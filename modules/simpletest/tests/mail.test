@@ -441,7 +441,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
    * <CRLF> is 1000 characters."
    */
   function testVeryLongLineWrap() {
-    $input = 'Drupal<br /><p>' . str_repeat('x', 2100) . '</><br />Drupal';
+    $input = 'Drupal<br /><p>' . str_repeat('x', 2100) . '</p><br />Drupal';
     $output = drupal_html_to_text($input);
     // This awkward construct comes from includes/mail.inc lines 8-13.
     $eol = variable_get('mail_line_endings', MAIL_LINE_ENDINGS);
@@ -455,7 +455,6 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
       $maximum_line_length = max($maximum_line_length, strlen($line . $eol));
     }
     $verbose = 'Maximum line length found was ' . $maximum_line_length . ' octets.';
-    // @todo This should assert that $maximum_line_length <= 1000.
-    $this->pass($verbose);
+    $this->assertTrue($maximum_line_length <= 1000, $verbose);
   }
 }

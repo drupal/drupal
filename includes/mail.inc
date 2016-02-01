@@ -566,7 +566,7 @@ function _drupal_wrap_mail_line(&$line, $key, $values) {
   // Use soft-breaks only for purely quoted or unindented text.
   $line = wordwrap($line, 77 - $values['length'], $values['soft'] ? " \n" : "\n");
   // Break really long words at the maximum width allowed.
-  $line = wordwrap($line, 996 - $values['length'], $values['soft'] ? " \n" : "\n");
+  $line = wordwrap($line, 996 - $values['length'], $values['soft'] ? " \n" : "\n", TRUE);
 }
 
 /**
