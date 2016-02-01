@@ -3982,7 +3982,12 @@ function form_process_autocomplete($element) {
     // browser interpreting the path plus search string as an actual file.
     $current_clean_url = isset($GLOBALS['conf']['clean_url']) ? $GLOBALS['conf']['clean_url'] : NULL;
     $GLOBALS['conf']['clean_url'] = 0;
-    $element['#autocomplete_input']['#url_value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    // Force the script path to 'index.php', in case the server is not
+    // configured to find it automatically. Normally it is the responsibility
+    // of the site to do this themselves using hook_url_outbound_alter() (see
+    // url()) but since this code is forcing non-clean URLs on sites that don't
+    // normally use them, it is done here instead.
+    $element['#autocomplete_input']['#url_value'] = url($element['#autocomplete_path'], array('absolute' => TRUE, 'script' => 'index.php'));
     $GLOBALS['conf']['clean_url'] = $current_clean_url;
   }
   return $element;

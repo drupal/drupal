@@ -342,7 +342,7 @@ class ProfileTestAutocomplete extends ProfileTestCase {
     // Autocomplete always uses non-clean URLs.
     $current_clean_url = isset($GLOBALS['conf']['clean_url']) ? $GLOBALS['conf']['clean_url'] : NULL;
     $GLOBALS['conf']['clean_url'] = 0;
-    $autocomplete_url = url('profile/autocomplete/' . $field['fid'], array('absolute' => TRUE));
+    $autocomplete_url = url('profile/autocomplete/' . $field['fid'], array('absolute' => TRUE, 'script' => 'index.php'));
     $GLOBALS['conf']['clean_url'] = $current_clean_url;
     $autocomplete_id = drupal_html_id('edit-' . $field['form_name'] . '-autocomplete');
     $autocomplete_html = '<input type="hidden" id="' . $autocomplete_id . '" value="' . $autocomplete_url . '" disabled="disabled" class="autocomplete" />';
