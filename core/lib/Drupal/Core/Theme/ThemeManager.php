@@ -11,7 +11,6 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Template\Attribute;
 
@@ -49,11 +48,6 @@ class ThemeManager implements ThemeManagerInterface {
   protected $themeInitialization;
 
   /**
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * The app root.
    *
    * @var string
@@ -69,15 +63,12 @@ class ThemeManager implements ThemeManagerInterface {
    *   The theme negotiator.
    * @param \Drupal\Core\Theme\ThemeInitializationInterface $theme_initialization
    *   The theme initialization.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    */
-  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, RequestStack $request_stack, ModuleHandlerInterface $module_handler) {
+  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler) {
     $this->root = $root;
     $this->themeNegotiator = $theme_negotiator;
     $this->themeInitialization = $theme_initialization;
-    $this->requestStack = $request_stack;
     $this->moduleHandler = $module_handler;
   }
 
