@@ -9,6 +9,9 @@ function image_module_test_file_download($uri) {
   if (variable_get('image_module_test_file_download', FALSE) == $uri) {
     return array('X-Image-Owned-By' => 'image_module_test');
   }
+  if (variable_get('image_module_test_invalid_headers', FALSE) == $uri) {
+    return array('Content-Type' => 'image/png');
+  }
 }
 
 /**

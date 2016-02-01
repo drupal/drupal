@@ -835,8 +835,8 @@ function image_style_deliver($style, $scheme) {
       file_download($scheme, file_uri_target($derivative_uri));
     }
     else {
-      $headers = module_invoke_all('file_download', $image_uri);
-      if (in_array(-1, $headers) || empty($headers)) {
+      $headers = file_download_headers($image_uri);
+      if (empty($headers)) {
         return MENU_ACCESS_DENIED;
       }
       if (count($headers)) {

@@ -202,6 +202,22 @@ class ImageStylesPathAndUrlTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test that we do not pass an array to drupal_add_http_header.
+   */
+  function testImageContentTypeHeaders() {
+    $files = $this->drupalGetTestFiles('image');
+    $file = array_shift($files);
+    // Copy the test file to private folder.
+    $private_file = file_copy($file, 'private://', FILE_EXISTS_RENAME);
+    // Tell image_module_test module to return the headers we want to test.
+    variable_set('image_module_test_invalid_headers', $private_file->uri);
+    // Invoke image_style_deliver so it will try to set headers.
+    $generated_url = image_style_url($this->style_name, $private_file->uri);
+    $this->drupalGet($generated_url);
+    variable_del('image_module_test_invalid_headers');
+  }
+
+  /**
    * Test image_style_url().
    */
   function _testImageStyleUrlAndPath($scheme, $clean_url = TRUE, $extra_slash = FALSE) {
