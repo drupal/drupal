@@ -320,15 +320,26 @@ function module_load_install($module) {
  *   The name of the included file, if successful; FALSE otherwise.
  */
 function module_load_include($type, $module, $name = NULL) {
+  static $files = array();
+
   if (!isset($name)) {
     $name = $module;
+  }
+
+  $key = $type . ':' . $module . ':' . $name;
+  if (isset($files[$key])) {
+    return $files[$key];
   }
 
   if (function_exists('drupal_get_path')) {
     $file = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$name.$type";
     if (is_file($file)) {
       require_once $file;
+      $files[$key] = $file;
       return $file;
+    }
+    else {
+      $files[$key] = FALSE;
     }
   }
   return FALSE;
