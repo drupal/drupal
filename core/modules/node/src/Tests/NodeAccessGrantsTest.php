@@ -26,4 +26,13 @@ class NodeAccessGrantsTest extends NodeAccessTest {
    */
   public static $modules = array('node_access_test_empty');
 
+  /**
+   * Test operations not supported by node grants.
+   */
+  function testUnsupportedOperation() {
+    $web_user = $this->drupalCreateUser(['access content']);
+    $node = $this->drupalCreateNode();
+    $this->assertNodeAccess(['random_operation' => FALSE], $node, $web_user);
+  }
+
 }
