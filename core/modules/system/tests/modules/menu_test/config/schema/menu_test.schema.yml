@@ -7,3 +7,10 @@ menu_test.menu_item:
     title:
       type: label
       label: 'Title'
+menu_test.links.action:
+  type: config_object
+  label: 'Menu test local action'
+  mapping:
+    title:
+      type: label
+      label: 'Title'

@@ -8,6 +8,9 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -182,8 +185,10 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     $links = array();
     /** @var $plugin \Drupal\Core\Menu\LocalActionInterface */
     foreach ($this->instances[$route_appears] as $plugin_id => $plugin) {
+      $cacheability = new CacheableMetadata();
       $route_name = $plugin->getRouteName();
       $route_parameters = $plugin->getRouteParameters($this->routeMatch);
+      $access = $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account, TRUE);
       $links[$plugin_id] = array(
         '#theme' => 'menu_local_action',
         '#link' => array(
@@ -191,10 +196,22 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
           'url' => Url::fromRoute($route_name, $route_parameters),
           'localized_options' => $plugin->getOptions($this->routeMatch),
         ),
-        '#access' => $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account, TRUE),
+        '#access' => $access,
         '#weight' => $plugin->getWeight(),
       );
+      $cacheability->addCacheableDependency($access);
+      // For backward compatibility in 8.0.x, plugins that do not implement
+      // the \Drupal\Core\Cache\CacheableDependencyInterface are assumed
+      // to be cacheable forever.
+      if ($plugin instanceof CacheableDependencyInterface) {
+        $cacheability->addCacheableDependency($plugin);
+      }
+      else {
+        $cacheability->setCacheMaxAge(Cache::PERMANENT);
+      }
+      $cacheability->applyTo($links[$plugin_id]);
     }
+    $links['#cache']['contexts'][] = 'route';
 
     return $links;
   }

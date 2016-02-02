@@ -11,6 +11,12 @@ menu_test.local_action5:
   appears_on:
     - menu_test.local_action1
 
+menu_test.local_action.cache_check:
+  route_name: menu_test.local_action5
+  class: '\Drupal\menu_test\Plugin\Menu\LocalAction\TestLocalActionWithConfig'
+  appears_on:
+    - menu_test.local_action6
+
 menu_test.local_action2:
   route_name: menu_test.local_action2
   title: 'My hook_menu action'
