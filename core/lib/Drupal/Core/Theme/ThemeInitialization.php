@@ -318,7 +318,6 @@ class ThemeInitialization implements ThemeInitializationInterface {
     $stylesheets_remove = array();
     // Grab stylesheets from base theme.
     foreach ($base_themes as $base) {
-      $base_theme_path = $base->getPath();
       if (!empty($base->info['stylesheets-remove'])) {
         foreach ($base->info['stylesheets-remove'] as $css_file) {
           $css_file = $this->resolveStyleSheetPlaceholders($css_file);
