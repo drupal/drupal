@@ -77,4 +77,23 @@ class TokenReplaceTest extends ViewKernelTestBase {
     }
   }
 
+  /**
+   * Tests core token replacements generated from a view without results.
+   */
+  function testTokenReplacementNoResults() {
+    $token_handler = \Drupal::token();
+    $view = Views::getView('test_tokens');
+    $view->setDisplay('page_2');
+    $this->executeView($view);
+
+    $expected = array(
+      '[view:page-count]' => '1',
+    );
+
+    foreach ($expected as $token => $expected_output) {
+      $output = $token_handler->replace($token, array('view' => $view));
+      $this->assertIdentical($output, $expected_output, format_string('Token %token replaced correctly.', array('%token' => $token)));
+    }
+  }
+
 }
