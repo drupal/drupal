@@ -57,3 +57,23 @@ display:
         type: views_query
         options: {  }
       path: test_tokens
+  page_2:
+    id: page_2
+    display_title: Page
+    display_plugin: page
+    position: 2
+    display_options:
+      defaults:
+        filters: false
+      query:
+        type: views_query
+        options: {  }
+      filters:
+        name:
+          field: name
+          id: test_filter
+          table: views_test_data
+          plugin_id: string
+          operator: '='
+          value: 'not an existing name'
+      path: test_tokens_empty
