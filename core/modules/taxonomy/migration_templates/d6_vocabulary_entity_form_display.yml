@@ -8,12 +8,17 @@ source:
     entity_type: node
     form_mode: default
     options:
-      type: options_select
       weight: 20
 process:
   entity_type: 'constants/entity_type'
   form_mode: 'constants/form_mode'
-  options: 'constants/options'
+  options/type:
+    plugin: static_map
+    source: tags
+    map:
+      0: options_select
+      1: entity_reference_autocomplete_tags
+  options/weight: 'constants/options/weight'
   bundle: type
   field_name:
     plugin: migration
