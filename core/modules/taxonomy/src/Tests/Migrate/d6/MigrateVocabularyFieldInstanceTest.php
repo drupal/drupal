@@ -40,12 +40,14 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
     $field = FieldConfig::load($field_id);
     $this->assertIdentical($field_id, $field->id(), 'Field instance exists on article bundle.');
     $this->assertIdentical('Tags', $field->label());
+    $this->assertTrue($field->isRequired(), 'Field is required');
 
     // Test the page bundle as well.
     $field_id = 'node.page.tags';
     $field = FieldConfig::load($field_id);
     $this->assertIdentical($field_id, $field->id(), 'Field instance exists on page bundle.');
     $this->assertIdentical('Tags', $field->label());
+    $this->assertTrue($field->isRequired(), 'Field is required');
 
     $settings = $field->getSettings();
     $this->assertIdentical('default:taxonomy_term', $settings['handler'], 'The handler plugin ID is correct.');
@@ -53,6 +55,11 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(TRUE, $settings['handler_settings']['auto_create'], 'The "auto_create" setting is correct.');
 
     $this->assertIdentical(array('node', 'article', 'tags'), Migration::load('d6_vocabulary_field_instance')->getIdMap()->lookupDestinationID(array(4, 'article')));
+
+    // Test the the field vocabulary_1_i_0_
+    $field_id = 'node.story.vocabulary_1_i_0_';
+    $field = FieldConfig::load($field_id);
+    $this->assertFalse($field->isRequired(), 'Field is not required');
   }
 
 }
