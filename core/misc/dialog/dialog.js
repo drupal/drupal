@@ -31,6 +31,7 @@
     // `jQuery(event.target).remove()` as well, to remove the dialog on
     // closing.
     close: function (event) {
+      Drupal.dialog(event.target).close();
       Drupal.detachBehaviors(event.target, null, 'unload');
     }
   };
@@ -60,6 +61,19 @@
    * @return {Drupal.dialog~dialogDefinition}
    */
   Drupal.dialog = function (element, options) {
+    var undef;
+    var $element = $(element);
+    var dialog = {
+      open: false,
+      returnValue: undef,
+      show: function () {
+        openDialog({modal: false});
+      },
+      showModal: function () {
+        openDialog({modal: true});
+      },
+      close: closeDialog
+    };
 
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
@@ -77,20 +91,6 @@
       dialog.open = false;
       $(window).trigger('dialog:afterclose', [dialog, $element]);
     }
-
-    var undef;
-    var $element = $(element);
-    var dialog = {
-      open: false,
-      returnValue: undef,
-      show: function () {
-        openDialog({modal: false});
-      },
-      showModal: function () {
-        openDialog({modal: true});
-      },
-      close: closeDialog
-    };
 
     return dialog;
   };
