@@ -2786,10 +2786,14 @@ function language_list($field = 'language') {
 }
 
 /**
- * Returns the default language used on the site
+ * Returns the default language, as an object, or one of its properties.
  *
  * @param $property
- *   Optional property of the language object to return
+ *   (optional) The property of the language object to return.
+ *
+ * @return
+ *   Either the language object for the default language used on the site,
+ *   or the property of that object named in the $property parameter.
  */
 function language_default($property = NULL) {
   $language = variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => ''));
