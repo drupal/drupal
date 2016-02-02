@@ -213,3 +213,50 @@ config_test.dynamic.*.third_party.config_schema_test:
       type: integer
     string:
       type: string
+
+wrapping.config_schema_test.plugin_types:
+  type: config_object
+  mapping:
+    tests:
+      type: sequence
+      sequence:
+        - type: wrapping.test.plugin_types.[plugin_id]
+
+wrapping.test.plugin_types.*:
+  type: test.plugin_types.[plugin_id]
+  mapping:
+    wrapper_value:
+      type: string
+
+test.plugin_types.wrapper:*:
+  type: test.plugin_types
+  mapping:
+    internal_value:
+      type: string
+
+wrapping.config_schema_test.double_brackets:
+  type: config_object
+  mapping:
+    tests:
+      type: sequence
+      sequence:
+        - type: wrapping.test.double_brackets.[another_key]
+
+wrapping.test.double_brackets.*:
+  type: test.double_brackets.[foo].[bar]
+  mapping:
+    wrapper_value:
+      type: string
+
+test.double_brackets.cat.dog:
+  type: test.double_brackets
+  mapping:
+    another_key:
+      type: string
+    foo:
+      type: string
+    bar:
+      type: string
+
+test.double_brackets.*:
+  type: mapping
