@@ -506,4 +506,70 @@ class ConfigSchemaTest extends KernelTestBase {
     $this->assertEqual($definitions['config_schema_test.hook']['additional_metadata'], 'new schema info');
   }
 
+  /**
+   * Tests saving config when the type is wrapped by a dynamic type.
+   */
+  public function testConfigSaveWithWrappingSchema() {
+    $untyped_values = [
+      'tests' => [
+        [
+          'wrapper_value' => 'foo',
+          'plugin_id' => 'wrapper:foo',
+          'internal_value' => 100,
+        ],
+      ],
+    ];
+
+    $typed_values = [
+      'tests' => [
+        [
+          'wrapper_value' => 'foo',
+          'plugin_id' => 'wrapper:foo',
+          'internal_value' => '100',
+        ],
+      ],
+    ];
+
+    // Save config which has a schema that enforces types.
+    \Drupal::configFactory()->getEditable('wrapping.config_schema_test.plugin_types')
+      ->setData($untyped_values)
+      ->save();
+    $this->assertIdentical(\Drupal::config('wrapping.config_schema_test.plugin_types')
+      ->get(), $typed_values);
+  }
+
+  /**
+   * Tests dynamic config schema type with multiple sub-key references.
+   */
+  public function testConfigSaveWithWrappingSchemaDoubleBrackets() {
+    $untyped_values = [
+      'tests' => [
+        [
+          'wrapper_value' => 'foo',
+          'foo' => 'cat',
+          'bar' => 'dog',
+          'another_key' => 100,
+        ],
+      ],
+    ];
+
+    $typed_values = [
+      'tests' => [
+        [
+          'wrapper_value' => 'foo',
+          'foo' => 'cat',
+          'bar' => 'dog',
+          'another_key' => '100',
+        ],
+      ],
+    ];
+
+    // Save config which has a schema that enforces types.
+    \Drupal::configFactory()->getEditable('wrapping.config_schema_test.double_brackets')
+      ->setData($untyped_values)
+      ->save();
+    $this->assertIdentical(\Drupal::config('wrapping.config_schema_test.double_brackets')
+      ->get(), $typed_values);
+  }
+
 }
