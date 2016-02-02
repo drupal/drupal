@@ -70,7 +70,7 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
    * {@inheritdoc}
    */
   public function getLangcode() {
-    return $this->parent->getLangcode();
+    return $this->getParent()->getLangcode();
   }
 
   /**
