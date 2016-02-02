@@ -733,6 +733,7 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
     drupal_static_reset('module_hook_info');
     drupal_static_reset('drupal_alter');
     cache_clear_all('hook_info', 'cache_bootstrap');
+    cache_clear_all('system_cache_tables', 'cache');
     return;
   }
 

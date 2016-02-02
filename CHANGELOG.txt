@@ -1,6 +1,8 @@
 
 Drupal 7.42, xxxx-xx-xx (development version)
 -----------------------
+- Stopped invoking hook_flush_caches() on every cron run, since some modules
+  use that hook for expensive operations that are only needed on cache clears.
 - Changed the default .htaccess and web.config to block Composer-related files.
 - Added static caching to module_load_include() to improve performance.
 - Fixed double-encoding bugs in select field widgets provided by the Options

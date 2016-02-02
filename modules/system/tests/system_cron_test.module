@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Helper module for CronRunTestCase::testCronCacheExpiration().
+ */
+
+/**
+ * Implements hook_flush_caches().
+ */
+function system_cron_test_flush_caches() {
+  // Set a variable to indicate that this hook was invoked.
+  variable_set('system_cron_test_flush_caches', 1);
+  return array();
+}

@@ -1,0 +1,6 @@
+name = System Cron Test
+description = 'Support module for testing the system_cron().'
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE
