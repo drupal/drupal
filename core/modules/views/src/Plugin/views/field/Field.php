@@ -22,6 +22,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Entity\Render\EntityFieldRenderer;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -933,8 +934,10 @@ class Field extends FieldPluginBase implements CacheableDependencyInterface, Mul
 
         if (is_object($raw)) {
           $property = $raw->get($id);
-          if (!empty($property)) {
-            $tokens['{{ ' . $this->options['id'] . '__' . $id . ' }}'] = Xss::filterAdmin($property->getValue());
+          // Check if TypedDataInterface is implemented so we know how to render
+          // the item as a string.
+          if (!empty($property) && $property instanceof TypedDataInterface) {
+            $tokens['{{ ' . $this->options['id'] . '__' . $id . ' }}'] = Xss::filterAdmin($property->getString());
           }
           else {
             // Make sure that empty values are replaced as well.
