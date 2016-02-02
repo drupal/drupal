@@ -57,6 +57,7 @@ class TwigSandboxPolicy implements \Twig_Sandbox_SecurityPolicyInterface {
       'bundle',
       'get',
       '__toString',
+      'toString',
     ]);
     $this->whitelisted_methods = array_flip($whitelisted_methods);
 
