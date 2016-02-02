@@ -93,14 +93,35 @@ class reEnableModuleFieldTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/modules/uninstall');
-    $this->assertText('Fields type(s) in use');
+    $this->assertText("The Telephone number field type is used in the following field: node.field_telephone");
+
+    // Add another telephone field to a different entity type in order to test
+    // the message for the case when multiple fields are blocking the
+    // uninstallation of a module.
+    $field_storage2 = entity_create('field_storage_config', array(
+      'field_name' => 'field_telephone_2',
+      'entity_type' => 'user',
+      'type' => 'telephone',
+    ));
+    $field_storage2->save();
+    entity_create('field_config', array(
+      'field_storage' => $field_storage2,
+      'bundle' => 'user',
+      'label' => 'User Telephone Number',
+    ))->save();
+
+    $this->drupalGet('admin/modules/uninstall');
+    $this->assertText("The Telephone number field type is used in the following fields: node.field_telephone, user.field_telephone_2");
+
+    // Delete both fields.
     $field_storage->delete();
+    $field_storage2->delete();
+
     $this->drupalGet('admin/modules/uninstall');
     $this->assertText('Fields pending deletion');
     $this->cronRun();
-    $this->assertNoText('Fields type(s) in use');
+    $this->assertNoText("The Telephone number field type is used in the following field: node.field_telephone");
     $this->assertNoText('Fields pending deletion');
-
   }
 
 }

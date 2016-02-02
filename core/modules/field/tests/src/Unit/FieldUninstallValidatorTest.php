@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\field\Unit;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\simpletest\AssertHelperTrait;
 use Drupal\Tests\UnitTestCase;
 
@@ -24,13 +25,20 @@ class FieldUninstallValidatorTest extends UnitTestCase {
   protected $fieldUninstallValidator;
 
   /**
+   * The mock field type plugin manager;
+   *
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $fieldTypePluginManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
     $this->fieldUninstallValidator = $this->getMockBuilder('Drupal\field\FieldUninstallValidator')
       ->disableOriginalConstructor()
-      ->setMethods(['getFieldStoragesByModule'])
+      ->setMethods(['getFieldStoragesByModule', 'getFieldTypeLabel'])
       ->getMock();
     $this->fieldUninstallValidator->setStringTranslation($this->getStringTranslationStub());
   }
@@ -79,12 +87,24 @@ class FieldUninstallValidatorTest extends UnitTestCase {
     $field_storage->expects($this->once())
       ->method('isDeleted')
       ->willReturn(FALSE);
+    $field_type = $this->randomMachineName();
+    $field_storage->expects($this->once())
+      ->method('getType')
+      ->willReturn($field_type);
+    $field_name = $this->randomMachineName();
+    $field_storage->expects($this->once())
+      ->method('getLabel')
+      ->willReturn($field_name);
     $this->fieldUninstallValidator->expects($this->once())
       ->method('getFieldStoragesByModule')
       ->willReturn([$field_storage]);
+    $field_type_label = $this->randomMachineName();
+    $this->fieldUninstallValidator->expects($this->once())
+      ->method('getFieldTypeLabel')
+      ->willReturn($field_type_label);
 
     $module = $this->randomMachineName();
-    $expected = ['Fields type(s) in use'];
+    $expected = ["The <em class=\"placeholder\">$field_type_label</em> field type is used in the following field: $field_name"];
     $reasons = $this->fieldUninstallValidator->validate($module);
     $this->assertSame($expected, $this->castSafeStrings($reasons));
   }
