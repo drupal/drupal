@@ -19,7 +19,6 @@ function simpletest_requirements($phase) {
   $requirements = array();
 
   $has_curl = function_exists('curl_init');
-  $has_domdocument = method_exists('DOMDocument', 'loadHTML');
   $open_basedir = ini_get('open_basedir');
 
   $requirements['curl'] = array(
@@ -29,15 +28,6 @@ function simpletest_requirements($phase) {
   if (!$has_curl) {
     $requirements['curl']['severity'] = REQUIREMENT_ERROR;
     $requirements['curl']['description'] = t('The testing framework could not be installed because the PHP <a href="http://php.net/manual/curl.setup.php">cURL</a> library is not available.');
-  }
-
-  $requirements['php_domdocument'] = array(
-    'title' => t('PHP DOMDocument class'),
-    'value' => $has_domdocument ? t('Enabled') : t('Not found'),
-  );
-  if (!$has_domdocument) {
-    $requirements['php_domdocument']['severity'] = REQUIREMENT_ERROR;
-    $requirements['php_domdocument']['description'] = t('The testing framework requires the DOMDocument class to be available. Check the configure command at the <a href=":link-phpinfo">PHP info page</a>.', array(':link-phpinfo' => \Drupal::url('system.php')));
   }
 
   // SimpleTest currently needs 2 cURL options which are incompatible with
