@@ -40,16 +40,6 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   protected $originalId;
 
   /**
-   * The name of the property that is used to store plugin configuration.
-   *
-   * This is needed when the entity uses a LazyPluginCollection, to dictate
-   * where the plugin configuration should be stored.
-   *
-   * @var string
-   */
-  protected $pluginConfigKey;
-
-  /**
    * The enabled/disabled status of the configuration entity.
    *
    * @var bool
