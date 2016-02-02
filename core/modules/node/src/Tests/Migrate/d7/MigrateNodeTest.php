@@ -52,6 +52,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
       'd7_field',
       'd7_field_instance',
       'd7_node__test_content_type',
+      'd7_node__article',
     ]);
   }
 
@@ -143,6 +144,9 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertIdentical('title text', $node->field_images->title);
     $this->assertIdentical('93', $node->field_images->width);
     $this->assertIdentical('93', $node->field_images->height);
+
+    $node = Node::load(2);
+    $this->assertIdentical("...is that it's the absolute best show ever. Trust me, I would know.", $node->body->value);
   }
 
 }
