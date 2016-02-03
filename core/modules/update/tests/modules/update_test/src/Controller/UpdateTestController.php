@@ -68,8 +68,7 @@ class UpdateTestController extends ControllerBase {
       $availability_scenario = '#broken#';
     }
 
-    $path = drupal_get_path('module', 'update_test');
-    $file = "$path/$project_name.$availability_scenario.xml";
+    $file = __DIR__ . "/../../$project_name.$availability_scenario.xml";
     $headers = array('Content-Type' => 'text/xml; charset=utf-8');
     if (!is_file($file)) {
       // Return an empty response.

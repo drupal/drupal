@@ -933,7 +933,7 @@ www.example.com with a newline in comments -->
         'filter_url_length' => 496,
       )
     ));
-    $path = drupal_get_path('module', 'filter') . '/tests';
+    $path = __DIR__ . '/../../tests';
 
     $input = file_get_contents($path . '/filter.url-input.txt');
     $expected = file_get_contents($path . '/filter.url-output.txt');

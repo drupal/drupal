@@ -59,7 +59,7 @@ class AggregatorTestRssController extends ControllerBase {
     $response->headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
 
     // Read actual feed from file.
-    $file_name = drupal_get_path('module', 'aggregator_test') . '/aggregator_test_rss091.xml';
+    $file_name = __DIR__ . '/../../aggregator_test_rss091.xml';
     $handle = fopen($file_name, 'r');
     $feed = fread($handle, filesize($file_name));
     fclose($handle);

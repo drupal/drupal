@@ -52,7 +52,7 @@ class UpdateUploadTest extends UpdateTestBase {
     // Check to ensure an existing module can't be reinstalled. Also checks that
     // the archive was extracted since we can't know if the module is already
     // installed until after extraction.
-    $validArchiveFile = drupal_get_path('module', 'update') . '/tests/aaa_update_test.tar.gz';
+    $validArchiveFile = __DIR__ . '/../../tests/aaa_update_test.tar.gz';
     $edit = array(
       'files[project_upload]' => $validArchiveFile,
     );
@@ -65,7 +65,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $moduleUpdater = $updaters['module']['class'];
     $installedInfoFilePath = $this->container->get('update.root') . '/' . $moduleUpdater::getRootDirectoryRelativePath() . '/update_test_new_module/update_test_new_module.info.yml';
     $this->assertFalse(file_exists($installedInfoFilePath), 'The new module does not exist in the filesystem before it is installed with the Update Manager.');
-    $validArchiveFile = drupal_get_path('module', 'update') . '/tests/update_test_new_module/8.x-1.0/update_test_new_module.tar.gz';
+    $validArchiveFile = __DIR__ . '/../../tests/update_test_new_module/8.x-1.0/update_test_new_module.tar.gz';
     $edit = array(
       'files[project_upload]' => $validArchiveFile,
     );
