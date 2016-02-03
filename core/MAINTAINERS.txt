@@ -24,7 +24,8 @@ Drupal 8
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
   (Framework Manager)
 
-Provisional membership: None at this time.
+Provisional membership:
+- Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
 
 Drupal 7
 - David Rothstein 'David_Rothstein' https://www.drupal.org/u/david_rothstein
