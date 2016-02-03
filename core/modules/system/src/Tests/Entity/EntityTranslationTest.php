@@ -371,6 +371,10 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Save the translation and check that the expected hooks are fired.
     $translation->save();
     $hooks = $this->getHooksInfo();
+
+    $this->assertEqual($hooks['entity_translation_create'], $langcode, 'The generic entity translation creation hook has fired.');
+    $this->assertEqual($hooks[$entity_type . '_translation_create'], $langcode, 'The entity-type-specific entity translation creation hook has fired.');
+
     $this->assertEqual($hooks['entity_translation_insert'], $langcode, 'The generic entity translation insertion hook has fired.');
     $this->assertEqual($hooks[$entity_type . '_translation_insert'], $langcode, 'The entity-type-specific entity translation insertion hook has fired.');
 
@@ -436,6 +440,10 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $this->assertEqual($entity->language()->getId(), $default_langcode, 'The original language has been preserved.');
     $translation->save();
     $hooks = $this->getHooksInfo();
+
+    $this->assertEqual($hooks['entity_translation_create'], $langcode2, 'The generic entity translation creation hook has fired.');
+    $this->assertEqual($hooks[$entity_type . '_translation_create'], $langcode2, 'The entity-type-specific entity translation creation hook has fired.');
+
     $this->assertEqual($hooks['entity_translation_insert'], $langcode2, 'The generic entity translation insertion hook has fired.');
     $this->assertEqual($hooks[$entity_type . '_translation_insert'], $langcode2, 'The entity-type-specific entity translation insertion hook has fired.');
 
@@ -483,7 +491,13 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $entity->removeTranslation($langcode2);
     $entity->save();
     $hooks = $this->getHooksInfo();
-    $this->assertFalse($hooks, 'No hooks are run when adding and removing a translation without storing it.');
+
+    $this->assertTrue(isset($hooks['entity_translation_create']), 'The generic entity translation creation hook is run when adding and removing a translation without storing it.');
+    unset($hooks['entity_translation_create']);
+    $this->assertTrue(isset($hooks[$entity_type . '_translation_create']), 'The entity-type-specific entity translation creation hook is run when adding and removing a translation without storing it.');
+    unset($hooks[$entity_type . '_translation_create']);
+
+    $this->assertFalse($hooks, 'No other hooks beyond the entity translation creation hooks are run when adding and removing a translation without storing it.');
 
     // Check that hooks are fired only when actually storing data.
     $entity = $this->reloadEntity($entity);
@@ -554,6 +568,9 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     );
     $this->assertEqual($translation->description->getValue(), $expected, 'Language-aware default values correctly populated.');
     $this->assertEqual($translation->description->getLangcode(), $langcode2, 'Field object has the expected langcode.');
+
+    // Reset hook firing information.
+    $this->getHooksInfo();
   }
 
   /**

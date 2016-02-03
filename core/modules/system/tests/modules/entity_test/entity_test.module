@@ -472,6 +472,13 @@ function entity_test_entity_operation_alter(array &$operations, EntityInterface 
 }
 
 /**
+ * Implements hook_entity_translation_create().
+ */
+function entity_test_entity_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_translation_create', $translation->language()->getId());
+}
+
+/**
  * Implements hook_entity_translation_insert().
  */
 function entity_test_entity_translation_insert(EntityInterface $translation) {
@@ -483,6 +490,13 @@ function entity_test_entity_translation_insert(EntityInterface $translation) {
  */
 function entity_test_entity_translation_delete(EntityInterface $translation) {
   _entity_test_record_hooks('entity_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_create() for 'entity_test_mul'.
+ */
+function entity_test_entity_test_mul_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_translation_create', $translation->language()->getId());
 }
 
 /**
@@ -500,7 +514,14 @@ function entity_test_entity_test_mul_translation_delete(EntityInterface $transla
 }
 
 /**
- * Implements hook_ENTITY_TYPE_translation_insert() for 'entity_test_mulrev'.
+ * Implements hook_ENTITY_TYPE_translation_create() for 'entity_test_mul_changed'.
+ */
+function entity_test_entity_test_mul_changed_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_changed_translation_create', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_insert() for 'entity_test_mul_changed'.
  */
 function entity_test_entity_test_mul_changed_translation_insert(EntityInterface $translation) {
   _entity_test_record_hooks('entity_test_mul_changed_translation_insert', $translation->language()->getId());
@@ -511,6 +532,13 @@ function entity_test_entity_test_mul_changed_translation_insert(EntityInterface 
  */
 function entity_test_entity_test_mul_changed_translation_delete(EntityInterface $translation) {
   _entity_test_record_hooks('entity_test_mul_changed_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_create().
+ */
+function entity_test_entity_test_mulrev_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mulrev_translation_create', $translation->language()->getId());
 }
 
 /**
@@ -528,6 +556,13 @@ function entity_test_entity_test_mulrev_translation_delete(EntityInterface $tran
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_translation_create() for 'entity_test_mulrev_changed'.
+ */
+function entity_test_entity_test_mulrev_changed_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mulrev_changed_translation_create', $translation->language()->getId());
+}
+
+/**
  * Implements hook_ENTITY_TYPE_translation_insert() for 'entity_test_mulrev'.
  */
 function entity_test_entity_test_mulrev_changed_translation_insert(EntityInterface $translation) {
@@ -539,6 +574,13 @@ function entity_test_entity_test_mulrev_changed_translation_insert(EntityInterfa
  */
 function entity_test_entity_test_mulrev_changed_translation_delete(EntityInterface $translation) {
   _entity_test_record_hooks('entity_test_mulrev_changed_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_create() for 'entity_test_mul_langcode_key'.
+ */
+function entity_test_entity_test_mul_langcode_key_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_langcode_key_translation_create', $translation->language()->getId());
 }
 
 /**
