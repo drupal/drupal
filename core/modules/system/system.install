@@ -365,12 +365,25 @@ function system_requirements($phase) {
     else {
       $site_path = DrupalKernel::findSitePath(Request::createFromGlobals());
     }
-    if (!drupal_verify_install_file($site_path, FILE_NOT_WRITABLE, 'dir')) {
-      $conf_errors[] = t("The directory %file is not protected from modifications and poses a security risk. You must change the directory's permissions to be non-writable.", array('%file' => $site_path));
+    // Allow system administrators to disable permissions hardening for the site
+    // directory. This allows additional files in the site directory to be
+    // updated when they are managed in a version control system.
+    if (Settings::get('skip_permissions_hardening')) {
+      $conf_errors[] = t('Protection disabled');
+      // If permissions hardening is disabled, then only show a warning for a
+      // writable file, as a reminder, rather than an error.
+      $file_protection_severity = REQUIREMENT_WARNING;
+    }
+    else {
+      // In normal operation, writable files or directories are an error.
+      $file_protection_severity = REQUIREMENT_ERROR;
+      if (!drupal_verify_install_file($site_path, FILE_NOT_WRITABLE, 'dir')) {
+        $conf_errors[] = t("The directory %file is not protected from modifications and poses a security risk. You must change the directory's permissions to be non-writable.", array('%file' => $site_path));
+      }
     }
     foreach (array('settings.php', 'settings.local.php', 'services.yml') as $conf_file) {
       $full_path = $site_path . '/' . $conf_file;
-      if (file_exists($full_path) && !drupal_verify_install_file($full_path, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE)) {
+      if (file_exists($full_path) && (Settings::get('skip_permissions_hardening') || !drupal_verify_install_file($full_path, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE))) {
         $conf_errors[] = t("The file %file is not protected from modifications and poses a security risk. You must change the file's permissions to be non-writable.", array('%file' => $full_path));
       }
     }
@@ -393,7 +406,7 @@ function system_requirements($phase) {
       }
       $requirements['configuration_files'] = array(
         'value' => t('Not protected'),
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => $file_protection_severity,
         'description' => $description,
       );
     }
