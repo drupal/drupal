@@ -206,10 +206,15 @@ class DateFormatter implements DateFormatterInterface {
       'granularity' => 2,
       'langcode' => NULL,
       'strict' => TRUE,
+      'return_as_object' => FALSE,
     );
 
     if ($options['strict'] && $from > $to) {
-      return $this->t('0 seconds');
+      $string = $this->t('0 seconds');
+      if ($options['return_as_object']) {
+        return new FormattedDateDiff($string, 0);
+      }
+      return $string;
     }
 
     $date_time_from = new \DateTime();
@@ -226,6 +231,7 @@ class DateFormatter implements DateFormatterInterface {
     // We loop over the keys provided by \DateInterval explicitly. Since we
     // don't take the "invert" property into account, the resulting output value
     // will always be positive.
+    $max_age = 1e99;
     foreach (array('y', 'm', 'd', 'h', 'i', 's') as $value) {
       if ($interval->$value > 0) {
         // Switch over the keys to call formatPlural() explicitly with literal
@@ -233,10 +239,12 @@ class DateFormatter implements DateFormatterInterface {
         switch ($value) {
           case 'y':
             $interval_output = $this->formatPlural($interval->y, '1 year', '@count years', array(), array('langcode' => $options['langcode']));
+            $max_age = min($max_age, 365*86400);
             break;
 
           case 'm':
             $interval_output = $this->formatPlural($interval->m, '1 month', '@count months', array(), array('langcode' => $options['langcode']));
+            $max_age = min($max_age, 30*86400);
             break;
 
           case 'd':
@@ -249,10 +257,12 @@ class DateFormatter implements DateFormatterInterface {
               $interval_output .= $this->formatPlural($weeks, '1 week', '@count weeks', array(), array('langcode' => $options['langcode']));
               $days -= $weeks * 7;
               $granularity--;
+              $max_age = min($max_age, 7*86400);
             }
 
             if ((!$output || $weeks > 0) && $granularity > 0 && $days > 0) {
               $interval_output .= ($interval_output ? ' ' : '') . $this->formatPlural($days, '1 day', '@count days', array(), array('langcode' => $options['langcode']));
+              $max_age = min($max_age, 86400);
             }
             else {
               // If we did not output days, set the granularity to 0 so that we
@@ -263,14 +273,17 @@ class DateFormatter implements DateFormatterInterface {
 
           case 'h':
             $interval_output = $this->formatPlural($interval->h, '1 hour', '@count hours', array(), array('langcode' => $options['langcode']));
+            $max_age = min($max_age, 3600);
             break;
 
           case 'i':
             $interval_output = $this->formatPlural($interval->i, '1 minute', '@count minutes', array(), array('langcode' => $options['langcode']));
+            $max_age = min($max_age, 60);
             break;
 
           case 's':
             $interval_output = $this->formatPlural($interval->s, '1 second', '@count seconds', array(), array('langcode' => $options['langcode']));
+            $max_age = min($max_age, 1);
             break;
 
         }
@@ -290,6 +303,11 @@ class DateFormatter implements DateFormatterInterface {
 
     if (empty($output)) {
       $output = $this->t('0 seconds');
+      $max_age = 0;
+    }
+
+    if ($options['return_as_object']) {
+      return new FormattedDateDiff($output, $max_age);
     }
 
     return $output;

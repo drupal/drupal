@@ -8,6 +8,7 @@
 namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -112,7 +113,7 @@ class DateTimeTimeAgoFormatter extends FormatterBase implements ContainerFactory
 
     foreach ($items as $delta => $item) {
       $date = $item->date;
-      $output = '';
+      $output = [];
       if (!empty($item->date)) {
         if ($this->getFieldSetting('datetime_type') == 'date') {
           // A date without time will pick up the current time, use the default.
@@ -120,7 +121,7 @@ class DateTimeTimeAgoFormatter extends FormatterBase implements ContainerFactory
         }
         $output = $this->formatDate($date);
       }
-      $elements[$delta] = array('#markup' => $output);
+      $elements[$delta] = $output;
     }
 
     return $elements;
@@ -176,20 +177,31 @@ class DateTimeTimeAgoFormatter extends FormatterBase implements ContainerFactory
    * @param \Drupal\Core\Datetime\DrupalDateTime|object $date
    *   A date/time object.
    *
-   * @return string
+   * @return array
    *   The formatted date/time string using the past or future format setting.
    */
   protected function formatDate(DrupalDateTime $date) {
     $granularity = $this->getSetting('granularity');
     $timestamp = $date->getTimestamp();
-    $options = ['granularity' => $granularity];
+    $options = [
+      'granularity' => $granularity,
+      'return_as_object' => TRUE,
+    ];
 
     if ($this->request->server->get('REQUEST_TIME') > $timestamp) {
-      return SafeMarkup::format($this->getSetting('past_format'), ['@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, $options)]);
+      $result = $this->dateFormatter->formatTimeDiffSince($timestamp, $options);
+      $build = [
+        '#markup' => SafeMarkup::format($this->getSetting('past_format'), ['@interval' => $result->getString()]),
+      ];
     }
     else {
-      return SafeMarkup::format($this->getSetting('future_format'), ['@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, $options)]);
+      $result = $this->dateFormatter->formatTimeDiffUntil($timestamp, $options);
+      $build = [
+        '#markup' => SafeMarkup::format($this->getSetting('future_format'), ['@interval' => $result->getString()]),
+      ];
     }
+    CacheableMetadata::createFromObject($result)->applyTo($build);
+    return $build;
   }
 
 }

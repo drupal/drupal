@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Datetime;
 
 use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\FormattedDateDiff;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -194,10 +195,16 @@ class DateTest extends UnitTestCase {
 
     // Mocks the formatDiff function of the dateformatter object.
     $this->dateFormatterStub
-      ->expects($this->any())
+      ->expects($this->at(0))
       ->method('formatDiff')
       ->with($timestamp, $request_time, $options)
       ->will($this->returnValue($expected));
+
+    $this->dateFormatterStub
+      ->expects($this->at(1))
+      ->method('formatDiff')
+      ->with($timestamp, $request_time, $options + ['return_as_object' => TRUE])
+      ->will($this->returnValue(new FormattedDateDiff('1 second', 1)));
 
     $request = Request::createFromGlobals();
     $request->server->set('REQUEST_TIME', $request_time);
@@ -207,6 +214,9 @@ class DateTest extends UnitTestCase {
       ->willReturn($request);
 
     $this->assertEquals($expected, $this->dateFormatterStub->formatTimeDiffSince($timestamp, $options));
+    $options['return_as_object'] = TRUE;
+    $expected_object = new FormattedDateDiff('1 second', 1);
+    $this->assertEquals($expected_object, $this->dateFormatterStub->formatTimeDiffSince($timestamp, $options));
   }
 
   /**
@@ -222,10 +232,16 @@ class DateTest extends UnitTestCase {
 
     // Mocks the formatDiff function of the dateformatter object.
     $this->dateFormatterStub
-      ->expects($this->any())
+      ->expects($this->at(0))
       ->method('formatDiff')
       ->with($request_time, $timestamp, $options)
       ->will($this->returnValue($expected));
+
+    $this->dateFormatterStub
+      ->expects($this->at(1))
+      ->method('formatDiff')
+      ->with($request_time, $timestamp, $options + ['return_as_object' => TRUE])
+      ->will($this->returnValue(new FormattedDateDiff('1 second', 1)));
 
     $request = Request::createFromGlobals();
     $request->server->set('REQUEST_TIME', $request_time);
@@ -235,6 +251,9 @@ class DateTest extends UnitTestCase {
       ->willReturn($request);
 
     $this->assertEquals($expected, $this->dateFormatterStub->formatTimeDiffUntil($timestamp, $options));
+    $options['return_as_object'] = TRUE;
+    $expected_object = new FormattedDateDiff('1 second', 1);
+    $this->assertEquals($expected_object, $this->dateFormatterStub->formatTimeDiffUntil($timestamp, $options));
   }
 
   /**
@@ -244,7 +263,7 @@ class DateTest extends UnitTestCase {
    *
    * @covers ::formatDiff
    */
-  public function testformatDiff($expected, $timestamp1, $timestamp2, $options = array()) {
+  public function testformatDiff($expected, $max_age, $timestamp1, $timestamp2, $options = array()) {
 
     // Mocks a simple formatPlural implementation.
     $this->stringTranslation->expects($this->any())
@@ -263,6 +282,10 @@ class DateTest extends UnitTestCase {
       }));
 
     $this->assertEquals($expected, $this->dateFormatter->formatDiff($timestamp1, $timestamp2, $options));
+
+    $options['return_as_object'] = TRUE;
+    $expected_object = new FormattedDateDiff($expected, $max_age);
+    $this->assertEquals($expected_object, $this->dateFormatter->formatDiff($timestamp1, $timestamp2, $options));
   }
 
   /**
@@ -282,103 +305,103 @@ class DateTest extends UnitTestCase {
 
     $data = array(
       // Checks for equal timestamps.
-      array('0 seconds', $request_time, $request_time),
+      array('0 seconds', 0, $request_time, $request_time),
 
       // Checks for seconds only.
-      array('1 second', $this->createTimestamp('2013-12-11 10:09:07'), $request_time),
-      array('1 second', $this->createTimestamp('2013-12-11 10:09:07'), $request_time),
-      array('1 second', $this->createTimestamp('2013-12-11 10:09:07'), $request_time, $granularity_3 + $langcode_en),
-      array('1 second', $this->createTimestamp('2013-12-11 10:09:07'), $request_time, $granularity_4 + $langcode_lolspeak),
-      array('2 seconds', $this->createTimestamp('2013-12-11 10:09:06'), $request_time),
-      array('59 seconds', $this->createTimestamp('2013-12-11 10:08:09'), $request_time),
-      array('59 seconds', $this->createTimestamp('2013-12-11 10:08:09'), $request_time),
+      array('1 second', 1, $this->createTimestamp('2013-12-11 10:09:07'), $request_time),
+      array('1 second', 1, $this->createTimestamp('2013-12-11 10:09:07'), $request_time),
+      array('1 second', 1, $this->createTimestamp('2013-12-11 10:09:07'), $request_time, $granularity_3 + $langcode_en),
+      array('1 second', 1, $this->createTimestamp('2013-12-11 10:09:07'), $request_time, $granularity_4 + $langcode_lolspeak),
+      array('2 seconds', 1, $this->createTimestamp('2013-12-11 10:09:06'), $request_time),
+      array('59 seconds', 1, $this->createTimestamp('2013-12-11 10:08:09'), $request_time),
+      array('59 seconds', 1, $this->createTimestamp('2013-12-11 10:08:09'), $request_time),
 
       // Checks for minutes and possibly seconds.
-      array('1 minute', $this->createTimestamp('2013-12-11 10:08:08'), $request_time),
-      array('1 minute', $this->createTimestamp('2013-12-11 10:08:08'), $request_time),
-      array('1 minute 1 second', $this->createTimestamp('2013-12-11 10:08:07'), $request_time),
-      array('1 minute 59 seconds', $this->createTimestamp('2013-12-11 10:07:09'), $request_time),
-      array('2 minutes', $this->createTimestamp('2013-12-11 10:07:08'), $request_time),
-      array('2 minutes 1 second', $this->createTimestamp('2013-12-11 10:07:07'), $request_time),
-      array('2 minutes 2 seconds', $this->createTimestamp('2013-12-11 10:07:06'), $request_time),
-      array('2 minutes 2 seconds', $this->createTimestamp('2013-12-11 10:07:06'), $request_time, $granularity_3),
-      array('2 minutes 2 seconds', $this->createTimestamp('2013-12-11 10:07:06'), $request_time, $granularity_4),
-      array('30 minutes', $this->createTimestamp('2013-12-11 09:39:08'), $request_time),
-      array('59 minutes 59 seconds', $this->createTimestamp('2013-12-11 09:09:09'), $request_time),
-      array('59 minutes 59 seconds', $this->createTimestamp('2013-12-11 09:09:09'), $request_time),
+      array('1 minute', 60, $this->createTimestamp('2013-12-11 10:08:08'), $request_time),
+      array('1 minute', 60, $this->createTimestamp('2013-12-11 10:08:08'), $request_time),
+      array('1 minute 1 second', 1, $this->createTimestamp('2013-12-11 10:08:07'), $request_time),
+      array('1 minute 59 seconds', 1, $this->createTimestamp('2013-12-11 10:07:09'), $request_time),
+      array('2 minutes', 60, $this->createTimestamp('2013-12-11 10:07:08'), $request_time),
+      array('2 minutes 1 second', 1, $this->createTimestamp('2013-12-11 10:07:07'), $request_time),
+      array('2 minutes 2 seconds', 1, $this->createTimestamp('2013-12-11 10:07:06'), $request_time),
+      array('2 minutes 2 seconds', 1, $this->createTimestamp('2013-12-11 10:07:06'), $request_time, $granularity_3),
+      array('2 minutes 2 seconds', 1, $this->createTimestamp('2013-12-11 10:07:06'), $request_time, $granularity_4),
+      array('30 minutes', 60, $this->createTimestamp('2013-12-11 09:39:08'), $request_time),
+      array('59 minutes 59 seconds', 1, $this->createTimestamp('2013-12-11 09:09:09'), $request_time),
+      array('59 minutes 59 seconds', 1, $this->createTimestamp('2013-12-11 09:09:09'), $request_time),
 
       // Checks for hours and possibly minutes or seconds.
-      array('1 hour', $this->createTimestamp('2013-12-11 09:09:08'), $request_time),
-      array('1 hour', $this->createTimestamp('2013-12-11 09:09:08'), $request_time),
-      array('1 hour', $this->createTimestamp('2013-12-11 09:09:07'), $request_time),
-      array('1 hour', $this->createTimestamp('2013-12-11 09:09:06'), $request_time),
-      array('1 hour 1 minute', $this->createTimestamp('2013-12-11 09:08:08'), $request_time),
-      array('1 hour 1 minute 1 second', $this->createTimestamp('2013-12-11 09:08:07'), $request_time, $granularity_3),
-      array('1 hour 1 minute 2 seconds', $this->createTimestamp('2013-12-11 09:08:06'), $request_time, $granularity_4),
-      array('1 hour 30 minutes', $this->createTimestamp('2013-12-11 08:39:08'), $request_time),
-      array('2 hours', $this->createTimestamp('2013-12-11 08:09:08'), $request_time),
-      array('23 hours 59 minutes', $this->createTimestamp('2013-12-10 10:10:08'), $request_time),
+      array('1 hour', 3600, $this->createTimestamp('2013-12-11 09:09:08'), $request_time),
+      array('1 hour', 3600, $this->createTimestamp('2013-12-11 09:09:08'), $request_time),
+      array('1 hour', 3600, $this->createTimestamp('2013-12-11 09:09:07'), $request_time),
+      array('1 hour', 3600, $this->createTimestamp('2013-12-11 09:09:06'), $request_time),
+      array('1 hour 1 minute', 60, $this->createTimestamp('2013-12-11 09:08:08'), $request_time),
+      array('1 hour 1 minute 1 second', 1, $this->createTimestamp('2013-12-11 09:08:07'), $request_time, $granularity_3),
+      array('1 hour 1 minute 2 seconds', 1, $this->createTimestamp('2013-12-11 09:08:06'), $request_time, $granularity_4),
+      array('1 hour 30 minutes', 60, $this->createTimestamp('2013-12-11 08:39:08'), $request_time),
+      array('2 hours', 3600, $this->createTimestamp('2013-12-11 08:09:08'), $request_time),
+      array('23 hours 59 minutes', 60, $this->createTimestamp('2013-12-10 10:10:08'), $request_time),
 
       // Checks for days and possibly hours, minutes or seconds.
-      array('1 day', $this->createTimestamp('2013-12-10 10:09:08'), $request_time),
-      array('1 day', $this->createTimestamp('2013-12-10 10:09:07'), $request_time),
-      array('1 day 1 hour', $this->createTimestamp('2013-12-10 09:09:08'), $request_time),
-      array('1 day 1 hour 1 minute', $this->createTimestamp('2013-12-10 09:08:07'), $request_time, $granularity_3 + $langcode_en),
-      array('1 day 1 hour 1 minute 1 second', $this->createTimestamp('2013-12-10 09:08:07'), $request_time, $granularity_4 + $langcode_lolspeak),
-      array('1 day 2 hours 2 minutes 2 seconds', $this->createTimestamp('2013-12-10 08:07:06'), $request_time, $granularity_4),
-      array('2 days', $this->createTimestamp('2013-12-09 10:09:08'), $request_time),
-      array('2 days', $this->createTimestamp('2013-12-09 10:07:08'), $request_time),
-      array('2 days 2 hours', $this->createTimestamp('2013-12-09 08:09:08'), $request_time),
-      array('2 days 2 hours 2 minutes', $this->createTimestamp('2013-12-09 08:07:06'), $request_time, $granularity_3 + $langcode_en),
-      array('2 days 2 hours 2 minutes 2 seconds', $this->createTimestamp('2013-12-09 08:07:06'), $request_time, $granularity_4 + $langcode_lolspeak),
+      array('1 day', 86400, $this->createTimestamp('2013-12-10 10:09:08'), $request_time),
+      array('1 day', 86400, $this->createTimestamp('2013-12-10 10:09:07'), $request_time),
+      array('1 day 1 hour', 3600, $this->createTimestamp('2013-12-10 09:09:08'), $request_time),
+      array('1 day 1 hour 1 minute', 60, $this->createTimestamp('2013-12-10 09:08:07'), $request_time, $granularity_3 + $langcode_en),
+      array('1 day 1 hour 1 minute 1 second', 1, $this->createTimestamp('2013-12-10 09:08:07'), $request_time, $granularity_4 + $langcode_lolspeak),
+      array('1 day 2 hours 2 minutes 2 seconds', 1, $this->createTimestamp('2013-12-10 08:07:06'), $request_time, $granularity_4),
+      array('2 days', 86400, $this->createTimestamp('2013-12-09 10:09:08'), $request_time),
+      array('2 days', 86400, $this->createTimestamp('2013-12-09 10:07:08'), $request_time),
+      array('2 days 2 hours', 3600, $this->createTimestamp('2013-12-09 08:09:08'), $request_time),
+      array('2 days 2 hours 2 minutes', 60, $this->createTimestamp('2013-12-09 08:07:06'), $request_time, $granularity_3 + $langcode_en),
+      array('2 days 2 hours 2 minutes 2 seconds', 1, $this->createTimestamp('2013-12-09 08:07:06'), $request_time, $granularity_4 + $langcode_lolspeak),
 
       // Checks for weeks and possibly days, hours, minutes or seconds.
-      array('1 week', $this->createTimestamp('2013-12-04 10:09:08'), $request_time),
-      array('1 week 1 day', $this->createTimestamp('2013-12-03 10:09:08'), $request_time),
-      array('2 weeks', $this->createTimestamp('2013-11-27 10:09:08'), $request_time),
-      array('2 weeks 2 days', $this->createTimestamp('2013-11-25 08:07:08'), $request_time),
-      array('2 weeks 2 days 2 hours 2 minutes', $this->createTimestamp('2013-11-25 08:07:08'), $request_time, $granularity_4),
-      array('4 weeks', $this->createTimestamp('2013-11-13 10:09:08'), $request_time),
-      array('4 weeks 1 day', $this->createTimestamp('2013-11-12 10:09:08'), $request_time),
+      array('1 week', 7 * 86400, $this->createTimestamp('2013-12-04 10:09:08'), $request_time),
+      array('1 week 1 day', 86400, $this->createTimestamp('2013-12-03 10:09:08'), $request_time),
+      array('2 weeks', 7 * 86400, $this->createTimestamp('2013-11-27 10:09:08'), $request_time),
+      array('2 weeks 2 days', 86400, $this->createTimestamp('2013-11-25 08:07:08'), $request_time),
+      array('2 weeks 2 days 2 hours 2 minutes', 60, $this->createTimestamp('2013-11-25 08:07:08'), $request_time, $granularity_4),
+      array('4 weeks', 7 * 86400, $this->createTimestamp('2013-11-13 10:09:08'), $request_time),
+      array('4 weeks 1 day', 86400, $this->createTimestamp('2013-11-12 10:09:08'), $request_time),
 
       // Checks for months and possibly days, hours, minutes or seconds.
-      array('1 month', $this->createTimestamp('2013-11-11 10:09:08'), $request_time),
-      array('1 month', $this->createTimestamp('2013-11-11 10:09:07'), $request_time),
-      array('1 month', $this->createTimestamp('2013-11-11 09:09:08'), $request_time),
-      array('1 month', $this->createTimestamp('2013-11-11 09:08:07'), $request_time, $granularity_3),
-      array('1 month', $this->createTimestamp('2013-11-11 09:08:07'), $request_time, $granularity_4),
-      array('1 month 4 weeks', $this->createTimestamp('2013-10-13 10:09:08'), $request_time),
-      array('1 month 4 weeks 1 day', $this->createTimestamp('2013-10-13 10:09:08'), $request_time, $granularity_3),
-      array('1 month 4 weeks', $this->createTimestamp('2013-10-12 10:09:08'), $request_time),
-      array('1 month 4 weeks 2 days', $this->createTimestamp('2013-10-12 10:09:08'), $request_time, $granularity_3),
-      array('2 months', $this->createTimestamp('2013-10-11 10:09:08'), $request_time),
-      array('2 months', $this->createTimestamp('2013-10-10 10:09:08'), $request_time),
-      array('2 months', $this->createTimestamp('2013-10-09 08:07:06'), $request_time),
-      array('2 months', $this->createTimestamp('2013-10-09 08:07:06'), $request_time, $granularity_3),
-      array('2 months', $this->createTimestamp('2013-10-09 08:07:06'), $request_time, $granularity_4),
-      array('6 months', $this->createTimestamp('2013-06-09 10:09:08'), $request_time),
-      array('11 months', $this->createTimestamp('2013-01-11 07:09:08'), $request_time),
-      array('11 months 4 weeks', $this->createTimestamp('2012-12-12 10:09:08'), $request_time),
-      array('11 months 4 weeks 2 days', $this->createTimestamp('2012-12-12 10:09:08'), $request_time, $granularity_3),
+      array('1 month', 30 * 86400, $this->createTimestamp('2013-11-11 10:09:08'), $request_time),
+      array('1 month', 30 * 86400, $this->createTimestamp('2013-11-11 10:09:07'), $request_time),
+      array('1 month', 30 * 86400, $this->createTimestamp('2013-11-11 09:09:08'), $request_time),
+      array('1 month', 30 * 86400, $this->createTimestamp('2013-11-11 09:08:07'), $request_time, $granularity_3),
+      array('1 month', 30 * 86400, $this->createTimestamp('2013-11-11 09:08:07'), $request_time, $granularity_4),
+      array('1 month 4 weeks', 7 * 86400, $this->createTimestamp('2013-10-13 10:09:08'), $request_time),
+      array('1 month 4 weeks 1 day', 86400, $this->createTimestamp('2013-10-13 10:09:08'), $request_time, $granularity_3),
+      array('1 month 4 weeks', 7 * 86400, $this->createTimestamp('2013-10-12 10:09:08'), $request_time),
+      array('1 month 4 weeks 2 days', 86400, $this->createTimestamp('2013-10-12 10:09:08'), $request_time, $granularity_3),
+      array('2 months', 30 * 86400, $this->createTimestamp('2013-10-11 10:09:08'), $request_time),
+      array('2 months', 30 * 86400, $this->createTimestamp('2013-10-10 10:09:08'), $request_time),
+      array('2 months', 30 * 86400, $this->createTimestamp('2013-10-09 08:07:06'), $request_time),
+      array('2 months', 30 * 86400, $this->createTimestamp('2013-10-09 08:07:06'), $request_time, $granularity_3),
+      array('2 months', 30 * 86400, $this->createTimestamp('2013-10-09 08:07:06'), $request_time, $granularity_4),
+      array('6 months', 30 * 86400, $this->createTimestamp('2013-06-09 10:09:08'), $request_time),
+      array('11 months', 30 * 86400, $this->createTimestamp('2013-01-11 07:09:08'), $request_time),
+      array('11 months 4 weeks', 7 * 86400, $this->createTimestamp('2012-12-12 10:09:08'), $request_time),
+      array('11 months 4 weeks 2 days', 86400, $this->createTimestamp('2012-12-12 10:09:08'), $request_time, $granularity_3),
 
       // Checks for years and possibly months, days, hours, minutes or seconds.
-      array('1 year', $this->createTimestamp('2012-12-11 10:09:08'), $request_time),
-      array('1 year', $this->createTimestamp('2012-12-11 10:08:08'), $request_time),
-      array('1 year', $this->createTimestamp('2012-12-10 10:09:08'), $request_time),
-      array('2 years', $this->createTimestamp('2011-12-11 10:09:08'), $request_time),
-      array('2 years', $this->createTimestamp('2011-12-11 10:07:08'), $request_time),
-      array('2 years', $this->createTimestamp('2011-12-09 10:09:08'), $request_time),
-      array('2 years 2 months', $this->createTimestamp('2011-10-09 08:07:06'), $request_time, $granularity_3),
-      array('2 years 2 months', $this->createTimestamp('2011-10-09 08:07:06'), $request_time, $granularity_4),
-      array('10 years', $this->createTimestamp('2003-12-11 10:09:08'), $request_time),
-      array('100 years', $this->createTimestamp('1913-12-11 10:09:08'), $request_time),
+      array('1 year', 365 * 86400, $this->createTimestamp('2012-12-11 10:09:08'), $request_time),
+      array('1 year', 365 * 86400, $this->createTimestamp('2012-12-11 10:08:08'), $request_time),
+      array('1 year', 365 * 86400, $this->createTimestamp('2012-12-10 10:09:08'), $request_time),
+      array('2 years', 365 * 86400, $this->createTimestamp('2011-12-11 10:09:08'), $request_time),
+      array('2 years', 365 * 86400, $this->createTimestamp('2011-12-11 10:07:08'), $request_time),
+      array('2 years', 365 * 86400, $this->createTimestamp('2011-12-09 10:09:08'), $request_time),
+      array('2 years 2 months', 30 * 86400, $this->createTimestamp('2011-10-09 08:07:06'), $request_time, $granularity_3),
+      array('2 years 2 months', 30 * 86400, $this->createTimestamp('2011-10-09 08:07:06'), $request_time, $granularity_4),
+      array('10 years', 365 * 86400, $this->createTimestamp('2003-12-11 10:09:08'), $request_time),
+      array('100 years', 365 * 86400, $this->createTimestamp('1913-12-11 10:09:08'), $request_time),
 
       // Checks the non-strict option vs. strict (default).
-      array('1 second', $this->createTimestamp('2013-12-11 10:09:08'), $this->createTimestamp('2013-12-11 10:09:07'), $non_strict),
-      array('0 seconds', $this->createTimestamp('2013-12-11 10:09:08'), $this->createTimestamp('2013-12-11 10:09:07')),
+      array('1 second', 1, $this->createTimestamp('2013-12-11 10:09:08'), $this->createTimestamp('2013-12-11 10:09:07'), $non_strict),
+      array('0 seconds', 0, $this->createTimestamp('2013-12-11 10:09:08'), $this->createTimestamp('2013-12-11 10:09:07')),
 
       // Checks granularity limit.
-      array('2 years 3 months 1 week', $this->createTimestamp('2011-08-30 11:15:57'), $request_time, $granularity_3),
+      array('2 years 3 months 1 week', 7 * 86400, $this->createTimestamp('2011-08-30 11:15:57'), $request_time, $granularity_3),
     );
 
     return $data;

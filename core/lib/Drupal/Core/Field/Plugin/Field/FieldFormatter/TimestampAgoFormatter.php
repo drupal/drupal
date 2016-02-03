@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -161,10 +162,12 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
         $updated = $this->formatTimestamp($item->value);
       }
       else {
-        $updated = $this->t('never');
+        $updated = [
+          '#markup' => $this->t('never'),
+        ];
       }
 
-      $elements[$delta] = array('#markup' => $updated);
+      $elements[$delta] = $updated;
     }
 
     return $elements;
@@ -176,19 +179,30 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
    * @param int $timestamp
    *   A UNIX timestamp to format.
    *
-   * @return string
+   * @return array
    *   The formatted timestamp string using the past or future format setting.
    */
   protected function formatTimestamp($timestamp) {
     $granularity = $this->getSetting('granularity');
-    $options = ['granularity' => $granularity];
+    $options = [
+      'granularity' => $granularity,
+      'return_as_object' => TRUE,
+    ];
 
     if ($this->request->server->get('REQUEST_TIME') > $timestamp) {
-      return SafeMarkup::format($this->getSetting('past_format'), ['@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, $options)]);
+      $result = $this->dateFormatter->formatTimeDiffSince($timestamp, $options);
+      $build = [
+        '#markup' => SafeMarkup::format($this->getSetting('past_format'), ['@interval' => $result->getString()]),
+      ];
     }
     else {
-      return SafeMarkup::format($this->getSetting('future_format'), ['@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, $options)]);
+      $result = $this->dateFormatter->formatTimeDiffUntil($timestamp, $options);
+      $build = [
+        '#markup' => SafeMarkup::format($this->getSetting('future_format'), ['@interval' => $result->getString()]),
+      ];
     }
+    CacheableMetadata::createFromObject($result)->applyTo($build);
+    return $build;
   }
 
 }
