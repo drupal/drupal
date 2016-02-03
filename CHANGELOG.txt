@@ -1,4 +1,7 @@
 
+Drupal 7.43, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.42, 2016-02-03
 -----------------------
 - Stopped invoking hook_flush_caches() on every cron run, since some modules
