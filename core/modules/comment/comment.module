@@ -194,15 +194,15 @@ function comment_field_config_delete(FieldConfigInterface $field) {
 /**
  * Implements hook_node_links_alter().
  */
-function comment_node_links_alter(array &$node_links, NodeInterface $node, array &$context) {
+function comment_node_links_alter(array &$links, NodeInterface $node, array &$context) {
   // Comment links are only added to node entity type for backwards
   // compatibility. Should you require comment links for other entity types you
   // can do so by implementing a new field formatter.
   // @todo Make this configurable from the formatter. See
   //   https://www.drupal.org/node/1901110.
 
-  $links = \Drupal::service('comment.link_builder')->buildCommentedEntityLinks($node, $context);
-  $node_links += $links;
+  $comment_links = \Drupal::service('comment.link_builder')->buildCommentedEntityLinks($node, $context);
+  $links += $comment_links;
 }
 
 /**

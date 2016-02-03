@@ -48,20 +48,20 @@ function statistics_node_view(array &$build, EntityInterface $node, EntityViewDi
 /**
  * Implements hook_node_links_alter().
  */
-function statistics_node_links_alter(array &$node_links, NodeInterface $entity, array &$context) {
+function statistics_node_links_alter(array &$links, NodeInterface $entity, array &$context) {
   if ($context['view_mode'] != 'rss') {
-    $node_links['#cache']['contexts'][] = 'user.permissions';
+    $links['#cache']['contexts'][] = 'user.permissions';
     if (\Drupal::currentUser()->hasPermission('view post access counter')) {
       $statistics = statistics_get($entity->id());
       if ($statistics) {
-        $links['statistics_counter']['title'] = \Drupal::translation()->formatPlural($statistics['totalcount'], '1 view', '@count views');
-        $node_links['statistics'] = array(
+        $statistics_links['statistics_counter']['title'] = \Drupal::translation()->formatPlural($statistics['totalcount'], '1 view', '@count views');
+        $links['statistics'] = array(
           '#theme' => 'links__node__statistics',
-          '#links' => $links,
+          '#links' => $statistics_links,
           '#attributes' => array('class' => array('links', 'inline')),
         );
       }
-      $node_links['#cache']['max-age'] = \Drupal::config('statistics.settings')->get('display_max_age');
+      $links['#cache']['max-age'] = \Drupal::config('statistics.settings')->get('display_max_age');
     }
   }
 }
