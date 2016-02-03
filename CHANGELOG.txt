@@ -23,6 +23,9 @@ Drupal 7.42, xxxx-xx-xx (development version)
   redundant with one in the node preview theme layer.
 - Improved the description of the "Trimmed" format option on text fields
   (translatable string change, and minor UI and data structure change).
+- Numerous small bug fixes.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.41, 2015-10-21
 -----------------------
