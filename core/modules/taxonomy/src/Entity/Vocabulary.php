@@ -20,6 +20,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *   handlers = {
  *     "storage" = "Drupal\taxonomy\VocabularyStorage",
  *     "list_builder" = "Drupal\taxonomy\VocabularyListBuilder",
+ *     "access" = "Drupal\taxonomy\VocabularyAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\taxonomy\VocabularyForm",
  *       "reset" = "Drupal\taxonomy\Form\VocabularyResetForm",
