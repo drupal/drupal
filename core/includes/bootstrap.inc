@@ -258,11 +258,10 @@ function drupal_get_path($type, $name) {
  * Translates a string to the current language or to a given language.
  *
  * In order for strings to be localized, make them available in one of the ways
- * supported by the
- * @link https://www.drupal.org/node/322729 Localization API @endlink. When
- * possible, use the \Drupal\Core\StringTranslation\StringTranslationTrait
- * $this->t(). Otherwise create a new
- * \Drupal\Core\StringTranslation\TranslatableMarkup object directly.
+ * supported by the @link i18n Localization API. @endlink When possible, use
+ * the \Drupal\Core\StringTranslation\StringTranslationTrait $this->t().
+ * Otherwise create a new \Drupal\Core\StringTranslation\TranslatableMarkup
+ * object directly.
  *
  * See \Drupal\Core\StringTranslation\TranslatableMarkup::__construct() for
  * important security information and usage guidelines.
