@@ -61,6 +61,11 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalGet('admin/structure/types/manage/page');
     $this->assertCacheContext('user.roles:authenticated');
 
+    // Verify that the menu link title has the correct maxlength.
+    $max_length = \Drupal::entityManager()->getBaseFieldDefinitions('menu_link_content')['title']->getSetting('max_length');
+    $this->drupalGet('node/add/page');
+    $this->assertPattern('/<input .* id="edit-menu-title" .* maxlength="' . $max_length . '" .* \/>/', 'Menu link title field has correct maxlength in node add form.');
+
     // Disable the default main menu, so that no menus are enabled.
     $edit = array(
       'menu_options[main]' => FALSE,
@@ -171,6 +176,7 @@ class MenuNodeTest extends WebTestBase {
 
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertFieldById('edit-menu-weight', 17, 'Menu weight correct in edit form');
+    $this->assertPattern('/<input .* id="edit-menu-title" .* maxlength="' . $max_length . '" .* \/>/', 'Menu link title field has correct maxlength in node edit form.');
 
     // Disable the menu link, then edit the node--the link should stay disabled.
     $link_id = menu_ui_get_menu_link_defaults($node)['entity_id'];

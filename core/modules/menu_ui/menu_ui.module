@@ -220,6 +220,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
         'entity_id' => $menu_link->id(),
         'id' => $menu_link->getPluginId(),
         'title' => $menu_link->getTitle(),
+        'title_max_length' => $menu_link->getFieldDefinitions()['title']->getSetting('max_length'),
         'description' => $menu_link->getDescription(),
         'menu_name' => $menu_link->getMenuName(),
         'parent' => $menu_link->getParentId(),
@@ -229,10 +230,15 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
   }
 
   if (!$defaults) {
+    // Get the default max_length of a menu link title from the base field
+    // definition.
+    $field_definitions = \Drupal::entityManager()->getBaseFieldDefinitions('menu_link_content');
+    $max_length = $field_definitions['title']->getSetting('max_length');
     $defaults = array(
       'entity_id' => 0,
       'id' => '',
       'title' => '',
+      'title_max_length' => $max_length,
       'description' => '',
       'menu_name' => $menu_name,
       'parent' => '',
@@ -313,6 +319,7 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
     '#type' => 'textfield',
     '#title' => t('Menu link title'),
     '#default_value' => $defaults['title'],
+    '#maxlength' => $defaults['title_max_length'],
   );
 
   $form['menu']['link']['description'] = array(
