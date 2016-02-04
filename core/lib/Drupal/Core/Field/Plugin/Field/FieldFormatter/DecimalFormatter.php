@@ -52,11 +52,11 @@ class DecimalFormatter extends NumericFormatterBase {
       '#default_value' => $this->getSetting('decimal_separator'),
       '#weight' => 5,
     );
-    $range = range(0, 10);
     $elements['scale'] = array(
-      '#type' => 'select',
+      '#type' => 'number',
       '#title' => t('Scale', array(), array('context' => 'decimal places')),
-      '#options' => array_combine($range, $range),
+      '#min' => 0,
+      '#max' => 10,
       '#default_value' => $this->getSetting('scale'),
       '#description' => t('The number of digits to the right of the decimal.'),
       '#weight' => 6,
