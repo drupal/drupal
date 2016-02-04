@@ -7,6 +7,7 @@
 namespace Drupal\serialization\Tests;
 
 use Drupal\Core\Url;
+use Drupal\entity_test\Entity\EntityTestMulRev;
 
 /**
  * Tests that entities references can be resolved.
@@ -57,7 +58,7 @@ class EntityResolverTest extends NormalizerTestBase {
    */
   function testUuidEntityResolver() {
     // Create an entity to get the UUID from.
-    $entity = entity_create('entity_test_mulrev', array('type' => 'entity_test_mulrev'));
+    $entity = EntityTestMulRev::create(array('type' => 'entity_test_mulrev'));
     $entity->set('name', 'foobar');
     $entity->set('field_test_entity_reference', array(array('target_id' => 1)));
     $entity->save();

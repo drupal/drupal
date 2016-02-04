@@ -8,6 +8,7 @@
 namespace Drupal\serialization\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\entity_test\Entity\EntityTestMulRev;
 
 /**
  * Tests that entities can be serialized to supported core formats.
@@ -81,7 +82,7 @@ class EntitySerializationTest extends NormalizerTestBase {
         'format' => 'full_html',
       ),
     );
-    $this->entity = entity_create('entity_test_mulrev', $this->values);
+    $this->entity = EntityTestMulRev::create($this->values);
     $this->entity->save();
 
     $this->serializer = $this->container->get('serializer');

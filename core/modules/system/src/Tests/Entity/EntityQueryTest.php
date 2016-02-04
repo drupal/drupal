@@ -123,7 +123,7 @@ class EntityQueryTest extends EntityUnitTestBase {
     // decimal 13 is binary 1101 so unit 3,2 and 0 will be added to the
     // entity.
     for ($i = 1; $i <= 15; $i++) {
-      $entity = entity_create('entity_test_mulrev', array(
+      $entity = EntityTestMulRev::create(array(
         'type' => $bundles[$i & 1],
         'name' => $this->randomMachineName(),
         'langcode' => 'en',
