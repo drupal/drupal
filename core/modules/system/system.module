@@ -1412,22 +1412,24 @@ function system_block_view_system_main_block_alter(array &$build, BlockPluginInt
 /**
  * Implements hook_path_update().
  */
-function system_path_update() {
-  \Drupal::service('path.alias_manager')->cacheClear();
+function system_path_update($path) {
+  $alias_manager = \Drupal::service('path.alias_manager');
+  $alias_manager->cacheClear($path['source']);
+  $alias_manager->cacheClear($path['original']['source']);
 }
 
 /**
  * Implements hook_path_insert().
  */
-function system_path_insert() {
-  \Drupal::service('path.alias_manager')->cacheClear();
+function system_path_insert($path) {
+  \Drupal::service('path.alias_manager')->cacheClear($path['source']);
 }
 
 /**
  * Implements hook_path_delete().
  */
 function system_path_delete($path) {
-  \Drupal::service('path.alias_manager')->cacheClear();
+  \Drupal::service('path.alias_manager')->cacheClear($path['source']);
 }
 
 /**
