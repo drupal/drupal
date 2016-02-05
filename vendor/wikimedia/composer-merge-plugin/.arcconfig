@@ -1,0 +1,6 @@
+{
+    "phabricator.uri" : "https://phabricator.wikimedia.org/",
+    "repository.callsign" : "GCMP",
+    "history.immutable" : false,
+    "unit.engine": "PhpunitTestEngine"
+}

@@ -1,0 +1,46 @@
+{
+    "name":         "behat/mink-browserkit-driver",
+    "description":  "Symfony2 BrowserKit driver for Mink framework",
+    "keywords":     ["Symfony2", "Mink", "testing", "browser"],
+    "homepage":     "http://mink.behat.org/",
+    "type":         "mink-driver",
+    "license":      "MIT",
+
+    "authors": [
+        {
+            "name":      "Konstantin Kudryashov",
+            "email":     "ever.zet@gmail.com",
+            "homepage":  "http://everzet.com"
+        }
+    ],
+
+    "require": {
+        "php":                  ">=5.3.6",
+        "behat/mink":           "~1.7@dev",
+        "symfony/browser-kit":  "~2.3",
+        "symfony/dom-crawler":  "~2.3"
+    },
+
+    "require-dev": {
+        "symfony/phpunit-bridge": "~2.7",
+        "silex/silex": "~1.2"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Behat\\Mink\\Driver\\": "src/"
+        }
+    },
+
+    "autoload-dev": {
+        "psr-4": {
+            "Behat\\Mink\\Tests\\Driver\\": "tests"
+        }
+    },
+
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.3.x-dev"
+        }
+    }
+}

@@ -1,13 +1,3 @@
-Drupal 8.1.0, xxxx-xx-xx (development version)
-------------------------
-- Removed Composer-managed vendor from the git repository:
-    * Drupal.org packager adds dependencies to zip and tar package. This can be
-      used without any further steps.
-    * When not using zip / tar files, e.g. when using a git clone, run composer
-      install to get dependencies.
-    * See https://www.drupal.org/documentation/install/download#git
-      for instructions.
-
 Drupal 8.0.0, 2015-11-19
 ------------------------
 - Significantly improved the front end:

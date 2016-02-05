@@ -1,0 +1,27 @@
+language: php
+
+sudo: false
+
+php: [5.3, 5.4, 5.5, 5.6, hhvm]
+
+matrix:
+  include:
+    - php: 5.5
+      env: SYMFONY_VERSION='2.3.*'
+    - php: 5.5
+      env: SYMFONY_VERSION='2.5.*@dev'
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+before_install:
+  - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require -n --no-update symfony/symfony=$SYMFONY_VERSION; fi;'
+
+install:
+  - composer install -n
+
+script: phpunit -v --coverage-clover=coverage.clover
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover

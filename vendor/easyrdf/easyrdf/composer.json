@@ -1,0 +1,43 @@
+{
+    "name": "easyrdf/easyrdf",
+    "description": "EasyRdf is a PHP library designed to make it easy to consume and produce RDF.",
+    "version": "0.9.1",
+    "type": "library",
+    "keywords": ["RDF", "Semantic Web", "Linked Data", "Turtle", "RDFa", "SPARQL"],
+    "homepage": "http://www.easyrdf.org/",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Nicholas Humfrey",
+            "email": "njh@aelius.com",
+            "homepage": "http://www.aelius.com/njh/",
+            "role": "Developer"
+        },
+        {
+            "name": "Alexey Zakhlestin",
+            "email": "indeyets@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "forum": "http://groups.google.com/group/easyrdf/",
+        "issues": "http://github.com/njh/easyrdf/issues",
+        "irc": "irc://chat.freenode.net/easyrdf"
+    },
+    "require": {
+        "php": ">=5.2.8",
+        "ext-mbstring": "*",
+        "ext-pcre": "*"
+    },
+    "suggest": {
+        "ml/json-ld": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/PHPUnit": "~3.5",
+        "squizlabs/php_codesniffer": "~1.4.3",
+        "sami/sami": "~1.4"
+    },
+    "autoload": {
+        "psr-0": { "EasyRdf_": "lib/" }
+    }
+}
