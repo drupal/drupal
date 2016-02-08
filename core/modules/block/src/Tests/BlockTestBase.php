@@ -65,7 +65,7 @@ abstract class BlockTestBase extends WebTestBase {
       'sidebar_second',
       'footer',
     );
-    $block_storage = $this->container->get('entity.manager')->getStorage('block');
+    $block_storage = $this->container->get('entity_type.manager')->getStorage('block');
     $blocks = $block_storage->loadByProperties(array('theme' => $this->config('system.theme')->get('default')));
     foreach ($blocks as $block) {
       $block->delete();
