@@ -325,6 +325,10 @@ function template_preprocess_vertical_tabs(&$variables) {
  */
 function template_preprocess_input(&$variables) {
   $element = $variables['element'];
+  // Remove name attribute if empty, for W3C compliance.
+  if (isset($variables['attributes']['name']) && empty((string) $variables['attributes']['name'])) {
+    unset($variables['attributes']['name']);
+  }
   $variables['children'] = $element['#children'];
 }
 

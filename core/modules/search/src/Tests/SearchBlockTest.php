@@ -45,6 +45,11 @@ class SearchBlockTest extends SearchTestBase {
     $this->drupalGet('');
     $this->assertText($block->label(), 'Block title was found.');
 
+    // Check that name attribute is not empty.
+    $pattern = "//input[@type='submit' and @name='']";
+    $elements = $this->xpath($pattern);
+    $this->assertTrue(empty($elements), 'The search input field does not have empty name attribute.');
+
     // Test a normal search via the block form, from the front page.
     $terms = array('keys' => 'test');
     $this->submitGetForm('', $terms, t('Search'));
