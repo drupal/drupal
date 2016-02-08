@@ -57,7 +57,7 @@ class ViewEntityDependenciesTest extends ViewKernelTestBase {
       'name' => $this->randomString(),
     ));
     $content_type->save();
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => Unicode::strtolower($this->randomMachineName()),
       'entity_type' => 'node',
       'type' => 'comment',

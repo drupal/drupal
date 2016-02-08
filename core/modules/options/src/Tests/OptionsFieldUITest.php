@@ -267,7 +267,7 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   protected function createOptionsField($type) {
     // Create a field.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'type' => $type,

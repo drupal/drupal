@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\Component\Utility\Unicode;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Base class for language-aware entity tests.
@@ -75,7 +76,7 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
 
     // Create field fields in all entity variations.
     foreach (entity_test_entity_types() as $entity_type) {
-      entity_create('field_storage_config', array(
+      FieldStorageConfig::create(array(
         'field_name' => $this->fieldName,
         'entity_type' => $entity_type,
         'type' => 'text',
@@ -89,7 +90,7 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
       ))->save();
       $this->field[$entity_type] = FieldConfig::load($entity_type . '.' . $entity_type . '.' . $this->fieldName);
 
-      entity_create('field_storage_config', array(
+      FieldStorageConfig::create(array(
         'field_name' => $this->untranslatableFieldName,
         'entity_type' => $entity_type,
         'type' => 'text',

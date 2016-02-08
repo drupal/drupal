@@ -21,6 +21,7 @@ namespace Drupal\field\Tests\Views;
 
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Provides some helper methods for testing fieldapi integration into views.
@@ -66,7 +67,7 @@ abstract class FieldTestBase extends ViewTestBase {
     $field_names = array();
     for ($i = 0; $i < $amount; $i++) {
       $field_names[$i] = 'field_name_' . $i;
-      $this->fieldStorages[$i] = entity_create('field_storage_config', array(
+      $this->fieldStorages[$i] = FieldStorageConfig::create(array(
         'field_name' => $field_names[$i],
         'entity_type' => 'node',
         'type' => $type,

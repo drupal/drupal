@@ -12,6 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests taxonomy field filters with translations.
@@ -68,7 +69,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     $this->vocabulary->save();
 
     // Add a translatable field to the vocabulary.
-    $field = entity_create('field_storage_config', array(
+    $field = FieldStorageConfig::create(array(
       'field_name' => 'field_foo',
       'entity_type' => 'taxonomy_term',
       'type' => 'text',

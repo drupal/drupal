@@ -10,6 +10,7 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the new entity API for the test field type.
@@ -36,7 +37,7 @@ class TestItemTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create a 'test_field' field and storage for validation.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'test_field',

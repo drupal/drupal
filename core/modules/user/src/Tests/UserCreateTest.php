@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the create user administration page.
@@ -36,7 +37,7 @@ class UserCreateTest extends WebTestBase {
 
     // Create a field.
     $field_name = 'test_field';
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'user',
       'module' => 'image',

@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Parent class for Field API unit tests.
@@ -91,7 +92,7 @@ abstract class FieldUnitTestBase extends KernelTestBase {
     $field_definition = 'field_definition' . $suffix;
 
     $this->fieldTestData->$field_name = Unicode::strtolower($this->randomMachineName() . '_field_name' . $suffix);
-    $this->fieldTestData->$field_storage = entity_create('field_storage_config', array(
+    $this->fieldTestData->$field_storage = FieldStorageConfig::create(array(
       'field_name' => $this->fieldTestData->$field_name,
       'entity_type' => $entity_type,
       'type' => 'test_field',

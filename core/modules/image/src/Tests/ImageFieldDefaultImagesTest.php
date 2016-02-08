@@ -9,6 +9,7 @@ namespace Drupal\image\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\file\Entity\File;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests setting up default images both to the field and field field.
@@ -319,7 +320,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
    * Tests image field and field having an invalid default image.
    */
   public function testInvalidDefaultImage() {
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => Unicode::strtolower($this->randomMachineName()),
       'entity_type' => 'node',
       'type' => 'image',

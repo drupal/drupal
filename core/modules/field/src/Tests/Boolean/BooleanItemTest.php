@@ -10,6 +10,7 @@ namespace Drupal\field\Tests\Boolean;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the new entity API for the boolean field type.
@@ -25,7 +26,7 @@ class BooleanItemTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create a boolean field and storage for validation.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'field_boolean',
       'entity_type' => 'entity_test',
       'type' => 'boolean',

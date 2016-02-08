@@ -15,6 +15,7 @@ use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Defines the Field storage configuration entity.
@@ -238,7 +239,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    *   - type: required.
    *
    * In most cases, Field entities are created via
-   * entity_create('field_storage_config', $values)), where $values is the same
+   * FieldStorageConfig::create($values)), where $values is the same
    * parameter as in this constructor.
    *
    * @see entity_create()

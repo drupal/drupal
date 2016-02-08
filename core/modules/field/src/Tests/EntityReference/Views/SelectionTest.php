@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\EntityReference\Views;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\Views;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests entity reference selection handler.
@@ -50,7 +51,7 @@ class SelectionTest extends WebTestBase {
     }
 
     // Create a field.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,

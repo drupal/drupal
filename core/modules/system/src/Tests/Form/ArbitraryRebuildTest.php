@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Form;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests altering forms to be rebuilt so there are multiple steps.
@@ -27,7 +28,7 @@ class ArbitraryRebuildTest extends WebTestBase {
     parent::setUp();
 
     // Auto-create a field for testing.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'entity_type' => 'user',
       'field_name' => 'test_multiple',
       'type' => 'text',

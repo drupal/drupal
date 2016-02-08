@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the behavior of a field module after being disabled and re-enabled.
@@ -47,7 +48,7 @@ class reEnableModuleFieldTest extends WebTestBase {
   function testReEnabledField() {
 
     // Add a telephone field to the article content type.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_telephone',
       'entity_type' => 'node',
       'type' => 'telephone',

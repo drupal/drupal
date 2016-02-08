@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests link field widgets and formatters.
@@ -57,7 +58,7 @@ class LinkFieldTest extends WebTestBase {
   function testURLValidation() {
     $field_name = Unicode::strtolower($this->randomMachineName());
     // Create a field with settings to validate.
-    $this->fieldStorage = entity_create('field_storage_config', array(
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
@@ -222,7 +223,7 @@ class LinkFieldTest extends WebTestBase {
   function testLinkTitle() {
     $field_name = Unicode::strtolower($this->randomMachineName());
     // Create a field with settings to validate.
-    $this->fieldStorage = entity_create('field_storage_config', array(
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
@@ -336,7 +337,7 @@ class LinkFieldTest extends WebTestBase {
   function testLinkFormatter() {
     $field_name = Unicode::strtolower($this->randomMachineName());
     // Create a field with settings to validate.
-    $this->fieldStorage = entity_create('field_storage_config', array(
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
@@ -476,7 +477,7 @@ class LinkFieldTest extends WebTestBase {
   function testLinkSeparateFormatter() {
     $field_name = Unicode::strtolower($this->randomMachineName());
     // Create a field with settings to validate.
-    $this->fieldStorage = entity_create('field_storage_config', array(
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',

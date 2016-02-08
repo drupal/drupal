@@ -9,6 +9,7 @@
 namespace Drupal\options\Tests;
 
 use Drupal\field\Tests\FieldUnitTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Base class for Options module integration tests.
@@ -66,7 +67,7 @@ abstract class OptionsFieldUnitTestBase extends FieldUnitTestBase {
         'allowed_values' => array(1 => 'One', 2 => 'Two', 3 => 'Three'),
       ),
     );
-    $this->fieldStorage = entity_create('field_storage_config', $this->fieldStorageDefinition);
+    $this->fieldStorage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $this->fieldStorage->save();
 
     $this->field = entity_create('field_config', array(

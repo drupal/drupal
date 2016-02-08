@@ -10,6 +10,7 @@ namespace Drupal\field\Tests\Views;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the field itself of the Field integration.
@@ -52,7 +53,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $this->setUpFieldStorages(3);
 
     // Setup a field with cardinality > 1.
-    $this->fieldStorages[3] = entity_create('field_storage_config', array(
+    $this->fieldStorages[3] = FieldStorageConfig::create(array(
       'field_name' => 'field_name_3',
       'entity_type' => 'node',
       'type' => 'string',
@@ -60,7 +61,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     ));
     $this->fieldStorages[3]->save();
     // Setup a field that will have no value.
-    $this->fieldStorages[4] = entity_create('field_storage_config', array(
+    $this->fieldStorages[4] = FieldStorageConfig::create(array(
       'field_name' => 'field_name_4',
       'entity_type' => 'node',
       'type' => 'string',
@@ -69,7 +70,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $this->fieldStorages[4]->save();
 
     // Setup a text field.
-    $this->fieldStorages[5] = entity_create('field_storage_config', array(
+    $this->fieldStorages[5] = FieldStorageConfig::create(array(
       'field_name' => 'field_name_5',
       'entity_type' => 'node',
       'type' => 'text',
@@ -78,7 +79,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     // Setup a text field with access control.
     // @see field_test_entity_field_access()
-    $this->fieldStorages[6] = entity_create('field_storage_config', array(
+    $this->fieldStorages[6] = FieldStorageConfig::create(array(
       'field_name' => 'field_no_view_access',
       'entity_type' => 'node',
       'type' => 'text',

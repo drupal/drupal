@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests loading, saving and deleting vocabularies.
@@ -154,7 +155,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
       'type' => 'text',
       'cardinality' => 4
     );
-    entity_create('field_storage_config', $storage_definition)->save();
+    FieldStorageConfig::create($storage_definition)->save();
     $field_definition = array(
       'field_name' => $field_name,
       'entity_type' => 'taxonomy_term',
@@ -178,7 +179,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     // an instance of this field on the same bundle name should be successful.
     $this->vocabulary->enforceIsNew();
     $this->vocabulary->save();
-    entity_create('field_storage_config', $storage_definition)->save();
+    FieldStorageConfig::create($storage_definition)->save();
     entity_create('field_config', $field_definition)->save();
   }
 }

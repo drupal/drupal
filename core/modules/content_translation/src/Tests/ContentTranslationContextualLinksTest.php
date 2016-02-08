@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests that contextual links are available for content translation.
@@ -72,7 +73,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
     $this->contentType = $this->drupalCreateContentType(array('type' => $this->bundle));
 
     // Add a field to the content type. The field is not yet translatable.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'field_test_text',
       'entity_type' => 'node',
       'type' => 'text',

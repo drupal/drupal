@@ -42,7 +42,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
       'type' => 'test_field',
     );
     field_test_memorize();
-    $field_storage = entity_create('field_storage_config', $field_storage_definition);
+    $field_storage = FieldStorageConfig::create($field_storage_definition);
     $field_storage->save();
 
     $field_storage = FieldStorageConfig::load($field_storage->id());
@@ -81,7 +81,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
 
     // Guarantee that the name is unique.
     try {
-      entity_create('field_storage_config', $field_storage_definition)->save();
+      FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create two fields with the same name.'));
     }
     catch (EntityStorageException $e) {
@@ -94,7 +94,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
         'field_name' => 'field_1',
         'entity_type' => 'entity_type',
       );
-      entity_create('field_storage_config', $field_storage_definition)->save();
+      FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create a field with no type.'));
     }
     catch (FieldException $e) {
@@ -107,7 +107,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
         'type' => 'test_field',
         'entity_type' => 'entity_test',
       );
-      entity_create('field_storage_config', $field_storage_definition)->save();
+      FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create an unnamed field.'));
     }
     catch (FieldException $e) {
@@ -119,7 +119,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
         'field_name' => 'test_field',
         'type' => 'test_field'
       );
-      entity_create('field_storage_config', $field_storage_definition)->save();
+      FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create a field without an entity type.');
     }
     catch (FieldException $e) {
@@ -133,7 +133,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
         'entity_type' => 'entity_test',
         'type' => 'test_field',
       );
-      entity_create('field_storage_config', $field_storage_definition)->save();
+      FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create a field with a name starting with a digit.'));
     }
     catch (FieldException $e) {
@@ -147,7 +147,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
         'entity_type' => 'entity_test',
         'type' => 'test_field',
       );
-      entity_create('field_storage_config', $field_storage_definition)->save();
+      FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create a field with a name containing an illegal character.'));
     }
     catch (FieldException $e) {
@@ -161,7 +161,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
         'entity_type' => 'entity_test',
         'type' => 'test_field',
       );
-      entity_create('field_storage_config', $field_storage_definition)->save();
+      FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create a field with a name longer than 32 characters.'));
     }
     catch (FieldException $e) {
@@ -176,7 +176,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
         'field_name' => 'id',
         'entity_type' => 'entity_test',
       );
-      entity_create('field_storage_config', $field_storage_definition)->save();
+      FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create a field bearing the name of an entity key.'));
     }
     catch (FieldException $e) {
@@ -194,7 +194,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     $schema = array(
       'dummy' => 'foobar'
     );
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_2',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
@@ -212,7 +212,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
-    $field_storage = entity_create('field_storage_config', $field_storage_definition);
+    $field_storage = FieldStorageConfig::create($field_storage_definition);
     $field_storage->save();
     $id = $field_storage->id();
 
@@ -240,7 +240,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
    */
   function testIndexes() {
     // Check that indexes specified by the field type are used by default.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_1',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
@@ -253,7 +253,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
 
     // Check that indexes specified by the field definition override the field
     // type indexes.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_2',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
@@ -269,7 +269,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
 
     // Check that indexes specified by the field definition add to the field
     // type indexes.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_3',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
@@ -297,13 +297,13 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
       'type' => 'test_field',
       'entity_type' => 'entity_test',
     );
-    entity_create('field_storage_config', $field_storage_definition)->save();
+    FieldStorageConfig::create($field_storage_definition)->save();
     $another_field_storage_definition = array(
       'field_name' => 'field_2',
       'type' => 'test_field',
       'entity_type' => 'entity_test',
     );
-    entity_create('field_storage_config', $another_field_storage_definition)->save();
+    FieldStorageConfig::create($another_field_storage_definition)->save();
 
     // Create fields for each.
     $field_definition = array(
@@ -347,7 +347,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
 
     // Try to create a new field the same name as a deleted field and
     // write data into it.
-    entity_create('field_storage_config', $field_storage_definition)->save();
+    FieldStorageConfig::create($field_storage_definition)->save();
     entity_create('field_config', $field_definition)->save();
     $field_storage = FieldStorageConfig::load('entity_test.' . $field_storage_definition['field_name']);
     $this->assertTrue(!empty($field_storage) && !$field_storage->isDeleted(), 'A new storage with a previously used name is created.');
@@ -368,7 +368,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
   }
 
   function testUpdateFieldType() {
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_type',
       'entity_type' => 'entity_test',
       'type' => 'decimal',
@@ -393,7 +393,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     // respected. Since cardinality enforcement is consistent across database
     // systems, it makes a good test case.
     $cardinality = 4;
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_update',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
@@ -431,7 +431,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
    * Test field type modules forbidding an update.
    */
   function testUpdateForbid() {
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'forbidden',
       'entity_type' => 'entity_test',
       'type' => 'test_field',

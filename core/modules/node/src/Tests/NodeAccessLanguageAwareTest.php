@@ -10,6 +10,7 @@ namespace Drupal\node\Tests;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\User;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests node_access and db_select() with node_access tag functionality with
@@ -52,7 +53,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
 
     // Create the 'private' field, which allows the node to be marked as private
     // (restricted access) in a given translation.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_private',
       'entity_type' => 'node',
       'type' => 'boolean',

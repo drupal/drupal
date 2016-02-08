@@ -22,6 +22,7 @@ use Drupal\serialization\EntityResolver\TargetIdResolver;
 use Drupal\serialization\EntityResolver\UuidResolver;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\Serializer\Serializer;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Test the HAL normalizer.
@@ -93,7 +94,7 @@ abstract class NormalizerTestBase extends KernelTestBase {
     ))->save();
 
     // Create the test text field.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'field_test_text',
       'entity_type' => 'entity_test',
       'type' => 'text',
@@ -106,7 +107,7 @@ abstract class NormalizerTestBase extends KernelTestBase {
     ))->save();
 
     // Create the test translatable field.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'field_test_translatable_text',
       'entity_type' => 'entity_test',
       'type' => 'text',
@@ -119,7 +120,7 @@ abstract class NormalizerTestBase extends KernelTestBase {
     ))->save();
 
     // Create the test entity reference field.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'field_test_entity_reference',
       'entity_type' => 'entity_test',
       'type' => 'entity_reference',

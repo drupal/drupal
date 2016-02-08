@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests Datetime field functionality.
@@ -77,7 +78,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $this->fieldStorage = entity_create('field_storage_config', array(
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'datetime',
@@ -624,7 +625,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     // Create a field storage with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'datetime',

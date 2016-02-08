@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests image theme functions.
@@ -41,7 +42,7 @@ class ImageThemeFunctionTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'entity_type' => 'entity_test',
       'field_name' => 'image_test',
       'type' => 'image',

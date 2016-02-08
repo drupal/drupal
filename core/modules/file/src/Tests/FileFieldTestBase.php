@@ -77,7 +77,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    *   A list of widget settings that will be added to the widget defaults.
    */
   function createFileField($name, $entity_type, $bundle, $storage_settings = array(), $field_settings = array(), $widget_settings = array()) {
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'entity_type' => $entity_type,
       'field_name' => $name,
       'type' => 'file',

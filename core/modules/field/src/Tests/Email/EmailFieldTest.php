@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\Email;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests email field functionality.
@@ -54,7 +55,7 @@ class EmailFieldTest extends WebTestBase {
   function testEmailField() {
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $this->fieldStorage = entity_create('field_storage_config', array(
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'email',

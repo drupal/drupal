@@ -9,6 +9,7 @@ namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Bulk delete storages and fields, and clean up afterwards.
@@ -105,7 +106,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     }
 
     // Create two field storages.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'bf_1',
       'entity_type' => $this->entityTypeId,
       'type' => 'test_field',
@@ -113,7 +114,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     ));
     $field_storage->save();
     $this->fieldStorages[] = $field_storage;
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'bf_2',
       'entity_type' => $this->entityTypeId,
       'type' => 'test_field',

@@ -9,6 +9,7 @@ namespace Drupal\field\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests multilanguage fields logic.
@@ -88,7 +89,7 @@ class TranslationTest extends FieldUnitTestBase {
       'type' => 'test_field',
       'cardinality' => 4,
     );
-    $this->fieldStorage = entity_create('field_storage_config', $this->fieldStorageDefinition);
+    $this->fieldStorage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $this->fieldStorage->save();
 
     $this->fieldDefinition = array(
@@ -144,7 +145,7 @@ class TranslationTest extends FieldUnitTestBase {
     $field_name_default = Unicode::strtolower($this->randomMachineName() . '_field_name');
     $field_storage_definition = $this->fieldStorageDefinition;
     $field_storage_definition['field_name'] = $field_name_default;
-    $field_storage = entity_create('field_storage_config', $field_storage_definition);
+    $field_storage = FieldStorageConfig::create($field_storage_definition);
     $field_storage->save();
 
     $field_definition = $this->fieldDefinition;

@@ -9,6 +9,7 @@ namespace Drupal\simpletest\Tests;
 
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests KernelTestBase functionality.
@@ -277,7 +278,7 @@ EOS;
       'bundle' => 'entity_test',
       'mode' => 'default',
     ));
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'type' => 'test_field'

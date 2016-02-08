@@ -6,6 +6,8 @@
 
 namespace Drupal\options\Tests\Views;
 
+use Drupal\field\Entity\FieldStorageConfig;
+
 /**
  * Test to ensure views data is properly created for the Options module.
  *
@@ -32,7 +34,7 @@ class ViewsDataTest extends OptionsTestBase {
     parent::setUp();
 
     $field_name = 'test_options';
-    $this->fieldStorage = entity_create('field_storage_config', [
+    $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'list_string',

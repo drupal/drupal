@@ -82,7 +82,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
 
     // Set up a field, so that the entity that'll be referenced bubbles up a
     // cache tag when rendering it entirely.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'body',
       'entity_type' => $this->entityType,
       'type' => 'text',

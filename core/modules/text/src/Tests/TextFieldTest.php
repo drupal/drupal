@@ -9,6 +9,7 @@ namespace Drupal\text\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Tests\String\StringFieldTest;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the creation of text fields.
@@ -39,7 +40,7 @@ class TextFieldTest extends StringFieldTest {
     // Create a field with settings to validate.
     $max_length = 3;
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'text',
@@ -73,7 +74,7 @@ class TextFieldTest extends StringFieldTest {
   function testRequiredLongTextWithFileUpload() {
     // Create a text field.
     $text_field_name = 'text_long';
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $text_field_name,
       'entity_type' => 'entity_test',
       'type' => 'text_with_summary',
@@ -88,7 +89,7 @@ class TextFieldTest extends StringFieldTest {
 
     // Create a file field.
     $file_field_name = 'file_field';
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $file_field_name,
       'entity_type' => 'entity_test',
       'type' => 'file'
@@ -151,7 +152,7 @@ class TextFieldTest extends StringFieldTest {
 
     // Create a field.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => $field_type

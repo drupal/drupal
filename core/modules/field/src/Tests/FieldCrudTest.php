@@ -50,7 +50,7 @@ class FieldCrudTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
-    $this->fieldStorage = entity_create('field_storage_config', $this->fieldStorageDefinition);
+    $this->fieldStorage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $this->fieldStorage->save();
     $this->fieldDefinition = array(
       'field_name' => $this->fieldStorage->getName(),
@@ -262,7 +262,7 @@ class FieldCrudTest extends FieldUnitTestBase {
     $this->assertFalse(FieldConfig::loadByName('entity_test', $field_definition_2['bundle'], $field_storage->getName()));
 
     // Check that deletion of the last field deletes the storage.
-    $field_storage = entity_create('field_storage_config', $this->fieldStorageDefinition);
+    $field_storage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $field_storage->save();
     $field = entity_create('field_config', $this->fieldDefinition);
     $field->save();
@@ -275,7 +275,7 @@ class FieldCrudTest extends FieldUnitTestBase {
 
     // Check that deletion of all fields using a storage simultaneously deletes
     // the storage.
-    $field_storage = entity_create('field_storage_config', $this->fieldStorageDefinition);
+    $field_storage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $field_storage->save();
     $field = entity_create('field_config', $this->fieldDefinition);
     $field->save();

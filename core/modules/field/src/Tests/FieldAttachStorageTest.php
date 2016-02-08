@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests storage-related Field Attach API functions.
@@ -95,7 +96,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     );
     for ($i = 1; $i <= 3; $i++) {
       $field_names[$i] = 'field_' . $i;
-      $field_storage = entity_create('field_storage_config', array(
+      $field_storage = FieldStorageConfig::create(array(
         'field_name' => $field_names[$i],
         'entity_type' => $entity_type,
         'type' => 'test_field',
@@ -323,7 +324,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       'type' => 'test_field',
       'cardinality' => 1,
     );
-    entity_create('field_storage_config', $field_storage)->save();
+    FieldStorageConfig::create($field_storage)->save();
     $field = array(
       'field_name' => $field_name,
       'entity_type' => $entity_type,

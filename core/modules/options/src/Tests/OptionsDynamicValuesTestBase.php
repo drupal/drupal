@@ -8,6 +8,7 @@
 namespace Drupal\options\Tests;
 
 use Drupal\field\Tests\FieldTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Base class for testing allowed values of options fields.
@@ -39,7 +40,7 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
     parent::setUp();
 
     $field_name = 'test_options';
-    $this->fieldStorage = entity_create('field_storage_config', [
+    $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test_rev',
       'type' => 'list_string',

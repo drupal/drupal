@@ -10,6 +10,7 @@ namespace Drupal\text\Tests;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests using entity fields of the text summary field type.
@@ -98,7 +99,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
    */
   protected function createField($entity_type) {
     // Create a field .
-    $this->fieldStorage = entity_create('field_storage_config', array(
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => 'summary_field',
       'entity_type' => $entity_type,
       'type' => 'text_with_summary',

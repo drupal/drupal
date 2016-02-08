@@ -2,6 +2,7 @@
 
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * @file
@@ -42,7 +43,7 @@ require_once __DIR__ . '/field_test.field.inc';
  *   field_test_memorize();
  *
  *   // call some Field API functions that invoke field_test hooks
- *   entity_create('field_storage_config', $field_definition)->save();
+ *   FieldStorageConfig::create($field_definition)->save();
  *
  *   // retrieve and reset the memorized hook call data
  *   $mem = field_test_memorize();

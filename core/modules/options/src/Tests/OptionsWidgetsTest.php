@@ -8,6 +8,7 @@
 namespace Drupal\options\Tests;
 
 use Drupal\field\Tests\FieldTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the Options widgets.
@@ -42,7 +43,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     parent::setUp();
 
     // Field storage with cardinality 1.
-    $this->card1 = entity_create('field_storage_config', [
+    $this->card1 = FieldStorageConfig::create([
       'field_name' => 'card_1',
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
@@ -62,7 +63,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->card1->save();
 
     // Field storage with cardinality 2.
-    $this->card2 = entity_create('field_storage_config', [
+    $this->card2 = FieldStorageConfig::create([
       'field_name' => 'card_2',
       'entity_type' => 'entity_test',
       'type' => 'list_integer',

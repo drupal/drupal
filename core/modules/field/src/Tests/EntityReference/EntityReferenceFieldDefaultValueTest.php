@@ -55,7 +55,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     $referenced_node = $this->drupalCreateNode(array('type' => 'referenced_content'));
 
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'entity_reference',
@@ -118,7 +118,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     $referenced_node_type2 = $this->drupalCreateContentType(array('type' => 'referenced_config_to_preserve'));
 
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'entity_reference',

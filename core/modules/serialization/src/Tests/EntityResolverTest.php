@@ -8,6 +8,7 @@ namespace Drupal\serialization\Tests;
 
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTestMulRev;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests that entities references can be resolved.
@@ -36,7 +37,7 @@ class EntityResolverTest extends NormalizerTestBase {
     \Drupal::service('router.builder')->rebuild();
 
     // Create the test field storage.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'entity_type' => 'entity_test_mulrev',
       'field_name' => 'field_test_entity_reference',
       'type' => 'entity_reference',

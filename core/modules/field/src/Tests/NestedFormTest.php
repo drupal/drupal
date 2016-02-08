@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests field elements in nested forms.
@@ -57,8 +58,8 @@ class NestedFormTest extends FieldTestBase {
    */
   function testNestedFieldForm() {
     // Add two fields on the 'entity_test'
-    entity_create('field_storage_config', $this->fieldStorageSingle)->save();
-    entity_create('field_storage_config', $this->fieldStorageUnlimited)->save();
+    FieldStorageConfig::create($this->fieldStorageSingle)->save();
+    FieldStorageConfig::create($this->fieldStorageUnlimited)->save();
     $this->field['field_name'] = 'field_single';
     $this->field['label'] = 'Single field';
     entity_create('field_config', $this->field)->save();

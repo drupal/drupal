@@ -8,6 +8,7 @@
 namespace Drupal\image\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * TODO: Test the following functions.
@@ -71,7 +72,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
    *   Formatter settings to be added to the formatter defaults.
    */
   function createImageField($name, $type_name, $storage_settings = array(), $field_settings = array(), $widget_settings = array(), $formatter_settings = array()) {
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $name,
       'entity_type' => 'node',
       'type' => 'image',

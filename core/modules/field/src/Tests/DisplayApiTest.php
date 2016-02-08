@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the field display API.
@@ -94,7 +95,7 @@ class DisplayApiTest extends FieldUnitTestBase {
       ),
     );
 
-    entity_create('field_storage_config', $field_storage)->save();
+    FieldStorageConfig::create($field_storage)->save();
     entity_create('field_config', $field)->save();
     // Create a display for the default view mode.
     entity_get_display($field['entity_type'], $field['bundle'], 'default')

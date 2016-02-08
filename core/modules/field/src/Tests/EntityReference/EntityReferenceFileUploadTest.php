@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests an autocomplete widget with file upload.
@@ -51,7 +52,7 @@ class EntityReferenceFileUploadTest extends WebTestBase {
     $this->referencedType = $referenced->id();
     $this->nodeId = $this->drupalCreateNode(array('type' => $referenced->id()))->id();
 
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'test_field',
       'entity_type' => 'node',
       'translatable' => FALSE,
@@ -83,7 +84,7 @@ class EntityReferenceFileUploadTest extends WebTestBase {
 
     // Create a file field.
     $file_field_name = 'file_field';
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $file_field_name,
       'entity_type' => 'node',
       'type' => 'file'

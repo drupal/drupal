@@ -9,6 +9,7 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\Entity\CommentType;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests that comment fields cannot be added to entities with non-integer IDs.
@@ -51,7 +52,7 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
         'target_entity_type_id' => 'entity_test_string_id',
       ));
       $bundle->save();
-      $field_storage = entity_create('field_storage_config', array(
+      $field_storage = FieldStorageConfig::create(array(
         'field_name' => 'foo',
         'entity_type' => 'entity_test_string_id',
         'settings' => array(

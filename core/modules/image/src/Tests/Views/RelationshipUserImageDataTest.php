@@ -10,6 +10,7 @@ namespace Drupal\image\Tests\Views;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests image on user relationship handler.
@@ -36,7 +37,7 @@ class RelationshipUserImageDataTest extends ViewTestBase {
     parent::setUp();
 
     // Create the user profile field and instance.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'entity_type' => 'user',
       'field_name' => 'user_picture',
       'type' => 'image',

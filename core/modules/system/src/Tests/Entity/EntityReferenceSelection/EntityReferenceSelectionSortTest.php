@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests sorting referenced items.
@@ -45,7 +46,7 @@ class EntityReferenceSelectionSortTest extends EntityUnitTestBase {
    */
   public function testSort() {
     // Add text field to entity, to sort by.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'field_text',
       'entity_type' => 'node',
       'type' => 'text',

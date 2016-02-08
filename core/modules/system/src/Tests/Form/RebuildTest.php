@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Form;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests functionality of \Drupal\Core\Form\FormBuilderInterface::rebuildForm().
@@ -73,7 +74,7 @@ class RebuildTest extends WebTestBase {
   function testPreserveFormActionAfterAJAX() {
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'text',

@@ -10,6 +10,7 @@ namespace Drupal\field\Tests\EntityReference;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\node\Entity\Node;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests creating new entity (e.g. taxonomy-term) from an autocomplete widget.
@@ -44,7 +45,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $referenced = $this->drupalCreateContentType();
     $this->referencedType = $referenced->id();
 
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'test_field',
       'entity_type' => 'node',
       'translatable' => FALSE,

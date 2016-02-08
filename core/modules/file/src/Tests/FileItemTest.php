@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests using entity fields of the file field type.
@@ -47,7 +48,7 @@ class FileItemTest extends FieldUnitTestBase {
     $this->installEntitySchema('file');
     $this->installSchema('file', array('file_usage'));
 
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'file_test',
       'entity_type' => 'entity_test',
       'type' => 'file',

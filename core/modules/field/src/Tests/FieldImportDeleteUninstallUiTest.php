@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\field\Entity\FieldStorageConfig;
+
 /**
  * Delete field storages and fields during config synchronization and uninstall
  * module that provides the field type through the UI.
@@ -36,7 +38,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
    */
   public function testImportDeleteUninstall() {
     // Create a telephone field.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_tel',
       'entity_type' => 'entity_test',
       'type' => 'telephone',
@@ -48,7 +50,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     ))->save();
 
     // Create a text field.
-    $date_field_storage = entity_create('field_storage_config', array(
+    $date_field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_date',
       'entity_type' => 'entity_test',
       'type' => 'datetime',

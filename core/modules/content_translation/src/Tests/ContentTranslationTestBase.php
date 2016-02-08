@@ -10,6 +10,7 @@ namespace Drupal\content_translation\Tests;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Base class for content translation tests.
@@ -183,7 +184,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     if (empty($this->fieldName)) {
       $this->fieldName = 'field_test_et_ui_test';
     }
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $this->fieldName,
       'type' => 'string',
       'entity_type' => $this->entityTypeId,

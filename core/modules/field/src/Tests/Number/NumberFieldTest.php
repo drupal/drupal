@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\Number;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the creation of numeric fields.
@@ -43,7 +44,7 @@ class NumberFieldTest extends WebTestBase {
   function testNumberDecimalField() {
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'decimal',
@@ -133,7 +134,7 @@ class NumberFieldTest extends WebTestBase {
 
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $storage = entity_create('field_storage_config', array(
+    $storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'integer',
@@ -276,7 +277,7 @@ class NumberFieldTest extends WebTestBase {
   function testNumberFloatField() {
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'float',
@@ -377,13 +378,13 @@ class NumberFieldTest extends WebTestBase {
     // Create a content type containing float and integer fields.
     $this->drupalCreateContentType(array('type' => $type));
 
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $float_field,
       'entity_type' => 'node',
       'type' => 'float',
     ))->save();
 
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $integer_field,
       'entity_type' => 'node',
       'type' => 'integer',
@@ -501,7 +502,7 @@ class NumberFieldTest extends WebTestBase {
   function testCreateNumberFloatField() {
     // Create a float field.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'float',
@@ -526,7 +527,7 @@ class NumberFieldTest extends WebTestBase {
   function testCreateNumberDecimalField() {
     // Create a decimal field.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'decimal',

@@ -10,6 +10,7 @@ namespace Drupal\field\Tests\Email;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the new entity API for the email field type.
@@ -22,7 +23,7 @@ class EmailItemTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create an email field storage and field for validation.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'field_email',
       'entity_type' => 'entity_test',
       'type' => 'email',

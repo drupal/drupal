@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\field\Entity\FieldStorageConfig;
+
 /**
  * Tests Field access.
  *
@@ -50,7 +52,7 @@ class FieldAccessTest extends FieldTestBase {
       'entity_type' => 'node',
       'type' => 'text',
     );
-    entity_create('field_storage_config', $field_storage)->save();
+    FieldStorageConfig::create($field_storage)->save();
     $field = array(
       'field_name' => $field_storage['field_name'],
       'entity_type' => 'node',

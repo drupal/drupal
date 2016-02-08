@@ -9,6 +9,7 @@ namespace Drupal\text\Tests\Formatter;
 
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the text formatters functionality.
@@ -55,7 +56,7 @@ class TextFormatterTest extends EntityUnitTestBase {
       ),
     ))->save();
 
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'formatted_text',
       'entity_type' => $this->entityType,
       'type' => 'text',

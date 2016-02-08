@@ -6,6 +6,7 @@
  */
 
 use Drupal\system\Tests\Update\DbUpdatesTrait;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Implements hook_install().
@@ -13,7 +14,7 @@ use Drupal\system\Tests\Update\DbUpdatesTrait;
 function entity_test_install() {
   foreach (entity_test_entity_types() as $entity_type) {
     // Auto-create fields for testing.
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'entity_type' => $entity_type,
       'field_name' => 'field_test_text',
       'type' => 'text',

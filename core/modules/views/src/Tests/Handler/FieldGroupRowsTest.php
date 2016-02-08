@@ -10,6 +10,7 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\views\Views;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the "Display all values in the same row" setting.
@@ -48,7 +49,7 @@ class FieldGroupRowsTest extends HandlerTestBase {
     $node_type = $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Create the unlimited text field.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
         'field_name' => $this->fieldName,
         'entity_type' => 'node',
         'type' => 'text',

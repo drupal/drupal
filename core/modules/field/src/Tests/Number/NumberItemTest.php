@@ -10,6 +10,7 @@ namespace Drupal\field\Tests\Number;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the new entity API for the number field type.
@@ -30,7 +31,7 @@ class NumberItemTest extends FieldUnitTestBase {
 
     // Create number field storages and fields for validation.
     foreach (array('integer', 'float', 'decimal') as $type) {
-      entity_create('field_storage_config', array(
+      FieldStorageConfig::create(array(
         'entity_type' => 'entity_test',
         'field_name' => 'field_' . $type,
         'type' => $type,

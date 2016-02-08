@@ -10,6 +10,7 @@ namespace Drupal\datetime\Tests;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the new entity API for the date field type.
@@ -29,7 +30,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create a field with settings to validate.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_datetime',
       'type' => 'datetime',
       'entity_type' => 'entity_test',

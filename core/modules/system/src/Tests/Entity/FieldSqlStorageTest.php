@@ -84,7 +84,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     $this->fieldName = strtolower($this->randomMachineName());
     $this->fieldCardinality = 4;
-    $this->fieldStorage = entity_create('field_storage_config', array(
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => $this->fieldName,
       'entity_type' => $entity_type,
       'type' => 'test_field',
@@ -282,7 +282,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $values = array();
     for ($i = 0; $i < 2; $i++) {
       $field_names[$i] = $name_base . $i;
-      entity_create('field_storage_config', array(
+      FieldStorageConfig::create(array(
         'field_name' => $field_names[$i],
         'entity_type' => $entity_type,
         'type' => 'test_field',
@@ -312,7 +312,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   function testUpdateFieldSchemaWithData() {
     $entity_type = 'entity_test_rev';
     // Create a decimal 5.2 field and add some data.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'decimal52',
       'entity_type' => $entity_type,
       'type' => 'decimal',
@@ -347,7 +347,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    */
   function testFieldUpdateFailure() {
     // Create a text field.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'test_text',
       'entity_type' => 'entity_test_rev',
       'type' => 'text',
@@ -387,7 +387,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // Create a decimal field.
     $field_name = 'testfield';
     $entity_type = 'entity_test_rev';
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => $entity_type,
       'type' => 'text',
@@ -443,7 +443,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // field_test_field_schema()).
     $field_name = 'testfield';
     $foreign_key_name = 'shape';
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'shape',
@@ -480,7 +480,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // Short entity type and field name.
     $entity_type = 'short_entity_type';
     $field_name = 'short_field_name';
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'entity_type' => $entity_type,
       'field_name' => $field_name,
       'type' => 'test_field',
@@ -493,7 +493,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // Short entity type, long field name
     $entity_type = 'short_entity_type';
     $field_name = 'long_field_name_abcdefghijklmnopqrstuvwxyz';
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'entity_type' => $entity_type,
       'field_name' => $field_name,
       'type' => 'test_field',
@@ -506,7 +506,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // Long entity type, short field name
     $entity_type = 'long_entity_type_abcdefghijklmnopqrstuvwxyz';
     $field_name = 'short_field_name';
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'entity_type' => $entity_type,
       'field_name' => $field_name,
       'type' => 'test_field',
@@ -519,7 +519,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // Long entity type and field name.
     $entity_type = 'long_entity_type_abcdefghijklmnopqrstuvwxyz';
     $field_name = 'long_field_name_abcdefghijklmnopqrstuvwxyz';
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'entity_type' => $entity_type,
       'field_name' => $field_name,
       'type' => 'test_field',
@@ -529,7 +529,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $expected = 'long_entity_type_abcdefghijklmnopq_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEqual($this->tableMapping->getDedicatedRevisionTableName($field_storage), $expected);
     // Try creating a second field and check there are no clashes.
-    $field_storage2 = entity_create('field_storage_config', array(
+    $field_storage2 = FieldStorageConfig::create(array(
       'entity_type' => $entity_type,
       'field_name' => $field_name . '2',
       'type' => 'test_field',
@@ -538,7 +538,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $this->assertNotEqual($this->tableMapping->getDedicatedRevisionTableName($field_storage), $this->tableMapping->getDedicatedRevisionTableName($field_storage2));
 
     // Deleted field.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'entity_type' => 'some_entity_type',
       'field_name' => 'some_field_name',
       'type' => 'test_field',

@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests;
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the persistence of basic options through multiple steps.
@@ -32,7 +33,7 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
 
     // Create an unlimited cardinality field.
     $this->fieldName = Unicode::strtolower($this->randomMachineName());
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'type' => 'text',

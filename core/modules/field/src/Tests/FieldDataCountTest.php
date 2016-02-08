@@ -54,7 +54,7 @@ class FieldDataCountTest extends FieldUnitTestBase {
     // Create a field with a cardinality of 2 to show that we are counting
     // entities and not rows in a table.
     /** @var \Drupal\field\Entity\FieldStorageConfig $field_storage */
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => 'field_int',
       'entity_type' => 'entity_test',
       'type' => 'integer',
