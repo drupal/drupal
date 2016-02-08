@@ -131,7 +131,7 @@ class TimestampFormatter extends FormatterBase implements ContainerFactoryPlugin
     );
 
     $elements['custom_date_format']['#states']['visible'][] = array(
-      ':input[name="name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][date_format]"]' => array('value' => 'custom'),
+      ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][date_format]"]' => array('value' => 'custom'),
     );
 
     $elements['timezone'] = array(
