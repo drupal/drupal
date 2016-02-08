@@ -30,7 +30,7 @@ class GarbageCollectionTest extends KernelTestBase {
     parent::setUp();
 
     // These additional tables are necessary due to the call to system_cron().
-    $this->installSchema('system', array('key_value_expire', 'flood', 'queue'));
+    $this->installSchema('system', array('key_value_expire', 'queue'));
   }
 
   /**

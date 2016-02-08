@@ -232,11 +232,6 @@ class ContactPersonalTest extends WebTestBase {
     $flood_limit = 3;
     $this->config('contact.settings')->set('flood.limit', $flood_limit)->save();
 
-    // Clear flood table in preparation for flood test and allow other checks to complete.
-    db_delete('flood')->execute();
-    $num_records_flood = db_query("SELECT COUNT(*) FROM {flood}")->fetchField();
-    $this->assertIdentical($num_records_flood, '0', 'Flood table emptied.');
-
     $this->drupalLogin($this->webUser);
 
     // Submit contact form with correct values and check flood interval.

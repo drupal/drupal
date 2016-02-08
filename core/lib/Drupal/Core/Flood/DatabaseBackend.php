@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Flood;
 
+use Drupal\Core\Database\SchemaObjectExistsException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Database\Connection;
 
@@ -14,6 +15,11 @@ use Drupal\Core\Database\Connection;
  * Defines the database flood backend. This is the default Drupal backend.
  */
 class DatabaseBackend implements FloodInterface {
+
+  /**
+   * The database table name.
+   */
+  const TABLE_NAME = 'flood';
 
   /**
    * The database connection used to store flood event information.
@@ -50,7 +56,35 @@ class DatabaseBackend implements FloodInterface {
     if (!isset($identifier)) {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
-    $this->connection->insert('flood')
+    $try_again = FALSE;
+    try {
+      $this->doInsert($name, $window, $identifier);
+    }
+    catch (\Exception $e) {
+      $try_again = $this->ensureTableExists();
+      if (!$try_again) {
+        throw $e;
+      }
+    }
+    if ($try_again) {
+      $this->doInsert($name, $window, $identifier);
+    }
+  }
+
+  /**
+   * Inserts an event into the flood table
+   *
+   * @param string $name
+   *   The name of an event.
+   * @param int $window
+   *   Number of seconds before this event expires.
+   * @param string $identifier
+   *   Unique identifier of the current user.
+   *
+   * @see \Drupal\Core\Flood\DatabaseBackend::register
+   */
+  protected function doInsert($name, $window, $identifier) {
+    $this->connection->insert(static::TABLE_NAME)
       ->fields(array(
         'event' => $name,
         'identifier' => $identifier,
@@ -67,10 +101,15 @@ class DatabaseBackend implements FloodInterface {
     if (!isset($identifier)) {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
-    $this->connection->delete('flood')
-      ->condition('event', $name)
-      ->condition('identifier', $identifier)
-      ->execute();
+    try {
+      $this->connection->delete(static::TABLE_NAME)
+        ->condition('event', $name)
+        ->condition('identifier', $identifier)
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
   }
 
   /**
@@ -80,23 +119,120 @@ class DatabaseBackend implements FloodInterface {
     if (!isset($identifier)) {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
-    $number = $this->connection->select('flood', 'f')
-      ->condition('event', $name)
-      ->condition('identifier', $identifier)
-      ->condition('timestamp', REQUEST_TIME - $window, '>')
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-    return ($number < $threshold);
+    try {
+      $number = $this->connection->select(static::TABLE_NAME, 'f')
+        ->condition('event', $name)
+        ->condition('identifier', $identifier)
+        ->condition('timestamp', REQUEST_TIME - $window, '>')
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      return ($number < $threshold);
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+      return TRUE;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function garbageCollection() {
-    return $this->connection->delete('flood')
-      ->condition('expiration', REQUEST_TIME, '<')
-      ->execute();
+    try {
+      $return = $this->connection->delete(static::TABLE_NAME)
+        ->condition('expiration', REQUEST_TIME, '<')
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
+  }
+
+  /**
+   * Check if the flood table exists and create it if not.
+   */
+  protected function ensureTableExists() {
+    try {
+      $database_schema = $this->connection->schema();
+      if (!$database_schema->tableExists(static::TABLE_NAME)) {
+        $schema_definition = $this->schemaDefinition();
+        $database_schema->createTable(static::TABLE_NAME, $schema_definition);
+        return TRUE;
+      }
+    }
+    // If another process has already created the table, attempting to create
+    // it will throw an exception. In this case just catch the exception and do
+    // nothing.
+    catch (SchemaObjectExistsException $e) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Act on an exception when flood might be stale.
+   *
+   * If the table does not yet exist, that's fine, but if the table exists and
+   * yet the query failed, then the flood is stale and the exception needs to
+   * propagate.
+   *
+   * @param $e
+   *   The exception.
+   *
+   * @throws \Exception
+   */
+  protected function catchException(\Exception $e) {
+    if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {
+      throw $e;
+    }
+  }
+
+  /**
+   * Defines the schema for the flood table.
+   */
+  public function schemaDefinition() {
+    return [
+      'description' => 'Flood controls the threshold of events, such as the number of contact attempts.',
+      'fields' => [
+        'fid' => [
+          'description' => 'Unique flood event ID.',
+          'type' => 'serial',
+          'not null' => TRUE,
+        ],
+        'event' => [
+          'description' => 'Name of event (e.g. contact).',
+          'type' => 'varchar_ascii',
+          'length' => 64,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'identifier' => [
+          'description' => 'Identifier of the visitor, such as an IP address or hostname.',
+          'type' => 'varchar_ascii',
+          'length' => 128,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'timestamp' => [
+          'description' => 'Timestamp of the event.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'expiration' => [
+          'description' => 'Expiration timestamp. Expired events are purged on cron run.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+      ],
+      'primary key' => ['fid'],
+      'indexes' => [
+        'allow' => ['event', 'identifier', 'timestamp'],
+        'purge' => ['expiration'],
+      ],
+    ];
   }
 
 }

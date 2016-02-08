@@ -889,48 +889,6 @@ function system_schema() {
     ),
   );
 
-  $schema['flood'] = array(
-    'description' => 'Flood controls the threshold of events, such as the number of contact attempts.',
-    'fields' => array(
-      'fid' => array(
-        'description' => 'Unique flood event ID.',
-        'type' => 'serial',
-        'not null' => TRUE,
-      ),
-      'event' => array(
-        'description' => 'Name of event (e.g. contact).',
-        'type' => 'varchar_ascii',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'identifier' => array(
-        'description' => 'Identifier of the visitor, such as an IP address or hostname.',
-        'type' => 'varchar_ascii',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'timestamp' => array(
-        'description' => 'Timestamp of the event.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'expiration' => array(
-        'description' => 'Expiration timestamp. Expired events are purged on cron run.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('fid'),
-    'indexes' => array(
-      'allow' => array('event', 'identifier', 'timestamp'),
-      'purge' => array('expiration'),
-    ),
-  );
-
   $schema['key_value'] = array(
     'description' => 'Generic key-value storage table. See the state system for an example.',
     'fields' => array(
