@@ -62,6 +62,16 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('Email Field', $field->label());
     $this->assertIdentical('benjy@example.com', $entity->field_test_email->value);
 
+    // Test image field.
+    $field = FieldConfig::load('node.story.field_test_imagefield');
+    $this->assertIdentical('Image Field', $field->label());
+    $field_settings = $field->getSettings();
+    $this->assertIdentical('', $field_settings['max_resolution']);
+    $this->assertIdentical('', $field_settings['min_resolution']);
+    $this->assertIdentical('', $field_settings['file_directory']);
+    $this->assertIdentical('png gif jpg jpeg', $field_settings['file_extensions']);
+    $this->assertIdentical('public', $field_settings['uri_scheme']);
+
     // Test a filefield.
     $field = FieldConfig::load('node.story.field_test_filefield');
     $this->assertIdentical('File Field', $field->label());
