@@ -28,6 +28,8 @@ libraries-extend:
     - seven/vertical-tabs
   core/jquery.ui:
     - seven/seven.jquery.ui
+  tour/tour-styling:
+    - seven/tour-styling
 quickedit_stylesheets:
   - css/components/quickedit.css
 regions:

@@ -29,7 +29,6 @@ global-styling:
       css/components/tablesort-indicator.css: {}
       css/components/system-status-report.css: {}
       css/components/tabs.css: {}
-      css/components/tour.theme.css: {}
       css/components/views-ui.css: {}
     layout:
       css/layout/layout.css: {}
@@ -93,3 +92,9 @@ seven.drupal.dialog:
   css:
     theme:
       css/components/dialog.css: {}
+
+tour-styling:
+  version: VERSION
+  css:
+    theme:
+      css/components/tour.theme.css: {}
