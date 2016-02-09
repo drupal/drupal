@@ -36,10 +36,7 @@ class DependencySerializationTest extends UnitTestCase {
     $dependencySerialization->setContainer($container);
 
     $string = serialize($dependencySerialization);
-    $object = unserialize($string);
-
-    $string = serialize($dependencySerialization);
-    /** @var \Drupal\Tests\Core\DependencyInjection\DependencySerializationTestDummy $object */
+    /** @var \Drupal\Tests\Core\DependencyInjection\DependencySerializationTestDummy $dependencySerialization */
     $dependencySerialization = unserialize($string);
 
     $this->assertSame($service, $dependencySerialization->service);
