@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Plugin\ObjectWithPluginCollectionInterface;
+
 /**
  * Provides an interface for an object using a plugin collection.
  *
@@ -14,15 +16,6 @@ namespace Drupal\Core\Entity;
  *
  * @ingroup plugin_api
  */
-interface EntityWithPluginCollectionInterface extends EntityInterface {
-
-  /**
-   * Gets the plugin collections used by this entity.
-   *
-   * @return \Drupal\Component\Plugin\LazyPluginCollection[]
-   *   An array of plugin collections, keyed by the property name they use to
-   *   store their configuration.
-   */
-  public function getPluginCollections();
+interface EntityWithPluginCollectionInterface extends EntityInterface, ObjectWithPluginCollectionInterface {
 
 }
