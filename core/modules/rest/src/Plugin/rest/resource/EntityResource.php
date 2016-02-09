@@ -50,7 +50,7 @@ class EntityResource extends ResourceBase {
     }
     foreach ($entity as $field_name => $field) {
       if (!$field->access('view')) {
-        unset($entity->{$field_name});
+        $entity->set($field_name, NULL);
       }
     }
 

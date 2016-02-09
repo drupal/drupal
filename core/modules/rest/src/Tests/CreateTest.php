@@ -199,8 +199,8 @@ class CreateTest extends RESTTestBase {
       }
       else {
         // Changed and revision_timestamp fields can never be added.
-        unset($entity->changed);
-        unset($entity->revision_timestamp);
+        $entity->set('changed', NULL);
+        $entity->set('revision_timestamp', NULL);
       }
 
       $serialized = $this->serializer->serialize($entity, $this->defaultFormat, ['account' => $account]);
@@ -299,7 +299,7 @@ class CreateTest extends RESTTestBase {
       }
 
       // Changed field can never be added.
-      unset($entity->changed);
+      $entity->set('changed', NULL);
 
       $serialized = $this->serializer->serialize($entity, $this->defaultFormat, ['account' => $account]);
 
