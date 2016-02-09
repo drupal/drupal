@@ -271,7 +271,7 @@ class ManagedFile extends FormElement {
       }
 
       // Add the upload progress callback.
-      $element['upload_button']['#ajax']['progress']['url'] = Url::fromRoute('file.ajax_progress');
+      $element['upload_button']['#ajax']['progress']['url'] = Url::fromRoute('file.ajax_progress', ['key' => $upload_progress_key]);
     }
 
     // The file upload field itself.
