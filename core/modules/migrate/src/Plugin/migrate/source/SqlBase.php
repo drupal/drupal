@@ -75,7 +75,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    *   The query string.
    */
   public function __toString() {
-    return (string) $this->query;
+    return (string) $this->query();
   }
 
   /**
