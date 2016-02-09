@@ -51,14 +51,16 @@ class FieldInstanceSettings extends ProcessPluginBase {
 
       case 'imagefield_widget':
         $settings['file_extensions'] = $widget_settings['file_extensions'];
-        $settings['file_directory'] = 'public://';
+        $settings['file_directory'] = $widget_settings['file_path'];
         $settings['max_filesize'] = $this->convertSizeUnit($widget_settings['max_filesize_per_file']);
         $settings['alt_field'] = $widget_settings['alt'];
         $settings['alt_field_required'] = $widget_settings['custom_alt'];
         $settings['title_field'] = $widget_settings['title'];
         $settings['title_field_required'] = $widget_settings['custom_title'];
-        $settings['max_resolution'] = $widget_settings['max_resolution'];
-        $settings['min_resolution'] = $widget_settings['min_resolution'];
+        // With nothing entered for min or max resolution in Drupal 6, zero is
+        // stored. For Drupal 8 this should be an empty string.
+        $settings['max_resolution'] = !empty($widget_settings['max_resolution']) ? $widget_settings['max_resolution'] : '';
+        $settings['min_resolution'] = !empty($widget_settings['min_resolution']) ? $widget_settings['min_resolution'] : '';
         break;
 
     }
