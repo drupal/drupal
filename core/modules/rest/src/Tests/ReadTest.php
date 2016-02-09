@@ -94,7 +94,7 @@ class ReadTest extends RESTTestBase {
     // application/hal+json, so it returns a 406.
     $this->assertResponse('406', 'HTTP response code is 406 when the resource does not define formats, because it falls back to the canonical, non-REST route.');
     $this->assertEqual($response, Json::encode([
-      'message' => 'Not acceptable',
+      'message' => 'Not acceptable format: hal_json',
     ]));
   }
 
