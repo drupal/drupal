@@ -14,11 +14,11 @@ namespace Drupal\Core\Lock;
  *
  * In most environments, multiple Drupal page requests (a.k.a. threads or
  * processes) will execute in parallel. This leads to potential conflicts or
- * race conditions when two requests execute the same code at the same time. A
- * common example of this is a rebuild like menu_router_rebuild() where we
- * invoke many hook implementations to get and process data from all active
- * modules, and then delete the current data in the database to insert the new
- * afterwards.
+ * race conditions when two requests execute the same code at the same time. For
+ * instance, some implementations of hook_cron() implicitly assume they are
+ * running only once, rather than having multiple calls in parallel. To prevent
+ * problems with such code, the cron system uses a locking process to ensure
+ * that cron is not started again if it is already running.
  *
  * This is a cooperative, advisory lock system. Any long-running operation
  * that could potentially be attempted in parallel by multiple requests should
