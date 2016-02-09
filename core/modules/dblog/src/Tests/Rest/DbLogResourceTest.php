@@ -59,5 +59,11 @@ class DbLogResourceTest extends RESTTestBase {
     $this->assertResponse(404);
     $decoded = Json::decode($response);
     $this->assertEqual($decoded['error'], 'Log entry with ID 9999 was not found', 'Response message is correct.');
+
+    // Make a bad request (a true malformed request would never be a route match).
+    $response = $this->httpRequest(Url::fromRoute('rest.dblog.GET.' . $this->defaultFormat, ['id' => 0, '_format' => $this->defaultFormat]), 'GET');
+    $this->assertResponse(400);
+    $decoded = Json::decode($response);
+    $this->assertEqual($decoded['error'], 'No log entry ID was provided', 'Response message is correct.');
   }
 }
