@@ -397,6 +397,12 @@ function template_preprocess_views_view_table(&$variables) {
   // A boolean variable which stores whether the table has a responsive class.
   $responsive = FALSE;
 
+  // For the actual site we want to not render full URLs, because this would
+  // make pagers cacheable per URL, which is problematic in blocks, for example.
+  // For the actual live preview though the javascript relies on properly
+  // working URLs.
+  $route_name = !empty($view->live_preview) ? '<current>' : '<none>';
+
   $query = tablesort_get_query_parameters();
   if (isset($view->exposed_raw_input)) {
     $query += $view->exposed_raw_input;
@@ -438,9 +444,7 @@ function template_preprocess_views_view_table(&$variables) {
         $link_options = array(
           'query' => $query,
         );
-        // It is ok to specify no URL path here as we will always reload the
-        // current page.
-        $url = new Url('<none>', [], $link_options);
+        $url = new Url($route_name, [], $link_options);
         $variables['header'][$field]['url'] = $url->toString();
         $variables['header'][$field]['content'] = $label;
         $variables['header'][$field]['title'] = $title;
