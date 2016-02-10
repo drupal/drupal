@@ -89,28 +89,28 @@ class ErrorTest extends UnitTestCase {
     $data = array();
 
     // Test with no function, main should be in the backtrace.
-    $data[] = array(array($this->createBacktraceItem(NULL, NULL)), "main()\n");
+    $data[] = array(array($this->createBacktraceItem(NULL, NULL)), "main() (Line: 10)\n");
 
     $base = array($this->createBacktraceItem());
-    $data[] = array($base, "test_function()\n");
+    $data[] = array($base, "test_function() (Line: 10)\n");
 
     // Add a second item.
     $second_item = $base;
     $second_item[] = $this->createBacktraceItem('test_function_2');
 
-    $data[] = array($second_item, "test_function()\ntest_function_2()\n");
+    $data[] = array($second_item, "test_function() (Line: 10)\ntest_function_2() (Line: 10)\n");
 
     // Add a second item, with a class.
     $second_item_class = $base;
     $second_item_class[] = $this->createBacktraceItem('test_function_2', 'TestClass');
 
-    $data[] = array($second_item_class, "test_function()\nTestClass->test_function_2()\n");
+    $data[] = array($second_item_class, "test_function() (Line: 10)\nTestClass->test_function_2() (Line: 10)\n");
 
     // Add a second item, with a class.
     $second_item_args = $base;
     $second_item_args[] = $this->createBacktraceItem('test_function_2', NULL, array('string', 10, new \stdClass()));
 
-    $data[] = array($second_item_args, "test_function()\ntest_function_2('string', 10, Object)\n");
+    $data[] = array($second_item_args, "test_function() (Line: 10)\ntest_function_2('string', 10, Object) (Line: 10)\n");
 
     return $data;
   }
@@ -124,14 +124,16 @@ class ErrorTest extends UnitTestCase {
    *   (optional) The class to use in the backtrace item.
    * @param array $args
    *   (optional) An array of function arguments to add to the backtrace item.
+   * @param int $line
+   *   (optional) The line where the function was called.
    *
    * @return array
    *   A backtrace array item.
    */
-  protected function createBacktraceItem($function = 'test_function', $class = NULL, array $args = array()) {
+  protected function createBacktraceItem($function = 'test_function', $class = NULL, array $args = array(), $line = 10) {
     $backtrace = array(
       'file' => 'test_file',
-      'line' => 10,
+      'line' => $line,
       'function' => $function,
       'args' => array(),
     );

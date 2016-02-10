@@ -180,7 +180,12 @@ class Error {
         }
       }
 
-      $return .= $call['function'] . '(' . implode(', ', $call['args']) . ")\n";
+      $line = '';
+      if (isset($trace['line'])) {
+        $line = " (Line: {$trace['line']})";
+      }
+
+      $return .= $call['function'] . '(' . implode(', ', $call['args']) . ")$line\n";
     }
 
     return $return;
