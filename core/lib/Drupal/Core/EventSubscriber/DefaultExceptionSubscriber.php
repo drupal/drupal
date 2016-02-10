@@ -166,6 +166,20 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Handles an HttpExceptionInterface exception for unknown formats.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   *   The event to process.
+   */
+  protected function onFormatUnknown(GetResponseForExceptionEvent $event) {
+    /** @var \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface|\Exception $exception */
+    $exception = $event->getException();
+
+    $response = new Response($exception->getMessage(), $exception->getStatusCode(), $exception->getHeaders());
+    $event->setResponse($response);
+  }
+
+  /**
    * Handles errors for this subscriber.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
@@ -173,11 +187,17 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
    */
   public function onException(GetResponseForExceptionEvent $event) {
     $format = $this->getFormat($event->getRequest());
+    $exception = $event->getException();
 
-    // If it's an unrecognized format, assume HTML.
     $method = 'on' . $format;
     if (!method_exists($this, $method)) {
-      $method = 'onHtml';
+      if ($exception instanceof HttpExceptionInterface) {
+        $this->onFormatUnknown($event);
+      }
+      else {
+        $this->onHtml($event);
+      }
+      return;
     }
     $this->$method($event);
   }
