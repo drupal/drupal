@@ -55,7 +55,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     parent::setUp();
 
     $this->controller = $this->container
-      ->get('entity.manager')
+      ->get('entity_type.manager')
       ->getStorage('block');
 
     \Drupal::state()->set('block_test.content', 'Llamas &gt; unicorns!');
@@ -327,7 +327,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    *   The render array.
    */
   protected function getBlockRenderArray() {
-    return $this->container->get('entity.manager')->getViewBuilder('block')->view($this->block, 'block');
+    return $this->container->get('entity_type.manager')->getViewBuilder('block')->view($this->block, 'block');
   }
 
 }

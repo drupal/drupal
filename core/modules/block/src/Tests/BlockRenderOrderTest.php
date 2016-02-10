@@ -70,7 +70,7 @@ class BlockRenderOrderTest extends WebTestBase {
     $this->drupalGet('');
     $test_content = $this->getRawContent('');
 
-    $controller = $this->container->get('entity.manager')->getStorage('block');
+    $controller = $this->container->get('entity_type.manager')->getStorage('block');
     foreach ($controller->loadMultiple() as $return_block) {
       $id = $return_block->id();
       if ($return_block_weight = $return_block->getWeight()) {
