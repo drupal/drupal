@@ -148,10 +148,9 @@ function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $op) {
  * @param \Drupal\node\NodeInterface $node
  *   The node that has just been saved.
  *
- * @return
+ * @return array
  *   An array of grants as defined above.
  *
- * @see node_access_write_grants()
  * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
