@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\field\Unit\Plugin\migrate\process\d7\FieldInstanceSettingsTest.
+ * Contains \Drupal\Tests\field\Unit\Plugin\migrate\process\d7\FieldSettingsTest.
  */
 
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d7;

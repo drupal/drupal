@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\Tests\LanguageNegotiationLanguageContentEntityTest.
+ * Contains \Drupal\language\Tests\LanguageNegotiationContentEntityTest.
  */
 
 namespace Drupal\language\Tests;

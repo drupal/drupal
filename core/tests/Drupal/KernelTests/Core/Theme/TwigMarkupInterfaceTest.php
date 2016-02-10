@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\KernelTests\Core\Theme\ThemeRenderAndAutoescapeTest.
+ * Contains \Drupal\KernelTests\Core\Theme\TwigMarkupInterfaceTest.
  */
 
 namespace Drupal\KernelTests\Core\Theme;
