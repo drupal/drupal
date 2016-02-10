@@ -34,7 +34,13 @@ interface RedirectDestinationInterface {
   public function getAsArray();
 
   /**
-   * Gets the destination as URL.
+   * Gets the destination as a path.
+   *
+   * To convert to a URL suitable for
+   * \Symfony\Component\HttpFoundation\RedirectResponse::__construct() use
+   * @code
+   * \Drupal\Core\Url::fromUserInput(\Drupal::destination()->get())->setAbsolute()->toString()
+   * @endcode
    *
    * @return string
    */
