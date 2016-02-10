@@ -7,8 +7,11 @@
 
 namespace Drupal\Tests\Core\Config\Entity;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Plugin\DefaultLazyPluginCollection;
+use Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections;
 use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 use Drupal\Tests\UnitTestCase;
 
@@ -308,6 +311,36 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::__sleep
+   */
+  public function testSleepWithPluginCollections() {
+    $instance_id = 'the_instance_id';
+    $instance = new TestConfigurablePlugin([], $instance_id, []);
+
+    $plugin_manager = $this->prophesize(PluginManagerInterface::class);
+    $plugin_manager->createInstance($instance_id, ['id' => $instance_id])->willReturn($instance);
+
+    $entity_values = ['the_plugin_collection_config' => [$instance_id => ['foo' => 'original_value']]];
+    $entity = new TestConfigEntityWithPluginCollections($entity_values, $this->entityTypeId);
+    $entity->setPluginManager($plugin_manager->reveal());
+
+    // After creating the entity, change the plugin configuration.
+    $instance->setConfiguration(['foo' => 'new_value']);
+
+    // After changing the plugin configuration, the entity still has the
+    // original value.
+    $expected_plugin_config = [$instance_id => ['foo' => 'original_value']];
+    $this->assertSame($expected_plugin_config, $entity->get('the_plugin_collection_config'));
+
+    // Ensure the plugin collection is not stored.
+    $this->assertNotContains('pluginCollection', $entity->__sleep());
+
+    $expected_plugin_config = [$instance_id => ['foo' => 'new_value']];
+    // Ensure the updated values are stored in the entity.
+    $this->assertSame($expected_plugin_config, $entity->get('the_plugin_collection_config'));
+  }
+
+  /**
    * @covers ::setOriginalId
    * @covers ::getOriginalId
    */
@@ -576,6 +609,23 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     // Test unsetThirdPartyProviders().
     $this->entity->unsetThirdPartySetting('test_provider2', $key);
     $this->assertEquals(array($third_party), $this->entity->getThirdPartyProviders());
+  }
+
+}
+
+class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCollections {
+
+  protected $pluginCollection;
+
+  public function setPluginManager(PluginManagerInterface $plugin_manager) {
+    $this->pluginCollection = new DefaultLazyPluginCollection($plugin_manager, ['the_instance_id' => ['id' => 'the_instance_id']]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginCollections() {
+    return ['the_plugin_collection_config' => $this->pluginCollection];
   }
 
 }
