@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -124,22 +125,38 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       return $this->redirect('system.modules_list');
     }
 
-    $items = array();
-    // Display a list of required modules that have to be installed as well but
-    // were not manually selected.
-    foreach ($this->modules['dependencies'] as $module => $dependencies) {
-      $items[] = $this->formatPlural(count($dependencies), 'You must enable the @required module to install @module.', 'You must enable the @required modules to install @module.', array(
-        '@module' => $this->modules['install'][$module],
-        '@required' => implode(', ', $dependencies),
-      ));
-    }
-
+    $items = $this->buildMessageList();
     $form['message'] = array(
       '#theme' => 'item_list',
       '#items' => $items,
     );
 
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * Builds the message list for the confirmation form.
+   *
+   * @return MarkupInterface[]
+   *   Array of markup for the list of messages on the form.
+   *
+   * @see \Drupal\system\Form\ModulesListForm::buildModuleList()
+   */
+  protected function buildMessageList() {
+    $items = [];
+    if (!empty($this->modules['dependencies'])) {
+      // Display a list of required modules that have to be installed as well
+      // but were not manually selected.
+      foreach ($this->modules['dependencies'] as $module => $dependencies) {
+        $items[] = $this->formatPlural(count($dependencies), 'You must enable the @required module to install @module.', 'You must enable the @required modules to install @module.', [
+          '@module' => $this->modules['install'][$module],
+          // It is safe to implode this because module names are not translated
+          // markup and so will not be double-escaped.
+          '@required' => implode(', ', $dependencies),
+        ]);
+      }
+    }
+    return $items;
   }
 
   /**

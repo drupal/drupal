@@ -4,4 +4,3 @@ description: 'Module in the experimental package to test experimental functional
 package: Core (Experimental)
 version: 8.y.x-unstable
 core: 8.x
-hidden: true

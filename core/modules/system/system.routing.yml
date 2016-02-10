@@ -273,6 +273,14 @@ system.modules_list_confirm:
   requirements:
     _permission: 'administer modules'
 
+system.modules_list_experimental_confirm:
+  path: '/admin/modules/list/confirm-experimental'
+  defaults:
+    _form: 'Drupal\system\Form\ModulesListExperimentalConfirmForm'
+    _title: 'Experimental modules'
+  requirements:
+    _permission: 'administer modules'
+
 system.theme_uninstall:
   path: '/admin/appearance/uninstall'
   defaults:

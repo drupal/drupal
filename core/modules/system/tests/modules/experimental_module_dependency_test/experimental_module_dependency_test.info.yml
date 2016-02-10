@@ -1,0 +1,8 @@
+name: 'Experimental Dependency Test'
+type: module
+description: 'Module with a dependency in the experimental package.'
+package: Testing
+dependencies:
+  - experimental_module_test
+version: VERSION
+core: 8.x
