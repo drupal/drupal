@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Extension\ModuleHandlerTest.
+ * Contains \Drupal\Tests\system\Kernel\Extension\ModuleHandlerTest.
  */
 
 namespace Drupal\Tests\system\Kernel\Extension;
