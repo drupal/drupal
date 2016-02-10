@@ -444,6 +444,60 @@ class BookTest extends WebTestBase {
   }
 
   /**
+   * Tests BookManager::getTableOfContents().
+   */
+  public function testGetTableOfContents() {
+    // Create new book.
+    $nodes = $this->createBook();
+    $book = $this->book;
+
+    $this->drupalLogin($this->bookAuthor);
+
+    /*
+     * Add Node 5 under Node 2.
+     * Add Node 6, 7, 8, 9, 10, 11 under Node 3.
+     * Book
+     *  |- Node 0
+     *   |- Node 1
+     *   |- Node 2
+     *    |- Node 5
+     *  |- Node 3
+     *   |- Node 6
+     *    |- Node 7
+     *     |- Node 8
+     *      |- Node 9
+     *       |- Node 10
+     *        |- Node 11
+     *  |- Node 4
+     */
+    foreach ([5 => 2, 6 => 3, 7 => 6, 8 => 7, 9 => 8, 10 => 9, 11 => 10] as $child => $parent) {
+      $nodes[$child] = $this->createBookNode($book->id(), $nodes[$parent]->id());
+    }
+    $this->drupalGet($nodes[0]->toUrl('edit-form'));
+    // Snice Node 0 has children 2 levels deep, nodes 10 and 11 should not
+    // appear in the selector.
+    $this->assertNoOption('edit-book-pid', $nodes[10]->id());
+    $this->assertNoOption('edit-book-pid', $nodes[11]->id());
+    // Node 9 should be available as an option.
+    $this->assertOption('edit-book-pid', $nodes[9]->id());
+
+    // Get a shallow set of options.
+    /** @var \Drupal\book\BookManagerInterface $manager */
+    $manager = $this->container->get('book.manager');
+    $options = $manager->getTableOfContents($book->id(), 3);
+    $expected_nids = [$book->id(), $nodes[0]->id(), $nodes[1]->id(), $nodes[2]->id(), $nodes[3]->id(), $nodes[6]->id(), $nodes[4]->id()];
+    $this->assertEqual(count($options), count($expected_nids));
+    $diff = array_diff($expected_nids, array_keys($options));
+    $this->assertTrue(empty($diff), 'Found all expected option keys');
+    // Exclude Node 3.
+    $options = $manager->getTableOfContents($book->id(), 3, array($nodes[3]->id()));
+    $expected_nids = array($book->id(), $nodes[0]->id(), $nodes[1]->id(), $nodes[2]->id(), $nodes[4]->id());
+    $this->assertEqual(count($options), count($expected_nids));
+    $diff = array_diff($expected_nids, array_keys($options));
+    $this->assertTrue(empty($diff), 'Found all expected option keys after excluding Node 3');
+  }
+
+  /**
    * Tests the book navigation block when an access module is installed.
    */
   function testNavigationBlockOnAccessModuleInstalled() {
