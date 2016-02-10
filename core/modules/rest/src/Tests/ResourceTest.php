@@ -6,6 +6,8 @@
  */
 
 namespace Drupal\rest\Tests;
+
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\Entity\Role;
 
@@ -118,6 +120,32 @@ class ResourceTest extends RESTTestBase {
       foreach ($definition['uri_paths'] as $key => $uri_path) {
         $this->assertFalse(strpos($uri_path, '//'), 'The resource URI path does not have duplicate slashes.');
       }
+    }
+  }
+
+  /**
+   * Tests that a resource with a missing plugin does not cause an exception.
+   */
+  public function testMissingPlugin() {
+    $settings = array(
+      'entity:nonexisting' => array(
+        'GET' => array(
+          'supported_formats' => array(
+            'hal_json',
+          ),
+        ),
+      ),
+    );
+
+    try {
+      // Attempt to enable the resource.
+      $this->config->set('resources', $settings);
+      $this->config->save();
+      $this->rebuildCache();
+      $this->pass('rest.settings referencing a missing REST resource plugin does not cause an exception.');
+    }
+    catch (PluginNotFoundException $e) {
+      $this->fail('rest.settings referencing a missing REST resource plugin caused an exception.');
     }
   }
 

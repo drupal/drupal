@@ -64,7 +64,17 @@ class ResourceRoutes extends RouteSubscriberBase {
    */
   protected function alterRoutes(RouteCollection $collection) {
     $routes = array();
-    $enabled_resources = $this->config->get('rest.settings')->get('resources') ?: array();
+
+    // Silently ignore resources that are in the settings but are not defined on
+    // the plugin manager currently. That avoids exceptions when REST module is
+    // enabled before another module that provides the resource plugin specified
+    // in the settings.
+    // @todo Remove in https://www.drupal.org/node/2308745
+    $resources = $this->config->get('rest.settings')->get('resources') ?: array();
+    $enabled_resources = array_intersect_key($resources, $this->manager->getDefinitions());
+    if (count($resources) != count($enabled_resources)) {
+      trigger_error('rest.settings lists resources relying on the following missing plugins: ' . implode(', ', array_keys(array_diff_key($resources, $enabled_resources))));
+    }
 
     // Iterate over all enabled resource plugins.
     foreach ($enabled_resources as $id => $enabled_methods) {
