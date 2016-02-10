@@ -135,7 +135,7 @@ class Serializer extends StylePluginBase implements CacheableDependencyInterface
     else {
       $content_type = !empty($this->options['formats']) ? reset($this->options['formats']) : 'json';
     }
-    return $this->serializer->serialize($rows, $content_type);
+    return $this->serializer->serialize($rows, $content_type, ['views_style_plugin' => $this]);
   }
 
   /**
