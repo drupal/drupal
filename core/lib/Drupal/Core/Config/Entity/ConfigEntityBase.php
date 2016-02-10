@@ -355,6 +355,32 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
+  public function __sleep() {
+    $keys_to_unset = [];
+    if ($this instanceof EntityWithPluginCollectionInterface) {
+      $vars = get_object_vars($this);
+      foreach ($this->getPluginCollections() as $plugin_config_key => $plugin_collection) {
+        // Save any changes to the plugin configuration to the entity.
+        $this->set($plugin_config_key, $plugin_collection->getConfiguration());
+        // If the plugin collections are stored as properties on the entity,
+        // mark them to be unset.
+        $keys_to_unset += array_filter($vars, function ($value) use ($plugin_collection) {
+          return $plugin_collection === $value;
+        });
+      }
+    }
+
+    $vars = parent::__sleep();
+
+    if (!empty($keys_to_unset)) {
+      $vars = array_diff($vars, array_keys($keys_to_unset));
+    }
+    return $vars;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function calculateDependencies() {
     // All dependencies should be recalculated on every save apart from enforced
     // dependencies. This ensures stale dependencies are never saved.
