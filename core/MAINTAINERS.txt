@@ -391,6 +391,10 @@ Number module
 Options module
 - Yves Chedemois 'yched' https://www.drupal.org/u/yched
 
+Page Cache module
+- Lorenz Schori 'znerol' https://www.drupal.org/u/znerol
+- Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
+
 Path module
 - ?
 
