@@ -1045,8 +1045,8 @@
  * - The class name needs to end in the word Test.
  * - The namespace must be a subspace/subdirectory of \Drupal\yourmodule\Tests,
  *   where yourmodule is your module's machine name.
- * - The test class file must be named and placed under the yourmodule/tests/src
- *   directory, according to the PSR-4 standard.
+ * - The test class file must be named and placed under the
+ *   yourmodule/tests/src/Unit directory, according to the PSR-4 standard.
  * - Your test class needs a phpDoc comment block with a description and
  *   a @group annotation, which gives information about the test.
  * - Methods in your test class whose names start with 'test' are the actual
