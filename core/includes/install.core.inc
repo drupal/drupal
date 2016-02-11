@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * API functions for installing Drupal.
+ */
+
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
@@ -27,11 +32,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Drupal\user\Entity\User;
 use GuzzleHttp\Exception\RequestException;
-
-/**
- * @file
- * API functions for installing Drupal.
- */
 
 /**
  * Do not run the task during the current installation request.

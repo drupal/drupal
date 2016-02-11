@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Field API documentation.
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */

@@ -4,6 +4,7 @@
  * @file
  * Contains \Drupal\system\Tests\Entity\EntityQueryAggregateTest.
  */
+
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\field\Entity\FieldStorageConfig;

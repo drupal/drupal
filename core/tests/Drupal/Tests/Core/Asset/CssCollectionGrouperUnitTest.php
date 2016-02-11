@@ -5,7 +5,6 @@
  * Contains \Drupal\Tests\Core\Asset\CssCollectionGrouperUnitTest.
  */
 
-
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\CssCollectionGrouper;

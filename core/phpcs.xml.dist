@@ -19,7 +19,6 @@
     <exclude name="Drupal.Classes.UnusedUseStatement"/>
     <exclude name="Drupal.Commenting.ClassComment"/>
     <exclude name="Drupal.Commenting.DocComment"/>
-    <exclude name="Drupal.Commenting.FileComment"/>
     <exclude name="Drupal.Commenting.FunctionComment"/>
     <exclude name="Drupal.Commenting.HookComment"/>
     <exclude name="Drupal.Commenting.InlineComment"/>

@@ -1,6 +1,11 @@
 #!/usr/bin/env php
 <?php
 
+/**
+ * @file
+ * A command line application to generate proxy classes.
+ */
+
 use Drupal\Core\Command\GenerateProxyClassApplication;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\ProxyBuilder\ProxyBuilder;

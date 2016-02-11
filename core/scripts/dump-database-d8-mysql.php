@@ -1,6 +1,11 @@
 #!/usr/bin/env php
 <?php
 
+/**
+ * @file
+ * A command line application to dump a database to a generation script.
+ */
+
 use Drupal\Core\Command\DbDumpApplication;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;

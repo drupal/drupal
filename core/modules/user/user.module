@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Enables the user registration and login system.
+ */
+
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Unicode;
@@ -18,11 +23,6 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
-
-/**
- * @file
- * Enables the user registration and login system.
- */
 
 /**
  * Maximum length of username text field.

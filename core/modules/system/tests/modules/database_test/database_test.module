@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Database test module.
+ */
+
 use Drupal\Core\Database\Query\AlterableInterface;
 
 /**

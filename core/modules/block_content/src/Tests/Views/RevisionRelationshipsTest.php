@@ -4,6 +4,7 @@
  * @file
  * Contains \Drupal\block_content\Tests\Views\RevisionRelationshipsTest.
  */
+
 namespace Drupal\block_content\Tests\Views;
 
 use Drupal\block_content\Entity\BlockContentType;

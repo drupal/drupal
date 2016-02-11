@@ -1,9 +1,5 @@
 <?php
 
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Url;
-use Drupal\Component\Utility\UrlHelper;
-
 /**
  * @file
  * Functions to aid in the creation of sortable tables.
@@ -12,6 +8,10 @@ use Drupal\Component\Utility\UrlHelper;
  * having column headers that the user can click on to sort the table by that
  * column.
  */
+
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Url;
+use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Initializes the table sort context.

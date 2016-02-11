@@ -1,12 +1,12 @@
 <?php
 
-use Drupal\comment\CommentInterface;
-use Drupal\Core\Url;
-
 /**
  * @file
  * Hooks provided by the Comment module.
  */
+
+use Drupal\comment\CommentInterface;
+use Drupal\Core\Url;
 
 /**
  * @addtogroup hooks

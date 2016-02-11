@@ -5,7 +5,6 @@
  * Contains \Drupal\Tests\Core\Asset\CssCollectionRendererUnitTest.
  */
 
-
 namespace {
 
 /**

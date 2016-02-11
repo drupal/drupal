@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Text fixture.
+ */
+
 $connection = Drupal\Core\Database\Database::getConnection();
 
 $connection->insert('config')

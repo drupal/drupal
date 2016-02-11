@@ -4,6 +4,7 @@
  * @file
  * Contains \Drupal\Tests\menu_link_content\Unit\Plugin\migrate\source\MenuLinkSourceTest.
  */
+
 namespace Drupal\Tests\menu_link_content\Unit\Plugin\migrate\source;
 
 use Drupal\Component\Utility\Unicode;

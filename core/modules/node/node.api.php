@@ -1,14 +1,14 @@
 <?php
 
-use Drupal\node\NodeInterface;
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Xss;
-use Drupal\Core\Access\AccessResult;
-
 /**
  * @file
  * Hooks specific to the Node module.
  */
+
+use Drupal\node\NodeInterface;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Access\AccessResult;
 
 /**
  * @addtogroup hooks

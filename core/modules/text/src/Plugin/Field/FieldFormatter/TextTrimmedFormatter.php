@@ -4,6 +4,7 @@
  * @file
  * Contains \Drupal\text\Plugin\Field\FieldFormatter\TextTrimmedFormatter.
  */
+
 namespace Drupal\text\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;

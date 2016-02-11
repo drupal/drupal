@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Test module.
+ */
+
+/**
  * Implements hook_theme().
  */
 function twig_theme_test_theme($existing, $type, $theme, $path) {

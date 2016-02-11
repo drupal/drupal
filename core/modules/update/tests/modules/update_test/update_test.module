@@ -1,11 +1,11 @@
 <?php
 
-use Drupal\Core\Extension\Extension;
-
 /**
  * @file
  * Module for testing Update Manager functionality.
  */
+
+use Drupal\Core\Extension\Extension;
 
 /**
  * Implements hook_system_info_alter().

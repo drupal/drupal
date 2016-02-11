@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Install hooks for test module.
+ */
+
+/**
  * Implements hook_install().
  */
 function url_alter_test_install() {

@@ -1,11 +1,11 @@
 <?php
 
-use Drupal\Core\Database\Query\AlterableInterface;
-
 /**
  * @file
  * Test module that alters search queries.
  */
+
+use Drupal\Core\Database\Query\AlterableInterface;
 
 /**
  * Implements hook_query_TAG_alter(): tag search_$type with $type node_search.

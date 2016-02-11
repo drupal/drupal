@@ -4,6 +4,7 @@
  * @file
  * Contains main module functionality.
  */
+
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;

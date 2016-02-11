@@ -1,9 +1,5 @@
 <?php
 
-use Drupal\field\FieldStorageConfigInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\field\Entity\FieldStorageConfig;
-
 /**
  * @file
  * Helper module for the Field API tests.
@@ -16,6 +12,10 @@ use Drupal\field\Entity\FieldStorageConfig;
  * The main field_test.module file implements generic hooks and provides some
  * test helper functions
  */
+
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 
 require_once __DIR__ . '/field_test.entity.inc';
 require_once __DIR__ . '/field_test.field.inc';

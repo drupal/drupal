@@ -5,7 +5,6 @@
  * Contains \Drupal\filter\Plugin\migrate\process\d6\FilterFormatPermission.
  */
 
-
 namespace Drupal\filter\Plugin\migrate\process\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

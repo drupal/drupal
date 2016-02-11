@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Test fixture.
+ */
+
 use Drupal\Core\Database\Database;
 
 

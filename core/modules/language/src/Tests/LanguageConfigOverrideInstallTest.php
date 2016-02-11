@@ -4,6 +4,7 @@
  * @file
  * Contains \Drupal\language\Tests\LanguageConfigOverrideInstallTest.
  */
+
 namespace Drupal\language\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;

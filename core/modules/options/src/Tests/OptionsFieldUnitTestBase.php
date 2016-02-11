@@ -5,7 +5,6 @@
  * Contains \Drupal\options\Tests\OptionsFieldUnitTestBase.
  */
 
-
 namespace Drupal\options\Tests;
 
 use Drupal\field\Tests\FieldUnitTestBase;

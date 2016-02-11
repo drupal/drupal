@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Test theme.
+ */
+
+/**
  * Implements hook_preprocess_theme_test_template_test().
  */
 function test_theme_nyan_cat_engine_preprocess_theme_test_template_test(&$variables) {
