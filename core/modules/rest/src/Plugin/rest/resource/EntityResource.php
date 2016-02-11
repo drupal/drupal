@@ -110,7 +110,8 @@ class EntityResource extends ResourceBase {
       // 201 Created responses have an empty body.
       $url = $entity->urlInfo('canonical', ['absolute' => TRUE])->toString(TRUE);
       $response = new ResourceResponse(NULL, 201, ['Location' => $url->getGeneratedUrl()]);
-      $response->addCacheableDependency($url);
+      // Responses after creating an entity are not cacheable, so we add no
+      // cacheability metadata here.
       return $response;
     }
     catch (EntityStorageException $e) {
