@@ -50,13 +50,6 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   public $tableAlias;
 
   /**
-   * When a table has been moved this property is set.
-   *
-   * @var string
-   */
-  public $actualTable;
-
-  /**
    * The actual field in the database table, maybe different
    * on other kind of query plugins/special handlers.
    *
@@ -70,13 +63,6 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * @var string
    */
   public $field;
-
-  /**
-   * When a field has been moved this property is set.
-   *
-   * @var string
-   */
-  public $actualField;
 
   /**
    * The relationship used for this field.
@@ -123,15 +109,6 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     // Check to see if this handler type is defaulted. Note that
     // we have to do a lookup because the type is singular but the
     // option is stored as the plural.
-
-    // If the 'moved to' keyword moved our handler, let's fix that now.
-    if (isset($this->actualTable)) {
-      $options['table'] = $this->actualTable;
-    }
-
-    if (isset($this->actualField)) {
-      $options['field'] = $this->actualField;
-    }
 
     $this->unpackOptions($this->options, $options);
 
