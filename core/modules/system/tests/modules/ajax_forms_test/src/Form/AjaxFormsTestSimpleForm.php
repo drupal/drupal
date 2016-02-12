@@ -72,6 +72,48 @@ class AjaxFormsTestSimpleForm extends FormBase {
       );
     }
 
+    $form['test_group'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Test group'),
+      '#open' => TRUE,
+    ];
+
+    // Test ajax element in a #group.
+    $form['checkbox_in_group_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'checkbox-wrapper'],
+      '#group' => 'test_group',
+      'checkbox_in_group' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('AJAX checkbox in a group'),
+        '#ajax' => [
+          'callback' => [$object, 'checkboxGroupCallback'],
+          'wrapper' => 'checkbox-wrapper',
+        ],
+      ],
+      'nested_group' => [
+        '#type' => 'details',
+        '#title' => $this->t('Nested group'),
+        '#open' => TRUE,
+      ],
+      'checkbox_in_nested' => [
+        '#type' => 'checkbox',
+        '#group' => 'nested_group',
+        '#title' => $this->t('AJAX checkbox in a nested group'),
+        '#ajax' => [
+          'callback' => [$object, 'checkboxGroupCallback'],
+          'wrapper' => 'checkbox-wrapper',
+        ],
+      ],
+    ];
+
+    $form['another_checkbox_in_nested'] = [
+      '#type' => 'checkbox',
+      '#group' => 'nested_group',
+      '#title' => $this->t('Another AJAX checkbox in a nested group'),
+    ];
+
+
     return $form;
   }
 
