@@ -65,7 +65,9 @@ class HandlerTest extends UITestBase {
   /**
    * Overrides \Drupal\views\Tests\ViewTestBase::viewsData().
    *
-   * Adds a relationship for the uid column.
+   * Adds:
+   * - a relationship for the uid column.
+   * - a dummy field with no help text.
    */
   protected function viewsData() {
     $data = parent::viewsData();
@@ -78,6 +80,12 @@ class HandlerTest extends UITestBase {
         'base field' => 'uid'
       )
     );
+
+    // Create a dummy field with no help text.
+    $data['views_test_data']['no_help'] = $data['views_test_data']['name'];
+    $data['views_test_data']['no_help']['field']['title'] = t('No help');
+    $data['views_test_data']['no_help']['field']['real field'] = 'name';
+    unset($data['views_test_data']['no_help']['help']);
 
     return $data;
   }
@@ -244,6 +252,23 @@ class HandlerTest extends UITestBase {
       $this->assertNoDuplicateField('Revision ID', 'Content');
       $this->assertNoDuplicateField('Revision ID', 'Content revision');
     }
+  }
+
+  /**
+   * Ensures that no missing help text is shown.
+   *
+   * @see \Drupal\views\EntityViewsData
+   */
+  public function testErrorMissingHelp() {
+    // Test that the error message is not shown for entity fields but an empty
+    // description field is shown instead.
+    $this->drupalGet('admin/structure/views/nojs/add-handler/test_node_view/default/field');
+    $this->assertNoText('Error: missing help');
+    $this->assertRaw('<td class="description"></td>', 'Empty description found');
+
+    // Test that no error message is shown for other fields.
+    $this->drupalGet('admin/structure/views/nojs/add-handler/test_view_empty/default/field');
+    $this->assertNoText('Error: missing help');
   }
 
   /**
