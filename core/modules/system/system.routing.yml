@@ -456,6 +456,9 @@ system.db_update:
     op: 'info'
   requirements:
     _access: 'TRUE'
+  options:
+    default_url_options:
+      path_processing: FALSE
 
 system.admin_content:
   path: '/admin/content'

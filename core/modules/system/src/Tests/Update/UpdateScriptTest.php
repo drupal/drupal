@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Update;
 
 use Drupal\Core\Url;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -22,7 +23,7 @@ class UpdateScriptTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('update_script_test', 'dblog');
+  public static $modules = array('update_script_test', 'dblog', 'language');
 
   /**
    * {@inheritdoc}
@@ -216,6 +217,57 @@ class UpdateScriptTest extends WebTestBase {
     $final_maintenance_mode = $this->container->get('state')
       ->get('system.maintenance_mode');
     $this->assertEqual($final_maintenance_mode, $initial_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
+  }
+
+ /**
+  * Tests perfoming updates with update.php in a multilingual environment.
+  */
+  function testSuccessfulMultilingualUpdateFunctionality() {
+    // Add some custom languages.
+    foreach (array('aa', 'bb') as $language_code) {
+      ConfigurableLanguage::create(array(
+          'id' => $language_code,
+          'label' => $this->randomMachineName(),
+        ))->save();
+     }
+
+    $config = \Drupal::service('config.factory')->getEditable('language.negotiation');
+    // Ensure path prefix is used to determine the language.
+    $config->set('url.source', 'path_prefix');
+    // Ensure that there's a path prefix set for english as well.
+    $config->set('url.prefixes.en', 'en');
+    $config->save();
+
+    // Reset the static cache to ensure we have the most current setting.
+    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $this->assertEqual($schema_version, 8001, 'update_script_test schema version is 8001 after updating.');
+
+    // Set the installed schema version to one less than the current update.
+    drupal_set_installed_schema_version('update_script_test', $schema_version - 1);
+    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $this->assertEqual($schema_version, 8000, 'update_script_test schema version overridden to 8000.');
+
+    // Create admin user.
+    $admin_user = $this->drupalCreateUser(array('administer software updates', 'access administration pages', 'access site reports', 'access site in maintenance mode', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+
+    // Visit status report page and ensure, that link to update.php has no path prefix set.
+    $this->drupalGet('en/admin/reports/status', array('external' => TRUE));
+    $this->assertResponse(200);
+    $this->assertLinkByHref('/update.php');
+    $this->assertNoLinkByHref('en/update.php');
+
+    // Click through update.php with 'access administration pages' and
+    // 'access site reports' permissions.
+    $this->drupalGet($this->updateUrl, array('external' => TRUE));
+    $this->clickLink(t('Continue'));
+    $this->clickLink(t('Apply pending updates'));
+    $this->assertText('Updates were attempted.');
+    $this->assertLink('logged');
+    $this->assertLink('Administration pages');
+    $this->assertNoLinkByHrefInMainRegion('update.php', 1);
+    $this->clickLink('Administration pages');
+    $this->assertResponse(200);
   }
 
   /**
