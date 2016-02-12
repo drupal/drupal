@@ -19,14 +19,15 @@ Poltergeist.Browser = (function () {
    * @param owner
    * @param width
    * @param height
+   * @param jsErrors
    * @constructor
    */
-  function Browser(owner, width, height) {
+  function Browser(owner, width, height, jsErrors) {
     this.owner = owner;
     this.width = width || 1024;
     this.height = height || 768;
     this.pages = [];
-    this.js_errors = true;
+    this.js_errors = (typeof jsErrors === 'boolean') ? jsErrors : true;
     this._debug = false;
     this._counter = 0;
     this.resetPage();
