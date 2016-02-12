@@ -5,11 +5,12 @@ Poltergeist = (function () {
    * @param port
    * @param width
    * @param height
+   * @param jsErrors
    * @constructor
    */
-  function Poltergeist(port, width, height) {
+  function Poltergeist(port, width, height, jsErrors) {
     var self;
-    this.browser = new Poltergeist.Browser(this, width, height);
+    this.browser = new Poltergeist.Browser(this, width, height, jsErrors);
 
     this.commandServer = new Poltergeist.Server(this, port);
     this.commandServer.start();

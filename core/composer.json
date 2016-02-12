@@ -34,7 +34,7 @@
   "require-dev": {
     "behat/mink": "~1.6",
     "behat/mink-goutte-driver": "~1.2",
-    "jcalderonzumba/gastonjs": "^1.1@dev",
+    "jcalderonzumba/gastonjs": "~1.0.2",
     "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
     "mikey179/vfsStream": "~1.2",
     "phpunit/phpunit": "~4.8",

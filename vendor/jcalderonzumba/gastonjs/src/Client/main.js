@@ -26,4 +26,4 @@ phantom.injectJs("" + phantom.libraryPath + "/browser.js");
 
 system = require('system');
 
-new Poltergeist(system.args[1], system.args[2], system.args[3]);
+new Poltergeist(system.args[1], system.args[2], system.args[3], system.args[4] === 'false' ? false : true);
