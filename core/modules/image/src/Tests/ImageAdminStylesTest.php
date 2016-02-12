@@ -244,7 +244,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertNoLinkByHref($style_path . '/effects/' . $uuids['image_crop'] . '/delete');
     // Refresh the image style information and verify that the effect was
     // actually deleted.
-    $style = entity_load_unchanged('image_style', $style->id());
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $style = $entity_type_manager->getStorage('image_style')->loadUnchanged($style->id());
     $this->assertFalse($style->getEffects()->has($uuids['image_crop']), format_string(
       'Effect with ID %uuid no longer found on image style %style',
       array(
@@ -260,7 +261,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     );
     $this->drupalPostForm($style_path, array('new' => 'image_rotate'), t('Add'));
     $this->drupalPostForm(NULL, $edit, t('Add effect'));
-    $style = entity_load_unchanged('image_style', $style_name);
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $style = $entity_type_manager->getStorage('image_style')->loadUnchanged($style_name);
     $this->assertEqual(count($style->getEffects()), 6, 'Rotate effect with transparent background was added.');
 
     // Style deletion form.
