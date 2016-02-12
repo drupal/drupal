@@ -54,9 +54,11 @@ class NodeViewsData extends EntityViewsData {
       ),
     );
 
+    $data['node_field_data']['promote']['help'] = t('A boolean indicating whether the node is visible on the front page.');
     $data['node_field_data']['promote']['filter']['label'] = t('Promoted to front page status');
     $data['node_field_data']['promote']['filter']['type'] = 'yes-no';
 
+    $data['node_field_data']['sticky']['help'] = t('A boolean indicating whether the node should sort to the top of content lists.');
     $data['node_field_data']['sticky']['filter']['label'] = t('Sticky status');
     $data['node_field_data']['sticky']['filter']['type'] = 'yes-no';
     $data['node_field_data']['sticky']['sort']['help'] = t('Whether or not the content is sticky. To list sticky content first, set this to descending.');
@@ -255,6 +257,10 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_revision']['status']['filter']['label'] = t('Published');
     $data['node_field_revision']['status']['filter']['type'] = 'yes-no';
     $data['node_field_revision']['status']['filter']['use_equal'] = TRUE;
+
+    $data['node_field_revision']['promote']['help'] = t('A boolean indicating whether the node is visible on the front page.');
+
+    $data['node_field_revision']['sticky']['help'] = t('A boolean indicating whether the node should sort to the top of content lists.');
 
     $data['node_field_revision']['langcode']['help'] = t('The language of the content or translation.');
 
