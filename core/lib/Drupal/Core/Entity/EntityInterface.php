@@ -309,6 +309,9 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    *   The entity storage object.
    *
    * @see \Drupal\Core\Field\FieldItemListInterface::preSave()
+   *
+   * @throws \Exception
+   *   When there is a problem that should prevent saving the entity.
    */
   public function preSave(EntityStorageInterface $storage);
 
