@@ -1,23 +1,19 @@
 langcode: en
 status: true
-dependencies:
-  module:
-    - user
+dependencies: {  }
 id: test_attachment_ui
 label: null
 module: views
 description: ''
 tag: ''
 base_table: views_test_data
-base_field: nid
+base_field: ''
 core: '8'
 display:
   default:
     display_options:
       access:
-        type: perm
-        options:
-          perm: 'views_test_data test permission'
+        type: none
       cache:
         type: tag
       exposed_form:
@@ -34,15 +30,47 @@ display:
           table: views_test_data
           field: id
           plugin_id: numeric
+      display_extenders: {  }
     display_plugin: default
     display_title: Master
     id: default
     position: 0
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url.query_args
+      tags: {  }
   attachment_1:
     display_plugin: attachment
     display_title: Attachment
     id: attachment_1
     position: 1
+    display_options:
+      title: '<em>Markup</em>'
+      display_extenders: {  }
+      defaults:
+        title: false
+        header: false
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: 'Attachment title: [view:title]'
+            format: plain_text
+          plugin_id: text
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+      tags: {  }
   feed_1:
     display_plugin: feed
     id: feed_1
@@ -65,10 +93,23 @@ display:
             guid_field: id
             guid_field_is_permalink: false
       path: test_attachment_ui_feed
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+      tags: {  }
   page_1:
     display_plugin: page
-    display_title: <em>Page</em>
+    display_title: '<em>Page</em>'
     display_options:
       path: test_attachment_ui
+      display_extenders: {  }
     id: page_1
     position: 2
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url.query_args
+      tags: {  }
