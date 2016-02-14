@@ -13,6 +13,7 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests the bubbling up of comment cache tags when using the Comment list
@@ -98,7 +99,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
     // also exists in the {users} table.
     $user = $this->createUser();
     $user->save();
-    $comment = entity_create('comment', array(
+    $comment = Comment::create(array(
       'subject' => 'Llama',
       'comment_body' => array(
         'value' => 'Llamas are cool!',

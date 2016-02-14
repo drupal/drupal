@@ -54,7 +54,7 @@ class CommentNonNodeTest extends WebTestBase {
 
     // Create a bundle for entity_test.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test');
-    entity_create('comment_type', array(
+    CommentType::create(array(
       'id' => 'comment',
       'label' => 'Comment settings',
       'description' => 'Comment settings',

@@ -8,6 +8,7 @@
 namespace Drupal\hal\Tests;
 
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests that nodes and terms are correctly normalized and denormalized.
@@ -167,7 +168,7 @@ class EntityTest extends NormalizerTestBase {
     ));
     $node->save();
 
-    $parent_comment = entity_create('comment', array(
+    $parent_comment = Comment::create(array(
       'uid' => $account->id(),
       'subject' => $this->randomMachineName(),
       'comment_body' => [
@@ -180,7 +181,7 @@ class EntityTest extends NormalizerTestBase {
     ));
     $parent_comment->save();
 
-    $comment = entity_create('comment', array(
+    $comment = Comment::create(array(
       'uid' => $account->id(),
       'subject' => $this->randomMachineName(),
       'comment_body' => [

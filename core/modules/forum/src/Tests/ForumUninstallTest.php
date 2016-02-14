@@ -11,6 +11,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests forum module uninstallation.
@@ -54,7 +55,7 @@ class ForumUninstallTest extends WebTestBase {
     ));
 
     // Create at least one comment against the forum node.
-    $comment = entity_create('comment', array(
+    $comment = Comment::create(array(
       'entity_id' => $node->nid->value,
       'entity_type' => 'node',
       'field_name' => 'comment_forum',

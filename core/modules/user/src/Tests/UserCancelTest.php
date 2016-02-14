@@ -249,7 +249,7 @@ class UserCancelTest extends WebTestBase {
     // Add a comment to the page.
     $comment_subject = $this->randomMachineName(8);
     $comment_body = $this->randomMachineName(8);
-    $comment = entity_create('comment', array(
+    $comment = Comment::create(array(
       'subject' => $comment_subject,
       'comment_body' => $comment_body,
       'entity_id' => $node->id(),
@@ -316,7 +316,7 @@ class UserCancelTest extends WebTestBase {
     // Add a comment to the page.
     $comment_subject = $this->randomMachineName(8);
     $comment_body = $this->randomMachineName(8);
-    $comment = entity_create('comment', array(
+    $comment = Comment::create(array(
       'subject' => $comment_subject,
       'comment_body' => $comment_body,
       'entity_id' => $node->id(),

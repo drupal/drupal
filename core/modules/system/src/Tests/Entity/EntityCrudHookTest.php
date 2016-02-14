@@ -163,7 +163,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     $nid = $node->id();
     $GLOBALS['entity_crud_hook_test'] = array();
 
-    $comment = entity_create('comment', array(
+    $comment = Comment::create(array(
       'cid' => NULL,
       'pid' => 0,
       'entity_id' => $nid,

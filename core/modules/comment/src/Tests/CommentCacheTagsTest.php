@@ -77,7 +77,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     $this->entityTestCamelid->save();
 
     // Create a "Llama" comment.
-    $comment = entity_create('comment', array(
+    $comment = Comment::create(array(
       'subject' => 'Llama',
       'comment_body' => array(
         'value' => 'The name "llama" was adopted by European settlers from native Peruvians.',

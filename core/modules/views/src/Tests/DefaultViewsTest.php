@@ -15,6 +15,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\views\Views;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests the default views provided by views.
@@ -101,7 +102,7 @@ class DefaultViewsTest extends ViewTestBase {
         'entity_type' => 'node',
         'field_name' => 'comment'
       );
-      entity_create('comment', $comment)->save();
+      Comment::create($comment)->save();
     }
 
     // Some views, such as the "Who's Online" view, only return results if at

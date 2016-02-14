@@ -13,6 +13,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\Entity\User;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests for the base handlers provided by Entity Reference.
@@ -413,7 +414,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     $comments = array();
     $comment_labels = array();
     foreach ($comment_values as $key => $values) {
-      $comment = entity_create('comment', $values);
+      $comment = Comment::create($values);
       $comment->save();
       $comments[$key] = $comment;
       $comment_labels[$key] = Html::escape($comment->label());

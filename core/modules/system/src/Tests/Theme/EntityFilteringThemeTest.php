@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests themed output for each entity type in all available themes to ensure
@@ -110,7 +111,7 @@ class EntityFilteringThemeTest extends WebTestBase {
     ));
 
     // Create a test comment on the test node.
-    $this->comment = entity_create('comment', array(
+    $this->comment = Comment::create(array(
       'entity_id' => $this->node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',

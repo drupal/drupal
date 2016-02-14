@@ -11,6 +11,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests the field plugin base integration with the entity system.
@@ -59,7 +60,7 @@ class FieldEntityTest extends ViewTestBase {
 
     $node = entity_create('node', array('uid' => $account->id(), 'type' => 'page', 'title' => $this->randomString()));
     $node->save();
-    $comment = entity_create('comment', array(
+    $comment = Comment::create(array(
       'uid' => $account->id(),
       'entity_id' => $node->id(),
       'entity_type' => 'node',

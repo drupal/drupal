@@ -9,6 +9,7 @@ namespace Drupal\forum\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests the forum blocks.
@@ -97,7 +98,7 @@ class ForumBlockTest extends WebTestBase {
       // Get the node from the topic title.
       $node = $this->drupalGetNodeByTitle($topics[$index]);
       $date->modify('+1 minute');
-      $comment = entity_create('comment', array(
+      $comment = Comment::create(array(
         'entity_id' => $node->id(),
         'field_name' => 'comment_forum',
         'entity_type' => 'node',

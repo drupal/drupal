@@ -12,6 +12,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests the RDF mappings and RDFa markup of the standard profile.
@@ -515,7 +516,7 @@ class StandardProfileTest extends WebTestBase {
       $values += $contact;
     }
 
-    $comment = entity_create('comment', $values);
+    $comment = Comment::create($values);
     $comment->save();
     return $comment;
   }

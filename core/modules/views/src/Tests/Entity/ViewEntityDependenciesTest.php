@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
+use Drupal\comment\Entity\CommentType;
 
 /**
  * Tests the calculation of dependencies for views.
@@ -44,7 +45,7 @@ class ViewEntityDependenciesTest extends ViewKernelTestBase {
     $this->installEntitySchema('node');
     $this->installConfig(array('field', 'node'));
 
-    $comment_type = entity_create('comment_type', array(
+    $comment_type = CommentType::create(array(
       'id' => 'comment',
       'label' => 'Comment settings',
       'description' => 'Comment settings',

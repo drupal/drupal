@@ -10,6 +10,7 @@ namespace Drupal\comment\Tests\Views;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests the argument_comment_user_uid handler.
@@ -87,7 +88,7 @@ abstract class CommentTestBase extends ViewTestBase {
       'pid' => '',
       'mail' => 'someone@example.com',
     );
-    $this->comment = entity_create('comment', $comment);
+    $this->comment = Comment::create($comment);
     $this->comment->save();
   }
 
