@@ -628,7 +628,7 @@
 
   $(document).on('state:checked', function (e) {
     if (e.trigger) {
-      $(e.target).prop('checked', e.value);
+      $(':input', e.target).prop('checked', e.value);
     }
   });
 
