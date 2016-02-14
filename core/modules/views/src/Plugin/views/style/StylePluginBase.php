@@ -232,6 +232,10 @@ abstract class StylePluginBase extends PluginBase {
 
   /**
    * Take a value and apply token replacement logic to it.
+   *
+   * @return \Drupal\views\Render\ViewsRenderPipelineMarkup
+   *   The value with tokens replaced and wrapped in a ViewsRenderPipelineMarkup
+   *   object. The value will have been XSS admin filtered.
    */
   public function tokenizeValue($value, $row_index) {
     if (strpos($value, '{{') !== FALSE) {
@@ -248,7 +252,7 @@ abstract class StylePluginBase extends PluginBase {
       // resulting string. We do the same here for consistency.
       $value = Xss::filterAdmin($value);
     }
-    return $value;
+    return ViewsRenderPipelineMarkup::create($value);
   }
 
   /**

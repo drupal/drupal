@@ -143,6 +143,8 @@ class EntityFilteringThemeTest extends WebTestBase {
         $this->drupalGet($path);
         $this->assertResponse(200);
         $this->assertNoRaw($this->xssLabel);
+        // Ensure there is no double escaping.
+        $this->assertNoEscaped('&lt;');
       }
     }
   }

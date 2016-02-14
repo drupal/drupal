@@ -61,5 +61,10 @@ class DisplayAttachmentTest extends UITestBase {
     $view = Views::getView('test_attachment_ui');
     $view->initDisplay();
     $this->assertEqual(array_keys($view->displayHandlers->get('attachment_1')->getOption('displays')), array('default', 'page_1'), 'The attached displays got saved as expected');
+
+    // The attachment title should be escaped as it is using the plain text
+    // formatter.
+    $this->drupalGet('test_attachment_ui');
+    $this->assertEscaped('Attachment title: <em>Markup</em>');
   }
 }
