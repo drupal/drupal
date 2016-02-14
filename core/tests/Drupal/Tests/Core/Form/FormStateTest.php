@@ -536,7 +536,7 @@ class FormStateTest extends UnitTestCase {
    * @covers ::setTemporaryValue
    */
   public function testTemporaryValue() {
-    $form_state = New FormState();
+    $form_state = new FormState();
     $this->assertFalse($form_state->hasTemporaryValue('rainbow_sparkles'));
     $form_state->setTemporaryValue('rainbow_sparkles', 'yes please');
     $this->assertSame($form_state->getTemporaryValue('rainbow_sparkles'), 'yes please');

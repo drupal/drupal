@@ -59,7 +59,7 @@ class Zip implements ArchiverInterface {
   /**
    * {@inheritdoc}
    */
-  public function extract($path, Array $files = array()) {
+  public function extract($path, array $files = array()) {
     if ($files) {
       $this->zip->extractTo($path, $files);
     }

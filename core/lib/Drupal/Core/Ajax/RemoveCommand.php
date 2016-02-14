@@ -21,7 +21,7 @@ namespace Drupal\Core\Ajax;
  *
  * @ingroup ajax
  */
-class RemoveCommand Implements CommandInterface {
+class RemoveCommand implements CommandInterface {
 
   /**
    * The CSS selector for the element(s) to be removed.

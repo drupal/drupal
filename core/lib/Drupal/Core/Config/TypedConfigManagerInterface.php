@@ -17,7 +17,7 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
  * @see hook_config_schema_info_alter()
  * @see https://www.drupal.org/node/1905070
  */
-Interface TypedConfigManagerInterface extends TypedDataManagerInterface {
+interface TypedConfigManagerInterface extends TypedDataManagerInterface {
 
   /**
    * Gets typed configuration data.

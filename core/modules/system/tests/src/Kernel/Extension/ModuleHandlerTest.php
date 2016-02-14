@@ -88,7 +88,7 @@ class ModuleHandlerTest extends KernelTestBase {
    *   The expected values, sorted by weight and module name.
    * @param $condition
    */
-  protected function assertModuleList(Array $expected_values, $condition) {
+  protected function assertModuleList(array $expected_values, $condition) {
     $expected_values = array_values(array_unique($expected_values));
     $enabled_modules = array_keys($this->container->get('module_handler')->getModuleList());
     $this->assertEqual($expected_values, $enabled_modules, format_string('@condition: extension handler returns correct results', array('@condition' => $condition)));
