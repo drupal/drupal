@@ -80,6 +80,7 @@ class UserAdminListingTest extends WebTestBase {
         'status' => (string) $account->td[1],
         'roles' => $roles,
         'member_for' => (string) $account->td[3],
+        'last_access' => (string) $account->td[4],
       );
     }
 
@@ -92,6 +93,8 @@ class UserAdminListingTest extends WebTestBase {
     $this->assertEqual($result_accounts[$role_account_name]['roles'], $expected_roles, 'Ensure roles are listed properly.');
 
     $this->assertEqual($result_accounts[$timestamp_user]['member_for'], \Drupal::service('date.formatter')->formatTimeDiffSince($accounts[$timestamp_user]->created->value), 'Ensure the right member time is displayed.');
+
+    $this->assertEqual($result_accounts[$timestamp_user]['last_access'], 'never', 'Ensure the last access time is "never".');
   }
 
 }

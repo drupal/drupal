@@ -158,7 +158,7 @@ class UserListBuilder extends EntityListBuilder {
     $row['member_for']['data'] = $this->dateFormatter->formatTimeDiffSince($entity->getCreatedTime(), $options)->toRenderable();
     $last_access = $this->dateFormatter->formatTimeDiffSince($entity->getLastAccessedTime(), $options);
 
-    if ($entity->access) {
+    if ($entity->getLastAccessedTime()) {
       $row['access']['data']['#markup'] = $last_access->getString();
       CacheableMetadata::createFromObject($last_access)->applyTo($row['access']['data']);
     }
