@@ -333,7 +333,7 @@ function views_update_8003() {
  */
 
 /**
- * @addtogroup updates-8.0.4
+ * @addtogroup updates-8.0.x
  * @{
  */
 
@@ -345,5 +345,5 @@ function views_update_8004() {
 }
 
 /**
- * @} End of "addtogroup updates-8.0.4".
+ * @} End of "addtogroup updates-8.0.x".
  */
