@@ -11,6 +11,7 @@ use Drupal\book\BookManagerInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -91,7 +92,8 @@ class BookOutlineForm extends ContentEntityForm {
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->entity->book['original_bid'] ? $this->t('Update book outline') : $this->t('Add to book outline');
-    $actions['delete']['#value'] = $this->t('Remove from book outline');
+    $actions['delete']['#title'] = $this->t('Remove from book outline');
+    $actions['delete']['#url'] = new Url('entity.node.book_remove_form', ['node' => $this->entity->book['nid']]);
     $actions['delete']['#access'] = $this->bookManager->checkNodeIsRemovable($this->entity);
     return $actions;
   }
@@ -124,13 +126,6 @@ class BookOutlineForm extends ContentEntityForm {
     else {
       drupal_set_message($this->t('There was an error adding the post to the book.'), 'error');
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function delete(array $form, FormStateInterface $form_state) {
-    $form_state->setRedirectUrl($this->entity->urlInfo('book-remove-form'));
   }
 
 }
