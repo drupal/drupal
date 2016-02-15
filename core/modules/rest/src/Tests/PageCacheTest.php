@@ -33,6 +33,7 @@ class PageCacheTest extends RESTTestBase {
 
     // Create an entity programmatically.
     $entity = $this->entityCreate('entity_test');
+    $entity->set('field_test_text', 'custom cache tag value');
     $entity->save();
     // Read it over the REST API.
     $this->httpRequest($entity->urlInfo()->setRouteParameter('_format', $this->defaultFormat), 'GET', NULL, $this->defaultMimeType);
@@ -40,6 +41,7 @@ class PageCacheTest extends RESTTestBase {
     $this->assertHeader('x-drupal-cache', 'MISS');
     $this->assertCacheTag('config:rest.settings');
     $this->assertCacheTag('entity_test:1');
+    $this->assertCacheTag('entity_test_access:field_test_text');
 
     // Read it again, should be page-cached now.
     $this->httpRequest($entity->urlInfo()->setRouteParameter('_format', $this->defaultFormat), 'GET', NULL, $this->defaultMimeType);
@@ -47,6 +49,7 @@ class PageCacheTest extends RESTTestBase {
     $this->assertHeader('x-drupal-cache', 'HIT');
     $this->assertCacheTag('config:rest.settings');
     $this->assertCacheTag('entity_test:1');
+    $this->assertCacheTag('entity_test_access:field_test_text');
 
     // Trigger a config save which should clear the page cache, so we should get
     // a cache miss now for the same request.
@@ -56,6 +59,7 @@ class PageCacheTest extends RESTTestBase {
     $this->assertHeader('x-drupal-cache', 'MISS');
     $this->assertCacheTag('config:rest.settings');
     $this->assertCacheTag('entity_test:1');
+    $this->assertCacheTag('entity_test_access:field_test_text');
   }
 
 }
