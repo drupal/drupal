@@ -50,14 +50,4 @@ use Drupal\Core\Entity\EntityTypeInterface;
  */
 class EntityTestMulLangcodeKey extends EntityTest {
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields = parent::baseFieldDefinitions($entity_type);
-    $fields['custom_langcode_key'] = $fields['langcode'];
-    unset($fields['langcode']);
-    return $fields;
-  }
-
 }

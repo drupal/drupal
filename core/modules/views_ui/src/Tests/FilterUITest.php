@@ -72,7 +72,7 @@ class FilterUITest extends ViewTestBase {
 
     $this->drupalGet('admin/structure/views/view/test_filter_groups');
 
-    $this->assertLink('Content: Node ID (= 1)', 0, 'Content: Node ID (= 1) link appears correctly.');
+    $this->assertLink('Content: ID (= 1)', 0, 'Content: ID (= 1) link appears correctly.');
 
     // Tests that we can create a new filter group from UI.
     $this->drupalGet('admin/structure/views/nojs/rearrange-filter/test_filter_groups/page');

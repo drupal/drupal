@@ -21,8 +21,10 @@ namespace Drupal\entity_test\Entity;
  *   render_cache = FALSE,
  *   entity_keys = {
  *     "id" = "id",
+ *     "uuid" = "uuid",
  *     "label" = "name",
- *     "bundle" = "type"
+ *     "bundle" = "type",
+ *     "langcode" = "langcode",
  *   }
  * )
  */

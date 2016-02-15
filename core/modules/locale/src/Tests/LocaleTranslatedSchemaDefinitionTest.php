@@ -46,17 +46,17 @@ class LocaleTranslatedSchemaDefinitionTest extends WebTestBase {
     $stringStorage = \Drupal::service('locale.storage');
 
     $source = $stringStorage->createString(array(
-      'source' => 'The node ID.',
+      'source' => 'Revision ID',
     ))->save();
 
     $stringStorage->createTranslation(array(
       'lid' => $source->lid,
       'language' => 'fr',
-      'translation' => 'Translated node ID',
+      'translation' => 'Translated Revision ID',
     ))->save();
 
     // Ensure that the field is translated when access through the API.
-    $this->assertEqual('Translated node ID', \Drupal::entityManager()->getBaseFieldDefinitions('node')['nid']->getDescription());
+    $this->assertEqual('Translated Revision ID', \Drupal::entityManager()->getBaseFieldDefinitions('node')['vid']->getLabel());
 
     // Assert there are no updates.
     $this->assertFalse(\Drupal::service('entity.definition_update_manager')->needsUpdates());

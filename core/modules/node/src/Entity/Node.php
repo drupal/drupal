@@ -325,41 +325,7 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['nid'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Node ID'))
-      ->setDescription(t('The node ID.'))
-      ->setReadOnly(TRUE)
-      ->setSetting('unsigned', TRUE);
-
-    $fields['uuid'] = BaseFieldDefinition::create('uuid')
-      ->setLabel(t('UUID'))
-      ->setDescription(t('The node UUID.'))
-      ->setReadOnly(TRUE);
-
-    $fields['vid'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Revision ID'))
-      ->setDescription(t('The node revision ID.'))
-      ->setReadOnly(TRUE)
-      ->setSetting('unsigned', TRUE);
-
-    $fields['type'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Type'))
-      ->setDescription(t('The node type.'))
-      ->setSetting('target_type', 'node_type')
-      ->setReadOnly(TRUE);
-
-    $fields['langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Language'))
-      ->setDescription(t('The node language code.'))
-      ->setTranslatable(TRUE)
-      ->setRevisionable(TRUE)
-      ->setDisplayOptions('view', array(
-        'type' => 'hidden',
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'language_select',
-        'weight' => 2,
-      ));
+    $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Title'))

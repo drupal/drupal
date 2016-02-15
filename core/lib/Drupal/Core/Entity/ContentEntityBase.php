@@ -9,9 +9,11 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
@@ -1112,6 +1114,64 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       $this->entityKeys[$key] = $value;
     }
     return $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+    $fields = [];
+    if ($entity_type->hasKey('id')) {
+      $fields[$entity_type->getKey('id')] = BaseFieldDefinition::create('integer')
+        ->setLabel(new TranslatableMarkup('ID'))
+        ->setReadOnly(TRUE)
+        ->setSetting('unsigned', TRUE);
+    }
+    if ($entity_type->hasKey('uuid')) {
+      $fields[$entity_type->getKey('uuid')] = BaseFieldDefinition::create('uuid')
+        ->setLabel(new TranslatableMarkup('UUID'))
+        ->setReadOnly(TRUE);
+    }
+    if ($entity_type->hasKey('revision')) {
+      $fields[$entity_type->getKey('revision')] = BaseFieldDefinition::create('integer')
+        ->setLabel(new TranslatableMarkup('Revision ID'))
+        ->setReadOnly(TRUE)
+        ->setSetting('unsigned', TRUE);
+    }
+    if ($entity_type->hasKey('langcode')) {
+      $fields[$entity_type->getKey('langcode')] = BaseFieldDefinition::create('language')
+        ->setLabel(new TranslatableMarkup('Language'))
+        ->setDisplayOptions('view', [
+          'type' => 'hidden',
+        ])
+        ->setDisplayOptions('form', [
+          'type' => 'language_select',
+          'weight' => 2,
+        ]);
+      if ($entity_type->isRevisionable()) {
+        $fields[$entity_type->getKey('langcode')]->setRevisionable(TRUE);
+      }
+      if ($entity_type->isTranslatable()) {
+        $fields[$entity_type->getKey('langcode')]->setTranslatable(TRUE);
+      }
+    }
+    if ($entity_type->hasKey('bundle')) {
+      if ($bundle_entity_type_id = $entity_type->getBundleEntityType()) {
+        $fields[$entity_type->getKey('bundle')] = BaseFieldDefinition::create('entity_reference')
+          ->setLabel($entity_type->getBundleLabel())
+          ->setSetting('target_type', $bundle_entity_type_id)
+          ->setRequired(TRUE)
+          ->setReadOnly(TRUE);
+      }
+      else {
+        $fields[$entity_type->getKey('bundle')] = BaseFieldDefinition::create('string')
+          ->setLabel($entity_type->getBundleLabel())
+          ->setRequired(TRUE)
+          ->setReadOnly(TRUE);
+      }
+    }
+
+    return $fields;
   }
 
   /**

@@ -33,7 +33,8 @@ use Drupal\entity_test\FieldStorageDefinition;
  *     "id" = "id",
  *     "label" = "name",
  *     "uuid" = "uuid",
- *     "bundle" = "type"
+ *     "bundle" = "type",
+ *     "langcode" = "langcode",
  *   },
  *   links = {
  *     "canonical" = "/entity_test_base_field_display/{entity_test_base_field_display}/edit",

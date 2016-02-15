@@ -81,7 +81,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     $default_widget = $field_type_info['default_widget'];
     $widget_settings = \Drupal::service('plugin.manager.field.widget')->getDefaultSettings($default_widget);
     $expected = array(
-      'weight' => 0,
+      'weight' => 3,
       'type' => $default_widget,
       'settings' => $widget_settings,
       'third_party_settings' => array(),
