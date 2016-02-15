@@ -8,6 +8,7 @@
 namespace Drupal\tour\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\tour\Entity\Tour;
 
 /**
  * Tests the functionality of tour tips.
@@ -108,7 +109,7 @@ class TourTest extends TourTestBasic {
     $this->assertNotEqual(count($elements), 1, 'Did not find English variant of tip 1.');
 
     // Programmatically create a tour for use through the remainder of the test.
-    $tour = entity_create('tour', array(
+    $tour = Tour::create(array(
       'id' => 'tour-entity-create-test-en',
       'label' => 'Tour test english',
       'langcode' => 'en',
