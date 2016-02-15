@@ -152,7 +152,7 @@ class UserListBuilder extends EntityListBuilder {
       '#items' => $users_roles,
     );
     $row['member_for'] = $this->dateFormatter->formatTimeDiffSince($entity->getCreatedTime());
-    $row['access'] = $entity->access ? $this->t('@time ago', array('@time' => $this->dateFormatter->formatTimeDiffSince($entity->getLastAccessedTime()))) : t('never');
+    $row['access'] = $entity->getLastAccessedTime() ? $this->t('@time ago', array('@time' => $this->dateFormatter->formatTimeDiffSince($entity->getLastAccessedTime()))) : t('never');
     return $row + parent::buildRow($entity);
   }
 
