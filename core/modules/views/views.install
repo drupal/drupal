@@ -331,3 +331,19 @@ function views_update_8003() {
 /**
  * @} End of "addtogroup updates-8.0.0-rc".
  */
+
+/**
+ * @addtogroup updates-8.0.x
+ * @{
+ */
+
+/**
+ * Clear caches due to updated entity views data.
+ */
+function views_update_8004() {
+  // Empty update to cause a cache flush so that views data is rebuilt.
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.x".
+ */
