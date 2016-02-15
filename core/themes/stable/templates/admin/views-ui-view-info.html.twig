@@ -7,7 +7,7 @@
  * - displays: List of displays.
  */
 #}
-<h3 class="views-ui-view-title views-table-filter-text-source">{{ view.label }}</h3>
+<h3 class="views-ui-view-title" data-drupal-selector="views-table-filter-text-source">{{ view.label }}</h3>
 <div class="views-ui-view-displays">
   {% if displays %}
     {% trans %}
@@ -22,5 +22,5 @@
 </div>
 <div class="views-ui-view-machine-name">
   {{ 'Machine name:'|t }}
-  <span class="views-table-filter-text-source">{{ view.id }}</span>
+  <span data-drupal-selector="views-table-filter-text-source">{{ view.id }}</span>
 </div>

@@ -12,7 +12,7 @@
    *
    * Text search input: input.views-filter-text
    * Target table:      input.views-filter-text[data-table]
-   * Source text:       .views-table-filter-text-source
+   * Source text:       [data-drupal-selector="views-table-filter-text-source"]
    *
    * @type {Drupal~behavior}
    *
@@ -30,7 +30,7 @@
 
         function showViewRow(index, row) {
           var $row = $(row);
-          var $sources = $row.find('.views-table-filter-text-source');
+          var $sources = $row.find('[data-drupal-selector="views-table-filter-text-source"]');
           var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
