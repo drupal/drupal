@@ -618,6 +618,7 @@ class BookTest extends WebTestBase {
     $this->drupalGet('node/' . $empty_book->id() . '/outline');
     $this->assertRaw(t('Book outline'));
     $this->assertOptionSelected('edit-book-bid', 0, 'Node does not belong to a book');
+    $this->assertNoLink(t('Remove from book outline'));
 
     $edit = array();
     $edit['book[bid]'] = '1';
@@ -637,6 +638,8 @@ class BookTest extends WebTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/' . $book->id() . '/outline');
     $this->assertRaw(t('Book outline'));
+    $this->clickLink(t('Remove from book outline'));
+    $this->assertRaw(t('Are you sure you want to remove %title from the book hierarchy?', array('%title' => $book->label())));
 
     // Create a new node and set the book after the node was created.
     $node = $this->drupalCreateNode(array('type' => 'book'));
