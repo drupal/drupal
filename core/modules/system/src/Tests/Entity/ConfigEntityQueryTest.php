@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Config\Entity\Query\QueryFactory;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\config_test\Entity\ConfigQueryTest;
 
 /**
  * Tests Config Entity Query functionality.
@@ -58,7 +59,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $array['level1a']['level2'] = 9;
     // The tests match array.level1.level2.
     $array['level1']['level2'] = 1;
-    $entity = entity_create('config_query_test', array(
+    $entity = ConfigQueryTest::create(array(
       'label' => $this->randomMachineName(),
       'id' => '1',
       'number' => 31,
@@ -69,7 +70,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $entity->save();
 
     $array['level1']['level2'] = 2;
-    $entity = entity_create('config_query_test', array(
+    $entity = ConfigQueryTest::create(array(
       'label' => $this->randomMachineName(),
       'id' => '2',
       'number' => 41,
@@ -80,7 +81,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $entity->save();
 
     $array['level1']['level2'] = 1;
-    $entity = entity_create('config_query_test', array(
+    $entity = ConfigQueryTest::create(array(
       'label' => 'test_prefix_' . $this->randomMachineName(),
       'id' => '3',
       'number' => 59,
@@ -91,7 +92,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $entity->save();
 
     $array['level1']['level2'] = 2;
-    $entity = entity_create('config_query_test', array(
+    $entity = ConfigQueryTest::create(array(
       'label' => $this->randomMachineName() . '_test_suffix',
       'id' => '4',
       'number' => 26,
@@ -102,7 +103,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $entity->save();
 
     $array['level1']['level2'] = 3;
-    $entity = entity_create('config_query_test', array(
+    $entity = ConfigQueryTest::create(array(
       'label' => $this->randomMachineName() . '_TEST_contains_' . $this->randomMachineName(),
       'id' => '5',
       'number' => 53,
@@ -348,7 +349,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
    */
   public function testStringIdConditions() {
     // We need an entity with a non-numeric ID.
-    $entity = entity_create('config_query_test', array(
+    $entity = ConfigQueryTest::create(array(
       'label' => $this->randomMachineName(),
       'id' => 'foo.bar',
     ));
