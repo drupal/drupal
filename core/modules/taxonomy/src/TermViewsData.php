@@ -20,7 +20,7 @@ class TermViewsData extends EntityViewsData {
   public function getViewsData() {
     $data = parent::getViewsData();
 
-    $data['taxonomy_term_field_data']['table']['base']['help'] = t('Taxonomy terms are attached to nodes.');
+    $data['taxonomy_term_field_data']['table']['base']['help'] = $this->t('Taxonomy terms are attached to nodes.');
     $data['taxonomy_term_field_data']['table']['base']['access query tag'] = 'term_access';
     $data['taxonomy_term_field_data']['table']['wizard_id'] = 'taxonomy_term';
 
@@ -32,21 +32,21 @@ class TermViewsData extends EntityViewsData {
       ),
     );
 
-    $data['taxonomy_term_field_data']['tid']['help'] = t('The tid of a taxonomy term.');
+    $data['taxonomy_term_field_data']['tid']['help'] = $this->t('The tid of a taxonomy term.');
 
     $data['taxonomy_term_field_data']['tid']['argument']['id'] = 'taxonomy';
     $data['taxonomy_term_field_data']['tid']['argument']['name field'] = 'name';
     $data['taxonomy_term_field_data']['tid']['argument']['zero is null'] = TRUE;
 
     $data['taxonomy_term_field_data']['tid']['filter']['id'] = 'taxonomy_index_tid';
-    $data['taxonomy_term_field_data']['tid']['filter']['title'] = t('Term');
-    $data['taxonomy_term_field_data']['tid']['filter']['help'] = t('Taxonomy term chosen from autocomplete or select widget.');
+    $data['taxonomy_term_field_data']['tid']['filter']['title'] = $this->t('Term');
+    $data['taxonomy_term_field_data']['tid']['filter']['help'] = $this->t('Taxonomy term chosen from autocomplete or select widget.');
     $data['taxonomy_term_field_data']['tid']['filter']['hierarchy table'] = 'taxonomy_term_hierarchy';
     $data['taxonomy_term_field_data']['tid']['filter']['numeric'] = TRUE;
 
     $data['taxonomy_term_field_data']['tid_raw'] = array(
-      'title' => t('Term ID'),
-      'help' => t('The tid of a taxonomy term.'),
+      'title' => $this->t('Term ID'),
+      'help' => $this->t('The tid of a taxonomy term.'),
       'real field' => 'tid',
       'filter' => array(
         'id' => 'numeric',
@@ -56,9 +56,9 @@ class TermViewsData extends EntityViewsData {
 
     $data['taxonomy_term_field_data']['tid_representative'] = array(
       'relationship' => array(
-        'title' => t('Representative node'),
-        'label'  => t('Representative node'),
-        'help' => t('Obtains a single representative node for each term, according to a chosen sort criterion.'),
+        'title' => $this->t('Representative node'),
+        'label'  => $this->t('Representative node'),
+        'help' => $this->t('Obtains a single representative node for each term, according to a chosen sort criterion.'),
         'id' => 'groupwise_max',
         'relationship field' => 'tid',
         'outer field' => 'taxonomy_term_field_data.tid',
@@ -70,23 +70,23 @@ class TermViewsData extends EntityViewsData {
       ),
     );
 
-    $data['taxonomy_term_field_data']['vid']['help'] = t('Filter the results of "Taxonomy: Term" to a particular vocabulary.');
-    $data['taxonomy_term_field_data']['vid']['field']['help'] = t('The vocabulary name.');
+    $data['taxonomy_term_field_data']['vid']['help'] = $this->t('Filter the results of "Taxonomy: Term" to a particular vocabulary.');
+    $data['taxonomy_term_field_data']['vid']['field']['help'] = $this->t('The vocabulary name.');
     unset($data['taxonomy_term_field_data']['vid']['argument']);
     unset($data['taxonomy_term_field_data']['vid']['sort']);
 
     $data['taxonomy_term_field_data']['name']['field']['id'] = 'term_name';
     $data['taxonomy_term_field_data']['name']['argument']['many to one'] = TRUE;
-    $data['taxonomy_term_field_data']['name']['argument']['empty field name'] = t('Uncategorized');
+    $data['taxonomy_term_field_data']['name']['argument']['empty field name'] = $this->t('Uncategorized');
 
     $data['taxonomy_term_field_data']['description__value']['field']['click sortable'] = FALSE;
 
-    $data['taxonomy_term_field_data']['changed']['title'] = t('Updated date');
-    $data['taxonomy_term_field_data']['changed']['help'] = t('The date the term was last updated.');
+    $data['taxonomy_term_field_data']['changed']['title'] = $this->t('Updated date');
+    $data['taxonomy_term_field_data']['changed']['help'] = $this->t('The date the term was last updated.');
 
     $data['taxonomy_term_field_data']['changed_fulldate'] = array(
-      'title' => t('Updated date'),
-      'help' => t('Date in the form of CCYYMMDD.'),
+      'title' => $this->t('Updated date'),
+      'help' => $this->t('Date in the form of CCYYMMDD.'),
       'argument' => array(
         'field' => 'changed',
         'id' => 'date_fulldate',
@@ -94,8 +94,8 @@ class TermViewsData extends EntityViewsData {
     );
 
     $data['taxonomy_term_field_data']['changed_year_month'] = array(
-      'title' => t('Updated year + month'),
-      'help' => t('Date in the form of YYYYMM.'),
+      'title' => $this->t('Updated year + month'),
+      'help' => $this->t('Date in the form of YYYYMM.'),
       'argument' => array(
         'field' => 'changed',
         'id' => 'date_year_month',
@@ -103,8 +103,8 @@ class TermViewsData extends EntityViewsData {
     );
 
     $data['taxonomy_term_field_data']['changed_year'] = array(
-      'title' => t('Updated year'),
-      'help' => t('Date in the form of YYYY.'),
+      'title' => $this->t('Updated year'),
+      'help' => $this->t('Date in the form of YYYY.'),
       'argument' => array(
         'field' => 'changed',
         'id' => 'date_year',
@@ -112,8 +112,8 @@ class TermViewsData extends EntityViewsData {
     );
 
     $data['taxonomy_term_field_data']['changed_month'] = array(
-      'title' => t('Updated month'),
-      'help' => t('Date in the form of MM (01 - 12).'),
+      'title' => $this->t('Updated month'),
+      'help' => $this->t('Date in the form of MM (01 - 12).'),
       'argument' => array(
         'field' => 'changed',
         'id' => 'date_month',
@@ -121,8 +121,8 @@ class TermViewsData extends EntityViewsData {
     );
 
     $data['taxonomy_term_field_data']['changed_day'] = array(
-      'title' => t('Updated day'),
-      'help' => t('Date in the form of DD (01 - 31).'),
+      'title' => $this->t('Updated day'),
+      'help' => $this->t('Date in the form of DD (01 - 31).'),
       'argument' => array(
         'field' => 'changed',
         'id' => 'date_day',
@@ -130,15 +130,15 @@ class TermViewsData extends EntityViewsData {
     );
 
     $data['taxonomy_term_field_data']['changed_week'] = array(
-      'title' => t('Updated week'),
-      'help' => t('Date in the form of WW (01 - 53).'),
+      'title' => $this->t('Updated week'),
+      'help' => $this->t('Date in the form of WW (01 - 53).'),
       'argument' => array(
         'field' => 'changed',
         'id' => 'date_week',
       ),
     );
 
-    $data['taxonomy_index']['table']['group']  = t('Taxonomy term');
+    $data['taxonomy_index']['table']['group']  = $this->t('Taxonomy term');
 
     $data['taxonomy_index']['table']['join'] = array(
       'taxonomy_term_field_data' => array(
@@ -158,13 +158,13 @@ class TermViewsData extends EntityViewsData {
     );
 
     $data['taxonomy_index']['nid'] = array(
-      'title' => t('Content with term'),
-      'help' => t('Relate all content tagged with a term.'),
+      'title' => $this->t('Content with term'),
+      'help' => $this->t('Relate all content tagged with a term.'),
       'relationship' => array(
         'id' => 'standard',
         'base' => 'node',
         'base field' => 'nid',
-        'label' => t('node'),
+        'label' => $this->t('node'),
         'skip base' => 'node',
       ),
     );
@@ -172,19 +172,19 @@ class TermViewsData extends EntityViewsData {
     // @todo This stuff needs to move to a node field since really it's all
     //   about nodes.
     $data['taxonomy_index']['tid'] = array(
-      'group' => t('Content'),
-      'title' => t('Has taxonomy term ID'),
-      'help' => t('Display content if it has the selected taxonomy terms.'),
+      'group' => $this->t('Content'),
+      'title' => $this->t('Has taxonomy term ID'),
+      'help' => $this->t('Display content if it has the selected taxonomy terms.'),
       'argument' => array(
         'id' => 'taxonomy_index_tid',
         'name table' => 'taxonomy_term_field_data',
         'name field' => 'name',
-        'empty field name' => t('Uncategorized'),
+        'empty field name' => $this->t('Uncategorized'),
         'numeric' => TRUE,
         'skip base' => 'taxonomy_term_field_data',
       ),
       'filter' => array(
-        'title' => t('Has taxonomy term'),
+        'title' => $this->t('Has taxonomy term'),
         'id' => 'taxonomy_index_tid',
         'hierarchy table' => 'taxonomy_term_hierarchy',
         'numeric' => TRUE,
@@ -194,32 +194,32 @@ class TermViewsData extends EntityViewsData {
     );
 
     $data['taxonomy_index']['status'] = [
-      'title' => t('Publish status'),
-      'help' => t('Whether or not the content related to a term is published.'),
+      'title' => $this->t('Publish status'),
+      'help' => $this->t('Whether or not the content related to a term is published.'),
       'filter' => [
         'id' => 'boolean',
-        'label' => t('Published status'),
+        'label' => $this->t('Published status'),
         'type' => 'yes-no',
       ],
     ];
 
     $data['taxonomy_index']['sticky'] = [
-      'title' => t('Sticky status'),
-      'help' => t('Whether or not the content related to a term is sticky.'),
+      'title' => $this->t('Sticky status'),
+      'help' => $this->t('Whether or not the content related to a term is sticky.'),
       'filter' => [
         'id' => 'boolean',
-        'label' => t('Sticky status'),
+        'label' => $this->t('Sticky status'),
         'type' => 'yes-no',
       ],
       'sort' => [
         'id' => 'standard',
-        'help' => t('Whether or not the content related to a term is sticky. To list sticky content first, set this to descending.'),
+        'help' => $this->t('Whether or not the content related to a term is sticky. To list sticky content first, set this to descending.'),
       ],
     ];
 
     $data['taxonomy_index']['created'] = [
-      'title' => t('Post date'),
-      'help' => t('The date the content related to a term was posted.'),
+      'title' => $this->t('Post date'),
+      'help' => $this->t('The date the content related to a term was posted.'),
       'sort' => [
         'id' => 'date'
       ],
@@ -228,7 +228,7 @@ class TermViewsData extends EntityViewsData {
       ],
     ];
 
-    $data['taxonomy_term_hierarchy']['table']['group']  = t('Taxonomy term');
+    $data['taxonomy_term_hierarchy']['table']['group']  = $this->t('Taxonomy term');
     $data['taxonomy_term_hierarchy']['table']['provider']  = 'taxonomy';
 
     $data['taxonomy_term_hierarchy']['table']['join'] = array(
@@ -245,20 +245,20 @@ class TermViewsData extends EntityViewsData {
     );
 
     $data['taxonomy_term_hierarchy']['parent'] = array(
-      'title' => t('Parent term'),
-      'help' => t('The parent term of the term. This can produce duplicate entries if you are using a vocabulary that allows multiple parents.'),
+      'title' => $this->t('Parent term'),
+      'help' => $this->t('The parent term of the term. This can produce duplicate entries if you are using a vocabulary that allows multiple parents.'),
       'relationship' => array(
         'base' => 'taxonomy_term_field_data',
         'field' => 'parent',
-        'label' => t('Parent'),
+        'label' => $this->t('Parent'),
         'id' => 'standard',
       ),
       'filter' => array(
-        'help' => t('Filter the results of "Taxonomy: Term" by the parent pid.'),
+        'help' => $this->t('Filter the results of "Taxonomy: Term" by the parent pid.'),
         'id' => 'numeric',
       ),
       'argument' => array(
-        'help' => t('The parent term of the term.'),
+        'help' => $this->t('The parent term of the term.'),
         'id' => 'taxonomy',
       ),
     );
