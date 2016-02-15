@@ -8,8 +8,8 @@
 namespace Drupal\editor_test\Plugin\Editor;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\editor\Entity\Editor;
 use Drupal\editor\Plugin\EditorBase;
-use Drupal\editor\Entity\Editor as EditorEntity;
 
 /**
  * Defines a Unicorn-powered text editor for Drupal (for testing purposes).
@@ -38,7 +38,7 @@ class UnicornEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  function settingsForm(array $form, FormStateInterface $form_state, EditorEntity $editor) {
+  function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
     $form['ponies_too'] = array(
       '#title' => t('Pony mode'),
       '#type' => 'checkbox',
@@ -50,7 +50,7 @@ class UnicornEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  function getJSSettings(EditorEntity $editor) {
+  function getJSSettings(Editor $editor) {
     $js_settings = array();
     $settings = $editor->getSettings();
     if ($settings['ponies_too']) {
@@ -62,7 +62,7 @@ class UnicornEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  public function getLibraries(EditorEntity $editor) {
+  public function getLibraries(Editor $editor) {
     return array(
       'editor_test/unicorn',
     );

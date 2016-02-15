@@ -15,7 +15,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\editor\Entity\Editor as EditorEntity;
+use Drupal\editor\Entity\Editor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -142,7 +142,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state, EditorEntity $editor) {
+  public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
     $settings = $editor->getSettings();
 
     $ckeditor_settings_toolbar = array(
@@ -259,7 +259,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function getJSSettings(EditorEntity $editor) {
+  public function getJSSettings(Editor $editor) {
     $settings = array();
 
     // Get the settings for all enabled plugins, even the internal ones.
@@ -367,7 +367,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLibraries(EditorEntity $editor) {
+  public function getLibraries(Editor $editor) {
     $libraries = array(
       'ckeditor/drupal.ckeditor',
     );
@@ -393,7 +393,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    * @return array
    *   An array containing the "toolbar" configuration.
    */
-  public function buildToolbarJSSetting(EditorEntity $editor) {
+  public function buildToolbarJSSetting(Editor $editor) {
     $toolbar = array();
 
     $settings = $editor->getSettings();
@@ -416,7 +416,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    * @return array
    *   An array containing the "contentsCss" configuration.
    */
-  public function buildContentsCssJSSetting(EditorEntity $editor) {
+  public function buildContentsCssJSSetting(Editor $editor) {
     $css = array(
       drupal_get_path('module', 'ckeditor') . '/css/ckeditor-iframe.css',
       drupal_get_path('module', 'system') . '/css/components/align.module.css',
