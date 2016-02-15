@@ -15,6 +15,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Drupal\entity_test\Entity\EntityTestLabel;
 
 /**
  * Tests the formatters functionality.
@@ -259,7 +260,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $field_storage_config->setSetting('target_type', 'entity_test_label');
     $field_storage_config->save();
 
-    $referenced_entity_with_no_link_template = entity_create('entity_test_label', array(
+    $referenced_entity_with_no_link_template = EntityTestLabel::create(array(
       'name' => $this->randomMachineName(),
     ));
     $referenced_entity_with_no_link_template->save();
