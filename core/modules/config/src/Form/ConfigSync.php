@@ -186,7 +186,7 @@ class ConfigSync extends FormBase {
     if (empty($source_list) || !$storage_comparer->createChangelist()->hasChanges()) {
       $form['no_changes'] = array(
         '#type' => 'table',
-        '#header' => array('Name', 'Operations'),
+        '#header' => array($this->t('Name'), $this->t('Operations')),
         '#rows' => array(),
         '#empty' => $this->t('There are no configuration changes to import.'),
       );
@@ -272,7 +272,7 @@ class ConfigSync extends FormBase {
         }
         $form[$collection][$config_change_type]['list'] = array(
           '#type' => 'table',
-          '#header' => array('Name', 'Operations'),
+          '#header' => array($this->t('Name'), $this->t('Operations')),
         );
 
         foreach ($config_names as $config_name) {
