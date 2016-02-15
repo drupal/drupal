@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\node\Tests\Views;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests replacement of Views tokens supplied by the Node module.
@@ -38,7 +39,7 @@ class NodeFieldTokensTest extends NodeTestBase {
     $summary = $this->randomMachineName(16);
 
     /** @var $node \Drupal\node\NodeInterface */
-    $node = entity_create('node', [
+    $node = Node::create([
       'type' => 'article',
       'tnid' => 0,
       'uid' => $account->id(),

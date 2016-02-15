@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\node\Entity\Node;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
@@ -39,7 +40,7 @@ class NodeValidationTest extends EntityUnitTestBase {
    */
   public function testValidation() {
     $this->createUser();
-    $node = entity_create('node', array('type' => 'page', 'title' => 'test', 'uid' => 1));
+    $node = Node::create(['type' => 'page', 'title' => 'test', 'uid' => 1]);
     $violations = $node->validate();
     $this->assertEqual(count($violations), 0, 'No violations when validating a default node.');
 

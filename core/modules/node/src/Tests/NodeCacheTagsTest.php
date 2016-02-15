@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\Entity\Node;
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 
 /**
@@ -33,7 +34,7 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     ))->save();
 
     // Create a "Llama" node.
-    $node = entity_create('node', array('type' => 'camelids'));
+    $node = Node::create(['type' => 'camelids']);
     $node->setTitle('Llama')
       ->setPublished(TRUE)
       ->save();

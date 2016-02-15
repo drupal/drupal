@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests\Condition;
 
+use Drupal\node\Entity\Node;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
@@ -38,11 +39,11 @@ class NodeConditionTest extends EntityUnitTestBase {
     $this->createUser();
 
     // Get some nodes of various types to check against.
-    $page = entity_create('node', array('type' => 'page', 'title' => $this->randomMachineName(), 'uid' => 1));
+    $page = Node::create(['type' => 'page', 'title' => $this->randomMachineName(), 'uid' => 1]);
     $page->save();
-    $article = entity_create('node', array('type' => 'article', 'title' => $this->randomMachineName(), 'uid' => 1));
+    $article = Node::create(['type' => 'article', 'title' => $this->randomMachineName(), 'uid' => 1]);
     $article->save();
-    $test = entity_create('node', array('type' => 'test', 'title' => $this->randomMachineName(), 'uid' => 1));
+    $test = Node::create(['type' => 'test', 'title' => $this->randomMachineName(), 'uid' => 1]);
     $test->save();
 
     // Grab the node type condition and configure it to check against node type

@@ -10,6 +10,7 @@ namespace Drupal\node\Tests;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\node\Entity\Node;
 use Drupal\system\Tests\System\TokenReplaceUnitTestBase;
 
 /**
@@ -51,13 +52,13 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
     // Create a user and a node.
     $account = $this->createUser();
     /* @var $node \Drupal\node\NodeInterface */
-    $node = entity_create('node', array(
+    $node = Node::create([
       'type' => 'article',
       'tnid' => 0,
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
       'body' => [['value' => 'Regular NODE body for the test.', 'summary' => 'Fancy NODE summary.', 'format' => 'plain_text']],
-    ));
+    ]);
     $node->save();
 
     // Generate and test tokens.
@@ -110,12 +111,12 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
     }
 
     // Repeat for a node without a summary.
-    $node = entity_create('node', array(
+    $node = Node::create([
       'type' => 'article',
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
       'body' => [['value' => 'A string that looks random like TR5c2I', 'format' => 'plain_text']],
-    ));
+    ]);
     $node->save();
 
     // Generate and test token - use full body as expected value.
