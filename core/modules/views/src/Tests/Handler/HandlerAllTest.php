@@ -11,6 +11,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\filter\InOperator;
+use Drupal\views\Entity\View;
 
 /**
  * Tests instances of all handlers.
@@ -59,7 +60,7 @@ class HandlerAllTest extends HandlerTestBase {
         continue;
       }
 
-      $view = entity_create('view', array('base_table' => $base_table));
+      $view = View::create(array('base_table' => $base_table));
       $view = $view->getExecutable();
 
       // @todo The groupwise relationship is currently broken.

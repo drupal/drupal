@@ -10,6 +10,7 @@ namespace Drupal\views_ui\Tests;
 use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views_ui\Controller\ViewsUIController;
 use Drupal\Component\Utility\Html;
+use Drupal\views\Entity\View;
 
 /**
  * Tests the views ui tagging functionality.
@@ -37,7 +38,7 @@ class TagTest extends ViewKernelTestBase {
       $suffix = $i % 2 ? 'odd' : 'even';
       $tag = 'autocomplete_tag_test_' . $suffix . $this->randomMachineName();
       $tags[] = $tag;
-      entity_create('view', array('tag' => $tag, 'id' => $this->randomMachineName()))->save();
+      View::create(array('tag' => $tag, 'id' => $this->randomMachineName()))->save();
     }
 
     // Make sure just ten results are returns.

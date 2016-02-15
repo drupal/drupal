@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin;
 
@@ -230,7 +231,7 @@ class DisplayTest extends PluginTestBase {
     $this->assertTrue(empty($result), 'The more link is not shown when view has more records.');
 
     // Test the default value of use_more_always.
-    $view = entity_create('view')->getExecutable();
+    $view = View::create()->getExecutable();
     $this->assertTrue($view->getDisplay()->getOption('use_more_always'), 'Always display the more link by default.');
   }
 

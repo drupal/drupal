@@ -660,7 +660,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
     );
 
-    $view = entity_create('view', $values);
+    $view = View::create($values);
 
     // Build all display options for this view.
     $display_options = $this->buildDisplayOptions($form, $form_state);
