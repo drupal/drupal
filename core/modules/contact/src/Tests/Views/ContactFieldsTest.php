@@ -9,6 +9,7 @@ namespace Drupal\contact\Tests\Views;
 
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\contact\Entity\ContactForm;
 
 /**
  * Tests which checks that no fieldapi fields are added on contact.
@@ -41,10 +42,10 @@ class ContactFieldsTest extends ViewTestBase {
     ));
     $this->fieldStorage->save();
 
-    entity_create('contact_form', array(
+    ContactForm::create([
       'id' => 'contact_message',
       'label' => 'Test contact form',
-    ))->save();
+    ])->save();
 
     entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,

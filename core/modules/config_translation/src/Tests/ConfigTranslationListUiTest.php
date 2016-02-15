@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 use Drupal\shortcut\Entity\ShortcutSet;
+use Drupal\contact\Entity\ContactForm;
 
 /**
  * Visit all lists.
@@ -211,10 +212,10 @@ class ConfigTranslationListUiTest extends WebTestBase {
   public function doContactFormsListTest() {
     // Create a test contact form to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $contact_form = entity_create('contact_form', array(
+    $contact_form = ContactForm::create([
       'id' => Unicode::strtolower($this->randomMachineName(16)),
       'label' => $this->randomMachineName(),
-    ));
+    ]);
     $contact_form->save();
 
     // Get the contact form listing.
