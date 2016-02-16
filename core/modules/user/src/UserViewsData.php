@@ -32,7 +32,8 @@ class UserViewsData extends EntityViewsData {
       'empty field name' => \Drupal::config('user.settings')->get('anonymous'),
     );
     $data['users_field_data']['uid']['filter']['id'] = 'user_name';
-    $data['users_field_data']['uid']['filter']['title'] = $this->t('Name');
+    $data['users_field_data']['uid']['filter']['title'] = $this->t('Name (autocomplete)');
+    $data['users_field_data']['uid']['filter']['help'] = $this->t('The user or author name. Uses an autocomplete widget to find a user name, the actual filter uses the resulting user ID.');
     $data['users_field_data']['uid']['relationship'] = array(
       'title' => $this->t('Content authored'),
       'help' => $this->t('Relate content to the user who created it. This relationship will create one record for each content item created by the user.'),
