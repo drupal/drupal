@@ -8,6 +8,7 @@
 namespace Drupal\editor\Tests;
 
 use Drupal\Core\Entity\Entity;
+use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
@@ -113,7 +114,7 @@ class EditorLoadingTest extends WebTestBase {
    */
   public function testLoading() {
     // Only associate a text editor with the "Full HTML" text format.
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'full_html',
       'editor' => 'unicorn',
       'image_upload' => array(
@@ -123,7 +124,7 @@ class EditorLoadingTest extends WebTestBase {
         'max_size' => '',
         'max_dimensions' => array('width' => '', 'height' => ''),
       )
-    ));
+    ]);
     $editor->save();
 
     // The normal user:
@@ -166,10 +167,10 @@ class EditorLoadingTest extends WebTestBase {
     $this->drupalLogout($this->privilegedUser);
 
     // Also associate a text editor with the "Plain Text" text format.
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'plain_text',
       'editor' => 'unicorn',
-    ));
+    ]);
     $editor->save();
 
     // The untrusted user:
@@ -221,7 +222,7 @@ class EditorLoadingTest extends WebTestBase {
    */
   public function testSupportedElementTypes() {
     // Associate the unicorn text editor with the "Full HTML" text format.
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'full_html',
       'editor' => 'unicorn',
       'image_upload' => array(
@@ -231,7 +232,7 @@ class EditorLoadingTest extends WebTestBase {
         'max_size' => '',
         'max_dimensions' => array('width' => '', 'height' => ''),
       )
-    ));
+    ]);
     $editor->save();
 
     // Create an "page" node that uses the full_html text format.
@@ -255,10 +256,10 @@ class EditorLoadingTest extends WebTestBase {
 
     // Associate the trex text editor with the "Full HTML" text format.
     $editor->delete();
-    entity_create('editor', array(
+    Editor::create([
       'format' => 'full_html',
       'editor' => 'trex',
-    ))->save();
+    ])->save();
 
     $this->drupalGet('node/1/edit');
     list( , $editor_settings_present, $editor_js_present, $field, $format_selector) = $this->getThingsToCheck('field-text', 'input');

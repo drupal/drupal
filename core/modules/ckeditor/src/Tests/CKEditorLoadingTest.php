@@ -7,6 +7,7 @@
 
 namespace Drupal\ckeditor\Tests;
 
+use Drupal\editor\Entity\Editor;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -48,10 +49,10 @@ class CKEditorLoadingTest extends WebTestBase {
       'filters' => array(),
     ));
     $filtered_html_format->save();
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'filtered_html',
       'editor' => 'ckeditor',
-    ));
+    ]);
     $editor->save();
 
     // Create a second format without an associated editor so a drop down select

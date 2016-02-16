@@ -8,6 +8,7 @@
 namespace Drupal\editor\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\editor\Entity\Editor;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -116,10 +117,10 @@ class EditorSecurityTest extends WebTestBase {
       ),
     ));
     $format->save();
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'restricted_with_editor',
       'editor' => 'unicorn',
-    ));
+    ]);
     $editor->save();
     $format = entity_create('filter_format', array(
       'format' => 'restricted_plus_dangerous_tag_with_editor',
@@ -136,10 +137,10 @@ class EditorSecurityTest extends WebTestBase {
       ),
     ));
     $format->save();
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'restricted_plus_dangerous_tag_with_editor',
       'editor' => 'unicorn',
-    ));
+    ]);
     $editor->save();
     $format = entity_create('filter_format', array(
       'format' => 'unrestricted_without_editor',
@@ -155,10 +156,10 @@ class EditorSecurityTest extends WebTestBase {
       'filters' => array(),
     ));
     $format->save();
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'unrestricted_with_editor',
       'editor' => 'unicorn',
-    ));
+    ]);
     $editor->save();
 
 

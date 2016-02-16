@@ -7,6 +7,7 @@
 
 namespace Drupal\ckeditor\Tests;
 
+use Drupal\editor\Entity\Editor;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -44,10 +45,10 @@ class CKEditorPluginManagerTest extends KernelTestBase {
       'filters' => array(),
     ));
     $filtered_html_format->save();
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'filtered_html',
       'editor' => 'ckeditor',
-    ));
+    ]);
     $editor->save();
   }
 

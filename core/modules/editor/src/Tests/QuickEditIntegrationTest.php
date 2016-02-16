@@ -10,6 +10,7 @@ namespace Drupal\editor\Tests;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\editor\Entity\Editor;
 use Drupal\quickedit\MetadataGenerator;
 use Drupal\quickedit\Tests\QuickEditTestBase;
 use Drupal\quickedit_test\MockEditEntityFieldAccessCheck;
@@ -95,10 +96,10 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $full_html_format->save();
 
     // Associate text editor with text format.
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => $full_html_format->id(),
       'editor' => 'unicorn',
-    ));
+    ]);
     $editor->save();
 
     // Also create a text format without an associated text editor.

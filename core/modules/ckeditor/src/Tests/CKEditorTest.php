@@ -60,10 +60,10 @@ class CKEditorTest extends KernelTestBase {
       ),
     ));
     $filtered_html_format->save();
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'filtered_html',
       'editor' => 'ckeditor',
-    ));
+    ]);
     $editor->save();
 
     // Create "CKEditor" text editor plugin instance.

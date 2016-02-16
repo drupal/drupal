@@ -7,6 +7,7 @@
 
 namespace Drupal\editor\Tests;
 
+use Drupal\editor\Entity\Editor;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -79,10 +80,10 @@ class EditorManagerTest extends KernelTestBase {
     // Case 3: a text editor available & associated (but associated only with
     // the 'Full HTML' text format).
     $unicorn_plugin = $this->editorManager->createInstance('unicorn');
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'full_html',
       'editor' => 'unicorn',
-    ));
+    ]);
     $editor->save();
     $this->assertIdentical(array(), $this->editorManager->getAttachments(array()), 'No attachments when one text editor is enabled and retrieving attachments for zero text formats.');
     $expected = array(

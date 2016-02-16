@@ -178,10 +178,10 @@ function editor_form_filter_admin_format_editor_configure($form, FormStateInterf
     }
     elseif (empty($editor) || $editor_value !== $editor->getEditor()) {
       $format = $form_state->getFormObject()->getEntity();
-      $editor = entity_create('editor', array(
+      $editor = Editor::create([
         'format' => $format->isNew() ? NULL : $format->id(),
         'editor' => $editor_value,
-      ));
+      ]);
       $form_state->set('editor', $editor);
     }
   }

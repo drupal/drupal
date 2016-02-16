@@ -7,6 +7,7 @@
 
 namespace Drupal\editor\Tests;
 
+use Drupal\editor\Entity\Editor;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -47,10 +48,10 @@ class EditorFileUsageTest extends EntityUnitTestBase {
       ->save();
 
     // Set up text editor.
-    $editor = entity_create('editor', array(
+    $editor = Editor::create([
       'format' => 'filtered_html',
       'editor' => 'unicorn',
-    ));
+    ]);
     $editor->save();
 
     // Create a node type for testing.

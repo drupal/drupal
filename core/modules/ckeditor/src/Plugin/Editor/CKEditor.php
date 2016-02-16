@@ -204,7 +204,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     }, array());
     // Build a fake Editor object, which we'll use to generate JavaScript
     // settings for this fake Editor instance.
-    $fake_editor = entity_create('editor', array(
+    $fake_editor = Editor::create(array(
       'format' => $editor->id(),
       'editor' => 'ckeditor',
       'settings' => array(
