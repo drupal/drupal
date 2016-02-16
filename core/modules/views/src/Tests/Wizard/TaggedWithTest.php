@@ -41,14 +41,14 @@ class TaggedWithTest extends WizardTestBase {
   protected $nodeTypeWithoutTags;
 
   /**
-   * Node type without an autocomplete tagging field.
+   * The vocabulary used for the test tag field.
    *
    * @var \Drupal\taxonomy\VocabularyInterface
    */
   protected $tagVocabulary;
 
   /**
-   * Node type without an autocomplete tagging field.
+   * Holds the field storage for test tag field.
    *
    * @var \Drupal\field\FieldStorageConfigInterface
    */
