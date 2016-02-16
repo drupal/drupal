@@ -27,13 +27,10 @@ views.argument.user__roles_rid:
   type: views.argument.many_to_one
   label: 'Role ID'
 
-views.argument_validator.user:
-  type: mapping
+views.argument_validator.entity:user:
+  type: views.argument_validator_entity
   label: 'User'
   mapping:
-    type:
-      type: string
-      label: 'Type of user filter value to allow'
     restrict_roles:
       type: boolean
       label: 'Restrict user based on role'

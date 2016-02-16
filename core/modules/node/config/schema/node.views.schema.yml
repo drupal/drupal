@@ -73,26 +73,6 @@ views.argument_default.node:
     type: string
     label: 'Nid'
 
-views.argument_validator.node:
-  type: mapping
-  label: 'Content'
-  mapping:
-    types:
-      type: sequence
-      label: 'Content types'
-      sequence:
-        type: string
-        label: 'Type'
-    access:
-      type: boolean
-      label: 'Validate user has access to the content'
-    access_op:
-      type: boolean
-      label: 'Access operation to check'
-    nid_type:
-      type: string
-      label: 'Filter value format'
-
 views.field.node:
   type: views_field
   label: 'Node'

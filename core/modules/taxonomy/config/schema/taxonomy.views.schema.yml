@@ -59,6 +59,9 @@ views.argument_validator.taxonomy_term_name:
       sequence:
         type: string
         label: 'Vocabulary'
+    transform:
+      type: boolean
+      label: 'Transform dashes in URL to spaces in term name filter values'
 
 views.argument_default.taxonomy_tid:
   type: mapping
