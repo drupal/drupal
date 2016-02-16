@@ -235,7 +235,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     $user_labels = array();
     foreach ($user_values as $key => $values) {
       if (is_array($values)) {
-        $account = entity_create('user', $values);
+        $account = User::create($values);
         $account->save();
       }
       else {

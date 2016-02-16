@@ -91,10 +91,10 @@ class UserValidationTest extends KernelTestBase {
     $this->assertEqual($violations[0]->getMessage(), t('The username %name is too long: it must be %max characters or less.', array('%name' => $name, '%max' => 60)));
 
     // Create a second test user to provoke a name collision.
-    $user2 = entity_create('user', array(
+    $user2 = User::create([
       'name' => 'existing',
       'mail' => 'existing@example.com',
-    ));
+    ]);
     $user2->save();
     $user->set('name', 'existing');
     $violations = $user->validate();
@@ -165,11 +165,11 @@ class UserValidationTest extends KernelTestBase {
     Role::create(array('id' => 'role2'))->save();
 
     // Test cardinality of user roles.
-    $user = entity_create('user', array(
+    $user = User::create([
       'name' => 'role_test',
       'mail' => 'test@example.com',
       'roles' => array('role1', 'role2'),
-    ));
+    ]);
     $violations = $user->validate();
     $this->assertEqual(count($violations), 0);
 

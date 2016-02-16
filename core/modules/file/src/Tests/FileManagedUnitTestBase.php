@@ -9,6 +9,7 @@ namespace Drupal\file\Tests;
 
 use Drupal\file\FileInterface;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Base class for file unit tests that use the file_test module to test uploads and
@@ -35,7 +36,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
 
     // Make sure that a user with uid 1 exists, self::createFile() relies on
     // it.
-    $user = entity_create('user', array('uid' => 1, 'name' => $this->randomMachineName()));
+    $user = User::create(['uid' => 1, 'name' => $this->randomMachineName()]);
     $user->enforceIsNew();
     $user->save();
     \Drupal::currentUser()->setAccount($user);

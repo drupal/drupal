@@ -9,6 +9,7 @@ namespace Drupal\hal\Tests;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\comment\Entity\Comment;
+use Drupal\user\Entity\User;
 
 /**
  * Tests that nodes and terms are correctly normalized and denormalized.
@@ -46,7 +47,7 @@ class EntityTest extends NormalizerTestBase {
     $node_type = entity_create('node_type', array('type' => 'example_type'));
     $node_type->save();
 
-    $user = entity_create('user', array('name' => $this->randomMachineName()));
+    $user = User::create(['name' => $this->randomMachineName()]);
     $user->save();
 
     // Add comment type.
@@ -98,7 +99,7 @@ class EntityTest extends NormalizerTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array('vid' => 'example_vocabulary'));
     $vocabulary->save();
 
-    $account = entity_create('user', array('name' => $this->randomMachineName()));
+    $account = User::create(['name' => $this->randomMachineName()]);
     $account->save();
 
     // @todo Until https://www.drupal.org/node/2327935 is fixed, if no parent is
@@ -142,7 +143,7 @@ class EntityTest extends NormalizerTestBase {
     $node_type = entity_create('node_type', array('type' => 'example_type'));
     $node_type->save();
 
-    $account = entity_create('user', array('name' => $this->randomMachineName()));
+    $account = User::create(['name' => $this->randomMachineName()]);
     $account->save();
 
     // Add comment type.

@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Database;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\RowCountException;
+use Drupal\user\Entity\User;
 
 /**
  * Tests the Select query builder with more complex queries.
@@ -328,10 +329,10 @@ class SelectComplexTest extends DatabaseTestBase {
   function testJoinSubquery() {
     $this->installSchema('system', 'sequences');
 
-    $account = entity_create('user', array(
+    $account = User::create([
       'name' => $this->randomMachineName(),
       'mail' => $this->randomMachineName() . '@example.com',
-    ));
+    ]);
 
     $query = db_select('test_task', 'tt', array('target' => 'replica'));
     $query->addExpression('tt.pid + 1', 'abc');

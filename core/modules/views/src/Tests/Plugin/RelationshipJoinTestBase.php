@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\user\Entity\User;
 use Drupal\views\Views;
 
 /**
@@ -38,7 +39,7 @@ abstract class RelationshipJoinTestBase extends PluginKernelTestBase {
     parent::setUpFixtures();
 
     // Create a record for uid 1.
-    $this->rootUser = entity_create('user', array('name' => $this->randomMachineName()));
+    $this->rootUser = User::create(['name' => $this->randomMachineName()]);
     $this->rootUser->save();
 
     Views::viewsData()->clear();

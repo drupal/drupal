@@ -12,6 +12,7 @@ use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\node\Entity\NodeType;
 use Drupal\plugin_test\Plugin\MockBlockManager;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests that contexts are properly set and working within plugins.
@@ -72,7 +73,7 @@ class ContextPluginTest extends KernelTestBase {
 
     // Set an appropriate context value and check to make sure its methods work
     // as expected.
-    $user = entity_create('user', array('name' => $name));
+    $user = User::create(['name' => $name]);
     $plugin->setContextValue('user', $user);
 
     $this->assertEqual($plugin->getContextValue('user')->getUsername(), $user->getUsername());

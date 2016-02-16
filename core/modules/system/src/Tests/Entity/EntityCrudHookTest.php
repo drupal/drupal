@@ -482,13 +482,13 @@ class EntityCrudHookTest extends EntityUnitTestBase {
    * Tests hook invocations for CRUD operations on users.
    */
   public function testUserHooks() {
-    $account = entity_create('user', array(
+    $account = User::create([
       'name' => 'Test user',
       'mail' => 'test@example.com',
       'created' => REQUEST_TIME,
       'status' => 1,
       'language' => 'en',
-    ));
+    ]);
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_user_create called',

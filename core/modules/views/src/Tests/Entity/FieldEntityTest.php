@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Entity;
 
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
@@ -55,7 +56,7 @@ class FieldEntityTest extends ViewTestBase {
     // The view is a view of comments, their nodes and their authors, so there
     // are three layers of entities.
 
-    $account = entity_create('user', array('name' => $this->randomMachineName(), 'bundle' => 'user'));
+    $account = User::create(['name' => $this->randomMachineName(), 'bundle' => 'user']);
     $account->save();
 
     $node = entity_create('node', array('uid' => $account->id(), 'type' => 'page', 'title' => $this->randomString()));

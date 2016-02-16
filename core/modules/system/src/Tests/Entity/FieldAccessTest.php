@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests Field level access hooks.
@@ -64,7 +65,7 @@ class FieldAccessTest extends KernelTestBase {
 
     // Create a dummy user account for testing access with.
     $values = array('name' => 'test');
-    $account = entity_create('user', $values);
+    $account = User::create($values);
 
     $this->assertFalse($entity->field_test_text->access('view', $account), 'Access to the field was denied.');
     $expected = AccessResult::forbidden()->cacheUntilEntityChanges($entity);

@@ -9,6 +9,7 @@ namespace Drupal\user\Tests;
 
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 
 /**
@@ -41,10 +42,10 @@ class UserCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    */
   protected function createEntity() {
     // Create a "Llama" user.
-    $user = entity_create('user', array(
+    $user = User::create([
       'name' => 'Llama',
       'status' => TRUE,
-    ));
+    ]);
     $user->save();
 
     return $user;

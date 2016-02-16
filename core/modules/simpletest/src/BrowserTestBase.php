@@ -26,6 +26,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -567,7 +568,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       $edit['roles'] = array($rid);
     }
 
-    $account = entity_create('user', $edit);
+    $account = User::create($edit);
     $account->save();
 
     $this->assertNotNull($account->id(), SafeMarkup::format('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])));
