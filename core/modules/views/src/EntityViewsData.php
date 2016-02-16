@@ -217,7 +217,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         $data[$revision_data_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
         $data[$revision_data_table]['table']['entity revision'] = TRUE;
 
-        $data[$revision_data_table]['table']['join'][$revision_table] = array(
+        $data[$revision_table]['table']['join'][$revision_data_table] = array(
           'left_field' => $revision_field,
           'field' => $revision_field,
           'type' => 'INNER',
