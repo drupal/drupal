@@ -8,6 +8,7 @@
 namespace Drupal\menu_link_content\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\simpletest\WebTestBase;
 use Drupal\system\Entity\Menu;
 
@@ -69,7 +70,7 @@ class LinksTest extends WebTestBase {
     $parent = $base_options + array(
       'link' => ['uri' => 'internal:/menu-test/hierarchy/parent'],
     );
-    $link = entity_create('menu_link_content', $parent);
+    $link = MenuLinkContent::create($parent);
     $link->save();
     $links['parent'] = $link->getPluginId();
 
@@ -77,7 +78,7 @@ class LinksTest extends WebTestBase {
       'link' => ['uri' => 'internal:/menu-test/hierarchy/parent/child'],
       'parent' => $links['parent'],
     );
-    $link = entity_create('menu_link_content', $child_1);
+    $link = MenuLinkContent::create($child_1);
     $link->save();
     $links['child-1'] = $link->getPluginId();
 
@@ -85,7 +86,7 @@ class LinksTest extends WebTestBase {
       'link' => ['uri' => 'internal:/menu-test/hierarchy/parent/child2/child'],
       'parent' => $links['child-1'],
     );
-    $link = entity_create('menu_link_content', $child_1_1);
+    $link = MenuLinkContent::create($child_1_1);
     $link->save();
     $links['child-1-1'] = $link->getPluginId();
 
@@ -93,7 +94,7 @@ class LinksTest extends WebTestBase {
       'link' => ['uri' => 'internal:/menu-test/hierarchy/parent/child2/child'],
       'parent' => $links['child-1'],
     );
-    $link = entity_create('menu_link_content', $child_1_2);
+    $link = MenuLinkContent::create($child_1_2);
     $link->save();
     $links['child-1-2'] = $link->getPluginId();
 
@@ -101,7 +102,7 @@ class LinksTest extends WebTestBase {
       'link' => ['uri' => 'internal:/menu-test/hierarchy/parent/child'],
       'parent' => $links['parent'],
     );
-    $link = entity_create('menu_link_content', $child_2);
+    $link = MenuLinkContent::create($child_2);
     $link->save();
     $links['child-2'] = $link->getPluginId();
 
@@ -130,7 +131,7 @@ class LinksTest extends WebTestBase {
       'bundle' => 'menu_link_content',
       'link' => [['uri' => 'internal:/']],
     );
-    $link = entity_create('menu_link_content', $options);
+    $link = MenuLinkContent::create($options);
     $link->save();
     // Make sure the changed timestamp is set.
     $this->assertEqual($link->getChangedTime(), REQUEST_TIME, 'Creating a menu link sets the "changed" timestamp.');

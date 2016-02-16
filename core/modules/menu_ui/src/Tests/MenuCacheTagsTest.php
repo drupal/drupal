@@ -8,6 +8,7 @@
 namespace Drupal\menu_ui\Tests;
 
 use Drupal\Core\Url;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\system\Tests\Cache\PageCacheTagsTestBase;
 use Drupal\system\Entity\Menu;
 
@@ -80,7 +81,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
 
     // Verify that after adding a menu link, there is a cache miss.
     $this->pass('Test addition of menu link.', 'Debug');
-    $menu_link_2 = entity_create('menu_link_content', array(
+    $menu_link_2 = MenuLinkContent::create(array(
       'id' => '',
       'parent' => '',
       'title' => 'Alpaca',

@@ -142,7 +142,7 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
   }
   else {
     // Create a new menu_link_content entity.
-    $entity = entity_create('menu_link_content', array(
+    $entity = MenuLinkContent::create(array(
       'link' => ['uri' => 'entity:node/' . $node->id()],
       'langcode' => $node->getUntranslated()->language()->getId(),
     ));

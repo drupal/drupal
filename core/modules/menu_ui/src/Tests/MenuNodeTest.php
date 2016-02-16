@@ -198,7 +198,7 @@ class MenuNodeTest extends WebTestBase {
     $this->assertNoLink($node_title);
 
     // Add a menu link to the Administration menu.
-    $item = entity_create('menu_link_content', array(
+    $item = MenuLinkContent::create(array(
       'link' => [['uri' => 'entity:node/' . $node->id()]],
       'title' => $this->randomMachineName(16),
       'menu_name' => 'admin',
@@ -220,7 +220,7 @@ class MenuNodeTest extends WebTestBase {
     // Create a second node.
     $child_node = $this->drupalCreateNode(array('type' => 'article'));
     // Assign a menu link to the second node, being a child of the first one.
-    $child_item = entity_create('menu_link_content', array(
+    $child_item = MenuLinkContent::create(array(
       'link' => [['uri' => 'entity:node/' . $child_node->id()]],
       'title' => $this->randomMachineName(16),
       'parent' => $item->getPluginId(),
