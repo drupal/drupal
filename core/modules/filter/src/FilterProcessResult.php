@@ -35,7 +35,7 @@ use Drupal\Core\Template\Attribute;
  * public function process($text, $langcode) {
  *   // Modify $text.
  *
- *   return new FilterProcess($text);
+ *   return new FilterProcessResult($text);
  * }
  * @endcode
  *
@@ -44,7 +44,7 @@ use Drupal\Core\Template\Attribute;
  * public function process($text, $langcode) {
  *   // Modify $text.
  *
- *   $result = new FilterProcess($text);
+ *   $result = new FilterProcessResult($text);
  *
  *   // Associate assets to be attached.
  *   $result->setAttachments(array(
