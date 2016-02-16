@@ -10,6 +10,7 @@ namespace Drupal\simpletest\Tests;
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
  * Tests KernelTestBase functionality.
@@ -273,7 +274,7 @@ EOS;
     $this->enableModules(array('field_test'));
 
     // Create a field.
-    entity_create('entity_view_display', array(
+    $display = EntityViewDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'default',
