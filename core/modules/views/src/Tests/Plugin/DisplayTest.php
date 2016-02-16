@@ -290,7 +290,7 @@ class DisplayTest extends PluginTestBase {
     $config->save();
 
     // Place the block display.
-    $block = $this->drupalPlaceBlock('views_block:test_display_invalid-block_1', array(), array('title' => 'Invalid display'));
+    $block = $this->drupalPlaceBlock('views_block:test_display_invalid-block_1', array('label' => 'Invalid display'));
 
     $this->drupalGet('<front>');
     $this->assertResponse(200);
