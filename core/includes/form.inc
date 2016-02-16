@@ -886,15 +886,13 @@ function &batch_get() {
  *
  * Depending on whether the batch is progressive or not, the
  * Drupal\Core\Queue\Batch or Drupal\Core\Queue\BatchMemory handler classes will
- * be used.
+ * be used. The name and class of the queue are added by reference to the
+ * batch set.
  *
  * @param $batch
  *   The batch array.
  * @param $set_id
  *   The id of the set to process.
- *
- * @return
- *   The name and class of the queue are added by reference to the batch set.
  */
 function _batch_populate_queue(&$batch, $set_id) {
   $batch_set = &$batch['sets'][$set_id];
