@@ -99,12 +99,25 @@ class Insert extends QueryInsert {
     elseif ($options['return'] == Database::RETURN_INSERT_ID) {
       $options['return'] = Database::RETURN_NULL;
     }
-    // Only use the returned last_insert_id if it is not already set.
-    if (!empty($last_insert_id)) {
-      $this->connection->query($stmt, array(), $options);
+
+    // Create a savepoint so we can rollback a failed query. This is so we can
+    // mimic MySQL and SQLite transactions which don't fail if a single query
+    // fails. This is important for tables that are created on demand. For
+    // example, \Drupal\Core\Cache\DatabaseBackend.
+    $this->connection->addSavepoint();
+    try {
+      // Only use the returned last_insert_id if it is not already set.
+      if (!empty($last_insert_id)) {
+        $this->connection->query($stmt, array(), $options);
+      }
+      else {
+        $last_insert_id = $this->connection->query($stmt, array(), $options);
+      }
+      $this->connection->releaseSavepoint();
     }
-    else {
-      $last_insert_id = $this->connection->query($stmt, array(), $options);
+    catch (\Exception $e) {
+      $this->connection->rollbackSavepoint();
+      throw $e;
     }
 
     // Re-initialize the values array so that we can re-use this query.

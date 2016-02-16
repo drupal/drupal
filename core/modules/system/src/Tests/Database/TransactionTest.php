@@ -492,5 +492,124 @@ class TransactionTest extends DatabaseTestBase {
     $this->assertRowAbsent('inner');
     $this->assertRowAbsent('inner2');
   }
-}
 
+  /**
+   * Tests that transactions can continue to be used if a query fails.
+   */
+  public function testQueryFailureInTransaction() {
+    $connection = Database::getConnection();
+    $transaction = $connection->startTransaction('test_transaction');
+    $connection->schema()->dropTable('test');
+
+    // Test a failed query using the query() method.
+    try {
+      $connection->query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'David'))->fetchField();
+      $this->fail('Using the query method failed.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Using the query method failed.');
+    }
+
+    // Test a failed select query.
+    try {
+      $connection->select('test')
+        ->fields('test', ['name'])
+        ->execute();
+
+      $this->fail('Select query failed.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Select query failed.');
+    }
+
+    // Test a failed insert query.
+    try {
+      $connection->insert('test')
+        ->fields([
+          'name' => 'David',
+          'age' => '24',
+        ])
+        ->execute();
+
+      $this->fail('Insert query failed.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Insert query failed.');
+    }
+
+    // Test a failed update query.
+    try {
+      $connection->update('test')
+        ->fields(['name' => 'Tiffany'])
+        ->condition('id', 1)
+        ->execute();
+
+      $this->fail('Update query failed.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Update query failed.');
+    }
+
+    // Test a failed delete query.
+    try {
+      $connection->delete('test')
+        ->condition('id', 1)
+        ->execute();
+
+      $this->fail('Delete query failed.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Delete query failed.');
+    }
+
+    // Test a failed merge query.
+    try {
+      $connection->merge('test')
+        ->key('job', 'Presenter')
+        ->fields([
+          'age' => '31',
+          'name' => 'Tiffany',
+        ])
+        ->execute();
+
+      $this->fail('Merge query failed.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Merge query failed.');
+    }
+
+    // Test a failed upsert query.
+    try {
+      $connection->upsert('test')
+        ->key('job')
+        ->fields(['job', 'age', 'name'])
+        ->values([
+          'job' => 'Presenter',
+          'age' => 31,
+          'name' => 'Tiffany',
+        ])
+        ->execute();
+
+      $this->fail('Upset query failed.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Upset query failed.');
+    }
+
+    // Create the missing schema and insert a row.
+    $this->installSchema('database_test', ['test']);
+    $connection->insert('test')
+      ->fields(array(
+        'name' => 'David',
+        'age' => '24',
+      ))
+      ->execute();
+
+    // Commit the transaction.
+    unset($transaction);
+
+    $saved_age = $connection->query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'David'))->fetchField();
+    $this->assertEqual('24', $saved_age);
+  }
+
+}
