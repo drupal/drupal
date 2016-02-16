@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -44,10 +45,10 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
       'type' => 'telephone',
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     // Create a text field.
     $date_field_storage = FieldStorageConfig::create(array(
@@ -56,10 +57,10 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
       'type' => 'datetime',
     ));
     $date_field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $date_field_storage,
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     // Create an entity which has values for the telephone and text field.
     $entity = entity_create('entity_test');

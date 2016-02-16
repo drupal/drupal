@@ -7,6 +7,7 @@
 
 namespace Drupal\telephone\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -56,12 +57,12 @@ class TelephoneFieldTest extends WebTestBase {
       'entity_type' => 'node',
       'type' => 'telephone',
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => 'field_telephone',
       'label' => 'Telephone Number',
       'entity_type' => 'node',
       'bundle' => 'article',
-    ))->save();
+    ])->save();
 
     entity_get_form_display('node', 'article', 'default')
       ->setComponent('field_telephone', array(

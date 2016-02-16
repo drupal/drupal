@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\Boolean;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -31,11 +32,11 @@ class BooleanItemTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => 'boolean',
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_boolean',
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     // Create a form display for the default form mode.
     entity_get_form_display('entity_test', 'entity_test', 'default')

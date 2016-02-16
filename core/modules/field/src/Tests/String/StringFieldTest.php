@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests\String;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -61,11 +62,11 @@ class StringFieldTest extends WebTestBase {
       'type' => $field_type
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',
-    ))->save();
+    ])->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
         'type' => $widget_type,

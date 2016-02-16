@@ -9,6 +9,7 @@ namespace Drupal\views\Tests\Handler;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Render\RenderContext;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\views\Views;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -62,7 +63,7 @@ class FieldGroupRowsTest extends HandlerTestBase {
       'field_storage' => $field_storage,
       'bundle' => $node_type->id(),
     );
-    entity_create('field_config', $field)->save();
+    FieldConfig::create($field)->save();
   }
 
   /**

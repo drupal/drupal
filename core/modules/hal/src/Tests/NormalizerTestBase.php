@@ -8,6 +8,7 @@
 namespace Drupal\hal\Tests;
 
 use Drupal\Core\Cache\MemoryBackend;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\hal\Encoder\JsonEncoder;
 use Drupal\hal\Normalizer\ContentEntityNormalizer;
 use Drupal\hal\Normalizer\EntityReferenceItemNormalizer;
@@ -99,12 +100,12 @@ abstract class NormalizerTestBase extends KernelTestBase {
       'entity_type' => 'entity_test',
       'type' => 'text',
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_text',
       'bundle' => 'entity_test',
       'translatable' => FALSE,
-    ))->save();
+    ])->save();
 
     // Create the test translatable field.
     FieldStorageConfig::create(array(
@@ -112,12 +113,12 @@ abstract class NormalizerTestBase extends KernelTestBase {
       'entity_type' => 'entity_test',
       'type' => 'text',
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_translatable_text',
       'bundle' => 'entity_test',
       'translatable' => TRUE,
-    ))->save();
+    ])->save();
 
     // Create the test entity reference field.
     FieldStorageConfig::create(array(
@@ -128,12 +129,12 @@ abstract class NormalizerTestBase extends KernelTestBase {
         'target_type' => 'entity_test',
       ),
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_entity_reference',
       'bundle' => 'entity_test',
       'translatable' => TRUE,
-    ))->save();
+    ])->save();
 
     $entity_manager = \Drupal::entityManager();
     $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('default'), \Drupal::moduleHandler(), \Drupal::service('config.factory'), \Drupal::service('request_stack')), new RelationLinkManager(new MemoryBackend('default'), $entity_manager, \Drupal::moduleHandler(), \Drupal::service('config.factory'), \Drupal::service('request_stack')));

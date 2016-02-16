@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests\Email;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -61,10 +62,10 @@ class EmailFieldTest extends WebTestBase {
       'type' => 'email',
     ));
     $this->fieldStorage->save();
-    $this->field = entity_create('field_config', array(
+    $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
-    ));
+    ]);
     $this->field->save();
 
     // Create a form display for the default form mode.

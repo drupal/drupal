@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Form;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -80,11 +81,11 @@ class RebuildTest extends WebTestBase {
       'type' => 'text',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'page',
-    ))->save();
+    ])->save();
     entity_get_form_display('node', 'page', 'default')
       ->setComponent($field_name, array('type' => 'text_textfield'))
       ->save();

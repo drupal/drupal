@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -57,7 +58,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'label' => 'Entity reference field',
       'field_name' => 'test_field',
       'entity_type' => 'node',
@@ -73,7 +74,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
           'auto_create' => TRUE,
         ),
       ),
-    ))->save();
+    ])->save();
 
     entity_get_display('node', $referencing->id(), 'default')
       ->setComponent('test_field')

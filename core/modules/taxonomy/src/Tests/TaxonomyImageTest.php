@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\user\RoleInterface;
 use Drupal\file\Entity\File;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -50,12 +51,12 @@ class TaxonomyImageTest extends TaxonomyTestBase {
         'uri_scheme' => 'private',
       ),
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $name,
       'entity_type' => $entity_type,
       'bundle' => $this->vocabulary->id(),
       'settings' => array(),
-    ))->save();
+    ])->save();
     entity_get_display($entity_type, $this->vocabulary->id(), 'default')
       ->setComponent($name, array(
         'type' => 'image',

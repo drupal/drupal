@@ -10,6 +10,7 @@ namespace Drupal\field\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -109,7 +110,7 @@ abstract class FieldUnitTestBase extends KernelTestBase {
         'test_field_setting' => $this->randomMachineName(),
       ),
     );
-    $this->fieldTestData->$field = entity_create('field_config', $this->fieldTestData->$field_definition);
+    $this->fieldTestData->$field = FieldConfig::create($this->fieldTestData->$field_definition);
     $this->fieldTestData->$field->save();
 
     entity_get_form_display($entity_type, $bundle, 'default')

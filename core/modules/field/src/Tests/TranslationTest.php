@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -96,7 +97,7 @@ class TranslationTest extends FieldUnitTestBase {
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
     );
-    $this->field = entity_create('field_config', $this->fieldDefinition);
+    $this->field = FieldConfig::create($this->fieldDefinition);
     $this->field->save();
 
     for ($i = 0; $i < 3; ++$i) {
@@ -151,7 +152,7 @@ class TranslationTest extends FieldUnitTestBase {
     $field_definition = $this->fieldDefinition;
     $field_definition['field_storage'] = $field_storage;
     $field_definition['default_value'] = array(array('value' => rand(1, 127)));
-    $field = entity_create('field_config', $field_definition);
+    $field = FieldConfig::create($field_definition);
     $field->save();
 
     $translation_langcodes = array_slice($available_langcodes, 0, 2);

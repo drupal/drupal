@@ -10,6 +10,7 @@ namespace Drupal\image\Tests;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -51,11 +52,11 @@ class ImageItemTest extends FieldUnitTestBase {
       'type' => 'image',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'image_test',
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
     file_unmanaged_copy(\Drupal::root() . '/core/misc/druplicon.png', 'public://example.jpg');
     $this->image = entity_create('file', array(
       'uri' => 'public://example.jpg',

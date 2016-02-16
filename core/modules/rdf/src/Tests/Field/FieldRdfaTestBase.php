@@ -6,6 +6,7 @@
 
 namespace Drupal\rdf\Tests\Field;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -120,12 +121,12 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => $this->fieldType,
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
       'bundle' => 'entity_test',
       'settings' => $field_settings,
-    ))->save();
+    ])->save();
   }
 
   /**

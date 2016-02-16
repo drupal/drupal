@@ -30,7 +30,7 @@ class FieldApiDataTest extends FieldTestBase {
       'bundle' => 'page',
       'label' => 'GiraffeA" label'
     );
-    entity_create('field_config', $field)->save();
+    FieldConfig::create($field)->save();
 
     // Attach the same field to a different bundle with a different label.
     $this->drupalCreateContentType(['type' => 'article']);

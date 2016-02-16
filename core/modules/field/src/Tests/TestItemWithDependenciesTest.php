@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -40,11 +41,11 @@ class TestItemWithDependenciesTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => 'test_field_with_dependencies',
     ))->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
       'bundle' => 'entity_test',
-    ));
+    ]);
     $field->save();
 
     // Validate that the field configuration entity has the expected

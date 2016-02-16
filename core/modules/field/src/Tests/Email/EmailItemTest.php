@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\Email;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -28,11 +29,11 @@ class EmailItemTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => 'email',
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_email',
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     // Create a form display for the default form mode.
     entity_get_form_display('entity_test', 'entity_test', 'default')

@@ -7,6 +7,7 @@
 
 namespace Drupal\text\Tests\Formatter;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -62,12 +63,12 @@ class TextFormatterTest extends EntityUnitTestBase {
       'type' => 'text',
       'settings' => array(),
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => $this->entityType,
       'bundle' => $this->bundle,
       'field_name' => 'formatted_text',
       'label' => 'Filtered text',
-    ))->save();
+    ])->save();
   }
 
   /**

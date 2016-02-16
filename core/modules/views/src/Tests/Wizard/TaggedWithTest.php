@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Wizard;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 
 /**
@@ -201,7 +202,7 @@ class TaggedWithTest extends WizardTestBase {
 
     // If we add an instance of the tagging field to the second node type, the
     // "tagged with" form element should not appear for it too.
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $this->tagFieldName,
       'entity_type' => 'node',
       'bundle' => $this->nodeTypeWithoutTags->id(),
@@ -214,7 +215,7 @@ class TaggedWithTest extends WizardTestBase {
           'auto_create' => TRUE,
         ),
       ),
-    ))->save();
+    ])->save();
     entity_get_form_display('node', $this->nodeTypeWithoutTags->id(), 'default')
       ->setComponent($this->tagFieldName, array(
         'type' => 'entity_reference_autocomplete_tags',

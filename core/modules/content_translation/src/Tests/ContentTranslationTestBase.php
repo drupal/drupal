@@ -8,6 +8,7 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -190,12 +191,12 @@ abstract class ContentTranslationTestBase extends WebTestBase {
       'entity_type' => $this->entityTypeId,
       'cardinality' => 1,
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => $this->entityTypeId,
       'field_name' => $this->fieldName,
       'bundle' => $this->bundle,
       'label' => 'Test translatable text-field',
-    ))->save();
+    ])->save();
     entity_get_form_display($this->entityTypeId, $this->bundle, 'default')
       ->setComponent($this->fieldName, array(
         'type' => 'string_textfield',

@@ -7,6 +7,7 @@
 
 namespace Drupal\image\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -82,7 +83,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
       'cardinality' => !empty($storage_settings['cardinality']) ? $storage_settings['cardinality'] : 1,
     ))->save();
 
-    $field_config = entity_create('field_config', array(
+    $field_config = FieldConfig::create([
       'field_name' => $name,
       'label' => $name,
       'entity_type' => 'node',
@@ -90,7 +91,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
       'required' => !empty($field_settings['required']),
       'settings' => $field_settings,
       'description' => $description,
-    ));
+    ]);
     $field_config->save();
 
     entity_get_form_display('node', $type_name, 'default')

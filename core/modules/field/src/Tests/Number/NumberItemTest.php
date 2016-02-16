@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\Number;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -36,11 +37,11 @@ class NumberItemTest extends FieldUnitTestBase {
         'field_name' => 'field_' . $type,
         'type' => $type,
       ))->save();
-      entity_create('field_config', array(
+      FieldConfig::create([
         'entity_type' => 'entity_test',
         'field_name' => 'field_' . $type,
         'bundle' => 'entity_test',
-      ))->save();
+      ])->save();
     }
   }
 

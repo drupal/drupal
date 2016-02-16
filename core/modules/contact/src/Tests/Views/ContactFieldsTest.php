@@ -7,6 +7,7 @@
 
 namespace Drupal\contact\Tests\Views;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\contact\Entity\ContactForm;
@@ -47,10 +48,10 @@ class ContactFieldsTest extends ViewTestBase {
       'label' => 'Test contact form',
     ])->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'contact_message',
-    ))->save();
+    ])->save();
 
     $this->container->get('views.views_data')->clear();
   }

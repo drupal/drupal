@@ -11,6 +11,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -85,11 +86,11 @@ class DateTimeFieldTest extends WebTestBase {
       'settings' => array('datetime_type' => 'date'),
     ));
     $this->fieldStorage->save();
-    $this->field = entity_create('field_config', array(
+    $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'required' => TRUE,
-    ));
+    ]);
     $this->field->save();
 
     entity_get_form_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'default')
@@ -633,10 +634,10 @@ class DateTimeFieldTest extends WebTestBase {
     ));
     $field_storage->save();
 
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'date_content',
-    ));
+    ]);
     $field->save();
 
     // Set now as default_value.

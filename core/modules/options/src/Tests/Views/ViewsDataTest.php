@@ -6,6 +6,7 @@
 
 namespace Drupal\options\Tests\Views;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -45,7 +46,7 @@ class ViewsDataTest extends OptionsTestBase {
     ]);
     $this->fieldStorage->save();
 
-    $this->field = entity_create('field_config', [
+    $this->field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',

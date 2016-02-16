@@ -7,6 +7,7 @@
 
 use Drupal\system\Tests\Update\DbUpdatesTrait;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Implements hook_install().
@@ -20,13 +21,13 @@ function entity_test_install() {
       'type' => 'text',
       'cardinality' => 1,
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => $entity_type,
       'field_name' => 'field_test_text',
       'bundle' => $entity_type,
       'label' => 'Test text-field',
       'translatable' => FALSE,
-    ))->save();
+    ])->save();
 
     entity_get_form_display($entity_type, $entity_type, 'default')
       ->setComponent('field_test_text', array('type' => 'text_textfield'))

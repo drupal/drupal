@@ -61,10 +61,10 @@ class FieldDataCountTest extends FieldUnitTestBase {
       'cardinality' => 2,
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     $this->assertIdentical($field_storage->hasdata(), FALSE, 'There are no entities with field data.');
     $this->assertIdentical($this->storage->countFieldData($field_storage), 0, 'There are 0 entities with field data.');

@@ -79,13 +79,13 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
         'type' => 'test_field',
         'settings' => array(),
       ))->save();
-      entity_create('field_config', array(
+      FieldConfig::create([
         'entity_type' => $this->entity->getEntityTypeId(),
         'bundle' => $this->entity->bundle(),
         'field_name' => 'configurable_field',
         'label' => 'Configurable field',
         'settings' => array(),
-      ))->save();
+      ])->save();
 
       // Reload the entity now that a new field has been added to it.
       $storage = $this->container
@@ -255,7 +255,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
         'target_type' => $referenced_entity->getEntityTypeId(),
       ),
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => $entity_type,
       'bundle' => $bundle,
@@ -269,7 +269,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
           'auto_create' => FALSE,
         ),
       ),
-    ))->save();
+    ])->save();
     if (!$this->entity->getEntityType()->hasHandlerClass('view_builder')) {
       entity_get_display($entity_type, $bundle, 'full')
         ->setComponent($field_name, array(

@@ -82,12 +82,12 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
         'type' => 'text',
         'cardinality' => 4,
       ))->save();
-      entity_create('field_config', array(
+      FieldConfig::create([
         'field_name' => $this->fieldName,
         'entity_type' => $entity_type,
         'bundle' => $entity_type,
         'translatable' => TRUE,
-      ))->save();
+      ])->save();
       $this->field[$entity_type] = FieldConfig::load($entity_type . '.' . $entity_type . '.' . $this->fieldName);
 
       FieldStorageConfig::create(array(
@@ -96,12 +96,12 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
         'type' => 'text',
         'cardinality' => 4,
       ))->save();
-      entity_create('field_config', array(
+      FieldConfig::create([
         'field_name' => $this->untranslatableFieldName,
         'entity_type' => $entity_type,
         'bundle' => $entity_type,
         'translatable' => FALSE,
-      ))->save();
+      ])->save();
     }
 
     // Create the default languages.

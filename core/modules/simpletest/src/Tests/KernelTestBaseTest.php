@@ -8,6 +8,7 @@
 namespace Drupal\simpletest\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -285,10 +286,10 @@ EOS;
       'type' => 'test_field'
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
   }
 
   /**

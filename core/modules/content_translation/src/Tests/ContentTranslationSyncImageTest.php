@@ -8,6 +8,7 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -57,7 +58,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       'cardinality' => $this->cardinality,
     ))->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => $this->entityTypeId,
       'field_name' => $this->fieldName,
       'bundle' => $this->entityTypeId,
@@ -71,7 +72,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
           ),
         ),
       ),
-    ))->save();
+    ])->save();
   }
 
   /**

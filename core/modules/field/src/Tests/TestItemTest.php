@@ -10,6 +10,7 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -42,11 +43,11 @@ class TestItemTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
   }
 
   /**

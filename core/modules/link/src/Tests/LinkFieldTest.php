@@ -10,6 +10,7 @@ namespace Drupal\link\Tests;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\link\LinkItemInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -64,14 +65,14 @@ class LinkFieldTest extends WebTestBase {
       'type' => 'link',
     ));
     $this->fieldStorage->save();
-    $this->field = entity_create('field_config', array(
+    $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'settings' => array(
         'title' => DRUPAL_DISABLED,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ),
-    ));
+    ]);
     $this->field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
@@ -229,7 +230,7 @@ class LinkFieldTest extends WebTestBase {
       'type' => 'link',
     ));
     $this->fieldStorage->save();
-    $this->field = entity_create('field_config', array(
+    $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'label' => 'Read more about this entity',
@@ -237,7 +238,7 @@ class LinkFieldTest extends WebTestBase {
         'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ),
-    ));
+    ]);
     $this->field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
@@ -344,7 +345,7 @@ class LinkFieldTest extends WebTestBase {
       'cardinality' => 2,
     ));
     $this->fieldStorage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
@@ -352,7 +353,7 @@ class LinkFieldTest extends WebTestBase {
         'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ),
-    ))->save();
+    ])->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
         'type' => 'link_default',
@@ -484,14 +485,14 @@ class LinkFieldTest extends WebTestBase {
       'cardinality' => 2,
     ));
     $this->fieldStorage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ),
-    ))->save();
+    ])->save();
     $display_options = array(
       'type' => 'link_separate',
       'label' => 'hidden',

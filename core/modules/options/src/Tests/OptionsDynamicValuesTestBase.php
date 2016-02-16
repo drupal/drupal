@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -51,7 +52,7 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
     ]);
     $this->fieldStorage->save();
 
-    $this->field = entity_create('field_config', [
+    $this->field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test_rev',
       'bundle' => 'entity_test_rev',

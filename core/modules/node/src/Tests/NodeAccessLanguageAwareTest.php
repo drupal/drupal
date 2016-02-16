@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\User;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -61,7 +62,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
     ));
     $field_storage->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'page',
       'widget' => array(
@@ -71,7 +72,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
         'on_label' => 'Private',
         'off_label' => 'Not private',
       ),
-    ))->save();
+    ])->save();
 
     // After enabling a node access module, the access table has to be rebuild.
     node_access_rebuild();

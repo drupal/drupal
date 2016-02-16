@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests\EntityReference\Views;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\Views;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -62,7 +63,7 @@ class SelectionTest extends WebTestBase {
       'cardinality' => '1',
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'test_bundle',
       'settings' => array(
@@ -75,7 +76,7 @@ class SelectionTest extends WebTestBase {
           ),
         ),
       ),
-    ));
+    ]);
     $field->save();
     $this->field = $field;
   }

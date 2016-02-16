@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -54,11 +55,11 @@ class reEnableModuleFieldTest extends WebTestBase {
       'type' => 'telephone',
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'article',
       'label' => 'Telephone Number',
-    ))->save();
+    ])->save();
 
     entity_get_form_display('node', 'article', 'default')
       ->setComponent('field_telephone', array(
@@ -105,11 +106,11 @@ class reEnableModuleFieldTest extends WebTestBase {
       'type' => 'telephone',
     ));
     $field_storage2->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage2,
       'bundle' => 'user',
       'label' => 'User Telephone Number',
-    ))->save();
+    ])->save();
 
     $this->drupalGet('admin/modules/uninstall');
     $this->assertText("The Telephone number field type is used in the following fields: node.field_telephone, user.field_telephone_2");

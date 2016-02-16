@@ -113,7 +113,7 @@ abstract class FileFieldTestBase extends WebTestBase {
       'required' => !empty($field_settings['required']),
       'settings' => $field_settings,
     );
-    entity_create('field_config', $field)->save();
+    FieldConfig::create($field)->save();
 
     entity_get_form_display($entity_type, $bundle, 'default')
       ->setComponent($name, array(

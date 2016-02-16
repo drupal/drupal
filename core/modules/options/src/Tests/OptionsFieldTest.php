@@ -8,6 +8,7 @@
 namespace Drupal\options\Tests;
 
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -77,12 +78,12 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     // Options are reset when a new field with the same name is created.
     $this->fieldStorage->delete();
     FieldStorageConfig::create($this->fieldStorageDefinition)->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'required' => TRUE,
-    ))->save();
+    ])->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->fieldName, array(
         'type' => 'options_buttons',

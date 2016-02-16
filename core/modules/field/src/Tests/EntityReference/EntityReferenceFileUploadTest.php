@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -64,7 +65,7 @@ class EntityReferenceFileUploadTest extends WebTestBase {
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'label' => 'Entity reference field',
       'field_name' => 'test_field',
       'entity_type' => 'node',
@@ -79,7 +80,7 @@ class EntityReferenceFileUploadTest extends WebTestBase {
           ),
         ),
       ),
-    ))->save();
+    ])->save();
 
 
     // Create a file field.
@@ -90,12 +91,12 @@ class EntityReferenceFileUploadTest extends WebTestBase {
       'type' => 'file'
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'node',
       'field_storage' => $field_storage,
       'bundle' => $referencing->id(),
       'label' => $this->randomMachineName() . '_label',
-    ))->save();
+    ])->save();
 
     entity_get_display('node', $referencing->id(), 'default')
       ->setComponent('test_field')

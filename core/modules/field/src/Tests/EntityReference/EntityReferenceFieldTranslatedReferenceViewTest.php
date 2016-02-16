@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests\EntityReference;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
@@ -222,11 +223,11 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends WebTestBase {
       ),
     ))->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $this->referenceFieldName,
       'bundle' => $this->referrerType->id(),
       'entity_type' => $this->testEntityTypeName,
-    ))
+    ])
     ->save();
     entity_get_form_display($this->testEntityTypeName, $this->referrerType->id(), 'default')
       ->setComponent($this->referenceFieldName, array(

@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
 
@@ -62,7 +63,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
       'settings' => array('target_type' => 'node'),
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'reference_content',
       'settings' => array(
@@ -72,7 +73,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
           'sort' => array('field' => '_none'),
         ),
       ),
-    ));
+    ]);
     $field->save();
 
     // Set created node as default_value.
@@ -126,7 +127,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
       'cardinality' => FieldStorageConfig::CARDINALITY_UNLIMITED,
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'reference_content',
       'settings' => array(
@@ -135,7 +136,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
           'sort' => array('field' => '_none'),
         ),
       ),
-    ));
+    ]);
     $field->save();
 
     // Set created node as default_value.

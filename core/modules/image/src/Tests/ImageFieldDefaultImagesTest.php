@@ -8,6 +8,7 @@
 namespace Drupal\image\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -83,7 +84,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $this->assertEqual($field_storage->getSettings()['default_image']['uuid'], $default_images['field']->uuid());
 
     // Add another field with another default image to the page content type.
-    $field2 = entity_create('field_config', array(
+    $field2 = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'page',
       'label' => $field->label(),
@@ -97,7 +98,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
           'height' => 0,
         ),
       ),
-    ));
+    ]);
     $field2->save();
 
     $widget_settings = entity_get_form_display('node', $field->getTargetBundle(), 'default')->getComponent($field_name);
@@ -335,7 +336,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     // The non-existent default image should not be saved.
     $this->assertNull($settings['default_image']['uuid']);
 
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'page',
       'label' => $this->randomMachineName(),
@@ -344,7 +345,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
           'uuid' => 100000,
         )
       ),
-    ));
+    ]);
     $field->save();
     $settings = $field->getSettings();
     // The non-existent default image should not be saved.

@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -47,10 +48,10 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
       'type' => 'integer',
     ));
     $unrelated_field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $unrelated_field_storage,
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     // Create a telephone field for validation.
     $field_storage = FieldStorageConfig::create(array(
@@ -59,10 +60,10 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
       'type' => 'telephone',
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     $entity = entity_create('entity_test');
     $value = '+0123456789';
@@ -122,10 +123,10 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
     ));
     $field_storage->save();
     $field_storage_uuid = $field_storage->uuid();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     // Create 12 entities to ensure that the purging works as expected.
     for ($i=0; $i < 12; $i++) {

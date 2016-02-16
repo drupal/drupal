@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -91,10 +92,10 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'cardinality' => $this->fieldCardinality,
     ));
     $this->fieldStorage->save();
-    $this->field = entity_create('field_config', array(
+    $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => $entity_type
-    ));
+    ]);
     $this->field->save();
 
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
@@ -287,11 +288,11 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
         'entity_type' => $entity_type,
         'type' => 'test_field',
       ))->save();
-      entity_create('field_config', array(
+      FieldConfig::create([
         'field_name' => $field_names[$i],
         'entity_type' => $entity_type,
         'bundle' => $bundle,
-      ))->save();
+      ])->save();
       $values[$field_names[$i]] = mt_rand(1, 127);
     }
 
@@ -319,10 +320,10 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'settings' => array('precision' => 5, 'scale' => 2),
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $entity_type,
-    ));
+    ]);
     $field->save();
     $entity = entity_create($entity_type, array(
       'id' => 0,
@@ -393,10 +394,10 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'type' => 'text',
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $entity_type,
-    ));
+    ]);
     $field->save();
     $tables = array($this->tableMapping->getDedicatedDataTableName($field_storage), $this->tableMapping->getDedicatedRevisionTableName($field_storage));
 

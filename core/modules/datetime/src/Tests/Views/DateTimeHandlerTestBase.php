@@ -8,6 +8,7 @@
 namespace Drupal\datetime\Tests\Views;
 
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\views\Tests\Handler\HandlerTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -57,7 +58,7 @@ abstract class DateTimeHandlerTestBase extends HandlerTestBase {
       'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
     ]);
     $fieldStorage->save();
-    $field = entity_create('field_config', [
+    $field = FieldConfig::create([
       'field_storage' => $fieldStorage,
       'bundle' => 'page',
       'required' => TRUE,

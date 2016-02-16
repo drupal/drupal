@@ -79,12 +79,12 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
   // Add or remove the body field, as needed.
   $field = FieldConfig::loadByName('block_content', $block_type_id, 'body');
   if (empty($field)) {
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' =>  FieldStorageConfig::loadByName('block_content', 'body'),
       'bundle' => $block_type_id,
       'label' => $label,
       'settings' => array('display_summary' => FALSE),
-    ));
+    ]);
     $field->save();
 
     // Assign widget settings for the 'default' form mode.

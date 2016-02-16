@@ -8,6 +8,7 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
@@ -79,12 +80,12 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
       'type' => 'text',
       'cardinality' => 1,
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'node',
       'field_name' => 'field_test_text',
       'bundle' => $this->bundle,
       'label' => 'Test text-field',
-    ))->save();
+    ])->save();
     entity_get_form_display('node', $this->bundle, 'default')
       ->setComponent('field_test_text', array(
         'type' => 'text_textfield',

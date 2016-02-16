@@ -232,7 +232,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     );
-    entity_create('field_config', $field_definition)->save();
+    FieldConfig::create($field_definition)->save();
   }
 
   /**
@@ -311,10 +311,10 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     );
-    entity_create('field_config', $field_definition)->save();
+    FieldConfig::create($field_definition)->save();
     $another_field_definition = $field_definition;
     $another_field_definition['field_name'] = $another_field_storage_definition['field_name'];
-    entity_create('field_config', $another_field_definition)->save();
+    FieldConfig::create($another_field_definition)->save();
 
     // Test that the first field is not deleted, and then delete it.
     $field_storage = current(entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE)));
@@ -348,7 +348,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     // Try to create a new field the same name as a deleted field and
     // write data into it.
     FieldStorageConfig::create($field_storage_definition)->save();
-    entity_create('field_config', $field_definition)->save();
+    FieldConfig::create($field_definition)->save();
     $field_storage = FieldStorageConfig::load('entity_test.' . $field_storage_definition['field_name']);
     $this->assertTrue(!empty($field_storage) && !$field_storage->isDeleted(), 'A new storage with a previously used name is created.');
     $field = FieldConfig::load('entity_test.' . $field_definition['bundle'] . '.' . $field_definition['field_name'] );
@@ -400,11 +400,11 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
       'cardinality' => $cardinality,
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    ));
+    ]);
     $field->save();
 
     do {

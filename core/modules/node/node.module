@@ -324,12 +324,12 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
   $field_storage = FieldStorageConfig::loadByName('node', 'body');
   $field = FieldConfig::loadByName('node', $type->id(), 'body');
   if (empty($field)) {
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $type->id(),
       'label' => $label,
       'settings' => array('display_summary' => TRUE),
-    ));
+    ]);
     $field->save();
 
     // Assign widget settings for the 'default' form mode.

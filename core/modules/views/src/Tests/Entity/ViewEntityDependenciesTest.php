@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Entity;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Tests\ViewKernelTestBase;
@@ -64,7 +65,7 @@ class ViewEntityDependenciesTest extends ViewKernelTestBase {
       'type' => 'comment',
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $content_type->id(),
       'label' => $this->randomMachineName() . '_label',
@@ -72,13 +73,13 @@ class ViewEntityDependenciesTest extends ViewKernelTestBase {
       'settings' => array(
         'comment_type' => $comment_type->id(),
       ),
-    ))->save();
-    entity_create('field_config', array(
+    ])->save();
+    FieldConfig::create([
       'field_storage' => FieldStorageConfig::loadByName('node', 'body'),
       'bundle' => $content_type->id(),
       'label' => $this->randomMachineName() . '_body',
       'settings' => array('display_summary' => TRUE),
-    ))->save();
+    ])->save();
 
     ViewTestData::createTestViews(get_class($this), array('views_test_config'));
   }

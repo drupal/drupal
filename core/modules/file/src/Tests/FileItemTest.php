@@ -55,12 +55,12 @@ class FileItemTest extends FieldUnitTestBase {
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
     $this->directory = $this->getRandomGenerator()->name(8);
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'file_test',
       'bundle' => 'entity_test',
       'settings' => array('file_directory' => $this->directory),
-    ))->save();
+    ])->save();
     file_put_contents('public://example.txt', $this->randomMachineName());
     $this->file = entity_create('file', array(
       'uri' => 'public://example.txt',

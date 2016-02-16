@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -162,7 +163,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
       'bundle' => $this->vocabulary->id(),
       'label' => $this->randomMachineName() . '_label',
     );
-    entity_create('field_config', $field_definition)->save();
+    FieldConfig::create($field_definition)->save();
 
     // Remove the third party setting from the memory copy of the vocabulary.
     // We keep this invalid copy around while the taxonomy module is not even
@@ -180,6 +181,6 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     $this->vocabulary->enforceIsNew();
     $this->vocabulary->save();
     FieldStorageConfig::create($storage_definition)->save();
-    entity_create('field_config', $field_definition)->save();
+    FieldConfig::create($field_definition)->save();
   }
 }

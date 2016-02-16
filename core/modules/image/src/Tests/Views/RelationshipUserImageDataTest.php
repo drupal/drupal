@@ -7,6 +7,7 @@
 
 namespace Drupal\image\Tests\Views;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
@@ -43,14 +44,14 @@ class RelationshipUserImageDataTest extends ViewTestBase {
       'type' => 'image',
       'translatable' => '0',
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'label' => 'User Picture',
       'description' => '',
       'field_name' => 'user_picture',
       'entity_type' => 'user',
       'bundle' => 'user',
       'required' => 0,
-    ))->save();
+    ])->save();
 
     ViewTestData::createTestViews(get_class($this), array('image_test_views'));
   }

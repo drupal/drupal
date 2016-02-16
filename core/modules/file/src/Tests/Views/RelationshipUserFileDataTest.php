@@ -7,6 +7,7 @@
 
 namespace Drupal\file\Tests\Views;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
@@ -43,14 +44,14 @@ class RelationshipUserFileDataTest extends ViewTestBase {
       'type' => 'file',
       'translatable' => '0',
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'label' => 'User File',
       'description' => '',
       'field_name' => 'user_file',
       'entity_type' => 'user',
       'bundle' => 'user',
       'required' => 0,
-    ))->save();
+    ])->save();
 
     ViewTestData::createTestViews(get_class($this), array('file_test_views'));
   }

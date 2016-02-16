@@ -73,7 +73,7 @@ class FieldCrudTest extends FieldUnitTestBase {
     // constraint for this field.
     \Drupal::state()->set('field_test_add_constraint', $this->fieldStorage->getName());
     /** @var \Drupal\Core\Field\FieldConfigInterface $field */
-    $field = entity_create('field_config', $this->fieldDefinition);
+    $field = FieldConfig::create($this->fieldDefinition);
     $field->save();
 
     $field = FieldConfig::load($field->id());
@@ -118,7 +118,7 @@ class FieldCrudTest extends FieldUnitTestBase {
 
     // Guarantee that the field/bundle combination is unique.
     try {
-      entity_create('field_config', $this->fieldDefinition)->save();
+      FieldConfig::create($this->fieldDefinition)->save();
       $this->fail(t('Cannot create two fields with the same field / bundle combination.'));
     }
     catch (EntityStorageException $e) {
@@ -128,7 +128,7 @@ class FieldCrudTest extends FieldUnitTestBase {
     // Check that the specified field exists.
     try {
       $this->fieldDefinition['field_name'] = $this->randomMachineName();
-      entity_create('field_config', $this->fieldDefinition)->save();
+      FieldConfig::create($this->fieldDefinition)->save();
       $this->fail(t('Cannot create a field with a non-existing storage.'));
     }
     catch (FieldException $e) {
@@ -180,7 +180,7 @@ class FieldCrudTest extends FieldUnitTestBase {
    * Test reading back a field definition.
    */
   function testReadField() {
-    entity_create('field_config', $this->fieldDefinition)->save();
+    FieldConfig::create($this->fieldDefinition)->save();
 
     // Read the field back.
     $field = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
@@ -193,7 +193,7 @@ class FieldCrudTest extends FieldUnitTestBase {
    * Test the update of a field.
    */
   function testUpdateField() {
-    entity_create('field_config', $this->fieldDefinition)->save();
+    FieldConfig::create($this->fieldDefinition)->save();
 
     // Check that basic changes are saved.
     $field = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
@@ -221,11 +221,11 @@ class FieldCrudTest extends FieldUnitTestBase {
 
     // Create two fields for the same field storage so we can test that only one
     // is deleted.
-    entity_create('field_config', $this->fieldDefinition)->save();
+    FieldConfig::create($this->fieldDefinition)->save();
     $another_field_definition = $this->fieldDefinition;
     $another_field_definition['bundle'] .= '_another_bundle';
     entity_test_create_bundle($another_field_definition['bundle']);
-    entity_create('field_config', $another_field_definition)->save();
+    FieldConfig::create($another_field_definition)->save();
 
     // Test that the first field is not deleted, and then delete it.
     $field = current(entity_load_multiple_by_properties('field_config', array('entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE)));
@@ -255,8 +255,8 @@ class FieldCrudTest extends FieldUnitTestBase {
 
     // Check that deletion of a field storage deletes its fields.
     $field_storage = $this->fieldStorage;
-    entity_create('field_config', $this->fieldDefinition)->save();
-    entity_create('field_config', $field_definition_2)->save();
+    FieldConfig::create($this->fieldDefinition)->save();
+    FieldConfig::create($field_definition_2)->save();
     $field_storage->delete();
     $this->assertFalse(FieldConfig::loadByName('entity_test', $this->fieldDefinition['bundle'], $field_storage->getName()));
     $this->assertFalse(FieldConfig::loadByName('entity_test', $field_definition_2['bundle'], $field_storage->getName()));
@@ -264,9 +264,9 @@ class FieldCrudTest extends FieldUnitTestBase {
     // Check that deletion of the last field deletes the storage.
     $field_storage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $field_storage->save();
-    $field = entity_create('field_config', $this->fieldDefinition);
+    $field = FieldConfig::create($this->fieldDefinition);
     $field->save();
-    $field_2 = entity_create('field_config', $field_definition_2);
+    $field_2 = FieldConfig::create($field_definition_2);
     $field_2->save();
     $field->delete();
     $this->assertTrue(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
@@ -277,9 +277,9 @@ class FieldCrudTest extends FieldUnitTestBase {
     // the storage.
     $field_storage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $field_storage->save();
-    $field = entity_create('field_config', $this->fieldDefinition);
+    $field = FieldConfig::create($this->fieldDefinition);
     $field->save();
-    $field_2 = entity_create('field_config', $field_definition_2);
+    $field_2 = FieldConfig::create($field_definition_2);
     $field_2->save();
     $this->container->get('entity.manager')->getStorage('field_config')->delete(array($field, $field_2));
     $this->assertFalse(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));

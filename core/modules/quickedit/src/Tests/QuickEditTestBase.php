@@ -7,6 +7,7 @@
 
 namespace Drupal\quickedit\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -80,14 +81,14 @@ abstract class QuickEditTestBase extends KernelTestBase {
     $this->fields->$field_storage->save();
 
     $field = $field_name . '_field';
-    $this->fields->$field = entity_create('field_config', array(
+    $this->fields->$field = FieldConfig::create([
       'field_storage' => $this->fields->$field_storage,
       'bundle' => 'entity_test',
       'label' => $label,
       'description' => $label,
       'weight' => mt_rand(0, 127),
       'settings' => $field_settings,
-    ));
+    ]);
     $this->fields->$field->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')

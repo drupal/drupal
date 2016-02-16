@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests\Number;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -52,11 +53,11 @@ class NumberFieldTest extends WebTestBase {
         'precision' => 8, 'scale' => 4,
       )
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
@@ -141,14 +142,14 @@ class NumberFieldTest extends WebTestBase {
     ));
     $storage->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'settings' => array(
         'min' => $minimum, 'max' => $maximum, 'prefix' => 'ThePrefix',
       )
-    ))->save();
+    ])->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
@@ -283,11 +284,11 @@ class NumberFieldTest extends WebTestBase {
       'type' => 'float',
     ))->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
@@ -390,7 +391,7 @@ class NumberFieldTest extends WebTestBase {
       'type' => 'integer',
     ))->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $float_field,
       'entity_type' => 'node',
       'bundle' => $type,
@@ -398,9 +399,9 @@ class NumberFieldTest extends WebTestBase {
         'prefix' => $prefix,
         'suffix' => $suffix
       ),
-    ))->save();
+    ])->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_name' => $integer_field,
       'entity_type' => 'node',
       'bundle' => $type,
@@ -408,7 +409,7 @@ class NumberFieldTest extends WebTestBase {
         'prefix' => $prefix,
         'suffix' => $suffix
       ),
-    ))->save();
+    ])->save();
 
     entity_get_form_display('node', $type, 'default')
       ->setComponent($float_field, array(
@@ -508,11 +509,11 @@ class NumberFieldTest extends WebTestBase {
       'type' => 'float',
     ))->save();
 
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    ));
+    ]);
     $field->save();
 
     // Set the minimum value to a float value.
@@ -533,11 +534,11 @@ class NumberFieldTest extends WebTestBase {
       'type' => 'decimal',
     ))->save();
 
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    ));
+    ]);
     $field->save();
 
     // Set the minimum value to a decimal value.

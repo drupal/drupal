@@ -8,6 +8,7 @@
 namespace Drupal\text\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\String\StringFieldTest;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -49,10 +50,10 @@ class TextFieldTest extends StringFieldTest {
       )
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
 
     // Test validation with valid and invalid values.
     $entity = entity_create('entity_test');
@@ -80,12 +81,12 @@ class TextFieldTest extends StringFieldTest {
       'type' => 'text_with_summary',
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',
       'required' => TRUE,
-    ))->save();
+    ])->save();
 
     // Create a file field.
     $file_field_name = 'file_field';
@@ -95,11 +96,11 @@ class TextFieldTest extends StringFieldTest {
       'type' => 'file'
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',
-    ))->save();
+    ])->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($text_field_name, array(
@@ -158,11 +159,11 @@ class TextFieldTest extends StringFieldTest {
       'type' => $field_type
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',
-    ))->save();
+    ])->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
         'type' => $widget_type,

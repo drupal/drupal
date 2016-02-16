@@ -8,6 +8,7 @@
 namespace Drupal\config_translation\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
@@ -399,14 +400,14 @@ class ConfigTranslationListUiTest extends WebTestBase {
       'revision' => FALSE
     ));
     $block_content_type->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       // The field storage is guaranteed to exist because it is supplied by the
       // block_content module.
       'field_storage' => FieldStorageConfig::loadByName('block_content', 'body'),
       'bundle' => $block_content_type->id(),
       'label' => 'Body',
       'settings' => array('display_summary' => FALSE),
-    ));
+    ]);
     $field->save();
 
     // Look at a few fields on a few entity types.

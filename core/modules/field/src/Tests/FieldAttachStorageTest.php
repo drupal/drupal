@@ -104,11 +104,11 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       $field_storage->save();
       $field_ids[$i] = $field_storage->uuid();
       foreach ($field_bundles_map[$i] as $bundle) {
-        entity_create('field_config', array(
+        FieldConfig::create([
           'field_name' => $field_names[$i],
           'entity_type' => $entity_type,
           'bundle' => $bundles[$bundle],
-        ))->save();
+        ])->save();
       }
     }
 
@@ -289,7 +289,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Add a field to that bundle.
     $this->fieldTestData->field_definition['bundle'] = $new_bundle;
-    entity_create('field_config', $this->fieldTestData->field_definition)->save();
+    FieldConfig::create($this->fieldTestData->field_definition)->save();
 
     // Save an entity with data in the field.
     $entity = entity_create($entity_type, array('type' => $this->fieldTestData->field->getTargetBundle()));
@@ -314,7 +314,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Add a field to that bundle.
     $this->fieldTestData->field_definition['bundle'] = $new_bundle;
-    entity_create('field_config', $this->fieldTestData->field_definition)->save();
+    FieldConfig::create($this->fieldTestData->field_definition)->save();
 
     // Create a second field for the test bundle
     $field_name = Unicode::strtolower($this->randomMachineName() . '_field_name');
@@ -333,7 +333,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       'description' => $this->randomMachineName() . '_description',
       'weight' => mt_rand(0, 127),
     );
-    entity_create('field_config', $field)->save();
+    FieldConfig::create($field)->save();
 
     // Save an entity with data for both fields
     $entity = entity_create($entity_type, array('type' => $this->fieldTestData->field->getTargetBundle()));

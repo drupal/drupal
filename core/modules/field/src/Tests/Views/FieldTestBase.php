@@ -19,6 +19,7 @@
 
 namespace Drupal\field\Tests\Views;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -79,10 +80,10 @@ abstract class FieldTestBase extends ViewTestBase {
 
   function setUpFields($bundle = 'page') {
     foreach ($this->fieldStorages as $key => $field_storage) {
-      $this->fields[$key] = entity_create('field_config', array(
+      $this->fields[$key] = FieldConfig::create([
         'field_storage' => $field_storage,
         'bundle' => $bundle,
-      ));
+      ]);
       $this->fields[$key]->save();
     }
   }

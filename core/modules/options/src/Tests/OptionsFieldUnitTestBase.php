@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -69,10 +70,10 @@ abstract class OptionsFieldUnitTestBase extends FieldUnitTestBase {
     $this->fieldStorage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $this->fieldStorage->save();
 
-    $this->field = entity_create('field_config', array(
+    $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
-    ));
+    ]);
     $this->field->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')

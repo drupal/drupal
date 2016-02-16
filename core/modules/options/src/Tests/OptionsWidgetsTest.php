@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Tests;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -89,7 +90,7 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testRadioButtons() {
     // Create an instance of the 'single value' field.
-    $field = entity_create('field_config', [
+    $field = FieldConfig::create([
       'field_storage' => $this->card1,
       'bundle' => 'entity_test',
     ]);
@@ -146,10 +147,10 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testCheckBoxes() {
     // Create an instance of the 'multiple values' field.
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $this->card2,
       'bundle' => 'entity_test',
-    ));
+    ]);
     $field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->card2->getName(), array(
@@ -235,11 +236,11 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testSelectListSingle() {
     // Create an instance of the 'single value' field.
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $this->card1,
       'bundle' => 'entity_test',
       'required' => TRUE,
-    ));
+    ]);
     $field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->card1->getName(), array(
@@ -335,10 +336,10 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testSelectListMultiple() {
     // Create an instance of the 'multiple values' field.
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $this->card2,
       'bundle' => 'entity_test',
-    ));
+    ]);
     $field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->card2->getName(), array(
@@ -456,7 +457,7 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testEmptyValue() {
     // Create an instance of the 'single value' field.
-    $field = entity_create('field_config', [
+    $field = FieldConfig::create([
       'field_storage' => $this->card1,
       'bundle' => 'entity_test',
     ]);

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -60,11 +61,11 @@ class EntityQueryAggregateTest extends EntityUnitTestBase {
         'type' => 'integer',
         'cardinality' => 2,
       ))->save();
-      entity_create('field_config', array(
+      FieldConfig::create([
         'field_name' => $field_name,
         'entity_type' => 'entity_test',
         'bundle' => 'entity_test',
-      ))->save();
+      ])->save();
     }
 
     $entity = $this->entityStorage->create(array(

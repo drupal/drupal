@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -62,13 +63,13 @@ class NestedFormTest extends FieldTestBase {
     FieldStorageConfig::create($this->fieldStorageUnlimited)->save();
     $this->field['field_name'] = 'field_single';
     $this->field['label'] = 'Single field';
-    entity_create('field_config', $this->field)->save();
+    FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($this->field['field_name'])
       ->save();
     $this->field['field_name'] = 'field_unlimited';
     $this->field['label'] = 'Unlimited field';
-    entity_create('field_config', $this->field)->save();
+    FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($this->field['field_name'])
       ->save();

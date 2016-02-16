@@ -9,6 +9,7 @@ namespace Drupal\field\Tests;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -41,11 +42,11 @@ class ShapeItemTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => 'shape',
     ))->save();
-    entity_create('field_config', array(
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
   }
 
   /**

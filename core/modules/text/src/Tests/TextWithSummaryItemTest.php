@@ -9,6 +9,7 @@ namespace Drupal\text\Tests;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -108,10 +109,10 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
       )
     ));
     $this->fieldStorage->save();
-    $this->field = entity_create('field_config', array(
+    $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => $entity_type,
-    ));
+    ]);
     $this->field->save();
   }
 

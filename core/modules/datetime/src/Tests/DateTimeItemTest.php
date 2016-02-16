@@ -9,6 +9,7 @@ namespace Drupal\datetime\Tests;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -37,13 +38,13 @@ class DateTimeItemTest extends FieldUnitTestBase {
       'settings' => array('datetime_type' => 'date'),
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'settings' => array(
         'default_value' => 'blank',
       ),
-    ));
+    ]);
     $field->save();
   }
 

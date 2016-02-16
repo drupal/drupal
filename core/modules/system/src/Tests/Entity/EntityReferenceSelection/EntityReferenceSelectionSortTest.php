@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
@@ -53,14 +54,14 @@ class EntityReferenceSelectionSortTest extends EntityUnitTestBase {
       'entity_types' => array('node'),
     ))->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create([
       'label' => 'Text Field',
       'field_name' => 'field_text',
       'entity_type' => 'node',
       'bundle' => 'article',
       'settings' => array(),
       'required' => FALSE,
-    ))->save();
+    ])->save();
 
     // Build a set of test data.
     $node_values = array(

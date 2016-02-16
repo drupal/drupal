@@ -127,10 +127,10 @@ class BulkDeleteTest extends FieldUnitTestBase {
     // fields.
     foreach ($this->bundles as $bundle) {
       foreach ($this->fieldStorages as $field_storage) {
-        entity_create('field_config', array(
+        FieldConfig::create([
           'field_storage' => $field_storage,
           'bundle' => $bundle,
-        ))->save();
+        ])->save();
       }
       for ($i = 0; $i < 10; $i++) {
         $entity = entity_create($this->entityTypeId, array('type' => $bundle));

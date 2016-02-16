@@ -100,7 +100,7 @@ class FormTest extends FieldTestBase {
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     FieldStorageConfig::create($field_storage)->save();
-    entity_create('field_config', $this->field)->save();
+    FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($field_name)
       ->save();
@@ -176,7 +176,7 @@ class FormTest extends FieldTestBase {
     $default = rand(1, 127);
     $this->field['default_value'] = array(array('value' => $default));
     FieldStorageConfig::create($field_storage)->save();
-    entity_create('field_config', $this->field)->save();
+    FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($field_name)
       ->save();
@@ -204,7 +204,7 @@ class FormTest extends FieldTestBase {
     $this->field['field_name'] = $field_name;
     $this->field['required'] = TRUE;
     FieldStorageConfig::create($field_storage)->save();
-    entity_create('field_config', $this->field)->save();
+    FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($field_name)
       ->save();
@@ -240,7 +240,7 @@ class FormTest extends FieldTestBase {
 //    $field_name = $this->field['field_name'];
 //    $this->instance['field_name'] = $field_name;
 //    FieldStorageConfig::create($this->field)->save();
-//    entity_create('field_config', $this->instance)->save();
+//    FieldConfig::create($this->instance)->save();
 //  }
 
   function testFieldFormUnlimited() {
@@ -248,7 +248,7 @@ class FormTest extends FieldTestBase {
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     FieldStorageConfig::create($field_storage)->save();
-    entity_create('field_config', $this->field)->save();
+    FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($field_name)
       ->save();
@@ -359,7 +359,7 @@ class FormTest extends FieldTestBase {
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     FieldStorageConfig::create($field_storage)->save();
-    entity_create('field_config', $this->field)->save();
+    FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($field_name)
       ->save();
@@ -379,7 +379,7 @@ class FormTest extends FieldTestBase {
       'bundle' => 'entity_test',
       'required' => TRUE,
     );
-    entity_create('field_config', $field)->save();
+    FieldConfig::create($field)->save();
     entity_get_form_display($field['entity_type'], $field['bundle'], 'default')
       ->setComponent($field['field_name'], array(
         'type' => 'options_buttons',
@@ -406,7 +406,7 @@ class FormTest extends FieldTestBase {
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     FieldStorageConfig::create($field_storage)->save();
-    entity_create('field_config', $this->field)->save();
+    FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($field_name)
       ->save();
@@ -467,7 +467,7 @@ class FormTest extends FieldTestBase {
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     FieldStorageConfig::create($field_storage)->save();
-    entity_create('field_config', $this->field)->save();
+    FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($field_name, array(
         'type' => 'test_field_widget_multiple',
@@ -516,7 +516,7 @@ class FormTest extends FieldTestBase {
     $field['entity_type'] = $entity_type;
     $field['bundle'] = $entity_type;
     FieldStorageConfig::create($field_storage)->save();
-    entity_create('field_config', $field)->save();
+    FieldConfig::create($field)->save();
     entity_get_form_display($entity_type, $entity_type, 'default')
       ->setComponent($field_name)
       ->save();
@@ -536,7 +536,7 @@ class FormTest extends FieldTestBase {
       'default_value' => array(0 => array('value' => 99)),
     );
     FieldStorageConfig::create($field_storage_no_access)->save();
-    entity_create('field_config', $field_no_access)->save();
+    FieldConfig::create($field_no_access)->save();
     entity_get_form_display($field_no_access['entity_type'], $field_no_access['bundle'], 'default')
       ->setComponent($field_name_no_access)
       ->save();
@@ -601,7 +601,7 @@ class FormTest extends FieldTestBase {
     $this->field['entity_type'] = $entity_type;
     $this->field['bundle'] = $entity_type;
     FieldStorageConfig::create($field_storage)->save();
-    $this->field = entity_create('field_config', $this->field);
+    $this->field = FieldConfig::create($this->field);
     $this->field->save();
     // We explicitly do not assign a widget in a form display, so the field
     // stays hidden in forms.
