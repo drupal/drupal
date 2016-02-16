@@ -14,9 +14,9 @@ views.argument_validator.php:
       type: string
       label: 'PHP validate code'
 
-views.argument_validator.numeric:
-  type: boolean
-  label: 'Numeric'
+views.argument_validator.*:
+  type: mapping
+  label: 'Default argument validator'
 
 views.argument_validator_entity:
   type: mapping
