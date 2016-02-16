@@ -501,6 +501,9 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
         $filter = 'numeric';
         $argument = 'numeric';
         $sort = 'standard';
+        if ($field_storage->getType() == 'boolean') {
+          $filter = 'boolean';
+        }
         break;
       case 'text':
       case 'blob':
