@@ -27,9 +27,10 @@ class ImageFieldWidgetTest extends ImageFieldTestBase {
       'min_resolution' => $min_resolution . 'x' . $min_resolution,
       'alt_field' => 0,
     );
-    $this->createImageField($field_name, 'article', array(), $field_settings);
+    $this->createImageField($field_name, 'article', array(), $field_settings, array(), array(), 'Image test on [site:name]');
     $this->drupalGet('node/add/article');
     $this->assertNotEqual(0, count($this->xpath('//div[contains(@class, "field--widget-image-image")]')), 'Image field widget found on add/node page', 'Browser');
+    $this->assertNoText('Image test on [site:name]');
   }
 
 }

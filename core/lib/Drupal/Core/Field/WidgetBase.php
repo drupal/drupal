@@ -567,4 +567,14 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     return (bool) $form_state->get('default_value_widget');
   }
 
+  /**
+   * Returns the filtered field description.
+   *
+   * @return \Drupal\Core\Field\FieldFilteredMarkup
+   *   The filtered field description, with tokens replaced.
+   */
+  protected function getFilteredDescription() {
+    return FieldFilteredMarkup::create(\Drupal::token()->replace($this->fieldDefinition->getDescription()));
+  }
+
 }

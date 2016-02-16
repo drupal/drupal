@@ -70,8 +70,10 @@ abstract class ImageFieldTestBase extends WebTestBase {
    *   Widget settings to be added to the widget defaults.
    * @param array $formatter_settings
    *   Formatter settings to be added to the formatter defaults.
+   * @param string $description
+   *   A description for the field.
    */
-  function createImageField($name, $type_name, $storage_settings = array(), $field_settings = array(), $widget_settings = array(), $formatter_settings = array()) {
+  function createImageField($name, $type_name, $storage_settings = array(), $field_settings = array(), $widget_settings = array(), $formatter_settings = array(), $description = '') {
     FieldStorageConfig::create(array(
       'field_name' => $name,
       'entity_type' => 'node',
@@ -87,6 +89,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
       'bundle' => $type_name,
       'required' => !empty($field_settings['required']),
       'settings' => $field_settings,
+      'description' => $description,
     ));
     $field_config->save();
 
