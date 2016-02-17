@@ -232,11 +232,11 @@ function tracker_comment_delete(CommentInterface $comment) {
 /**
  * Updates indexing tables when a node is added, updated, or commented on.
  *
- * @param $nid
+ * @param int $nid
  *   A node ID.
- * @param $uid
+ * @param int $uid
  *   The node or comment author.
- * @param $changed
+ * @param int $changed
  *   The node updated timestamp or comment timestamp.
  */
 function _tracker_add($nid, $uid, $changed) {
@@ -303,11 +303,11 @@ function _tracker_calculate_changed($node) {
 /**
  * Cleans up indexed data when nodes or comments are removed.
  *
- * @param $nid
+ * @param int $nid
  *  The node ID.
- * @param $uid
+ * @param int $uid
  *   The author of the node or comment.
- * @param $changed
+ * @param int $changed
  *   The last changed timestamp of the node.
  */
 function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
