@@ -2195,7 +2195,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $output = $element['#empty'];
       }
 
-      $form_object = ViewsForm::create(\Drupal::getContainer(), $view->storage->id(), $view->current_display);
+      $form_object = ViewsForm::create(\Drupal::getContainer(), $view->storage->id(), $view->current_display, $view->args);
       $form = \Drupal::formBuilder()->getForm($form_object, $view, $output);
       // The form is requesting that all non-essential views elements be hidden,
       // usually because the rendered step is not a view result.

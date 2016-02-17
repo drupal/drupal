@@ -66,6 +66,13 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   protected $viewDisplayId;
 
   /**
+   * The arguments passed to the active view.
+   *
+   * @var string[]
+   */
+  protected $viewArguments;
+
+  /**
    * Constructs a ViewsForm object.
    *
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
@@ -78,37 +85,60 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
    *   The ID of the view.
    * @param string $view_display_id
    *   The ID of the active view's display.
+   * @param string[] $view_args
+   *   The arguments passed to the active view.
    */
-  public function __construct(ClassResolverInterface $class_resolver, UrlGeneratorInterface $url_generator, RequestStack $requestStack, $view_id, $view_display_id) {
+  public function __construct(ClassResolverInterface $class_resolver, UrlGeneratorInterface $url_generator, RequestStack $requestStack, $view_id, $view_display_id, array $view_args) {
     $this->classResolver = $class_resolver;
     $this->urlGenerator = $url_generator;
     $this->requestStack = $requestStack;
     $this->viewId = $view_id;
     $this->viewDisplayId = $view_display_id;
+    $this->viewArguments = $view_args;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, $view_id = NULL, $view_display_id = NULL) {
+  public static function create(ContainerInterface $container, $view_id = NULL, $view_display_id = NULL, array $view_args = NULL) {
     return new static(
       $container->get('class_resolver'),
       $container->get('url_generator'),
       $container->get('request_stack'),
       $view_id,
-      $view_display_id
+      $view_display_id,
+      $view_args
     );
+  }
+
+  /**
+   * Returns a string for the form's base ID.
+   *
+   * @return string
+   *   The string identifying the form's base ID.
+   */
+  public function getBaseFormId() {
+    $parts = [
+      'views_form',
+      $this->viewId,
+      $this->viewDisplayId,
+    ];
+
+    return implode('_', $parts);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    $parts = array(
-      'views_form',
-      $this->viewId,
-      $this->viewDisplayId,
-    );
+    $parts = [
+      $this->getBaseFormId(),
+    ];
+
+    if (!empty($this->viewArguments)) {
+      // Append the passed arguments to ensure form uniqueness.
+      $parts = array_merge($parts, $this->viewArguments);
+    }
 
     return implode('_', $parts);
   }
@@ -122,6 +152,9 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
       $form_state->set('step', $step);
     }
     $form_state->set(['step_controller', 'views_form_views_form'], 'Drupal\views\Form\ViewsFormMainForm');
+
+    // Add the base form ID.
+    $form_state->addBuildInfo('base_form_id', $this->getBaseFormId());
 
     $form = array();
 

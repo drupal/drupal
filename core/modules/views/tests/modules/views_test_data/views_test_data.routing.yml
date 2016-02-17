@@ -11,3 +11,11 @@ views_test_data.element_embed:
     _form: '\Drupal\views_test_data\Form\ViewsTestDataElementEmbedForm'
   requirements:
     _access: 'TRUE'
+
+views_test_data.form_multiple:
+  path: '/views_test_form_multiple'
+  defaults:
+    _title: 'Test Views Form Multiple'
+    _controller: '\Drupal\views_test_data\Controller\ViewsTestFormMultipleController::testPage'
+  requirements:
+    _access: 'TRUE'
