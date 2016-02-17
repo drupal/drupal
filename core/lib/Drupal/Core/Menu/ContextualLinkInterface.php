@@ -9,6 +9,14 @@ namespace Drupal\Core\Menu;
 
 /**
  * Defines a contextual link plugin.
+ *
+ * Contextual links by default are in the module_name.links.contextual.yml
+ * file. These YAML files contain a list of contextual link plugin definitions,
+ * keyed by the plugin ID. Each definition must define a route_name and a group
+ * and might define title, options, and weight. See the getter methods on this
+ * interface for an explanation of each.
+ *
+ * @ingroup menu
  */
 interface ContextualLinkInterface {
 
