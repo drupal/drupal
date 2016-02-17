@@ -111,8 +111,10 @@ function hook_views_analyze(Drupal\views\ViewExecutable $view) {
  * To provide views data for an entity, instead of implementing this hook,
  * create a class implementing \Drupal\views\EntityViewsDataInterface and
  * reference this in the "views" annotation in the entity class. The return
- * value of the getViewsData() method on the interface is the same as this hook.
- * See the @link entity_api Entity API topic @endlink for more information about
+ * value of the getViewsData() method on the interface is the same as this hook,
+ * and base class in \Drupal\views\EntityViewsData will take care of adding the
+ * basic Views tables and fields for your entity. See the
+ * @link entity_api Entity API topic @endlink for more information about
  * entities.
  *
  * The data described with this hook is fetched and retrieved by
@@ -137,6 +139,7 @@ function hook_views_data() {
   //   numeric_field INT(11)        COMMENT 'Just a numeric field.',
   //   boolean_field INT(1)         COMMENT 'Just an on/off field.',
   //   timestamp_field INT(8)       COMMENT 'Just a timestamp field.',
+  //   langcode VARCHAR(12)         COMMENT 'Language code field.',
   //   PRIMARY KEY(nid)
   // );
 
@@ -186,25 +189,30 @@ function hook_views_data() {
   // to do this for one-to-one joins, because otherwise your automatic join
   // will add more rows to the view. It is also not a good idea to do this if
   // most views won't need your table -- if that is the case, define a
-  // relationship instead (see the field section below).
+  // relationship instead (see below).
   //
-  // If you've decided an automatic join is a good idea, here's how to do it:
+  // If you've decided an automatic join is a good idea, here's how to do it;
+  // the resulting SQL query will look something like this:
+  //   ... FROM example_table et ... JOIN node_field_data nfd
+  //   ON et.nid = nfd.nid AND ('extra' clauses will be here) ...
+  // although the table aliases will be different.
   $data['example_table']['table']['join'] = array(
     // Within the 'join' section, list one or more tables to automatically
-    // join to. In this example, every time 'node' is available in a view,
-    // 'example_table' will be too. The array keys here are the array keys
-    // for the other tables, given in their hook_views_data() implementations.
-    // If the table listed here is from another module's hook_views_data()
-    // implementation, make sure your module depends on that other module.
+    // join to. In this example, every time 'node_field_data' is available in
+    // a view, 'example_table' will be too. The array keys here are the array
+    // keys for the other tables, given in their hook_views_data()
+    // implementations. If the table listed here is from another module's
+    // hook_views_data() implementation, make sure your module depends on that
+    // other module.
     'node_field_data' => array(
-      // Primary key field in node to use in the join.
+      // Primary key field in node_field_data to use in the join.
       'left_field' => 'nid',
       // Foreign key field in example_table to use in the join.
       'field' => 'nid',
-      // An array of extra conditions on the join.
+      // 'extra' is an array of additional conditions on the join.
       'extra' => array(
         0 => array(
-          // Adds AND node.published = TRUE to the join.
+          // Adds AND node_field_data.published = TRUE to the join.
           'field' => 'published',
           'value' => TRUE,
         ),
@@ -216,13 +224,47 @@ function hook_views_data() {
           'numeric' => TRUE,
         ),
         2 => array(
-          // Adds AND example_table.boolean_field <> node.published to the join.
+          // Adds AND example_table.boolean_field <>
+          // node_field_data.published to the join.
           'field' => 'published',
           'left_field' => 'boolean_field',
           // The operator used, Defaults to "=".
           'operator' => '!=',
         ),
       ),
+    ),
+  );
+
+  // You can also do a more complex join, where in order to get to a certain
+  // base table defined in a hook_views_data() implementation, you will join
+  // to a different table that Views knows how to auto-join to the base table.
+  // For instance, if another module that your module depends on had
+  // defined a table 'foo' with an automatic join to 'node_field_table' (as
+  // shown above), you could join to 'node_field_table' via the 'foo' table.
+  // Here's how to do this, and the resulting SQL query would look something
+  // like this:
+  //   ... FROM example_table et ... JOIN foo foo
+  //   ON et.nid = foo.nid AND ('extra' clauses will be here) ...
+  //   JOIN node_field_data nfd ON (definition of the join from the foo
+  //   module goes here) ...
+  // although the table aliases will be different.
+  $data['example_table']['table']['join']['node_field_data'] = array(
+    // 'node_field_data' above is the base we're joining to in Views.
+    // 'left_table' is the table we're actually joining to, in order to get to
+    // 'node_field_data'. It has to be something that Views knows how to join
+    // to 'node_field_data'.
+    'left_table' => 'foo',
+    'left_field' => 'nid',
+    'field' => 'nid',
+    // 'extra' is an array of additional conditions on the join.
+    'extra' => array(
+      // This syntax matches additional fields in the two tables:
+      // ... AND foo.langcode = example_table.langcode ...
+      array('left_field' => 'langcode', 'field' => 'langcode'),
+      // This syntax adds a condition on our table. 'operator' defaults to
+      // '=' for non-array values, or 'IN' for array values.
+      // ... AND example_table.numeric_field > 0 ...
+      array('field' => 'numeric_field', 'value' => 0, 'numeric' => TRUE, 'operator' => '>'),
     ),
   );
 
@@ -258,15 +300,15 @@ function hook_views_data() {
     'title' => t('Example content'),
     'help' => t('Relate example content to the node content'),
 
-    // Define a relationship to the node table, so views whose base table is
-    // example_table can add a relationship to the node table. To make a
+    // Define a relationship to the node_field_data table, so views whose
+    // base table is example_table can add a relationship to nodes. To make a
     // relationship in the other direction, you can:
     // - Use hook_views_data_alter() -- see the function body example on that
     //   hook for details.
     // - Use the implicit join method described above.
     'relationship' => array(
       // Views name of the table to join to for the relationship.
-      'base' => 'node',
+      'base' => 'node_field_data',
       // Database field name in the other table to join on.
       'base field' => 'nid',
       // ID of relationship handler plugin to use.
@@ -407,11 +449,11 @@ function hook_views_data() {
  * @see hook_views_data()
  */
 function hook_views_data_alter(array &$data) {
-  // Alter the title of the node:nid field in the Views UI.
-  $data['node']['nid']['title'] = t('Node-Nid');
+  // Alter the title of the node_field_data:nid field in the Views UI.
+  $data['node_field_data']['nid']['title'] = t('Node-Nid');
 
-  // Add an additional field to the users table.
-  $data['users']['example_field'] = array(
+  // Add an additional field to the users_field_data table.
+  $data['users_field_data']['example_field'] = array(
     'title' => t('Example field'),
     'help' => t('Some example content that references a user'),
 
@@ -423,7 +465,7 @@ function hook_views_data_alter(array &$data) {
 
   // Change the handler of the node title field, presumably to a handler plugin
   // you define in your module. Give the ID of this plugin.
-  $data['node']['title']['field']['id'] = 'node_title';
+  $data['node_field_data']['title']['field']['id'] = 'node_title';
 
   // Add a relationship that will allow a view whose base table is 'foo' (from
   // another module) to have a relationship to 'example_table' (from my module),
