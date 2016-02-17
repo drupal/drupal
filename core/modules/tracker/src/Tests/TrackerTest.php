@@ -432,12 +432,12 @@ class TrackerTest extends WebTestBase {
    * indicators, as well as the "x new" replies link to the tracker.
    * We do this in JavaScript to prevent breaking the render cache.
    *
-   * @param $node_id
+   * @param int $node_id
    *   A node ID, that must exist as a data-history-node-id attribute
-   * @param $node_timestamp
+   * @param int $node_timestamp
    *   A node timestamp, that must exist as a data-history-node-timestamp
    *   attribute.
-   * @param $node_last_comment_timestamp
+   * @param int $node_last_comment_timestamp
    *   A node's last comment timestamp, that must exist as a
    *   data-history-node-last-comment-timestamp attribute.
    * @param bool $library_is_present
