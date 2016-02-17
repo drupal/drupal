@@ -123,10 +123,13 @@ class HelpController extends ControllerBase {
 
       $temp = $this->moduleHandler()->invoke($name, 'help', array("help.page.$name", $this->routeMatch));
       if (empty($temp)) {
-        $build['top']['#markup'] = $this->t('No help is available for module %module.', array('%module' => $module_name));
+        $build['top'] = ['#markup' => $this->t('No help is available for module %module.', array('%module' => $module_name))];
       }
       else {
-        $build['top']['#markup'] = $temp;
+        if (!is_array($temp)) {
+          $temp = ['#markup' => $temp];
+        }
+        $build['top'] = $temp;
       }
 
       // Only print list of administration pages if the module in question has

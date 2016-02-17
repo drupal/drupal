@@ -26,7 +26,7 @@ function help_help($route_name, RouteMatchInterface $route_match) {
       }
       $output .= '</ol>';
       $output .= '<p>' . t('For more information, refer to the subjects listed in the Help Topics section or to the <a href=":docs">online documentation</a> and <a href=":support">support</a> pages at <a href=":drupal">drupal.org</a>.', array(':docs' => 'https://www.drupal.org/documentation', ':support' => 'https://www.drupal.org/support', ':drupal' => 'https://www.drupal.org')) . '</p>';
-      return $output;
+      return ['#markup' => $output];
 
     case 'help.page.help':
       $output = '';
@@ -39,7 +39,7 @@ function help_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Providing page-specific help') . '</dt>';
       $output .= '<dd>' . t('Page-specific help text provided by modules is displayed in the Help block. This block can be placed and configured on the <a href=":blocks">Block layout page</a>.', array(':blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#')) . '</dd>';
       $output .= '</dl>';
-      return $output;
+      return ['#markup' => $output];
   }
 }
 

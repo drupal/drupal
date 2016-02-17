@@ -90,8 +90,8 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
    *
-   * @return string
-   *   Help text of the matched route item as HTML.
+   * @return array|string
+   *   Render array or string containing the help of the matched route item.
    */
   protected function getActiveHelp(Request $request) {
     // Do not show on a 403 or 404 page.
@@ -100,7 +100,15 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
     }
 
     $help = $this->moduleHandler->invokeAll('help', array($this->routeMatch->getRouteName(), $this->routeMatch));
-    return $help ? implode("\n", $help) : '';
+    $build = [];
+    foreach ($help as $item) {
+      if (!is_array($item)) {
+        $item = ['#markup' => $item];
+      }
+      $build[] = $item;
+    }
+
+    return $build;
   }
 
   /**
@@ -111,10 +119,11 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
     if (!$help) {
       return [];
     }
+    elseif (!is_array($help)) {
+      return ['#markup' => $help];
+    }
     else {
-      return [
-        '#children' => $help,
-      ];
+      return $help;
     }
   }
 

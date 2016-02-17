@@ -40,8 +40,9 @@
  *   The current route match. This can be used to generate different help
  *   output for different pages that share the same route.
  *
- * @return string
- *   A localized string containing the help text.
+ * @return string|array
+ *   A render array, localized string, or object that can be rendered into
+ *   a string, containing the help text.
  */
 function hook_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
   switch ($route_name) {
