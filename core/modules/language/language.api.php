@@ -13,7 +13,7 @@
 /**
  * Define language types.
  *
- * @return
+ * @return array
  *   An associative array of language type definitions. The keys are the
  *   identifiers, which are also used as names for global variables representing
  *   the types in the bootstrap phase. The values are associative arrays that
@@ -51,7 +51,7 @@ function hook_language_types_info() {
 /**
  * Perform alterations on language types.
  *
- * @param $language_types
+ * @param array $language_types
  *   Array of language type definitions.
  *
  * @see hook_language_types_info()
@@ -66,7 +66,7 @@ function hook_language_types_info_alter(array &$language_types) {
 /**
  * Perform alterations on language negotiation methods.
  *
- * @param $negotiation_info
+ * @param array $negotiation_info
  *   Array of language negotiation method definitions.
  *
  * @ingroup language_negotiation

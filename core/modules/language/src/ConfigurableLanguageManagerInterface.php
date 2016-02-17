@@ -51,7 +51,7 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
   /**
    * Stores language types configuration.
    *
-   * @param array
+   * @param array $config
    *   An indexed array with the following keys_
    *   - configurable: an array of configurable language type names.
    *   - all: an array of all the defined language type names.
