@@ -968,37 +968,6 @@ function system_schema() {
     'primary key' => array('name'),
   );
 
-  $schema['semaphore'] = array(
-    'description' => 'Table for holding semaphores, locks, flags, etc. that cannot be stored as state since they must not be cached.',
-    'fields' => array(
-      'name' => array(
-        'description' => 'Primary Key: Unique name.',
-        'type' => 'varchar_ascii',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => ''
-      ),
-      'value' => array(
-        'description' => 'A value for the semaphore.',
-        'type' => 'varchar_ascii',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => ''
-      ),
-      'expire' => array(
-        'description' => 'A Unix timestamp with microseconds indicating when the semaphore should expire.',
-        'type' => 'float',
-        'size' => 'big',
-        'not null' => TRUE
-      ),
-    ),
-    'indexes' => array(
-      'value' => array('value'),
-      'expire' => array('expire'),
-    ),
-    'primary key' => array('name'),
-  );
-
   $schema['sequences'] = array(
     'description' => 'Stores IDs.',
     'fields' => array(

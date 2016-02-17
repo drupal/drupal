@@ -24,17 +24,9 @@ class LockUnitTest extends KernelTestBase {
    */
   protected $lock;
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('system');
-
   protected function setUp() {
     parent::setUp();
     $this->lock = new DatabaseLockBackend($this->container->get('database'));
-    $this->installSchema('system', 'semaphore');
   }
 
   /**

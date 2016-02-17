@@ -61,7 +61,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
 
     // Install system tables to test the key/value storage without installing a
     // full Drupal environment.
-    $this->installSchema('system', array('semaphore', 'key_value_expire'));
+    $this->installSchema('system', array('key_value_expire'));
 
     // Create several objects for testing.
     for ($i = 0; $i <= 3; $i++) {

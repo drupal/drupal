@@ -90,7 +90,6 @@ class DbDumpTest extends KernelTestBase {
     // Create some schemas so our export contains tables.
     $this->installSchema('system', [
       'key_value_expire',
-      'semaphore',
       'sessions',
       'url_alias',
     ]);
@@ -131,7 +130,6 @@ class DbDumpTest extends KernelTestBase {
       'key_value_expire',
       'menu_link_content',
       'menu_link_content_data',
-      'semaphore',
       'sequences',
       'sessions',
       'url_alias',

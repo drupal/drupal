@@ -20,19 +20,6 @@ class CacheCollectorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->installSchema('system', ['semaphore']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function register(ContainerBuilder $container) {
     parent::register($container);
     // Change container to database cache backends.
