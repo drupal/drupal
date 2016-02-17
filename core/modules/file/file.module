@@ -51,10 +51,12 @@ function file_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Loads file entities from the database.
  *
- * @param array $fids
- *   (optional) An array of entity IDs. If omitted, all entities are loaded.
+ * @param array|null $fids
+ *   (optional) An array of entity IDs. If omitted or NULL, all entities are
+ *   loaded.
  * @param bool $reset
- *   Whether to reset the internal file_load_multiple() cache.
+ *   (optional) Whether to reset the internal file_load_multiple() cache.
+ *   Defaults to FALSE.
  *
  * @return array
  *   An array of file entities, indexed by fid.
@@ -80,9 +82,10 @@ function file_load_multiple(array $fids = NULL, $reset = FALSE) {
  * @param int $fid
  *   A file ID.
  * @param bool $reset
- *   Whether to reset the internal file_load_multiple() cache.
+ *   (optional) Whether to reset the internal file_load_multiple() cache.
+ *   Defaults to FALSE.
  *
- * @return \Drupal\file\FileInterface
+ * @return \Drupal\file\FileInterface|null
  *   A file entity or NULL if the file was not found.
  *
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
@@ -117,19 +120,20 @@ function file_load($fid, $reset = FALSE) {
  * @param \Drupal\file\FileInterface $source
  *   A file entity.
  * @param string $destination
- *   A string containing the destination that $source should be copied to.
- *   This must be a stream wrapper URI.
+ *   A string containing the destination that $source should be
+ *   copied to. This must be a stream wrapper URI.
  * @param int $replace
- *   Replace behavior when the destination file already exists:
- *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
- *       the destination name exists then its database entry will be updated. If
- *       no database entry is found then a new one will be created.
- *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
- *       unique.
- *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ *   (optional) Replace behavior when the destination file already exists.
+ *   Possible values include:
+ *   - FILE_EXISTS_REPLACE: Replace the existing file. If a managed file with
+ *     the destination name exists, then its database entry will be updated. If
+ *     no database entry is found, then a new one will be created.
+ *   - FILE_EXISTS_RENAME: (default) Append _{incrementing number} until the
+ *     filename is unique.
+ *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
  *
- * @return \Drupal\file\FileInterface|FALSE
- *   File object if the copy is successful, or FALSE in the event of an error.
+ * @return \Drupal\file\FileInterface|false
+ *   File entity if the copy is successful, or FALSE in the event of an error.
  *
  * @see file_unmanaged_copy()
  * @see hook_file_copy()
@@ -192,20 +196,20 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
  * @param \Drupal\file\FileInterface $source
  *   A file entity.
  * @param string $destination
- *   A string containing the destination that $source should be moved to.
- *   This must be a stream wrapper URI.
+ *   A string containing the destination that $source should be moved
+ *   to. This must be a stream wrapper URI.
  * @param int $replace
- *   Replace behavior when the destination file already exists:
- *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
- *       the destination name exists then its database entry will be updated and
- *       $source->delete() called after invoking hook_file_move().
- *       If no database entry is found then the source files record will be
- *       updated.
- *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
- *       unique.
- *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ *   (optional) The replace behavior when the destination file already exists.
+ *   Possible values include:
+ *   - FILE_EXISTS_REPLACE: Replace the existing file. If a managed file with
+ *     the destination name exists then its database entry will be updated and
+ *     $source->delete() called after invoking hook_file_move(). If no database
+ *     entry is found, then the source files record will be updated.
+ *   - FILE_EXISTS_RENAME: (default) Append _{incrementing number} until the
+ *     filename is unique.
+ *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
  *
- * @return \Drupal\file\FileInterface
+ * @return \Drupal\file\FileInterface|false
  *   Resulting file entity for success, or FALSE in the event of an error.
  *
  * @see file_unmanaged_move()
@@ -268,12 +272,13 @@ function file_move(FileInterface $source, $destination = NULL, $replace = FILE_E
  * @param \Drupal\file\FileInterface $file
  *   A file entity.
  * @param array $validators
- *   An optional, associative array of callback functions used to validate the
- *   file. The keys are function names and the values arrays of callback
- *   parameters which will be passed in after the file entity. The
- *   functions should return an array of error messages; an empty array
- *   indicates that the file passed validation. The functions will be called in
- *   the order specified.
+ *   (optional) An associative array of callback functions used to validate
+ *   the file. The keys are function names and the values arrays of callback
+ *   parameters which will be passed in after the file entity. The functions
+ *   should return an array of error messages; an empty array indicates that
+ *   the file passed validation. The callback functions will be called in the
+ *   order specified in the array, then the hook hook_file_validate()
+ *   will be invoked so other modules can validate the new file.
  *
  * @return array
  *   An array containing validation error messages.
@@ -301,7 +306,8 @@ function file_validate(FileInterface $file, $validators = array()) {
  *   A file entity.
  *
  * @return array
- *   An array. If the file name is too long, it will contain an error message.
+ *   An empty array if the file name length is smaller than the limit or an
+ *   array containing an error message if it's not or is empty.
  */
 function file_validate_name_length(FileInterface $file) {
   $errors = array();
@@ -324,8 +330,8 @@ function file_validate_name_length(FileInterface $file) {
  *   A string with a space separated list of allowed extensions.
  *
  * @return array
- *   An array. If the file extension is not allowed, it will contain an error
- *   message.
+ *   An empty array if the file extension is allowed or an array containing an
+ *   error message if it's not.
  *
  * @see hook_file_validate()
  */
@@ -345,15 +351,15 @@ function file_validate_extensions(FileInterface $file, $extensions) {
  * @param \Drupal\file\FileInterface $file
  *   A file entity.
  * @param int $file_limit
- *   An integer specifying the maximum file size in bytes. Zero indicates that
- *   no limit should be enforced.
+ *   (optional) The maximum file size in bytes. Zero (the default) indicates
+ *   that no limit should be enforced.
  * @param int $user_limit
- *   An integer specifying the maximum number of bytes the user is allowed.
- *   Zero indicates that no limit should be enforced.
+ *   (optional) The maximum number of bytes the user is allowed. Zero (the
+ *   default) indicates that no limit should be enforced.
  *
  * @return array
- *   An array. If the file size exceeds limits, it will contain an error
- *   message.
+ *   An empty array if the file size is below limits or an array containing an
+ *   error message if it's not.
  *
  * @see hook_file_validate()
  */
@@ -380,7 +386,8 @@ function file_validate_size(FileInterface $file, $file_limit = 0, $user_limit = 
  *   A file entity.
  *
  * @return array
- *   An array. If the file is not an image, it will contain an error message.
+ *   An empty array if the file is a valid image or an array containing an error
+ *   message if it's not.
  *
  * @see hook_file_validate()
  */
@@ -405,18 +412,21 @@ function file_validate_is_image(FileInterface $file) {
  *
  * @param \Drupal\file\FileInterface $file
  *   A file entity. This function may resize the file affecting its size.
- * @param string $maximum_dimensions
- *   An optional string in the form WIDTHxHEIGHT e.g. '640x480' or '85x85'. If
- *   an image toolkit is installed the image will be resized down to these
- *   dimensions. A value of 0 indicates no restriction on size, so resizing
- *   will be attempted.
- * @param string $minimum_dimensions
- *   An optional string in the form WIDTHxHEIGHT. This will check that the
- *   image meets a minimum size. A value of 0 indicates no restriction.
+ * @param string|int $maximum_dimensions
+ *   (optional) A string in the form WIDTHxHEIGHT; for example, '640x480' or
+ *   '85x85'. If an image toolkit is installed, the image will be resized down
+ *   to these dimensions. A value of zero (the default) indicates no restriction
+ *   on size, so no resizing will be attempted.
+ * @param string|int $minimum_dimensions
+ *   (optional) A string in the form WIDTHxHEIGHT. This will check that the
+ *   image meets a minimum size. A value of zero (the default) indicates that
+ *   there is no restriction on size.
  *
- * @return
- *   An array. If the file is an image and did not meet the requirements, it
- *   will contain an error message.
+ * @return array
+ *   An empty array if the file meets the specified dimensions, was resized
+ *   successfully to meet those requirements or is not an image. If the image
+ *   does not meet the requirements or an attempt to resize it fails, an array
+ *   containing the error message will be returned.
  *
  * @see hook_file_validate()
  */
@@ -460,20 +470,22 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
  *
  * @param string $data
  *   A string containing the contents of the file.
- * @param string $destination
- *   A string containing the destination URI. This must be a stream wrapper URI.
- *   If no value is provided, a randomized name will be generated and the file
- *   will be saved using Drupal's default files scheme, usually "public://".
+ * @param string|null $destination
+ *   (optional) A string containing the destination URI. This must be a stream
+ *   wrapper URI. If no value or NULL is provided, a randomized name will be
+ *   generated and the file will be saved using Drupal's default files scheme,
+ *   usually "public://".
  * @param int $replace
- *   Replace behavior when the destination file already exists:
- *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
- *       the destination name exists then its database entry will be updated. If
- *       no database entry is found then a new one will be created.
- *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
- *       unique.
- *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ *   (optional) The replace behavior when the destination file already exists.
+ *   Possible values include:
+ *   - FILE_EXISTS_REPLACE: Replace the existing file. If a managed file with
+ *     the destination name exists, then its database entry will be updated. If
+ *     no database entry is found, then a new one will be created.
+ *   - FILE_EXISTS_RENAME: (default) Append _{incrementing number} until the
+ *     filename is unique.
+ *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
  *
- * @return \Drupal\file\FileInterface
+ * @return \Drupal\file\FileInterface|false
  *   A file entity, or FALSE on error.
  *
  * @see file_unmanaged_save_data()
@@ -666,39 +678,32 @@ function file_cron() {
  *   A string that is the associative array key of the upload form element in
  *   the form array.
  * @param array $validators
- *   An optional, associative array of callback functions used to validate the
+ *   (optional) An associative array of callback functions used to validate the
  *   file. See file_validate() for a full discussion of the array format.
- *   If no extension validator is provided it will default to a limited safe
- *   list of extensions which is as follows: "jpg jpeg gif png txt
- *   doc xls pdf ppt pps odt ods odp". To allow all extensions you must
- *   explicitly set the 'file_validate_extensions' validator to an empty array
- *   (Beware: this is not safe and should only be allowed for trusted users, if
- *   at all).
- * @param string $destination
- *   A string containing the URI that the file should be copied to. This must
- *   be a stream wrapper URI. If this value is omitted, Drupal's temporary
- *   files scheme will be used ("temporary://").
- * @param int $delta
- *   Delta of the file to save or NULL to save all files. Defaults to NULL.
+ *   If the array is empty, it will be set up to call file_validate_extensions()
+ *   with a safe list of extensions, as follows: "jpg jpeg gif png txt doc
+ *   xls pdf ppt pps odt ods odp". To allow all extensions, you must explicitly
+ *   set this array to ['file_validate_extensions' => '']. (Beware: this is not
+ *   safe and should only be allowed for trusted users, if at all.)
+ * @param string|false $destination
+ *   (optional) A string containing the URI that the file should be copied to.
+ *   This must be a stream wrapper URI. If this value is omitted or set to
+ *   FALSE, Drupal's temporary files scheme will be used ("temporary://").
+ * @param null|int $delta
+ *   (optional) The delta of the file to return the file entity.
+ *   Defaults to NULL.
  * @param int $replace
- *   Replace behavior when the destination file already exists:
+ *   (optional) The replace behavior when the destination file already exists.
+ *   Possible values include:
  *   - FILE_EXISTS_REPLACE: Replace the existing file.
- *   - FILE_EXISTS_RENAME: Append _{incrementing number} until the filename is
- *     unique.
+ *   - FILE_EXISTS_RENAME: (default) Append _{incrementing number} until the
+ *     filename is unique.
  *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
  *
- * @return array
- *   Function returns array of files or a single file object if $delta
- *   != NULL. Each file object contains the file information if the
- *   upload succeeded or FALSE in the event of an error. Function
- *   returns NULL if no file was uploaded.
- *
- *   The documentation for the "File interface" group, which you can find under
- *   Related topics, or the header at the top of this file, documents the
- *   components of a file entity. In addition to the standard components,
- *   this function adds:
- *   - source: Path to the file before it is moved.
- *   - destination: Path to the file after it is moved (same as 'uri').
+ * @return array|\Drupal\file\FileInterface|null|false
+ *   An array of file entities or a single file entity if $delta != NULL. Each
+ *   array element contains the file entity if the upload succeeded or FALSE if
+ *   there was an error. Function returns NULL if no file was uploaded.
  */
 function file_save_upload($form_field_name, $validators = array(), $destination = FALSE, $delta = NULL, $replace = FILE_EXISTS_RENAME) {
   $user = \Drupal::currentUser();
@@ -903,7 +908,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
 /**
  * Determines the preferred upload progress implementation.
  *
- * @return string|FALSE
+ * @return string|false
  *   A string indicating which upload progress system is available. Either "apc"
  *   or "uploadprogress". If neither are available, returns FALSE.
  */
@@ -928,7 +933,7 @@ function file_progress_implementation() {
  * Implements hook_ENTITY_TYPE_predelete() for file entities.
  */
 function file_file_predelete(File $file) {
-  // TODO: Remove references to a file that is in-use.
+  // @todo Remove references to a file that is in-use.
 }
 
 /**
@@ -1156,9 +1161,10 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  *
- * @return array
+ * @return array|false
  *   An array of file entities for each file that was saved, keyed by its file
- *   ID, or FALSE if no files were saved.
+ *   ID. Each array element contains a file entity. Function returns FALSE if
+ *   upload directory could not be created or no files were uploaded.
  */
 function file_managed_file_save_upload($element, FormStateInterface $form_state) {
   $upload_name = implode('_', $element['#parents']);
@@ -1437,20 +1443,20 @@ function file_icon_map($mime_type) {
  *
  * @param \Drupal\file\FileInterface $file
  *   A file entity.
- * @param \Drupal\Core\Field\FieldDefinitionInterface $field
- *   (optional) A field definition to be used for this check. If given, limits the
- *   reference check to the given field.
+ * @param \Drupal\Core\Field\FieldDefinitionInterface|null $field
+ *   (optional) A field definition to be used for this check. If given,
+ *   limits the reference check to the given field. Defaults to NULL.
  * @param int $age
  *   (optional) A constant that specifies which references to count. Use
- *   EntityStorageInterface::FIELD_LOAD_REVISION to retrieve all
+ *   EntityStorageInterface::FIELD_LOAD_REVISION (the default) to retrieve all
  *   references within all revisions or
- *   EntityStorageInterface::FIELD_LOAD_CURRENT to retrieve references
- *   only in the current revisions.
+ *   EntityStorageInterface::FIELD_LOAD_CURRENT to retrieve references only in
+ *   the current revisions of all entities that have references to this file.
  * @param string $field_type
  *   (optional) The name of a field type. If given, limits the reference check
- *   to fields of the given type. If both $field and $field_type is given but
+ *   to fields of the given type. If both $field and $field_type are given but
  *   $field is not the same type as $field_type, an empty array will be
- *   returned.
+ *   returned. Defaults to 'file'.
  *
  * @return array
  *   A multidimensional array. The keys are field_name, entity_type,
@@ -1526,10 +1532,12 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
 /**
  * Formats human-readable version of file status.
  *
- * @param int $choice
- *   integer Status code.
- * @return string
- *   string Text-represented file status.
+ * @param int|null $choice
+ *   (optional) An integer status code. If not set, all statuses are returned.
+ *   Defaults to NULL.
+ *
+ * @return \Drupal\Core\StringTranslation\TranslatableMarkup|\Drupal\Core\StringTranslation\TranslatableMarkup[]
+ *   An array of file statuses or a specified status if $choice is set.
  */
 function _views_file_status($choice = NULL) {
   $status = array(
