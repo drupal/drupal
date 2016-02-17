@@ -64,20 +64,36 @@
  * to multiple databases, including multiple types of databases,
  * during the same request.
  *
- * Each database connection is specified as an array of settings,
- * similar to the following:
+ * One example of the simplest connection array is shown below. To use the
+ * sample settings, copy and uncomment the code below between the @code and
+ * @endcode lines and paste it after the $databases declaration. You will need
+ * to replace the database username and password and possibly the host and port
+ * with the appropriate credentials for your database system.
+ *
+ * The next section describes how to customize the $databases array for more
+ * specific needs.
+ *
  * @code
- * array(
- *   'driver' => 'mysql',
+ * $databases['default']['default'] = array (
  *   'database' => 'databasename',
- *   'username' => 'username',
- *   'password' => 'password',
+ *   'username' => 'sqlusername',
+ *   'password' => 'sqlpassword',
  *   'host' => 'localhost',
- *   'port' => 3306,
- *   'prefix' => 'myprefix_',
+ *   'port' => '3306',
+ *   'driver' => 'mysql',
+ *   'prefix' => '',
  *   'collation' => 'utf8mb4_general_ci',
  * );
  * @endcode
+ */
+ $databases = array();
+
+/**
+ * Customizing database settings.
+ *
+ * Many of the values of the $databases array can be customized for your
+ * particular database system. Refer to the sample in the section above as a
+ * starting point.
  *
  * The "driver" property indicates what Drupal database driver the
  * connection should use.  This is usually the same as the name of the
@@ -117,19 +133,6 @@
  * of potential replica databases.  Drupal will select one at random for a given
  * request as needed.  The fourth line creates a new database with a name of
  * "extra".
- *
- * For a single database configuration, the following is sufficient:
- * @code
- * $databases['default']['default'] = array(
- *   'driver' => 'mysql',
- *   'database' => 'databasename',
- *   'username' => 'username',
- *   'password' => 'password',
- *   'host' => 'localhost',
- *   'prefix' => 'main_',
- *   'collation' => 'utf8mb4_general_ci',
- * );
- * @endcode
  *
  * You can optionally set prefixes for some or all database table names
  * by using the 'prefix' setting. If a prefix is specified, the table
@@ -174,7 +177,6 @@
  * connecting to the database server, as well as PDO connection settings. For
  * example, to enable MySQL SELECT queries to exceed the max_join_size system
  * variable, and to reduce the database connection timeout to 5 seconds:
- *
  * @code
  * $databases['default']['default'] = array(
  *   'init_commands' => array(
@@ -186,38 +188,36 @@
  * );
  * @endcode
  *
- * WARNING: These defaults are designed for database portability. Changing them
- * may cause unexpected behavior, including potential data loss.
+ * WARNING: The above defaults are designed for database portability. Changing
+ * them may cause unexpected behavior, including potential data loss. See
+ * https://www.drupal.org/developing/api/database/configuration for more
+ * information on these defaults and the potential issues.
  *
- * @see DatabaseConnection_mysql::__construct
- * @see DatabaseConnection_pgsql::__construct
- * @see DatabaseConnection_sqlite::__construct
+ * More details can be found in the constructor methods for each driver:
+ * - \Drupal\Core\Database\Driver\mysql\Connection::__construct()
+ * - \Drupal\Core\Database\Driver\pgsql\Connection::__construct()
+ * - \Drupal\Core\Database\Driver\sqlite\Connection::__construct()
  *
- * Database configuration format:
+ * Sample Database configuration format for PostgreSQL (pgsql):
  * @code
- *   $databases['default']['default'] = array(
- *     'driver' => 'mysql',
- *     'database' => 'databasename',
- *     'username' => 'username',
- *     'password' => 'password',
- *     'host' => 'localhost',
- *     'prefix' => '',
- *   );
  *   $databases['default']['default'] = array(
  *     'driver' => 'pgsql',
  *     'database' => 'databasename',
- *     'username' => 'username',
- *     'password' => 'password',
+ *     'username' => 'sqlusername',
+ *     'password' => 'sqlpassword',
  *     'host' => 'localhost',
  *     'prefix' => '',
  *   );
+ * @endcode
+ *
+ * Sample Database configuration format for SQLite (sqlite):
+ * @code
  *   $databases['default']['default'] = array(
  *     'driver' => 'sqlite',
  *     'database' => '/path/to/databasefilename',
  *   );
  * @endcode
  */
-$databases = array();
 
 /**
  * Location of the site configuration files.
