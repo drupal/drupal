@@ -159,7 +159,7 @@ function filter_get_roles_by_format(FilterFormatInterface $format) {
 /**
  * Retrieves a list of text formats that are allowed for a given role.
  *
- * @param $rid
+ * @param string $rid
  *   The user role ID to retrieve text formats for.
  *
  * @return \Drupal\filter\FilterFormatInterface[]
@@ -236,7 +236,7 @@ function filter_default_format(AccountInterface $account = NULL) {
  * Any modules implementing a format deletion functionality must not delete this
  * format.
  *
- * @return
+ * @return string|null
  *   The ID of the fallback text format.
  *
  * @see hook_filter_format_disable()
@@ -635,10 +635,10 @@ function _filter_url_parse_partial_links($match) {
  *
  * Callback for preg_replace_callback() within _filter_url().
  *
- * @param $match
+ * @param array $match
  *   An array containing matches to replace from preg_replace_callback(),
  *   whereas $match[1] is expected to contain the content to be filtered.
- * @param $escape
+ * @param bool|null $escape
  *   (optional) A Boolean indicating whether to escape (TRUE) or unescape
  *   comments (FALSE). Defaults to NULL, indicating neither. If TRUE, statically
  *   cached $comments are reset.
