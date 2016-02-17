@@ -160,7 +160,7 @@ interface LanguageNegotiatorInterface {
   /**
    * Returns the ID of the language type's primary language negotiation method.
    *
-   * @param $type
+   * @param string $type
    *   The language type.
    *
    * @return string
@@ -172,9 +172,9 @@ interface LanguageNegotiatorInterface {
   /**
    * Checks whether a language negotiation method is enabled for a language type.
    *
-   * @param $method_id
+   * @param string $method_id
    *   The language negotiation method ID.
-   * @param $type
+   * @param string $type
    *   (optional) The language type. If none is passed, all the configurable
    *   language types will be inspected.
    *

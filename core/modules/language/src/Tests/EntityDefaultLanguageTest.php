@@ -100,9 +100,9 @@ class EntityDefaultLanguageTest extends KernelTestBase {
   /**
    * Creates a new node content type.
    *
-   * @param name
+   * @param string $name
    *   The content type name.
-   * @param $langcode
+   * @param string $langcode
    *   Default language code of the nodes of this type.
    */
   protected function createContentType($name, $langcode) {
@@ -123,9 +123,9 @@ class EntityDefaultLanguageTest extends KernelTestBase {
   /**
    * Creates a new node of given type and language using Entity API.
    *
-   * @param $type
+   * @param string $type
    *   The node content type.
-   * @param $langcode
+   * @param string $langcode
    *   (optional) Language code to pass to entity create.
    *
    * @return \Drupal\node\NodeInterface
