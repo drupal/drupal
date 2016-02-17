@@ -854,41 +854,6 @@ function system_install() {
  * Implements hook_schema().
  */
 function system_schema() {
-  $schema['batch'] = array(
-    'description' => 'Stores details about batches (processes that run in multiple HTTP requests).',
-    'fields' => array(
-      'bid' => array(
-        'description' => 'Primary Key: Unique batch ID.',
-        // This is not a serial column, to allow both progressive and
-        // non-progressive batches. See batch_process().
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'token' => array(
-        'description' => "A string token generated against the current user's session id and the batch id, used to ensure that only the user who submitted the batch can effectively access it.",
-        'type' => 'varchar_ascii',
-        'length' => 64,
-        'not null' => TRUE,
-      ),
-      'timestamp' => array(
-        'description' => 'A Unix timestamp indicating when this batch was submitted for processing. Stale batches are purged at cron time.',
-        'type' => 'int',
-        'not null' => TRUE,
-      ),
-      'batch' => array(
-        'description' => 'A serialized array containing the processing data for the batch.',
-        'type' => 'blob',
-        'not null' => FALSE,
-        'size' => 'big',
-      ),
-    ),
-    'primary key' => array('bid'),
-    'indexes' => array(
-      'token' => array('token'),
-    ),
-  );
-
   $schema['key_value'] = array(
     'description' => 'Generic key-value storage table. See the state system for an example.',
     'fields' => array(
