@@ -13,7 +13,7 @@
 /**
  * Perform alterations on filter definitions.
  *
- * @param $info
+ * @param array $info
  *   Array of information on filters exposed by filter plugins.
  */
 function hook_filter_info_alter(&$info) {
@@ -48,7 +48,7 @@ function hook_filter_secure_image_alter(&$image) {
 /**
  * Perform actions when a text format has been disabled.
  *
- * @param $format
+ * @param \Drupal\filter\FilterFormatInterface $format
  *   The format object of the format being disabled.
  */
 function hook_filter_format_disable($format) {
