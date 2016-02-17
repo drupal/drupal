@@ -347,3 +347,19 @@ function views_update_8004() {
 /**
  * @} End of "addtogroup updates-8.0.x".
  */
+
+/**
+ * @addtogroup updates-8.1.0
+ * @{
+ */
+
+/**
+ * Clear views data cache.
+ */
+function views_update_8005() {
+  // Empty update function to rebuild the views data.
+}
+
+/**
+ * @} End of "addtogroup updates-8.1.0".
+ */

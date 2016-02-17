@@ -176,6 +176,13 @@ views.field.language:
       type: boolean
       label: 'Display in native language'
 
+views.field.rendered_entity:
+  type: views_field
+  label: 'Rendered entity'
+  mapping:
+    view_mode:
+      type: string
+      label: 'View mode'
 
 views.field.entity_link:
   type: views_field
