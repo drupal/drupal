@@ -11,6 +11,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\user\RoleInterface;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests integration searching comments.
@@ -59,7 +60,7 @@ class SearchCommentTest extends SearchTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $full_html_format = entity_create('filter_format', array(
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
@@ -90,7 +91,7 @@ class SearchCommentTest extends SearchTestBase {
   function testSearchResultsComment() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create basic_html format that escapes all HTML.
-    $basic_html_format = entity_create('filter_format', array(
+    $basic_html_format = FilterFormat::create(array(
       'format' => 'basic_html',
       'name' => 'Basic HTML',
       'weight' => 1,

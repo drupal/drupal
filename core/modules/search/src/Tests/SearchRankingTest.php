@@ -10,6 +10,7 @@ namespace Drupal\search\Tests;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Url;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Indexes content and tests ranking factors.
@@ -203,7 +204,7 @@ class SearchRankingTest extends SearchTestBase {
    * Test rankings of HTML tags.
    */
   public function testHTMLRankings() {
-    $full_html_format = entity_create('filter_format', array(
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
     ));

@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests using entity fields of the text summary field type.
@@ -49,7 +50,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
 
     // Create the necessary formats.
     $this->installConfig(array('filter'));
-    entity_create('filter_format', array(
+    FilterFormat::create(array(
       'format' => 'no_filters',
       'filters' => array(),
     ))->save();

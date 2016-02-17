@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\form_test\Form\FormTestDisabledElementsForm;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests various form element validation mechanisms.
@@ -34,7 +35,7 @@ class FormTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $filtered_html_format = entity_create('filter_format', array(
+    $filtered_html_format = FilterFormat::create(array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
     ));

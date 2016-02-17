@@ -103,7 +103,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
       ))
       ->save();
 
-    entity_create('filter_format', array(
+    FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
     ))->save();

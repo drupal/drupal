@@ -10,6 +10,7 @@ namespace Drupal\quickedit\Tests;
 use Drupal\quickedit\EditorSelector;
 use Drupal\quickedit\MetadataGenerator;
 use Drupal\quickedit_test\MockEditEntityFieldAccessCheck;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests in-place field editing metadata.
@@ -149,7 +150,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
     );
 
     // Create a text format.
-    $full_html_format = entity_create('filter_format', array(
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,

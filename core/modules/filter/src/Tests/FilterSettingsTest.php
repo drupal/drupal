@@ -8,6 +8,7 @@
 namespace Drupal\filter\Tests;
 
 use Drupal\simpletest\KernelTestBase;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests filter settings.
@@ -30,7 +31,7 @@ class FilterSettingsTest extends KernelTestBase {
     $filter_info = $this->container->get('plugin.manager.filter')->getDefinitions();
 
     // Create text format using filter default settings.
-    $filter_defaults_format = entity_create('filter_format', array(
+    $filter_defaults_format = FilterFormat::create(array(
       'format' => 'filter_defaults',
       'name' => 'Filter defaults',
     ));

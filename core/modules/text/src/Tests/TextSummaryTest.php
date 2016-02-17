@@ -8,6 +8,7 @@
 namespace Drupal\text\Tests;
 
 use Drupal\simpletest\KernelTestBase;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests text_summary() with different strings and lengths.
@@ -55,7 +56,7 @@ class TextSummaryTest extends KernelTestBase {
    * Test various summary length edge cases.
    */
   function testLength() {
-    entity_create('filter_format', array(
+    FilterFormat::create(array(
       'format' => 'autop',
       'filters' => array(
         'filter_autop' => array(
@@ -63,7 +64,7 @@ class TextSummaryTest extends KernelTestBase {
         ),
       ),
     ))->save();
-    entity_create('filter_format', array(
+    FilterFormat::create(array(
       'format' => 'autop_correct',
       'filters' => array(
         'filter_autop' => array(

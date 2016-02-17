@@ -10,6 +10,7 @@ namespace Drupal\ckeditor\Tests;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\editor\Entity\Editor;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests for the 'CKEditor' text editor plugin.
@@ -46,7 +47,7 @@ class CKEditorTest extends KernelTestBase {
     $this->installSchema('system', 'url_alias');
 
     // Create text format, associate CKEditor.
-    $filtered_html_format = entity_create('filter_format', array(
+    $filtered_html_format = FilterFormat::create(array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,

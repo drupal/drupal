@@ -38,7 +38,7 @@ class EditorAdminTest extends WebTestBase {
     parent::setUp();
 
     // Add text format.
-    $filtered_html_format = entity_create('filter_format', array(
+    $filtered_html_format = FilterFormat::create(array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,

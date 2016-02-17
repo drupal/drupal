@@ -8,6 +8,7 @@
 namespace Drupal\block\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Provides setup and helper methods for block module tests.
@@ -42,7 +43,7 @@ abstract class BlockTestBase extends WebTestBase {
     $this->config('system.site')->set('page.front', '/test-page')->save();
 
     // Create Full HTML text format.
-    $full_html_format = entity_create('filter_format', array(
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
     ));

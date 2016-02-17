@@ -11,7 +11,8 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\filter\Plugin\DataType\FilterFormat;
+use Drupal\filter\Entity\FilterFormat;
+use Drupal\filter\Plugin\DataType\FilterFormat as FilterFormatDataType;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -36,7 +37,7 @@ class FilterAPITest extends EntityUnitTestBase {
    */
   function testCheckMarkupFilterOrder() {
     // Create crazy HTML format.
-    $crazy_format = entity_create('filter_format', array(
+    $crazy_format = FilterFormat::create(array(
       'format' => 'crazy',
       'name' => 'Crazy',
       'weight' => 1,
@@ -138,7 +139,7 @@ class FilterAPITest extends EntityUnitTestBase {
     );
 
     // Test on stupid_filtered_html, where nothing is allowed.
-    $stupid_filtered_html_format = entity_create('filter_format', array(
+    $stupid_filtered_html_format = FilterFormat::create(array(
       'format' => 'stupid_filtered_html',
       'name' => 'Stupid Filtered HTML',
       'filters' => array(
@@ -164,7 +165,7 @@ class FilterAPITest extends EntityUnitTestBase {
 
     // Test on very_restricted_html, where there's two different filters of the
     // FilterInterface::TYPE_HTML_RESTRICTOR type, each restricting in different ways.
-    $very_restricted_html_format = entity_create('filter_format', array(
+    $very_restricted_html_format = FilterFormat::create(array(
       'format' => 'very_restricted_html',
       'name' => 'Very Restricted HTML',
       'filters' => array(
@@ -254,7 +255,7 @@ class FilterAPITest extends EntityUnitTestBase {
    * This test focuses solely on those advanced features.
    */
   function testProcessedTextElement() {
-    entity_create('filter_format', array(
+    FilterFormat::create(array(
       'format' => 'element_test',
       'name' => 'processed_text element test format',
       'filters' => array(
@@ -401,7 +402,7 @@ class FilterAPITest extends EntityUnitTestBase {
    */
   public function testFilterFormatPreSave() {
     /** @var \Drupal\filter\FilterFormatInterface $crazy_format */
-    $crazy_format = entity_create('filter_format', array(
+    $crazy_format = FilterFormat::create(array(
       'format' => 'crazy',
       'name' => 'Crazy',
       'weight' => 1,
@@ -451,7 +452,7 @@ class FilterAPITest extends EntityUnitTestBase {
   public function assertFilterFormatViolation(ConstraintViolationListInterface $violations, $invalid_value) {
     $filter_format_violation_found = FALSE;
     foreach ($violations as $violation) {
-      if ($violation->getRoot() instanceof FilterFormat && $violation->getInvalidValue() === $invalid_value) {
+      if ($violation->getRoot() instanceof FilterFormatDataType && $violation->getInvalidValue() === $invalid_value) {
         $filter_format_violation_found = TRUE;
         break;
       }

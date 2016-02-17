@@ -10,6 +10,7 @@ namespace Drupal\editor\Tests;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\simpletest\WebTestBase;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests Quick Edit module integration endpoints.
@@ -36,7 +37,7 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
     parent::setUp();
 
     // Create a text format.
-    $filtered_html_format = entity_create('filter_format', array(
+    $filtered_html_format = FilterFormat::create(array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,

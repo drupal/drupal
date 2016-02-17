@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests administration of CKEditor.
@@ -37,7 +38,7 @@ class CKEditorAdminTest extends WebTestBase {
     parent::setUp();
 
     // Create text format.
-    $filtered_html_format = entity_create('filter_format', array(
+    $filtered_html_format = FilterFormat::create(array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,

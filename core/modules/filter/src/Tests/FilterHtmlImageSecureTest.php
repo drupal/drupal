@@ -10,6 +10,7 @@ namespace Drupal\filter\Tests;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\simpletest\WebTestBase;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests restriction of IMG tags in HTML input.
@@ -38,7 +39,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     parent::setUp();
 
     // Setup Filtered HTML text format.
-    $filtered_html_format = entity_create('filter_format', array(
+    $filtered_html_format = FilterFormat::create(array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'filters' => array(

@@ -18,6 +18,7 @@ use Drupal\editor\EditorController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests Edit module integration (Editor module's inline editing support).
@@ -87,7 +88,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     );
 
     // Create text format.
-    $full_html_format = entity_create('filter_format', array(
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
@@ -103,7 +104,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $editor->save();
 
     // Also create a text format without an associated text editor.
-    entity_create('filter_format', array(
+    FilterFormat::create(array(
       'format' => 'no_editor',
       'name' => 'No Text Editor',
       'weight' => 2,

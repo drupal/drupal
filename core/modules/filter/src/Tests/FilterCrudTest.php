@@ -29,14 +29,15 @@ class FilterCrudTest extends KernelTestBase {
    */
   function testTextFormatCrud() {
     // Add a text format with minimum data only.
-    $format = entity_create('filter_format');
-    $format->set('format', 'empty_format');
-    $format->set('name', 'Empty format');
+    $format = FilterFormat::create(array(
+      'format' => 'empty_format',
+      'name' => 'Empty format',
+    ));
     $format->save();
     $this->verifyTextFormat($format);
 
     // Add another text format specifying all possible properties.
-    $format = entity_create('filter_format', array(
+    $format = FilterFormat::create(array(
       'format' => 'custom_format',
       'name' => 'Custom format',
     ));

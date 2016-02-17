@@ -12,6 +12,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests tracking of file usage by the Text Editor module.
@@ -35,7 +36,7 @@ class EditorFileUsageTest extends EntityUnitTestBase {
     $this->installConfig(['node']);
 
     // Add text formats.
-    $filtered_html_format = entity_create('filter_format', array(
+    $filtered_html_format = FilterFormat::create(array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,

@@ -50,7 +50,7 @@ class FilterAdminTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Set up the filter formats used by this test.
-    $basic_html_format = entity_create('filter_format', array(
+    $basic_html_format = FilterFormat::create(array(
       'format' => 'basic_html',
       'name' => 'Basic HTML',
       'filters' => array(
@@ -63,7 +63,7 @@ class FilterAdminTest extends WebTestBase {
       ),
     ));
     $basic_html_format->save();
-    $restricted_html_format = entity_create('filter_format', array(
+    $restricted_html_format = FilterFormat::create(array(
       'format' => 'restricted_html',
       'name' => 'Restricted HTML',
       'filters' => array(
@@ -89,7 +89,7 @@ class FilterAdminTest extends WebTestBase {
       ),
     ));
     $restricted_html_format->save();
-    $full_html_format = entity_create('filter_format', array(
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,

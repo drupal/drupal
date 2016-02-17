@@ -12,6 +12,7 @@ use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests loading of text editors.
@@ -56,14 +57,14 @@ class EditorLoadingTest extends WebTestBase {
     \Drupal::service('plugin.manager.editor')->clearCachedDefinitions();
 
     // Add text formats.
-    $filtered_html_format = entity_create('filter_format', array(
+    $filtered_html_format = FilterFormat::create(array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,
       'filters' => array(),
     ));
     $filtered_html_format->save();
-    $full_html_format = entity_create('filter_format', array(
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,

@@ -14,6 +14,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\contact\Entity\ContactForm;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Visit all lists.
@@ -260,7 +261,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
   public function doFormatsListTest() {
     // Create a test format to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $filter_format = entity_create('filter_format', array(
+    $filter_format = FilterFormat::create(array(
       'format' => Unicode::strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ));

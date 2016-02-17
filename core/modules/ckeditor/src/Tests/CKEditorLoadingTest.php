@@ -9,6 +9,7 @@ namespace Drupal\ckeditor\Tests;
 
 use Drupal\editor\Entity\Editor;
 use Drupal\simpletest\WebTestBase;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests loading of CKEditor.
@@ -42,7 +43,7 @@ class CKEditorLoadingTest extends WebTestBase {
     parent::setUp();
 
     // Create text format, associate CKEditor.
-    $filtered_html_format = entity_create('filter_format', array(
+    $filtered_html_format = FilterFormat::create(array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,
@@ -57,7 +58,7 @@ class CKEditorLoadingTest extends WebTestBase {
 
     // Create a second format without an associated editor so a drop down select
     // list is created when selecting formats.
-    $full_html_format = entity_create('filter_format', array(
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,

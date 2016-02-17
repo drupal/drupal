@@ -9,6 +9,7 @@ namespace Drupal\editor\Tests;
 
 use Drupal\editor\Entity\Editor;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests detection of text editors and correct generation of attachments.
@@ -38,14 +39,14 @@ class EditorManagerTest extends KernelTestBase {
     $this->installSchema('system', 'url_alias');
 
     // Add text formats.
-    $filtered_html_format = entity_create('filter_format', array(
+    $filtered_html_format = FilterFormat::create(array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,
       'filters' => array(),
     ));
     $filtered_html_format->save();
-    $full_html_format = entity_create('filter_format', array(
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
