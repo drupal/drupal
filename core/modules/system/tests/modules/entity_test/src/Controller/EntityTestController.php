@@ -45,24 +45,6 @@ class EntityTestController extends ControllerBase {
   }
 
   /**
-   * Displays the 'Add new entity_test' form.
-   *
-   * @param string $entity_type_id
-   *   Name of the entity type for which a create form should be displayed.
-   *
-   * @return array
-   *   The processed form for a new entity_test.
-   *
-   * @see \Drupal\entity_test\Routing\EntityTestRoutes::routes()
-   */
-  public function testAdd($entity_type_id) {
-    $entity = entity_create($entity_type_id, array());
-    $form = $this->entityFormBuilder()->getForm($entity);
-    $form['#title'] = $this->t('Create an @type', array('@type' => $entity_type_id));
-    return $form;
-  }
-
-  /**
    * Returns an empty page.
    *
    * @see \Drupal\entity_test\Routing\EntityTestRoutes::routes()

@@ -22,14 +22,12 @@ class EntityTestRoutes {
    */
   public function routes() {
     $types = entity_test_entity_types(ENTITY_TEST_TYPES_ROUTING);
-    $types[] = 'entity_test_string_id';
-    $types[] = 'entity_test_no_id';
 
     $routes = array();
     foreach ($types as $entity_type_id) {
       $routes["entity.$entity_type_id.add_form"] = new Route(
         "$entity_type_id/add",
-        array('_controller' => '\Drupal\entity_test\Controller\EntityTestController::testAdd', 'entity_type_id' => $entity_type_id),
+        array('_entity_form' => "$entity_type_id.default"),
         array('_permission' => 'administer entity_test content')
       );
 
