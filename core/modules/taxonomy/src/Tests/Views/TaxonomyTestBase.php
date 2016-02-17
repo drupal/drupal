@@ -55,6 +55,9 @@ abstract class TaxonomyTestBase extends ViewTestBase {
    */
   protected $term2;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->mockStandardInstall();
@@ -119,10 +122,17 @@ abstract class TaxonomyTestBase extends ViewTestBase {
   }
 
   /**
-   * Returns a new term with random properties in vocabulary $vid.
+   * Creates and returns a taxonomy term.
    *
    * @param array $settings
-   *   (Optional) An associative array of settings to pass to `entity_create`.
+   *   (optional) An array of values to override the following default
+   *   properties of the term:
+   *   - name: A random string.
+   *   - description: A random string.
+   *   - format: First available text format.
+   *   - vid: Vocabulary ID of self::$vocabulary object.
+   *   - langcode: LANGCODE_NOT_SPECIFIED.
+   *   Defaults to an empty array.
    *
    * @return \Drupal\taxonomy\Entity\Term
    *   The created taxonomy term.
