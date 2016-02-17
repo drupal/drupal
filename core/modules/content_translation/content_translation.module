@@ -566,11 +566,6 @@ function content_translation_page_attachments(&$page) {
     if ($entity instanceof ContentEntityInterface) {
       // Current route represents a content entity. Build hreflang links.
       foreach ($entity->getTranslationLanguages() as $language) {
-        // Skip any translation that cannot be viewed.
-        $translation = $entity->getTranslation($language->getId());
-        if (!$translation->access('view')) {
-          continue;
-        }
         $url = $entity->urlInfo()
           ->setOption('language', $language)
           ->setAbsolute()
