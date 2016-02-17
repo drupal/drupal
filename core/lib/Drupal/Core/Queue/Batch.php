@@ -30,10 +30,15 @@ class Batch extends DatabaseQueue {
    * item to be claimed repeatedly until it is deleted.
    */
   public function claimItem($lease_time = 0) {
-    $item = $this->connection->queryRange('SELECT data, item_id FROM {queue} q WHERE name = :name ORDER BY item_id ASC', 0, 1, array(':name' => $this->name))->fetchObject();
-    if ($item) {
-      $item->data = unserialize($item->data);
-      return $item;
+    try {
+      $item = $this->connection->queryRange('SELECT data, item_id FROM {queue} q WHERE name = :name ORDER BY item_id ASC', 0, 1, array(':name' => $this->name))->fetchObject();
+      if ($item) {
+        $item->data = unserialize($item->data);
+        return $item;
+      }
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
     }
     return FALSE;
   }
@@ -49,9 +54,14 @@ class Batch extends DatabaseQueue {
    */
   public function getAllItems() {
     $result = array();
-    $items = $this->connection->query('SELECT data FROM {queue} q WHERE name = :name ORDER BY item_id ASC', array(':name' => $this->name))->fetchAll();
-    foreach ($items as $item) {
-      $result[] = unserialize($item->data);
+    try {
+      $items = $this->connection->query('SELECT data FROM {queue} q WHERE name = :name ORDER BY item_id ASC', array(':name' => $this->name))->fetchAll();
+      foreach ($items as $item) {
+        $result[] = unserialize($item->data);
+      }
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
     }
     return $result;
   }

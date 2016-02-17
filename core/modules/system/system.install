@@ -954,49 +954,6 @@ function system_schema() {
     ),
   );
 
-  $schema['queue'] = array(
-    'description' => 'Stores items in queues.',
-    'fields' => array(
-      'item_id' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique item ID.',
-      ),
-      'name' => array(
-        'type' => 'varchar_ascii',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The queue name.',
-      ),
-      'data' => array(
-        'type' => 'blob',
-        'not null' => FALSE,
-        'size' => 'big',
-        'serialize' => TRUE,
-        'description' => 'The arbitrary data for the item.',
-      ),
-      'expire' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Timestamp when the claim lease expires on the item.',
-      ),
-      'created' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Timestamp when the item was created.',
-      ),
-    ),
-    'primary key' => array('item_id'),
-    'indexes' => array(
-      'name_created' => array('name', 'created'),
-      'expire' => array('expire'),
-    ),
-  );
-
   $schema['router'] = array(
     'description' => 'Maps paths to various callbacks (access, page and title)',
     'fields' => array(

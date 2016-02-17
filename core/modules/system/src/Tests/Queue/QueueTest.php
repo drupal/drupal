@@ -20,17 +20,9 @@ use Drupal\simpletest\KernelTestBase;
 class QueueTest extends KernelTestBase {
 
   /**
-   * The modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('system');
-
-  /**
    * Tests the System queue.
    */
   public function testSystemQueue() {
-    $this->installSchema('system', 'queue');
     // Create two queues.
     $queue1 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
     $queue1->createQueue();
