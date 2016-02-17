@@ -352,18 +352,8 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     // Test that the node page displays the correct translations.
     $this->doTestTranslations('node/' . $node->id(), $values);
 
-    // Unpublish one of the translations.
-    foreach ($node->getTranslationLanguages() as $lang) {
-      if ($lang->getId() != 'en') {
-        $translation = $node->getTranslation($lang->getId());
-        $translation->setPublished(NODE_NOT_PUBLISHED);
-        $translation->save();
-        break;
-      }
-    }
-
     // Test that the node page has the correct alternate hreflang links.
-    $this->doTestAlternateHreflangLinks($node);
+    $this->doTestAlternateHreflangLinks($node->urlInfo());
   }
 
   /**
@@ -383,39 +373,26 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Tests the given node's page view for correct alternate hreflang links.
+   * Tests that the given path provides the correct alternate hreflang links.
    *
-   * @param \Drupal\node\Entity\Node $node
-   *   The node to be tested.
-   *
-   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @param \Drupal\Core\Url $url
+   *   The path to be tested.
    */
-  protected function doTestAlternateHreflangLinks(Node $node) {
-    $url = $node->urlInfo();
+  protected function doTestAlternateHreflangLinks(Url $url) {
     $languages = $this->container->get('language_manager')->getLanguages();
     $url->setAbsolute();
     $urls = [];
-    $translations = [];
     foreach ($this->langcodes as $langcode) {
       $language_url = clone $url;
       $urls[$langcode] = $language_url->setOption('language', $languages[$langcode]);
-      $translations[$langcode] = $node->getTranslation($langcode);
     }
     foreach ($this->langcodes as $langcode) {
-      // Skip unpublished translations.
-      if ($translations[$langcode]->isPublished()) {
-        $this->drupalGet($urls[$langcode]);
-        foreach ($urls as $alternate_langcode => $language_url) {
-          // Retrieve desired link elements from the HTML head.
-          $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]',
-            array(':href' => $language_url->toString(), ':hreflang' => $alternate_langcode));
-          if ($translations[$alternate_langcode]->isPublished()) {
-            $this->assert(isset($links[0]), format_string('The %langcode node translation has the correct alternate hreflang link for %alternate_langcode: %link.', array('%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url->toString())));
-          }
-          else {
-            $this->assertFalse(isset($links[0]), format_string('The %langcode node translation has an hreflang link for unpublished %alternate_langcode translation: %link.', array('%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url->toString())));
-          }
-        }
+      $this->drupalGet($urls[$langcode]);
+      foreach ($urls as $alternate_langcode => $language_url) {
+        // Retrieve desired link elements from the HTML head.
+        $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]',
+          array(':href' => $language_url->toString(), ':hreflang' => $alternate_langcode));
+        $this->assert(isset($links[0]), format_string('The %langcode node translation has the correct alternate hreflang link for %alternate_langcode: %link.', array('%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url->toString())));
       }
     }
   }
