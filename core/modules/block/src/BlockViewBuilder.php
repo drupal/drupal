@@ -250,6 +250,6 @@ class BlockViewBuilder extends EntityViewBuilder {
       }
     }
     return $build;
-   }
+  }
 
 }
