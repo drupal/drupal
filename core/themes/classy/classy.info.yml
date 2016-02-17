@@ -19,3 +19,5 @@ libraries-extend:
     - classy/dialog
   file/drupal.file:
     - classy/file
+  core/drupal.progress:
+    - classy/progress
