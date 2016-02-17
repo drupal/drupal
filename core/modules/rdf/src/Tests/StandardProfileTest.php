@@ -8,6 +8,7 @@
 namespace Drupal\rdf\Tests;
 
 use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
@@ -140,7 +141,7 @@ class StandardProfileTest extends WebTestBase {
 
     // Create image.
     file_unmanaged_copy(\Drupal::root() . '/core/misc/druplicon.png', 'public://example.jpg');
-    $this->image = entity_create('file', array('uri' => 'public://example.jpg'));
+    $this->image = File::create(['uri' => 'public://example.jpg']);
     $this->image->save();
 
     // Create article.

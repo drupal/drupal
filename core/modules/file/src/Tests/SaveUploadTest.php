@@ -52,7 +52,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->drupalLogin($account);
 
     $image_files = $this->drupalGetTestFiles('image');
-    $this->image = entity_create('file', (array) current($image_files));
+    $this->image = File::create((array) current($image_files));
 
     list(, $this->imageExtension) = explode('.', $this->image->getFilename());
     $this->assertTrue(is_file($this->image->getFileUri()), "The image file we're going to upload exists.");

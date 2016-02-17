@@ -8,6 +8,7 @@
 namespace Drupal\hal\Tests;
 
 use Drupal\Core\Cache\MemoryBackend;
+use Drupal\file\Entity\File;
 use Drupal\hal\Encoder\JsonEncoder;
 use Drupal\hal\Normalizer\FieldItemNormalizer;
 use Drupal\hal\Normalizer\FileEntityNormalizer;
@@ -65,7 +66,7 @@ class FileNormalizeTest extends NormalizerTestBase {
       'status' => FILE_STATUS_PERMANENT,
     );
     // Create a new file entity.
-    $file = entity_create('file', $file_params);
+    $file = File::create($file_params);
     file_put_contents($file->getFileUri(), 'hello world');
     $file->save();
 

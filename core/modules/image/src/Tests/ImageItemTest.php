@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\file\Entity\File;
 
 /**
  * Tests using entity fields of the image field type.
@@ -58,9 +59,9 @@ class ImageItemTest extends FieldUnitTestBase {
       'bundle' => 'entity_test',
     ])->save();
     file_unmanaged_copy(\Drupal::root() . '/core/misc/druplicon.png', 'public://example.jpg');
-    $this->image = entity_create('file', array(
+    $this->image = File::create([
       'uri' => 'public://example.jpg',
-    ));
+    ]);
     $this->image->save();
     $this->imageFactory = $this->container->get('image.factory');
   }
@@ -91,9 +92,9 @@ class ImageItemTest extends FieldUnitTestBase {
 
     // Make sure the computed entity reflects updates to the referenced file.
     file_unmanaged_copy(\Drupal::root() . '/core/misc/druplicon.png', 'public://example-2.jpg');
-    $image2 = entity_create('file', array(
+    $image2 = File::create([
       'uri' => 'public://example-2.jpg',
-    ));
+    ]);
     $image2->save();
 
     $entity->image_test->target_id = $image2->id();

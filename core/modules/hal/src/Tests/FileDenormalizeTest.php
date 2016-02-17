@@ -36,7 +36,7 @@ class FileDenormalizeTest extends WebTestBase {
       'status' => FILE_STATUS_PERMANENT,
     );
     // Create a new file entity.
-    $file = entity_create('file', $file_params);
+    $file = File::create($file_params);
     file_put_contents($file->getFileUri(), 'hello world');
     $file->save();
 

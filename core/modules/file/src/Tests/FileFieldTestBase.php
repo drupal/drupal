@@ -50,7 +50,7 @@ abstract class FileFieldTestBase extends WebTestBase {
     // \Drupal\file\Entity\File::load().
     $file->filesize = filesize($file->uri);
 
-    return entity_create('file', (array) $file);
+    return File::create((array) $file);
   }
 
   /**

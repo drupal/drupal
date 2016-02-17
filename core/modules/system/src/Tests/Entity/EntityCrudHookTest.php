@@ -231,7 +231,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
 
     $url = 'public://entity_crud_hook_test.file';
     file_put_contents($url, 'Test test test');
-    $file = entity_create('file', array(
+    $file = File::create([
       'fid' => NULL,
       'uid' => 1,
       'filename' => 'entity_crud_hook_test.file',
@@ -241,7 +241,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
       'status' => 1,
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
-    ));
+    ]);
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_file_create called',

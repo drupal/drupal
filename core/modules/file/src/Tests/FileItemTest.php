@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\file\Entity\File;
 
 /**
  * Tests using entity fields of the file field type.
@@ -62,9 +63,9 @@ class FileItemTest extends FieldUnitTestBase {
       'settings' => array('file_directory' => $this->directory),
     ])->save();
     file_put_contents('public://example.txt', $this->randomMachineName());
-    $this->file = entity_create('file', array(
+    $this->file = File::create([
       'uri' => 'public://example.txt',
-    ));
+    ]);
     $this->file->save();
   }
 
@@ -99,9 +100,9 @@ class FileItemTest extends FieldUnitTestBase {
 
     // Make sure the computed files reflects updates to the file.
     file_put_contents('public://example-2.txt', $this->randomMachineName());
-    $file2 = entity_create('file', array(
+    $file2 = File::create([
       'uri' => 'public://example-2.txt',
-    ));
+    ]);
     $file2->save();
 
     $entity->file_test->target_id = $file2->id();
@@ -124,9 +125,9 @@ class FileItemTest extends FieldUnitTestBase {
     // Make sure the computed files reflects updates to the file.
     file_put_contents('public://example-3.txt', $this->randomMachineName());
     // Test unsaved file entity.
-    $file3 = entity_create('file', array(
+    $file3 = File::create([
       'uri' => 'public://example-3.txt',
-    ));
+    ]);
     $display = entity_get_display('entity_test', 'entity_test', 'default');
     $display->setComponent('file_test', [
       'label' => 'above',

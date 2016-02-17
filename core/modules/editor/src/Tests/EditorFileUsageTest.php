@@ -9,6 +9,7 @@ namespace Drupal\editor\Tests;
 
 use Drupal\editor\Entity\Editor;
 use Drupal\node\Entity\NodeType;
+use Drupal\file\Entity\File;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -74,7 +75,7 @@ class EditorFileUsageTest extends EntityUnitTestBase {
 
     $image_entities = array();
     foreach ($image_paths as $key => $image_path) {
-      $image = entity_create('file');
+      $image = File::create();
       $image->setFileUri($image_path);
       $image->setFilename(drupal_basename($image->getFileUri()));
       $image->save();

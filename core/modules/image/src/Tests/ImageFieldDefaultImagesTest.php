@@ -38,12 +38,12 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       $filename = $this->randomMachineName() . "$i";
       $desired_filepath = 'public://' . $filename;
       file_unmanaged_copy($files[0]->uri, $desired_filepath, FILE_EXISTS_ERROR);
-      $file = entity_create('file', array('uri' => $desired_filepath, 'filename' => $filename, 'name' => $filename));
+      $file = File::create(['uri' => $desired_filepath, 'filename' => $filename, 'name' => $filename]);
       $file->save();
     }
     $default_images = array();
     foreach (array('field', 'field', 'field2', 'field_new', 'field_new') as $image_target) {
-      $file = entity_create('file', (array) array_pop($files));
+      $file = File::create((array) array_pop($files));
       $file->save();
       $default_images[$image_target] = $file;
     }

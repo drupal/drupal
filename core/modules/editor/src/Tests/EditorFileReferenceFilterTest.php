@@ -8,6 +8,7 @@
 namespace Drupal\editor\Tests;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\file\Entity\File;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\filter\FilterPluginCollection;
 
@@ -55,14 +56,14 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
     };
 
     file_put_contents('public://llama.jpg', $this->randomMachineName());
-    $image = entity_create('file', array('uri' => 'public://llama.jpg'));
+    $image = File::create(['uri' => 'public://llama.jpg']);
     $image->save();
     $id = $image->id();
     $uuid = $image->uuid();
     $cache_tag = ['file:' . $id];
 
     file_put_contents('public://alpaca.jpg', $this->randomMachineName());
-    $image_2 = entity_create('file', array('uri' => 'public://alpaca.jpg'));
+    $image_2 = File::create(['uri' => 'public://alpaca.jpg']);
     $image_2->save();
     $id_2 = $image_2->id();
     $uuid_2 = $image_2->uuid();

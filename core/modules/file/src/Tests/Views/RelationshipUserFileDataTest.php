@@ -8,6 +8,7 @@
 namespace Drupal\file\Tests\Views;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\file\Entity\File;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
@@ -60,7 +61,7 @@ class RelationshipUserFileDataTest extends ViewTestBase {
    * Tests using the views file relationship.
    */
   public function testViewsHandlerRelationshipUserFileData() {
-    $file = entity_create('file', array(
+    $file = File::create([
       'fid' => 2,
       'uid' => 2,
       'filename' => 'image-test.jpg',
@@ -69,7 +70,7 @@ class RelationshipUserFileDataTest extends ViewTestBase {
       'created' => 1,
       'changed' => 1,
       'status' => FILE_STATUS_PERMANENT,
-    ));
+    ]);
     $file->enforceIsNew();
     file_put_contents($file->getFileUri(), file_get_contents('core/modules/simpletest/files/image-1.png'));
     $file->save();

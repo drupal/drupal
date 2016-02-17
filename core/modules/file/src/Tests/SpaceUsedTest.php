@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\file\Tests;
+use Drupal\file\Entity\File;
 
 /**
  * Tests the spaceUsed() function.
@@ -44,11 +45,11 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
    */
   protected function createFileWithSize($uri, $size, $uid, $status = FILE_STATUS_PERMANENT) {
     file_put_contents($uri, $this->randomMachineName($size));
-    $file = entity_create('file', array(
+    $file = File::create([
       'uri' => $uri,
       'uid' => $uid,
       'status' => $status,
-    ));
+    ]);
     $file->save();
     return $file;
   }

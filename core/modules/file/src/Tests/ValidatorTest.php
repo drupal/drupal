@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\file\Tests;
+use Drupal\file\Entity\File;
 
 /**
  * Tests the functions used to validate uploaded files.
@@ -31,11 +32,11 @@ class ValidatorTest extends FileManagedUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->image = entity_create('file');
+    $this->image = File::create();
     $this->image->setFileUri('core/misc/druplicon.png');
     $this->image->setFilename(drupal_basename($this->image->getFileUri()));
 
-    $this->nonImage = entity_create('file');
+    $this->nonImage = File::create();
     $this->nonImage->setFileUri('core/assets/vendor/jquery/jquery.min.js');
     $this->nonImage->setFilename(drupal_basename($this->nonImage->getFileUri()));
   }
@@ -44,7 +45,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
    * Test the file_validate_extensions() function.
    */
   function testFileValidateExtensions() {
-    $file = entity_create('file', array('filename' => 'asdf.txt'));
+    $file = File::create(['filename' => 'asdf.txt']);
     $errors = file_validate_extensions($file, 'asdf txt pork');
     $this->assertEqual(count($errors), 0, 'Valid extension accepted.', 'File');
 
@@ -120,7 +121,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
    */
   function testFileValidateNameLength() {
     // Create a new file entity.
-    $file = entity_create('file');
+    $file = File::create();
 
     // Add a filename with an allowed length and test it.
     $file->setFilename(str_repeat('x', 240));
@@ -145,7 +146,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
    */
   function testFileValidateSize() {
     // Create a file with a size of 1000 bytes, and quotas of only 1 byte.
-    $file = entity_create('file', array('filesize' => 1000));
+    $file = File::create(['filesize' => 1000]);
     $errors = file_validate_size($file, 0, 0);
     $this->assertEqual(count($errors), 0, 'No limits means no errors.', 'File');
     $errors = file_validate_size($file, 1, 0);

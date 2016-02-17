@@ -504,11 +504,11 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
 
   if ($uri = file_unmanaged_save_data($data, $destination, $replace)) {
     // Create a file entity.
-    $file = entity_create('file', array(
+    $file = File::create([
       'uri' => $uri,
       'uid' => $user->id(),
       'status' => FILE_STATUS_PERMANENT,
-    ));
+    ]);
     // If we are replacing an existing file re-use its database record.
     // @todo Do not create a new entity in order to update it. See
     //   https://www.drupal.org/node/2241865.
@@ -772,7 +772,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
       'filesize' => $file_info->getSize(),
     );
     $values['filemime'] = \Drupal::service('file.mime_type.guesser')->guess($values['filename']);
-    $file = entity_create('file', $values);
+    $file = File::create($values);
 
     $extensions = '';
     if (isset($validators['file_validate_extensions'])) {
