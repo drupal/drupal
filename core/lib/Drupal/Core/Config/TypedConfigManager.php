@@ -174,8 +174,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
         // Merge the newly determined subtype definition with the original
         // definition.
         $definition = NestedArray::mergeDeepArray([$definitions[$sub_type], $definition], TRUE);
+        $type = "$type||$sub_type";
       }
-
       // Unset type so we try the merge only once per type.
       unset($definition['type']);
       $this->definitions[$type] = $definition;

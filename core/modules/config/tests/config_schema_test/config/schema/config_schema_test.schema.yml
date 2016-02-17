@@ -258,5 +258,15 @@ test.double_brackets.cat.dog:
     bar:
       type: string
 
+test.double_brackets.turtle.horse:
+  type: test.double_brackets
+  mapping:
+    another_key:
+      type: integer
+    foo:
+      type: string
+    bar:
+      type: string
+
 test.double_brackets.*:
   type: mapping

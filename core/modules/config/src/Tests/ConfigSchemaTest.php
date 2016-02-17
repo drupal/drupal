@@ -546,8 +546,44 @@ class ConfigSchemaTest extends KernelTestBase {
       'tests' => [
         [
           'wrapper_value' => 'foo',
+          'foo' => 'turtle',
+          'bar' => 'horse',
+          // Converted to a string by 'test.double_brackets.turtle.horse'
+          // schema.
+          'another_key' => '100',
+        ],
+      ],
+    ];
+
+    $typed_values = [
+      'tests' => [
+        [
+          'wrapper_value' => 'foo',
+          'foo' => 'turtle',
+          'bar' => 'horse',
+          'another_key' => 100,
+        ],
+      ],
+    ];
+
+    // Save config which has a schema that enforces types.
+    \Drupal::configFactory()->getEditable('wrapping.config_schema_test.double_brackets')
+      ->setData($untyped_values)
+      ->save();
+    $this->assertIdentical(\Drupal::config('wrapping.config_schema_test.double_brackets')
+      ->get(), $typed_values);
+
+    $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.double_brackets')->get('tests')->getElements();
+    $definition = $tests[0]->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'wrapping.test.double_brackets.*||test.double_brackets.turtle.horse');
+
+    $untyped_values = [
+      'tests' => [
+        [
+          'wrapper_value' => 'foo',
           'foo' => 'cat',
           'bar' => 'dog',
+          // Converted to a string by 'test.double_brackets.cat.dog' schema.
           'another_key' => 100,
         ],
       ],
@@ -570,6 +606,36 @@ class ConfigSchemaTest extends KernelTestBase {
       ->save();
     $this->assertIdentical(\Drupal::config('wrapping.config_schema_test.double_brackets')
       ->get(), $typed_values);
+
+    $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.double_brackets')->get('tests')->getElements();
+    $definition = $tests[0]->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'wrapping.test.double_brackets.*||test.double_brackets.cat.dog');
+
+    // Combine everything in a single save.
+    $typed_values = [
+      'tests' => [
+        [
+          'wrapper_value' => 'foo',
+          'foo' => 'cat',
+          'bar' => 'dog',
+          'another_key' => 100,
+        ],
+        [
+          'wrapper_value' => 'foo',
+          'foo' => 'turtle',
+          'bar' => 'horse',
+          'another_key' => '100',
+        ],
+      ],
+    ];
+    \Drupal::configFactory()->getEditable('wrapping.config_schema_test.double_brackets')
+      ->setData($typed_values)
+      ->save();
+    $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.double_brackets')->get('tests')->getElements();
+    $definition = $tests[0]->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'wrapping.test.double_brackets.*||test.double_brackets.cat.dog');
+    $definition = $tests[1]->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'wrapping.test.double_brackets.*||test.double_brackets.turtle.horse');
   }
 
 }
