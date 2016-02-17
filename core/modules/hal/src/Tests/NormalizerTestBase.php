@@ -63,7 +63,7 @@ abstract class NormalizerTestBase extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('url_alias', 'router'));
+    $this->installSchema('system', array('router'));
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
     // If the concrete test sub-class installs the Node or Comment modules,

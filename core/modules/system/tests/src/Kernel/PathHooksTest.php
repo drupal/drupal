@@ -26,8 +26,6 @@ class PathHooksTest extends KernelTestBase {
    * Test system_path_*() correctly clears caches.
    */
   public function testPathHooks() {
-    $this->installSchema('system', ['url_alias']);
-
     $source = '/' . $this->randomMachineName();
     $alias = '/' . $this->randomMachineName();
 

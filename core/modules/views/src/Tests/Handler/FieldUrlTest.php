@@ -27,11 +27,6 @@ class FieldUrlTest extends ViewKernelTestBase {
    */
   public static $testViews = array('test_view');
 
-  protected function setUp() {
-    parent::setUp();
-    $this->installSchema('system', 'url_alias');
-  }
-
   function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['name']['field']['id'] = 'url';

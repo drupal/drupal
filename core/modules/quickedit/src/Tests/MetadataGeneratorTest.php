@@ -124,8 +124,6 @@ class MetadataGeneratorTest extends QuickEditTestBase {
    * Tests a field whose associated in-place editor generates custom metadata.
    */
   public function testEditorWithCustomMetadata() {
-    $this->installSchema('system', 'url_alias');
-
     $this->editorManager = $this->container->get('plugin.manager.quickedit.editor');
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
     $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);

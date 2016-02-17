@@ -28,7 +28,6 @@ class TokenReplaceTest extends ViewKernelTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', 'url_alias');
     $this->container->get('router.builder')->rebuild();
   }
 

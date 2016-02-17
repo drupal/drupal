@@ -71,7 +71,6 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     parent::setUp();
 
     // Install the Filter module.
-    $this->installSchema('system', 'url_alias');
 
     // Create a field.
     $this->fieldName = 'field_textarea';

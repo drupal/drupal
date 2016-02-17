@@ -30,7 +30,6 @@ class AliasStorageTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'url_alias');
     $this->storage = $this->container->get('path.alias_storage');
   }
 

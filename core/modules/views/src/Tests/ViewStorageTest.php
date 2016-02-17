@@ -182,10 +182,6 @@ class ViewStorageTest extends ViewKernelTestBase {
    * Tests the display related functions like getDisplaysList().
    */
   protected function displayMethodTests() {
-    // Enable the system module so the link generator can work using url_alias
-    // table.
-    $this->installSchema('system', 'url_alias');
-
     $config['display'] = array(
       'page_1' => array(
         'display_options' => array('path' => 'test'),

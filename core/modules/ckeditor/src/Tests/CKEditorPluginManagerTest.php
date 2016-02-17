@@ -36,7 +36,6 @@ class CKEditorPluginManagerTest extends KernelTestBase {
     parent::setUp();
 
     // Install the Filter module.
-    $this->installSchema('system', 'url_alias');
 
     // Create text format, associate CKEditor.
     $filtered_html_format = FilterFormat::create(array(

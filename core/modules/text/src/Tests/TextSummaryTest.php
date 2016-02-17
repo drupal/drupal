@@ -22,7 +22,6 @@ class TextSummaryTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'url_alias');
     $this->installConfig(array('text'));
   }
 

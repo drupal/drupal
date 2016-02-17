@@ -44,16 +44,6 @@ class DisplayPageTest extends ViewKernelTestBase {
   protected $routerDumper;
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    // Setup the needed tables in order to make the drupal router working.
-    $this->installSchema('system', array('url_alias'));
-  }
-
-  /**
    * Checks the behavior of the page for access denied/not found behaviors.
    */
   public function testPageResponses() {

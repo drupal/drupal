@@ -31,7 +31,7 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
     \Drupal::unsetContainer();
     parent::setUp();
 
-    $this->installSchema('system', ['router', 'url_alias']);
+    $this->installSchema('system', ['router']);
     \Drupal::service('router.builder')->rebuild();
   }
 

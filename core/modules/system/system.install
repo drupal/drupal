@@ -1031,44 +1031,6 @@ function system_schema() {
     ),
   );
 
-  $schema['url_alias'] = array(
-    'description' => 'A list of URL aliases for Drupal paths; a user may visit either the source or destination path.',
-    'fields' => array(
-      'pid' => array(
-        'description' => 'A unique path alias identifier.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'source' => array(
-        'description' => 'The Drupal path this alias is for; e.g. node/12.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'alias' => array(
-        'description' => 'The alias for this path; e.g. title-of-the-story.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'langcode' => array(
-        'description' => "The language code this alias is for; if 'und', the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.",
-        'type' => 'varchar_ascii',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-    ),
-    'primary key' => array('pid'),
-    'indexes' => array(
-      'alias_langcode_pid' => array('alias', 'langcode', 'pid'),
-      'source_langcode_pid' => array('source', 'langcode', 'pid'),
-    ),
-  );
-
   return $schema;
 }
 

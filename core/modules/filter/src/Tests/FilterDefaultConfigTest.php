@@ -24,7 +24,6 @@ class FilterDefaultConfigTest extends KernelTestBase {
 
     // Drupal\filter\FilterPermissions::permissions() builds an URL to output
     // a link in the description.
-    $this->installSchema('system', 'url_alias');
 
     $this->installEntitySchema('user');
 

@@ -20,11 +20,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
  */
 class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
 
-  protected function setUp() {
-    parent::setUp();
-    $this->installSchema('system', 'url_alias');
-  }
-
   /**
    * Asserts entity access correctly grants or denies access.
    */

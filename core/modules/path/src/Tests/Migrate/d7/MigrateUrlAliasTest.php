@@ -26,7 +26,6 @@ class MigrateUrlAliasTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', ['url_alias']);
     $this->executeMigration('d7_url_alias');
   }
 
