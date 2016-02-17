@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests\Condition;
 
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
@@ -23,11 +24,11 @@ class NodeConditionTest extends EntityUnitTestBase {
     parent::setUp();
 
     // Create the node bundles required for testing.
-    $type = entity_create('node_type', array('type' => 'page', 'name' => 'page'));
+    $type = NodeType::create(['type' => 'page', 'name' => 'page']);
     $type->save();
-    $type = entity_create('node_type', array('type' => 'article', 'name' => 'article'));
+    $type = NodeType::create(['type' => 'article', 'name' => 'article']);
     $type->save();
-    $type = entity_create('node_type', array('type' => 'test', 'name' => 'test'));
+    $type = NodeType::create(['type' => 'test', 'name' => 'test']);
     $type->save();
   }
 

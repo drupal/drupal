@@ -11,6 +11,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\system\Tests\System\TokenReplaceUnitTestBase;
 
 /**
@@ -35,7 +36,7 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
     parent::setUp();
     $this->installConfig(array('filter', 'node'));
 
-    $node_type = entity_create('node_type', array('type' => 'article', 'name' => 'Article'));
+    $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
     $node_type->save();
     node_add_body_field($node_type);
   }

@@ -9,6 +9,7 @@ namespace Drupal\views\Tests;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Xss;
+use Drupal\node\Entity\NodeType;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
@@ -87,10 +88,10 @@ class ViewExecutableTest extends ViewKernelTestBase {
     $this->installSchema('comment', array('comment_entity_statistics'));
     $this->installConfig(array('system', 'field', 'node', 'comment'));
 
-    entity_create('node_type', array(
+    NodeType::create([
       'type' => 'page',
       'name' => 'Page',
-    ))->save();
+    ])->save();
     $this->addDefaultCommentField('node', 'page');
     parent::setUpFixtures();
 

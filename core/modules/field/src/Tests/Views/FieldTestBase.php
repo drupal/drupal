@@ -20,6 +20,7 @@
 namespace Drupal\field\Tests\Views;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -55,10 +56,10 @@ abstract class FieldTestBase extends ViewTestBase {
     parent::setUp();
 
     // Ensure the page node type exists.
-    entity_create('node_type', array(
+    NodeType::create([
       'type' => 'page',
       'name' => 'page',
-    ))->save();
+    ])->save();
 
     ViewTestData::createTestViews(get_class($this), array('field_test_views'));
   }

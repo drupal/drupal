@@ -10,6 +10,7 @@ namespace Drupal\views\Tests\Entity;
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
@@ -54,10 +55,10 @@ class ViewEntityDependenciesTest extends ViewKernelTestBase {
     ));
     $comment_type->save();
 
-    $content_type = entity_create('node_type', array(
+    $content_type = NodeType::create([
       'type' => $this->randomMachineName(),
       'name' => $this->randomString(),
-    ));
+    ]);
     $content_type->save();
     $field_storage = FieldStorageConfig::create(array(
       'field_name' => Unicode::strtolower($this->randomMachineName()),

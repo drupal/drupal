@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Module;
 use Drupal\Core\Cache\Cache;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -46,7 +47,7 @@ class UninstallTest extends WebTestBase {
     $this->drupalLogin($account);
 
     // Create a node type.
-    $node_type = entity_create('node_type', array('type' => 'uninstall_blocker', 'name' => 'Uninstall blocker'));
+    $node_type = NodeType::create(['type' => 'uninstall_blocker', 'name' => 'Uninstall blocker']);
     // Create a dependency that can be fixed.
     $node_type->setThirdPartySetting('module_test', 'key', 'value');
     $node_type->save();

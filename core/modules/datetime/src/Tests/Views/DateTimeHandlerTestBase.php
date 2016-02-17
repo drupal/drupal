@@ -9,6 +9,7 @@ namespace Drupal\datetime\Tests\Views;
 
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\Handler\HandlerTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -46,7 +47,7 @@ abstract class DateTimeHandlerTestBase extends HandlerTestBase {
     parent::setUp();
 
     // Add a date field to page nodes.
-    $node_type = entity_create('node_type', [
+    $node_type = NodeType::create([
       'type' => 'page',
       'name' => 'page'
     ]);

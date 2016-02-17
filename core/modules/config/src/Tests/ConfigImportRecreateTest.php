@@ -63,10 +63,10 @@ class ConfigImportRecreateTest extends KernelTestBase {
 
   public function testRecreateEntity() {
     $type_name = Unicode::strtolower($this->randomMachineName(16));
-    $content_type = entity_create('node_type', array(
+    $content_type = NodeType::create([
       'type' => $type_name,
       'name' => 'Node type one',
-    ));
+    ]);
     $content_type->save();
     node_add_body_field($content_type);
     /** @var \Drupal\Core\Config\StorageInterface $active */
@@ -82,10 +82,10 @@ class ConfigImportRecreateTest extends KernelTestBase {
     $content_type->delete();
     $this->assertFalse($active->exists($config_name), 'Content type\'s old name does not exist active store.');
     // Recreate with the same type - this will have a different UUID.
-    $content_type = entity_create('node_type', array(
+    $content_type = NodeType::create([
       'type' => $type_name,
       'name' => 'Node type two',
-    ));
+    ]);
     $content_type->save();
     node_add_body_field($content_type);
 

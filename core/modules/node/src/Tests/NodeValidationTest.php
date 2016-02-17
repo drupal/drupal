@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
@@ -31,7 +32,7 @@ class NodeValidationTest extends EntityUnitTestBase {
     parent::setUp();
 
     // Create a node type for testing.
-    $type = entity_create('node_type', array('type' => 'page', 'name' => 'page'));
+    $type = NodeType::create(['type' => 'page', 'name' => 'page']);
     $type->save();
   }
 

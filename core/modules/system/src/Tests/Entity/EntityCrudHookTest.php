@@ -13,6 +13,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\block\Entity\Block;
+use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -142,10 +143,10 @@ class EntityCrudHookTest extends EntityUnitTestBase {
    */
   public function testCommentHooks() {
     $account = $this->createUser();
-    entity_create('node_type', array(
+    NodeType::create([
       'type' => 'article',
       'name' => 'Article',
-    ))->save();
+    ])->save();
     $this->addDefaultCommentField('node', 'article', 'comment', CommentItemInterface::OPEN);
 
     $node = entity_create('node', array(

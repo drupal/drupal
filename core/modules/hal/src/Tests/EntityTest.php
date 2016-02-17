@@ -10,6 +10,7 @@ namespace Drupal\hal\Tests;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\comment\Entity\Comment;
 use Drupal\user\Entity\User;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Tests that nodes and terms are correctly normalized and denormalized.
@@ -44,7 +45,7 @@ class EntityTest extends NormalizerTestBase {
    * Tests the normalization of nodes.
    */
   public function testNode() {
-    $node_type = entity_create('node_type', array('type' => 'example_type'));
+    $node_type = NodeType::create(['type' => 'example_type']);
     $node_type->save();
 
     $user = User::create(['name' => $this->randomMachineName()]);
@@ -140,7 +141,7 @@ class EntityTest extends NormalizerTestBase {
    * Tests the normalization of comments.
    */
   public function testComment() {
-    $node_type = entity_create('node_type', array('type' => 'example_type'));
+    $node_type = NodeType::create(['type' => 'example_type']);
     $node_type->save();
 
     $account = User::create(['name' => $this->randomMachineName()]);

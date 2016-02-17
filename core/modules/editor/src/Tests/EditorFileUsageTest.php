@@ -8,6 +8,7 @@
 namespace Drupal\editor\Tests;
 
 use Drupal\editor\Entity\Editor;
+use Drupal\node\Entity\NodeType;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -55,7 +56,7 @@ class EditorFileUsageTest extends EntityUnitTestBase {
     $editor->save();
 
     // Create a node type for testing.
-    $type = entity_create('node_type', array('type' => 'page', 'name' => 'page'));
+    $type = NodeType::create(['type' => 'page', 'name' => 'page']);
     $type->save();
     node_add_body_field($type);
   }

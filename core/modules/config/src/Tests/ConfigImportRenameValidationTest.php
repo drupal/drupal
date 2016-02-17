@@ -13,6 +13,7 @@ use Drupal\Component\Uuid\Php;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -85,11 +86,11 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
     $test_entity->delete();
 
     // Create a content type with a matching UUID in the active storage.
-    $content_type = entity_create('node_type', array(
+    $content_type = NodeType::create([
       'type' => Unicode::strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
       'uuid' => $uuid,
-    ));
+    ]);
     $content_type->save();
 
     // Confirm that the staged configuration is detected as a rename since the

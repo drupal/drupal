@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests\Views;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Tests replacement of Views tokens supplied by the Node module.
@@ -29,7 +30,7 @@ class NodeFieldTokensTest extends NodeTestBase {
   public function testViewsTokenReplacement() {
     // Create the Article content type with a standard body field.
     /* @var $node_type \Drupal\node\NodeTypeInterface */
-    $node_type = entity_create('node_type', ['type' => 'article', 'name' => 'Article']);
+    $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
     $node_type->save();
     node_add_body_field($node_type);
 
