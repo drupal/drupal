@@ -55,10 +55,15 @@ class StaticTranslation implements TranslatorInterface {
   }
 
   /**
-   * Add translations for new language.
+   * Retrieves translations for a given language.
    *
    * @param string $langcode
    *   The langcode of the language.
+   *
+   * @return array
+   *   A multidimensional array of translations, indexed by the context the
+   *   source string belongs to. The second level is using original strings as
+   *   keys. An empty array will be returned when no translations are available.
    */
   protected function getLanguage($langcode) {
     // This class is usually a base class but we do not declare as abstract
