@@ -7,7 +7,7 @@
 namespace Drupal\system\Tests\Block;
 
 use Drupal\system\Entity\Menu;
-
+use Drupal\block\Entity\Block;
 use Drupal\Core\Render\Element;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\system\Tests\Routing\MockRouteProvider;
@@ -157,7 +157,7 @@ class SystemMenuBlockTest extends KernelTestBase {
    */
   public function testSystemMenuBlockConfigDependencies() {
 
-    $block = entity_create('block', array(
+    $block = Block::create(array(
       'plugin' => 'system_menu_block:' . $this->menu->id(),
       'region' => 'footer',
       'id' => 'machinename',

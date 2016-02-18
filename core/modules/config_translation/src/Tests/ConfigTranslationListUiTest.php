@@ -7,6 +7,7 @@
 
 namespace Drupal\config_translation\Tests;
 
+use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -189,7 +190,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
   public function doCustomContentTypeListTest() {
     // Create a test custom block type to decouple looking for translate
     // operations link so this does not test more than necessary.
-    $block_content_type = entity_create('block_content_type', array(
+    $block_content_type = BlockContentType::create(array(
       'id' => Unicode::strtolower($this->randomMachineName(16)),
       'label' => $this->randomMachineName(),
       'revision' => FALSE
@@ -395,7 +396,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
     ));
 
     // Create a block content type.
-    $block_content_type = entity_create('block_content_type', array(
+    $block_content_type = BlockContentType::create(array(
       'id' => 'basic',
       'label' => 'Basic',
       'revision' => FALSE

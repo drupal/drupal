@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\Tests\ViewKernelTestBase;
+use Drupal\block\Entity\Block;
 
 /**
  * Tests views block config dependencies functionality.
@@ -106,7 +107,7 @@ class BlockDependenciesTest extends ViewKernelTestBase {
       $values['visibility'][$id]['id'] = $id;
     }
     $values['settings'] = $settings;
-    $block = entity_create('block', $values);
+    $block = Block::create($values);
     $block->save();
     return $block;
   }

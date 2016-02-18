@@ -87,7 +87,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
    * Tests hook invocations for CRUD operations on blocks.
    */
   public function testBlockHooks() {
-    $entity = entity_create('block', array(
+    $entity = Block::create(array(
       'id' => 'stark_test_html',
       'plugin' => 'test_html',
       'theme' => 'stark',

@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Tests;
 
+use Drupal\block\Entity\Block;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -31,8 +32,7 @@ class BlockTemplateSuggestionsTest extends WebTestBase {
     // an underscore (not transformed) and a hyphen (transformed to underscore),
     // and generates possibilities for each level of derivative.
     // @todo Clarify this comment.
-    /** @var \Drupal\block\BlockInterface $block */
-    $block = entity_create('block', array(
+    $block = Block::create(array(
       'plugin' => 'system_menu_block:admin',
       'region' => 'footer',
       'id' => 'machinename',

@@ -7,6 +7,8 @@
 
 namespace Drupal\block_content\Tests;
 
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Utility\Unicode;
 use Drupal\content_translation\Tests\ContentTranslationUITestBase;
 
@@ -60,7 +62,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
    */
   protected function setupBundle() {
     // Create the basic bundle since it is provided by standard.
-    $bundle = entity_create('block_content_type', array(
+    $bundle = BlockContentType::create(array(
       'id' => $this->bundle,
       'label' => $this->bundle,
       'revision' => FALSE
@@ -96,7 +98,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
   protected function createBlockContent($title = FALSE, $bundle = FALSE) {
     $title = ($title ? : $this->randomMachineName());
     $bundle = ($bundle ? : $this->bundle);
-    $block_content = entity_create('block_content', array(
+    $block_content = BlockContent::create(array(
       'info' => $title,
       'type' => $bundle,
       'langcode' => 'en'
@@ -162,7 +164,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
   public function testDisabledBundle() {
     // Create a bundle that does not have translation enabled.
     $disabled_bundle = $this->randomMachineName();
-    $bundle = entity_create('block_content_type', array(
+    $bundle = BlockContentType::create(array(
       'id' => $disabled_bundle,
       'label' => $disabled_bundle,
       'revision' => FALSE

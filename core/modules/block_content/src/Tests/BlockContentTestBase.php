@@ -7,6 +7,8 @@
 
 namespace Drupal\block_content\Tests;
 
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\block_content\Entity\BlockContentType;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -78,7 +80,7 @@ abstract class BlockContentTestBase extends WebTestBase {
    */
   protected function createBlockContent($title = FALSE, $bundle = 'basic', $save = TRUE) {
     $title = ($title ? : $this->randomMachineName());
-    $block_content = entity_create('block_content', array(
+    $block_content = BlockContent::create(array(
       'info' => $title,
       'type' => $bundle,
       'langcode' => 'en'
@@ -101,7 +103,7 @@ abstract class BlockContentTestBase extends WebTestBase {
    *   Created custom block type.
    */
   protected function createBlockContentType($label, $create_body = FALSE) {
-    $bundle = entity_create('block_content_type', array(
+    $bundle = BlockContentType::create(array(
       'id' => $label,
       'label' => $label,
       'revision' => FALSE,
