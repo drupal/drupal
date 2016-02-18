@@ -27,49 +27,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserStorage extends SqlContentEntityStorage implements UserStorageInterface {
 
   /**
-   * Provides the password hashing service object.
-   *
-   * @var \Drupal\Core\Password\PasswordInterface
-   */
-  protected $password;
-
-  /**
-   * Constructs a new UserStorage object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition.
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection to be used.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   Cache backend instance to use.
-   * @param \Drupal\Core\Password\PasswordInterface $password
-   *   The password hashing service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, PasswordInterface $password, LanguageManagerInterface $language_manager) {
-    parent::__construct($entity_type, $database, $entity_manager, $cache, $language_manager);
-
-    $this->password = $password;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static(
-      $entity_type,
-      $container->get('database'),
-      $container->get('entity.manager'),
-      $container->get('cache.entity'),
-      $container->get('password'),
-      $container->get('language_manager')
-    );
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function doSaveFieldItems(ContentEntityInterface $entity, array $names = []) {
