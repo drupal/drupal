@@ -10,6 +10,7 @@ namespace Drupal\taxonomy\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Provides common helper methods for Taxonomy module tests.
@@ -21,13 +22,13 @@ trait TaxonomyTestTrait {
    */
   function createVocabulary() {
     // Create a vocabulary.
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
-    ));
+    ]);
     $vocabulary->save();
     return $vocabulary;
   }
@@ -47,16 +48,16 @@ trait TaxonomyTestTrait {
   function createTerm(Vocabulary $vocabulary, $values = array()) {
     $filter_formats = filter_formats();
     $format = array_pop($filter_formats);
-    $term = entity_create('taxonomy_term', $values + array(
+    $term = Term::create($values + [
       'name' => $this->randomMachineName(),
-      'description' => array(
+      'description' => [
         'value' => $this->randomMachineName(),
         // Use the first available text format.
         'format' => $format->id(),
-      ),
+      ],
       'vid' => $vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
+    ]);
     $term->save();
     return $term;
   }

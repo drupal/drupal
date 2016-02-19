@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use \Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Posts an article with a taxonomy term and a date prior to 1970.
@@ -28,10 +29,10 @@ class LegacyTest extends TaxonomyTestBase {
     parent::setUp();
 
     // Create a tags vocabulary for the 'article' content type.
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create([
       'name' => 'Tags',
       'vid' => 'tags',
-    ));
+    ]);
     $vocabulary->save();
     $field_name = 'field_' . $vocabulary->id();
 
@@ -69,4 +70,5 @@ class LegacyTest extends TaxonomyTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertEqual($node->getCreatedTime(), $date->getTimestamp(), 'Legacy node was saved with the right date.');
   }
+
 }

@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Tests;
 
 use Drupal\content_translation\Tests\ContentTranslationUITestBase;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests the Term Translation UI.
@@ -44,13 +45,13 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
     parent::setupBundle();
 
     // Create a vocabulary.
-    $this->vocabulary = entity_create('taxonomy_vocabulary', array(
+    $this->vocabulary = Vocabulary::create([
       'name' => $this->bundle,
       'description' => $this->randomMachineName(),
       'vid' => $this->bundle,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
-    ));
+    ]);
     $this->vocabulary->save();
   }
 
@@ -113,13 +114,13 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
     $translatable_tid = $this->createEntity($values, $this->langcodes[0], $this->vocabulary->id());
 
     // Create an untranslatable vocabulary.
-    $untranslatable_vocabulary = entity_create('taxonomy_vocabulary', array(
+    $untranslatable_vocabulary = Vocabulary::create([
       'name' => 'untranslatable_voc',
       'description' => $this->randomMachineName(),
       'vid' => 'untranslatable_voc',
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
-    ));
+    ]);
     $untranslatable_vocabulary->save();
 
     $values = array(

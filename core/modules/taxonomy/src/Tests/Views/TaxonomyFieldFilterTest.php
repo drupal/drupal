@@ -14,6 +14,8 @@ use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Tests taxonomy field filters with translations.
@@ -63,10 +65,10 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     );
 
     // Create a vocabulary.
-    $this->vocabulary = entity_create('taxonomy_vocabulary', array(
+    $this->vocabulary = Vocabulary::create([
       'name' => 'Views testing tags',
       'vid' => 'views_testing_tags',
-    ));
+    ]);
     $this->vocabulary->save();
 
     // Add a translatable field to the vocabulary.
@@ -173,13 +175,13 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
       'field_foo' => $this->randomMachineName(),
     );
 
-    $term = entity_create('taxonomy_term', array(
+    $term = Term::create([
       'name' => $properties['name'],
       'description' => $properties['description'],
       'format' => $format->id(),
       'vid' => $this->vocabulary->id(),
       'langcode' => $properties['langcode'],
-    ));
+    ]);
     $term->field_foo->value = $properties['field_foo'];
     $term->save();
     return $term;

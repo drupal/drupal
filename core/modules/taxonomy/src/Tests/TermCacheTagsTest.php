@@ -8,6 +8,8 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Tests the Taxonomy term entity's cache tags.
@@ -26,17 +28,17 @@ class TermCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    */
   protected function createEntity() {
     // Create a "Camelids" vocabulary.
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create([
       'name' => 'Camelids',
       'vid' => 'camelids',
-    ));
+    ]);
     $vocabulary->save();
 
     // Create a "Llama" taxonomy term.
-    $term = entity_create('taxonomy_term', array(
+    $term = Term::create([
       'name' => 'Llama',
       'vid' => $vocabulary->id(),
-    ));
+    ]);
     $term->save();
 
     return $term;
