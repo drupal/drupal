@@ -17,6 +17,9 @@ process:
     source:
       - constants/slash
       - dst
-  langcode: language
+  langcode:
+    plugin: d6_url_alias_language
+    source:
+      - language
 destination:
   plugin: url_alias

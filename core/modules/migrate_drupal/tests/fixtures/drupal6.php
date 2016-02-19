@@ -32353,13 +32353,19 @@ $connection->insert('url_alias')
   'pid' => '1',
   'src' => 'node/1',
   'dst' => 'alias-one',
-  'language' => 'en',
+  'language' => 'af',
 ))
 ->values(array(
   'pid' => '2',
   'src' => 'node/2',
   'dst' => 'alias-two',
   'language' => 'en',
+))
+->values(array(
+  'pid' => '3',
+  'src' => 'node/3',
+  'dst' => 'alias-three',
+  'language' => '',
 ))
 ->execute();
 
