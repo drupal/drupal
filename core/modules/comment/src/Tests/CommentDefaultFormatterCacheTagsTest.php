@@ -59,7 +59,6 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
     $this->installConfig(array('system', 'filter', 'comment'));
 
     // Comment rendering generates links, so build the router.
-    $this->installSchema('system', array('router'));
     $this->container->get('router.builder')->rebuild();
 
     // Set up a field, so that the entity that'll be referenced bubbles up a

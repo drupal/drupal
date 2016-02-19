@@ -36,7 +36,6 @@ class RouteProviderTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test_mul');
     $this->installEntitySchema('entity_test_admin_routes');
-    $this->installSchema('system', 'router');
 
     $router_builder = \Drupal::service('router.builder');
     $router_builder->rebuild();

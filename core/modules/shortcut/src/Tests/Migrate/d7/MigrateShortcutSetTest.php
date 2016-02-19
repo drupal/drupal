@@ -35,7 +35,6 @@ class MigrateShortcutSetTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('router'));
     $this->installEntitySchema('shortcut');
     $this->installEntitySchema('menu_link_content');
     \Drupal::service('router.builder')->rebuild();

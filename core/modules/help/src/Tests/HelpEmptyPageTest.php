@@ -27,15 +27,6 @@ class HelpEmptyPageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->installSchema('system', 'router');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function containerBuild(ContainerBuilder $container) {
     parent::containerBuild($container);
 

@@ -24,7 +24,6 @@ class BreakpointDiscoveryTest extends KernelTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('router'));
     \Drupal::service('theme_handler')->install(array('breakpoint_theme_test'));
   }
 

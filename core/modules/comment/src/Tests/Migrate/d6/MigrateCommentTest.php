@@ -33,7 +33,6 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installSchema('comment', ['comment_entity_statistics']);
-    $this->installSchema('system', ['router']);
     $this->installConfig(['comment']);
 
     // The entity.node.canonical route must exist when the RDF hook is called.

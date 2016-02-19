@@ -46,8 +46,6 @@ class DefaultConfigTest extends KernelTestBase {
     // drupal_get_filename().
     // @todo Remove as part of https://www.drupal.org/node/2186491
     system_rebuild_module_data();
-
-    $this->installSchema('system', 'router');
   }
 
   /**

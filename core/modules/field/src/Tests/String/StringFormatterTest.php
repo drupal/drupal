@@ -58,7 +58,6 @@ class StringFormatterTest extends KernelTestBase {
 
     // Configure the theme system.
     $this->installConfig(array('system', 'field'));
-    $this->installSchema('system', 'router');
     \Drupal::service('router.builder')->rebuild();
     $this->installEntitySchema('entity_test_rev');
 

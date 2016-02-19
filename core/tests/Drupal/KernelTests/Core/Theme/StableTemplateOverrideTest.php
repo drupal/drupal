@@ -54,7 +54,6 @@ class StableTemplateOverrideTest extends KernelTestBase {
 
     $this->container->get('theme_installer')->install(['stable']);
 
-    $this->installSchema('system', 'router');
     $this->installAllModules();
   }
 

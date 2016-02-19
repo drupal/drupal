@@ -79,7 +79,6 @@ class UserAccountFormFieldsTest extends KernelTestBase {
     $this->installConfig(array('user'));
 
     // Install the router table and then rebuild.
-    $this->installSchema('system', ['router']);
     \Drupal::service('router.builder')->rebuild();
 
     $form = $this->buildAccountForm('default');

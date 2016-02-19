@@ -41,7 +41,7 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences', 'router']);
+    $this->installSchema('system', ['sequences']);
     $this->installConfig(['filter', 'filter_test']);
     // Filter tips link to the full-page.
     \Drupal::service('router.builder')->rebuild();

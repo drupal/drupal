@@ -102,7 +102,6 @@ class StreamWrapperTest extends FileTestBase {
     // Test file_create_url()
     // TemporaryStream::getExternalUrl() uses Url::fromRoute(), which needs
     // route information to work.
-    $this->installSchema('system', 'router');
     $this->container->get('router.builder')->rebuild();
     $this->assertTrue(strpos(file_create_url('temporary://test.txt'), 'system/temporary?file=test.txt'), 'Temporary external URL correctly built.');
     $this->assertTrue(strpos(file_create_url('public://test.txt'), Settings::get('file_public_path') . '/test.txt'), 'Public external URL correctly built.');

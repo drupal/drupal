@@ -39,7 +39,6 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
 
     $this->installEntitySchema('menu_link_content');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['router']);
 
     // Ensure that the weight of module_link_content is higher than system.
     // @see menu_link_content_install()

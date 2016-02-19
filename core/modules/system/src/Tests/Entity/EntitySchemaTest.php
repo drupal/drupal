@@ -29,7 +29,6 @@ class EntitySchemaTest extends EntityUnitTestBase  {
   protected function setUp() {
     parent::setUp();
     $this->installSchema('user', array('users_data'));
-    $this->installSchema('system', array('router'));
     $this->database = $this->container->get('database');
   }
 

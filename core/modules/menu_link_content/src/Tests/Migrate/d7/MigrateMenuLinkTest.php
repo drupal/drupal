@@ -32,7 +32,6 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', ['router']);
     $this->installEntitySchema('menu_link_content');
     $this->executeMigration('menu');
     \Drupal::service('router.builder')->rebuild();

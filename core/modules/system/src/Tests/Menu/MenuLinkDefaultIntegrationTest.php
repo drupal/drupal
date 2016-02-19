@@ -28,14 +28,6 @@ class MenuLinkDefaultIntegrationTest extends KernelTestBase {
   );
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->installSchema('system', array('router'));
-  }
-
-  /**
    * Tests moving a static menu link without a specified menu to the root.
    */
   public function testMoveToRoot() {

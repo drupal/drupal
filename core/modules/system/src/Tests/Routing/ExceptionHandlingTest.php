@@ -30,7 +30,6 @@ class ExceptionHandlingTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', ['router']);
     $this->installEntitySchema('date_format');
     \Drupal::service('router.builder')->rebuild();
   }

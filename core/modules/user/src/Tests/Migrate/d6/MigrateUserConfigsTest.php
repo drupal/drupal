@@ -26,7 +26,6 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', 'router');
     $this->container->get('router.builder')->rebuild();
     $this->executeMigrations(['d6_user_mail', 'd6_user_settings']);
   }

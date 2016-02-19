@@ -25,7 +25,6 @@ class RestLinkManagerTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', ['router']);
     \Drupal::service('router.builder')->rebuild();
   }
 

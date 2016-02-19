@@ -29,7 +29,6 @@ class SafeMarkupKernelTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'router');
     $this->container->get('router.builder')->rebuild();
   }
 

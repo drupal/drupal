@@ -41,7 +41,6 @@ class EntityBundleFieldTest extends EntityUnitTestBase  {
   protected function setUp() {
     parent::setUp();
     $this->installSchema('user', array('users_data'));
-    $this->installSchema('system', array('router'));
     $this->moduleHandler = $this->container->get('module_handler');
     $this->database = $this->container->get('database');
   }

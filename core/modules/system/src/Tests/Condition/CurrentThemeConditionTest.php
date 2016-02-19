@@ -23,14 +23,6 @@ class CurrentThemeConditionTest extends KernelTestBase {
   public static $modules = array('system', 'theme_test');
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->installSchema('system', array('router'));
-  }
-
-  /**
    * Tests the current theme condition.
    */
   public function testCurrentTheme() {

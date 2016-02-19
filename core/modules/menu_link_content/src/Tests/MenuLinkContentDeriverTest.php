@@ -33,7 +33,6 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('menu_link_content');
-    $this->installSchema('system', 'router');
   }
 
   /**

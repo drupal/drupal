@@ -32,7 +32,6 @@ class UuidFormatterTest extends KernelTestBase {
     parent::setUp();
 
     $this->installConfig(['system', 'field']);
-    $this->installSchema('system', 'router');
     \Drupal::service('router.builder')->rebuild();
     $this->installEntitySchema('entity_test');
   }

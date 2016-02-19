@@ -87,7 +87,6 @@ class SystemMenuBlockTest extends KernelTestBase {
     parent::setUp();
     $this->installSchema('system', 'sequences');
     $this->installEntitySchema('user');
-    $this->installSchema('system', array('router'));
     $this->installEntitySchema('menu_link_content');
 
     $account = User::create([

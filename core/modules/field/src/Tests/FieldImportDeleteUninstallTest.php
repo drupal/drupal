@@ -29,7 +29,7 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    // Module uninstall requires the router and users_data tables.
+    // Module uninstall requires users_data tables.
     // @see drupal_flush_all_caches()
     // @see user_modules_uninstalled()
     $this->installSchema('user', array('users_data'));

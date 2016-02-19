@@ -919,55 +919,6 @@ function system_schema() {
     ),
   );
 
-  $schema['router'] = array(
-    'description' => 'Maps paths to various callbacks (access, page and title)',
-    'fields' => array(
-      'name' => array(
-        'description' => 'Primary Key: Machine name of this route',
-        'type' => 'varchar_ascii',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'path' => array(
-        'description' => 'The path for this URI',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'pattern_outline' => array(
-        'description' => 'The pattern',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'fit' => array(
-        'description' => 'A numeric representation of how specific the path is.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'route' => array(
-        'description' => 'A serialized Route object',
-        'type' => 'blob',
-        'size' => 'big',
-      ),
-      'number_parts' => array(
-        'description' => 'Number of parts in this router path.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'small',
-      ),
-    ),
-    'indexes' => array(
-      'pattern_outline_parts' => array('pattern_outline', 'number_parts'),
-    ),
-    'primary key' => array('name'),
-  );
-
   $schema['sequences'] = array(
     'description' => 'Stores IDs.',
     'fields' => array(

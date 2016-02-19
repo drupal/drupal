@@ -35,7 +35,8 @@ class DbDumpCommandTest extends KernelTestBase {
       $this->markTestSkipped("Skipping test since the DbDumpCommand is currently only compatible with MySQL");
     }
 
-    $this->installSchema('system', 'router');
+    // Rebuild the router to ensure a routing table.
+    \Drupal::service('router.builder')->rebuild();
 
     /** @var \Drupal\Core\Database\Connection $connection */
     $connection = $this->container->get('database');
