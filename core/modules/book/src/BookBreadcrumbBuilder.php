@@ -88,7 +88,10 @@ class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $depth = 1;
       while (!empty($book['p' . ($depth + 1)])) {
         if (!empty($parent_books[$book['p' . $depth]]) && ($parent_book = $parent_books[$book['p' . $depth]])) {
-          if ($parent_book->access('view', $this->account)) {
+          $access = $parent_book->access('view', $this->account, TRUE);
+          $breadcrumb->addCacheableDependency($access);
+          if ($access->isAllowed()) {
+            $breadcrumb->addCacheableDependency($parent_book);
             $links[] = Link::createFromRoute($parent_book->label(), 'entity.node.canonical', array('node' => $parent_book->id()));
           }
         }
