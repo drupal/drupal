@@ -25,8 +25,7 @@ class UrlAliasLanguage extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $language = reset($value);
-    $langcode = ($language === '') ? LanguageInterface::LANGCODE_NOT_SPECIFIED : $language;
+    $langcode = ($value === '') ? LanguageInterface::LANGCODE_NOT_SPECIFIED : $value;
     return $langcode;
   }
 
