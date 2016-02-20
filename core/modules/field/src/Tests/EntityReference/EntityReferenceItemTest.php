@@ -115,7 +115,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $tid = $this->term->id();
 
     // Just being able to create the entity like this verifies a lot of code.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->field_test_taxonomy_term->target_id = $tid;
     $entity->name->value = $this->randomMachineName();
     $entity->save();
@@ -178,11 +178,11 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     // Delete terms so we have nothing to reference and try again
     $term->delete();
     $term2->delete();
-    $entity = entity_create('entity_test', array('name' => $this->randomMachineName()));
+    $entity = EntityTest::create(array('name' => $this->randomMachineName()));
     $entity->save();
 
     // Test the generateSampleValue() method.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->field_test_taxonomy_term->generateSampleItems();
     $entity->field_test_taxonomy_vocabulary->generateSampleItems();
     $this->entityValidateAndSave($entity);
@@ -211,7 +211,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $referenced_entity_id = $this->vocabulary->id();
 
     // Just being able to create the entity like this verifies a lot of code.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->field_test_taxonomy_vocabulary->target_id = $referenced_entity_id;
     $entity->name->value = $this->randomMachineName();
     $entity->save();
@@ -247,7 +247,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     // Delete terms so we have nothing to reference and try again
     $this->vocabulary->delete();
     $vocabulary2->delete();
-    $entity = entity_create('entity_test', array('name' => $this->randomMachineName()));
+    $entity = EntityTest::create(array('name' => $this->randomMachineName()));
     $entity->save();
   }
 
@@ -285,7 +285,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
       'vid' => $this->term->bundle(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     // Now assign the unsaved term to the field.
     $entity->field_test_taxonomy_term->entity = $term;
     $entity->name->value = $this->randomMachineName();

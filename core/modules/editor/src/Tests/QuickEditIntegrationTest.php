@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\editor\Entity\Editor;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\quickedit\MetadataGenerator;
 use Drupal\quickedit\Tests\QuickEditTestBase;
 use Drupal\quickedit_test\MockEditEntityFieldAccessCheck;
@@ -143,7 +144,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $this->editorSelector = $this->container->get('quickedit.editor.selector');
 
     // Create an entity with values for this text field.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->{$this->fieldName}->value = 'Hello, world!';
     $entity->{$this->fieldName}->format = 'filtered_html';
     $entity->save();
@@ -172,7 +173,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
 
     // Create an entity with values for the field.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->{$this->fieldName}->value = 'Test';
     $entity->{$this->fieldName}->format = 'full_html';
     $entity->save();
@@ -209,7 +210,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
    */
   public function testGetUntransformedTextCommand() {
     // Create an entity with values for the field.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->{$this->fieldName}->value = 'Test';
     $entity->{$this->fieldName}->format = 'full_html';
     $entity->save();

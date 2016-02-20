@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -110,7 +111,7 @@ class DisplayApiTest extends FieldUnitTestBase {
 
     // Create an entity with values.
     $this->values = $this->_generateTestFieldValues($this->cardinality);
-    $this->entity = entity_create('entity_test');
+    $this->entity = EntityTest::create();
     $this->entity->{$this->fieldName}->setValue($this->values);
     $this->entity->save();
   }

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Drupal\comment\Entity\Comment;
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Tests the bubbling up of comment cache tags when using the Comment list
@@ -74,7 +75,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
     $renderer = $this->container->get('renderer');
 
     // Create the entity that will be commented upon.
-    $commented_entity = entity_create('entity_test', array('name' => $this->randomMachineName()));
+    $commented_entity = EntityTest::create(array('name' => $this->randomMachineName()));
     $commented_entity->save();
 
     // Verify cache tags on the rendered entity before it has comments.

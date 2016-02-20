@@ -13,6 +13,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\block\Entity\Block;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\node\Entity\Node;
@@ -542,7 +543,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
   function testEntityRollback() {
     // Create a block.
     try {
-      entity_create('entity_test', array('name' => 'fail_insert'))->save();
+      EntityTest::create(array('name' => 'fail_insert'))->save();
       $this->fail('Expected exception has not been thrown.');
     }
     catch (\Exception $e) {

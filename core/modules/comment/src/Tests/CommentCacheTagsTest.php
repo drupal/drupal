@@ -11,6 +11,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 use Drupal\user\Entity\Role;
@@ -70,7 +71,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     $field->save();
 
     // Create a "Camelids" test entity that the comment will be assigned to.
-    $this->entityTestCamelid = entity_create('entity_test', array(
+    $this->entityTestCamelid = EntityTest::create(array(
       'name' => 'Camelids',
       'type' => 'bar',
     ));
@@ -101,7 +102,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     $this->verifyPageCache($this->entityTestCamelid->urlInfo(), 'HIT');
 
     // Create a "Hippopotamus" comment.
-    $this->entityTestHippopotamidae = entity_create('entity_test', array(
+    $this->entityTestHippopotamidae = EntityTest::create(array(
       'name' => 'Hippopotamus',
       'type' => 'bar',
     ));

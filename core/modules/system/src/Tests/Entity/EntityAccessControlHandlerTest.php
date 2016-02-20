@@ -11,6 +11,8 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
+use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\Entity\EntityTestDefaultAccess;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -40,7 +42,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
   function testEntityAccess() {
     // Set up a non-admin user that is allowed to view test entities.
     \Drupal::currentUser()->setAccount($this->createUser(array('uid' => 2), array('view test entity')));
-    $entity = entity_create('entity_test', array(
+    $entity = EntityTest::create(array(
       'name' => 'test',
     ));
 
@@ -77,7 +79,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
   function testDefaultEntityAccess() {
     // Set up a non-admin user that is allowed to view test entities.
     \Drupal::currentUser()->setAccount($this->createUser(array('uid' => 2), array('view test entity')));
-    $entity = entity_create('entity_test', array(
+    $entity = EntityTest::create(array(
         'name' => 'forbid_access',
       ));
 
@@ -102,7 +104,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
     $handler = $this->container->get('entity.manager')->getAccessControlHandler('entity_test_default_access');
     $this->assertTrue($handler instanceof EntityAccessControlHandler, 'The default entity handler is used for the entity_test_default_access entity type.');
 
-    $entity = entity_create('entity_test_default_access');
+    $entity = EntityTestDefaultAccess::create();
     $this->assertEntityAccess(array(
       'create' => FALSE,
       'update' => FALSE,
@@ -127,7 +129,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
       ))->save();
     }
 
-    $entity = entity_create('entity_test', array(
+    $entity = EntityTest::create(array(
       'name' => 'test',
       'langcode' => 'foo',
     ));
@@ -144,7 +146,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
    */
   public function testHooks() {
     $state = $this->container->get('state');
-    $entity = entity_create('entity_test', array(
+    $entity = EntityTest::create(array(
       'name' => 'test',
     ));
 

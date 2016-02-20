@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests\Uri;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
@@ -70,7 +71,7 @@ class UriItemTest extends FieldUnitTestBase {
       ->save();
 
     // Test the generateSampleValue() method.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->$field_name->generateSampleItems();
     $this->entityValidateAndSave($entity);
   }

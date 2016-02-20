@@ -291,7 +291,7 @@ class FieldCrudTest extends FieldUnitTestBase {
    * @see field_test_entity_bundle_field_info_alter()
    */
   protected function doFieldValidationTests() {
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->set($this->fieldStorage->getName(), 1);
     $violations = $entity->validate();
     $this->assertEqual(count($violations), 0, 'No violations found when in-range value passed.');

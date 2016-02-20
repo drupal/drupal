@@ -10,6 +10,7 @@ namespace Drupal\link\Tests;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
@@ -73,7 +74,7 @@ class LinkItemTest extends FieldUnitTestBase {
    */
   public function testLinkItem() {
     // Create entity.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $url = 'https://www.drupal.org?test_param=test_value';
     $parsed_url = UrlHelper::parse($url);
     $title = $this->randomMachineName();
@@ -158,7 +159,7 @@ class LinkItemTest extends FieldUnitTestBase {
 
     // Test the generateSampleValue() method for generic, external, and internal
     // link types.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->field_test->generateSampleItems();
     $entity->field_test_external->generateSampleItems();
     $entity->field_test_internal->generateSampleItems();

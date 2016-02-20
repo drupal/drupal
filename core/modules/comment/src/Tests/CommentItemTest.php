@@ -9,6 +9,7 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
@@ -40,7 +41,7 @@ class CommentItemTest extends FieldUnitTestBase {
     $this->addDefaultCommentField('entity_test', 'entity_test', 'comment');
 
     // Verify entity creation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->name->value = $this->randomMachineName();
     $entity->save();
 
@@ -52,7 +53,7 @@ class CommentItemTest extends FieldUnitTestBase {
 
     // Test sample item generation.
     /** @var \Drupal\entity_test\Entity\EntityTest $entity */
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->comment->generateSampleItems();
     $this->entityValidateAndSave($entity);
     $this->assertTrue(in_array($entity->get('comment')->status, [

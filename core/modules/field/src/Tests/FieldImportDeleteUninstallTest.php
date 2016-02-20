@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -65,7 +66,7 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
       'bundle' => 'entity_test',
     ])->save();
 
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $value = '+0123456789';
     $entity->field_test = $value;
     $entity->field_int = '99';
@@ -130,7 +131,7 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
 
     // Create 12 entities to ensure that the purging works as expected.
     for ($i=0; $i < 12; $i++) {
-      $entity = entity_create('entity_test');
+      $entity = EntityTest::create();
       $value = '+0123456789';
       $entity->field_test = $value;
       $entity->name->value = $this->randomMachineName();

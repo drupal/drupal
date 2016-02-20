@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -63,7 +64,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     ])->save();
 
     // Create an entity which has values for the telephone and text field.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $value = '+0123456789';
     $entity->field_tel = $value;
     $entity->field_date = time();

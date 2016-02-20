@@ -7,6 +7,7 @@
 
 namespace Drupal\quickedit\Tests;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\quickedit\EditorSelector;
 use Drupal\quickedit\MetadataGenerator;
 use Drupal\quickedit_test\MockEditEntityFieldAccessCheck;
@@ -93,7 +94,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->{$field_1_name}->value = 'Test';
     $entity->{$field_2_name}->value = 42;
     $entity->save();
@@ -159,7 +160,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
     $full_html_format->save();
 
     // Create an entity with values for this rich text field.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->{$field_name}->value = 'Test';
     $entity->{$field_name}->format = 'full_html';
     $entity->save();

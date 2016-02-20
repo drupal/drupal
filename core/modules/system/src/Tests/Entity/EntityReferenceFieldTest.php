@@ -19,6 +19,7 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
+use Drupal\entity_test\Entity\EntityTestStringId;
 
 /**
  * Tests for the entity reference field.
@@ -202,7 +203,10 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     $entity = entity_create($this->entityType, array('type' => $this->bundle));
 
     // Create the default target entity.
-    $target_entity = entity_create('entity_test_string_id', array('id' => $this->randomString(), 'type' => $this->bundle));
+    $target_entity = EntityTestStringId::create([
+      'id' => $this->randomString(),
+      'type' => $this->bundle
+    ]);
     $target_entity->save();
 
     // Set the field value.

@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\Boolean;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -51,7 +52,7 @@ class BooleanItemTest extends FieldUnitTestBase {
    */
   public function testBooleanItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $value = '1';
     $entity->field_boolean = $value;
     $entity->name->value = $this->randomMachineName();
@@ -76,7 +77,7 @@ class BooleanItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_boolean->value, $new_value);
 
     // Test sample item generation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->field_boolean->generateSampleItems();
     $this->entityValidateAndSave($entity);
   }

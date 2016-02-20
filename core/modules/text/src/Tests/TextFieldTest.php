@@ -8,6 +8,7 @@
 namespace Drupal\text\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\String\StringFieldTest;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -56,7 +57,7 @@ class TextFieldTest extends StringFieldTest {
     ])->save();
 
     // Test validation with valid and invalid values.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     for ($i = 0; $i <= $max_length + 2; $i++) {
       $entity->{$field_name}->value = str_repeat('x', $i);
       $violations = $entity->{$field_name}->validate();

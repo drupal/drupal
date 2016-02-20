@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\Email;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -48,7 +49,7 @@ class EmailItemTest extends FieldUnitTestBase {
    */
   public function testEmailItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $value = 'test@example.com';
     $entity->field_email = $value;
     $entity->name->value = $this->randomMachineName();
@@ -73,7 +74,7 @@ class EmailItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_email->value, $new_value);
 
     // Test sample item generation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->field_email->generateSampleItems();
     $this->entityValidateAndSave($entity);
   }

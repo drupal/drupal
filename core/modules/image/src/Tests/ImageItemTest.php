@@ -10,6 +10,7 @@ namespace Drupal\image\Tests;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -71,7 +72,7 @@ class ImageItemTest extends FieldUnitTestBase {
    */
   public function testImageItem() {
     // Create a test entity with the image field set.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->image_test->target_id = $this->image->id();
     $entity->image_test->alt = $alt = $this->randomMachineName();
     $entity->image_test->title = $title = $this->randomMachineName();
@@ -115,7 +116,7 @@ class ImageItemTest extends FieldUnitTestBase {
 
     // Delete the image and try to save the entity again.
     $this->image->delete();
-    $entity = entity_create('entity_test', array('mame' => $this->randomMachineName()));
+    $entity = EntityTest::create(array('mame' => $this->randomMachineName()));
     $entity->save();
 
     // Test image item properties.
@@ -124,7 +125,7 @@ class ImageItemTest extends FieldUnitTestBase {
     $this->assertEqual(array_keys($properties), $expected);
 
     // Test the generateSampleValue() method.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->image_test->generateSampleItems();
     $this->entityValidateAndSave($entity);
   }

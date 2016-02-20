@@ -7,6 +7,7 @@
 
 namespace Drupal\quickedit\Tests;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\quickedit\EditorSelector;
 
 /**
@@ -65,7 +66,7 @@ class EditorSelectionTest extends QuickEditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->{$field_name}->value = 'Hello, world!';
     $entity->save();
 
@@ -104,7 +105,7 @@ class EditorSelectionTest extends QuickEditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->{$field_name}->value = 'Hello, world!';
     $entity->{$field_name}->format = 'filtered_html';
     $entity->save();
@@ -141,7 +142,7 @@ class EditorSelectionTest extends QuickEditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->{$field_name}->value = 42;
     $entity->save();
 

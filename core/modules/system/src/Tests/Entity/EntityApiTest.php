@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\user\UserInterface;
 
 /**
@@ -126,7 +127,7 @@ class EntityApiTest extends EntityUnitTestBase {
    * Tests that exceptions are thrown when saving or deleting an entity.
    */
   public function testEntityStorageExceptionHandling() {
-    $entity = entity_create('entity_test', array('name' => 'test'));
+    $entity = EntityTest::create(array('name' => 'test'));
     try {
       $GLOBALS['entity_test_throw_exception'] = TRUE;
       $entity->save();
@@ -136,7 +137,7 @@ class EntityApiTest extends EntityUnitTestBase {
       $this->assertEqual($e->getcode(), 1, 'Entity presave EntityStorageException caught.');
     }
 
-    $entity = entity_create('entity_test', array('name' => 'test2'));
+    $entity = EntityTest::create(array('name' => 'test2'));
     try {
       unset($GLOBALS['entity_test_throw_exception']);
       $entity->save();
@@ -146,7 +147,7 @@ class EntityApiTest extends EntityUnitTestBase {
       $this->assertNotEqual($e->getCode(), 1, 'Entity presave EntityStorageException caught.');
     }
 
-    $entity = entity_create('entity_test', array('name' => 'test3'));
+    $entity = EntityTest::create(array('name' => 'test3'));
     $entity->save();
     try {
       $GLOBALS['entity_test_throw_exception'] = TRUE;
@@ -158,7 +159,7 @@ class EntityApiTest extends EntityUnitTestBase {
     }
 
     unset($GLOBALS['entity_test_throw_exception']);
-    $entity = entity_create('entity_test', array('name' => 'test4'));
+    $entity = EntityTest::create(array('name' => 'test4'));
     $entity->save();
     try {
       $entity->delete();

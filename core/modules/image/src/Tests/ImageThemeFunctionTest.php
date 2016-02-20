@@ -9,6 +9,7 @@ namespace Drupal\image\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
@@ -81,7 +82,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     $url = file_url_transform_relative($style->buildUrl($original_uri));
 
     // Create a test entity with the image field set.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->image_test->target_id = $this->image->id();
     $entity->image_test->alt = NULL;
     $entity->image_test->uri = $original_uri;

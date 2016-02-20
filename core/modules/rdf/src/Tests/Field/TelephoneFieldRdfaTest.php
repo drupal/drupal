@@ -6,6 +6,8 @@
 
 namespace Drupal\rdf\Tests\Field;
 
+use Drupal\entity_test\Entity\EntityTest;
+
 /**
  * Tests RDFa output by telephone field formatters.
  *
@@ -43,7 +45,7 @@ class TelephoneFieldRdfaTest extends FieldRdfaTestBase {
 
     // Set up test values.
     $this->testValue = '555-555-5555';
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = EntityTest::create(array());
     $this->entity->{$this->fieldName}->value = $this->testValue;
   }
 

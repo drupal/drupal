@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Tests;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -102,7 +103,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       ->save();
 
     // Create an entity.
-    $entity = entity_create('entity_test', [
+    $entity = EntityTest::create([
       'user_id' => 1,
       'name' => $this->randomMachineName(),
     ]);
@@ -159,7 +160,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       ->save();
 
     // Create an entity.
-    $entity = entity_create('entity_test', array(
+    $entity = EntityTest::create(array(
       'user_id' => 1,
       'name' => $this->randomMachineName(),
     ));
@@ -249,7 +250,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       ->save();
 
     // Create an entity.
-    $entity = entity_create('entity_test', array(
+    $entity = EntityTest::create(array(
       'user_id' => 1,
       'name' => $this->randomMachineName(),
     ));
@@ -348,7 +349,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       ->save();
 
     // Create an entity.
-    $entity = entity_create('entity_test', array(
+    $entity = EntityTest::create(array(
       'user_id' => 1,
       'name' => $this->randomMachineName(),
     ));
@@ -471,7 +472,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       ->save();
 
     // Create an entity.
-    $entity = entity_create('entity_test', [
+    $entity = EntityTest::create([
       'user_id' => 1,
       'name' => $this->randomMachineName(),
     ]);

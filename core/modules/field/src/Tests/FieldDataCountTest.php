@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -70,7 +71,7 @@ class FieldDataCountTest extends FieldUnitTestBase {
     $this->assertIdentical($this->storage->countFieldData($field_storage), 0, 'There are 0 entities with field data.');
 
     // Create 1 entity without the field.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->name->value = $this->randomMachineName();
     $entity->save();
 
@@ -79,7 +80,7 @@ class FieldDataCountTest extends FieldUnitTestBase {
 
     // Create 12 entities to ensure that the purging works as expected.
     for ($i=0; $i < 12; $i++) {
-      $entity = entity_create('entity_test');
+      $entity = EntityTest::create();
       $entity->field_int[] = mt_rand(1, 99);
       $entity->field_int[] = mt_rand(1, 99);
       $entity->name[] = $this->randomMachineName();

@@ -6,6 +6,8 @@
 
 namespace Drupal\rdf\Tests\Field;
 
+use Drupal\entity_test\Entity\EntityTest;
+
 /**
  * Tests the placement of RDFa in link field formatters.
  *
@@ -45,7 +47,7 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
   public function testAllFormattersExternal() {
     // Set up test values.
     $this->testValue = 'http://test.me/foo/bar/neque/porro/quisquam/est/qui-dolorem?foo/bar/neque/porro/quisquam/est/qui-dolorem';
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = EntityTest::create(array());
     $this->entity->{$this->fieldName}->uri = $this->testValue;
 
     // Set up the expected result.
@@ -63,7 +65,7 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
   public function testAllFormattersInternal() {
     // Set up test values.
     $this->testValue = 'admin';
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = EntityTest::create(array());
     $this->entity->{$this->fieldName}->uri = 'internal:/admin';
 
     // Set up the expected result.
@@ -82,7 +84,7 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
   public function testAllFormattersFront() {
     // Set up test values.
     $this->testValue = '/';
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = EntityTest::create(array());
     $this->entity->{$this->fieldName}->uri = 'internal:/';
 
     // Set up the expected result.

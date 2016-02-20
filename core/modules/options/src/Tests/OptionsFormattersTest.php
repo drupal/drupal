@@ -7,6 +7,8 @@
 
 namespace Drupal\options\Tests;
 
+use Drupal\entity_test\Entity\EntityTest;
+
 /**
  * Tests the Options field type formatters.
  *
@@ -27,7 +29,7 @@ class OptionsFormattersTest extends OptionsFieldUnitTestBase {
    * Tests the formatters.
    */
   public function testFormatter() {
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->{$this->fieldName}->value = 1;
 
     $items = $entity->get($this->fieldName);

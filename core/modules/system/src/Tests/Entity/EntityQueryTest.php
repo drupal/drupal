@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -472,7 +473,7 @@ class EntityQueryTest extends EntityUnitTestBase {
       'bundle' => $bundle,
     ])->save();
 
-    $entity = entity_create('entity_test', array(
+    $entity = EntityTest::create(array(
       'id' => 1,
       'type' => $bundle,
     ));

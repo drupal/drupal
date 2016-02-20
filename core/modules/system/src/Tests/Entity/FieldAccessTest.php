@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\user\Entity\User;
 
@@ -61,7 +62,7 @@ class FieldAccessTest extends KernelTestBase {
         'format' => 'full_html',
       ),
     );
-    $entity = entity_create('entity_test', $values);
+    $entity = EntityTest::create($values);
 
     // Create a dummy user account for testing access with.
     $values = array('name' => 'test');

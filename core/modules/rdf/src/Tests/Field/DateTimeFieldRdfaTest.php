@@ -6,6 +6,8 @@
 
 namespace Drupal\rdf\Tests\Field;
 
+use Drupal\entity_test\Entity\EntityTest;
+
 /**
  * Tests RDFa output by datetime field formatters.
  *
@@ -42,7 +44,7 @@ class DateTimeFieldRdfaTest extends FieldRdfaTestBase {
     ))->save();
 
     // Set up test entity.
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = EntityTest::create(array());
     $this->entity->{$this->fieldName}->value = $this->testValue;
   }
 

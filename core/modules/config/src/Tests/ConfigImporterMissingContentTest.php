@@ -9,6 +9,7 @@ namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -77,9 +78,9 @@ class ConfigImporterMissingContentTest extends KernelTestBase {
     // on two content entities that do not exist.
     $storage = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
-    $entity_one = entity_create('entity_test', array('name' => 'one'));
-    $entity_two = entity_create('entity_test', array('name' => 'two'));
-    $entity_three = entity_create('entity_test', array('name' => 'three'));
+    $entity_one = EntityTest::create(array('name' => 'one'));
+    $entity_two = EntityTest::create(array('name' => 'two'));
+    $entity_three = EntityTest::create(array('name' => 'three'));
     $dynamic_name = 'config_test.dynamic.dotted.default';
     $original_dynamic_data = $storage->read($dynamic_name);
     // Entity one will be resolved by

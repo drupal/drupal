@@ -9,6 +9,7 @@ namespace Drupal\datetime\Tests;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -53,7 +54,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
    */
   public function testDateTimeItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $value = '2014-01-01T20:00:00Z';
     $entity->field_datetime = $value;
     $entity->name->value = $this->randomMachineName();
@@ -78,7 +79,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_datetime->value, $new_value);
 
     // Test the generateSampleValue() method.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->field_datetime->generateSampleItems();
     $this->entityValidateAndSave($entity);
   }
@@ -88,7 +89,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
    */
   public function testSetValue() {
     // Test DateTimeItem::setValue() using string.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $value = '2014-01-01T20:00:00Z';
     $entity->get('field_datetime')->set(0, $value);
     $entity->save();
@@ -98,7 +99,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_datetime[0]->value, $value, 'DateTimeItem::setValue() works with string value.');
 
     // Test DateTimeItem::setValue() using property array.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $value = '2014-01-01T20:00:00Z';
     $entity->set('field_datetime', $value);
     $entity->save();
@@ -113,7 +114,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
    */
   public function testSetValueProperty() {
     // Test Date::setValue().
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $value = '2014-01-01T20:00:00Z';
 
     $entity->set('field_datetime', $value);

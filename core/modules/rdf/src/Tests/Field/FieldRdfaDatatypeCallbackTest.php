@@ -6,6 +6,8 @@
 
 namespace Drupal\rdf\Tests\Field;
 
+use Drupal\entity_test\Entity\EntityTest;
+
 /**
  * Tests the RDFa output of a text field formatter with a datatype callback.
  *
@@ -41,7 +43,7 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
 
     // Set up test values.
     $this->testValue = $this->randomMachineName();
-    $this->entity = entity_create('entity_test');
+    $this->entity = EntityTest::create();
     $this->entity->{$this->fieldName}->value = $this->testValue;
     $this->entity->save();
 

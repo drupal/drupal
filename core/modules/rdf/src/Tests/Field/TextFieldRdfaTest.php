@@ -6,6 +6,8 @@
 
 namespace Drupal\rdf\Tests\Field;
 
+use Drupal\entity_test\Entity\EntityTest;
+
 /**
  * Tests RDFa output by text field formatters.
  *
@@ -51,7 +53,7 @@ class TextFieldRdfaTest extends FieldRdfaTestBase {
     ))->save();
 
     // Set up test entity.
-    $this->entity = entity_create('entity_test');
+    $this->entity = EntityTest::create();
     $this->entity->{$this->fieldName}->value = $this->testValue;
     $this->entity->{$this->fieldName}->summary = $this->testSummary;
   }

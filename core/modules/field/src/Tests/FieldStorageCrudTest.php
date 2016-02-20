@@ -10,6 +10,7 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\FieldException;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -355,7 +356,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     $this->assertTrue(!empty($field) && !$field->isDeleted(), 'A new field for a previously used field name is created.');
 
     // Save an entity with data for the field
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $values[0]['value'] = mt_rand(1, 127);
     $entity->{$field_storage->getName()}->value = $values[0]['value'];
     $entity = $this->entitySaveReload($entity);
@@ -408,7 +409,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     $field->save();
 
     do {
-      $entity = entity_create('entity_test');
+      $entity = EntityTest::create();
       // Fill in the entity with more values than $cardinality.
       for ($i = 0; $i < 20; $i++) {
         // We can not use $i here because 0 values are filtered out.

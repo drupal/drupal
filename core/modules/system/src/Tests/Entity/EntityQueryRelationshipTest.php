@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 use Drupal\Component\Utility\Unicode;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 
 /**
@@ -102,7 +103,7 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     // 0th account and 0th term, the 1st and 2nd entity will point to the
     // 1st account and 1st term.
     for ($i = 0; $i <= 2; $i++) {
-      $entity = entity_create('entity_test', array('type' => 'test_bundle'));
+      $entity = EntityTest::create(array('type' => 'test_bundle'));
       $entity->name->value = $this->randomMachineName();
       $index = $i ? 1 : 0;
       $entity->user_id->target_id = $this->accounts[$index]->id();

@@ -6,6 +6,8 @@
 
 namespace Drupal\rdf\Tests\Field;
 
+use Drupal\entity_test\Entity\EntityTest;
+
 /**
  * Tests RDFa output by email field formatters.
  *
@@ -36,7 +38,7 @@ class EmailFieldRdfaTest extends FieldRdfaTestBase {
 
     // Set up test values.
     $this->testValue = 'test@example.com';
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = EntityTest::create(array());
     $this->entity->{$this->fieldName}->value = $this->testValue;
   }
 

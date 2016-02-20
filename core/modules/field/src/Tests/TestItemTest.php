@@ -10,6 +10,7 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -55,7 +56,7 @@ class TestItemTest extends FieldUnitTestBase {
    */
   public function testTestItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $value = rand(1, 10);
     $entity->field_test = $value;
     $entity->name->value = $this->randomMachineName();

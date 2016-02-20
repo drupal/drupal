@@ -115,7 +115,7 @@ class ConfigDependencyTest extends EntityUnitTestBase {
     $this->assertTrue(isset($dependents['config_test.dynamic.entity4']), 'config_test.dynamic.entity4 has a dependency on the Node module.');
 
     // Test dependency on a content entity.
-    $entity_test = entity_create('entity_test', array(
+    $entity_test = EntityTest::create(array(
       'name' => $this->randomString(),
       'type' => 'entity_test',
     ));

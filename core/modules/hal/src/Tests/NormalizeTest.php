@@ -9,6 +9,7 @@ namespace Drupal\hal\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Tests that entities can be normalized in HAL.
@@ -30,9 +31,9 @@ class NormalizeTest extends NormalizerTestBase {
    * Tests the normalize function.
    */
   public function testNormalize() {
-    $target_entity_de = entity_create('entity_test', (array('langcode' => 'de', 'field_test_entity_reference' => NULL)));
+    $target_entity_de = EntityTest::create((array('langcode' => 'de', 'field_test_entity_reference' => NULL)));
     $target_entity_de->save();
-    $target_entity_en = entity_create('entity_test', (array('langcode' => 'en', 'field_test_entity_reference' => NULL)));
+    $target_entity_en = EntityTest::create((array('langcode' => 'en', 'field_test_entity_reference' => NULL)));
     $target_entity_en->save();
 
     // Create a German entity.
@@ -55,7 +56,7 @@ class NormalizeTest extends NormalizerTestBase {
       )
     );
 
-    $entity = entity_create('entity_test', $values);
+    $entity = EntityTest::create($values);
     $entity->save();
     // Add an English value for name and entity reference properties.
     $entity->addTranslation('en')->set('name', array(0 => array('value' => $translation_values['name'])));

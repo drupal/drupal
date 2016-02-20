@@ -9,6 +9,7 @@ namespace Drupal\field\Tests;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -54,7 +55,7 @@ class ShapeItemTest extends FieldUnitTestBase {
    */
   public function testShapeItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $shape = 'cube';
     $color = 'blue';
     $entity->{$this->fieldName}->shape = $shape;

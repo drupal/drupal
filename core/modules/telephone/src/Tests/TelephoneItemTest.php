@@ -9,6 +9,7 @@ namespace Drupal\telephone\Tests;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -48,7 +49,7 @@ class TelephoneItemTest extends FieldUnitTestBase {
    */
   public function testTestItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $value = '+0123456789';
     $entity->field_test = $value;
     $entity->name->value = $this->randomMachineName();
@@ -73,7 +74,7 @@ class TelephoneItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_test->value, $new_value);
 
     // Test sample item generation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->field_test->generateSampleItems();
     $this->entityValidateAndSave($entity);
   }

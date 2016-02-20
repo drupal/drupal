@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\config\Tests\AssertConfigEntityImportTrait;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 
@@ -202,9 +203,9 @@ class EntityReferenceIntegrationTest extends WebTestBase {
     $config_entity_2 = entity_create('config_test', array('id' => $this->randomMachineName(), 'label' => $this->randomMachineName()));
     $config_entity_2->save();
 
-    $content_entity_1 = entity_create('entity_test', array('name' => $this->randomMachineName()));
+    $content_entity_1 = EntityTest::create(array('name' => $this->randomMachineName()));
     $content_entity_1->save();
-    $content_entity_2 = entity_create('entity_test', array('name' => $this->randomMachineName()));
+    $content_entity_2 = EntityTest::create(array('name' => $this->randomMachineName()));
     $content_entity_2->save();
 
     return array(

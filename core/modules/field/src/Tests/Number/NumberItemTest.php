@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\Number;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -50,7 +51,7 @@ class NumberItemTest extends FieldUnitTestBase {
    */
   public function testNumberItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $integer = rand(0, 10);
     $entity->field_integer = $integer;
     $float = 3.14;
@@ -98,7 +99,7 @@ class NumberItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_decimal->value, $new_decimal);
 
     /// Test sample item generation.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->field_integer->generateSampleItems();
     $entity->field_float->generateSampleItems();
     $entity->field_decimal->generateSampleItems();

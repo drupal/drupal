@@ -10,6 +10,7 @@ namespace Drupal\file\Tests;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -80,7 +81,7 @@ class FileItemTest extends FieldUnitTestBase {
     $this->assertEqual($handler_id, 'default:file');
 
     // Create a test entity with the
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->file_test->target_id = $this->file->id();
     $entity->file_test->display = 1;
     $entity->file_test->description = $description = $this->randomMachineName();
@@ -115,7 +116,7 @@ class FileItemTest extends FieldUnitTestBase {
     $entity->delete();
 
     // Test the generateSampleValue() method.
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->file_test->generateSampleItems();
     $this->entityValidateAndSave($entity);
     // Verify that the sample file was stored in the correct directory.
@@ -134,7 +135,7 @@ class FileItemTest extends FieldUnitTestBase {
       'type' => 'file_default',
       'weight' => 1,
     ])->save();
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->file_test = array('entity' => $file3);
     $uri = $file3->getFileUri();
     $output = entity_view($entity, 'default');

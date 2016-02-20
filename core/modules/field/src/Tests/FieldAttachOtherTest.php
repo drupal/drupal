@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Form\FormState;
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Tests other Field API functions.
@@ -143,9 +144,9 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
       ));
 
     // Create two entities.
-    $entity1 = entity_create('entity_test', array('id' => 1, 'type' => 'entity_test'));
+    $entity1 = EntityTest::create(array('id' => 1, 'type' => 'entity_test'));
     $entity1->{$this->fieldTestData->field_name}->setValue($this->_generateTestFieldValues(1));
-    $entity2 = entity_create('entity_test', array('id' => 2, 'type' => 'entity_test'));
+    $entity2 = EntityTest::create(array('id' => 2, 'type' => 'entity_test'));
     $entity2->{$this->fieldTestData->field_name}->setValue($this->_generateTestFieldValues(1));
 
     // Run buildMultiple(), and check that the entities come out as expected.
@@ -164,7 +165,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
    */
   function testEntityCache() {
     // Initialize random values and a test entity.
-    $entity_init = entity_create('entity_test', array('type' => $this->fieldTestData->field->getTargetBundle()));
+    $entity_init = EntityTest::create(array('type' => $this->fieldTestData->field->getTargetBundle()));
     $values = $this->_generateTestFieldValues($this->fieldTestData->field_storage->getCardinality());
 
     // Non-cacheable entity type.

@@ -10,6 +10,7 @@ namespace Drupal\options\Tests;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\entity_test\Entity\EntityTestRev;
 
 /**
  * Base class for testing allowed values of options fields.
@@ -70,7 +71,7 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
       'user_id' => mt_rand(1, 10),
       'name' => $this->randomMachineName(),
     ];
-    $this->entity = entity_create('entity_test_rev', $values);
+    $this->entity = EntityTestRev::create($values);
     $this->entity->save();
     $this->test = [
       'label' => $this->entity->label(),

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -84,7 +85,7 @@ class EntityViewControllerTest extends WebTestBase {
 
     // Create an entity and save test value in field_test_text.
     $test_value = $this->randomMachineName();
-    $entity = entity_create('entity_test');
+    $entity = EntityTest::create();
     $entity->field_test_text = $test_value;
     $entity->save();
 
