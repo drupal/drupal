@@ -74,7 +74,7 @@ class MigrateTemplateStorage implements MigrateTemplateStorageInterface {
       if (file_exists($full_directory)) {
         $files = scandir($full_directory);
         foreach ($files as $file) {
-          if ($file[0] !== '.' && fnmatch('*.yml', $file)) {
+          if ($file[0] !== '.' && preg_match('/\.yml$/', $file)) {
             $templates[basename($file, '.yml')] = Yaml::decode(file_get_contents("$full_directory/$file"));
           }
         }

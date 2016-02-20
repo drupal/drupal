@@ -70,6 +70,12 @@ class FileStorageTest extends ConfigStorageTestBase {
     $config_files = $this->storage->listAll();
     $this->assertIdentical($config_files, $expected_files, 'Relative path, two config files found.');
 
+    // @todo https://www.drupal.org/node/2666954 FileStorage::listAll() is
+    //   case-sensitive. However, \Drupal\Core\Config\DatabaseStorage::listAll()
+    //   is case-insensitive.
+    $this->assertIdentical(['system.performance'], $this->storage->listAll('system'), 'The FileStorage::listAll() with prefix works.');
+    $this->assertIdentical([], $this->storage->listAll('System'), 'The FileStorage::listAll() is case sensitive.');
+
     // Initialize FileStorage with absolute file path.
     $absolute_path = realpath($this->directory);
     $storage_absolute_path = new FileStorage($absolute_path);

@@ -335,7 +335,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       // Collect languages included with CKEditor based on file listing.
       $files = scandir('core/assets/vendor/ckeditor/lang');
       foreach ($files as $file) {
-        if ($file[0] !== '.' && fnmatch('*.js', $file)) {
+        if ($file[0] !== '.' && preg_match('/\.js$/', $file)) {
           $langcode = basename($file, '.js');
           $langcodes[$langcode] = $langcode;
         }
