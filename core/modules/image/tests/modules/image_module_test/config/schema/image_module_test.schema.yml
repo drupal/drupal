@@ -1,3 +1,11 @@
+image.effect.image_module_test_ajax:
+  type: mapping
+  label: 'Ajax test'
+  mapping:
+    test_parameter:
+      type: integer
+      label: 'Test Parameter'
+
 image.style.*.third_party.image_module_test:
   type: mapping
   label: 'Schema for image_module_test module additions to image_style entity'
