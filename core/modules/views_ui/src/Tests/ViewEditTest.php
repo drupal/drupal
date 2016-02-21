@@ -93,6 +93,19 @@ class ViewEditTest extends UITestBase {
     // Test that the display ID has not been changed.
     $this->drupalGet('admin/structure/views/view/test_view/edit/test_1');
     $this->assertLink(t('test_1'));
+
+    // Test that validation does not run on cancel.
+    $this->drupalGet('admin/structure/views/view/test_view');
+    // Delete the field to cause an error on save.
+    $fields = [];
+    $fields['fields[age][removed]'] = 1;
+    $fields['fields[id][removed]'] = 1;
+    $fields['fields[name][removed]'] = 1;
+    $this->drupalPostForm('admin/structure/views/nojs/rearrange/test_view/default/field', $fields, t('Apply'));
+    $this->drupalPostForm(NULL, array(), 'Save');
+    $this->drupalPostForm(NULL, array(), t('Cancel'));
+    $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed.');
+    $this->assertUrl('admin/structure/views', array(), 'Redirected back to the view listing page..');
   }
 
   /**
