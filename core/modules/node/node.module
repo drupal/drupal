@@ -1155,6 +1155,11 @@ function node_access_rebuild($batch_mode = FALSE) {
       // quickly.
       $entity_query = \Drupal::entityQuery('node');
       $entity_query->sort('nid', 'DESC');
+      // Disable access checking since all nodes must be processed even if the
+      // user does not have access. And unless the current user has the bypass
+      // node access permission, no nodes are accessible since the grants have
+      // just been deleted.
+      $entity_query->accessCheck(false);
       $nids = $entity_query->execute();
       foreach ($nids as $nid) {
         $node_storage->resetCache(array($nid));
@@ -1204,6 +1209,11 @@ function _node_access_rebuild_batch_operation(&$context) {
   $nids = \Drupal::entityQuery('node')
     ->condition('nid', $context['sandbox']['current_node'], '>')
     ->sort('nid', 'ASC')
+    // Disable access checking since all nodes must be processed even if the
+    // user does not have access. And unless the current user has the bypass
+    // node access permission, no nodes are accessible since the grants have
+    // just been deleted.
+    ->accessCheck(false)
     ->range(0, $limit)
     ->execute();
   $node_storage->resetCache($nids);
