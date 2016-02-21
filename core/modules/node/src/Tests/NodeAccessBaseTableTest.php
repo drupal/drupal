@@ -171,6 +171,22 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     // This user should be able to see all of the nodes on the relevant
     // taxonomy pages.
     $this->assertTaxonomyPage(TRUE);
+
+    // Rebuild the node access permissions, repeat the test. This is done to
+    // ensure that node access is rebuilt correctly even if the current user
+    // does not have the bypass node access permission.
+    node_access_rebuild();
+
+    foreach ($this->nodesByUser as $private_status) {
+      foreach ($private_status as $nid => $is_private) {
+        $this->drupalGet('node/' . $nid);
+        $this->assertResponse(200);
+      }
+    }
+
+    // This user should be able to see all of the nodes on the relevant
+    // taxonomy pages.
+    $this->assertTaxonomyPage(TRUE);
   }
 
   /**
