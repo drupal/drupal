@@ -227,6 +227,7 @@ class ViewEditForm extends ViewFormBase {
       '#type' => 'submit',
       '#value' => $this->t('Cancel'),
       '#submit' => array('::cancel'),
+      '#limit_validation_errors' => array(),
     );
     if ($this->entity->isLocked()) {
       $actions['submit']['#access'] = FALSE;
