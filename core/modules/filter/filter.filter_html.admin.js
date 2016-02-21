@@ -98,9 +98,6 @@
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
           that.userTags = _.difference(that._parseSetting(this.value), that.autoTags);
         });
-      }).on('keyup', function (e) {
-        if (e.keyCode != 13) return;
-        $(this).val($(this).val().replace(/\n/g, ""));
       });
     },
 
@@ -241,38 +238,36 @@
       var allowedTags = setting.match(/(<[^>]+>)/g);
       var sandbox = document.createElement('div');
       var rules = {};
-      if (allowedTags) {
-        for (var t = 0; t < allowedTags.length; t++) {
-          // Let the browser do the parsing work for us.
-          sandbox.innerHTML = allowedTags[t];
-          node = sandbox.firstChild;
-          tag = (node !== null) ? node.tagName.toLowerCase() : null;
+      for (var t = 0; t < allowedTags.length; t++) {
+        // Let the browser do the parsing work for us.
+        sandbox.innerHTML = allowedTags[t];
+        node = sandbox.firstChild;
+        tag = node.tagName.toLowerCase();
 
-          // Build the Drupal.FilterHtmlRule object.
-          rule = new Drupal.FilterHTMLRule();
-          // We create one rule per allowed tag, so always one tag.
-          rule.restrictedTags.tags = [tag];
-          // Add the attribute restrictions.
-          attributes = (node !== null) ? node.attributes : '';
-          for (var i = 0; i < attributes.length; i++) {
-            attribute = attributes.item(i);
-            var attributeName = attribute.nodeName;
-            // @todo Drupal.FilterHtmlRule does not allow for generic attribute
-            //   value restrictions, only for the "class" and "style" attribute's
-            //   values. The filter_html filter always disallows the "style"
-            //   attribute, so we only need to support "class" attribute value
-            //   restrictions. Fix once https://www.drupal.org/node/2567801 lands.
-            if (attributeName === 'class') {
-              var attributeValue = attribute.textContent;
-              rule.restrictedTags.allowed.classes = attributeValue.split(' ');
-            }
-            else {
-              rule.restrictedTags.allowed.attributes.push(attributeName);
-            }
+        // Build the Drupal.FilterHtmlRule object.
+        rule = new Drupal.FilterHTMLRule();
+        // We create one rule per allowed tag, so always one tag.
+        rule.restrictedTags.tags = [tag];
+        // Add the attribute restrictions.
+        attributes = node.attributes;
+        for (var i = 0; i < attributes.length; i++) {
+          attribute = attributes.item(i);
+          var attributeName = attribute.nodeName;
+          // @todo Drupal.FilterHtmlRule does not allow for generic attribute
+          //   value restrictions, only for the "class" and "style" attribute's
+          //   values. The filter_html filter always disallows the "style"
+          //   attribute, so we only need to support "class" attribute value
+          //   restrictions. Fix once https://www.drupal.org/node/2567801 lands.
+          if (attributeName === 'class') {
+            var attributeValue = attribute.textContent;
+            rule.restrictedTags.allowed.classes = attributeValue.split(' ');
           }
-
-          rules[tag] = rule;
+          else {
+            rule.restrictedTags.allowed.attributes.push(attributeName);
+          }
         }
+
+        rules[tag] = rule;
       }
       return rules;
     },
