@@ -40,6 +40,17 @@ migrate.process.dedupe_entity:
       type: integer
       label: 'Length'
 
+migrate.process.explode:
+  type: migrate_process
+  label: 'Explode process'
+  mapping:
+    delimiter:
+      type: string
+      label: 'Delimiter'
+    limit:
+      type: integer
+      label: 'Limit'
+
 migrate.process.extract:
   type: migrate_process
   label: 'Extract process'
