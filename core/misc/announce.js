@@ -29,6 +29,9 @@
    * Builds a div element with the aria-live attribute and add it to the DOM.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior for drupalAnnouce.
    */
   Drupal.behaviors.drupalAnnounce = {
     attach: function (context) {
@@ -98,6 +101,7 @@
    *   'polite' or 'assertive'.
    *
    * @return {function}
+   *   The return of the call to debounce.
    *
    * @see http://www.w3.org/WAI/PF/aria-practices/#liveprops
    */

@@ -11,6 +11,9 @@
    * Initialize tableSelects.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches tableSelect functionality.
    */
   Drupal.behaviors.tableSelect = {
     attach: function (context, settings) {
@@ -117,8 +120,11 @@
 
   /**
    * @param {HTMLElement} from
+   *   The HTML element representing the "from" part of the range.
    * @param {HTMLElement} to
+   *   The HTML element representing the "to" part of the range.
    * @param {bool} state
+   *   The state to set on the range.
    */
   Drupal.tableSelectRange = function (from, to, state) {
     // We determine the looping mode based on the order of from and to.

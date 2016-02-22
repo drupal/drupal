@@ -11,6 +11,9 @@
    * Attach the tableResponsive function to {@link Drupal.behaviors}.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches tableResponsive functionality.
    */
   Drupal.behaviors.tableResponsive = {
     attach: function (context, settings) {
@@ -37,6 +40,7 @@
    * @constructor Drupal.TableResponsive
    *
    * @param {HTMLElement} table
+   *   The table element to initialize the responsive table on.
    */
   function TableResponsive(table) {
     this.table = table;
@@ -82,6 +86,7 @@
 
     /**
      * @param {jQuery.Event} e
+     *   The event triggered.
      */
     eventhandlerEvaluateColumnVisibility: function (e) {
       var pegged = parseInt(this.$link.data('pegged'), 10);
@@ -105,6 +110,7 @@
      * Columns are classed with either 'priority-low' or 'priority-medium'.
      *
      * @param {jQuery.Event} e
+     *   The event triggered.
      */
     eventhandlerToggleColumns: function (e) {
       e.preventDefault();

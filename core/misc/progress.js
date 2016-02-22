@@ -11,6 +11,7 @@
    * Theme function for the progress bar.
    *
    * @param {string} id
+   *   The id for the progress bar.
    *
    * @return {string}
    *   The HTML for the progress bar.
@@ -38,9 +39,13 @@
    * @constructor
    *
    * @param {string} id
+   *   The id for the progressbar.
    * @param {function} updateCallback
+   *   Callback to run on update.
    * @param {string} method
+   *   HTTP method to use.
    * @param {function} errorCallback
+   *   Callback to call on error.
    */
   Drupal.ProgressBar = function (id, updateCallback, method, errorCallback) {
     this.id = id;
@@ -61,8 +66,11 @@
      * Set the percentage and status message for the progressbar.
      *
      * @param {number} percentage
+     *   The progress percentage.
      * @param {string} message
+     *   The message to show the user.
      * @param {string} label
+     *   The text for the progressbar label.
      */
     setProgress: function (percentage, message, label) {
       if (percentage >= 0 && percentage <= 100) {
@@ -80,7 +88,9 @@
      * Start monitoring progress via Ajax.
      *
      * @param {string} uri
+     *   The URI to use for monitoring.
      * @param {number} delay
+     *   The delay for calling the monitoring URI.
      */
     startMonitoring: function (uri, delay) {
       this.delay = delay;
@@ -144,6 +154,7 @@
      * Display errors on the page.
      *
      * @param {string} string
+     *   The error message to show the user.
      */
     displayError: function (string) {
       var error = $('<div class="messages messages--error"></div>').html(string);

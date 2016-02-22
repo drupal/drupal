@@ -66,6 +66,7 @@
      *   be a jQuery-compatible selector string.
      *
      * @return {Drupal~TabbingContext}
+     *   The TabbingContext instance.
      *
      * @fires event:drupalTabbingConstrained
      */

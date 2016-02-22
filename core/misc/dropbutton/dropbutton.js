@@ -11,6 +11,9 @@
    * Process elements with the .dropbutton class on page load.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches dropButton behaviors.
    */
   Drupal.behaviors.dropButton = {
     attach: function (context, settings) {
@@ -36,6 +39,7 @@
    * @function Drupal.DropButton~dropbuttonClickHandler
    *
    * @param {jQuery.Event} e
+   *   The event triggered.
    */
   function dropbuttonClickHandler(e) {
     e.preventDefault();
@@ -190,6 +194,7 @@
 
     /**
      * @param {jQuery.Event} e
+     *   The event triggered.
      */
     focusOut: function (e) {
       this.hoverOut.call(this, e);
@@ -197,6 +202,7 @@
 
     /**
      * @param {jQuery.Event} e
+     *   The event triggered.
      */
     focusIn: function (e) {
       this.hoverIn.call(this, e);
@@ -209,6 +215,7 @@
      * A toggle is an interactive element often bound to a click handler.
      *
      * @param {object} options
+     *   Options object.
      * @param {string} [options.title]
      *   The HTML anchor title attribute and text for the inner span element.
      *

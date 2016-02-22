@@ -11,6 +11,9 @@
    * Attach the machine-readable name form element behavior.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches machine-name behaviors.
    */
   Drupal.behaviors.machineName = {
 
@@ -18,7 +21,9 @@
      * Attaches the behavior.
      *
      * @param {Element} context
+     *   The context for attaching the behavior.
      * @param {object} settings
+     *   Settings object.
      * @param {object} settings.machineName
      *   A list of elements to process, keyed by the HTML ID of the form
      *   element containing the human-readable value. Each element is an object
