@@ -271,8 +271,10 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     $tids = array();
-    foreach ($form_state->getValue(array('options', 'value')) as $value) {
-      $tids[] = $value['target_id'];
+    if ($values = $form_state->getValue(array('options', 'value'))) {
+      foreach ($values as $value) {
+        $tids[] = $value['target_id'];
+      }
     }
     $form_state->setValue(array('options', 'value'), $tids);
   }
@@ -335,8 +337,10 @@ class TaxonomyIndexTid extends ManyToOne {
       return;
     }
 
-    foreach ($form_state->getValue($identifier) as $value) {
-      $this->validated_exposed_input[] = $value['target_id'];
+    if ($values = $form_state->getValue($identifier)) {
+      foreach ($values as $value) {
+        $this->validated_exposed_input[] = $value['target_id'];
+      }
     }
   }
 
