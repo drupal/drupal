@@ -1039,7 +1039,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       $display_options['pager']['type'] = 'none';
     }
     // If the user checked the pager checkbox use a full pager.
-    elseif (isset($page['pager'])) {
+    elseif (!empty($page['pager'])) {
       $display_options['pager']['type'] = 'full';
     }
     // If the user doesn't have checked the checkbox use the pager which just
