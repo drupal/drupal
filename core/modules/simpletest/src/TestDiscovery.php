@@ -134,7 +134,6 @@ class TestDiscovery {
    *
    * @todo Remove singular grouping; retain list of groups in 'group' key.
    * @see https://www.drupal.org/node/2296615
-   * @todo Add base class groups 'Kernel' + 'Web', complementing 'PHPUnit'.
    */
   public function getTestClasses($extension = NULL) {
     $reader = new SimpleAnnotationReader();
@@ -328,12 +327,13 @@ class TestDiscovery {
       // Concrete tests must have a group.
       throw new MissingGroupException(sprintf('Missing @group annotation in %s', $classname));
     }
-    // Force all PHPUnit tests into the same group.
-    if (static::isUnitTest($classname)) {
-      $info['group'] = 'PHPUnit';
+    $info['group'] = $annotations['group'];
+    // Put PHPUnit test suites into their own custom groups.
+    if ($testsuite = static::getPhpunitTestSuite($classname)) {
+      $info['type'] = 'PHPUnit-' . $testsuite;
     }
     else {
-      $info['group'] = $annotations['group'];
+      $info['type'] = 'Simpletest';
     }
 
     if (!empty($annotations['coversDefaultClass'])) {
@@ -414,26 +414,31 @@ class TestDiscovery {
   }
 
   /**
-   * Determines if the provided classname is a unit test.
+   * Determines the phpunit testsuite for a given classname.
    *
-   * @param $classname
+   * @param string $classname
    *   The test classname.
    *
-   * @return bool
-   *   TRUE if the class is a unit test. FALSE if not.
+   * @return string|false
+   *   The testsuite name or FALSE if its not a phpunit test.
    */
-  public static function isUnitTest($classname) {
-    if (strpos($classname, 'Drupal\\Tests\\') === 0) {
-      $namespace = explode('\\', $classname);
-      $first_letter = Unicode::substr($namespace[2], 0, 1);
-      if (Unicode::strtoupper($first_letter) === $first_letter) {
-        // A core unit test.
-        return TRUE;
+  public static function getPhpunitTestSuite($classname) {
+    if (preg_match('/Drupal\\\\Tests\\\\Core\\\\(\w+)/', $classname, $matches)) {
+      return 'Unit';
+    }
+    if (preg_match('/Drupal\\\\Tests\\\\Component\\\\(\w+)/', $classname, $matches)) {
+      return 'Unit';
+    }
+    // Module tests.
+    if (preg_match('/Drupal\\\\Tests\\\\(\w+)\\\\(\w+)/', $classname, $matches)) {
+      return $matches[2];
+    }
+    // Core tests.
+    elseif (preg_match('/Drupal\\\\(\w*)Tests\\\\/', $classname, $matches)) {
+      if ($matches[1] == '') {
+        return 'Unit';
       }
-      elseif ($namespace[3] == 'Unit') {
-        // A module unit test.
-        return TRUE;
-      }
+      return $matches[1];
     }
     return FALSE;
   }
