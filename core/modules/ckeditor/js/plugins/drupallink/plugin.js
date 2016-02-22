@@ -18,15 +18,20 @@
     for (var attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
       attribute = domElement.attributes.item(attrIndex);
       attributeName = attribute.nodeName.toLowerCase();
-      // Don't consider data-cke-saved- attributes; they're just there to work
-      // around browser quirks.
-      if (attributeName.substring(0, 15) === 'data-cke-saved-') {
+      // Ignore data-cke-* attributes; they're CKEditor internals.
+      if (attributeName.indexOf('data-cke-') === 0) {
         continue;
       }
       // Store the value for this attribute, unless there's a data-cke-saved-
       // alternative for it, which will contain the quirk-free, original value.
       parsedAttributes[attributeName] = element.data('cke-saved-' + attributeName) || attribute.nodeValue;
     }
+
+    // Remove any cke_* classes.
+    if (parsedAttributes.class) {
+      parsedAttributes.class = CKEDITOR.tools.trim(parsedAttributes.class.replace(/cke_\S+/, ''));
+    }
+
     return parsedAttributes;
   }
 
