@@ -216,7 +216,7 @@
           // discovered.
           // @see plugins/image2/plugin.js/init() in CKEditor; this is similar.
           if (this.parts.link) {
-            this.setData('link', CKEDITOR.plugins.link.parseLinkAttributes(editor, this.parts.link));
+            this.setData('link', CKEDITOR.plugins.image2.getLinkAttributesParser()(editor, this.parts.link));
           }
         };
       });
@@ -281,6 +281,15 @@
     }
 
   });
+
+  // Override image2's integration with the official CKEditor link plugin:
+  // integrate with the drupallink plugin instead.
+  CKEDITOR.plugins.image2.getLinkAttributesParser = function () {
+    return CKEDITOR.plugins.drupallink.parseLinkAttributes;
+  };
+  CKEDITOR.plugins.image2.getLinkAttributesGetter = function () {
+    return CKEDITOR.plugins.drupallink.getLinkAttributes;
+  };
 
   /**
    * Integrates the drupalimage widget with the drupallink plugin.
