@@ -19,6 +19,14 @@
    * Attaches the Ajax behavior to each Ajax form element.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Initialize all {@link Drupal.Ajax} objects declared in
+   *   `drupalSettings.ajax` or initialize {@link Drupal.Ajax} objects from
+   *   DOM elements having the `use-ajax-submit` or `use-ajax` css class.
+   * @prop {Drupal~behaviorDetach} detach
+   *   During `unload` remove all {@link Drupal.Ajax} objects related to
+   *   the removed content.
    */
   Drupal.behaviors.AJAX = {
     attach: function (context, settings) {
@@ -81,6 +89,16 @@
 
         Drupal.ajax(element_settings);
       });
+    },
+
+    detach: function (context, settings, trigger) {
+      if (trigger === 'unload') {
+        Drupal.ajax.expired().forEach(function (instance) {
+          // Set this to null and allow garbage collection to reclaim
+          // the memory.
+          Drupal.ajax.instances[instance.instanceIndex] = null;
+        });
+      }
     }
   };
 
@@ -237,9 +255,24 @@
   /**
    * Contains all created Ajax objects.
    *
-   * @type {Array.<Drupal.Ajax>}
+   * @type {Array.<Drupal.Ajax|null>}
    */
   Drupal.ajax.instances = [];
+
+  /**
+   * List all objects where the associated element is not in the DOM
+   *
+   * This method ignores {@link Drupal.Ajax} objects not bound to DOM elements
+   * when created with {@link Drupal.ajax}.
+   *
+   * @return {Array.<Drupal.Ajax>}
+   *   The list of expired {@link Drupal.Ajax} objects.
+   */
+  Drupal.ajax.expired = function () {
+    return Drupal.ajax.instances.filter(function (instance) {
+      return instance && instance.element !== false && !document.body.contains(instance.element);
+    });
+  };
 
   /**
    * Ajax constructor.
@@ -1030,6 +1063,8 @@
     /**
      * Command to set the settings used for other commands in this response.
      *
+     * This method will also remove expired `drupalSettings.ajax` settings.
+     *
      * @param {Drupal.Ajax} [ajax]
      * @param {object} response
      * @param {bool} response.merge
@@ -1037,6 +1072,22 @@
      * @param {number} [status]
      */
     settings: function (ajax, response, status) {
+      var ajaxSettings = drupalSettings.ajax;
+
+      // Clean up drupalSettings.ajax.
+      Drupal.ajax.expired().forEach(function (instance) {
+        // If the Ajax object has been created through drupalSettings.ajax
+        // it will have a selector. When there is no selector the object
+        // has been initialized with a special class name picked up by the
+        // Ajax behavior.
+        if (instance.selector) {
+          var selector = instance.selector.replace('#', '');
+          if (selector in ajaxSettings) {
+            delete ajaxSettings[selector];
+          }
+        }
+      });
+
       if (response.merge) {
         $.extend(true, drupalSettings, response.settings);
       }
