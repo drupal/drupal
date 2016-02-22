@@ -61,5 +61,13 @@ class CronQueueTest extends WebTestBase {
     $this->assertEqual($item->data, 'crash', 'Failing item remains in the queue.');
     $item = $queue->claimItem();
     $this->assertEqual($item->data, 'ignored', 'Item beyond the failing item remains in the queue.');
+
+    // Test the requeueing functionality.
+    $queue = $this->container->get('queue')->get('cron_queue_test_requeue_exception');
+    $queue->createItem([]);
+    $this->cronRun();
+    $this->assertEqual(\Drupal::state()->get('cron_queue_test_requeue_exception'), 2);
+    $this->assertFalse($queue->numberOfItems());
   }
+
 }

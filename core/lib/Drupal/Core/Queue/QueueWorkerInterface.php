@@ -26,6 +26,9 @@ interface QueueWorkerInterface extends PluginInspectionInterface {
    *   The data that was passed to
    *   \Drupal\Core\Queue\QueueInterface::createItem() when the item was queued.
    *
+   * @throws \Drupal\Core\Queue\RequeueException
+   *   Processing is not yet finished. This will allow another process to claim
+   *   the item immediately.
    * @throws \Exception
    *   A QueueWorker plugin may throw an exception to indicate there was a
    *   problem. The cron process will log the exception, and leave the item in
