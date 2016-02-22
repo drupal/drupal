@@ -128,6 +128,11 @@ class NormalizeTest extends NormalizerTestBase {
           ),
         ),
       ),
+      'id' => array(
+        array(
+          'value' => $entity->id(),
+        ),
+      ),
       'uuid' => array(
         array(
           'value' => $entity->uuid(),
@@ -160,7 +165,7 @@ class NormalizeTest extends NormalizerTestBase {
     $this->assertEqual($normalized['_links']['self'], $expected_array['_links']['self'], 'self link placed correctly.');
     // @todo Test curies.
     // @todo Test type.
-    $this->assertFalse(isset($normalized['id']), 'Internal id is not exposed.');
+    $this->assertEqual($normalized['id'], $expected_array['id'], 'Internal id is exposed.');
     $this->assertEqual($normalized['uuid'], $expected_array['uuid'], 'Non-translatable fields is normalized.');
     $this->assertEqual($normalized['name'], $expected_array['name'], 'Translatable field with multiple language values is normalized.');
     $this->assertEqual($normalized['field_test_text'], $expected_array['field_test_text'], 'Field with properties is normalized.');

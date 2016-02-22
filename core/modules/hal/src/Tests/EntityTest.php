@@ -76,21 +76,13 @@ class EntityTest extends NormalizerTestBase {
     $node->save();
 
     $original_values = $node->toArray();
-    unset($original_values['nid']);
-    unset($original_values['vid']);
 
     $normalized = $this->serializer->normalize($node, $this->format);
 
+    /** @var \Drupal\node\NodeInterface $denormalized_node */
     $denormalized_node = $this->serializer->denormalize($normalized, 'Drupal\node\Entity\Node', $this->format);
 
-    // Verify that the ID and revision ID were skipped by the normalizer.
-    $this->assertEqual(NULL, $denormalized_node->id());
-    $this->assertEqual(NULL, $denormalized_node->getRevisionId());
-
-    // Loop over the remaining fields and verify that they are identical.
-    foreach ($original_values as $field_name => $field_values) {
-      $this->assertEqual($field_values, $denormalized_node->get($field_name)->getValue());
-    }
+    $this->assertEqual($original_values, $denormalized_node->toArray(), 'Node values are restored after normalizing and denormalizing.');
   }
 
   /**
@@ -122,19 +114,13 @@ class EntityTest extends NormalizerTestBase {
     $term->save();
 
     $original_values = $term->toArray();
-    unset($original_values['tid']);
 
     $normalized = $this->serializer->normalize($term, $this->format, ['account' => $account]);
 
+    /** @var \Drupal\taxonomy\TermInterface $denormalized_term */
     $denormalized_term = $this->serializer->denormalize($normalized, 'Drupal\taxonomy\Entity\Term', $this->format, ['account' => $account]);
 
-    // Verify that the ID and revision ID were skipped by the normalizer.
-    $this->assertEqual(NULL, $denormalized_term->id());
-
-    // Loop over the remaining fields and verify that they are identical.
-    foreach ($original_values as $field_name => $field_values) {
-      $this->assertEqual($field_values, $denormalized_term->get($field_name)->getValue());
-    }
+    $this->assertEqual($original_values, $denormalized_term->toArray(), 'Term values are restored after normalizing and denormalizing.');
   }
 
   /**
@@ -200,9 +186,9 @@ class EntityTest extends NormalizerTestBase {
     $comment->save();
 
     $original_values = $comment->toArray();
-    // cid will not exist and hostname will always be denied view access.
+    // Hostname will always be denied view access.
     // No value will exist for name as this is only for anonymous users.
-    unset($original_values['cid'], $original_values['hostname'], $original_values['name']);
+    unset($original_values['hostname'], $original_values['name']);
 
     $normalized = $this->serializer->normalize($comment, $this->format, ['account' => $account]);
 
@@ -210,19 +196,13 @@ class EntityTest extends NormalizerTestBase {
     // data.
     $this->assertFalse(array_key_exists('hostname', $normalized), 'Hostname was not found in normalized comment data.');
 
+    /** @var \Drupal\comment\CommentInterface $denormalized_comment */
     $denormalized_comment = $this->serializer->denormalize($normalized, 'Drupal\comment\Entity\Comment', $this->format, ['account' => $account]);
 
-    // Verify that the ID and revision ID were skipped by the normalizer.
-    $this->assertEqual(NULL, $denormalized_comment->id());
-
-    // Loop over the remaining fields and verify that they are identical.
-    foreach ($original_values as $field_name => $field_values) {
-      // The target field comes with revision id which is not set.
-      if (array_key_exists('revision_id', $field_values[0])) {
-        unset($field_values[0]['revision_id']);
-      }
-      $this->assertEqual($field_values, $denormalized_comment->get($field_name)->getValue());
-    }
+    // Before comparing, unset values that are expected to differ.
+    $denormalized_comment_values = $denormalized_comment->toArray();
+    unset($denormalized_comment_values['hostname'], $denormalized_comment_values['name']);
+    $this->assertEqual($original_values, $denormalized_comment_values, 'The expected comment values are restored after normalizing and denormalizing.');
   }
 
 }

@@ -83,7 +83,6 @@ class ContentEntityNormalizer extends NormalizerBase {
     );
 
     // If the fields to use were specified, only output those field values.
-    // Otherwise, output all field values except internal ID.
     if (isset($context['included_fields'])) {
       $fields = array();
       foreach ($context['included_fields'] as $field_name) {
@@ -93,12 +92,9 @@ class ContentEntityNormalizer extends NormalizerBase {
     else {
       $fields = $entity->getFields();
     }
-    // Ignore the entity ID and revision ID.
-    $exclude = array($entity->getEntityType()->getKey('id'), $entity->getEntityType()->getKey('revision'));
     foreach ($fields as $field) {
-      // Continue if this is an excluded field or the current user does not have
-      // access to view it.
-      if (in_array($field->getFieldDefinition()->getName(), $exclude) || !$field->access('view', $context['account'])) {
+      // Continue if the current user does not have access to view this field.
+      if (!$field->access('view', $context['account'])) {
         continue;
       }
 
