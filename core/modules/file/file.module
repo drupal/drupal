@@ -1266,7 +1266,7 @@ function template_preprocess_file_link(&$variables) {
     'file',
     // Add a specific class for each and every mime type.
     'file--mime-' . strtr($mime_type, array('/' => '-', '.' => '-')),
-    // Add a more general class for groups of well known mime types.
+    // Add a more general class for groups of well known MIME types.
     'file--' . file_icon_class($mime_type),
   );
 

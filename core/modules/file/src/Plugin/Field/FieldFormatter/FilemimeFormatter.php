@@ -12,11 +12,11 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Formatter to render the file mime type, with an optional icon.
+ * Formatter to render the file MIME type, with an optional icon.
  *
  * @FieldFormatter(
  *   id = "file_filemime",
- *   label = @Translation("File mime"),
+ *   label = @Translation("File MIME"),
  *   field_types = {
  *     "string"
  *   }

@@ -50,7 +50,7 @@ class FileDenormalizeTest extends WebTestBase {
     $this->assertTrue(file_exists($denormalized->getFileUri()), 'The temporary file was found.');
 
     $this->assertIdentical($file->uuid(), $denormalized->uuid(), 'The expected UUID was found');
-    $this->assertIdentical($file->getMimeType(), $denormalized->getMimeType(), 'The expected mime type was found.');
+    $this->assertIdentical($file->getMimeType(), $denormalized->getMimeType(), 'The expected MIME type was found.');
     $this->assertIdentical($file->getFilename(), $denormalized->getFilename(), 'The expected filename was found.');
     $this->assertTrue($denormalized->isPermanent(), 'The file has a permanent status.');
 
@@ -72,7 +72,7 @@ class FileDenormalizeTest extends WebTestBase {
     $this->assertIdentical('temporary://' . $file_name, $denormalized->getFileUri(), 'The expected file URI was found.');
     $this->assertTrue(file_exists($denormalized->getFileUri()), 'The temporary file was found.');
 
-    $this->assertIdentical('text/plain', $denormalized->getMimeType(), 'The expected mime type was found.');
+    $this->assertIdentical('text/plain', $denormalized->getMimeType(), 'The expected MIME type was found.');
     $this->assertIdentical($file_name, $denormalized->getFilename(), 'The expected filename was found.');
     $this->assertFalse($denormalized->isPermanent(), 'The file has a permanent status.');
   }

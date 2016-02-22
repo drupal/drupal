@@ -85,7 +85,7 @@ class File extends DrupalSqlBase {
       'uid' => $this->t('The {users}.uid who added the file. If set to 0, this file was added by an anonymous user.'),
       'filename' => $this->t('File name'),
       'filepath' => $this->t('File path'),
-      'filemime' => $this->t('File Mime Type'),
+      'filemime' => $this->t('File MIME Type'),
       'status' => $this->t('The published status of a file.'),
       'timestamp' => $this->t('The time that the file was added.'),
       'file_directory_path' => $this->t('The Drupal files path.'),
