@@ -11,6 +11,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\entity_test\Entity\EntityTestLabel;
 
 /**
  * Defines the access control handler for the test entity type.
@@ -26,6 +27,13 @@ use Drupal\Core\Session\AccountInterface;
 class EntityTestAccessControlHandler extends EntityAccessControlHandler {
 
   /**
+   * Allows to grant access to just the labels.
+   *
+   * @var bool
+   */
+  protected $viewLabelOperation = TRUE;
+
+  /**
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
@@ -37,7 +45,11 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
       return AccessResult::forbidden();
     }
 
-    if ($operation === 'view') {
+    if ($operation === 'view label' && $entity instanceof EntityTestLabel) {
+      // Viewing the label of the 'entity_test_label' entity type is allowed.
+      return AccessResult::allowed();
+    }
+    elseif (in_array($operation, array('view', 'view label'))) {
       if (!$entity->isDefaultTranslation()) {
         return AccessResult::allowedIfHasPermission($account, 'view test entity translations');
       }

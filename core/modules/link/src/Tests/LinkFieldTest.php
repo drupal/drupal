@@ -10,6 +10,7 @@ namespace Drupal\link\Tests;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\link\LinkItemInterface;
 use Drupal\simpletest\WebTestBase;
@@ -99,6 +100,12 @@ class LinkFieldTest extends WebTestBase {
     // Create a node to test the link widget.
     $node = $this->drupalCreateNode();
 
+    // Create an entity with restricted view access.
+    $entity_test_no_label_access = EntityTest::create([
+      'name' => 'forbid_access',
+    ]);
+    $entity_test_no_label_access->save();
+
     // Define some valid URLs (keys are the entered values, values are the
     // strings displayed to the user).
     $valid_external_entries = array(
@@ -132,7 +139,7 @@ class LinkFieldTest extends WebTestBase {
       // Entity URI displayed as ER autocomplete value when displayed in a form.
       'entity:node/1' => $node->label() . ' (1)',
       // URI for an entity that exists, but is not accessible by the user.
-      'entity:user/1' => '- Restricted access - (1)',
+      'entity:entity_test/' . $entity_test_no_label_access->id() => '- Restricted access - (' . $entity_test_no_label_access->id() . ')',
       // URI for an entity that doesn't exist, but with a valid ID.
       'entity:user/999999' => 'entity:user/999999',
     );

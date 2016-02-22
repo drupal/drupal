@@ -11,9 +11,12 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestDefaultAccess;
+use Drupal\entity_test\Entity\EntityTestLabel;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\user\Entity\User;
 
 /**
  * Tests the entity access control handler.
@@ -37,12 +40,69 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
   }
 
   /**
+   * Ensures user labels are accessible for everyone.
+   */
+  public function testUserLabelAccess() {
+    // Set up a non-admin user.
+    \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2]));
+
+    $anonymous_user = User::getAnonymousUser();
+    $user = $this->createUser();
+
+    // The current user is allowed to view the anonymous user label.
+    $this->assertEntityAccess(array(
+      'create' => FALSE,
+      'update' => FALSE,
+      'delete' => FALSE,
+      'view' => FALSE,
+      'view label' => TRUE,
+    ), $anonymous_user);
+
+    // The current user is allowed to view user labels.
+    $this->assertEntityAccess(array(
+      'create' => FALSE,
+      'update' => FALSE,
+      'delete' => FALSE,
+      'view' => FALSE,
+      'view label' => TRUE,
+    ), $user);
+
+    // Switch to a anonymous user account.
+    $account_switcher = \Drupal::service('account_switcher');
+    $account_switcher->switchTo(new AnonymousUserSession());
+
+    // The anonymous user is allowed to view the anonymous user label.
+    $this->assertEntityAccess(array(
+      'create' => FALSE,
+      'update' => FALSE,
+      'delete' => FALSE,
+      'view' => FALSE,
+      'view label' => TRUE,
+    ), $anonymous_user);
+
+    // The anonymous user is allowed to view user labels.
+    $this->assertEntityAccess(array(
+      'create' => FALSE,
+      'update' => FALSE,
+      'delete' => FALSE,
+      'view' => FALSE,
+      'view label' => TRUE,
+    ), $user);
+
+    // Restore user account.
+    $account_switcher->switchBack();
+  }
+
+  /**
    * Ensures entity access is properly working.
    */
   function testEntityAccess() {
     // Set up a non-admin user that is allowed to view test entities.
     \Drupal::currentUser()->setAccount($this->createUser(array('uid' => 2), array('view test entity')));
-    $entity = EntityTest::create(array(
+
+    // Use the 'entity_test_label' entity type in order to test the 'view label'
+    // access operation.
+    $entity = EntityTestLabel::create(array(
       'name' => 'test',
     ));
 
@@ -52,15 +112,18 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
       'update' => FALSE,
       'delete' => FALSE,
       'view' => TRUE,
+      'view label' => TRUE,
     ), $entity);
 
-    // The custom user is not allowed to perform any operation on test entities.
+    // The custom user is not allowed to perform any operation on test entities,
+    // except for viewing their label.
     $custom_user = $this->createUser();
     $this->assertEntityAccess(array(
       'create' => FALSE,
       'update' => FALSE,
       'delete' => FALSE,
       'view' => FALSE,
+      'view label' => TRUE,
     ), $entity, $custom_user);
   }
 

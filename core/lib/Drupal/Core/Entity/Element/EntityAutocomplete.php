@@ -290,7 +290,7 @@ class EntityAutocomplete extends Textfield {
   /**
    * Converts an array of entity objects into a string of entity labels.
    *
-   * This method is also responsible for checking the 'view' access on the
+   * This method is also responsible for checking the 'view label' access on the
    * passed-in entities.
    *
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
@@ -302,7 +302,9 @@ class EntityAutocomplete extends Textfield {
   public static function getEntityLabels(array $entities) {
     $entity_labels = array();
     foreach ($entities as $entity) {
-      $label = ($entity->access('view')) ? $entity->label() : t('- Restricted access -');
+      // Use the special view label, since some entities allow the label to be
+      // viewed, even if the entity is not allowed to be viewed.
+      $label = ($entity->access('view label')) ? $entity->label() : t('- Restricted access -');
 
       // Take into account "autocreated" entities.
       if (!$entity->isNew()) {
