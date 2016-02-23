@@ -302,7 +302,7 @@ class ConfigManager implements ConfigManagerInterface {
     $dependency_manager = $this->getConfigDependencyManager();
     $dependents = $this->findConfigEntityDependentsAsEntities($type, $names, $dependency_manager);
     $original_dependencies = $dependents;
-    $update_uuids = [];
+    $delete_uuids = $update_uuids = [];
 
     $return = [
       'update' => [],
@@ -311,26 +311,35 @@ class ConfigManager implements ConfigManagerInterface {
     ];
 
     // Try to fix any dependencies and find out what will happen to the
-    // dependency graph.
-    foreach ($dependents as $dependent) {
+    // dependency graph. Entities are processed in the order of most dependent
+    // first. For example, this ensures that fields are removed before
+    // field storages.
+    while ($dependent = array_pop($dependents)) {
       /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $dependent */
       if ($dry_run) {
         // Clone the entity so any changes do not change any static caches.
         $dependent = clone $dependent;
       }
+      $fixed = FALSE;
       if ($this->callOnDependencyRemoval($dependent, $original_dependencies, $type, $names)) {
         // Recalculate dependencies and update the dependency graph data.
         $dependent->calculateDependencies();
         $dependency_manager->updateData($dependent->getConfigDependencyName(), $dependent->getDependencies());
-        // Based on the updated data rebuild the list of dependents.
+        // Based on the updated data rebuild the list of dependents. This will
+        // remove entities that are no longer dependent after the recalculation.
         $dependents = $this->findConfigEntityDependentsAsEntities($type, $names, $dependency_manager);
+        // Remove any entities that we've already marked for deletion.
+        $dependents = array_filter($dependents, function ($dependent) use ($delete_uuids) {
+          return !in_array($dependent->uuid(), $delete_uuids);
+        });
         // Ensure that the dependency has actually been fixed. It is possible
         // that the dependent has multiple dependencies that cause it to be in
         // the dependency chain.
         $fixed = TRUE;
-        foreach ($dependents as $entity) {
+        foreach ($dependents as $key => $entity) {
           if ($entity->uuid() == $dependent->uuid()) {
             $fixed = FALSE;
+            unset($dependents[$key]);
             break;
           }
         }
@@ -339,15 +348,12 @@ class ConfigManager implements ConfigManagerInterface {
           $update_uuids[] = $dependent->uuid();
         }
       }
+      // If the entity cannot be fixed then it has to be deleted.
+      if (!$fixed) {
+        $delete_uuids[] = $dependent->uuid();
+        $return['delete'][] = $dependent;
+      }
     }
-    // Now that we've fixed all the possible dependencies the remaining need to
-    // be deleted. Reverse the deletes so that entities are removed in the
-    // correct order of dependence. For example, this ensures that fields are
-    // removed before field storages.
-    $return['delete'] = array_reverse($dependents);
-    $delete_uuids = array_map(function($dependent) {
-      return $dependent->uuid();
-    }, $return['delete']);
     // Use the lists of UUIDs to filter the original list to work out which
     // configuration entities are unchanged.
     $return['unchanged'] = array_filter($original_dependencies, function ($dependent) use ($delete_uuids, $update_uuids) {

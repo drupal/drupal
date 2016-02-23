@@ -229,7 +229,7 @@ class ConfigDependencyTest extends EntityUnitTestBase {
 
     // Set a more complicated test where dependencies will be fixed.
     \Drupal::state()->set('config_test.fix_dependencies', array($entity1->getConfigDependencyName()));
-
+    \Drupal::state()->set('config_test.on_dependency_removal_called', []);
     // Entity1 will be deleted because it depends on node.
     $entity1 = $storage->create(
       array(
@@ -259,7 +259,8 @@ class ConfigDependencyTest extends EntityUnitTestBase {
     $entity2->save();
 
     // Entity3 will be unchanged because it is dependent on Entity2 which can
-    // be fixed.
+    // be fixed. The ConfigEntityInterface::onDependencyRemoval() method will
+    // not be called for this entity.
     $entity3 = $storage->create(
       array(
         'id' => 'entity3',
@@ -294,6 +295,10 @@ class ConfigDependencyTest extends EntityUnitTestBase {
     $this->assertEqual($entity2->uuid(), reset($config_entities['update'])->uuid(), 'Entity 2 will be updated.');
     $this->assertEqual($entity3->uuid(), reset($config_entities['unchanged'])->uuid(), 'Entity 3 is not changed.');
     $this->assertEqual($entity4->uuid(), $config_entities['delete'][1]->uuid(), 'Entity 4 will be deleted.');
+
+    $called = \Drupal::state()->get('config_test.on_dependency_removal_called', []);
+    $this->assertFalse(in_array($entity3->id(), $called), 'ConfigEntityInterface::onDependencyRemoval() is not called for entity 3.');
+    $this->assertIdentical(['entity1', 'entity2', 'entity4'], $called, 'The most dependent entites have ConfigEntityInterface::onDependencyRemoval() called first.');
 
     // Perform the uninstall.
     $config_manager->uninstall('module', 'node');
