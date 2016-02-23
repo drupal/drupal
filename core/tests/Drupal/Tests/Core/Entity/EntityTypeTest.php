@@ -311,15 +311,7 @@ class EntityTypeTest extends UnitTestCase {
     $this->assertSame($default_label, $entity_type->getGroupLabel());
 
     $default_label = new TranslatableMarkup('Other', array(), array('context' => 'Entity type group'));
-    $entity_type = $this->setUpEntityType([]);
-
-    $string_translation = $this->getMock(TranslationInterface::class);
-    $string_translation->expects($this->atLeastOnce())
-      ->method('translate')
-      ->with('Other', array(), array('context' => 'Entity type group'))
-      ->willReturn($default_label);
-    $entity_type->setStringTranslation($string_translation);
-
+    $entity_type = $this->setUpEntityType(array('group_label' => $default_label));
     $this->assertSame($default_label, $entity_type->getGroupLabel());
   }
 

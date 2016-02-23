@@ -12,6 +12,7 @@ use Drupal\Core\Datetime\FormattedDateDiff;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * @coversDefaultClass \Drupal\Core\Datetime\DateFormatter
@@ -97,11 +98,10 @@ class DateTest extends UnitTestCase {
   public function testFormatInterval($interval, $granularity, $expected, $langcode = NULL) {
     // Mocks a simple formatPlural implementation.
     $this->stringTranslation->expects($this->any())
-      ->method('formatPlural')
-      ->with($this->anything(), $this->anything(), $this->anything(), array(), array('langcode' => $langcode))
-      ->will($this->returnCallback(function($count, $one, $multiple) {
-        return $count == 1 ? $one : str_replace('@count', $count, $multiple);
-      }));
+      ->method('translateString')
+      ->willReturnCallback(function (TranslatableMarkup $arg) {
+        return $arg->getUntranslatedString();
+      });
 
     // Check if the granularity is specified.
     if ($granularity) {
@@ -111,7 +111,7 @@ class DateTest extends UnitTestCase {
       $result = $this->dateFormatter->formatInterval($interval);
     }
 
-    $this->assertEquals($expected, $result);
+    $this->assertEquals(new TranslatableMarkup($expected, [], ['langcode' => $langcode], $this->stringTranslation), $result);
   }
 
   /**
@@ -153,14 +153,8 @@ class DateTest extends UnitTestCase {
    * Tests the formatInterval method for 0 second.
    */
   public function testFormatIntervalZeroSecond() {
-    $this->stringTranslation->expects($this->once())
-      ->method('translate')
-      ->with('0 sec', array(), array('langcode' => 'xxx-lolspeak'))
-      ->will($this->returnValue('0 sec'));
-
     $result = $this->dateFormatter->formatInterval(0, 1, 'xxx-lolspeak');
-
-    $this->assertEquals('0 sec', $result);
+    $this->assertEquals(new TranslatableMarkup('0 sec', array(), array('langcode' => 'xxx-lolspeak'), $this->stringTranslation), $result);
   }
 
   /**
@@ -264,24 +258,20 @@ class DateTest extends UnitTestCase {
    * @covers ::formatDiff
    */
   public function testformatDiff($expected, $max_age, $timestamp1, $timestamp2, $options = array()) {
-
-    // Mocks a simple formatPlural implementation.
+    // Mocks a simple translateString implementation.
     $this->stringTranslation->expects($this->any())
-      ->method('formatPlural')
-      ->with($this->anything(), $this->anything(), $this->anything(), array(), array('langcode' => isset($options['langcode']) ? $options['langcode'] : NULL))
-      ->will($this->returnCallback(function($count, $one, $multiple) {
-        return $count == 1 ? $one : str_replace('@count', $count, $multiple);
-      }));
+      ->method('translateString')
+      ->willReturnCallback(function (TranslatableMarkup $arg) {
+        return $arg->getUntranslatedString();
+      });
 
-    // Mocks a simple translate implementation.
-    $this->stringTranslation->expects($this->any())
-      ->method('translate')
-      ->with($this->anything())
-      ->will($this->returnCallback(function($string, $args, $options) {
-        return $string;
-      }));
-
-    $this->assertEquals($expected, $this->dateFormatter->formatDiff($timestamp1, $timestamp2, $options));
+    if (isset($options['langcode'])) {
+      $expected_markup = new TranslatableMarkup($expected, [], ['langcode' => $options['langcode']], $this->stringTranslation);
+    }
+    else {
+      $expected_markup = new TranslatableMarkup($expected, [], [], $this->stringTranslation);
+    }
+    $this->assertEquals($expected_markup, $this->dateFormatter->formatDiff($timestamp1, $timestamp2, $options));
 
     $options['return_as_object'] = TRUE;
     $expected_object = new FormattedDateDiff($expected, $max_age);

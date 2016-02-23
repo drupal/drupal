@@ -12,6 +12,7 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * @coversDefaultClass \Drupal\Core\Controller\TitleResolver
@@ -55,13 +56,7 @@ class TitleResolverTest extends UnitTestCase {
   public function testStaticTitle() {
     $request = new Request();
     $route = new Route('/test-route', array('_title' => 'static title'));
-
-    $this->translationManager->expects($this->once())
-      ->method('translate')
-      ->with('static title', array(), array())
-      ->will($this->returnValue('translated title'));
-
-    $this->assertEquals('translated title', $this->titleResolver->getTitle($request, $route));
+    $this->assertEquals(new TranslatableMarkup('static title', array(), array(), $this->translationManager), $this->titleResolver->getTitle($request, $route));
   }
 
   /**
@@ -72,13 +67,7 @@ class TitleResolverTest extends UnitTestCase {
   public function testStaticTitleWithContext() {
     $request = new Request();
     $route = new Route('/test-route', array('_title' => 'static title', '_title_context' => 'context'));
-
-    $this->translationManager->expects($this->once())
-      ->method('translate')
-      ->with('static title', array(), array('context' => 'context'))
-      ->will($this->returnValue('translated title with context'));
-
-    $this->assertEquals('translated title with context', $this->titleResolver->getTitle($request, $route));
+    $this->assertEquals(new TranslatableMarkup('static title', array(), array('context' => 'context'), $this->translationManager), $this->titleResolver->getTitle($request, $route));
   }
 
   /**
@@ -94,20 +83,14 @@ class TitleResolverTest extends UnitTestCase {
     $request->attributes->set('_raw_variables', $raw_variables);
 
     $route = new Route('/test-route', array('_title' => $title));
-
-    $this->translationManager->expects($this->once())
-      ->method('translate')
-      ->with($title, $this->logicalOr($this->arrayHasKey('@test'), $this->arrayHasKey('%test'), $this->arrayHasKey('!test')), array())
-      ->will($this->returnValue('static title value'));
-
     $this->assertEquals($expected_title, $this->titleResolver->getTitle($request, $route));
   }
 
   public function providerTestStaticTitleWithParameter() {
+    $translation_manager = $this->getMock('\Drupal\Core\StringTranslation\TranslationInterface');
     return array(
-      array('static title @test', 'static title value'),
-      array('static title !test', 'static title value'),
-      array('static title %test', 'static title value'),
+      array('static title @test', new TranslatableMarkup('static title @test', ['@test' => 'value', '%test' => 'value', '@test2' => 'value2', '%test2' => 'value2'], array(), $translation_manager)),
+      array('static title %test', new TranslatableMarkup('static title %test', ['@test' => 'value', '%test' => 'value', '@test2' => 'value2', '%test2' => 'value2'], array(), $translation_manager)),
     );
   }
 
