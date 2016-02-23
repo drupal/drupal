@@ -1313,9 +1313,7 @@ function template_preprocess_html(&$variables) {
  *
  * Default template: page.html.twig.
  *
- * Most themes use their own copy of page.html.twig. The default is located
- * inside "modules/system/page.html.twig". Look in there for the full list of
- * variables.
+ * See the page.html.twig template for the list of variables.
  */
 function template_preprocess_page(&$variables) {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
