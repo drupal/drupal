@@ -103,7 +103,7 @@
     var self_settings = $.extend({}, this.element_settings, {
       event: 'RefreshView',
       base: this.selector,
-      element: this.$view
+      element: this.$view.get(0)
     });
     this.refreshViewAjax = Drupal.ajax(self_settings);
   };
@@ -168,7 +168,7 @@
     var self_settings = $.extend({}, this.element_settings, {
       submit: viewData,
       base: false,
-      element: $link
+      element: link
     });
     this.pagerAjax = Drupal.ajax(self_settings);
   };
