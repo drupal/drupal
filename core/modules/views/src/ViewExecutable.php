@@ -1019,6 +1019,9 @@ class ViewExecutable implements \Serializable {
 
   /**
    * Builds all the arguments.
+   *
+   * @return bool
+   *   TRUE if the arguments were built successfully, FALSE otherwise.
    */
   protected function _buildArguments() {
     // Initially, we want to build sorts and fields. This can change, though,
