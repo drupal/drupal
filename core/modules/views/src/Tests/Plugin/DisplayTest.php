@@ -23,7 +23,7 @@ class DisplayTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid', 'test_display_empty');
+  public static $testViews = array('test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid', 'test_display_empty', 'test_exposed_relationship_admin_ui');
 
   /**
    * Modules to enable.
@@ -307,6 +307,31 @@ class DisplayTest extends PluginTestBase {
     $this->assertResponse(200);
     $this->assertText('The &quot;invalid&quot; plugin does not exist.');
     $this->assertNoBlockAppears($block);
+  }
+
+  /**
+   * Tests display validation when a required relationship is missing.
+   */
+  public function testMissingRelationship() {
+    $view = Views::getView('test_exposed_relationship_admin_ui');
+
+    // Remove the relationship that is not used by other handlers.
+    $view->removeHandler('default', 'relationship', 'uid_1');
+    $errors = $view->validate();
+    // Check that no error message is shown.
+    $this->assertTrue(empty($errors['default']), 'No errors found when removing unused relationship.');
+
+    // Unset cached relationships (see DisplayPluginBase::getHandlers())
+    unset($view->display_handler->handlers['relationship']);
+
+    // Remove the relationship used by other handlers.
+    $view->removeHandler('default', 'relationship', 'uid');
+    // Validate display
+    $errors = $view->validate();
+    // Check that the error messages are shown.
+    $this->assertTrue(count($errors['default']) == 2, 'Error messages found for required relationship');
+    $this->assertEqual($errors['default'][0], t('The %handler_type %handler uses a relationship that has been removed.', array('%handler_type' => 'field', '%handler' => 'User: Last login')));
+    $this->assertEqual($errors['default'][1], t('The %handler_type %handler uses a relationship that has been removed.', array('%handler_type' => 'field', '%handler' => 'User: Created')));
   }
 
   /**
