@@ -267,6 +267,10 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       ) + $base_service_definition;
 
       $service_definitions[] = array(
+        'shared' => FALSE,
+      ) + $base_service_definition;
+
+      $service_definitions[] = array(
         'lazy' => TRUE,
       ) + $base_service_definition;
 
@@ -358,6 +362,10 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
         'shared' => FALSE,
       ) + $base_service_definition;
 
+      $service_definitions[] = array(
+          'shared' => FALSE,
+        ) + $base_service_definition;
+
       // Test factory.
       $service_definitions[] = array(
         'factory' => array(new Reference('bar'), 'factoryMethod'),
@@ -397,6 +405,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
         $definition->getProperties()->willReturn($service_definition['properties']);
         $definition->getMethodCalls()->willReturn($service_definition['calls']);
         $definition->getScope()->willReturn($service_definition['scope']);
+        $definition->isShared()->willReturn($service_definition['shared']);
         $definition->getDecoratedService()->willReturn(NULL);
         $definition->getFactory()->willReturn($service_definition['factory']);
         $definition->getConfigurator()->willReturn($service_definition['configurator']);

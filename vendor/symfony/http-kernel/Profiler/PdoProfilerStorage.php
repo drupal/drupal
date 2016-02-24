@@ -11,11 +11,16 @@
 
 namespace Symfony\Component\HttpKernel\Profiler;
 
+@trigger_error('The '.__NAMESPACE__.'\PdoProfilerStorage class is deprecated since Symfony 2.8 and will be removed in 3.0. Use FileProfilerStorage instead.', E_USER_DEPRECATED);
+
 /**
  * Base PDO storage for profiling information in a PDO database.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Jan Schumann <js@schumann-it.com>
+ *
+ * @deprecated Deprecated since Symfony 2.8, to be removed in Symfony 3.0.
+ *             Use {@link FileProfilerStorage} instead.
  */
 abstract class PdoProfilerStorage implements ProfilerStorageInterface
 {
@@ -188,9 +193,8 @@ abstract class PdoProfilerStorage implements ProfilerStorageInterface
             $stmt->bindValue($arg, $val, is_int($val) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
         }
         $stmt->execute();
-        $return = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        return $return;
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     protected function close($db)

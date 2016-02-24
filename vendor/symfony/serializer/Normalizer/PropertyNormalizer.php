@@ -50,7 +50,7 @@ class PropertyNormalizer extends AbstractNormalizer
         $allowedAttributes = $this->getAllowedAttributes($object, $context, true);
 
         foreach ($reflectionObject->getProperties() as $property) {
-            if (in_array($property->name, $this->ignoredAttributes)) {
+            if (in_array($property->name, $this->ignoredAttributes) || $property->isStatic()) {
                 continue;
             }
 
@@ -110,6 +110,10 @@ class PropertyNormalizer extends AbstractNormalizer
             if ($allowed && !$ignored && $reflectionClass->hasProperty($propertyName)) {
                 $property = $reflectionClass->getProperty($propertyName);
 
+                if ($property->isStatic()) {
+                    continue;
+                }
+
                 // Override visibility
                 if (!$property->isPublic()) {
                     $property->setAccessible(true);
@@ -135,7 +139,7 @@ class PropertyNormalizer extends AbstractNormalizer
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return $this->supports($type);
+        return class_exists($type) && $this->supports($type);
     }
 
     /**

@@ -497,6 +497,7 @@ services:
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     parent: container.trait
+    deprecated: %service_id%-no-warning
     # @todo Remove this tag in https://www.drupal.org/node/2549143.
     tags:
       - { name: plugin_manager_cache_clear }
@@ -1015,7 +1016,7 @@ services:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:
       - { name: event_subscriber }
-    arguments: ['@router', '@router.request_context', NULL, '@request_stack']
+    arguments: ['@router', '@request_stack', '@router.request_context', NULL]
   bare_html_page_renderer:
     class: Drupal\Core\Render\BareHtmlPageRenderer
     arguments: ['@renderer', '@html_response.attachments_processor']
@@ -1297,71 +1298,71 @@ services:
     calls:
       - [setContainer, ['@service_container']]
     arguments: ['feed.writer.']
-# Zend Feed reader plugins. Plugins should be set as prototype scope.
+# Zend Feed reader plugins. Plugin instances should not be shared.
   feed.reader.dublincoreentry:
     class: Zend\Feed\Reader\Extension\DublinCore\Entry
-    scope: prototype
+    shared: false
   feed.reader.dublincorefeed:
     class: Zend\Feed\Reader\Extension\DublinCore\Feed
-    scope: prototype
+    shared: false
   feed.reader.contententry:
     class: Zend\Feed\Reader\Extension\Content\Entry
-    scope: prototype
+    shared: false
   feed.reader.atomentry:
     class: Zend\Feed\Reader\Extension\Atom\Entry
-    scope: prototype
+    shared: false
   feed.reader.atomfeed:
     class: Zend\Feed\Reader\Extension\Atom\Feed
-    scope: prototype
+    shared: false
   feed.reader.slashentry:
     class: Zend\Feed\Reader\Extension\Slash\Entry
-    scope: prototype
+    shared: false
   feed.reader.wellformedwebentry:
     class: Zend\Feed\Reader\Extension\WellFormedWeb\Entry
-    scope: prototype
+    shared: false
   feed.reader.threadentry:
     class: Zend\Feed\Reader\Extension\Thread\Entry
-    scope: prototype
+    shared: false
   feed.reader.podcastentry:
     class: Zend\Feed\Reader\Extension\Podcast\Entry
-    scope: prototype
+    shared: false
   feed.reader.podcastfeed:
     class: Zend\Feed\Reader\Extension\Podcast\Feed
-    scope: prototype
+    shared: false
 # Zend Feed writer plugins. Plugins should be set as prototype scope.
   feed.writer.atomrendererfeed:
     class: Zend\Feed\Writer\Extension\Atom\Renderer\Feed
-    scope: prototype
+    shared: false
   feed.writer.contentrendererentry:
     class: Zend\Feed\Writer\Extension\Content\Renderer\Entry
-    scope: prototype
+    shared: false
   feed.writer.dublincorerendererentry:
     class: Zend\Feed\Writer\Extension\DublinCore\Renderer\Entry
-    scope: prototype
+    shared: false
   feed.writer.dublincorerendererfeed:
     class: Zend\Feed\Writer\Extension\DublinCore\Renderer\Feed
-    scope: prototype
+    shared: false
   feed.writer.itunesentry:
     class: Zend\Feed\Writer\Extension\ITunes\Entry
-    scope: prototype
+    shared: false
   feed.writer.itunesfeed:
     class: Zend\Feed\Writer\Extension\ITunes\Feed
-    scope: prototype
+    shared: false
   feed.writer.itunesrendererentry:
     class: Zend\Feed\Writer\Extension\ITunes\Renderer\Entry
-    scope: prototype
+    shared: false
   feed.writer.itunesrendererfeed:
     class: Zend\Feed\Writer\Extension\ITunes\Renderer\Feed
-    scope: prototype
+    shared: false
   feed.writer.slashrendererentry:
     class: Zend\Feed\Writer\Extension\Slash\Renderer\Entry
-    scope: prototype
+    shared: false
   feed.writer.threadingrendererentry:
     class: Zend\Feed\Writer\Extension\Threading\Renderer\Entry
-    scope: prototype
+    shared: false
   feed.writer.wellformedwebrendererentry:
     class: Zend\Feed\Writer\Extension\WellFormedWeb\Renderer\Entry
-    scope: prototype
+    shared: false
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
     arguments: ['@app.root', '@theme.negotiator', '@theme.initialization', '@module_handler']

@@ -19,12 +19,15 @@
         "php": ">=5.3.9"
     },
     "autoload": {
-        "psr-4": { "Symfony\\Component\\Process\\": "" }
+        "psr-4": { "Symfony\\Component\\Process\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.7-dev"
+            "dev-master": "2.8-dev"
         }
     }
 }

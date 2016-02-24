@@ -116,8 +116,8 @@ class ClassCollectionLoader
         }
 
         // cache the core classes
-        if (!is_dir(dirname($cache))) {
-            mkdir(dirname($cache), 0777, true);
+        if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true) && !is_dir($cacheDir)) {
+            throw new \RuntimeException(sprintf('Class Collection Loader was not able to create directory "%s"', $cacheDir));
         }
         self::writeCacheFile($cache, '<?php '.$content);
 
@@ -137,8 +137,8 @@ class ClassCollectionLoader
     public static function fixNamespaceDeclarations($source)
     {
         if (!function_exists('token_get_all') || !self::$useTokenizer) {
-            if (preg_match('/namespace(.*?)\s*;/', $source)) {
-                $source = preg_replace('/namespace(.*?)\s*;/', "namespace$1\n{", $source)."}\n";
+            if (preg_match('/(^|\s)namespace(.*?)\s*;/', $source)) {
+                $source = preg_replace('/(^|\s)namespace(.*?)\s*;/', "$1namespace$2\n{", $source)."}\n";
             }
 
             return $source;
