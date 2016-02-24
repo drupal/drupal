@@ -529,13 +529,18 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
         // publicly accessible, with no download restrictions; for security
         // reasons all other schemes must go through the file_download_access()
         // check.
-        if (in_array(file_uri_scheme($file->uri), variable_get('file_public_schema', array('public'))) || file_download_access($file->uri)) {
-          $fid = $file->fid;
-        }
-        // If the current user doesn't have access, don't let the file be
-        // changed.
-        else {
+        if (!in_array(file_uri_scheme($file->uri), variable_get('file_public_schema', array('public'))) && !file_download_access($file->uri)) {
           $force_default = TRUE;
+        }
+        // Temporary files that belong to other users should never be allowed.
+        // Since file ownership can't be determined for anonymous users, they
+        // are not allowed to reuse temporary files at all.
+        elseif ($file->status != FILE_STATUS_PERMANENT && (!$GLOBALS['user']->uid || $file->uid != $GLOBALS['user']->uid)) {
+          $force_default = TRUE;
+        }
+        // If all checks pass, allow the file to be changed.
+        else {
+          $fid = $file->fid;
         }
       }
     }

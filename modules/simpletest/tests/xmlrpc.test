@@ -246,4 +246,38 @@ class XMLRPCMessagesTestCase extends DrupalWebTestCase {
     $this->assertEqual($removed, 'system.methodSignature', 'Hiding builting system.methodSignature with hook_xmlrpc_alter works');
   }
 
+  /**
+   * Test limits on system.multicall that can prevent brute-force attacks.
+   */
+  function testMulticallLimit() {
+    $url = url(NULL, array('absolute' => TRUE)) . 'xmlrpc.php';
+    $multicall_args = array();
+    $num_method_calls = 10;
+    for ($i = 0; $i < $num_method_calls; $i++) {
+      $struct = array('i' => $i);
+      $multicall_args[] = array('methodName' => 'validator1.echoStructTest', 'params' => array($struct));
+    }
+    // Test limits of 1, 5, 9, 13.
+    for ($limit = 1; $limit < $num_method_calls + 4; $limit += 4) {
+      variable_set('xmlrpc_multicall_duplicate_method_limit', $limit);
+      $results = xmlrpc($url, array('system.multicall' => array($multicall_args)));
+      $this->assertEqual($num_method_calls, count($results));
+      for ($i = 0; $i < min($limit, $num_method_calls); $i++) {
+        $x = array_shift($results);
+        $this->assertTrue(empty($x->is_error), "Result $i is not an error");
+        $this->assertEqual($multicall_args[$i]['params'][0], $x);
+      }
+      for (; $i < $num_method_calls; $i++) {
+        $x = array_shift($results);
+        $this->assertFalse(empty($x->is_error), "Result $i is an error");
+        $this->assertEqual(-156579, $x->code);
+      }
+    }
+    variable_set('xmlrpc_multicall_duplicate_method_limit', -1);
+    $results = xmlrpc($url, array('system.multicall' => array($multicall_args)));
+    $this->assertEqual($num_method_calls, count($results));
+    foreach ($results as $i => $x) {
+      $this->assertTrue(empty($x->is_error), "Result $i is not an error");
+    }
+  }
 }

@@ -93,6 +93,15 @@ function common_test_drupal_goto_alter(&$path, &$options, &$http_response_code) 
 }
 
 /**
+ * Implements hook_init().
+ */
+function common_test_init() {
+  if (variable_get('common_test_redirect_current_path', FALSE)) {
+    drupal_goto(current_path());
+  }
+}
+
+/**
  * Print destination query parameter.
  */
 function common_test_destination() {

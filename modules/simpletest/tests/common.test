@@ -373,6 +373,65 @@ class CommonURLUnitTest extends DrupalWebTestCase {
 }
 
 /**
+ * Tests url_is_external().
+ */
+class UrlIsExternalUnitTest extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'External URL checking',
+      'description' => 'Performs tests on url_is_external().',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Tests if each URL is external or not.
+   */
+  function testUrlIsExternal() {
+    foreach ($this->examples() as $path => $expected) {
+      $this->assertIdentical(url_is_external($path), $expected, $path);
+    }
+  }
+
+  /**
+   * Provides data for testUrlIsExternal().
+   *
+   * @return array
+   *   An array of test data, keyed by a path, with the expected value where
+   *   TRUE is external, and FALSE is not external.
+   */
+  protected function examples() {
+    return array(
+      // Simple external URLs.
+      'http://example.com' => TRUE,
+      'https://example.com' => TRUE,
+      'http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo' => TRUE,
+      '//drupal.org' => TRUE,
+      // Some browsers ignore or strip leading control characters.
+      "\x00//www.example.com" => TRUE,
+      "\x08//www.example.com" => TRUE,
+      "\x1F//www.example.com" => TRUE,
+      "\n//www.example.com" => TRUE,
+      // JSON supports decoding directly from UTF-8 code points.
+      json_decode('"\u00AD"') . "//www.example.com" => TRUE,
+      json_decode('"\u200E"') . "//www.example.com" => TRUE,
+      json_decode('"\uE0020"') . "//www.example.com" => TRUE,
+      json_decode('"\uE000"')  . "//www.example.com" => TRUE,
+      // Backslashes should be normalized to forward.
+      '\\\\example.com' => TRUE,
+      // Local URLs.
+      'node' => FALSE,
+      '/system/ajax' => FALSE,
+      '?q=foo:bar' => FALSE,
+      'node/edit:me' => FALSE,
+      '/drupal.org' => FALSE,
+      '<front>' => FALSE,
+    );
+  }
+}
+
+/**
  * Tests for check_plain(), filter_xss(), format_string(), and check_url().
  */
 class CommonXssUnitTest extends DrupalUnitTestCase {
@@ -1256,6 +1315,15 @@ class DrupalGotoTest extends DrupalWebTestCase {
     $this->assertText('drupal_goto', 'Drupal goto redirect succeeded.');
     $this->assertEqual($this->getUrl(), url('common-test/drupal_goto', array('query' => array('foo' => '123'), 'absolute' => TRUE)), 'Drupal goto redirected to expected URL.');
 
+    // Test that calling drupal_goto() on the current path is not dangerous.
+    variable_set('common_test_redirect_current_path', TRUE);
+    $this->drupalGet('', array('query' => array('q' => 'http://www.example.com/')));
+    $headers = $this->drupalGetHeaders(TRUE);
+    list(, $status) = explode(' ', $headers[0][':status'], 3);
+    $this->assertEqual($status, 302, 'Expected response code was sent.');
+    $this->assertNotEqual($this->getUrl(), 'http://www.example.com/', 'Drupal goto did not redirect to external URL.');
+    $this->assertTrue(strpos($this->getUrl(), url('<front>', array('absolute' => TRUE))) === 0, 'Drupal redirected to itself.');
+    variable_del('common_test_redirect_current_path');
     // Test that drupal_goto() respects ?destination=xxx. Use an complicated URL
     // to test that the path is encoded and decoded properly.
     $destination = 'common-test/drupal_goto/destination?foo=%2525&bar=123';

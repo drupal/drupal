@@ -347,7 +347,8 @@ function drupal_match_path($path, $patterns) {
  * drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL) makes this function available.
  *
  * @return
- *   The current Drupal URL path.
+ *   The current Drupal URL path. The path is untrusted user input and must be
+ *   treated as such.
  *
  * @see request_path()
  */
