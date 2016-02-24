@@ -1,6 +1,8 @@
 
-Drupal 6.38-dev, xxxx-xx-xx (development release)
--------------------------------------------------
+Drupal 6.38, 2016-02-24 - Final release
+---------------------------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2016-001.
+- Previously unreleased documentation fixes.
 
 Drupal 6.37, 2015-08-19
 -----------------------

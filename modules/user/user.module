@@ -670,8 +670,15 @@ function user_user($type, &$edit, &$account, $category = NULL) {
     return _user_edit_validate((isset($account->uid) ? $account->uid : FALSE), $edit);
   }
 
-  if ($type == 'submit' && $category == 'account') {
-    return _user_edit_submit((isset($account->uid) ? $account->uid : FALSE), $edit);
+  if ($type == 'submit') {
+    if ($category == 'account') {
+      return _user_edit_submit((isset($account->uid) ? $account->uid : FALSE), $edit);
+    }
+    elseif (isset($edit['roles'])) {
+      // Filter out roles with empty values to avoid granting extra roles when
+      // processing custom form submissions.
+      $edit['roles'] = array_filter($edit['roles']);
+    }
   }
 
   if ($type == 'categories') {
@@ -681,7 +688,7 @@ function user_user($type, &$edit, &$account, $category = NULL) {
 
 function user_login_block() {
   $form = array(
-    '#action' => url($_GET['q'], array('query' => drupal_get_destination())),
+    '#action' => url($_GET['q'], array('query' => drupal_get_destination(), 'external' => FALSE)),
     '#id' => 'user-login-form',
     '#validate' => user_login_default_validators(),
     '#submit' => array('user_login_submit'),

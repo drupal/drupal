@@ -1061,7 +1061,7 @@ function system_schema() {
         'default' => 0),
       'session' => array(
         'description' => 'The serialized contents of $_SESSION, an array of name/value pairs that persists across page requests by this session ID. Drupal loads $_SESSION from here at the start of each request and saves it at the end.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
         'size' => 'big')
       ),
@@ -2733,6 +2733,15 @@ function system_update_6055() {
   db_drop_unique_key($ret, 'url_alias', 'dst_language');
   db_add_index($ret, 'url_alias', 'src_language_pid', array('src', 'language', 'pid'));
   db_add_unique_key($ret, 'url_alias', 'dst_language_pid', array('dst', 'language', 'pid'));
+  return $ret;
+}
+
+/**
+ * Convert {session} data storage to blob.
+ */
+function system_update_6056() {
+  $ret = array();
+  db_change_field($ret, 'sessions', 'session', 'session', array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'));
   return $ret;
 }
 

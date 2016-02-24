@@ -1487,7 +1487,8 @@ function system_rss_feeds_settings() {
  */
 function system_date_time_settings() {
   drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
-  drupal_add_js(array('dateTime' => array('lookup' => url('admin/settings/date-time/lookup'))), 'setting');
+  $ajax_path = 'admin/settings/date-time/lookup';
+  drupal_add_js(array('dateTime' => array('lookup' => url($ajax_path, array('query' => array('token' => drupal_get_token($ajax_path)))))), 'setting');
 
   // Date settings:
   $zones = _system_zonelist();
@@ -1646,6 +1647,11 @@ function system_date_time_settings_submit($form, &$form_state) {
  * Return the date for a given format string via Ajax.
  */
 function system_date_time_lookup() {
+  // This callback is protected with a CSRF token because user input from the
+  // query string is reflected in the output.
+  if (!isset($_GET['token']) || !drupal_valid_token($_GET['token'], 'admin/settings/date-time/lookup')) {
+    return MENU_ACCESS_DENIED;
+  }
   $result = format_date(time(), 'custom', $_GET['format']);
   drupal_json($result);
 }

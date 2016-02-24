@@ -1066,9 +1066,16 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
     $form['#attributes']['disabled'] = 'disabled';
   }
 
+  // With JavaScript or other easy hacking, input can be submitted even for
+  // elements with #access=FALSE. For security, these must not be processed.
+  // For pages with multiple forms, ensure that input is only processed for the
+  // submitted form. drupal_execute() may bypass these checks and be treated as
+  // a high privilege user submitting a single form.
+  $process_input = $form['#programmed'] || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && (isset($form['#post']['form_id']) && $form['#post']['form_id'] == $form_id));
+
   if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
     $function = !empty($form['#value_callback']) ? $form['#value_callback'] : 'form_type_'. $form['#type'] .'_value';
-    if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && (isset($form['#post']['form_id']) && $form['#post']['form_id'] == $form_id))) {
+    if ($process_input) {
       $edit = $form['#post'];
       foreach ($form['#parents'] as $parent) {
         $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
@@ -1113,7 +1120,7 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
   // We compare the incoming values with the buttons defined in the form,
   // and flag the one that matches. We have to do some funky tricks to
   // deal with Internet Explorer's handling of single-button forms, though.
-  if (!empty($form['#post']) && isset($form['#executes_submit_callback'])) {
+  if ($process_input && !empty($form['#post']) && isset($form['#executes_submit_callback'])) {
     // First, accumulate a collection of buttons, divided into two bins:
     // those that execute full submit callbacks and those that only validate.
     $button_type = $form['#executes_submit_callback'] ? 'submit' : 'button';
