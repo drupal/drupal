@@ -699,7 +699,6 @@ function hook_entity_type_alter(array &$entity_types) {
  *
  * @see \Drupal\Core\Entity\EntityManagerInterface::getAllViewModes()
  * @see \Drupal\Core\Entity\EntityManagerInterface::getViewModes()
- * @see hook_entity_view_mode_info()
  */
 function hook_entity_view_mode_info_alter(&$view_modes) {
   $view_modes['user']['full']['status'] = TRUE;
