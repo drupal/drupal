@@ -601,7 +601,8 @@
    * can override these state change handlers for particular parts of a page.
    */
 
-  $(document).on('state:disabled', function (e) {
+  var $document = $(document);
+  $document.on('state:disabled', function (e) {
     // Only act when this change was triggered by a dependency and not by the
     // element monitoring itself.
     if (e.trigger) {
@@ -615,7 +616,7 @@
     }
   });
 
-  $(document).on('state:required', function (e) {
+  $document.on('state:required', function (e) {
     if (e.trigger) {
       if (e.value) {
         var label = 'label' + (e.target.id ? '[for=' + e.target.id + ']' : '');
@@ -631,19 +632,19 @@
     }
   });
 
-  $(document).on('state:visible', function (e) {
+  $document.on('state:visible', function (e) {
     if (e.trigger) {
       $(e.target).closest('.js-form-item, .js-form-submit, .js-form-wrapper').toggle(e.value);
     }
   });
 
-  $(document).on('state:checked', function (e) {
+  $document.on('state:checked', function (e) {
     if (e.trigger) {
       $(e.target).prop('checked', e.value);
     }
   });
 
-  $(document).on('state:collapsed', function (e) {
+  $document.on('state:collapsed', function (e) {
     if (e.trigger) {
       if ($(e.target).is('[open]') === e.value) {
         $(e.target).find('> summary').trigger('click');
