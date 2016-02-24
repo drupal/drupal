@@ -110,4 +110,30 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
     $this->assertEquals($route, $route_match->getRouteObject());
   }
 
+  /**
+   * @covers ::resetRouteMatch
+   */
+  public function testResetRouteMatch() {
+    $route = new Route('/test-route/{foo}');
+    $request = new Request();
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'test_route');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $route);
+    $request_stack = new RequestStack();
+    $request_stack->push($request);
+
+    $current_route_match = new CurrentRouteMatch($request_stack);
+
+    $route_name = $current_route_match->getRouteName();
+    $this->assertSame('test_route', $route_name);
+
+    // Replace the matched route on the request.
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, NULL);
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, NULL);
+    // Reset the route match.
+    $current_route_match->resetRouteMatch();
+
+    $route_name = $current_route_match->getRouteName();
+    $this->assertNull($route_name);
+  }
+
 }

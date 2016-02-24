@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Default object for current_route_match service.
  */
-class CurrentRouteMatch implements RouteMatchInterface, StackedRouteMatchInterface {
+class CurrentRouteMatch implements ResettableStackedRouteMatchInterface {
 
   /**
    * The related request stack.
@@ -116,6 +116,13 @@ class CurrentRouteMatch implements RouteMatchInterface, StackedRouteMatchInterfa
       }
     }
     return $route_match;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function resetRouteMatch() {
+    $this->routeMatches = new \SplObjectStorage();
   }
 
   /**
