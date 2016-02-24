@@ -9,6 +9,8 @@ namespace Drupal\node\Tests\Migrate\d6;
 
 use Drupal\migrate\Entity\Migration;
 use Drupal\Core\Database\Database;
+use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\node\Entity\Node;
 
 /**
@@ -24,9 +26,6 @@ class MigrateNodeTest extends MigrateNodeTestBase {
   protected function setUp() {
     parent::setUp();
     $this->executeMigrations(['d6_node:*']);
-
-    // This is required for the second import below.
-    \Drupal::database()->truncate(Migration::load('d6_node__story')->getIdMap()->mapTableName())->execute();
   }
 
   /**
@@ -53,27 +52,59 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     // This is empty on the first revision.
     $this->assertIdentical(NULL, $node_revision->revision_log->value);
 
+    $node = Node::load(2);
+    $this->assertIdentical('Test title rev 3', $node->getTitle());
+    $this->assertIdentical('test rev 3', $node->body->value);
+    $this->assertIdentical('filtered_html', $node->body->format);
+
     // Test that we can re-import using the EntityContentBase destination.
-    $connection = Database::getConnection('default', 'migrate');
-    $connection->update('node_revisions')
+    $title = $this->rerunMigration();
+    $node = Node::load(2);
+    $this->assertIdentical($title, $node->getTitle());
+    // Test multi-column fields are correctly upgraded.
+    $this->assertIdentical('test rev 3', $node->body->value);
+    $this->assertIdentical('full_html', $node->body->format);
+
+    // Now insert a row indicating a failure and set to update later.
+    $title = $this->rerunMigration(array(
+      'sourceid1' => 2,
+      'destid1' => NULL,
+      'source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
+    ));
+    $node = Node::load(2);
+    $this->assertIdentical($title, $node->getTitle());
+  }
+
+  /**
+   * Execute the migration a second time.
+   *
+   * @param array $new_row
+   *   An optional row to be inserted into the id map.
+   *
+   * @return string
+   *   The new title in the source for vid 3.
+   */
+  protected function rerunMigration($new_row = []) {
+    $title = $this->randomString();
+    $migration = Migration::load('d6_node__story');
+    $source_connection = Database::getConnection('default', 'migrate');
+    $source_connection->update('node_revisions')
       ->fields(array(
-        'title' => 'New node title',
+        'title' => $title,
         'format' => 2,
       ))
-      ->condition('vid', 1)
+      ->condition('vid', 3)
       ->execute();
-    $connection->delete('content_field_test_two')
-      ->condition('delta', 1)
-      ->execute();
-
-    $migration = Migration::load('d6_node__story');
+    $table_name = $migration->getIdMap()->mapTableName();
+    $default_connection = \Drupal::database();
+    $default_connection->truncate($table_name)->execute();
+    if ($new_row) {
+      $default_connection->insert($table_name)
+        ->fields($new_row)
+        ->execute();
+    }
     $this->executeMigration($migration);
-
-    $node = Node::load(1);
-    $this->assertIdentical('New node title', $node->getTitle());
-    // Test a multi-column fields are correctly upgraded.
-    $this->assertIdentical('test', $node->body->value);
-    $this->assertIdentical('full_html', $node->body->format);
+    return $title;
   }
 
 }
