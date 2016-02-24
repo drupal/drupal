@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Entity\Controller;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -19,6 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides generic entity title callbacks for use in routing.
  *
  * It provides:
+ * - An add title callback for entities without bundles.
+ * - An add title callback for entities with bundles.
  * - A view title callback.
  * - An edit title callback.
  * - A delete title callback.
@@ -30,20 +34,40 @@ class EntityController implements ContainerInjectionInterface {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
+
+  /**
+   * The entity type bundle info.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
+
+  /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
 
   /**
    * Constructs a new EntityController.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
    */
-  public function __construct(EntityManagerInterface $entity_manager, TranslationInterface $string_translation) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository, TranslationInterface $string_translation) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->entityRepository = $entity_repository;
     $this->stringTranslation = $string_translation;
   }
 
@@ -52,9 +76,54 @@ class EntityController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('entity.repository'),
       $container->get('string_translation')
     );
+  }
+
+  /**
+   * Provides a generic add title callback for entities without bundles.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   *
+   * @return string
+   *    The title for the entity add page.
+   */
+  public function addTitle($entity_type_id) {
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    return $this->t('Add @entity-type', ['@entity-type' => $entity_type->getLowercaseLabel()]);
+  }
+
+  /**
+   * Provides a generic add title callback for entities with bundles.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param string $bundle_parameter
+   *   The name of the route parameter that holds the bundle.
+   *
+   * @return string
+   *    The title for the entity add page, if the bundle was found.
+   */
+  public function addBundleTitle(RouteMatchInterface $route_match, $entity_type_id, $bundle_parameter) {
+    $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+    // If the entity has bundle entities, the parameter might have been upcasted
+    // so fetch the raw parameter.
+    $bundle = $route_match->getRawParameter($bundle_parameter);
+    if ((count($bundles) > 1) && isset($bundles[$bundle])) {
+      return $this->t('Add @bundle', ['@bundle' => $bundles[$bundle]['label']]);
+    }
+    // If the entity supports bundles generally, but only has a single bundle,
+    // the bundle is probably something like 'Default' so that it preferable to
+    // use the entity type label.
+    else {
+      return $this->addTitle($entity_type_id);
+    }
   }
 
   /**
@@ -65,8 +134,8 @@ class EntityController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Entity\EntityInterface $_entity
    *   (optional) An entity, passed in directly from the request attributes.
    *
-   * @return string
-   *   The title for the entity view page.
+   * @return string|null
+   *   The title for the entity view page, if an entity was found.
    */
   public function title(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
@@ -82,8 +151,8 @@ class EntityController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Entity\EntityInterface $_entity
    *   (optional) An entity, passed in directly from the request attributes.
    *
-   * @return string
-   *   The title for the entity edit page.
+   * @return string|null
+   *   The title for the entity edit page, if an entity was found.
    */
   public function editTitle(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
@@ -101,7 +170,7 @@ class EntityController implements ContainerInjectionInterface {
    *   set in \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer.
    *
    * @return string
-   *   The title for the delete entity page.
+   *   The title for the entity delete page.
    */
   public function deleteTitle(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
@@ -135,8 +204,8 @@ class EntityController implements ContainerInjectionInterface {
         }
       }
     }
-    if ($entity) {
-      return $this->entityManager->getTranslationFromContext($entity);
+    if (isset($entity)) {
+      return $this->entityRepository->getTranslationFromContext($entity);
     }
   }
 

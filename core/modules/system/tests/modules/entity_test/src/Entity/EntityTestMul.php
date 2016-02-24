@@ -38,6 +38,7 @@ namespace Drupal\entity_test\Entity;
  *     "langcode" = "langcode",
  *   },
  *   links = {
+ *     "add-form" = "/entity_test_mul/add",
  *     "canonical" = "/entity_test_mul/manage/{entity_test_mul}",
  *     "edit-form" = "/entity_test_mul/manage/{entity_test_mul}/edit",
  *     "delete-form" = "/entity_test/delete/entity_test_mul/{entity_test_mul}",

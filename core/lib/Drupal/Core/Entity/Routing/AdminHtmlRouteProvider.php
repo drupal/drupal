@@ -24,6 +24,16 @@ class AdminHtmlRouteProvider extends DefaultHtmlRouteProvider {
   /**
    * {@inheritdoc}
    */
+  protected function getAddFormRoute(EntityTypeInterface $entity_type) {
+    if ($route = parent::getAddFormRoute($entity_type)) {
+      $route->setOption('_admin_route', TRUE);
+      return $route;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getEditFormRoute(EntityTypeInterface $entity_type) {
     if ($route = parent::getEditFormRoute($entity_type)) {
       $route->setOption('_admin_route', TRUE);
