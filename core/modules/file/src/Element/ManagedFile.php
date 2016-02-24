@@ -64,6 +64,7 @@ class ManagedFile extends FormElement {
     foreach ($fids as $key => $fid) {
       $fids[$key] = (int) $fid;
     }
+    $force_default = FALSE;
 
     // Process any input and save new uploads.
     if ($input !== FALSE) {
@@ -95,15 +96,26 @@ class ManagedFile extends FormElement {
           $fids = [];
           foreach ($input['fids'] as $fid) {
             if ($file = File::load($fid)) {
-              $fids[] = $file->id();
+              // Temporary files that belong to other users should never be
+              // allowed. Since file ownership can't be determined for anonymous
+              // users, they are not allowed to reuse temporary files at all.
+              if ($file->isTemporary() && (\Drupal::currentUser()->isAnonymous() || $file->getOwnerId() != \Drupal::currentUser()->id()))  {
+                $force_default = TRUE;
+                break;
+              }
+              // If all checks pass, allow the files to be changed.
+              else {
+                $fids[] = $file->id();
+              }
             }
           }
         }
       }
     }
 
-    // If there is no input, set the default value.
-    else {
+    // If there is no input or if the default value was requested above, use the
+    // default value.
+    if ($input === FALSE || $force_default) {
       if ($element['#extended']) {
         $default_fids = isset($element['#default_value']['fids']) ? $element['#default_value']['fids'] : [];
         $return = isset($element['#default_value']) ? $element['#default_value'] : ['fids' => []];

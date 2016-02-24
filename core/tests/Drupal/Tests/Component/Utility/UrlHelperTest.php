@@ -361,6 +361,30 @@ class UrlHelperTest extends UnitTestCase {
       array('//www.drupal.org/foo/bar?foo=bar&bar=baz&baz#foo', TRUE),
       // Internal URL starting with a slash.
       array('/www.drupal.org', FALSE),
+      // Simple external URLs.
+      array('http://example.com', TRUE),
+      array('https://example.com', TRUE),
+      array('http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo', TRUE),
+      array('//drupal.org', TRUE),
+      // Some browsers ignore or strip leading control characters.
+      array("\x00//www.example.com", TRUE),
+      array("\x08//www.example.com", TRUE),
+      array("\x1F//www.example.com", TRUE),
+      array("\n//www.example.com", TRUE),
+      // JSON supports decoding directly from UTF-8 code points.
+      array(json_decode('"\u00AD"') . "//www.example.com", TRUE),
+      array(json_decode('"\u200E"') . "//www.example.com", TRUE),
+      array(json_decode('"\uE0020"') . "//www.example.com", TRUE),
+      array(json_decode('"\uE000"')  . "//www.example.com", TRUE),
+      // Backslashes should be normalized to forward.
+      array('\\\\example.com', TRUE),
+      // Local URLs.
+      array('node', FALSE),
+      array('/system/ajax', FALSE),
+      array('?q=foo:bar', FALSE),
+      array('node/edit:me', FALSE),
+      array('/drupal.org', FALSE),
+      array('<front>', FALSE),
     );
   }
 

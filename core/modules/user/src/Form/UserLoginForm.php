@@ -231,7 +231,13 @@ class UserLoginForm extends FormBase {
         }
       }
       else {
-        $form_state->setErrorByName('name', $this->t('Unrecognized username or password. <a href=":password">Have you forgotten your password?</a>', array(':password' => $this->url('user.pass', [], array('query' => array('name' => $form_state->getValue('name')))))));
+        // Use $form_state->getUserInput() in the error message to guarantee
+        // that we send exactly what the user typed in. The value from
+        // $form_state->getValue() may have been modified by validation
+        // handlers that ran earlier than this one.
+        $user_input = $form_state->getUserInput();
+        $query = isset($user_input['name']) ? array('name' => $user_input['name']) : array();
+        $form_state->setErrorByName('name', $this->t('Unrecognized username or password. <a href=":password">Have you forgotten your password?</a>', array(':password' => $this->url('user.pass', [], array('query' => $query)))));
         $accounts = $this->userStorage->loadByProperties(array('name' => $form_state->getValue('name')));
         if (!empty($accounts)) {
           $this->logger('user')->notice('Login attempt failed for %user.', array('%user' => $form_state->getValue('name')));
