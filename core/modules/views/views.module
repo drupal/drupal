@@ -728,6 +728,10 @@ function _views_query_tag_alter_condition(AlterableInterface $query, &$condition
  *   valid. But things like 'page' or 'block' should work here.
  * @param ...
  *   Any additional parameters will be passed as arguments.
+ *
+ * @return array|null
+ *   A renderable array containing the view output or NULL if the display ID
+ *   of the view to be executed doesn't exist.
  */
 function views_embed_view($name, $display_id = 'default') {
   $args = func_get_args();
@@ -739,7 +743,12 @@ function views_embed_view($name, $display_id = 'default') {
     return;
   }
 
-  return $view->preview($display_id, $args);
+  return [
+    '#type' => 'view',
+    '#name' => $name,
+    '#display_id' => $display_id,
+    '#arguments' => $args,
+  ];
 }
 
 /**
