@@ -44,7 +44,7 @@ process:
     plugin: menu_link_parent
     source:
       - plid
-      - @menu_name
+      - '@menu_name'
       - parent_link_path
   changed: updated
 destination:
