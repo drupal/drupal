@@ -14,6 +14,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\comment\Entity\Comment;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Tests the RDF mappings and RDFa markup of the standard profile.
@@ -132,11 +133,11 @@ class StandardProfileTest extends WebTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Create term.
-    $this->term = entity_create('taxonomy_term', array(
+    $this->term = Term::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       'vid' => 'tags',
-    ));
+    ]);
     $this->term->save();
 
     // Create image.

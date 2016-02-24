@@ -79,18 +79,18 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installSchema('node', ['node_access']);
 
-    $this->vocabulary = entity_create('taxonomy_vocabulary', array(
+    $this->vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
+    ]);
     $this->vocabulary->save();
 
-    $this->term = entity_create('taxonomy_term', array(
+    $this->term = Term::create([
       'name' => $this->randomMachineName(),
       'vid' => $this->vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
+    ]);
     $this->term->save();
 
     $this->entityStringId = EntityTestStringId::create([
@@ -141,11 +141,11 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->assertEqual($term->getName(), $new_name);
 
     // Make sure the computed term reflects updates to the term id.
-    $term2 = entity_create('taxonomy_term', array(
+    $term2 = Term::create([
       'name' => $this->randomMachineName(),
       'vid' => $this->term->bundle(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
+    ]);
     $term2->save();
 
     // Test all the possible ways of assigning a value.
@@ -233,11 +233,11 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->assertEqual($vocabulary->label(), $new_name);
 
     // Make sure the computed term reflects updates to the term id.
-    $vocabulary2 = entity_create('taxonomy_vocabulary', array(
+    $vocabulary2 =  $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
+    ]);
     $vocabulary2->save();
 
     $entity->field_test_taxonomy_vocabulary->target_id = $vocabulary2->id();
@@ -280,11 +280,11 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
    */
   public function testEntitySaveOrder() {
     // The term entity is unsaved here.
-    $term = entity_create('taxonomy_term', array(
+    $term = Term::create([
       'name' => $this->randomMachineName(),
       'vid' => $this->term->bundle(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
+    ]);
     $entity = EntityTest::create();
     // Now assign the unsaved term to the field.
     $entity->field_test_taxonomy_term->entity = $term;

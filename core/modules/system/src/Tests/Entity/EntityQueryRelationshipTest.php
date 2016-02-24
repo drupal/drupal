@@ -9,6 +9,8 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\Component\Utility\Unicode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Tests the Entity Query relationship API.
@@ -73,9 +75,9 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
 
     // We want an entity reference field. It needs a vocabulary, terms, a field
     // storage and a field. First, create the vocabulary.
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create([
       'vid' => Unicode::strtolower($this->randomMachineName()),
-    ));
+    ]);
     $vocabulary->save();
 
     // Second, create the field.
@@ -91,10 +93,10 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
 
     // Create two terms and also two accounts.
     for ($i = 0; $i <= 1; $i++) {
-      $term = entity_create('taxonomy_term', array(
+      $term = Term::create([
         'name' => $this->randomMachineName(),
         'vid' => $vocabulary->id(),
-      ));
+      ]);
       $term->save();
       $this->terms[] = $term;
       $this->accounts[] = $this->createUser();

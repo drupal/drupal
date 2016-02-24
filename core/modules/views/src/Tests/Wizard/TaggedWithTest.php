@@ -10,6 +10,7 @@ namespace Drupal\views\Tests\Wizard;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.
@@ -78,10 +79,10 @@ class TaggedWithTest extends WizardTestBase {
     $this->nodeTypeWithoutTags = $this->drupalCreateContentType();
 
     // Create the vocabulary for the tag field.
-    $this->tagVocabulary = entity_create('taxonomy_vocabulary', array(
+    $this->tagVocabulary = Vocabulary::create([
       'name' => 'Views testing tags',
       'vid' => 'views_testing_tags',
-    ));
+    ]);
     $this->tagVocabulary->save();
 
     // Create the tag field itself.

@@ -16,6 +16,7 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Visit all lists.
@@ -165,11 +166,11 @@ class ConfigTranslationListUiTest extends WebTestBase {
   protected function doVocabularyListTest() {
     // Create a test vocabulary to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       'vid' => Unicode::strtolower($this->randomMachineName()),
-    ));
+    ]);
     $vocabulary->save();
 
     // Get the Taxonomy listing.

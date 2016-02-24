@@ -358,23 +358,23 @@ class EntityCrudHookTest extends EntityUnitTestBase {
   public function testTaxonomyTermHooks() {
     $this->installEntitySchema('taxonomy_term');
 
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create([
       'name' => 'Test vocabulary',
       'vid' => 'test',
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
-    ));
+    ]);
     $vocabulary->save();
     $GLOBALS['entity_crud_hook_test'] = array();
 
-    $term = entity_create('taxonomy_term', array(
+    $term = Term::create([
       'vid' => $vocabulary->id(),
       'name' => 'Test term',
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'description' => NULL,
       'format' => 1,
-    ));
+    ]);
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_taxonomy_term_create called',
@@ -427,13 +427,13 @@ class EntityCrudHookTest extends EntityUnitTestBase {
   public function testTaxonomyVocabularyHooks() {
     $this->installEntitySchema('taxonomy_term');
 
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create([
       'name' => 'Test vocabulary',
       'vid' => 'test',
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
-    ));
+    ]);
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_taxonomy_vocabulary_create called',

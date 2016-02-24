@@ -339,13 +339,13 @@ class ForumTest extends WebTestBase {
     // Create a default vocabulary named "Tags".
     $description = 'Use tags to group articles on similar topics into categories.';
     $help = 'Enter a comma-separated list of words to describe your content.';
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create([
       'name' => 'Tags',
       'description' => $description,
       'vid' => 'tags',
       'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
       'help' => $help,
-    ));
+    ]);
     $vocabulary->save();
     // Test tags vocabulary form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags');

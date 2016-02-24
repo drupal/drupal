@@ -11,6 +11,8 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\comment\Entity\Comment;
 use Drupal\user\Entity\User;
 use Drupal\node\Entity\NodeType;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests that nodes and terms are correctly normalized and denormalized.
@@ -89,7 +91,7 @@ class EntityTest extends NormalizerTestBase {
    * Tests the normalization of terms.
    */
   public function testTerm() {
-    $vocabulary = entity_create('taxonomy_vocabulary', array('vid' => 'example_vocabulary'));
+    $vocabulary = Vocabulary::create(['vid' => 'example_vocabulary']);
     $vocabulary->save();
 
     $account = User::create(['name' => $this->randomMachineName()]);
@@ -97,12 +99,12 @@ class EntityTest extends NormalizerTestBase {
 
     // @todo Until https://www.drupal.org/node/2327935 is fixed, if no parent is
     // set, the test fails because target_id => 0 is reserialized to NULL.
-    $term_parent = entity_create('taxonomy_term', array(
+    $term_parent = Term::create([
       'name' => $this->randomMachineName(),
       'vid' => $vocabulary->id(),
-    ));
+    ]);
     $term_parent->save();
-    $term = entity_create('taxonomy_term', array(
+    $term = Term::create([
       'name' => $this->randomMachineName(),
       'vid' => $vocabulary->id(),
       'description' => array(
@@ -110,7 +112,7 @@ class EntityTest extends NormalizerTestBase {
         'format' => $this->randomMachineName(),
       ),
       'parent' => $term_parent->id(),
-    ));
+    ]);
     $term->save();
 
     $original_values = $term->toArray();

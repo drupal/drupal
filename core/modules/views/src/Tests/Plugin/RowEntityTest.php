@@ -10,6 +10,8 @@ namespace Drupal\views\Tests\Plugin;
 use Drupal\Core\Form\FormState;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewKernelTestBase;
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Tests the generic entity row plugin.
@@ -48,9 +50,9 @@ class RowEntityTest extends ViewKernelTestBase {
    * Tests the entity row handler.
    */
   public function testEntityRow() {
-    $vocab = entity_create('taxonomy_vocabulary', array('name' => $this->randomMachineName(), 'vid' => strtolower($this->randomMachineName())));
+    $vocab = Vocabulary::create(['name' => $this->randomMachineName(), 'vid' => strtolower($this->randomMachineName())]);
     $vocab->save();
-    $term = entity_create('taxonomy_term', array('name' => $this->randomMachineName(), 'vid' => $vocab->id() ));
+    $term = Term::create(['name' => $this->randomMachineName(), 'vid' => $vocab->id() ]);
     $term->save();
 
     $view = Views::getView('test_entity_row');

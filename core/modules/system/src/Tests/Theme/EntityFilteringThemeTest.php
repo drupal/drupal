@@ -13,6 +13,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\comment\Entity\Comment;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Tests themed output for each entity type in all available themes to ensure
@@ -94,10 +95,10 @@ class EntityFilteringThemeTest extends WebTestBase {
     $this->drupalLogin($this->user);
 
     // Create a test term.
-    $this->term = entity_create('taxonomy_term', array(
+    $this->term = Term::create([
       'name' => $this->xssLabel,
       'vid' => 1,
-    ));
+    ]);
     $this->term->save();
 
     // Add a comment field.
