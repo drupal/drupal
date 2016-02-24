@@ -1350,7 +1350,23 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
     $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time/formats', array('absolute' => TRUE)), 'Correct page redirection.');
     $this->assertText(t('Custom date format updated.'), 'Custom date format successfully updated.');
 
+    // Check that ajax callback is protected by CSRF token.
+    $this->drupalGet('admin/config/regional/date-time/formats/lookup', array('query' => array('format' => 'Y m d')));
+    $this->assertResponse(403, 'Access denied with no token');
+    $this->drupalGet('admin/config/regional/date-time/formats/lookup', array('query' => array('token' => 'invalid', 'format' => 'Y m d')));
+    $this->assertResponse(403, 'Access denied with invalid token');
+    $this->drupalGet('admin/config/regional/date-time/formats');
+    $this->clickLink(t('edit'));
+    $settings = $this->drupalGetSettings();
+    $lookup_url = $settings['dateTime']['date-format']['lookup'];
+    preg_match('/token=([^&]+)/', $lookup_url, $matches);
+    $this->assertFalse(empty($matches[1]), 'Found token value');
+    $this->drupalGet('admin/config/regional/date-time/formats/lookup', array('query' => array('token' => $matches[1], 'format' => 'Y m d')));
+    $this->assertResponse(200, 'Access allowed with valid token');
+    $this->assertText(format_date(time(), 'custom', 'Y m d'));
+
     // Delete custom date format.
+    $this->drupalGet('admin/config/regional/date-time/formats');
     $this->clickLink(t('delete'));
     $this->drupalPost($this->getUrl(), array(), t('Remove'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time/formats', array('absolute' => TRUE)), 'Correct page redirection.');
