@@ -1,3 +1,16 @@
+# This theme is marked as @internal. It is intended to evolve and change over
+# minor releases.
+# Change record https://www.drupal.org/node/2582945.
+# As the UI of Drupal improves between minor versions, the mark up and assets
+# in the Seven theme will change. The Seven theme is not backwards
+# compatible. If you wish to modify the output or assets of Seven you can:
+# 1. Copy the whole of Seven and rename it as your own admin theme. You
+# will need to manually manage your own updates if you want to stay up to
+# date with Seven's bug fixes and feature support.
+#
+# 2. Sub-theme Seven. This is only recommended if you want to make minor
+# tweaks and understand that Seven could break your modifications as it
+# changes.
 name: Seven
 type: theme
 base theme: classy
