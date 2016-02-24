@@ -134,8 +134,19 @@ class BasicSettingsForm extends ConfigFormBase {
       ),
     );
 
+    $form['live_preview']['options']['ui_show_sql_query_enabled'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show the SQL query'),
+      '#default_value' => $config->get('ui.show.sql_query.enabled'),
+    );
+
     $form['live_preview']['options']['ui_show_sql_query_where'] = array(
       '#type' => 'radios',
+      '#states' => array(
+        'visible' => array(
+          ':input[name="ui_show_sql_query_enabled"]' => array('checked' => TRUE),
+        ),
+      ),
       '#title' => t('Show SQL query'),
       '#options' => array(
         'above' => $this->t('Above the preview'),
@@ -144,11 +155,6 @@ class BasicSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('ui.show.sql_query.where'),
     );
 
-    $form['live_preview']['options']['ui_show_sql_query_enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Show the SQL query'),
-      '#default_value' => $config->get('ui.show.sql_query.enabled'),
-    );
     $form['live_preview']['options']['ui_show_performance_statistics'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Show performance statistics'),
