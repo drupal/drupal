@@ -1,7 +1,6 @@
 
-Drupal 7.43, 2016-02-24
+Drupal 7.43, xxxx-xx-xx (development version)
 -----------------------
-- Fixed security issues (multiple vulnerabilities). See SA-CORE-2016-001.
 
 Drupal 7.42, 2016-02-03
 -----------------------
