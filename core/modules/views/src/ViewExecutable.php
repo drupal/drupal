@@ -8,12 +8,12 @@
 namespace Drupal\views;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Tags;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
-use Drupal\Component\Utility\Tags;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -1371,8 +1371,9 @@ class ViewExecutable implements \Serializable {
     $module_handler->invokeAll('views_pre_execute', array($this));
 
     // Check for already-cached results.
+    /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
     if (!empty($this->live_preview)) {
-      $cache = $this->display_handler->getPlugin('cache', 'none');
+      $cache = Views::pluginManager('cache')->createInstance('none');
     }
     else {
       $cache = $this->display_handler->getPlugin('cache');

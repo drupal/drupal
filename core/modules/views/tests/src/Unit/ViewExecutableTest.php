@@ -7,10 +7,16 @@
 
 namespace Drupal\Tests\views\Unit;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
+use Drupal\views\Plugin\views\cache\None as NoneCache;
+use Drupal\views\Plugin\views\pager\None as NonePager;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\Routing\Route;
 
@@ -77,6 +83,20 @@ class ViewExecutableTest extends UnitTestCase {
   protected $routeProvider;
 
   /**
+   * The mocked none cache plugin.
+   *
+   * @var \Drupal\views\Plugin\views\cache\None|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $noneCache;
+
+  /**
+   * The mocked cache plugin that returns a successful result.
+   *
+   * @var \Drupal\views\Plugin\views\cache\None|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $successCache;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -103,10 +123,26 @@ class ViewExecutableTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $module_handler = $this->getMockBuilder(ModuleHandlerInterface::class)
+      ->getMock();
+
+    $this->noneCache = $this->getMockBuilder(NoneCache::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $success_cache = $this->prophesize(CachePluginBase::class);
+    $success_cache->cacheGet('results')->willReturn(TRUE);
+    $this->successCache = $success_cache->reveal();
+
+    $cache_manager = $this->prophesize(PluginManagerInterface::class);
+    $cache_manager->createInstance('none')->willReturn($this->noneCache);
+
     $translation = $this->getStringTranslationStub();
     $container = new ContainerBuilder();
     $container->set('string_translation', $translation);
     $container->set('views.executable', $this->viewExecutableFactory);
+    $container->set('module_handler', $module_handler);
+    $container->set('plugin.manager.views.cache', $cache_manager->reveal());
     \Drupal::setContainer($container);
   }
 
@@ -452,6 +488,11 @@ class ViewExecutableTest extends UnitTestCase {
     $display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
       ->disableOriginalConstructor()
       ->getMock();
+    $display->expects($this->any())
+      ->method('getPlugin')
+      ->with($this->equalTo('cache'))
+      ->willReturn($this->successCache);
+
     $display->display = $config['display']['default'];
 
     $view->current_display = 'default';
@@ -465,6 +506,10 @@ class ViewExecutableTest extends UnitTestCase {
       ->method('has')
       ->with('default')
       ->willReturn(TRUE);
+
+    foreach (array_keys($view->getHandlerTypes()) as $type) {
+      $view->$type = [];
+    }
 
     return array($view, $display);
   }
@@ -563,6 +608,33 @@ class ViewExecutableTest extends UnitTestCase {
     $view->setCurrentPage(12);
     $this->assertEquals(12, $view->getCurrentPage());
     $this->assertNotContains('page:12', $view->element['#cache']['keys']);
+  }
+
+  /**
+   * @covers ::execute
+   */
+  public function testCacheIsIgnoredDuringPreview() {
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
+    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit_Framework_MockObject_MockObject $display */
+    list($view, $display) = $this->setupBaseViewAndDisplay();
+
+    // Pager needs to be set to avoid false test failures.
+    $view->pager = $this->getMockBuilder(NonePager::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $query = $this->getMockBuilder(QueryPluginBase::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $view->query = $query;
+    $view->built = TRUE;
+    $view->live_preview = TRUE;
+
+    $this->noneCache->expects($this->once())->method('cacheGet');
+    $query->expects($this->once())->method('execute');
+
+    $view->execute();
   }
 
 }
