@@ -58,8 +58,9 @@
 
         // For anchor tags, these will go to the target of the anchor rather
         // than the usual location.
-        if ($(this).attr('href')) {
-          element_settings.url = $(this).attr('href');
+        var href = $(this).attr('href');
+        if (href) {
+          element_settings.url = href;
           element_settings.event = 'click';
         }
         element_settings.dialogType = $(this).data('dialog-type');
@@ -929,7 +930,7 @@
     insert: function (ajax, response, status) {
       // Get information from the response. If it is not there, default to
       // our presets.
-      var wrapper = response.selector ? $(response.selector) : $(ajax.wrapper);
+      var $wrapper = response.selector ? $(response.selector) : $(ajax.wrapper);
       var method = response.method || ajax.method;
       var effect = ajax.getEffect(response);
       var settings;
@@ -939,11 +940,11 @@
       // $(response.data) as new HTML rather than a CSS selector. Also, if
       // response.data contains top-level text nodes, they get lost with either
       // $(response.data) or $('<div></div>').replaceWith(response.data).
-      var new_content_wrapped = $('<div></div>').html(response.data);
-      var new_content = new_content_wrapped.contents();
+      var $new_content_wrapped = $('<div></div>').html(response.data);
+      var $new_content = $new_content_wrapped.contents();
 
       // For legacy reasons, the effects processing code assumes that
-      // new_content consists of a single top-level element. Also, it has not
+      // $new_content consists of a single top-level element. Also, it has not
       // been sufficiently tested whether attachBehaviors() can be successfully
       // called with a context object that includes top-level text nodes.
       // However, to give developers full control of the HTML appearing in the
@@ -953,8 +954,8 @@
       // top-level element, and only use the container DIV created above when
       // it doesn't. For more information, please see
       // https://www.drupal.org/node/736066.
-      if (new_content.length !== 1 || new_content.get(0).nodeType !== 1) {
-        new_content = new_content_wrapped;
+      if ($new_content.length !== 1 || $new_content.get(0).nodeType !== 1) {
+        $new_content = $new_content_wrapped;
       }
 
       // If removing content from the wrapper, detach behaviors first.
@@ -965,35 +966,35 @@
         case 'empty':
         case 'remove':
           settings = response.settings || ajax.settings || drupalSettings;
-          Drupal.detachBehaviors(wrapper.get(0), settings);
+          Drupal.detachBehaviors($wrapper.get(0), settings);
       }
 
       // Add the new content to the page.
-      wrapper[method](new_content);
+      $wrapper[method]($new_content);
 
       // Immediately hide the new content if we're using any effects.
       if (effect.showEffect !== 'show') {
-        new_content.hide();
+        $new_content.hide();
       }
 
       // Determine which effect to use and what content will receive the
       // effect, then show the new content.
-      if (new_content.find('.ajax-new-content').length > 0) {
-        new_content.find('.ajax-new-content').hide();
-        new_content.show();
-        new_content.find('.ajax-new-content')[effect.showEffect](effect.showSpeed);
+      if ($new_content.find('.ajax-new-content').length > 0) {
+        $new_content.find('.ajax-new-content').hide();
+        $new_content.show();
+        $new_content.find('.ajax-new-content')[effect.showEffect](effect.showSpeed);
       }
       else if (effect.showEffect !== 'show') {
-        new_content[effect.showEffect](effect.showSpeed);
+        $new_content[effect.showEffect](effect.showSpeed);
       }
 
       // Attach all JavaScript behaviors to the new content, if it was
       // successfully added to the page, this if statement allows
       // `#ajax['wrapper']` to be optional.
-      if (new_content.parents('html').length > 0) {
+      if ($new_content.parents('html').length > 0) {
         // Apply any settings from the returned JSON if available.
         settings = response.settings || ajax.settings || drupalSettings;
-        Drupal.attachBehaviors(new_content.get(0), settings);
+        Drupal.attachBehaviors($new_content.get(0), settings);
       }
     },
 
@@ -1024,10 +1025,11 @@
      * @param {number} [status]
      */
     changed: function (ajax, response, status) {
-      if (!$(response.selector).hasClass('ajax-changed')) {
-        $(response.selector).addClass('ajax-changed');
+      var $element = $(response.selector);
+      if (!$element.hasClass('ajax-changed')) {
+        $element.addClass('ajax-changed');
         if (response.asterisk) {
-          $(response.selector).find(response.asterisk).append(' <abbr class="ajax-changed" title="' + Drupal.t('Changed') + '">*</abbr> ');
+          $element.find(response.asterisk).append(' <abbr class="ajax-changed" title="' + Drupal.t('Changed') + '">*</abbr> ');
         }
       }
     },
