@@ -497,7 +497,7 @@ services:
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     parent: container.trait
-    deprecated: %service_id%-no-warning
+    deprecated: '%service_id%-no-warning'
     # @todo Remove this tag in https://www.drupal.org/node/2549143.
     tags:
       - { name: plugin_manager_cache_clear }
