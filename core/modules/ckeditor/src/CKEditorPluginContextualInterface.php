@@ -24,6 +24,7 @@ use Drupal\editor\Entity\Editor;
  * @see \Drupal\ckeditor\CKEditorPluginInterface
  * @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
  * @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginCssInterface
  * @see \Drupal\ckeditor\CKEditorPluginBase
  * @see \Drupal\ckeditor\CKEditorPluginManager
  * @see \Drupal\ckeditor\Annotation\CKEditorPlugin

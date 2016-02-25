@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\PluginBase;
 use Drupal\editor\Entity\Editor;
 use Drupal\ckeditor\CKEditorPluginInterface;
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
+use Drupal\ckeditor\CKEditorPluginCssInterface;
 
 /**
  * Defines the "drupalimagecaption" plugin.
@@ -21,7 +22,7 @@ use Drupal\ckeditor\CKEditorPluginContextualInterface;
  *   module = "ckeditor"
  * )
  */
-class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, CKEditorPluginContextualInterface {
+class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, CKEditorPluginContextualInterface, CKEditorPluginCssInterface {
 
   /**
    * {@inheritdoc}
@@ -66,6 +67,15 @@ class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, 
       // corresponding Drupal text filters are enabled.
       'drupalImageCaption_captionFilterEnabled' => $format->filters('filter_caption')->status,
       'drupalImageCaption_alignFilterEnabled' => $format->filters('filter_align')->status,
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCssFiles(Editor $editor) {
+    return array(
+      drupal_get_path('module', 'ckeditor') . '/css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css'
     );
   }
 

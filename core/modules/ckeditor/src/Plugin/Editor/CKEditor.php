@@ -422,6 +422,11 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       drupal_get_path('module', 'system') . '/css/components/align.module.css',
     );
     $this->moduleHandler->alter('ckeditor_css', $css, $editor);
+    // Get a list of all enabled plugins' iframe instance CSS files.
+    $plugins_css = array_reduce($this->ckeditorPluginManager->getCssFiles($editor), function($result, $item) {
+      return array_merge($result, array_values($item));
+    }, array());
+    $css = array_merge($css, $plugins_css);
     $css = array_merge($css, _ckeditor_theme_css());
     $css = array_map('file_create_url', $css);
     $css = array_map('file_url_transform_relative', $css);

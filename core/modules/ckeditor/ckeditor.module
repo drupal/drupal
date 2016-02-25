@@ -64,13 +64,6 @@ function ckeditor_ckeditor_css_alter(array &$css, Editor $editor) {
   if ($editor->getFilterFormat()->filters('filter_caption')->status) {
     $css[] = drupal_get_path('module', 'filter') . '/css/filter.caption.css';
   }
-
-  // Add the filter caption CSS if the text format associated with this text
-  // editor uses the filter_align filter. This is used by the included
-  // CKEditor DrupalImageCaption plugin.
-  if ($editor->getFilterFormat()->filters('filter_align')->status) {
-    $css[] = drupal_get_path('module', 'ckeditor') . '/css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css';
-  }
 }
 
 /**

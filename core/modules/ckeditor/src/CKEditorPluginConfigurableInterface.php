@@ -20,6 +20,7 @@ use Drupal\editor\Entity\Editor;
  * @see \Drupal\ckeditor\CKEditorPluginInterface
  * @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
  * @see \Drupal\ckeditor\CKEditorPluginContextualInterface
+ * @see \Drupal\ckeditor\CKEditorPluginCssInterface
  * @see \Drupal\ckeditor\CKEditorPluginBase
  * @see \Drupal\ckeditor\CKEditorPluginManager
  * @see \Drupal\ckeditor\Annotation\CKEditorPlugin

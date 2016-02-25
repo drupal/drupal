@@ -21,6 +21,7 @@ use Drupal\editor\Entity\Editor;
  * @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
  * @see \Drupal\ckeditor\CKEditorPluginContextualInterface
  * @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginCssInterface
  * @see \Drupal\ckeditor\CKEditorPluginBase
  * @see \Drupal\ckeditor\Annotation\CKEditorPlugin
  * @see plugin_api
@@ -127,7 +128,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
    *   All available CKEditor buttons, with plugin IDs as keys and button
    *   metadata (as implemented by getButtons()) as values.
    *
-   * @see CKEditorPluginButtonsInterface::getButtons()
+   * @see \Drupal\ckeditor\CKEditorPluginButtonsInterface::getButtons()
    */
   public function getButtons() {
     $plugins = array_keys($this->getDefinitions());
@@ -182,4 +183,32 @@ class CKEditorPluginManager extends DefaultPluginManager {
       }
     }
   }
+
+  /**
+   * Retrieves enabled plugins' iframe instance CSS files, keyed by plugin ID.
+   *
+   * @param \Drupal\editor\Entity\Editor $editor
+   *   A configured text editor object.
+   *
+   * @return string[]
+   *   Enabled plugins CKEditor CSS files, with plugin IDs as keys and CSS file
+   *   paths relative to the Drupal root (as implemented by getCssFiles()) as
+   *   values.
+   *
+   * @see \Drupal\ckeditor\CKEditorPluginCssInterface::getCssFiles()
+   */
+  public function getCssFiles(Editor $editor) {
+    $enabled_plugins = array_keys($this->getEnabledPluginFiles($editor, TRUE));
+    $css_files = array();
+
+    foreach ($enabled_plugins as $plugin_id) {
+      $plugin = $this->createInstance($plugin_id);
+      if ($plugin instanceof CKEditorPluginCssInterface) {
+        $css_files[$plugin_id] = $plugin->getCssFiles($editor);
+      }
+    }
+
+    return $css_files;
+  }
+
 }
