@@ -13,7 +13,6 @@
 namespace Drupal\Core\Template;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Render\RenderableInterface;
@@ -446,7 +445,7 @@ class TwigExtension extends \Twig_Extension {
 
     // We have a string or an object converted to a string: Autoescape it!
     if (isset($return)) {
-      if ($autoescape && SafeMarkup::isSafe($return, $strategy)) {
+      if ($autoescape && $return instanceof MarkupInterface) {
         return $return;
       }
       // Drupal only supports the HTML escaping strategy, so provide a

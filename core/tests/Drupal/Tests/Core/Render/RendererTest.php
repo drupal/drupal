@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Render;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
@@ -47,13 +47,13 @@ class RendererTest extends RendererTestBase {
     }
 
     if (isset($build['#markup'])) {
-      $this->assertFalse(SafeMarkup::isSafe($build['#markup']), 'The #markup value is not marked safe before rendering.');
+      $this->assertNotInstanceOf(MarkupInterface::class, $build['#markup'], 'The #markup value is not marked safe before rendering.');
     }
     $render_output = $this->renderer->renderRoot($build);
     $this->assertSame($expected, (string) $render_output);
     if ($render_output !== '') {
-      $this->assertTrue(SafeMarkup::isSafe($render_output), 'Output of render is marked safe.');
-      $this->assertTrue(SafeMarkup::isSafe($build['#markup']), 'The #markup value is marked safe after rendering.');
+      $this->assertInstanceOf(MarkupInterface::class, $render_output, 'Output of render is marked safe.');
+      $this->assertInstanceOf(MarkupInterface::class, $build['#markup'], 'The #markup value is marked safe after rendering.');
     }
   }
 
@@ -751,7 +751,7 @@ class RendererTest extends RendererTestBase {
     // #custom_property_array can not be a safe_cache_property.
     $safe_cache_properties = array_diff(Element::properties(array_filter($expected_results)), ['#custom_property_array']);
     foreach ($safe_cache_properties as $cache_property) {
-      $this->assertTrue(SafeMarkup::isSafe($data[$cache_property]), "$cache_property is marked as a safe string");
+      $this->assertInstanceOf(MarkupInterface::class, $data[$cache_property], "$cache_property is marked as a safe string");
     }
   }
 

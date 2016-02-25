@@ -9,7 +9,6 @@ namespace Drupal\Core\Utility;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\GeneratedLink;
@@ -166,7 +165,7 @@ class LinkGenerator implements LinkGeneratorInterface {
       $attributes['href'] = $generated_url->getGeneratedUrl();
     }
 
-    if (!SafeMarkup::isSafe($variables['text'])) {
+    if (!($variables['text'] instanceof MarkupInterface)) {
       $variables['text'] = Html::escape($variables['text']);
     }
     $attributes = new Attribute($attributes);

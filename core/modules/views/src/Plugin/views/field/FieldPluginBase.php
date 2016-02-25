@@ -8,7 +8,6 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
@@ -1221,7 +1220,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     // alterations made by this method. Any alterations or replacements made
     // within this method need to ensure that at the minimum the result is
     // XSS admin filtered. See self::renderAltered() as an example that does.
-    $value_is_safe = SafeMarkup::isSafe($this->last_render);
+    $value_is_safe = $this->last_render instanceof MarkupInterface;
     // Cast to a string so that empty checks and string functions work as
     // expected.
     $value = (string) $this->last_render;
@@ -1299,9 +1298,10 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
 
     // Preserve whether or not the string is safe. Since $more_link comes from
-    // \Drupal::l(), it is safe to append. Use SafeMarkup::isSafe() here because
-    // renderAsLink() can return both safe and unsafe values.
-    if (SafeMarkup::isSafe($value)) {
+    // \Drupal::l(), it is safe to append. Check if the value is an instance of
+    // \Drupal\Component\Render\MarkupInterface here because renderAsLink()
+    // can return both safe and unsafe values.
+    if ($value instanceof MarkupInterface) {
       return ViewsRenderPipelineMarkup::create($value . $more_link);
     }
     else {

@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\StringTranslation;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\Tests\UnitTestCase;
@@ -64,7 +63,7 @@ class TranslationManagerTest extends UnitTestCase {
     $this->translationManager->addTranslator($translator);
     $result = $this->translationManager->formatPlural($count, $singular, $plural, $args, $options);
     $this->assertEquals($expected, $result);
-    $this->assertTrue(SafeMarkup::isSafe($result));
+    $this->assertInstanceOf(MarkupInterface::class, $result);
   }
 
   /**

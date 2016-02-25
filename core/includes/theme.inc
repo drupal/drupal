@@ -11,7 +11,6 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Config;
@@ -428,7 +427,7 @@ function theme_render_and_autoescape($arg) {
 
   // We have a string or an object converted to a string: Escape it!
   if (isset($return)) {
-    return SafeMarkup::isSafe($return, 'html') ? $return : Html::escape($return);
+    return $return instanceof MarkupInterface ? $return : Html::escape($return);
   }
 
   // This is a normal render array, which is safe by definition, with special

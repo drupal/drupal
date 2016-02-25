@@ -138,7 +138,7 @@ class SafeMarkupTest extends UnitTestCase {
 
     $result = SafeMarkup::format($string, $args);
     $this->assertEquals($expected, $result, $message);
-    $this->assertEquals($expected_is_safe, SafeMarkup::isSafe($result), 'SafeMarkup::format correctly sets the result as safe or not safe.');
+    $this->assertEquals($expected_is_safe, $result instanceof MarkupInterface, 'SafeMarkup::format correctly sets the result as safe or not safe.');
 
     foreach ($args as $arg) {
       $this->assertSame($arg instanceof SafeMarkupTestMarkup, SafeMarkup::isSafe($arg));

@@ -7,8 +7,8 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html as HtmlUtility;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\Markup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
@@ -97,7 +97,7 @@ class HtmlTag extends RenderElement {
     // Construct all other elements.
     else {
       $markup .= '>';
-      $markup .= SafeMarkup::isSafe($element['#value']) ? $element['#value'] : Xss::filterAdmin($element['#value']);
+      $markup .= $element['#value'] instanceof MarkupInterface ? $element['#value'] : Xss::filterAdmin($element['#value']);
       $markup .= '</' . $escaped_tag . ">\n";
     }
     if (!empty($element['#noscript'])) {
@@ -171,11 +171,11 @@ class HtmlTag extends RenderElement {
     // Ensure what we are dealing with is safe.
     // This would be done later anyway in drupal_render().
     $prefix = isset($element['#prefix']) ? $element['#prefix'] : '';
-    if ($prefix && !SafeMarkup::isSafe($prefix)) {
+    if ($prefix && !($prefix instanceof MarkupInterface)) {
       $prefix = Xss::filterAdmin($prefix);
     }
     $suffix = isset($element['#suffix']) ? $element['#suffix'] : '';
-    if ($suffix && !SafeMarkup::isSafe($suffix)) {
+    if ($suffix && !($suffix instanceof MarkupInterface)) {
       $suffix = Xss::filterAdmin($suffix);
     }
 

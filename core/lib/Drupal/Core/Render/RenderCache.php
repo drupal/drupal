@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Render;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CacheContextsManager;
@@ -341,12 +340,6 @@ class RenderCache implements RenderCacheInterface {
     // the cache entry size.
     if (!empty($elements['#cache_properties']) && is_array($elements['#cache_properties'])) {
       $data['#cache_properties'] = $elements['#cache_properties'];
-      // Ensure that any safe strings are a Markup object.
-      foreach (Element::properties(array_flip($elements['#cache_properties'])) as $cache_property) {
-        if (isset($elements[$cache_property]) && is_scalar($elements[$cache_property]) && SafeMarkup::isSafe($elements[$cache_property])) {
-          $elements[$cache_property] = Markup::create($elements[$cache_property]);
-        }
-      }
 
       // Extract all the cacheable items from the element using cache
       // properties.

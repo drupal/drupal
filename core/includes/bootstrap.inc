@@ -10,6 +10,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Render\Markup;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
@@ -441,7 +442,7 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
     }
 
     // Convert strings which are safe to the simplest Markup objects.
-    if (!($message instanceof Markup) && SafeMarkup::isSafe($message)) {
+    if (!($message instanceof Markup) && $message instanceof MarkupInterface) {
       $message = Markup::create((string) $message);
     }
 
