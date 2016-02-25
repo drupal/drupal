@@ -31,7 +31,8 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *       "label" = @Translation("File"),
  *       "columns" = {
  *         "target_id", "width", "height"
- *       }
+ *       },
+ *       "require_all_groups_for_translation" = TRUE
  *     },
  *     "alt" = {
  *       "label" = @Translation("Alt"),
