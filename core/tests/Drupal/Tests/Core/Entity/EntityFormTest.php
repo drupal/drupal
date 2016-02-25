@@ -159,7 +159,7 @@ class EntityFormTest extends UnitTestCase {
   public function testGetEntityFromRouteMatchAdd() {
     $entity = $this->prophesize(EntityInterface::class)->reveal();
     $this->setUpStorage()->create([])->willReturn($entity);
-    $route_match = new RouteMatch('test_route',  new Route('/entity-test/add'));
+    $route_match = new RouteMatch('test_route', new Route('/entity-test/add'));
     $actual = $this->entityForm->getEntityFromRouteMatch($route_match, $this->entityType->id());
     $this->assertEquals($entity, $actual);
   }
@@ -178,7 +178,7 @@ class EntityFormTest extends UnitTestCase {
 
     // Test without a bundle parameter in the route.
     $storage->create([])->willReturn($entity);
-    $route_match = new RouteMatch('test_route',  new Route('/entity-test/add'));
+    $route_match = new RouteMatch('test_route', new Route('/entity-test/add'));
     $actual = $this->entityForm->getEntityFromRouteMatch($route_match, $this->entityType->id());
     $this->assertEquals($entity, $actual);
 
@@ -208,7 +208,7 @@ class EntityFormTest extends UnitTestCase {
 
     // Test without a bundle parameter in the route.
     $storage->create([])->willReturn($entity);
-    $route_match = new RouteMatch('test_route',  new Route('/entity-test/add'));
+    $route_match = new RouteMatch('test_route', new Route('/entity-test/add'));
     $actual = $this->entityForm->getEntityFromRouteMatch($route_match, $this->entityType->id());
     $this->assertEquals($entity, $actual);
 

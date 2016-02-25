@@ -26,7 +26,7 @@ class RegexDirectoryIterator extends \FilterIterator {
    *   The path to scan.
    * @param string $regex
    *   The regular expression to match, including delimiters. For example,
-       /\.yml$/ would list only files ending in .yml.
+   *   /\.yml$/ would list only files ending in .yml.
    */
   public function __construct($path, $regex) {
     // Use FilesystemIterator to not iterate over the the . and .. directories.
