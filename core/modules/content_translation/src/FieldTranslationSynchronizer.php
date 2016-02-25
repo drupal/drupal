@@ -66,6 +66,17 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
         // Retrieve all the untranslatable column groups and merge them into
         // single list.
         $groups = array_keys(array_diff($translation_sync, array_filter($translation_sync)));
+
+        // If a group was selected has the require_all_groups_for_translation
+        // flag set, there are no untranslatable columns. This is done because
+        // the UI adds Javascript that disables the other checkboxes, so their
+        // values are not saved.
+        foreach (array_filter($translation_sync) as $group) {
+          if (!empty($column_groups[$group]['require_all_groups_for_translation'])) {
+            $groups = [];
+            break;
+          }
+        }
         if (!empty($groups)) {
           $columns = array();
           foreach ($groups as $group) {
@@ -163,7 +174,16 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
             continue;
           }
           // If a synchronized column has changed or has been created from
-          // scratch we need to override the full items array for all languages.
+          // scratch we need to replace the values for this language as a
+          // combination of the values that need to be synced from the source
+          // items and the other columns from the existing values. This only
+          // works if the delta exists in the language.
+          elseif ($created && !empty($original_field_values[$langcode][$delta])) {
+            $item_columns_to_sync = array_intersect_key($source_items[$delta], array_flip($columns));
+            $item_columns_to_keep = array_diff_key($original_field_values[$langcode][$delta], array_flip($columns));
+            $values[$langcode][$delta] = $item_columns_to_sync + $item_columns_to_keep;
+          }
+          // If the delta doesn't exist, copy from the source language.
           elseif ($created) {
             $values[$langcode][$delta] = $source_items[$delta];
           }

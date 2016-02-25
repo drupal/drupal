@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_help().
@@ -199,9 +200,17 @@ function content_translation_entity_base_field_info(EntityTypeInterface $entity_
  *   which columns should be synchronized across different translations and
  *   which are translatable. This is useful for instance to translate the
  *   "alt" and "title" textual elements of an image field, while keeping the
- *   same image on every translation.
+ *   same image on every translation. Each group has the following keys:
+ *   - title: Title of the column group.
+ *   - translatable: (optional) If the column group should be translatable by
+ *     default, defaults to FALSE.
+ *   - columns: (optional) A list of columns of this group. Defaults to the
+ *     name of he group as the single column.
+ *   - require_all_groups_for_translation: (optional) Set to TRUE to enforce
+ *     that making this column group translatable requires all others to be
+ *     translatable too.
  *
- *   @see Drupal\image\Plugin\Field\FieldType\imageItem.
+ * @see Drupal\image\Plugin\Field\FieldType\ImageItem
  */
 function content_translation_field_info_alter(&$info) {
   foreach ($info as $key => $settings) {

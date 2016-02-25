@@ -201,7 +201,9 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
       for ($delta = 0; $delta < $this->cardinality; $delta++) {
         if ($delta_callback($delta)) {
           foreach ($this->columns as $column) {
-            $field_values[$sync_langcode][$delta][$column] = $field_values[$sync_langcode][0][$column];
+            if (in_array($column, $this->synchronized)) {
+              $field_values[$sync_langcode][$delta][$column] = $field_values[$sync_langcode][0][$column];
+            }
           }
         }
       }
@@ -209,19 +211,18 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
       $changed_items = $field_values[$sync_langcode];
       $this->synchronizer->synchronizeItems($field_values, $unchanged_items, $sync_langcode, $this->langcodes, $this->synchronized);
 
-      $result = TRUE;
       foreach ($this->unchangedFieldValues as $langcode => $unchanged_items) {
         for ($delta = 0; $delta < $this->cardinality; $delta++) {
           foreach ($this->columns as $column) {
             // The first item is always unchanged hence it is retained by the
             // synchronization process. The other ones are retained or synced
-            // depending on the logic implemented by the delta callback.
-            $value = $delta > 0 && $delta_callback($delta) ? $changed_items[0][$column] : $unchanged_items[$delta][$column];
-            $result = $result && ($field_values[$langcode][$delta][$column] == $value);
+            // depending on the logic implemented by the delta callback and
+            // whether it is a sync column or not.
+            $value = $delta > 0 && $delta_callback($delta) && in_array($column, $this->synchronized) ? $changed_items[0][$column] : $unchanged_items[$delta][$column];
+            $this->assertEqual($field_values[$langcode][$delta][$column], $value, "Item $delta column $column for langcode $langcode synced correctly");
           }
         }
       }
-      $this->assertTrue($result, 'Multiple synced items have been correctly synchronized.');
     }
   }
 
@@ -241,15 +242,16 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
     $changed_items = $field_values[$sync_langcode];
     $this->synchronizer->synchronizeItems($field_values, $unchanged_items, $sync_langcode, $this->langcodes, $this->synchronized);
 
-    $result = TRUE;
     foreach ($this->unchangedFieldValues as $langcode => $unchanged_items) {
       for ($delta = 0; $delta < $this->cardinality; $delta++) {
         foreach ($this->columns as $column) {
-          $result = $result && ($field_values[$langcode][$delta][$column] == $changed_items[$delta][$column]);
+          // If the column is synchronized, the value should have been synced,
+          // for unsychronized columns, the value must not change.
+          $expected_value = in_array($column, $this->synchronized) ? $changed_items[$delta][$column] : $this->unchangedFieldValues[$langcode][$delta][$column];
+          $this->assertEqual($field_values[$langcode][$delta][$column], $expected_value, "Differing Item $delta column $column for langcode $langcode synced correctly");
         }
       }
     }
-    $this->assertTrue($result, 'Differing synced columns have been correctly synchronized.');
   }
 
 }
