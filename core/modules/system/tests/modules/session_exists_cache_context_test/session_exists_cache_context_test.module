@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Test module.
+ */
+
+/**
  * Implements hook_page_top().
  */
 function session_exists_cache_context_test_page_top(array &$page_top) {
