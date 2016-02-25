@@ -55,6 +55,11 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: cache.context}
+  cache_context.session.exists:
+    class: Drupal\Core\Cache\Context\SessionExistsCacheContext
+    arguments: ['@session_configuration', '@request_stack']
+    tags:
+      - { name: cache.context}
   cache_context.request_format:
     class: Drupal\Core\Cache\Context\RequestFormatCacheContext
     arguments: ['@request_stack']
