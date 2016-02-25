@@ -270,6 +270,7 @@ class CKEditorTest extends KernelTestBase {
     $expected[] = file_url_transform_relative(file_create_url('core/themes/bartik/css/base/elements.css'));
     $expected[] = file_url_transform_relative(file_create_url('core/themes/bartik/css/components/captions.css'));
     $expected[] = file_url_transform_relative(file_create_url('core/themes/bartik/css/components/table.css'));
+    $expected[] = file_url_transform_relative(file_create_url('core/themes/bartik/css/components/text-formatted.css'));
     $this->assertIdentical($expected, $this->ckeditor->buildContentsCssJSSetting($editor), '"contentsCss" configuration part of JS settings built correctly while a theme providing a CKEditor stylesheet exists.');
   }
 

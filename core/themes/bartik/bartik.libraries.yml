@@ -44,6 +44,7 @@ global-styling:
       css/components/table.css: {}
       css/components/tablesort-indicator.css: {}
       css/components/tabs.css: {}
+      css/components/text-formatted.css: {}
       css/components/toolbar.css: {}
       css/components/featured-bottom.css: {}
       css/components/password-suggestions.css: {}

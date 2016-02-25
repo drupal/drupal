@@ -49,17 +49,3 @@
   }
 }
 
-/**
- * @todo Decide if we want to keep this.
- * It should be in layout.css but it would be
- * overridden there by block.css.
- */
-.region-content ul,
-.region-content ol {
-  margin: 1em 0;
-  padding: 0 0 0.25em 15px; /* LTR */
-}
-[dir="rtl"] .region-content ul,
-[dir="rtl"] .region-content ol {
-  padding: 0 15px 0.25em 0;
-}
