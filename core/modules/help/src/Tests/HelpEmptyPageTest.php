@@ -47,7 +47,8 @@ class HelpEmptyPageTest extends KernelTestBase {
       return TRUE;
     });
 
-    \Drupal::service('module_installer')->install(array_keys($all_modules));
+    $this->enableModules(array_keys($all_modules));
+    $this->installEntitySchema('menu_link_content');
 
     $route = \Drupal::service('router.route_provider')->getRouteByName('<front>');
     \Drupal::service('module_handler')->invokeAll('help', ['<front>', new RouteMatch('<front>', $route)]);
