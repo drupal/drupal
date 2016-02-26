@@ -240,7 +240,7 @@ class LinkFormatter extends FormatterBase implements ContainerFactoryPluginInter
    *   The link field item being rendered.
    *
    * @return \Drupal\Core\Url
-   *   An Url object.
+   *   A Url object.
    */
   protected function buildUrl(LinkItemInterface $item) {
     $url = $item->getUrl() ?: Url::fromRoute('<none>');

@@ -23,7 +23,7 @@ class DownloadTest extends FileManagedTestBase {
    * Test the public file transfer system.
    */
   function testPublicFileTransfer() {
-    // Test generating an URL to a created file.
+    // Test generating a URL to a created file.
     $file = $this->createFile();
     $url = file_create_url($file->getFileUri());
     // URLs can't contain characters outside the ASCII set so $filename has to be
@@ -33,7 +33,7 @@ class DownloadTest extends FileManagedTestBase {
     $this->drupalHead($url);
     $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the created file.');
 
-    // Test generating an URL to a shipped file (i.e. a file that is part of
+    // Test generating a URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
     $filepath = 'core/assets/vendor/jquery/jquery.min.js';
     $url = file_create_url($filepath);

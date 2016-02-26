@@ -13,7 +13,7 @@ namespace Drupal\Core\Path;
 interface PathValidatorInterface {
 
   /**
-   * Returns an URL object, if the path is valid and accessible.
+   * Returns a URL object, if the path is valid and accessible.
    *
    * @param string $path
    *   The path to check.
@@ -24,7 +24,7 @@ interface PathValidatorInterface {
   public function getUrlIfValid($path);
 
   /**
-   * Returns an URL object, if the path is valid.
+   * Returns a URL object, if the path is valid.
    *
    * Unlike getUrlIfValid(), access check is not performed. Do not use this
    * method if the $path is about to be presented to a user.

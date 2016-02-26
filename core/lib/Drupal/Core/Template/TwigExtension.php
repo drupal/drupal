@@ -253,7 +253,7 @@ class TwigExtension extends \Twig_Extension {
   }
 
   /**
-   * Gets a rendered link from an url object.
+   * Gets a rendered link from a url object.
    *
    * @param string $text
    *   The link text for the anchor tag as a translated string.
@@ -312,7 +312,7 @@ class TwigExtension extends \Twig_Extension {
    * Saves the unneeded automatic escaping for performance reasons.
    *
    * The URL generation process percent encodes non-alphanumeric characters.
-   * Thus, the only character within an URL that must be escaped in HTML is the
+   * Thus, the only character within a URL that must be escaped in HTML is the
    * ampersand ("&") which separates query params. Thus we cannot mark
    * the generated URL as always safe, but only when we are sure there won't be
    * multiple query params. This is the case when there are none or only one

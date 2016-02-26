@@ -39,7 +39,7 @@ interface DisplayRouterInterface extends DisplayPluginInterface {
   public function alterRoutes(RouteCollection $collection);
 
   /**
-   * Generates an URL to this display.
+   * Generates a URL to this display.
    *
    * @return \Drupal\Core\Url
    *   A URL object for the display.
