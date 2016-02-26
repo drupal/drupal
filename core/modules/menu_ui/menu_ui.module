@@ -139,12 +139,20 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
   if (!empty($values['entity_id'])) {
     $entity = MenuLinkContent::load($values['entity_id']);
+    if ($entity->isTranslatable()) {
+      if (!$entity->hasTranslation($node->language()->getId())) {
+        $entity = $entity->addTranslation($node->language()->getId(), $entity->toArray());
+      }
+      else {
+        $entity = $entity->getTranslation($node->language()->getId());
+      }
+    }
   }
   else {
     // Create a new menu_link_content entity.
     $entity = entity_create('menu_link_content', array(
       'link' => ['uri' => 'entity:node/' . $node->id()],
-      'langcode' => $node->getUntranslated()->language()->getId(),
+      'langcode' => $node->language()->getId(),
     ));
     $entity->enabled->value = 1;
   }
@@ -216,6 +224,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
     }
     if ($id) {
       $menu_link = MenuLinkContent::load($id);
+      $menu_link = \Drupal::service('entity.repository')->getTranslationFromContext($menu_link);
       $defaults = array(
         'entity_id' => $menu_link->id(),
         'id' => $menu_link->getPluginId(),
