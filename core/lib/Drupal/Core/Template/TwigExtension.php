@@ -401,6 +401,10 @@ class TwigExtension extends \Twig_Extension {
    * @return string|null
    *   The escaped, rendered output, or NULL if there is no valid output.
    *
+   * @throws \Exception
+   *   When $arg is passed as an object which does not implement __toString(),
+   *   RenderableInterface or toString().
+   *
    * @todo Refactor this to keep it in sync with theme_render_and_autoescape()
    *   in https://www.drupal.org/node/2575065
    */
@@ -432,7 +436,7 @@ class TwigExtension extends \Twig_Extension {
       elseif (method_exists($arg, '__toString')) {
         $return = (string) $arg;
       }
-      // You can't throw exceptions in the magic PHP __toString methods, see
+      // You can't throw exceptions in the magic PHP __toString() methods, see
       // http://php.net/manual/language.oop5.magic.php#object.tostring so
       // we also support a toString method.
       elseif (method_exists($arg, 'toString')) {
@@ -470,16 +474,21 @@ class TwigExtension extends \Twig_Extension {
   /**
    * Wrapper around render() for twig printed output.
    *
-   * If an object is passed that has no __toString method an exception is thrown;
-   * other objects are casted to string. However in the case that the object is an
-   * instance of a Twig_Markup object it is returned directly to support auto
-   * escaping.
+   * If an object is passed which does not implement __toString(),
+   * RenderableInterface or toString() then an exception is thrown;
+   * Other objects are casted to string. However in the case that the
+   * object is an instance of a Twig_Markup object it is returned directly
+   * to support auto escaping.
    *
    * If an array is passed it is rendered via render() and scalar values are
    * returned directly.
    *
    * @param mixed $arg
    *   String, Object or Render Array.
+   *
+   * @throws \Exception
+   *   When $arg is passed as an object which does not implement __toString(),
+   *   RenderableInterface or toString().
    *
    * @return mixed
    *   The rendered output or an Twig_Markup object.
@@ -510,7 +519,7 @@ class TwigExtension extends \Twig_Extension {
       elseif (method_exists($arg, '__toString')) {
         return (string) $arg;
       }
-      // You can't throw exceptions in the magic PHP __toString methods, see
+      // You can't throw exceptions in the magic PHP __toString() methods, see
       // http://php.net/manual/language.oop5.magic.php#object.tostring so
       // we also support a toString method.
       elseif (method_exists($arg, 'toString')) {
