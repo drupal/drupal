@@ -375,8 +375,12 @@ class DbDumpCommand extends DbCommandBase {
    *   The template for the generated PHP script.
    */
   protected function getTemplate() {
+    // The template contains an instruction for the file to be ignored by PHPCS.
+    // This is because the files can be huge and coding standards are
+    // irrelevant.
     $script = <<<'ENDOFSCRIPT'
 <?php
+// @codingStandardsIgnoreFile
 /**
  * @file
  * A database agnostic dump for testing purposes.
