@@ -38,7 +38,8 @@ interface MenuLinkFormInterface extends PluginFormInterface {
    *   The current state of the form.
    *
    * @return array
-   *   The new plugin definition values taken from the form values.
+   *   The new plugin definition values taken from the form values. The plugin
+   *   ID must be returned as part of the definition.
    */
   public function extractFormValues(array &$form, FormStateInterface $form_state);
 
