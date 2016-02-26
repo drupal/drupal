@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * @file
  * A database agnostic dump for testing purposes.
