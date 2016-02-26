@@ -797,7 +797,7 @@
         newRow = $('<tr class="filter-group-operator-row"><td colspan="5"></td></tr>');
         newRow.find('td').append(fakeOperator);
         newRow.insertBefore(titleRow);
-        dropdowns = dropdowns.add(fakeOperator);
+        dropdowns.add(fakeOperator);
       }
 
       return dropdowns;
