@@ -978,7 +978,7 @@ Drupal 4.5.0, 2004-10-18
 - Syndication:
     * Added support for RSS ping-notifications of http://technorati.com/.
     * Refactored the categorization of syndicated news items.
-    * Added an URL alias for 'rss.xml'.
+    * Added a URL alias for 'rss.xml'.
     * Improved date parsing.
 - Database backend:
     * Added support for multiple database connections.

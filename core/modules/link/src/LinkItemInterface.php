@@ -41,7 +41,7 @@ interface LinkItemInterface extends FieldItemInterface {
    * Gets the URL object.
    *
    * @return \Drupal\Core\Url
-   *   Returns an Url object.
+   *   Returns a Url object.
    */
   public function getUrl();
 
