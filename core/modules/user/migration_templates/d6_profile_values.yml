@@ -1,5 +1,6 @@
 id: d6_profile_values
 label: Profile values
+class: Drupal\user\Plugin\migrate\ProfileValues
 migration_tags:
   - Drupal 6
 builder:

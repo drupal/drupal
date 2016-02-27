@@ -45,7 +45,7 @@ abstract class MigrateTestCase extends UnitTestCase {
    *   The mocked migration.
    */
   protected function getMigration() {
-    $this->migrationConfiguration += ['migrationClass' => 'Drupal\migrate\Entity\Migration'];
+    $this->migrationConfiguration += ['migrationClass' => 'Drupal\migrate\Plugin\Migration'];
     $this->idMap = $this->getMock('Drupal\migrate\Plugin\MigrateIdMapInterface');
 
     $this->idMap

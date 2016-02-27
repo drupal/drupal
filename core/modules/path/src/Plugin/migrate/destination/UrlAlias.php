@@ -37,7 +37,7 @@ class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterfac
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param MigrationInterface $migration
+   * @param \Drupal\migrate\Entity\MigrationInterface $migration
    *   The migration.
    * @param \Drupal\Core\Path\AliasStorage $alias_storage
    *   The alias storage service.

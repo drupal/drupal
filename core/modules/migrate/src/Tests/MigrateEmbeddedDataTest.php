@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate\Tests;
 
-use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Row;
 use Drupal\simpletest\KernelTestBase;
 
@@ -34,8 +34,7 @@ class MigrateEmbeddedDataTest extends KernelTestBase {
       ['key' => '2', 'field1' => 'f1value2', 'field2' => 'f2value2'],
     ];
     $ids = ['key' => ['type' => 'integer']];
-    $config = [
-      'id' => 'sample_data',
+    $definition = [
       'migration_tags' => ['Embedded data test'],
       'source' => [
         'plugin' => 'embedded_data',
@@ -46,7 +45,7 @@ class MigrateEmbeddedDataTest extends KernelTestBase {
       'destination' => ['plugin' => 'null'],
     ];
 
-    $migration = Migration::create($config);
+    $migration = new Migration([], uniqid(), $definition);
     $source = $migration->getSourcePlugin();
 
     // Validate the plugin returns the source data that was provided.

@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate;
 
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Plugin\MigratePluginManager;
 
 /**

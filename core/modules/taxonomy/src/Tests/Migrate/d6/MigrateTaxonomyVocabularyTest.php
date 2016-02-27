@@ -7,7 +7,6 @@
 
 namespace Drupal\taxonomy\Tests\Migrate\d6;
 
-use Drupal\migrate\Entity\Migration;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
@@ -38,7 +37,7 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal6TestBase {
     for ($i = 0; $i < 3; $i++) {
       $j = $i + 1;
       $vocabulary = Vocabulary::load("vocabulary_{$j}_i_{$i}_");
-      $this->assertIdentical(Migration::load('d6_taxonomy_vocabulary')->getIdMap()->lookupDestinationID(array($j)), array($vocabulary->id()));
+      $this->assertIdentical($this->getMigration('d6_taxonomy_vocabulary')->getIdMap()->lookupDestinationID(array($j)), array($vocabulary->id()));
       $this->assertIdentical("vocabulary $j (i=$i)", $vocabulary->label());
       $this->assertIdentical("description of vocabulary $j (i=$i)", $vocabulary->getDescription());
       $this->assertIdentical($i, $vocabulary->getHierarchy());

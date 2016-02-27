@@ -121,11 +121,3 @@ field.formatter.settings.file_extension:
     extension_detect_tar:
       type: boolean
       label: 'Detect tar'
-
-migrate.source.d6_upload_instance:
-  type: migrate_source_sql
-  label: 'Drupal 6 upload form display'
-  mapping:
-    constants:
-      type: migrate_entity_constant
-      label: 'Constants'

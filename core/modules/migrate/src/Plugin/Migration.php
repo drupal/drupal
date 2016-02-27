@@ -2,39 +2,26 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Entity\Migration.
+ * Contains \Drupal\migrate\Plugin\Migration.
  */
 
-namespace Drupal\migrate\Entity;
+namespace Drupal\migrate\Plugin;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
-use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\migrate\Plugin\RequirementsInterface;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\migrate\Entity\MigrationInterface;
 
 /**
- * Defines the Migration entity.
+ * Defines the Migration plugin.
  *
  * The migration entity stores the information about a single migration, like
  * the source, process and destination plugins.
  *
- * @ConfigEntityType(
- *   id = "migration",
- *   label = @Translation("Migration"),
- *   handlers = {
- *     "storage" = "Drupal\migrate\MigrationStorage"
- *   },
- *   entity_keys = {
- *     "id" = "id",
- *     "label" = "label",
- *     "weight" = "weight"
- *   }
- * )
  */
-class Migration extends ConfigEntityBase implements MigrationInterface, RequirementsInterface {
+class Migration extends PluginBase implements MigrationInterface, RequirementsInterface {
 
   /**
    * The migration ID (machine name).
@@ -225,13 +212,6 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   protected $dependencies = [];
 
   /**
-   * The ID of the template from which this migration was derived, if any.
-   *
-   * @var string|NULL
-   */
-  protected $template;
-
-  /**
    * The entity manager.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface
@@ -254,6 +234,46 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   /**
    * {@inheritdoc}
    */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    foreach ($plugin_definition as $key => $value) {
+      $this->$key = $value;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function id() {
+    return $this->pluginId;
+  }
+
+  /**
+   * Gets any arbitrary property.
+   *
+   * @param string $property
+   *   The property to retrieve.
+   *
+   * @return mixed
+   *   The value for that property, or NULL if the property does not exist.
+   */
+  public function get($key) {
+    return isset($this->$key) ? $this->$key : NULL;
+  }
+
+  /**
+   * Retrieves the ID map plugin.
+   *
+   * @return \Drupal\migrate\Plugin\MigrateIdMapInterface
+   *   The ID map plugin.
+   */
+  public function getIdMapPlugin() {
+    return $this->idMapPlugin;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSourcePlugin() {
     if (!isset($this->sourcePlugin)) {
       $this->sourcePlugin = \Drupal::service('plugin.manager.migrate.source')->createInstance($this->source['plugin'], $this->source, $this);
@@ -266,7 +286,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    */
   public function getProcessPlugins(array $process = NULL) {
     if (!isset($process)) {
-      $process = $this->process;
+      $process = $this->getProcess();
     }
     $index = serialize($process);
     if (!isset($this->processPlugins[$index])) {
@@ -487,7 +507,8 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
       // Invalidate the destination plugin.
       unset($this->destinationPlugin);
     }
-    return parent::set($property_name, $value);
+    $this->{$property_name} = $value;
+    return $this;
   }
 
 
@@ -571,28 +592,13 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   /**
    * {@inheritdoc}
    */
-  public function trustData() {
-    // Migrations cannot be trusted since they are often written by hand and not
-    // through a UI.
-    $this->trustedData = FALSE;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function calculateDependencies() {
-    parent::calculateDependencies();
-    $this->calculatePluginDependencies($this->getSourcePlugin());
-    $this->calculatePluginDependencies($this->getDestinationPlugin());
-
-    // Add hard dependencies on required migrations.
-    $dependencies = $this->getEntityManager()->getStorage($this->entityTypeId)
-      ->getVariantIds($this->getMigrationDependencies()['required']);
-    foreach ($dependencies as $dependency) {
-      $this->addDependency('config', $this->getEntityType()->getConfigPrefix() . '.' . $dependency);
+  public function getPluginDefinition() {
+    $definition = [];
+    // While normal plugins do not change their definitions on the fly, this
+    // one does so accommodate for that.
+    foreach (parent::getPluginDefinition() as $key => $value) {
+      $definition[$key] = isset($this->$key) ? $this->$key : $value;
     }
-
-    return $this;
+    return $definition;
   }
 }

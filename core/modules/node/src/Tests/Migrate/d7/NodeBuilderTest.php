@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Tests\Migrate\d7;
 
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 
 /**
@@ -20,7 +19,7 @@ class NodeBuilderTest extends MigrateDrupal7TestBase {
   public static $modules = ['node'];
 
   public function testBuilder() {
-    $process = Migration::load('d7_node__test_content_type')->getProcess();
+    $process = $this->getMigration('d7_node:test_content_type')->getProcess();
     $this->assertIdentical('field_boolean', $process['field_boolean'][0]['source']);
     $this->assertIdentical('field_email', $process['field_email'][0]['source']);
     $this->assertIdentical('field_phone', $process['field_phone'][0]['source']);

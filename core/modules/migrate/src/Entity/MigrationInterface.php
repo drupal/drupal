@@ -7,12 +7,10 @@
 
 namespace Drupal\migrate\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
-
 /**
  * Interface for migrations.
  */
-interface MigrationInterface extends ConfigEntityInterface {
+interface MigrationInterface {
 
   /**
    * A constant used for systemOfRecord.
@@ -98,6 +96,13 @@ interface MigrationInterface extends ConfigEntityInterface {
    * This migration is disabled, skipping.
    */
   const RESULT_DISABLED = 6;
+
+  /**
+   * An alias for getPluginId() for backwards compatibility reasons.
+   *
+   * @return string
+   */
+  public function id();
 
   /**
    * Returns the initialized source plugin.

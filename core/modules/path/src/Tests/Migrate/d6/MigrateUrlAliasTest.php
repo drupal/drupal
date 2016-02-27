@@ -7,7 +7,6 @@
 
 namespace Drupal\path\Tests\Migrate\d6;
 
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -53,7 +52,8 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
    * Test the url alias migration.
    */
   public function testUrlAlias() {
-    $id_map = Migration::load('d6_url_alias')->getIdMap();
+    $id_map = $this->getMigration('d6_url_alias')->getIdMap();
+    // Test that the field exists.
     $conditions = array(
       'source' => '/node/1',
       'alias' => '/alias-one',
@@ -82,9 +82,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
       ->update($id_map->mapTableName())
       ->fields(array('source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE))
       ->execute();
-    $migration = \Drupal::entityManager()
-      ->getStorage('migration')
-      ->loadUnchanged('d6_url_alias');
+    $migration = $this->getMigration('d6_url_alias');
     $this->executeMigration($migration);
 
     $path = \Drupal::service('path.alias_storage')->load(array('pid' => $path['pid']));

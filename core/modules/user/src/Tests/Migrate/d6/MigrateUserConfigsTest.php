@@ -82,9 +82,7 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
           ->execute();
 
       /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
-      $migration = \Drupal::entityManager()
-          ->getStorage('migration')
-          ->loadUnchanged('d6_user_settings');
+      $migration = $this->getMigration('d6_user_settings');
       // Indicate we're rerunning a migration that's already run.
       $migration->getIdMap()->prepareUpdate();
       $this->executeMigration($migration);

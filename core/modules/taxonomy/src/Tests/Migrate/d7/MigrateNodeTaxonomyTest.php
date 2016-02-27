@@ -66,7 +66,7 @@ class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
       'd7_taxonomy_term',
       'd7_user_role',
       'd7_user',
-      'd7_node__article',
+      'd7_node:article',
     ]);
   }
 

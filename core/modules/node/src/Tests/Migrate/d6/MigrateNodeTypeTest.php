@@ -8,7 +8,6 @@
 namespace Drupal\node\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\NodeType;
 
@@ -32,7 +31,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
    * Tests Drupal 6 node type to Drupal 8 migration.
    */
   public function testNodeType() {
-    $id_map = Migration::load('d6_node_type')->getIdMap();
+    $id_map = $this->getMigration('d6_node_type')->getIdMap();
     // Test the test_page content type.
     $node_type_page = NodeType::load('test_page');
     $this->assertIdentical('test_page', $node_type_page->id(), 'Node type test_page loaded');

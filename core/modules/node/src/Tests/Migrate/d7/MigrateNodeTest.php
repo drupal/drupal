@@ -51,8 +51,8 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
       'd7_comment_type',
       'd7_field',
       'd7_field_instance',
-      'd7_node__test_content_type',
-      'd7_node__article',
+      'd7_node:test_content_type',
+      'd7_node:article',
     ]);
   }
 
