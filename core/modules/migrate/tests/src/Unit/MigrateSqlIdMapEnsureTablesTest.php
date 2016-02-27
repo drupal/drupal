@@ -29,6 +29,21 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
    * Tests the ensureTables method when the tables do not exist.
    */
   public function testEnsureTablesNotExist() {
+    $fields['source_ids_hash'] = Array(
+      'type' => 'varchar',
+      'length' => 64,
+      'not null' => 1,
+      'description' => 'Hash of source ids. Used as primary key'
+    );
+    $fields['sourceid1'] = array(
+      'type' => 'int',
+      'not null' => TRUE,
+    );
+    $fields['destid1'] = array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+    );
     $fields['source_row_status'] = array(
       'type' => 'int',
       'size' => 'tiny',
@@ -58,19 +73,10 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'not null' => FALSE,
       'description' => 'Hash of source row data, for detecting changes',
     );
-    $fields['sourceid1'] = array(
-      'type' => 'int',
-      'not null' => TRUE,
-    );
-    $fields['destid1'] = array(
-      'type' => 'varchar',
-      'length' => 255,
-      'not null' => FALSE,
-    );
     $map_table_schema = array(
       'description' => 'Mappings from source identifier value(s) to destination identifier value(s).',
       'fields' => $fields,
-      'primary key' => array('sourceid1'),
+      'primary key' => array('source_ids_hash'),
     );
     $schema = $this->getMockBuilder('Drupal\Core\Database\Schema')
       ->disableOriginalConstructor()
@@ -89,9 +95,11 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'unsigned' => TRUE,
       'not null' => TRUE,
     );
-    $fields['sourceid1'] = array(
-      'type' => 'int',
-      'not null' => TRUE,
+    $fields['source_ids_hash'] = Array(
+      'type' => 'varchar',
+      'length' => 64,
+      'not null' => 1,
+      'description' => 'Hash of source ids. Used as primary key'
     );
     $fields['level'] = array(
       'type' => 'int',
@@ -109,7 +117,6 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'fields' => $fields,
       'primary key' => array('msgid'),
     );
-    $table_schema['indexes']['sourcekey'] = array('sourceid1');
 
     $schema->expects($this->at(2))
       ->method('tableExists')
@@ -162,7 +169,20 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $schema->expects($this->at(4))
       ->method('addField')
       ->with('migrate_map_sql_idmap_test', 'hash', $field_schema);
-    $schema->expects($this->exactly(5))
+    $schema->expects($this->at(5))
+      ->method('fieldExists')
+      ->with('migrate_map_sql_idmap_test', 'source_ids_hash')
+      ->will($this->returnValue(FALSE));
+    $field_schema = array(
+      'type' => 'varchar',
+      'length' => '64',
+      'not null' => TRUE,
+      'description' => 'Hash of source ids. Used as primary key',
+    );
+    $schema->expects($this->at(6))
+      ->method('addField')
+      ->with('migrate_map_sql_idmap_test', 'source_ids_hash', $field_schema);
+    $schema->expects($this->exactly(7))
       ->method($this->anything());
     $this->runEnsureTablesTest($schema);
   }
