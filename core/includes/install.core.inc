@@ -1139,23 +1139,6 @@ function install_database_errors($database, $settings_file) {
     Database::addConnectionInfo('default', 'default', $database);
 
     $errors = db_installer_object($driver)->runTasks();
-    if (count($errors)) {
-      $error_message = [
-        '#type' => 'inline_template',
-        '#template' => '{% trans %}Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/getting-started/install">installation handbook</a>, or contact your hosting provider.{% endtrans%}{{ errors }}',
-        '#context' => [
-          'errors' => [
-            '#theme' => 'item_list',
-            '#items' => $errors,
-          ],
-        ],
-      ];
-
-      // These are generic errors, so we do not have any specific key of the
-      // database connection array to attach them to; therefore, we just put
-      // them in the error array with standard numeric keys.
-      $errors[$driver . '][0'] = \Drupal::service('renderer')->renderPlain($error_message);
-    }
   }
   return $errors;
 }
