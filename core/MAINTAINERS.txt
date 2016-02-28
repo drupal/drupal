@@ -33,12 +33,6 @@ Drupal 7
 
 Provisional membership: None at this time.
 
-Drupal 6
-- Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
-  (Release Manager, Framework Manager, Product Manager)
-
-Provisional membership: None at this time.
-
 Subsystem maintainers
 ---------------------
 
