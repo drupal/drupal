@@ -6,7 +6,27 @@
  */
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Entity\View;
 use Drupal\views\Views;
+
+/**
+ * @addtogroup updates-8.0.x
+ * @{
+ */
+
+/**
+ * Update dependencies to image style.
+ */
+function views_post_update_image_style_dependencies() {
+  $views = View::loadMultiple();
+  array_walk($views, function(View $view) {
+    $view->save();
+  });
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.x".
+ */
 
 /**
  * @addtogroup updates-8.0.0-beta

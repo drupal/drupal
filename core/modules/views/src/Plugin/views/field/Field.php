@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
@@ -18,6 +19,7 @@ use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Plugin\PluginDependencyTrait;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
@@ -40,7 +42,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsField("field")
  */
 class Field extends FieldPluginBase implements CacheableDependencyInterface, MultiItemsFieldHandlerInterface {
+
   use FieldAPIHandlerTrait;
+  use PluginDependencyTrait;
 
   /**
    * An array to store field renderable arrays for use by renderItems().
@@ -471,25 +475,9 @@ class Field extends FieldPluginBase implements CacheableDependencyInterface, Mul
       $form['field_api_classes']['#description'] .= ' ' . $this->t('Checking this option will cause the group Display Type and Separator values to be ignored.');
     }
 
-    // Get the currently selected formatter.
-    $format = $this->options['type'];
-
-    $settings = $this->options['settings'] + $this->formatterPluginManager->getDefaultSettings($format);
-
-    $options = array(
-      'field_definition' => $field,
-      'configuration' => array(
-        'type' => $format,
-        'settings' => $settings,
-        'label' => '',
-        'weight' => 0,
-      ),
-      'view_mode' => '_custom',
-    );
-
     // Get the settings form.
     $settings_form = array('#value' => array());
-    if ($formatter = $this->formatterPluginManager->getInstance($options)) {
+    if ($formatter = $this->getFormatterInstance()) {
       $settings_form = $formatter->settingsForm($form, $form_state);
       // Convert field UI selector states to work in the Views field form.
       FormHelper::rewriteStatesSelector($settings_form, "fields[{$field->getName()}][settings_edit_form]", 'options');
@@ -949,21 +937,49 @@ class Field extends FieldPluginBase implements CacheableDependencyInterface, Mul
   }
 
   /**
+   * Returns the field formatter instance.
+   *
+   * @return \Drupal\Core\Field\FormatterInterface|null
+   *   The field formatter instance.
+   */
+  protected function getFormatterInstance() {
+    $settings = $this->options['settings'] + $this->formatterPluginManager->getDefaultSettings($this->options['type']);
+
+    $options = [
+      'field_definition' => $this->getFieldDefinition(),
+      'configuration' => [
+        'type' => $this->options['type'],
+        'settings' => $settings,
+        'label' => '',
+        'weight' => 0,
+      ],
+      'view_mode' => '_custom',
+    ];
+
+    return $this->formatterPluginManager->getInstance($options);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    $dependencies = parent::calculateDependencies();
+    $this->dependencies = parent::calculateDependencies();
 
     // Add the module providing the configured field storage as a dependency.
     if (($field_storage_definition = $this->getFieldStorageDefinition()) && $field_storage_definition instanceof EntityInterface) {
-      $dependencies['config'][] = $field_storage_definition->getConfigDependencyName();
+      $this->dependencies['config'][] = $field_storage_definition->getConfigDependencyName();
     }
-    // Add the module providing the formatter.
     if (!empty($this->options['type'])) {
-      $dependencies['module'][] = $this->formatterPluginManager->getDefinition($this->options['type'])['provider'];
+      // Add the module providing the formatter.
+      $this->dependencies['module'][] = $this->formatterPluginManager->getDefinition($this->options['type'])['provider'];
+
+      // Add the formatter's dependencies.
+      if (($formatter = $this->getFormatterInstance()) && $formatter instanceof DependentPluginInterface) {
+        $this->calculatePluginDependencies($formatter);
+      }
     }
 
-    return $dependencies;
+    return $this->dependencies;
   }
 
   /**
