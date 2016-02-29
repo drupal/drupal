@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 $autoloader = require_once 'autoload.php';
 
-$kernel = new UpdateKernel('prod', $autoloader);
+$kernel = new UpdateKernel('prod', $autoloader, FALSE);
 $request = Request::createFromGlobals();
 
 $response = $kernel->handle($request);

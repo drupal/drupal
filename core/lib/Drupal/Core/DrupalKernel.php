@@ -866,7 +866,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // If needs dumping flag was set, dump the container.
     if ($this->containerNeedsDumping && !$this->cacheDrupalContainer($container_definition)) {
-      $this->container->get('logger.factory')->get('DrupalKernel')->notice('Container cannot be saved to cache.');
+      $this->container->get('logger.factory')->get('DrupalKernel')->error('Container cannot be saved to cache.');
     }
 
     return $this->container;
