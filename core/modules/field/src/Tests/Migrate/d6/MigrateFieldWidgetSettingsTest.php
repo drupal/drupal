@@ -56,6 +56,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
     $component = $form_display->getComponent('field_test_email');
     $expected['type'] = 'email_default';
     $expected['weight'] = 6;
+    $expected['settings'] = array('placeholder' => '', 'size' => 60);
     $this->assertIdentical($expected, $component);
 
     // Link field.
