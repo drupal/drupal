@@ -3,7 +3,7 @@
  * Backbone View providing the aural view of CKEditor keyboard UX configuration.
  */
 
-(function (Drupal, Backbone, $) {
+(function ($, Drupal, Backbone, _) {
 
   'use strict';
 
@@ -263,4 +263,4 @@
     }
   });
 
-})(Drupal, Backbone, jQuery);
+})(jQuery, Drupal, Backbone, _);

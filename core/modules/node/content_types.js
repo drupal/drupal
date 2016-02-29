@@ -3,7 +3,7 @@
  * Javascript for the node content editing form.
  */
 
-(function ($) {
+(function ($, Drupal) {
 
   'use strict';
 
@@ -59,4 +59,4 @@
     }
   };
 
-})(jQuery);
+})(jQuery, Drupal);

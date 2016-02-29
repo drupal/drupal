@@ -3,7 +3,7 @@
  * Attaches behavior for updating filter_html's settings automatically.
  */
 
-(function ($, _, document, window) {
+(function ($, Drupal, _, document) {
 
   'use strict';
 
@@ -325,4 +325,4 @@
     return html;
   };
 
-})(jQuery, _, document, window);
+})(jQuery, Drupal, _, document);

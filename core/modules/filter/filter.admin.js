@@ -3,7 +3,7 @@
  * Attaches administration-specific behavior for the Filter module.
  */
 
-(function ($) {
+(function ($, Drupal) {
 
   'use strict';
 
@@ -66,4 +66,4 @@
     }
   };
 
-})(jQuery);
+})(jQuery, Drupal);

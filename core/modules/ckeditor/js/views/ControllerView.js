@@ -3,7 +3,7 @@
  * A Backbone View acting as a controller for CKEditor toolbar configuration.
  */
 
-(function (Drupal, Backbone, $) {
+(function ($, Drupal, Backbone, CKEDITOR, _) {
 
   'use strict';
 
@@ -380,4 +380,4 @@
     }
   });
 
-})(Drupal, Backbone, jQuery);
+})(jQuery, Drupal, Backbone, CKEDITOR, _);

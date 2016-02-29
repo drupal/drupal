@@ -12,7 +12,7 @@
  * @event summaryUpdated
  */
 
-(function ($) {
+(function ($, Drupal, drupalSettings) {
 
   'use strict';
 
@@ -249,4 +249,4 @@
     return tab;
   };
 
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

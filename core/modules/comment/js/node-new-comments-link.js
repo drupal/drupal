@@ -6,7 +6,7 @@
  * installed.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, drupalSettings) {
 
   'use strict';
 
@@ -174,4 +174,4 @@
     }
   }
 
-})(jQuery, Drupal);
+})(jQuery, Drupal, drupalSettings);

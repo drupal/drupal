@@ -85,20 +85,20 @@
 
     // Add the ajax to exposed forms.
     this.$exposed_form = $('form#views-exposed-form-' + settings.view_name.replace(/_/g, '-') + '-' + settings.view_display_id.replace(/_/g, '-'));
-    this.$exposed_form.once('exposed-form').each(jQuery.proxy(this.attachExposedFormAjax, this));
+    this.$exposed_form.once('exposed-form').each($.proxy(this.attachExposedFormAjax, this));
 
     // Add the ajax to pagers.
     this.$view
       // Don't attach to nested views. Doing so would attach multiple behaviors
       // to a given element.
-      .filter(jQuery.proxy(this.filterNestedViews, this))
-      .once('ajax-pager').each(jQuery.proxy(this.attachPagerAjax, this));
+      .filter($.proxy(this.filterNestedViews, this))
+      .once('ajax-pager').each($.proxy(this.attachPagerAjax, this));
 
     // Add a trigger to update this view specifically. In order to trigger a
     // refresh use the following code.
     //
     // @code
-    // jQuery('.view-name').trigger('RefreshView');
+    // $('.view-name').trigger('RefreshView');
     // @endcode
     var self_settings = $.extend({}, this.element_settings, {
       event: 'RefreshView',
@@ -140,7 +140,7 @@
    */
   Drupal.views.ajaxView.prototype.attachPagerAjax = function () {
     this.$view.find('ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a')
-      .each(jQuery.proxy(this.attachPagerLinkAjax, this));
+      .each($.proxy(this.attachPagerLinkAjax, this));
   };
 
   /**

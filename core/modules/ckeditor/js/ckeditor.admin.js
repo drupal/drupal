@@ -3,7 +3,7 @@
  * CKEditor button and group configuration user interface.
  */
 
-(function ($, Drupal, _, CKEDITOR) {
+(function ($, Drupal, drupalSettings, _) {
 
   'use strict';
 
@@ -496,4 +496,4 @@
     return '<li class="ckeditor-add-new-group"><button role="button" aria-label="' + Drupal.t('Add a CKEditor button group to the end of this row.') + '">' + Drupal.t('Add group') + '</button></li>';
   };
 
-})(jQuery, Drupal, _, CKEDITOR);
+})(jQuery, Drupal, drupalSettings, _);

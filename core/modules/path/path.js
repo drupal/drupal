@@ -2,7 +2,7 @@
  * @file
  * Attaches behaviors for the Path module.
  */
-(function ($) {
+(function ($, Drupal) {
 
   'use strict';
 
@@ -26,4 +26,4 @@
     }
   };
 
-})(jQuery);
+})(jQuery, Drupal);

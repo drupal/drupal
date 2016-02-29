@@ -3,7 +3,7 @@
  * Block behaviors.
  */
 
-(function ($, window) {
+(function ($, window, Drupal) {
 
   'use strict';
 
@@ -20,7 +20,7 @@
       // The drupalSetSummary method required for this behavior is not available
       // on the Blocks administration page, so we need to make sure this
       // behavior is processed only if drupalSetSummary is defined.
-      if (typeof jQuery.fn.drupalSetSummary === 'undefined') {
+      if (typeof $.fn.drupalSetSummary === 'undefined') {
         return;
       }
 
@@ -218,4 +218,4 @@
     }
   };
 
-})(jQuery, window);
+})(jQuery, window, Drupal);

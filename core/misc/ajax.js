@@ -1195,4 +1195,4 @@
     }
   };
 
-})(jQuery, this, Drupal, drupalSettings);
+})(jQuery, window, Drupal, drupalSettings);

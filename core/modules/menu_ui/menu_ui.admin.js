@@ -3,7 +3,7 @@
  * Menu UI admin behaviors.
  */
 
-(function ($) {
+(function ($, Drupal) {
 
   'use strict';
 
@@ -65,4 +65,4 @@
     });
   };
 
-})(jQuery);
+})(jQuery, Drupal);

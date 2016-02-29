@@ -3,7 +3,7 @@
  * Javascript behaviors for the Book module.
  */
 
-(function ($) {
+(function ($, Drupal) {
 
   'use strict';
 
@@ -34,4 +34,4 @@
     }
   };
 
-})(jQuery);
+})(jQuery, Drupal);

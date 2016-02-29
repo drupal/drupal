@@ -3,7 +3,7 @@
  * Attaches preview-related behavior for the Color module.
  */
 
-(function ($) {
+(function ($, Drupal) {
 
   'use strict';
 
@@ -71,4 +71,4 @@
       }
     }
   };
-})(jQuery);
+})(jQuery, Drupal);

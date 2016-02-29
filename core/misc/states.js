@@ -3,7 +3,7 @@
  * Drupal's states library.
  */
 
-(function ($) {
+(function ($, Drupal) {
 
   'use strict';
 
@@ -721,4 +721,4 @@
     }
   }
 
-})(jQuery);
+})(jQuery, Drupal);

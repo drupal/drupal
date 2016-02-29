@@ -3,7 +3,7 @@
  * User permission page behaviors.
  */
 
-(function ($) {
+(function ($, Drupal) {
 
   'use strict';
 
@@ -85,4 +85,4 @@
     }
   };
 
-})(jQuery);
+})(jQuery, Drupal);
