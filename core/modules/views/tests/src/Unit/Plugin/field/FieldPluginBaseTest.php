@@ -343,6 +343,8 @@ class FieldPluginBaseTest extends UnitTestCase {
 
     // External URL.
     $data[] = ['https://www.drupal.org', [], [], '<a href="https://www.drupal.org">value</a>'];
+    $data[] = ['www.drupal.org', ['external' => TRUE], [], '<a href="http://www.drupal.org">value</a>'];
+    $data[] = ['', ['external' => TRUE], [], 'value'];
 
     return $data;
   }
@@ -510,7 +512,7 @@ class FieldPluginBaseTest extends UnitTestCase {
 
     $build =[
       '#type' => 'inline_template',
-      '#template' => 'base:test-path/' . explode('/', $path)[1],
+      '#template' => 'test-path/' . explode('/', $path)[1],
       '#context' => ['foo' => 123],
       '#post_render' => [function() {}],
     ];
@@ -545,6 +547,62 @@ class FieldPluginBaseTest extends UnitTestCase {
     $data[] = ['test-path/{{  foo }}', $tokens, $link_html];
     $data[] = ['test-path/{{ foo  }}', $tokens, $link_html];
     $data[] = ['test-path/{{  foo  }}', $tokens, $link_html];
+
+    return $data;
+  }
+
+  /**
+   * Test rendering of a link with a path and options.
+   *
+   * @dataProvider providerTestRenderAsExternalLinkWithPathAndTokens
+   * @covers ::renderAsLink
+   */
+  public function testRenderAsExternalLinkWithPathAndTokens($path, $tokens, $link_html, $context) {
+    $alter = [
+      'make_link' => TRUE,
+      'path' => $path,
+      'url' => '',
+    ];
+    if (isset($context['alter'])) {
+      $alter += $context['alter'];
+    }
+
+    $this->setUpUrlIntegrationServices();
+    $this->setupDisplayWithEmptyArgumentsAndFields();
+    $this->executable->build_info['substitutions'] = $tokens;
+    $field = $this->setupTestField(['alter' => $alter]);
+    $field->field_alias = 'key';
+    $row = new ResultRow(['key' => 'value']);
+
+    $build = [
+      '#type' => 'inline_template',
+      '#template' => $path,
+      '#context' => ['foo' => $context['context_path']],
+      '#post_render' => [function() {}],
+    ];
+
+    $this->renderer->expects($this->once())
+      ->method('renderPlain')
+      ->with($build)
+      ->willReturn($context['context_path']);
+
+    $result = $field->advancedRender($row);
+    $this->assertEquals($link_html, $result);
+  }
+
+  /**
+   * Data provider for ::testRenderAsExternalLinkWithPathAndTokens().
+   *
+   * @return array
+   *   Test data.
+   */
+  public function providerTestRenderAsExternalLinkWithPathAndTokens() {
+    $data = [];
+
+    $data[] = ['{{ foo }}', ['{{ foo }}' => 'http://www.drupal.org'], '<a href="http://www.drupal.org">value</a>', ['context_path' => 'http://www.drupal.org']];
+    $data[] = ['{{ foo }}', ['{{ foo }}' => ''], 'value', ['context_path' => '']];
+    $data[] = ['{{ foo }}', ['{{ foo }}' => ''], 'value', ['context_path' => '', 'alter' => ['external' => TRUE]]];
+    $data[] = ['{{ foo }}', ['{{ foo }}' => '/test-path/123'], '<a href="/test-path/123">value</a>', ['context_path' => '/test-path/123']];
 
     return $data;
   }

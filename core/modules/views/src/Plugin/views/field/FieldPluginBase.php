@@ -1363,6 +1363,43 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     ];
 
     $path = $alter['path'];
+    // strip_tags() and viewsTokenReplace remove <front>, so check whether it's
+    // different to front.
+    if ($path != '<front>') {
+      // Use strip_tags as there should never be HTML in the path.
+      // However, we need to preserve special characters like " that were
+      // removed by SafeMarkup::checkPlain().
+      $path = Html::decodeEntities($this->viewsTokenReplace($alter['path'], $tokens));
+
+      // Tokens might contain <front>, so check for <front> again.
+      if ($path != '<front>') {
+        $path = strip_tags($path);
+      }
+
+      // Tokens might have resolved URL's, as is the case for tokens provided by
+      // Link fields, so all internal paths will be prefixed by base_path(). For
+      // proper further handling reset this to internal:/.
+      if (strpos($path, base_path()) === 0) {
+        $path = 'internal:/' . substr($path, strlen(base_path()));
+      }
+
+      // If we have no $path and no $alter['url'], we have nothing to work with,
+      // so we just return the text.
+      if (empty($path) && empty($alter['url'])) {
+        return $text;
+      }
+
+      // If no scheme is provided in the $path, assign the default 'http://'.
+      // This allows a url of 'www.example.com' to be converted to
+      // 'http://www.example.com'.
+      // Only do this when flag for external has been set, $path doesn't contain
+      // a scheme and $path doesn't have a leading /.
+      if ($alter['external'] && !parse_url($path, PHP_URL_SCHEME) && strpos($path, '/') !== 0) {
+        // There is no scheme, add the default 'http://' to the $path.
+        $path = "http://" . $path;
+      }
+    }
+
     if (empty($alter['url'])) {
       if (!parse_url($path, PHP_URL_SCHEME)) {
         // @todo Views should expect and store a leading /. See
@@ -1378,28 +1415,12 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     $path = $alter['url']->setOptions($options)->toUriString();
 
-    // strip_tags() removes <front>, so check whether its different to front.
-    if ($path != 'route:<front>') {
-      // Unescape Twig delimiters that may have been escaped by the
-      // Url::toUriString() call above, because we support twig tokens in
-      // rewrite settings of views fields.
-      // In that case the original path looks like
-      // internal:/admin/content/files/usage/{{ fid }}, which will be escaped by
-      // the toUriString() call above.
-      $path = preg_replace(['/(\%7B){2}(\%20)*/', '/(\%20)*(\%7D){2}/'], ['{{', '}}'], $path);
+    if (!empty($alter['path_case']) && $alter['path_case'] != 'none' && !$alter['url']->isRouted()) {
+      $path = str_replace($alter['path'], $this->caseTransform($alter['path'], $this->options['alter']['path_case']), $path);
+    }
 
-      // Use strip tags as there should never be HTML in the path.
-      // However, we need to preserve special characters like " that are escaped
-      // by \Drupal\Component\Utility\Html::escape().
-      $path = strip_tags(Html::decodeEntities($this->viewsTokenReplace($path, $tokens)));
-
-      if (!empty($alter['path_case']) && $alter['path_case'] != 'none' && !$alter['url']->isRouted()) {
-        $path = str_replace($alter['path'], $this->caseTransform($alter['path'], $this->options['alter']['path_case']), $path);
-      }
-
-      if (!empty($alter['replace_spaces'])) {
-        $path = str_replace(' ', '-', $path);
-      }
+    if (!empty($alter['replace_spaces'])) {
+      $path = str_replace(' ', '-', $path);
     }
 
     // Parse the URL and move any query and fragment parameters out of the path.
@@ -1420,19 +1441,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     // If we get to here we have a path from the url parsing. So assign that to
     // $path now so we don't get query strings or fragments in the path.
     $path = $url['path'];
-
-    // If no scheme is provided in the $path, assign the default 'http://'.
-    // This allows a url of 'www.example.com' to be converted to 'http://www.example.com'.
-    // Only do this on for external URLs.
-    if ($alter['external']) {
-      if (!isset($url['scheme'])) {
-        // There is no scheme, add the default 'http://' to the $path.
-        // Use the original $alter['path'] instead of the parsed version.
-        $path = "http://" . $alter['path'];
-        // Reset the $url array to include the new scheme.
-        $url = UrlHelper::parse($path);
-      }
-    }
 
     if (isset($url['query'])) {
       // Remove query parameters that were assigned a query string replacement
