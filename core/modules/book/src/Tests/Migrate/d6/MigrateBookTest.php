@@ -30,7 +30,7 @@ class MigrateBookTest extends MigrateDrupal6TestBase {
     $this->installSchema('book', ['book']);
     $this->installSchema('node', ['node_access']);
     $this->migrateContent();
-    $this->executeMigrations(['d6_node', 'd6_book']);
+    $this->executeMigration('d6_book');
   }
 
   /**

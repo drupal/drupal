@@ -40,7 +40,6 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
 
     $this->migrateContent();
     $this->executeMigrations([
-      'd6_node',
       'd6_comment_type',
       'd6_comment_field',
       'd6_comment_field_instance',

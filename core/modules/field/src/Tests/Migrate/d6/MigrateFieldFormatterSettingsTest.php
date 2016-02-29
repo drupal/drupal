@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -180,7 +181,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $component = $display->getComponent('field_test_datetime');
     $this->assertIdentical($expected, $component);
     // Test that our Id map has the correct data.
-    $this->assertIdentical(array('node', 'story', 'teaser', 'field_test'), $this->getMigration('d6_field_formatter_settings')->getIdMap()->lookupDestinationID(array('story', 'teaser', 'node', 'field_test')));
+    $this->assertIdentical(array('node', 'story', 'teaser', 'field_test'), Migration::load('d6_field_formatter_settings')->getIdMap()->lookupDestinationID(array('story', 'teaser', 'node', 'field_test')));
   }
 
 }

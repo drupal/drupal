@@ -38,7 +38,7 @@ class ShortcutSetUsers extends DestinationBase implements ContainerFactoryPlugin
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\migrate\Entity\MigrationInterface $migration
+   * @param MigrationInterface $migration
    *   The migration.
    * @param \Drupal\shortcut\ShortcutSetStorageInterface $shortcut_set_storage
    *   The shortcut_set entity storage handler.

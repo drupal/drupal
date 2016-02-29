@@ -1,0 +1,40 @@
+# Basic data types for Migrate.
+
+migrate_plugin:
+  type: mapping
+  mapping:
+    plugin:
+      type: string
+      label: 'Plugin'
+
+migrate_destination:
+  type: migrate_plugin
+  label: 'Destination'
+  mapping:
+    overwrite_properties:
+      type: sequence
+      label: 'Properties to overwrite'
+      sequence:
+        type: string
+        label: 'Property'
+
+migrate_source:
+  type: migrate_plugin
+  label: 'Source'
+  mapping:
+    constants:
+      type: ignore
+      label: 'Constants'
+
+migrate_process:
+  type: migrate_plugin
+  label: 'Process'
+
+# Base schema for migrate source plugins that extend
+# \Drupal\migrate\Plugin\migrate\source\SqlBase.
+migrate_source_sql:
+  type: migrate_source
+  mapping:
+    target:
+      type: string
+      label: 'The migration database target'

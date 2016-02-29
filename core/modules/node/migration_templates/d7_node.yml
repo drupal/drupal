@@ -2,7 +2,8 @@ id: d7_node
 label: Nodes
 migration_tags:
   - Drupal 7
-deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
+builder:
+  plugin: d7_node
 source:
   plugin: d7_node
 process:

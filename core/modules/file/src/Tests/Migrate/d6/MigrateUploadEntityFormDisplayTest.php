@@ -8,6 +8,7 @@
 namespace Drupal\file\Tests\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -43,7 +44,7 @@ class MigrateUploadEntityFormDisplayTest extends MigrateDrupal6TestBase {
     $component = $display->getComponent('upload');
     $this->assertTrue(is_null($component));
 
-    $this->assertIdentical(array('node', 'page', 'default', 'upload'), $this->getMigration('d6_upload_entity_form_display')->getIdMap()->lookupDestinationID(array('page')));
+    $this->assertIdentical(array('node', 'page', 'default', 'upload'), Migration::load('d6_upload_entity_form_display')->getIdMap()->lookupDestinationID(array('page')));
   }
 
 }

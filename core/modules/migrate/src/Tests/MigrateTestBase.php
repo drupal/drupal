@@ -8,6 +8,7 @@
 namespace Drupal\migrate\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -127,9 +128,9 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    *   IDs.
    */
   protected function prepareMigrations(array $id_mappings) {
-    $manager = $this->container->get('plugin.manager.migration');
     foreach ($id_mappings as $migration_id => $data) {
-      foreach ($manager->createInstances($migration_id) as $migration) {
+      // Use loadMultiple() here in order to load all variants.
+      foreach (Migration::loadMultiple([$migration_id]) as $migration) {
         $id_map = $migration->getIdMap();
         $id_map->setMessage($this);
         $source_ids = $migration->getSourcePlugin()->getIds();
@@ -149,7 +150,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   protected function executeMigration($migration) {
     if (is_string($migration)) {
-      $this->migration = $this->getMigration($migration);
+      $this->migration = Migration::load($migration);
     }
     else {
       $this->migration = $migration;
@@ -167,12 +168,8 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    *   Array of migration IDs, in any order.
    */
   protected function executeMigrations(array $ids) {
-    $manager = $this->container->get('plugin.manager.migration');
-    array_walk($ids, function ($id) use ($manager) {
-      // This is possibly a base plugin id and we want to run all derivatives.
-      $instances = $manager->createInstances($id);
-      array_walk($instances, [$this, 'executeMigration']);
-    });
+    $migrations = Migration::loadMultiple($ids);
+    array_walk($migrations, [$this, 'executeMigration']);
   }
 
   /**
@@ -218,19 +215,12 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   protected function mockFailure($migration, array $row, $status = MigrateIdMapInterface::STATUS_FAILED) {
     if (is_string($migration)) {
-      $migration = $this->getMigration($migration);
+      $migration = Migration::load($migration);
     }
     /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
     $destination = array_map(function() { return NULL; }, $migration->getDestinationPlugin()->getIds());
     $row = new Row($row, $migration->getSourcePlugin()->getIds());
     $migration->getIdMap()->saveIdMapping($row, $destination, $status);
-  }
-
-  /**
-   * @return \Drupal\migrate\Plugin\Migration
-   */
-  protected function getMigration($plugin_id) {
-    return $this->container->get('plugin.manager.migration')->createInstance($plugin_id);
   }
 
 }

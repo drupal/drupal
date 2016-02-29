@@ -7,14 +7,14 @@
 
 namespace Drupal\migrate\Tests;
 
-use Drupal\migrate\Plugin\Migration;
+use Drupal\migrate\Entity\Migration;
 use Drupal\simpletest\KernelTestBase;
 
 /**
- * Tests the migration plugin.
+ * Tests the migration entity.
  *
  * @group migrate
- * @coversDefaultClass \Drupal\migrate\Plugin\Migration
+ * @coversDefaultClass \Drupal\migrate\Entity\Migration
  */
 class MigrationTest extends KernelTestBase {
 
@@ -31,7 +31,7 @@ class MigrationTest extends KernelTestBase {
    * @covers ::set()
    */
   public function testSetInvalidation() {
-    $migration = new Migration([], uniqid(), [
+    $migration = Migration::create([
       'source' => ['plugin' => 'empty'],
       'destination' => ['plugin' => 'entity:entity_view_mode'],
     ]);

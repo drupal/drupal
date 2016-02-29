@@ -8,12 +8,12 @@
 namespace Drupal\Tests\migrate\Kernel\Entity;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\migrate\Plugin\Migration;
+use Drupal\migrate\Entity\Migration;
 
 /**
  * Tests the Migration entity.
  *
- * @coversDefaultClass \Drupal\migrate\Plugin\Migration
+ * @coversDefaultClass \Drupal\migrate\Entity\Migration
  * @group migrate
  */
 class MigrationTest extends KernelTestBase {
@@ -24,12 +24,9 @@ class MigrationTest extends KernelTestBase {
   public static $modules = ['migrate'];
 
   /**
-   * @todo: this should be covers, fix when dependencies are fixed.
-   * @-covers ::calculateDependencies
+   * @covers ::calculateDependencies
    */
   public function testCalculateDependencies() {
-    // @TODO https://www.drupal.org/node/2666640
-    return;
     $fixture_migrations = [
       'd6_node__article' => 'd6_node',
       'd6_node__page' => 'd6_node',
@@ -37,7 +34,7 @@ class MigrationTest extends KernelTestBase {
     ];
 
     foreach ($fixture_migrations as $id => $template) {
-      $definition = [
+      $values = [
         'id' => $id,
         'template' => $template,
         'source' => [
@@ -48,10 +45,10 @@ class MigrationTest extends KernelTestBase {
         ],
         'migration_tags' => []
       ];
-      new Migration([], uniqid(), $definition);
+      Migration::create($values)->save();
     }
 
-    $definition = [
+    $values = [
       'migration_dependencies' => [
         'required' => [
           'd6_node:*',
@@ -66,7 +63,7 @@ class MigrationTest extends KernelTestBase {
       ],
     ];
 
-    $migration = new Migration([], uniqid(), $definition);
+    $migration = new Migration($values, 'migration');
     $expected = [
       'migrate.migration.d6_node__article',
       'migrate.migration.d6_node__page',

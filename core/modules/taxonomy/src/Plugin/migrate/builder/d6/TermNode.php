@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Plugin\migrate\builder\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateTemplateStorageInterface;

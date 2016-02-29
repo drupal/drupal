@@ -2,14 +2,15 @@ id: d6_term_node_revision
 label: Term/node relationship revisions
 migration_tags:
   - Drupal 6
-deriver: Drupal\taxonomy\Plugin\migrate\D6TermNodeDeriver
+builder:
+  plugin: d6_term_node
 source:
   plugin: d6_term_node_revision
 process:
   vid:
     -
       plugin: migration
-      migration: d6_node
+      migration: d6_node:*
       source: vid
     -
       plugin: skip_on_empty

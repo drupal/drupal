@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\Migrate\d7;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 
 /**
@@ -115,9 +116,8 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
 
     // Validate that the source count and processed count match up.
     /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
-    $migration = $this->getMigration('d7_field');
+    $migration = Migration::load('d7_field');
     $this->assertIdentical($migration->getSourcePlugin()->count(), $migration->getIdMap()->processedCount());
   }
-
 
 }

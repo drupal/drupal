@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate\Tests;
 
-use Drupal\migrate\Plugin\Migration;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateIdMapMessageEvent;
@@ -53,7 +53,8 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
 
     // A simple migration, which will generate a message to the ID map because
     // the concat plugin throws an exception if its source is not an array.
-    $definition = [
+    $config = [
+      'id' => 'sample_data',
       'migration_tags' => ['Message test'],
       'source' => [
         'plugin' => 'embedded_data',
@@ -76,7 +77,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
       ],
     ];
 
-    $this->migration = new Migration([], uniqid(), $definition);
+    $this->migration = Migration::create($config);
   }
 
   /**

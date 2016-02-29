@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate\Tests;
 
-use Drupal\migrate\Plugin\Migration;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Entity\MigrationInterface;
 
 /**
@@ -22,7 +22,7 @@ class MigrateStatusTest extends MigrateTestBase {
    */
   public function testStatus() {
     // Create a minimally valid migration.
-    $definition = [
+    $configuration = [
       'id' => 'migration_status_test',
       'migration_tags' => ['Testing'],
       'source' => ['plugin' => 'empty'],
@@ -32,7 +32,8 @@ class MigrateStatusTest extends MigrateTestBase {
       ],
       'process' => ['foo' => 'bar'],
     ];
-    $migration = new Migration([], uniqid(), $definition);
+    $migration = Migration::create($configuration);
+    $migration->save();
 
     // Default status is idle.
     $status = $migration->getStatus();

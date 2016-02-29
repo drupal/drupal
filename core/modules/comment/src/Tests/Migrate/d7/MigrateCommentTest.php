@@ -40,12 +40,12 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     // We only need the test_content_type node migration to run for real, so
     // mock all the others.
     $this->prepareMigrations(array(
-      'd7_node' => array(
+      'd7_node:*' => array(
         array(array(0), array(0)),
       ),
     ));
     $this->executeMigrations([
-      'd7_node:test_content_type',
+      'd7_node__test_content_type',
       'd7_comment_type',
       'd7_comment',
     ]);

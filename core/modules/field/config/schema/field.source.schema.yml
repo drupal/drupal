@@ -1,0 +1,71 @@
+migrate.source.d6_field_instance_per_form_display:
+  type: migrate_source_sql
+  label: 'Drupal 6 field instance form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_field:
+  type: migrate_source_sql
+  label: 'Drupal 6 field'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_field_formatter_settings:
+  type: migrate_source_sql
+  label: 'Drupal 6 field formatter settings'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_field_instance:
+  type: migrate_source_sql
+  label: 'Drupal 6 field instance'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_field_instance_per_view_mode:
+  type: migrate_source_sql
+  label: 'Drupal 6 field formatter'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d7_field:
+  type: migrate_source_sql
+  label: 'Drupal 7 field'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d7_field_instance:
+  type: migrate_source_sql
+  label: 'Drupal 7 field instance'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d7_field_instance_per_form_display:
+  type: migrate_source_sql
+  label: 'Drupal 7 field instance per form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d7_field_instance_per_view_mode:
+  type: migrate_source_sql
+  label: 'Drupal 7 field instance per view mode'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'

@@ -26,6 +26,3 @@ services:
   plugin.manager.migrate.builder:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [builder, '@container.namespaces', '@cache.discovery', '@module_handler']
-  plugin.manager.migration:
-    class: Drupal\migrate\Plugin\MigrationPluginManager
-    arguments: ['@module_handler', '@cache.discovery', '@language_manager']

@@ -38,7 +38,7 @@ class EntityFieldStorageConfig extends BaseEntityFieldStorageConfig {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\migrate\Entity\MigrationInterface $migration
+   * @param MigrationInterface $migration
    *   The migration.
    * @param EntityStorageInterface $storage
    *   The storage for this entity type.

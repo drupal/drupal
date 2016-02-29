@@ -29,7 +29,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   /**
    * The configuration of the migration to do.
    *
-   * @var \Drupal\migrate\Plugin\Migration
+   * @var \Drupal\migrate\Entity\Migration
    */
   protected $migration;
 
@@ -186,8 +186,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
     // Knock off migration if the requirements haven't been met.
     try {
-      // @TODO https://www.drupal.org/node/2666640
-      #$this->migration->checkRequirements();
+      $this->migration->checkRequirements();
     }
     catch (RequirementsException $e) {
       $this->message->display(

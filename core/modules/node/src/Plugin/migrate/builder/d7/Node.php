@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\migrate\builder\d7;
 
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Plugin\migrate\builder\CckBuilder;
 
 /**

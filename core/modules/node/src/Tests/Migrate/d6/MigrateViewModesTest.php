@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -34,7 +35,7 @@ class MigrateViewModesTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(FALSE, is_null($view_mode), 'Preview view mode loaded.');
     $this->assertIdentical('Preview', $view_mode->label(), 'View mode has correct label.');
     // Test the ID map.
-    $this->assertIdentical(array('node', 'preview'), $this->getMigration('d6_view_modes')->getIdMap()->lookupDestinationID(array(1)));
+    $this->assertIdentical(array('node', 'preview'), Migration::load('d6_view_modes')->getIdMap()->lookupDestinationID(array(1)));
   }
 
 }

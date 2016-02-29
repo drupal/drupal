@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -39,7 +40,7 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('entity_reference_label', $component['type']);
     $this->assertIdentical(20, $component['weight']);
     // Test the Id map.
-    $this->assertIdentical(array('node', 'article', 'default', 'tags'), $this->getMigration('d6_vocabulary_entity_display')->getIdMap()->lookupDestinationID(array(4, 'article')));
+    $this->assertIdentical(array('node', 'article', 'default', 'tags'), Migration::load('d6_vocabulary_entity_display')->getIdMap()->lookupDestinationID(array(4, 'article')));
   }
 
 }

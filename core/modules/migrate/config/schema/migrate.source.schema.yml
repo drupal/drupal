@@ -1,0 +1,34 @@
+# Schema for the migrate source plugins.
+
+migrate.source.*:
+  type: migrate_source
+  label: 'Default source'
+
+migrate.source.empty:
+  type: migrate_source_sql
+  label: 'Empty source'
+  mapping:
+    provider:
+      type: string
+      label: 'Provider'
+
+migrate.source.embedded_data:
+  type: migrate_source
+  label: 'Embedded data source'
+  mapping:
+    data_rows:
+      type: sequence
+      label: 'Data rows'
+      sequence:
+        type: ignore
+        label: 'Data row'
+    ids:
+      type: sequence
+      label: 'Unique key'
+      sequence:
+        type: mapping
+        label: 'Key column'
+        mapping:
+          type:
+            type: string
+            label: 'Column type'

@@ -27,9 +27,6 @@ class MigrationTest extends MigrateProcessTestCase {
    * @covers ::transform
    */
   public function testTransformWithStubSkipping() {
-    // @TODO https://www.drupal.org/node/2667620
-    $this->assertSame(TRUE, TRUE);
-    return;
     $migration_entity = $this->prophesize(MigrationInterface::class);
     $migration_storage = $this->prophesize(EntityStorageInterface::class);
     $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
@@ -58,9 +55,6 @@ class MigrationTest extends MigrateProcessTestCase {
    * @covers ::transform
    */
   public function testTransformWithStubbing() {
-    // @TODO https://www.drupal.org/node/2667620
-    $this->assertSame(TRUE, TRUE);
-    return;
     $migration_entity = $this->prophesize(MigrationInterface::class);
     $migration_storage = $this->prophesize(EntityStorageInterface::class);
     $process_plugin_manager = $this->prophesize(MigratePluginManager::class);

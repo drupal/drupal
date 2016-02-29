@@ -2,26 +2,39 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\Migration.
+ * Contains \Drupal\migrate\Entity\Migration.
  */
 
-namespace Drupal\migrate\Plugin;
+namespace Drupal\migrate\Entity;
 
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\RequirementsInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\migrate\Entity\MigrationInterface;
 
 /**
- * Defines the Migration plugin.
+ * Defines the Migration entity.
  *
  * The migration entity stores the information about a single migration, like
  * the source, process and destination plugins.
  *
+ * @ConfigEntityType(
+ *   id = "migration",
+ *   label = @Translation("Migration"),
+ *   handlers = {
+ *     "storage" = "Drupal\migrate\MigrationStorage"
+ *   },
+ *   entity_keys = {
+ *     "id" = "id",
+ *     "label" = "label",
+ *     "weight" = "weight"
+ *   }
+ * )
  */
-class Migration extends PluginBase implements MigrationInterface, RequirementsInterface {
+class Migration extends ConfigEntityBase implements MigrationInterface, RequirementsInterface {
 
   /**
    * The migration ID (machine name).
@@ -212,6 +225,13 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $dependencies = [];
 
   /**
+   * The ID of the template from which this migration was derived, if any.
+   *
+   * @var string|NULL
+   */
+  protected $template;
+
+  /**
    * The entity manager.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface
@@ -234,46 +254,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    foreach ($plugin_definition as $key => $value) {
-      $this->$key = $value;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function id() {
-    return $this->pluginId;
-  }
-
-  /**
-   * Gets any arbitrary property.
-   *
-   * @param string $property
-   *   The property to retrieve.
-   *
-   * @return mixed
-   *   The value for that property, or NULL if the property does not exist.
-   */
-  public function get($key) {
-    return isset($this->$key) ? $this->$key : NULL;
-  }
-
-  /**
-   * Retrieves the ID map plugin.
-   *
-   * @return \Drupal\migrate\Plugin\MigrateIdMapInterface
-   *   The ID map plugin.
-   */
-  public function getIdMapPlugin() {
-    return $this->idMapPlugin;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getSourcePlugin() {
     if (!isset($this->sourcePlugin)) {
       $this->sourcePlugin = \Drupal::service('plugin.manager.migrate.source')->createInstance($this->source['plugin'], $this->source, $this);
@@ -286,7 +266,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function getProcessPlugins(array $process = NULL) {
     if (!isset($process)) {
-      $process = $this->getProcess();
+      $process = $this->process;
     }
     $index = serialize($process);
     if (!isset($this->processPlugins[$index])) {
@@ -507,8 +487,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
       // Invalidate the destination plugin.
       unset($this->destinationPlugin);
     }
-    $this->{$property_name} = $value;
-    return $this;
+    return parent::set($property_name, $value);
   }
 
 
@@ -592,13 +571,28 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   /**
    * {@inheritdoc}
    */
-  public function getPluginDefinition() {
-    $definition = [];
-    // While normal plugins do not change their definitions on the fly, this
-    // one does so accommodate for that.
-    foreach (parent::getPluginDefinition() as $key => $value) {
-      $definition[$key] = isset($this->$key) ? $this->$key : $value;
+  public function trustData() {
+    // Migrations cannot be trusted since they are often written by hand and not
+    // through a UI.
+    $this->trustedData = FALSE;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    $this->calculatePluginDependencies($this->getSourcePlugin());
+    $this->calculatePluginDependencies($this->getDestinationPlugin());
+
+    // Add hard dependencies on required migrations.
+    $dependencies = $this->getEntityManager()->getStorage($this->entityTypeId)
+      ->getVariantIds($this->getMigrationDependencies()['required']);
+    foreach ($dependencies as $dependency) {
+      $this->addDependency('config', $this->getEntityType()->getConfigPrefix() . '.' . $dependency);
     }
-    return $definition;
+
+    return $this;
   }
 }

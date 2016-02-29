@@ -7,11 +7,11 @@
 
 namespace Drupal\migrate\Tests;
 
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\migrate\Plugin\Migration;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -34,7 +34,8 @@ class MigrateSkipRowTest extends KernelTestBase {
   public function testPrepareRowSkip() {
     // Run a simple little migration with two data rows which should be skipped
     // in different ways.
-    $definition = [
+    $config = [
+      'id' => 'sample_data',
       'migration_tags' => ['prepare_row test'],
       'source' => [
         'plugin' => 'embedded_data',
@@ -54,7 +55,7 @@ class MigrateSkipRowTest extends KernelTestBase {
       'load' => ['plugin' => 'null'],
     ];
 
-    $migration = new Migration([], uniqid(), $definition);
+    $migration = Migration::create($config);
 
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     $result = $executable->import();

@@ -2,7 +2,8 @@ id: d6_node
 label: Nodes
 migration_tags:
   - Drupal 6
-deriver: Drupal\node\Plugin\migrate\D6NodeDeriver
+builder:
+  plugin: d6_node
 source:
   plugin: d6_node
 process:

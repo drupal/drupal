@@ -1,0 +1,153 @@
+# Schema for the migrate_drupal source plugins.
+
+migrate.source.variable:
+  type: migrate_source_sql
+  label: 'Variable'
+  mapping:
+    variables:
+      type: sequence
+      label: 'Variables'
+      sequence:
+        type: string
+        label: 'Variable'
+    constants:
+      type: mapping
+      label: 'Constants'
+      mapping:
+        entity_type:
+          type: string
+          label: 'Entity type'
+        id:
+          type: string
+          label: 'ID'
+        label:
+          type: label
+          label: 'Label'
+        description:
+          type: text
+          label: 'Description'
+        path:
+          type: string
+          label: 'Path'
+        plugin:
+          type: string
+          label: 'Plugin'
+        status:
+          type: boolean
+          label: 'Status'
+        slash:
+          type: string
+          label: 'Slash'
+
+migrate.source.variable_multirow:
+  type: migrate_source_sql
+  label: 'Drupal variable multirow'
+  mapping:
+    variables:
+      type: sequence
+      label: 'Variables'
+      sequence:
+        type: string
+        label: 'Variable'
+
+migrate_entity_constant:
+  type: mapping
+  mapping:
+    entity_type:
+      type: string
+      label: 'Entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    label:
+      type: label
+      label: 'Label'
+    id:
+      type: string
+      label: 'ID'
+    target_entity_type:
+      type: string
+      label: 'Target entity type'
+    view_mode:
+      type: string
+      label: 'View mode'
+    form_mode:
+      type: string
+      label: 'Form mode'
+    field_name:
+      type: string
+      label: 'Field name'
+    empty:
+      type: sequence
+      label: 'Empty'
+      sequence:
+        type: string
+        label: 'Empty'
+    name:
+      type: string
+      label: 'Name'
+    preview:
+      type: integer
+      label: 'Preview'
+    create_body:
+      type: boolean
+      label: 'create body'
+    required:
+      type: boolean
+      label: 'Required'
+    type:
+      type: string
+      label: 'Type'
+    cardinality:
+      type: integer
+      label: 'Cardinality'
+    parent:
+      type: integer
+      label: 'Parent'
+    langcode:
+      type: string
+      label: 'Language code'
+    third_party_settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        type: ignore
+        label: 'Settings'
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        type: ignore
+        label: 'Settings'
+    options:
+      type: mapping
+      label: 'Options'
+      mapping:
+        label:
+          type: string
+          label: 'label'
+        type:
+          type: string
+          label: 'Type'
+        weight:
+          type: integer
+          label: 'Weight'
+        settings:
+          type: sequence
+          label: 'Settings'
+          sequence:
+            type: string
+            label: 'Settings'
+    selection_handler:
+      type: string
+      label: 'Entity reference selection handler'
+    auto_create:
+      type: boolean
+      label: 'Entity reference selection setting: Auto-create new entities'
+    status:
+      type: boolean
+      label: 'Status'
+
+migrate.source.md_empty:
+  type: migrate.source.empty
+  label: 'Empty source for migrate_drupal migrations'

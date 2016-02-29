@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\migrate\builder\d6;
 
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\migrate\builder\BuilderBase;
 

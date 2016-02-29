@@ -8,7 +8,7 @@
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\migrate\Plugin\Migration;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
@@ -16,7 +16,7 @@ use Drupal\migrate\Plugin\RequirementsInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\Migration
+ * @coversDefaultClass \Drupal\migrate\Entity\Migration
  * @group Migration
  */
 class MigrationTest extends UnitTestCase {

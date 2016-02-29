@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate\Tests;
 
-use Drupal\migrate\Plugin\Migration;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Entity\MigrationInterface;
@@ -44,7 +44,8 @@ class MigrateInterruptionTest extends KernelTestBase {
   public function testMigrateEvents() {
     // Run a simple little migration, which should trigger one of each event
     // other than map_delete.
-    $definition = [
+    $config = [
+      'id' => 'sample_data',
       'migration_tags' => ['Interruption test'],
       'source' => [
         'plugin' => 'embedded_data',
@@ -60,8 +61,9 @@ class MigrateInterruptionTest extends KernelTestBase {
       'destination' => ['plugin' => 'dummy'],
     ];
 
-    $migration = new Migration([], uniqid(), $definition);
+    $migration = Migration::create($config);
 
+    /** @var MigrationInterface $migration */
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     // When the import runs, the first row imported will trigger an
     // interruption.
