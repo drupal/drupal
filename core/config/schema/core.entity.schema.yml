@@ -178,6 +178,9 @@ field.widget.settings.email_default:
     placeholder:
       type: label
       label: 'Placeholder'
+    size:
+      type: integer
+      label: 'Size of email field'
 
 field.widget.settings.datetime_timestamp:
   type: mapping
