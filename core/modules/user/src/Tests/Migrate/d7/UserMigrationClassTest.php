@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\user\Tests\Migrate\d7\UserMigrationClassTest.
+ * Contains \Drupal\user\Tests\Migrate\d7\UserMigrationBuilderTest.
  */
 
 namespace Drupal\user\Tests\Migrate\d7;
