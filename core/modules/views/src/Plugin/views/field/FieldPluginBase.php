@@ -774,7 +774,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $form['alter']['path_case'] = array(
         '#type' => 'select',
         '#title' => $this->t('Transform the case'),
-        '#description' => $this->t('When printing url paths, how to transform the case of the filter value.'),
+        '#description' => $this->t('When printing URL paths, how to transform the case of the filter value.'),
         '#states' => array(
           'visible' => array(
             ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),

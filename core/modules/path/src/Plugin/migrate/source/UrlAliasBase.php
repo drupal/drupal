@@ -27,7 +27,7 @@ abstract class UrlAliasBase extends DrupalSqlBase {
   public function fields() {
     return array(
       'pid' => $this->t('The numeric identifier of the path alias.'),
-      'language' => $this->t('The language code of the url alias.'),
+      'language' => $this->t('The language code of the URL alias.'),
     );
   }
 

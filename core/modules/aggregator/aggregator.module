@@ -109,7 +109,7 @@ function aggregator_entity_extra_field_info() {
       ),
       'feed_icon' => array(
         'label' => t('Feed icon'),
-        'description' => t('An icon that links to the feed url'),
+        'description' => t('An icon that links to the feed URL'),
         'weight' => 6,
       ),
     ),

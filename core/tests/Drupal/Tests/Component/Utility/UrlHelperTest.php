@@ -246,7 +246,7 @@ class UrlHelperTest extends UnitTestCase {
    */
   public function testParse($url, $expected) {
     $parsed = UrlHelper::parse($url);
-    $this->assertEquals($expected, $parsed, 'The url was not properly parsed.');
+    $this->assertEquals($expected, $parsed, 'The URL was not properly parsed.');
   }
 
   /**

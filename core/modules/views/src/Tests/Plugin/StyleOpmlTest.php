@@ -74,7 +74,7 @@ class StyleOpmlTest extends PluginTestBase {
     $outline = $this->xpath('//outline[1]');
     $this->assertEqual($outline[0]['type'], 'link', 'The correct type attribute is used for link OPML.');
     $this->assertEqual($outline[0]['text'], $feed->label(), 'The correct text attribute is used for link OPML.');
-    $this->assertEqual($outline[0]['url'], $feed->getUrl(), 'The correct url attribute is used for link OPML.');
+    $this->assertEqual($outline[0]['url'], $feed->getUrl(), 'The correct URL attribute is used for link OPML.');
     // xmlUrl should not be present when type is link.
     $this->assertNull($outline[0]['xmlUrl'], 'The xmlUrl attribute is not used for link OPML.');
   }

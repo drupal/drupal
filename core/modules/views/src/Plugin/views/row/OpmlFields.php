@@ -134,7 +134,7 @@ class OpmlFields extends RowPluginBase {
     $form['url_field'] = array(
       '#type' => 'select',
       '#title' => $this->t('URL attribute'),
-      '#description' => $this->t('The field that is going to be used as the OPML url attribute for each row.'),
+      '#description' => $this->t('The field that is going to be used as the OPML URL attribute for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['url_field'],
       '#states' => array(

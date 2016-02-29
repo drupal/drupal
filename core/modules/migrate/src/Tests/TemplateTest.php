@@ -28,7 +28,7 @@ class TemplateTest extends MigrateTestBase {
     $migration_templates = \Drupal::service('migrate.template_storage')->findTemplatesByTag("Template Test");
     $expected_url = [
       'id' => 'url_template',
-      'label' => 'Template test - url',
+      'label' => 'Template test - URL',
       'migration_tags' => ['Template Test'],
       'source' => ['plugin' => 'empty'],
       'process' => ['src' => 'foobar'],
@@ -56,7 +56,7 @@ class TemplateTest extends MigrateTestBase {
 
     $expected_url = [
       'id' => 'url_template',
-      'label' => 'Template test - url',
+      'label' => 'Template test - URL',
       'migration_tags' => ['Template Test'],
       'source' => ['plugin' => 'empty'],
       'process' => ['src' => 'foobar'],

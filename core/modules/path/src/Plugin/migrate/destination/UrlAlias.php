@@ -90,8 +90,8 @@ class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterfac
     return [
       'pid' => 'The path id',
       'source' => 'The source path.',
-      'alias' => 'The url alias.',
-      'langcode' => 'The language code for the url.',
+      'alias' => 'The URL alias.',
+      'langcode' => 'The language code for the URL.',
     ];
   }
 

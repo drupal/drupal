@@ -84,7 +84,7 @@ class ConfirmFormTest extends WebTestBase {
    */
   public function assertCancelLinkUrl(Url $url, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[@href=:url]', [':url' => $url->toString()]);
-    $message = ($message ? $message : SafeMarkup::format('Cancel link with url %url found.', ['%url' => $url->toString()]));
+    $message = ($message ? $message : SafeMarkup::format('Cancel link with URL %url found.', ['%url' => $url->toString()]));
     return $this->assertTrue(isset($links[0]), $message, $group);
   }
 

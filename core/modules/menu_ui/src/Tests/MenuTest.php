@@ -298,7 +298,7 @@ class MenuTest extends MenuWebTestBase {
 
     // Verify add link button.
     $this->drupalGet('admin/structure/menu');
-    $this->assertLinkByHref('admin/structure/menu/manage/' . $menu_name . '/add', 0, "The add menu link button url is correct");
+    $this->assertLinkByHref('admin/structure/menu/manage/' . $menu_name . '/add', 0, "The add menu link button URL is correct");
 
     // Verify form defaults.
     $this->doMenuLinkFormDefaultsTest();

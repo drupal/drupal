@@ -61,13 +61,13 @@ class UrlRewritingTest extends FileTestBase {
     \Drupal::state()->delete('file_test.hook_file_url_alter');
     $filepath = 'core/misc/favicon.ico';
     $url = file_create_url($filepath . '?foo');
-    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath . '?foo=', $url, 'Correctly generated url. The query string is present.');
+    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath . '?foo=', $url, 'Correctly generated URL. The query string is present.');
     $url = file_create_url($filepath . '?foo=bar');
-    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath . '?foo=bar', $url, 'Correctly generated url. The query string is present.');
+    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath . '?foo=bar', $url, 'Correctly generated URL. The query string is present.');
     $url = file_create_url($filepath . '#v1.2');
-    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath . '#v1.2', $url, 'Correctly generated url. The fragment is present.');
+    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath . '#v1.2', $url, 'Correctly generated URL. The fragment is present.');
     $url = file_create_url($filepath . '?foo=bar#v1.2');
-    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath . '?foo=bar#v1.2', $url, 'Correctly generated url. The query string amd fragment is present.');
+    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath . '?foo=bar#v1.2', $url, 'Correctly generated URL. The query string amd fragment is present.');
   }
 
   /**

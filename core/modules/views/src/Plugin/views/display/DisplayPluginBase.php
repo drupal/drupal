@@ -1331,7 +1331,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         'category' => 'pager',
         'title' => $this->t('Link display'),
         'value' => $link_display,
-        'desc' => $this->t('Specify which display or custom url this display will link to.'),
+        'desc' => $this->t('Specify which display or custom URL this display will link to.'),
       );
     }
 
@@ -1485,7 +1485,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $form['use_more'] = array(
           '#type' => 'checkbox',
           '#title' => $this->t('Create more link'),
-          '#description' => $this->t("This will add a more link to the bottom of this view, which will link to the page view. If you have more than one page view, the link will point to the display specified in 'Link display' section under pager. You can override the url at the link display setting."),
+          '#description' => $this->t("This will add a more link to the bottom of this view, which will link to the page view. If you have more than one page view, the link will point to the display specified in 'Link display' section under pager. You can override the URL at the link display setting."),
           '#default_value' => $this->getOption('use_more'),
         );
         $form['use_more_always'] = array(

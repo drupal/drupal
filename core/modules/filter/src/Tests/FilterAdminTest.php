@@ -267,7 +267,7 @@ class FilterAdminTest extends WebTestBase {
     $this->drupalGet('admin/config/content/formats/manage/' . $format->id());
     $this->assertFieldByName('roles[' . RoleInterface::AUTHENTICATED_ID . ']', '', 'Role found.');
     $this->assertFieldByName('filters[' . $second_filter . '][status]', '', 'Line break filter found.');
-    $this->assertFieldByName('filters[' . $first_filter . '][status]', '', 'Url filter found.');
+    $this->assertFieldByName('filters[' . $first_filter . '][status]', '', 'URL filter found.');
 
     // Disable new filter.
     $this->drupalPostForm('admin/config/content/formats/manage/' . $format->id() . '/disable', array(), t('Disable'));

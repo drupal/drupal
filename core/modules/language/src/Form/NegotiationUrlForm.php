@@ -100,7 +100,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       '#tree' => TRUE,
       '#title' => $this->t('Domain configuration'),
       '#open' => TRUE,
-      '#description' => $this->t('The domain names to use for these languages. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "de.example.com" as language domain for German will result in an URL like "http://de.example.com/contact".'),
+      '#description' => $this->t('The domain names to use for these languages. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "de.example.com" as language domain for German will result in a URL like "http://de.example.com/contact".'),
       '#states' => array(
         'visible' => array(
           ':input[name="language_negotiation_url_part"]' => array(
