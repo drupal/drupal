@@ -125,6 +125,12 @@ class BooleanFormatterSettingsTest extends WebTestBase {
       }
       $this->assertText(SafeMarkup::format($default, array('@on' => $values[0], '@off' => $values[1])));
     }
+
+    foreach ($settings as $values) {
+      $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/display');
+      $result = $this->xpath('//div[contains(@class, :class) and contains(text(), :text)]', [':class' => 'field-plugin-summary', ':text' => 'Display: TRUE / FALSE']);
+      $this->assertEqual(count($result), 1, "Boolean formatter settings summary exist.");
+    }
   }
 
 }

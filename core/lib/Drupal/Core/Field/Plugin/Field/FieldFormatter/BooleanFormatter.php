@@ -117,6 +117,30 @@ class BooleanFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
+  public function settingsSummary() {
+    $summary = [];
+    $setting = $this->getSetting('format');
+
+    if ($setting == 'custom') {
+      $summary[] = $this->t('Custom text: @true_label / @false_label', [
+        '@true_label' => $this->getSetting('format_custom_true'),
+        '@false_label' => $this->getSetting('format_custom_false'),
+      ]);
+    }
+    else {
+      $formats = $this->getOutputFormats();
+      $summary[] = $this->t('Display: @true_label / @false_label', [
+        '@true_label' => $formats[$setting][0],
+        '@false_label' => $formats[$setting][1],
+      ]);
+    }
+
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
 
