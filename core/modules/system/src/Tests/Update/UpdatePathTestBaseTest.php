@@ -82,6 +82,17 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     // Increment the schema version.
     \Drupal::state()->set('update_test_schema_version', 8001);
     $this->runUpdates();
+
+    $select = \Drupal::database()->select('watchdog');
+    $select->orderBy('wid', 'DESC');
+    $select->range(0, 5);
+    $select->fields('watchdog', ['message']);
+
+    $container_cannot_be_saved_messages = array_filter(iterator_to_array($select->execute()), function($row) {
+      return strpos($row->message, 'Container cannot be saved to cache.') !== FALSE;
+    });
+    $this->assertEqual([], $container_cannot_be_saved_messages);
+
     // Ensure schema has changed.
     $this->assertEqual(drupal_get_installed_schema_version('update_test_schema', TRUE), 8001);
     // Ensure the index was added for column a.
