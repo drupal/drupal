@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\user\Plugin\migrate\builder\d7\User.
+ * Contains \Drupal\user\Plugin\migrate\User.
  */
 
 namespace Drupal\user\Plugin\migrate;
