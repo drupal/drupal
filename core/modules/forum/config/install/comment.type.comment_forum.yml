@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - forum
 id: comment_forum
 label: Comment_forum
 target_entity_type_id: node
