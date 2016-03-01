@@ -25,6 +25,9 @@ migrate_source:
     constants:
       type: ignore
       label: 'Constants'
+    database_state_key:
+      type: string
+      label: 'Key in state where the source database settings are stored'
 
 migrate_process:
   type: migrate_plugin

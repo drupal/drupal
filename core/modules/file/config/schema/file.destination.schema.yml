@@ -5,6 +5,9 @@ migrate.destination.entity:file:
     source_path_property:
       type: string
       label: 'Source path'
+    source_base_path:
+      type: string
+      label: 'Source base path'
     urlencode:
       type: boolean
       label: 'Whether to urlencode incoming file paths'
