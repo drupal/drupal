@@ -261,6 +261,10 @@ Basic Auth module
 - Klaus Purer 'klausi' https://www.drupal.org/u/klausi
 - Juampy Novillo Requena 'juampy' https://www.drupal.org/u/juampy
 
+BigPipe module
+- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+- Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
+
 Block module
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 - Ben Dougherty 'benjy' https://www.drupal.org/u/benjy

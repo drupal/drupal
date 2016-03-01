@@ -1,0 +1,6 @@
+name: BigPipe
+type: module
+description: 'Sends pages in a way that allows browsers to show them much faster. Uses the BigPipe technique.'
+package: Core (Experimental)
+version: VERSION
+core: 8.x

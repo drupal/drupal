@@ -48,6 +48,7 @@
         "drupal/bartik": "self.version",
         "drupal/ban": "self.version",
         "drupal/basic_auth": "self.version",
+        "drupal/big_pipe": "self.version",
         "drupal/block": "self.version",
         "drupal/block_content": "self.version",
         "drupal/book": "self.version",
