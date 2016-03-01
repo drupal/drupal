@@ -263,6 +263,15 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     }
     $id_map_database_options = $id_map->getDatabase()->getConnectionOptions();
     $source_database_options = $this->getDatabase()->getConnectionOptions();
+
+    // Special handling for sqlite which deals with files.
+    if ($id_map_database_options['driver'] === 'sqlite' &&
+      $source_database_options['driver'] === 'sqlite' &&
+      $id_map_database_options['database'] != $source_database_options['database']
+    ) {
+      return FALSE;
+    }
+
     foreach (array('username', 'password', 'host', 'port', 'namespace', 'driver') as $key) {
       if (isset($source_database_options[$key])) {
         if ($id_map_database_options[$key] != $source_database_options[$key]) {
