@@ -107,16 +107,33 @@ class SqlBaseTest extends UnitTestCase {
         FALSE,
         TRUE,
         TRUE,
-        ['username' => 'different_from_map', 'password' => 'different_from_map'],
-        ['username' => 'different_from_source', 'password' => 'different_from_source'],
+        ['driver' => 'mysql', 'username' => 'different_from_map', 'password' => 'different_from_map'],
+        ['driver' => 'mysql', 'username' => 'different_from_source', 'password' => 'different_from_source'],
       ],
       // Returns true because source and id map connection options are the same.
       [
         TRUE,
         TRUE,
         TRUE,
-        ['username' => 'same_value', 'password' => 'same_value'],
-        ['username' => 'same_value', 'password' => 'same_value'],
+        ['driver' => 'pgsql', 'username' => 'same_value', 'password' => 'same_value'],
+        ['driver' => 'pgsql', 'username' => 'same_value', 'password' => 'same_value'],
+      ],
+      // Returns false because driver is sqlite and the databases are not the
+      // same.
+      [
+        FALSE,
+        TRUE,
+        TRUE,
+        ['driver' => 'sqlite', 'database' => '1.sqlite', 'username' => '', 'password' => ''],
+        ['driver' => 'sqlite', 'database' => '2.sqlite', 'username' => '', 'password' => ''],
+      ],
+      // Returns false because driver is not the same.
+      [
+        FALSE,
+        TRUE,
+        TRUE,
+        ['driver' => 'pgsql', 'username' => 'same_value', 'password' => 'same_value'],
+        ['driver' => 'mysql', 'username' => 'same_value', 'password' => 'same_value'],
       ],
     ];
   }
