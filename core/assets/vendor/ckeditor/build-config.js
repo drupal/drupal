@@ -69,6 +69,7 @@ var CKBUILDER_CONFIG = {
 		'wysiwygarea' : 1,
 		'indent' : 1,
 		'indentlist' : 1,
+		'language' : 1,
 		'list' : 1,
 		'magicline' : 1,
 		'maximize' : 1,

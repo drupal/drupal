@@ -110,7 +110,7 @@ class CKEditorAdminTest extends WebTestBase {
           ),
         ),
       ),
-      'plugins' => array(),
+      'plugins' => ['language' => ['language_list' => 'un']],
     );
     $this->assertIdentical($this->castSafeStrings($ckeditor->getDefaultSettings()), $expected_default_settings);
 

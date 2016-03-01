@@ -21,6 +21,10 @@ libraries-override:
     css:
       component:
         css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css: css/ckeditor/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css
+  ckeditor/drupal.ckeditor.plugins.language:
+    css:
+      component:
+        css/plugins/language/ckeditor.language.css: css/ckeditor/plugins/language/ckeditor.language.css
   ckeditor/drupal.ckeditor.admin:
     css:
       theme:

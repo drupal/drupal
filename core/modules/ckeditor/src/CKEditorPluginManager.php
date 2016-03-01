@@ -72,15 +72,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
    */
   public function getEnabledPluginFiles(Editor $editor, $include_internal_plugins = FALSE) {
     $plugins = array_keys($this->getDefinitions());
-    // Flatten each row.
-    $toolbar_rows = array();
-    $settings = $editor->getSettings();
-    foreach ($settings['toolbar']['rows'] as $row_number => $row) {
-      $toolbar_rows[] = array_reduce($settings['toolbar']['rows'][$row_number], function (&$result, $button_group) {
-        return array_merge($result, $button_group['items']);
-      }, array());
-    }
-    $toolbar_buttons = array_unique(NestedArray::mergeDeepArray($toolbar_rows));
+    $toolbar_buttons = $this->getEnabledButtons($editor);
     $enabled_plugins = array();
     $additional_plugins = array();
 
@@ -119,6 +111,26 @@ class CKEditorPluginManager extends DefaultPluginManager {
     asort($enabled_plugins);
 
     return $enabled_plugins;
+  }
+
+  /**
+   * Gets the enabled toolbar buttons in the given text editor instance.
+   *
+   * @param \Drupal\editor\Entity\Editor $editor
+   *   A configured text editor object.
+   *
+   * @return string[]
+   *   A list of the toolbar buttons enabled in the given text editor instance.
+   */
+  public static function getEnabledButtons(Editor $editor) {
+    $toolbar_rows = [];
+    $settings = $editor->getSettings();
+    foreach ($settings['toolbar']['rows'] as $row_number => $row) {
+      $toolbar_rows[] = array_reduce($settings['toolbar']['rows'][$row_number], function (&$result, $button_group) {
+        return array_merge($result, $button_group['items']);
+      }, []);
+    }
+    return array_unique(NestedArray::mergeDeepArray($toolbar_rows));
   }
 
   /**

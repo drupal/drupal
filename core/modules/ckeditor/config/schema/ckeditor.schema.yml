@@ -33,6 +33,15 @@ editor.settings.ckeditor:
       sequence:
         type: ckeditor.plugin.[%key]
 
+# Plugin \Drupal\ckeditor\Plugin\CKEditorPlugin\Language
+ckeditor.plugin.language:
+  type: mapping
+  label: 'Language'
+  mapping:
+    language_list:
+      type: string
+      label: 'Language list ID'
+
 # Plugin \Drupal\ckeditor\Plugin\ckeditor\plugin\StylesCombo
 ckeditor.plugin.stylescombo:
   type: mapping
