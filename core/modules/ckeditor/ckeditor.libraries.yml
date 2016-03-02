@@ -22,6 +22,12 @@ drupal.ckeditor.plugins.drupalimagecaption:
   dependencies:
     - filter/caption
 
+drupal.ckeditor.plugins.language:
+  version: VERSION
+  css:
+    component:
+      css/plugins/language/ckeditor.language.css: {}
+
 drupal.ckeditor.admin:
   version: VERSION
   js:
@@ -72,8 +78,16 @@ drupal.ckeditor.stylescombo.admin:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/jquery.once
     - core/drupal.vertical-tabs
     - core/drupalSettings
     # Ensure to run after ckeditor/drupal.ckeditor.admin.
     - ckeditor/drupal.ckeditor.admin
+
+drupal.ckeditor.language.admin:
+  version: VERSION
+  js:
+    js/ckeditor.language.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.vertical-tabs
