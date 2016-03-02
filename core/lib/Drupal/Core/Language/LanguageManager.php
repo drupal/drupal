@@ -336,7 +336,8 @@ class LanguageManager implements LanguageManagerInterface {
   /**
    * The 6 official languages used at the United Nations.
    *
-   * This list is based on http://www.un.org/en/aboutun/languages.shtml/ and it
+   * This list is based on
+   * http://www.un.org/en/sections/about-un/official-languages/index.html and it
    * uses the same format as getStandardLanguageList().
    *
    * @return array
