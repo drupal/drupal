@@ -334,27 +334,6 @@ class LanguageManager implements LanguageManagerInterface {
   }
 
   /**
-   * The 6 official languages used at the United Nations.
-   *
-   * This list is based on http://www.un.org/en/aboutun/languages.shtml/ and it
-   * uses the same format as getStandardLanguageList().
-   *
-   * @return array
-   *   An array with language codes as keys, and English and native language
-   *   names as values.
-   */
-  public static function getUnitedNationsLanguageList() {
-    return [
-      'ar' => ['Arabic', /* Left-to-right marker "‭" */ 'العربية', LanguageInterface::DIRECTION_RTL],
-      'zh-hans' => ['Chinese, Simplified', '简体中文'],
-      'en' => ['English', 'English'],
-      'fr' => ['French', 'Français'],
-      'ru' => ['Russian', 'Русский'],
-      'es' => ['Spanish', 'Español'],
-    ];
-  }
-
-  /**
    * {@inheritdoc}
    *
    * This function is a noop since the configuration cannot be overridden by

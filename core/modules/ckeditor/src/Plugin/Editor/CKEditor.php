@@ -135,7 +135,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
           ),
         ),
       ),
-      'plugins' => ['language' => ['language_list' => 'un']],
+      'plugins' => array(),
     );
   }
 

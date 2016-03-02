@@ -64,13 +64,6 @@ function ckeditor_ckeditor_css_alter(array &$css, Editor $editor) {
   if ($editor->getFilterFormat()->filters('filter_caption')->status) {
     $css[] = drupal_get_path('module', 'filter') . '/css/filter.caption.css';
   }
-
-  // @todo: Remove in https://www.drupal.org/node/2645100.
-  /** @var \Drupal\ckeditor\CKEditorPluginManager $ckeditor_plugin_manager */
-  $ckeditor_plugin_manager = \Drupal::service('plugin.manager.ckeditor.plugin');
-  if (in_array('Language', $ckeditor_plugin_manager->getEnabledButtons($editor))) {
-    $css[] = drupal_get_path('module', 'ckeditor') . '/css/plugins/language/ckeditor.language.css';
-  }
 }
 
 /**
