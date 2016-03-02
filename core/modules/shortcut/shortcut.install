@@ -64,6 +64,6 @@ function shortcut_uninstall() {
   // Theme settings are not configuration entities and cannot depend on modules
   // so to unset a module-specific setting, we need to unset it with logic.
   if (\Drupal::service('theme_handler')->themeExists('seven')) {
-    \Drupal::configFactory()->getEditable('seven.settings')->clear('third_party_settings.shortcut.module_link')->save(TRUE);
+    \Drupal::configFactory()->getEditable('seven.settings')->clear('third_party_settings.shortcut')->save(TRUE);
   }
 }
