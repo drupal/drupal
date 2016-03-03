@@ -101,6 +101,7 @@
         "drupal/menu_ui": "self.version",
         "drupal/migrate": "self.version",
         "drupal/migrate_drupal": "self.version",
+        "drupal/migrate_drupal_ui": "self.version",
         "drupal/node": "self.version",
         "drupal/options": "self.version",
         "drupal/page_cache": "self.version",
