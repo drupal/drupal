@@ -67,7 +67,9 @@ class EntityValidationTest extends EntityUnitTestBase {
 
     // Pass in the value of the name field when creating. With the user
     // field we test setting a field after creation.
-    $entity = entity_create($entity_type);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create();
     $entity->user_id->target_id = $this->entityUser->id();
     $entity->name->value = $this->entityName;
 

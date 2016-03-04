@@ -32,7 +32,9 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
-    $entity_init = entity_create($entity_type);
+    $entity_init = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create();
 
     // Populate values to be displayed.
     $values = $this->_generateTestFieldValues($this->fieldTestData->field_storage->getCardinality());
@@ -186,9 +188,11 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithStorage('_2', $entity_type);
 
-    $entity_init = entity_create($entity_type, array(
-      'type' => $entity_type,
-    ));
+    $entity_init = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array(
+        'type' => $entity_type,
+      ));
 
     // Check that no initial cache entry is present.
     $cid = "values:$entity_type:" . $entity->id();
@@ -293,7 +297,9 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
-    $entity_init = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->getTargetBundle()));
+    $entity_init = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->getTargetBundle()));
 
     // Build the form for all fields.
     $display = entity_get_form_display($entity_type, $this->fieldTestData->field->getTargetBundle(), 'default');

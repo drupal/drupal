@@ -50,15 +50,21 @@ class EntityAutocompleteTest extends EntityUnitTestBase {
    */
   function testEntityReferenceAutocompletion() {
     // Add an entity with a slash in its name.
-    $entity_1 = entity_create($this->entityType, array('name' => '10/16/2011'));
+    $entity_1 = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('name' => '10/16/2011'));
     $entity_1->save();
 
     // Add another entity that differs after the slash character.
-    $entity_2 = entity_create($this->entityType, array('name' => '10/17/2011'));
+    $entity_2 = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('name' => '10/17/2011'));
     $entity_2->save();
 
     // Add another entity that has both a comma, a slash and markup.
-    $entity_3 = entity_create($this->entityType, array('name' => 'label with, and / <em>test</em>'));
+    $entity_3 = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('name' => 'label with, and / test'));
     $entity_3->save();
 
     // Try to autocomplete a entity label that matches both entities.
@@ -85,7 +91,7 @@ class EntityAutocompleteTest extends EntityUnitTestBase {
     $this->assertIdentical($data[0]['label'], Html::escape($entity_2->name->value), 'Autocomplete returned the second matching entity');
 
     // Try to autocomplete a entity label with both a comma, a slash and markup.
-    $input = '"label with, and / <em>';
+    $input = '"label with, and /"';
     $data = $this->getAutocompleteResult($input);
     $n = $entity_3->name->value . ' (3)';
     // Entity labels containing commas or quotes must be wrapped in quotes.

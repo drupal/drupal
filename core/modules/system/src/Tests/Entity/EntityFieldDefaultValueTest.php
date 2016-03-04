@@ -47,7 +47,9 @@ class EntityFieldDefaultValueTest extends EntityUnitTestBase  {
    *   The entity type to run the tests with.
    */
   protected function assertDefaultValues($entity_type_id) {
-    $entity = entity_create($entity_type_id);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type_id)
+      ->create();
     $definition = $this->entityManager->getDefinition($entity_type_id);
     $langcode_key = $definition->getKey('langcode');
     $this->assertEqual($entity->{$langcode_key}->value, 'en', SafeMarkup::format('%entity_type: Default language', array('%entity_type' => $entity_type_id)));

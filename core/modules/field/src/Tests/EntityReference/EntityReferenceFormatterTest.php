@@ -108,7 +108,9 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     ))->save();
 
     // Create the entity to be referenced.
-    $this->referencedEntity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
+    $this->referencedEntity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('name' => $this->randomMachineName()));
     $this->referencedEntity->body = array(
       'value' => '<p>Hello, world!</p>',
       'format' => 'full_html',
@@ -116,7 +118,9 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $this->referencedEntity->save();
 
     // Create another entity to be referenced but do not save it.
-    $this->unsavedReferencedEntity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
+    $this->unsavedReferencedEntity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('name' => $this->randomMachineName()));
     $this->unsavedReferencedEntity->body = array(
       'value' => '<p>Hello, unsaved world!</p>',
       'format' => 'full_html',
@@ -134,7 +138,9 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
 
     $field_name = $this->fieldName;
 
-    $referencing_entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
+    $referencing_entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('name' => $this->randomMachineName()));
     $referencing_entity->save();
     $referencing_entity->{$field_name}->entity = $this->referencedEntity;
 
@@ -286,7 +292,9 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
    */
   protected function buildRenderArray(array $referenced_entities, $formatter, $formatter_options = array()) {
     // Create the entity that will have the entity reference field.
-    $referencing_entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
+    $referencing_entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('name' => $this->randomMachineName()));
 
     $items = $referencing_entity->get($this->fieldName);
 

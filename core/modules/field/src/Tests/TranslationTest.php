@@ -120,7 +120,9 @@ class TranslationTest extends FieldUnitTestBase {
     // Prepare the field translations.
     $entity_type_id = 'entity_test';
     field_test_entity_info_translatable($entity_type_id, TRUE);
-    $entity = entity_create($entity_type_id, array('type' => $this->field->getTargetBundle()));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type_id)
+      ->create(array('type' => $this->field->getTargetBundle()));
     $field_translations = array();
     $available_langcodes = array_keys($this->container->get('language_manager')->getLanguages());
     $entity->langcode->value = reset($available_langcodes);
@@ -160,7 +162,9 @@ class TranslationTest extends FieldUnitTestBase {
     $translation_langcodes = array_values($translation_langcodes);
 
     $values = array('type' => $field->getTargetBundle(), 'langcode' => $translation_langcodes[0]);
-    $entity = entity_create($entity_type_id, $values);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type_id)
+      ->create($values);
     foreach ($translation_langcodes as $langcode) {
       $values[$this->fieldName][$langcode] = $this->_generateTestFieldValues($this->fieldStorage->getCardinality());
       $translation = $entity->hasTranslation($langcode) ? $entity->getTranslation($langcode) : $entity->addTranslation($langcode);

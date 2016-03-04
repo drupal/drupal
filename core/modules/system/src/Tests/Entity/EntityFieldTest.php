@@ -77,7 +77,9 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     // Pass in the value of the name field when creating. With the user
     // field we test setting a field after creation.
-    $entity = entity_create($entity_type);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create();
     $entity->user_id->target_id = $this->entityUser->id();
     $entity->name->value = $this->entityName;
 
@@ -172,9 +174,11 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     // Create a fresh entity so target_id does not get its property object
     // instantiated, then verify setting a new value via typed data API works.
-    $entity2 = entity_create($entity_type, array(
-      'user_id' => array('target_id' => $new_user1->id()),
-    ));
+    $entity2 = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array(
+        'user_id' => array('target_id' => $new_user1->id()),
+      ));
     // Access the property object, and set a value.
     $entity2->user_id->first()->get('target_id')->setValue($new_user2->id());
     $this->assertEqual($new_user2->id(), $entity2->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
@@ -255,11 +259,13 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->entityFieldText = $this->randomMachineName();
     $text_item[0]['value'] = $this->entityFieldText;
 
-    $entity = entity_create($entity_type, array(
-      'name' => $name_item,
-      'user_id' => $user_item,
-      'field_test_text' => $text_item,
-    ));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array(
+        'name' => $name_item,
+        'user_id' => $user_item,
+        'field_test_text' => $text_item,
+      ));
     $this->assertEqual($this->entityName, $entity->name->value, format_string('%entity_type: Name value can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entityUser->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
@@ -327,20 +333,24 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     // Make sure the user id can be set to zero.
     $user_item[0]['target_id'] = 0;
-    $entity = entity_create($entity_type, array(
-      'name' => $name_item,
-      'user_id' => $user_item,
-      'field_test_text' => $text_item,
-    ));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array(
+        'name' => $name_item,
+        'user_id' => $user_item,
+        'field_test_text' => $text_item,
+      ));
     $this->assertNotNull($entity->user_id->target_id, format_string('%entity_type: User id is not NULL', array('%entity_type' => $entity_type)));
     $this->assertIdentical($entity->user_id->target_id, 0, format_string('%entity_type: User id has been set to 0', array('%entity_type' => $entity_type)));
 
     // Test setting the ID with the value only.
-    $entity = entity_create($entity_type, array(
-      'name' => $name_item,
-      'user_id' => 0,
-      'field_test_text' => $text_item,
-    ));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array(
+        'name' => $name_item,
+        'user_id' => 0,
+        'field_test_text' => $text_item,
+      ));
     $this->assertNotNull($entity->user_id->target_id, format_string('%entity_type: User id is not NULL', array('%entity_type' => $entity_type)));
     $this->assertIdentical($entity->user_id->target_id, 0, format_string('%entity_type: User id has been set to 0', array('%entity_type' => $entity_type)));
   }
@@ -435,7 +445,9 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     // Test introspecting an entity object.
     // @todo: Add bundles and test bundles as well.
-    $entity = entity_create($entity_type);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create();
 
     $definitions = $entity->getFieldDefinitions();
     $this->assertEqual($definitions['name']->getType(), 'string', $entity_type .': Name field found.');

@@ -234,7 +234,9 @@ abstract class ContentTranslationTestBase extends WebTestBase {
         }
       }
     }
-    $entity = entity_create($this->entityTypeId, $entity_values);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityTypeId)
+      ->create($entity_values);
     $entity->save();
     return $entity->id();
   }

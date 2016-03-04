@@ -291,20 +291,24 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     // Create an entity that does reference the entity being tested.
     $label_key = \Drupal::entityManager()->getDefinition($entity_type)->getKey('label');
-    $referencing_entity = entity_create($entity_type, array(
-      $label_key => 'Referencing ' . $entity_type,
-      'status' => 1,
-      'type' => $bundle,
-      $field_name => array('target_id' => $referenced_entity->id()),
-    ));
+    $referencing_entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array(
+        $label_key => 'Referencing ' . $entity_type,
+        'status' => 1,
+        'type' => $bundle,
+        $field_name => array('target_id' => $referenced_entity->id()),
+      ));
     $referencing_entity->save();
 
     // Create an entity that does not reference the entity being tested.
-    $non_referencing_entity = entity_create($entity_type, array(
-      $label_key => 'Non-referencing ' . $entity_type,
-      'status' => 1,
-      'type' => $bundle,
-    ));
+    $non_referencing_entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array(
+        $label_key => 'Non-referencing ' . $entity_type,
+        'status' => 1,
+        'type' => $bundle,
+      ));
     $non_referencing_entity->save();
 
     return array(

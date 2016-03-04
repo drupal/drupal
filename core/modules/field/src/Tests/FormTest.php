@@ -543,7 +543,9 @@ class FormTest extends FieldTestBase {
 
     // Test that the form structure includes full information for each delta
     // apart from #access.
-    $entity = entity_create($entity_type, array('id' => 0, 'revision_id' => 0));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('id' => 0, 'revision_id' => 0));
 
     $display = entity_get_form_display($entity_type, $entity_type, 'default');
     $form = array();

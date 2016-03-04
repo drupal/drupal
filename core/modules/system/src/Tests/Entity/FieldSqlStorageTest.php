@@ -116,7 +116,9 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Create an entity with four revisions.
     $revision_ids = array();
-    $entity = entity_create($entity_type);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create();
     $entity->save();
     $revision_ids[] = $entity->getRevisionId();
     for ($i = 0; $i < 4; $i++) {
@@ -182,7 +184,9 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    */
   function testFieldWrite() {
     $entity_type = $bundle = 'entity_test_rev';
-    $entity = entity_create($entity_type);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create();
 
     $revision_values = array();
 
@@ -297,7 +301,9 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
 
     // Save an entity with values.
-    $entity = entity_create($entity_type, $values);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create($values);
     $entity->save();
 
     // Load the entity back and check the values.
@@ -325,10 +331,12 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'bundle' => $entity_type,
     ]);
     $field->save();
-    $entity = entity_create($entity_type, array(
-      'id' => 0,
-      'revision_id' => 0,
-    ));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array(
+        'id' => 0,
+        'revision_id' => 0,
+      ));
     $entity->decimal52->value = '1.235';
     $entity->save();
 
@@ -408,10 +416,12 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
 
     // Add data so the table cannot be dropped.
-    $entity = entity_create($entity_type, array(
-      'id' => 1,
-      'revision_id' => 1,
-    ));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array(
+        'id' => 1,
+        'revision_id' => 1,
+      ));
     $entity->$field_name->value = 'field data';
     $entity->enforceIsNew();
     $entity->save();
