@@ -76,13 +76,17 @@ class NestedFormTest extends FieldTestBase {
 
     // Create two entities.
     $entity_type = 'entity_test';
-    $entity_1 = entity_create($entity_type, array('id' => 1));
+    $entity_1 = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('id' => 1));
     $entity_1->enforceIsNew();
     $entity_1->field_single->value = 0;
     $entity_1->field_unlimited->value = 1;
     $entity_1->save();
 
-    $entity_2 = entity_create($entity_type, array('id' => 2));
+    $entity_2 = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('id' => 2));
     $entity_2->enforceIsNew();
     $entity_2->field_single->value = 10;
     $entity_2->field_unlimited->value = 11;

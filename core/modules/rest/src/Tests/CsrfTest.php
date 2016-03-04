@@ -54,7 +54,9 @@ class CsrfTest extends RESTTestBase {
     // request.
     $serializer = $this->container->get('serializer');
     $entity_values = $this->entityValues($this->testEntityType);
-    $entity = entity_create($this->testEntityType, $entity_values);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->testEntityType)
+      ->create($entity_values);
     $this->serialized = $serializer->serialize($entity, $this->defaultFormat);
   }
 

@@ -32,7 +32,10 @@ class ConfigEntityStorageTest extends KernelTestBase {
     $entity_type = 'config_test';
     $id = 'test_1';
     // Load the original configuration entity.
-    entity_create($entity_type, array('id' => $id))->save();
+    $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('id' => $id))
+      ->save();
     $entity = entity_load($entity_type, $id);
 
     $original_properties = $entity->toArray();

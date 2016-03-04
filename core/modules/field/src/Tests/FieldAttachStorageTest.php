@@ -37,7 +37,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     // TODO : test empty values filtering and "compression" (store consecutive deltas).
     // Preparation: create three revisions and store them in $revision array.
     $values = array();
-    $entity = entity_create($entity_type);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create();
     for ($revision_id = 0; $revision_id < 3; $revision_id++) {
       // Note: we try to insert one extra value.
       $current_values = $this->_generateTestFieldValues($cardinality + 1);
@@ -114,7 +116,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Create one test entity per bundle, with random values.
     foreach ($bundles as $index => $bundle) {
-      $entities[$index] = entity_create($entity_type, array('id' => $index, 'revision_id' => $index, 'type' => $bundle));
+      $entities[$index] = $this->container->get('entity_type.manager')
+        ->getStorage($entity_type)
+        ->create(array('id' => $index, 'revision_id' => $index, 'type' => $bundle));
       $entity = clone($entities[$index]);
       foreach ($field_names as $field_name) {
         if (!$entity->hasField($field_name)) {
@@ -149,7 +153,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $entity_type = 'entity_test';
     $this->createFieldWithStorage('', $entity_type);
 
-    $entity_init = entity_create($entity_type, array('id' => 1));
+    $entity_init = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('id' => 1));
 
     // Insert: Field is NULL.
     $entity = clone $entity_init;
@@ -200,7 +206,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->fieldTestData->field->save();
 
     // Verify that fields are populated with default values.
-    $entity_init = entity_create($entity_type, array('id' => 1, 'revision_id' => 1));
+    $entity_init = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('id' => 1, 'revision_id' => 1));
     $default = field_test_default_value($entity_init, $this->fieldTestData->field);
     $this->assertEqual($entity_init->{$this->fieldTestData->field_name}->getValue(), $default, 'Default field value correctly populated.');
 
@@ -213,7 +221,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Verify that prepopulated field values are not overwritten by defaults.
     $value = array(array('value' => $default[0]['value'] - mt_rand(1, 127)));
-    $entity = entity_create($entity_type, array('type' => $entity_init->bundle(), $this->fieldTestData->field_name => $value));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('type' => $entity_init->bundle(), $this->fieldTestData->field_name => $value));
     $this->assertEqual($entity->{$this->fieldTestData->field_name}->getValue(), $value, 'Prepopulated field value correctly maintained.');
   }
 
@@ -224,7 +234,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithStorage('', $entity_type);
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
-    $entity = entity_create($entity_type, array('type' => $this->fieldTestData->field->getTargetBundle()));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('type' => $this->fieldTestData->field->getTargetBundle()));
     $vids = array();
 
     // Create revision 0
@@ -292,7 +304,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     FieldConfig::create($this->fieldTestData->field_definition)->save();
 
     // Save an entity with data in the field.
-    $entity = entity_create($entity_type, array('type' => $this->fieldTestData->field->getTargetBundle()));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('type' => $this->fieldTestData->field->getTargetBundle()));
     $values = $this->_generateTestFieldValues($cardinality);
     $entity->{$this->fieldTestData->field_name} = $values;
 
@@ -336,7 +350,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     FieldConfig::create($field)->save();
 
     // Save an entity with data for both fields
-    $entity = entity_create($entity_type, array('type' => $this->fieldTestData->field->getTargetBundle()));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create(array('type' => $this->fieldTestData->field->getTargetBundle()));
     $values = $this->_generateTestFieldValues($this->fieldTestData->field_storage->getCardinality());
     $entity->{$this->fieldTestData->field_name} = $values;
     $entity->{$field_name} = $this->_generateTestFieldValues(1);

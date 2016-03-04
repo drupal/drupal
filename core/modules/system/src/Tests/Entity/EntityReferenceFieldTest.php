@@ -93,10 +93,14 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
    */
   public function testEntityReferenceFieldValidation() {
     // Test a valid reference.
-    $referenced_entity = entity_create($this->referencedEntityType, array('type' => $this->bundle));
+    $referenced_entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->referencedEntityType)
+      ->create(array('type' => $this->bundle));
     $referenced_entity->save();
 
-    $entity = entity_create($this->entityType, array('type' => $this->bundle));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('type' => $this->bundle));
     $entity->{$this->fieldName}->target_id = $referenced_entity->id();
     $violations = $entity->{$this->fieldName}->validate();
     $this->assertEqual($violations->count(), 0, 'Validation passes.');
@@ -122,13 +126,17 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
    */
   public function testReferencedEntitiesMultipleLoad() {
     // Create the parent entity.
-    $entity = entity_create($this->entityType, array('type' => $this->bundle));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('type' => $this->bundle));
 
     // Create three target entities and attach them to parent field.
     $target_entities = array();
     $reference_field = array();
     for ($i = 0; $i < 3; $i++) {
-      $target_entity = entity_create($this->referencedEntityType, array('type' => $this->bundle));
+      $target_entity = $this->container->get('entity_type.manager')
+        ->getStorage($this->referencedEntityType)
+        ->create(array('type' => $this->bundle));
       $target_entity->save();
       $target_entities[] = $target_entity;
       $reference_field[]['target_id'] = $target_entity->id();
@@ -149,7 +157,9 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
 
     // Create a new target entity that is not saved, thus testing the
     // "autocreate" feature.
-    $target_entity_unsaved = entity_create($this->referencedEntityType, array('type' => $this->bundle, 'name' => $this->randomString()));
+    $target_entity_unsaved = $this->container->get('entity_type.manager')
+      ->getStorage($this->referencedEntityType)
+      ->create(array('type' => $this->bundle, 'name' => $this->randomString()));
     $reference_field[6]['entity'] = $target_entity_unsaved;
     $target_entities[6] = $target_entity_unsaved;
 
@@ -200,7 +210,9 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
       FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
     );
     // Create the parent entity.
-    $entity = entity_create($this->entityType, array('type' => $this->bundle));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('type' => $this->bundle));
 
     // Create the default target entity.
     $target_entity = EntityTestStringId::create([
@@ -224,7 +236,9 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'field.field.' . $field->id(), $field->toArray());
 
     // Test that the default value works.
-    $entity = entity_create($this->entityType, array('type' => $this->bundle));
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('type' => $this->bundle));
     $entities = $entity->{$field_name}->referencedEntities();
     $this->assertEqual($entities[0]->id(), $target_entity->id());
   }

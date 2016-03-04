@@ -292,7 +292,9 @@ function _field_create_entity_from_ids($ids) {
   if (isset($ids->bundle) && $bundle_key = $entity_type->getKey('bundle')) {
     $id_properties[$bundle_key] = $ids->bundle;
   }
-  return entity_create($ids->entity_type, $id_properties);
+  return \Drupal::entityTypeManager()
+    ->getStorage($ids->entity_type)
+    ->create($id_properties);
 }
 
 /**

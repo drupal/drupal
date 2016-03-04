@@ -133,7 +133,9 @@ class BulkDeleteTest extends FieldUnitTestBase {
         ])->save();
       }
       for ($i = 0; $i < 10; $i++) {
-        $entity = entity_create($this->entityTypeId, array('type' => $bundle));
+        $entity = $this->container->get('entity_type.manager')
+          ->getStorage($this->entityTypeId)
+          ->create(array('type' => $bundle));
         foreach ($this->fieldStorages as $field_storage) {
           $entity->{$field_storage->getName()}->setValue($this->_generateTestFieldValues($field_storage->getCardinality()));
         }

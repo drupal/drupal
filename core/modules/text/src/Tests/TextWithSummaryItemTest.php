@@ -64,7 +64,9 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     $this->createField($entity_type);
 
     // Create an entity with a summary and no text format.
-    $entity = entity_create($entity_type);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create();
     $entity->summary_field->value = $value = $this->randomMachineName();
     $entity->summary_field->summary = $summary = $this->randomMachineName();
     $entity->summary_field->format = NULL;
@@ -88,7 +90,9 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->summary_field->summary_processed, $summary);
 
     // Test the generateSampleValue() method.
-    $entity = entity_create($entity_type);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create();
     $entity->summary_field->generateSampleItems();
     $this->entityValidateAndSave($entity);
   }

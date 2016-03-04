@@ -70,11 +70,15 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
     ))->save();
 
     // Create the entity to be referenced.
-    $this->targetEntity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
+    $this->targetEntity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('name' => $this->randomMachineName()));
     $this->targetEntity->save();
 
     // Create the entity that will have the entity reference field.
-    $this->entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
+    $this->entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(array('name' => $this->randomMachineName()));
     $this->entity->save();
     $this->entity->{$this->fieldName}->entity = $this->targetEntity;
     $this->uri = $this->getAbsoluteUri($this->entity);

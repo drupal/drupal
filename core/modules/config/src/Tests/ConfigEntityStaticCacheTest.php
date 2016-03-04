@@ -45,7 +45,10 @@ class ConfigEntityStaticCacheTest extends KernelTestBase {
     parent::setUp();
     $this->entityTypeId = 'config_test';
     $this->entityId = 'test_1';
-    entity_create($this->entityTypeId, array('id' => $this->entityId, 'label' => 'Original label'))->save();
+    $this->container->get('entity_type.manager')
+      ->getStorage($this->entityTypeId)
+      ->create(array('id' => $this->entityId, 'label' => 'Original label'))
+      ->save();
   }
 
   /**
