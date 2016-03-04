@@ -185,10 +185,10 @@ function locale_translate_batch_build(array $files, array $options) {
  *     LOCALE_NOT_CUSTOMIZED.
  *   - 'message': Alternative message to display during import. Note, this must
  *     be sanitized text.
- * @param array $context
+ * @param array|\ArrayAccess $context.
  *   Contains a list of files imported.
  */
-function locale_translate_batch_import($file, array $options, array &$context) {
+function locale_translate_batch_import($file, array $options, &$context) {
   // Merge the default values in the $options array.
   $options += array(
     'overwrite_options' => array(),
@@ -268,10 +268,10 @@ function locale_translate_batch_import($file, array $options, array &$context) {
  *
  * Save data of imported files.
  *
- * @param array $context
+ * @param array|\ArrayAccess $context.
  *   Contains a list of imported files.
  */
-function locale_translate_batch_import_save(array $context) {
+function locale_translate_batch_import_save($context) {
   if (isset($context['results']['files'])) {
     foreach ($context['results']['files'] as $file) {
       // Update the file history if both project and version are known. This
@@ -293,10 +293,10 @@ function locale_translate_batch_import_save(array $context) {
  *
  * Refreshes translations after importing strings.
  *
- * @param array $context
+ * @param array|\ArrayAccess $context.
  *   Contains a list of strings updated and information about the progress.
  */
-function locale_translate_batch_refresh(array &$context) {
+function locale_translate_batch_refresh(&$context) {
   if (!isset($context['sandbox']['refresh'])) {
     $strings = $langcodes = array();
     if (isset($context['results']['stats'])) {
@@ -597,12 +597,12 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
  *   An array of names of configuration objects to update.
  * @param array $langcodes
  *   (optional) Array of language codes to update. Defaults to all languages.
- * @param array $context
+ * @param array|\ArrayAccess $context.
  *   Contains a list of files imported.
  *
  * @see locale_config_batch_build()
  */
-function locale_config_batch_refresh_name(array $names, array $langcodes, array &$context) {
+function locale_config_batch_refresh_name(array $names, array $langcodes, &$context) {
   if (!isset($context['result']['stats']['config'])) {
     $context['result']['stats']['config'] = 0;
   }

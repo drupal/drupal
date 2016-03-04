@@ -108,10 +108,10 @@ function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode
  * @param bool $revisions
  *   (optional) TRUE if $nodes contains an array of revision IDs instead of
  *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
- * @param array $context
+ * @param array|\ArrayAccess $context.
  *   An array of contextual key/values.
  */
-function _node_mass_update_batch_process(array $nodes, array $updates, $load, $revisions, array &$context) {
+function _node_mass_update_batch_process(array $nodes, array $updates, $load, $revisions, &$context) {
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($nodes);
