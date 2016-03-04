@@ -96,8 +96,8 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate($name, $parameters = array(), $absolute = FALSE) {
-    $options['absolute'] = $absolute;
+  public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH) {
+    $options['absolute'] = is_bool($referenceType) ? $referenceType : $referenceType === self::ABSOLUTE_URL;
     $generated_url = $this->generateFromRoute($name, $parameters, $options, TRUE);
     $this->bubble($generated_url);
     return $generated_url->getGeneratedUrl();
