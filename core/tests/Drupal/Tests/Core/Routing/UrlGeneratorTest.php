@@ -217,6 +217,27 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
+   * Confirms that generated routes will have aliased paths using interface constants.
+   */
+  public function testAliasGenerationUsingInterfaceConstants() {
+    $url = $this->generator->generate('test_1', array(), UrlGenerator::ABSOLUTE_PATH);
+    $this->assertEquals('/hello/world', $url);
+    // No cacheability to test; UrlGenerator::generate() doesn't support
+    // collecting cacheability metadata.
+
+    $this->routeProcessorManager->expects($this->exactly(3))
+      ->method('processOutbound')
+      ->with($this->anything());
+
+
+    // Check that the two generate methods return the same result.
+    $this->assertGenerateFromRoute('test_1', [], [], $url, (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+
+    $path = $this->generator->getPathFromRoute('test_1');
+    $this->assertEquals('test/one', $path);
+  }
+
+  /**
    * @covers ::generateFromRoute
    */
   public function testUrlGenerationWithDisabledPathProcessing() {
@@ -362,6 +383,24 @@ class UrlGeneratorTest extends UnitTestCase {
    */
   public function testAbsoluteURLGeneration() {
     $url = $this->generator->generate('test_1', array(), TRUE);
+    $this->assertEquals('http://localhost/hello/world', $url);
+    // No cacheability to test; UrlGenerator::generate() doesn't support
+    // collecting cacheability metadata.
+
+    $this->routeProcessorManager->expects($this->exactly(2))
+      ->method('processOutbound')
+      ->with($this->anything());
+
+    $options = array('absolute' => TRUE, 'fragment' => 'top');
+    // Extra parameters should appear in the query string.
+    $this->assertGenerateFromRoute('test_1', ['zoo' => 5], $options, 'http://localhost/hello/world?zoo=5#top', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT)->setCacheContexts(['url.site']));
+  }
+
+  /**
+   * Confirms that absolute URLs work with generated routes using interface constants.
+   */
+  public function testAbsoluteURLGenerationUsingInterfaceConstants() {
+    $url = $this->generator->generate('test_1', array(), UrlGenerator::ABSOLUTE_URL);
     $this->assertEquals('http://localhost/hello/world', $url);
     // No cacheability to test; UrlGenerator::generate() doesn't support
     // collecting cacheability metadata.

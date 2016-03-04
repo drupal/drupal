@@ -272,8 +272,8 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate($name, $parameters = array(), $absolute = FALSE) {
-    $options['absolute'] = $absolute;
+  public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH) {
+    $options['absolute'] = is_bool($referenceType) ? $referenceType : $referenceType === self::ABSOLUTE_URL;
     return $this->generateFromRoute($name, $parameters, $options);
   }
 
