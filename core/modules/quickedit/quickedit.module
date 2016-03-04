@@ -124,6 +124,11 @@ function quickedit_preprocess_page_title(&$variables) {
  * Implements hook_preprocess_HOOK() for field templates.
  */
 function quickedit_preprocess_field(&$variables) {
+  $variables['#cache']['contexts'][] = 'user.permissions';
+  if (!\Drupal::currentUser()->hasPermission('access in-place editing')) {
+    return;
+  }
+
   $element = $variables['element'];
   /** @var $entity \Drupal\Core\Entity\EntityInterface */
   $entity = $element['#object'];
@@ -148,5 +153,10 @@ function quickedit_preprocess_field(&$variables) {
  * Implements hook_entity_view_alter().
  */
 function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  $build['#cache']['contexts'][] = 'user.permissions';
+  if (!\Drupal::currentUser()->hasPermission('access in-place editing')) {
+    return;
+  }
+
   $build['#attributes']['data-quickedit-entity-id'] = $entity->getEntityTypeId() . '/' . $entity->id();
 }
