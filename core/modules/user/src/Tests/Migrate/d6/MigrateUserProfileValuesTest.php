@@ -54,6 +54,11 @@ EOT;
     $this->assertIdentical('Queen', $user->profile_bands[5]->value);
     $this->assertIdentical('The White Stripes', $user->profile_bands[6]->value);
     $this->assertIdentical('1974-06-02', $user->profile_birthdate->value);
+    $this->assertIdentical('http://example.com/blog', $user->profile_blog->uri);
+    $this->assertNull($user->profile_blog->title);
+    $this->assertIdentical([], $user->profile_blog->options);
+    $this->assertIdentical('http://example.com/blog', $user->profile_blog->uri);
+    $this->assertNull($user->profile_love_migrations->value);
 
     $user = User::load(8);
     $this->assertIdentical('Forward/slash', $user->profile_sold_to->value);
