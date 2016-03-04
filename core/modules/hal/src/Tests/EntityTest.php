@@ -9,6 +9,7 @@ namespace Drupal\hal\Tests;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\comment\Entity\Comment;
+use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
@@ -62,19 +63,19 @@ class EntityTest extends NormalizerTestBase {
 
     $this->addDefaultCommentField('node', 'example_type');
 
-    $node = entity_create('node', array(
+    $node = Node::create([
       'title' => $this->randomMachineName(),
       'uid' => $user->id(),
       'type' => $node_type->id(),
       'status' => NODE_PUBLISHED,
       'promote' => 1,
       'sticky' => 0,
-      'body' => array(
+      'body' => [
         'value' => $this->randomMachineName(),
-        'format' => $this->randomMachineName(),
-      ),
+        'format' => $this->randomMachineName()
+      ],
       'revision_log' => $this->randomString(),
-    ));
+    ]);
     $node->save();
 
     $original_values = $node->toArray();
@@ -144,18 +145,18 @@ class EntityTest extends NormalizerTestBase {
 
     $this->addDefaultCommentField('node', 'example_type');
 
-    $node = entity_create('node', array(
+    $node = Node::create([
       'title' => $this->randomMachineName(),
       'uid' => $account->id(),
       'type' => $node_type->id(),
       'status' => NODE_PUBLISHED,
       'promote' => 1,
       'sticky' => 0,
-      'body' => array(
+      'body' => [[
         'value' => $this->randomMachineName(),
-        'format' => $this->randomMachineName(),
-      )
-    ));
+        'format' => $this->randomMachineName()
+      ]],
+    ]);
     $node->save();
 
     $parent_comment = Comment::create(array(

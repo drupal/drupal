@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\node\Entity\Node;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -659,7 +660,7 @@ class DateTimeFieldTest extends WebTestBase {
     \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     // Create a new node to check that datetime field default value is today.
-    $new_node = entity_create('node', array('type' => 'date_content'));
+    $new_node = Node::create(['type' => 'date_content']);
     $expected_date = new DrupalDateTime('now', DATETIME_STORAGE_TIMEZONE);
     $this->assertEqual($new_node->get($field_name)->offsetGet(0)->value, $expected_date->format(DATETIME_DATE_STORAGE_FORMAT));
 
@@ -692,7 +693,7 @@ class DateTimeFieldTest extends WebTestBase {
     \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     // Create a new node to check that datetime field default value is +90 days.
-    $new_node = entity_create('node', array('type' => 'date_content'));
+    $new_node = Node::create(['type' => 'date_content']);
     $expected_date = new DrupalDateTime('+90 days', DATETIME_STORAGE_TIMEZONE);
     $this->assertEqual($new_node->get($field_name)->offsetGet(0)->value, $expected_date->format(DATETIME_DATE_STORAGE_FORMAT));
 
@@ -715,7 +716,7 @@ class DateTimeFieldTest extends WebTestBase {
     \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     // Create a new node to check that datetime field default value is not set.
-    $new_node = entity_create('node', array('type' => 'date_content'));
+    $new_node = Node::create(['type' => 'date_content']);
     $this->assertNull($new_node->get($field_name)->value, 'Default value is not set');
   }
 

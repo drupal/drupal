@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Entity;
 
+use Drupal\node\Entity\Node;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
@@ -60,7 +61,11 @@ class FilterEntityBundleTest extends ViewTestBase {
 
     foreach ($this->entityBundles as $key => $info) {
       for ($i = 0; $i < 5; $i++) {
-        $entity = entity_create('node', array('title' => $this->randomString(), 'uid' => 1, 'type' => $key));
+        $entity = Node::create([
+          'title' => $this->randomString(),
+          'uid' => 1,
+          'type' => $key,
+        ]);
         $entity->save();
         $this->entities[$key][$entity->id()] = $entity;
         $this->entities['count']++;

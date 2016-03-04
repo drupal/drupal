@@ -11,6 +11,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
+use Drupal\node\Entity\Node;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\Entity\User;
 use Drupal\comment\Entity\Comment;
@@ -108,7 +109,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     $nodes = array();
     $node_labels = array();
     foreach ($node_values as $key => $values) {
-      $node = entity_create('node', $values);
+      $node = Node::create($values);
       $node->save();
       $nodes[$key] = $node;
       $node_labels[$key] = Html::escape($node->label());
@@ -367,7 +368,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     );
     $nodes = array();
     foreach ($node_values as $key => $values) {
-      $node = entity_create('node', $values);
+      $node = Node::create($values);
       $node->save();
       $nodes[$key] = $node;
     }
