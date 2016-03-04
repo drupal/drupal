@@ -16,6 +16,7 @@ use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
 /**
@@ -686,11 +687,11 @@ class EntityFieldTest extends EntityUnitTestBase  {
     // Test validating an entity of the wrong type.
     $user = $this->createUser();
     $user->save();
-    $node = entity_create('node', array(
+    $node = $node = Node::create([
       'type' => 'page',
       'uid' => $user->id(),
       'title' => $this->randomString(),
-    ));
+    ]);
     $reference->setValue($node);
     $violations = $reference->validate();
     $this->assertEqual($violations->count(), 1);
@@ -707,11 +708,11 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $violations = $reference_field->validate();
     $this->assertEqual($violations->count(), 1);
 
-    $node = entity_create('node', array(
+    $node = Node::create([
       'type' => 'article',
       'uid' => $user->id(),
       'title' => $this->randomString(),
-    ));
+    ]);
     $node->save();
     $reference_field->entity = $node;
     $violations = $reference_field->validate();

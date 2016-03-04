@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Entity;
 
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
@@ -59,7 +60,11 @@ class FieldEntityTest extends ViewTestBase {
     $account = User::create(['name' => $this->randomMachineName(), 'bundle' => 'user']);
     $account->save();
 
-    $node = entity_create('node', array('uid' => $account->id(), 'type' => 'page', 'title' => $this->randomString()));
+    $node = Node::create([
+      'uid' => $account->id(),
+      'type' => 'page',
+      'title' => $this->randomString(),
+    ]);
     $node->save();
     $comment = Comment::create(array(
       'uid' => $account->id(),

@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Module;
 use Drupal\Core\Cache\Cache;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 
@@ -52,7 +53,10 @@ class UninstallTest extends WebTestBase {
     $node_type->setThirdPartySetting('module_test', 'key', 'value');
     $node_type->save();
     // Add a node to prevent node from being uninstalled.
-    $node = entity_create('node', array('type' => 'uninstall_blocker', 'title' => $this->randomString()));
+    $node = Node::create([
+      'type' => 'uninstall_blocker',
+      'title' => $this->randomString(),
+    ]);
     $node->save();
 
     $this->drupalGet('admin/modules/uninstall');

@@ -10,6 +10,7 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\Core\Database\Connection;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
 use Drupal\views\Plugin\views\field\NumericField;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -162,10 +163,10 @@ class NodeNewComments extends NumericField {
   protected function renderLink($data, ResultRow $values) {
     if (!empty($this->options['link_to_comment']) && $data !== NULL && $data !== '') {
       $node_type = $this->getValue($values, 'type');
-      $node = entity_create('node', array(
+      $node = Node::create([
         'nid' => $this->getValue($values, 'nid'),
         'type' => $node_type,
-      ));
+      ]);
       // Because there is no support for selecting a specific comment field to
       // reference, we arbitrarily use the first such field name we find.
       // @todo Provide a means for selecting the comment field.

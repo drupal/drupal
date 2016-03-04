@@ -8,6 +8,7 @@
 namespace Drupal\editor\Tests;
 
 use Drupal\editor\Entity\Editor;
+use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\file\Entity\File;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
@@ -107,12 +108,12 @@ class EditorFileUsageTest extends EntityUnitTestBase {
 
     // Test editor_entity_insert(): increment.
     $this->createUser();
-    $node = entity_create('node', array(
+    $node = $node = Node::create([
       'type' => 'page',
       'title' => 'test',
       'body' => $body,
       'uid' => 1,
-    ));
+    ]);
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
       $this->assertIdentical(array('editor' => array('node' => array(1 => '1'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 1 usage.');

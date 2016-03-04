@@ -150,7 +150,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ])->save();
     $this->addDefaultCommentField('node', 'article', 'comment', CommentItemInterface::OPEN);
 
-    $node = entity_create('node', array(
+    $node = Node::create([
       'uid' => $account->id(),
       'type' => 'article',
       'title' => 'Test node',
@@ -160,7 +160,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
-    ));
+    ]);
     $node->save();
     $nid = $node->id();
     $GLOBALS['entity_crud_hook_test'] = array();
@@ -295,7 +295,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
   public function testNodeHooks() {
     $account = $this->createUser();
 
-    $node = entity_create('node', array(
+    $node = Node::create([
       'uid' => $account->id(),
       'type' => 'article',
       'title' => 'Test node',
@@ -305,7 +305,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
-    ));
+    ]);
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_node_create called',

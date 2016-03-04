@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Condition;
 
+use Drupal\node\Entity\Node;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -28,8 +29,13 @@ class ConditionFormTest extends WebTestBase {
   function testConfigForm() {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Page'));
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
-    $article = entity_create('node', array('type' => 'article', 'title' => $this->randomMachineName()));
+
+    $article = Node::create([
+      'type' => 'article',
+      'title' => $this->randomMachineName(),
+    ]);
     $article->save();
+
     $this->drupalGet('condition_test');
     $this->assertField('bundles[article]', 'There is an article bundle selector.');
     $this->assertField('bundles[page]', 'There is a page bundle selector.');

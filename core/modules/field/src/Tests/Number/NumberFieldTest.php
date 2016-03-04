@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\Number;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\node\Entity\Node;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -436,16 +437,12 @@ class NumberFieldTest extends WebTestBase {
       ->save();
 
     // Create a node to test formatters.
-    $node = entity_create('node', array(
+    $node = Node::create([
       'type' => $type,
       'title' => $this->randomMachineName(),
-      $float_field => array(
-        'value' => $random_float,
-      ),
-      $integer_field => array(
-        'value' => $random_integer,
-      ),
-    ));
+      $float_field => ['value' => $random_float],
+      $integer_field => ['value' => $random_integer],
+    ]);
     $node->save();
 
     // Go to manage display page.

@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Plugin;
 
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\plugin_test\Plugin\MockBlockManager;
 use Drupal\simpletest\KernelTestBase;
@@ -37,7 +38,7 @@ class ContextPluginTest extends KernelTestBase {
     $manager = new MockBlockManager();
     $plugin = $manager->createInstance('user_name');
     // Create a node, add it as context, catch the exception.
-    $node = entity_create('node', array('title' => $name, 'type' => 'page'));
+    $node = Node::create(['type' => 'page', 'title' => $name]);
 
     // Try to get context that is missing its definition.
     try {

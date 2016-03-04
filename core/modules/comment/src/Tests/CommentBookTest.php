@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentInterface;
+use Drupal\node\Entity\Node;
 use Drupal\simpletest\WebTestBase;
 use Drupal\comment\Entity\Comment;
 
@@ -38,11 +39,11 @@ class CommentBookTest extends WebTestBase {
    * Tests comments in book export.
    */
   public function testBookCommentPrint() {
-    $book_node = entity_create('node', array(
+    $book_node = Node::create([
       'type' => 'book',
       'title' => 'Book title',
       'body' => 'Book body',
-    ));
+    ]);
     $book_node->book['bid'] = 'new';
     $book_node->save();
 
