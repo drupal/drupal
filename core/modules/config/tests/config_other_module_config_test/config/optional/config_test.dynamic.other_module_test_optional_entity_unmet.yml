@@ -1,0 +1,11 @@
+id: other_module_test_optional_entity_unmet
+label: 'Other module test to test optional config installation'
+weight: 0
+style: ''
+status: true
+langcode: en
+protected_property: Default
+dependencies:
+  enforced:
+    config:
+      - config_test.dynamic.other_module_test_unmet
