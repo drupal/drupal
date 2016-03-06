@@ -23,6 +23,14 @@ namespace Drupal\Core\TypedData;
 interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Countable {
 
   /**
+   * Gets the data definition.
+   *
+   * @return \Drupal\Core\TypedData\ListDataDefinitionInterface
+   *   The data definition object describing the list.
+   */
+  public function getDataDefinition();
+
+  /**
    * Determines whether the list contains any non-empty items.
    *
    * @return bool

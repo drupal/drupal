@@ -26,6 +26,14 @@ namespace Drupal\Core\TypedData;
 interface ComplexDataInterface extends TraversableTypedDataInterface  {
 
   /**
+   * Gets the data definition.
+   *
+   * @return \Drupal\Core\TypedData\ComplexDataDefinitionInterface
+   *   The data definition object describing the complex data.
+   */
+  public function getDataDefinition();
+
+  /**
    * Gets a property object.
    *
    * @param $property_name
