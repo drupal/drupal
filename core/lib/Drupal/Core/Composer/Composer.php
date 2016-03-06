@@ -142,7 +142,9 @@ EOT;
   /**
    * Remove possibly problematic test files from vendored projects.
    *
-   * @param \Composer\Script\Event $event
+   * @param \Composer\Installer\PackageEvent $event
+   *   A PackageEvent object to get the configured composer vendor directories
+   *   from.
    */
   public static function vendorTestCodeCleanup(PackageEvent $event) {
     $vendor_dir = $event->getComposer()->getConfig()->get('vendor-dir');
