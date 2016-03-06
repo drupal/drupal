@@ -162,6 +162,37 @@ class HandlerTest extends ViewTestBase {
     $handlerBase = HandlerBase::breakString("$s1+$n2+$n3", TRUE);
     $this->assertEqualValue(array((int) $s1, $n2, $n3), $handlerBase);
     $this->assertEqual('or', $handlerBase->operator);
+
+    // Generate three random decimals which can be used below;
+    $d1 = rand(0, 10) / 10;
+    $d2 = rand(0, 10) / 10;
+    $d3 = rand(0, 10) / 10;
+
+    // Test "or"s.
+    $handlerBase = HandlerBase::breakString("$s1 $d1+$d2");
+    $this->assertEqualValue(array($s1, $d1, $d2), $handlerBase);
+    $this->assertEqual('or', $handlerBase->operator);
+
+    $handlerBase = HandlerBase::breakString("$s1+$d1+$d3");
+    $this->assertEqualValue(array($s1, $d1, $d3), $handlerBase);
+    $this->assertEqual('or', $handlerBase->operator);
+
+    $handlerBase = HandlerBase::breakString("$s1 $d2 $d3");
+    $this->assertEqualValue(array($s1, $d2, $d3), $handlerBase);
+    $this->assertEqual('or', $handlerBase->operator);
+
+    $handlerBase = HandlerBase::breakString("$s1 $d2++$d3");
+    $this->assertEqualValue(array($s1, $d2, $d3), $handlerBase);
+    $this->assertEqual('or', $handlerBase->operator);
+
+    // Test "and"s.
+    $handlerBase = HandlerBase::breakString("$s1,$d2,$d3");
+    $this->assertEqualValue(array($s1, $d2, $d3), $handlerBase);
+    $this->assertEqual('and', $handlerBase->operator);
+
+    $handlerBase = HandlerBase::breakString("$s1,,$d2,$d3");
+    $this->assertEqualValue(array($s1, $d2, $d3), $handlerBase);
+    $this->assertEqual('and', $handlerBase->operator);
   }
 
   /**

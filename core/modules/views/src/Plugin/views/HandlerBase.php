@@ -735,12 +735,12 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
     // Determine if the string has 'or' operators (plus signs) or 'and'
     // operators (commas) and split the string accordingly.
-    if (preg_match('/^([\w0-9-_]+[+ ]+)+[\w0-9-_]+$/u', $str)) {
+    if (preg_match('/^([\w0-9-_\.]+[+ ]+)+[\w0-9-_\.]+$/u', $str)) {
       // The '+' character in a query string may be parsed as ' '.
       $operator = 'or';
       $value = preg_split('/[+ ]/', $str);
     }
-    elseif (preg_match('/^([\w0-9-_]+[, ]+)*[\w0-9-_]+$/u', $str)) {
+    elseif (preg_match('/^([\w0-9-_\.]+[, ]+)*[\w0-9-_\.]+$/u', $str)) {
       $operator = 'and';
       $value = explode(',', $str);
     }
