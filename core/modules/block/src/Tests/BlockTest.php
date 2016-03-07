@@ -32,6 +32,7 @@ class BlockTest extends BlockTestBase {
       'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
       'settings[label]' => $title,
+      'settings[label_display]' => TRUE,
     );
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
@@ -142,11 +143,12 @@ class BlockTest extends BlockTestBase {
     $block = array();
     $block['id'] = 'system_powered_by_block';
     $block['settings[label]'] = $this->randomMachineName(8);
+    $block['settings[label_display]'] = TRUE;
     $block['theme'] = $this->config('system.theme')->get('default');
     $block['region'] = 'header';
 
     // Set block title to confirm that interface works and override any custom titles.
-    $this->drupalPostForm('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], array('settings[label]' => $block['settings[label]'], 'id' => $block['id'], 'region' => $block['region']), t('Save block'));
+    $this->drupalPostForm('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], array('settings[label]' => $block['settings[label]'], 'settings[label_display]' => $block['settings[label_display]'], 'id' => $block['id'], 'region' => $block['region']), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Block title set.');
     // Check to see if the block was created by checking its configuration.
     $instance = Block::load($block['id']);
@@ -255,19 +257,19 @@ class BlockTest extends BlockTestBase {
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('user');
-    $this->assertText($title, 'Block title was displayed by default.');
+    $this->assertNoText($title, 'Block title was not displayed by default.');
 
     $edit = array(
-      'settings[label_display]' => FALSE,
+      'settings[label_display]' => TRUE,
     );
     $this->drupalPostForm('admin/structure/block/manage/' . $id, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('admin/structure/block/manage/' . $id);
-    $this->assertNoFieldChecked('edit-settings-label-display', 'The display_block option has the correct default value on the configuration form.');
+    $this->assertFieldChecked('edit-settings-label-display', 'The display_block option has the correct default value on the configuration form.');
 
     $this->drupalGet('user');
-    $this->assertNoText($title, 'Block title was not displayed when hidden.');
+    $this->assertText($title, 'Block title was displayed when enabled.');
   }
 
   /**
