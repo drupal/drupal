@@ -2,23 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Entity\EntityUnitTestBase.
+ * Contains \Drupal\KernelTests\Core\Entity\EntityKernelTestBase.
  */
 
-namespace Drupal\system\Tests\Entity;
+namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 
 /**
- * Defines an abstract test base for entity unit tests.
- *
- * @deprecated in Drupal 8.1.x, will be removed before Drupal 8.2.x. Use
- *   \Drupal\KernelTests\Core\Entity\EntityKernelTestBase instead.
+ * Defines an abstract test base for entity kernel tests.
  */
-abstract class EntityUnitTestBase extends KernelTestBase {
+abstract class EntityKernelTestBase extends KernelTestBase {
 
   /**
    * Modules to enable.
@@ -113,10 +110,10 @@ abstract class EntityUnitTestBase extends KernelTestBase {
       $values['roles'][] = $role->id();
     }
 
-    $account = User::create($values + [
+    $account = User::create($values + array(
       'name' => $this->randomMachineName(),
       'status' => 1,
-    ]);
+    ));
     $account->enforceIsNew();
     $account->save();
     return $account;
