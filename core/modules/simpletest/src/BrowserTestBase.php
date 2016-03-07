@@ -229,11 +229,17 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    */
   protected function initMink() {
     $driver = $this->getDefaultDriverInstance();
+
+    if ($driver instanceof GoutteDriver) {
+      $driver->getClient()->setClient(\Drupal::httpClient());
+    }
+
     $session = new Session($driver);
     $this->mink = new Mink();
     $this->mink->registerSession('default', $session);
     $this->mink->setDefaultSessionName('default');
     $this->registerSessions();
+
     return $session;
   }
 
