@@ -305,4 +305,32 @@ class DisplayTest extends UITestBase {
     $this->assertNoRaw($display_title);
   }
 
+  /**
+   * Tests that the override option is hidden when it's not needed.
+   */
+  public function testHideDisplayOverride() {
+    // Test that the override option appears with two displays.
+    $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
+    $this->assertText('All displays');
+
+    // Remove a display and test if the override option is hidden.
+    $this->drupalPostForm('admin/structure/views/view/test_display/edit/block_1', [], t('Delete @display', ['@display' => 'Block']));
+    $this->drupalPostForm(NULL, [], t('Save'));
+
+    $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
+    $this->assertNoText('All displays');
+
+    // Test that the override option is shown when display master is on.
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
+    $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
+    $this->assertText('All displays');
+
+    // Test that the override option is shown if the current display is
+    // overridden so that the option to revert is available.
+    $this->drupalPostForm(NULL, ['override[dropdown]' => 'page_1'], t('Apply'));
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', FALSE)->save();
+    $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
+    $this->assertText('Revert to default');
+  }
+
 }

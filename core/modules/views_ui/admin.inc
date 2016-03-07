@@ -226,7 +226,11 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
     $form['progress']['#weight'] = -1001;
   }
 
-  if ($current_display->isDefaultDisplay()) {
+  // The dropdown should not be added when :
+  // - this is the default display.
+  // - there is no master shown and just one additional display (mostly page)
+  //   and the current display is defaulted.
+  if ($current_display->isDefaultDisplay() || ($current_display->isDefaulted($section) && !\Drupal::config('views.settings')->get('ui.show.master_display') && count($displays) <= 2)) {
     return;
   }
 
