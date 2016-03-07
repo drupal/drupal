@@ -23,7 +23,7 @@ trait AssertHelperTrait {
    * @return mixed
    *   The input value, with MarkupInterface objects casted to string.
    */
-  protected function castSafeStrings($value) {
+  protected static function castSafeStrings($value) {
     if ($value instanceof MarkupInterface) {
       $value = (string) $value;
     }
