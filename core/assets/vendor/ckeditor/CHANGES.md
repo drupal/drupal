@@ -1,6 +1,48 @@
 CKEditor 4 Changelog
 ====================
 
+## CKEditor 4.5.7
+
+New Features:
+
+* [#14327](http://dev.ckeditor.com/ticket/14327): Added Swiss German localization.
+
+Other Changes:
+
+* [#13816](http://dev.ckeditor.com/ticket/13816): Introduced a new strategy for Filling Character handling to avoid changes in DOM. This fixes the following issues:
+	* [#12727](http://dev.ckeditor.com/ticket/12727): [Blink] `IndexSizeError` when using the [Div Editing Area](http://ckeditor.com/addon/divarea) and [Content Templates](http://ckeditor.com/addon/templates) plugins.
+	* [#13377](http://dev.ckeditor.com/ticket/13377): [Widget](http://ckeditor.com/addon/widget) plugin issue when typing in Korean.
+	* [#13389](http://dev.ckeditor.com/ticket/13389): [Blink] [`editor.getData()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-getData) fails when the cursor is next to an `<hr>` tag.
+	* [#13513](http://dev.ckeditor.com/ticket/13513): [Blink, WebKit] [Div Editing Area](http://ckeditor.com/addon/divarea) and [`editor.getData()`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-getData) throw an error when an image is the only data in the editor.
+* [#13884](http://dev.ckeditor.com/ticket/13884): Fixed: Copy/paste table in Firefox results in just first cell being pasted.
+* [#14234](http://dev.ckeditor.com/ticket/14234): Fixed: URL input field is not marked as required in the [Embed](http://ckeditor.com/addon/embed) dialog.
+
+## CKEditor 4.5.6
+
+New Features:
+
+* Introduced the [`CKEDITOR.tools.getCookie()`](http://docs.ckeditor.com/#!/api/CKEDITOR.tools-method-getCookie) and [`CKEDITOR.tools.setCookie()`](http://docs.ckeditor.com/#!/api/CKEDITOR.tools-method-setCookie) methods for accessing cookies.
+* Introduced the [`CKEDITOR.tools.getCsrfToken()`](http://docs.ckeditor.com/#!/api/CKEDITOR.tools-method-getCsrfToken) method. The CSRF token is now automatically sent by the [File Browser](http://ckeditor.com/addon/filebrowser) and [File Tools](http://ckeditor.com/addon/filetools) plugins during file uploads. The server-side upload handlers may check it and use it to additionally secure the communication.
+
+Other Changes:
+
+* Updated [SCAYT](http://ckeditor.com/addon/scayt) (Spell Check As You Type):
+	- New features:
+		- CKEditor [Language](http://ckeditor.com/addon/language) plugin support.
+		- CKEditor [Placeholder](http://ckeditor.com/addon/placeholder) plugin support.
+		- [Drag&Drop](http://sdk.ckeditor.com/samples/fileupload.html) support.
+		- **Experimental** [GRAYT](http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-grayt_autoStartup) (Grammar As You Type) functionality.
+	- Fixed issues:
+		* [#98](https://github.com/WebSpellChecker/ckeditor-plugin-scayt/issues/98): SCAYT affects dialog double-click. Fixed in SCAYT core.
+		* [#102](https://github.com/WebSpellChecker/ckeditor-plugin-scayt/issues/102): SCAYT core performance enhancements.
+		* [#104](https://github.com/WebSpellChecker/ckeditor-plugin-scayt/issues/104): SCAYT's spans leak into the clipboard and after pasting.
+		* [#105](https://github.com/WebSpellChecker/ckeditor-plugin-scayt/issues/105): A JavaScript error fired in case of multiple instances of CKEditor on one page.
+		* [#107](https://github.com/WebSpellChecker/ckeditor-plugin-scayt/issues/107): SCAYT should not check non-editable parts of content.
+		* [#108](https://github.com/WebSpellChecker/ckeditor-plugin-scayt/issues/108): Latest SCAYT copies the ID of the editor element to the iframe.
+		* SCAYT stops working when CKEditor [Undo plugin](http://ckeditor.com/addon/undo) not enabled.
+		* Issue with pasting SCAYT markup in CKEditor.
+		* SCAYT stops working after pressing the *Cancel* button in the WSC dialog.
+
 ## CKEditor 4.5.5
 
 Fixed Issues:
@@ -23,7 +65,7 @@ Fixed Issues:
 
 Other Changes:
 
-* [#13859](http://dev.ckeditor.com/ticket/13859): Test cases created with `benter.tools.createTestsForEditors` will also receive editor bot as a second parameter.
+* [#13859](http://dev.ckeditor.com/ticket/13859): Test cases created with `bender.tools.createTestsForEditors` will also receive editor bot as a second parameter.
 
 ## CKEditor 4.5.4
 
@@ -56,7 +98,7 @@ Other Changes:
 
 New Features:
 
-* [#13501](http://dev.ckeditor.com/ticket/13501): Added the [`config.fileTools_defaultFileName`](http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-fileTools_defaultFileName) option to allow setting a default filen ame for paste uploads.
+* [#13501](http://dev.ckeditor.com/ticket/13501): Added the [`config.fileTools_defaultFileName`](http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-fileTools_defaultFileName) option to allow setting a default file name for paste uploads.
 * [#13603](http://dev.ckeditor.com/ticket/13603): Added support for uploading dropped BMP images.
 
 Fixed Issues:
