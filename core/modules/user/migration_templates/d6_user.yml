@@ -26,6 +26,7 @@ process:
     plugin: migration
     migration: d6_user_picture_file
     source: uid
+    no_stub: true
 destination:
   plugin: entity:user
   md5_passwords: true
