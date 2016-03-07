@@ -58,4 +58,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSame('green', $value);
   }
 
+  public function testError() {
+    $this->setExpectedException('\Exception', 'User notice: foo');
+    $this->drupalGet('test-error');
+  }
+
 }
