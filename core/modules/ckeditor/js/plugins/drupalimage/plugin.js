@@ -19,6 +19,8 @@
 
   CKEDITOR.plugins.add('drupalimage', {
     requires: 'image2',
+    icons: 'drupalimage',
+    hidpi: true,
 
     beforeInit: function (editor) {
       // Override the image2 widget definition to require and handle the
@@ -270,8 +272,7 @@
         editor.ui.addButton('DrupalImage', {
           label: Drupal.t('Image'),
           // Note that we use the original image2 command!
-          command: 'image',
-          icon: this.path + '/image.png'
+          command: 'image'
         });
       }
     },

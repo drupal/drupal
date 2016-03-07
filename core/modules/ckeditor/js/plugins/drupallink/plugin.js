@@ -62,6 +62,9 @@
   }
 
   CKEDITOR.plugins.add('drupallink', {
+    icons: 'drupallink,drupalunlink',
+    hidpi: true,
+
     init: function (editor) {
       // Add the commands for link and unlink.
       editor.addCommand('drupallink', {
@@ -195,13 +198,11 @@
       if (editor.ui.addButton) {
         editor.ui.addButton('DrupalLink', {
           label: Drupal.t('Link'),
-          command: 'drupallink',
-          icon: this.path + '/link.png'
+          command: 'drupallink'
         });
         editor.ui.addButton('DrupalUnlink', {
           label: Drupal.t('Unlink'),
-          command: 'drupalunlink',
-          icon: this.path + '/unlink.png'
+          command: 'drupalunlink'
         });
       }
 

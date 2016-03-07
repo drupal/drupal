@@ -55,11 +55,11 @@ class DrupalLink extends CKEditorPluginBase {
     return array(
       'DrupalLink' => array(
         'label' => t('Link'),
-        'image' => $path . '/link.png',
+        'image' => $path . '/icons/drupallink.png',
       ),
       'DrupalUnlink' => array(
         'label' => t('Unlink'),
-        'image' => $path . '/unlink.png',
+        'image' => $path . '/icons/drupalunlink.png',
       ),
     );
   }
