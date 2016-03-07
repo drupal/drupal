@@ -7,6 +7,7 @@
 
 namespace Drupal\big_pipe\Tests;
 
+use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
@@ -78,20 +79,25 @@ class BigPipeTest extends WebTestBase {
    * - \Drupal\big_pipe\Controller\BigPipeController
    */
   public function testNoJsDetection() {
+    $no_js_to_js_markup = '<script>document.cookie = "' . BigPipeStrategy::NOJS_COOKIE . '=1; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"</script>';
+
     // 1. No session (anonymous).
     $this->drupalGet(Url::fromRoute('<front>'));
     $this->assertSessionCookieExists(FALSE);
     $this->assertBigPipeNoJsCookieExists(FALSE);
     $this->assertNoRaw('<noscript><meta http-equiv="Refresh" content="0; URL=');
+    $this->assertNoRaw($no_js_to_js_markup);
 
     // 2. Session (authenticated).
     $this->drupalLogin($this->rootUser);
     $this->assertSessionCookieExists(TRUE);
     $this->assertBigPipeNoJsCookieExists(FALSE);
     $this->assertRaw('<noscript><meta http-equiv="Refresh" content="0; URL=' . base_path() . 'big_pipe/no-js?destination=' . base_path() . 'user/1" />' . "\n" . '</noscript>');
+    $this->assertNoRaw($no_js_to_js_markup);
     $this->assertBigPipeNoJsMetaRefreshRedirect();
     $this->assertBigPipeNoJsCookieExists(TRUE);
     $this->assertNoRaw('<noscript><meta http-equiv="Refresh" content="0; URL=');
+    $this->assertRaw($no_js_to_js_markup);
     $this->drupalLogout();
 
     // Close the prior connection and remove the collected state.
@@ -105,9 +111,11 @@ class BigPipeTest extends WebTestBase {
     $this->assertSessionCookieExists(TRUE);
     $this->assertBigPipeNoJsCookieExists(FALSE);
     $this->assertRaw('<noscript><meta http-equiv="Refresh" content="0; URL=' . base_path() . 'big_pipe/no-js?destination=' . base_path() . 'user/login" />' . "\n" . '</noscript>');
+    $this->assertNoRaw($no_js_to_js_markup);
     $this->assertBigPipeNoJsMetaRefreshRedirect();
     $this->assertBigPipeNoJsCookieExists(TRUE);
     $this->assertNoRaw('<noscript><meta http-equiv="Refresh" content="0; URL=');
+    $this->assertRaw($no_js_to_js_markup);
 
     // Close the prior connection and remove the collected state.
     $this->curlClose();
@@ -119,11 +127,13 @@ class BigPipeTest extends WebTestBase {
     $this->assertSessionCookieExists(FALSE);
     $this->assertBigPipeNoJsCookieExists(FALSE);
     $this->assertNoRaw('<noscript><meta http-equiv="Refresh" content="0; URL=');
+    $this->assertNoRaw($no_js_to_js_markup);
     $this->drupalLogin($this->rootUser);
     $this->drupalGet(Url::fromRoute('big_pipe_test.no_big_pipe'));
     $this->assertSessionCookieExists(TRUE);
     $this->assertBigPipeNoJsCookieExists(FALSE);
     $this->assertNoRaw('<noscript><meta http-equiv="Refresh" content="0; URL=');
+    $this->assertNoRaw($no_js_to_js_markup);
   }
 
   /**
