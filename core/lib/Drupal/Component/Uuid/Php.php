@@ -10,11 +10,10 @@ namespace Drupal\Component\Uuid;
 use Drupal\Component\Utility\Crypt;
 
 /**
- * Generates a UUID v4 using PHP code.
+ * Generates a UUID v4 (RFC 4122 section 4.4) using PHP code.
  *
- * Loosely based on Ruby's UUIDTools generate_random logic.
- *
- * @see http://uuidtools.rubyforge.org/api/classes/UUIDTools/UUID.html
+ * @see http://www.rfc-editor.org/rfc/rfc4122.txt
+ * @see http://www.rfc-editor.org/errata_search.php?rfc=4122&eid=3546
  */
 class Php implements UuidInterface {
 
@@ -22,27 +21,39 @@ class Php implements UuidInterface {
    * {@inheritdoc}
    */
   public function generate() {
-    $hex = substr(hash('sha256', Crypt::randomBytes(16)), 0, 32);
+    // Obtain a random string of 32 hex characters.
+    $hex = bin2hex(Crypt::randomBytes(16));
 
-    // The field names refer to RFC 4122 section 4.1.2.
+    // The variable names $time_low, $time_mid, $time_hi_and_version,
+    // $clock_seq_hi_and_reserved, $clock_seq_low, and $node correlate to
+    // the fields defined in RFC 4122 section 4.1.2.
+    //
+    // Use characters 0-11 to generate 32-bit $time_low and 16-bit $time_mid.
     $time_low = substr($hex, 0, 8);
     $time_mid = substr($hex, 8, 4);
 
-    $time_hi_and_version = base_convert(substr($hex, 12, 4), 16, 10);
-    $time_hi_and_version &= 0x0FFF;
-    $time_hi_and_version |= (4 << 12);
+    // Use characters 12-15 to generate 16-bit $time_hi_and_version.
+    // The 4 most significant bits are the version number (0100 == 0x4).
+    // We simply skip character 12 from $hex, and concatenate the strings.
+    $time_hi_and_version = '4' . substr($hex, 13, 3);
 
-    $clock_seq_hi_and_reserved = base_convert(substr($hex, 16, 4), 16, 10);
-    $clock_seq_hi_and_reserved &= 0x3F;
-    $clock_seq_hi_and_reserved |= 0x80;
+    // Use characters 16-17 to generate 8-bit $clock_seq_hi_and_reserved.
+    // The 2 most significant bits are set to one and zero respectively.
+    $clock_seq_hi_and_reserved = base_convert(substr($hex, 16, 2), 16, 10);
+    $clock_seq_hi_and_reserved &= 0b00111111;
+    $clock_seq_hi_and_reserved |= 0b10000000;
 
-    $clock_seq_low = substr($hex, 20, 2);
-    $nodes = substr($hex, 20);
+    // Use characters 18-19 to generate 8-bit $clock_seq_low.
+    $clock_seq_low = substr($hex, 18, 2);
+    // Use characters 20-31 to generate 48-bit $node.
+    $node = substr($hex, 20);
 
-    $uuid = sprintf('%s-%s-%04x-%02x%02x-%s',
-      $time_low, $time_mid,
-      $time_hi_and_version, $clock_seq_hi_and_reserved,
-      $clock_seq_low, $nodes);
+    // Re-combine as a UUID. $clock_seq_hi_and_reserved is still an integer.
+    $uuid = sprintf('%s-%s-%s-%02x%s-%s',
+      $time_low, $time_mid, $time_hi_and_version,
+      $clock_seq_hi_and_reserved, $clock_seq_low,
+      $node
+    );
 
     return $uuid;
   }
