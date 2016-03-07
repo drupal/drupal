@@ -86,4 +86,11 @@ class Test {
     throw new HttpException($code);
   }
 
+  public function error() {
+    trigger_error('foo', E_USER_NOTICE);
+    return [
+      '#markup' => 'Content',
+    ];
+  }
+
 }
