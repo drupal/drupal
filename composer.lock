@@ -1620,6 +1620,65 @@
             "time": "2016-01-14 12:00:59"
         },
         {
+            "name": "symfony/polyfill-iconv",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-iconv.git",
+                "reference": "be8627f0936f86fed0bec16fe79ebb4337299764"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-iconv/zipball/be8627f0936f86fed0bec16fe79ebb4337299764",
+                "reference": "be8627f0936f86fed0bec16fe79ebb4337299764",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-iconv": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Iconv\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for the Iconv extension",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "iconv",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2016-01-20 09:13:37"
+        },
+        {
             "name": "symfony/polyfill-mbstring",
             "version": "v1.1.0",
             "source": {

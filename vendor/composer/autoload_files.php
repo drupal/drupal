@@ -14,5 +14,6 @@ return array(
     'a0edc8309cc5e1d60e3047b5df6b7052' => $vendorDir . '/guzzlehttp/psr7/src/functions_include.php',
     '37a3dc5111fe8f707ab4c132ef1dbc62' => $vendorDir . '/guzzlehttp/guzzle/src/functions_include.php',
     '5255c38a0faeba867671b61dfda6d864' => $vendorDir . '/paragonie/random_compat/lib/random.php',
+    'def43f6c87e4f8dfd0c9e1b1bab14fe8' => $vendorDir . '/symfony/polyfill-iconv/bootstrap.php',
     '454414594637b9dd94a19af83f56f1a2' => $baseDir . '/core/lib/Drupal.php',
 );
