@@ -200,8 +200,9 @@
         });
         // Use jQuery UI Autocomplete on the textfield.
         $autocomplete.autocomplete(autocomplete.options)
-          .data('ui-autocomplete')
-          ._renderItem = autocomplete.options.renderItem;
+          .each(function() {
+            $(this).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
+          });
       }
     },
     detach: function (context, settings, trigger) {
