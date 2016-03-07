@@ -16,6 +16,7 @@
         "symfony/translation": "~2.8",
         "symfony/validator": "~2.8",
         "symfony/process": "~2.8",
+        "symfony/polyfill-iconv": "~1.0",
         "symfony/yaml": "~2.8",
         "twig/twig": "^1.23.1",
         "doctrine/common": "2.5.*",
