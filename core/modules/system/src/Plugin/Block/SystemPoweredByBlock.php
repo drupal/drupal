@@ -22,6 +22,13 @@ class SystemPoweredByBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    return ['label_display' => FALSE];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build() {
     return array('#markup' => '<span>' . $this->t('Powered by <a href=":poweredby">Drupal</a>', array(':poweredby' => 'https://www.drupal.org')) . '</span>');
   }
