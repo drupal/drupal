@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Database;
 
+use Drupal\KernelTests\Core\Database\DatabaseTestBase;
 use Drupal\simpletest\WebTestBase;
 
 /**
