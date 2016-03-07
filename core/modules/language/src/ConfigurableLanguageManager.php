@@ -472,7 +472,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
       }
       $predefined[$key] = new TranslatableMarkup($value[0]);
     }
-    asort($predefined);
+    natcasesort($predefined);
     return $predefined;
   }
 
