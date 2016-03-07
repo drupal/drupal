@@ -96,7 +96,7 @@ class CommentTypeForm extends EntityForm {
     $form['description'] = array(
       '#type' => 'textarea',
       '#default_value' => $comment_type->getDescription(),
-      '#description' => t('Describe this comment type. The text will be displayed on the <em>Comment types</em> administration overview page'),
+      '#description' => t('Describe this comment type. The text will be displayed on the <em>Comment types</em> administration overview page.'),
       '#title' => t('Description'),
     );
 
