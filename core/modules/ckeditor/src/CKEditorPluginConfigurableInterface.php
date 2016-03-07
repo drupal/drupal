@@ -42,8 +42,8 @@ interface CKEditorPluginConfigurableInterface extends CKEditorPluginInterface {
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    *
-   * @return array|FALSE
-   *   A render array for the settings form, or FALSE if there is none.
+   * @return array
+   *   A render array for the settings form.
    */
   public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor);
 
