@@ -48,19 +48,32 @@ function big_pipe_page_attachments(array &$page) {
   // avoid endless redirect loops.
   $has_big_pipe_nojs_cookie = $request->cookies->has(BigPipeStrategy::NOJS_COOKIE);
   $page['#cache']['contexts'][] = 'cookies:' . BigPipeStrategy::NOJS_COOKIE;
-  if ($session_exists && !$has_big_pipe_nojs_cookie) {
-    $page['#attached']['html_head'][] = [
-      [
-        // Redirect through a 'Refresh' meta tag if JavaScript is disabled.
-        '#tag' => 'meta',
-        '#noscript' => TRUE,
-        '#attributes' => [
-          'http-equiv' => 'Refresh',
-          // @todo: Switch to Url::fromRoute() once https://www.drupal.org/node/2589967 is resolved.
-          'content' => '0; URL=' . Url::fromUri('internal:/big_pipe/no-js', ['query' => \Drupal::service('redirect.destination')->getAsArray()])->toString(),
+  if ($session_exists) {
+    if (!$has_big_pipe_nojs_cookie) {
+      // Let server set the BigPipe no-JS cookie.
+      $page['#attached']['html_head'][] = [
+        [
+          // Redirect through a 'Refresh' meta tag if JavaScript is disabled.
+          '#tag' => 'meta',
+          '#noscript' => TRUE,
+          '#attributes' => [
+            'http-equiv' => 'Refresh',
+            // @todo: Switch to Url::fromRoute() once https://www.drupal.org/node/2589967 is resolved.
+            'content' => '0; URL=' . Url::fromUri('internal:/big_pipe/no-js', ['query' => \Drupal::service('redirect.destination')->getAsArray()])->toString(),
+          ],
         ],
-      ],
-      'big_pipe_detect_nojs',
-    ];
+        'big_pipe_detect_nojs',
+      ];
+    }
+    else {
+      // Let client delete the BigPipe no-JS cookie.
+      $page['#attached']['html_head'][] = [
+        [
+          '#tag' => 'script',
+          '#value' => 'document.cookie = "' . BigPipeStrategy::NOJS_COOKIE . '=1; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"',
+        ],
+        'big_pipe_detect_js',
+      ];
+    }
   }
 }
