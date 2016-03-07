@@ -96,7 +96,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected $skipCount = FALSE;
 
   /**
-   * Flags whether to track changes to incloming data.
+   * Flags whether to track changes to incoming data.
    *
    * If TRUE, we will maintain hashed source rows to determine whether incoming
    * data has changed.
