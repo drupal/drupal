@@ -40,6 +40,8 @@ var CKBUILDER_CONFIG = {
 		'bender-err.log',
 		'bender-out.log',
 		'node_modules',
+		'.jscsrc',
+		'.jshintrc',
 		// Parts of CKEditor that we consciously don't ship with Drupal.
 		'adapters',
 		'config.js',
