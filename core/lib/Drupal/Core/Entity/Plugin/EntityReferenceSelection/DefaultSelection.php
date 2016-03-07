@@ -122,6 +122,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
         'field' => '_none',
       ),
       'auto_create' => FALSE,
+      'auto_create_bundle' => NULL,
     );
 
     if ($entity_type->hasKey('bundle')) {
@@ -139,7 +140,19 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
         '#size' => 6,
         '#multiple' => TRUE,
         '#element_validate' => [[get_class($this), 'elementValidateFilter']],
+        '#ajax' => TRUE,
+        '#limit_validation_errors' => [],
       );
+
+      $form['target_bundles_update'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Update form'),
+        '#limit_validation_errors' => [],
+        '#attributes' => [
+          'class' => ['js-hide'],
+        ],
+        '#submit' => [[EntityReferenceItem::class, 'settingsAjaxSubmit']],
+      ];
     }
     else {
       $form['target_bundles'] = array(
@@ -207,6 +220,30 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
       }
     }
 
+    $form['auto_create'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t("Create referenced entities if they don't already exist"),
+      '#default_value' => $selection_handler_settings['auto_create'],
+      '#weight' => -2,
+    );
+
+    if ($entity_type->hasKey('bundle')) {
+      $bundles = array_intersect_key($bundle_options, array_filter((array) $selection_handler_settings['target_bundles']));
+      $form['auto_create_bundle'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Store new items in'),
+        '#options' => $bundles,
+        '#default_value' => $selection_handler_settings['auto_create_bundle'],
+        '#access' => count($bundles) > 1,
+        '#states' => [
+          'visible' => [
+            ':input[name="settings[handler_settings][auto_create]"]' => ['checked' => TRUE],
+          ],
+        ],
+        '#weight' => -1,
+      ];
+    }
+
     return $form;
   }
 
@@ -221,6 +258,10 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
     if ($form_state->getValue(['settings', 'handler_settings', 'target_bundles']) === []) {
       $form_state->setValue(['settings', 'handler_settings', 'target_bundles'], NULL);
     }
+
+    // Don't store the 'target_bundles_update' button value into the field
+    // config settings.
+    $form_state->unsetValue(['settings', 'handler_settings', 'target_bundles_update']);
   }
 
   /**

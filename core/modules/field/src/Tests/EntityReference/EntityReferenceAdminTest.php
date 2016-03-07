@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests\EntityReference;
 
+use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
@@ -315,7 +317,7 @@ class EntityReferenceAdminTest extends WebTestBase {
 
     // Tests adding default values to autocomplete widgets.
     Vocabulary::create(array('vid' => 'tags', 'name' => 'tags'))->save();
-    $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', 'tags');
+    $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', ['tags']);
     $field_path = 'node.' . $this->type . '.field_' . $taxonomy_term_field_name;
     $this->drupalGet($bundle_path . '/fields/' . $field_path . '/storage');
     $edit = [
@@ -348,13 +350,13 @@ class EntityReferenceAdminTest extends WebTestBase {
     Vocabulary::create(array('vid' => 'tags', 'name' => 'tags'))->save();
 
     // Create entity reference field with taxonomy term as a target.
-    $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', 'tags');
+    $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', ['tags']);
 
     // Create entity reference field with user as a target.
     $user_field_name = $this->createEntityReferenceField('user');
 
     // Create entity reference field with node as a target.
-    $node_field_name = $this->createEntityReferenceField('node', $this->type);
+    $node_field_name = $this->createEntityReferenceField('node', [$this->type]);
 
     // Create entity reference field with date format as a target.
     $date_format_field_name = $this->createEntityReferenceField('date_format');
@@ -403,17 +405,78 @@ class EntityReferenceAdminTest extends WebTestBase {
   }
 
   /**
+   * Tests field settings for an entity reference field when the field has
+   * multiple target bundles and is set to auto-create the target entity.
+   */
+  public function testMultipleTargetBundles() {
+    /** @var \Drupal\taxonomy\Entity\Vocabulary[] $vocabularies */
+    $vocabularies = [];
+    for ($i = 0; $i < 2; $i++) {
+      $vid = Unicode::strtolower($this->randomMachineName());
+      $vocabularies[$i] = Vocabulary::create([
+        'name' => $this->randomString(),
+        'vid' => $vid,
+      ]);
+      $vocabularies[$i]->save();
+    }
+
+    // Create a new field pointing to the first vocabulary.
+    $field_name = $this->createEntityReferenceField('taxonomy_term', [$vocabularies[0]->id()]);
+    $field_name = "field_$field_name";
+    $field_id = 'node.' . $this->type . '.' . $field_name;
+    $path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $field_id;
+
+    $this->drupalGet($path);
+
+    // Expect that there's no 'auto_create_bundle' selected.
+    $this->assertNoFieldByName('settings[handler_settings][auto_create_bundle]');
+
+    $edit = [
+      'settings[handler_settings][target_bundles][' . $vocabularies[1]->id() . ']' => TRUE,
+    ];
+    // Enable the second vocabulary as a target bundle.
+    $this->drupalPostAjaxForm($path, $edit, key($edit));
+    // Expect a select element with the two vocabularies as options.
+    $this->assertFieldByXPath("//select[@name='settings[handler_settings][auto_create_bundle]']/option[@value='" . $vocabularies[0]->id() . "']");
+    $this->assertFieldByXPath("//select[@name='settings[handler_settings][auto_create_bundle]']/option[@value='" . $vocabularies[1]->id() . "']");
+
+    $edit = [
+      'settings[handler_settings][auto_create]' => TRUE,
+      'settings[handler_settings][auto_create_bundle]' => $vocabularies[1]->id(),
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+
+    /** @var \Drupal\field\Entity\FieldConfig $field_config */
+    $field_config = FieldConfig::load($field_id);
+    // Expect that the target bundle has been saved in the backend.
+    $this->assertEqual($field_config->getSetting('handler_settings')['auto_create_bundle'], $vocabularies[1]->id());
+
+    // Delete the other bundle. Field config should not be affected.
+    $vocabularies[0]->delete();
+    $field_config = FieldConfig::load($field_id);
+    $this->assertTrue($field_config->getSetting('handler_settings')['auto_create']);
+    $this->assertIdentical($field_config->getSetting('handler_settings')['auto_create_bundle'], $vocabularies[1]->id());
+
+    // Delete the bundle set for entity auto-creation. Auto-created settings
+    // should be reset (no auto-creation).
+    $vocabularies[1]->delete();
+    $field_config = FieldConfig::load($field_id);
+    $this->assertFalse($field_config->getSetting('handler_settings')['auto_create']);
+    $this->assertFalse(isset($field_config->getSetting('handler_settings')['auto_create_bundle']));
+  }
+
+  /**
    * Creates a new Entity Reference fields with a given target type.
    *
-   * @param $target_type
+   * @param string $target_type
    *   The name of the target type
-   * @param $bundle
-   *   Name of the bundle
-   *   Default = NULL
+   * @param string[] $bundles
+   *   A list of bundle IDs. Defaults to [].
+   *
    * @return string
    *   Returns the generated field name
    */
-  public function createEntityReferenceField($target_type, $bundle = NULL) {
+  protected function createEntityReferenceField($target_type, $bundles = []) {
     // Generates a bundle path for the newly created content type.
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
 
@@ -422,7 +485,7 @@ class EntityReferenceAdminTest extends WebTestBase {
 
     $storage_edit = $field_edit = array();
     $storage_edit['settings[target_type]'] = $target_type;
-    if ($bundle) {
+    foreach ($bundles as $bundle) {
       $field_edit['settings[handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
     }
 
@@ -431,7 +494,6 @@ class EntityReferenceAdminTest extends WebTestBase {
     // Returns the generated field name.
     return $field_name;
   }
-
 
   /**
    * Checks if a select element contains the specified options.

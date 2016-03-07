@@ -413,7 +413,9 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       }
     }
 
-    // Depend on target bundle configurations.
+    // Depend on target bundle configurations. Dependencies for 'target_bundles'
+    // also covers the 'auto_create_bundle' setting, if any, because its value
+    // is included in the 'target_bundles' list.
     $handler = $field_definition->getSetting('handler_settings');
     if (!empty($handler['target_bundles'])) {
       if ($bundle_entity_type_id = $target_entity_type->getBundleEntityType()) {
@@ -473,10 +475,19 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
           foreach ($storage->loadMultiple($handler_settings['target_bundles']) as $bundle) {
             if (isset($dependencies[$bundle->getConfigDependencyKey()][$bundle->getConfigDependencyName()])) {
               unset($handler_settings['target_bundles'][$bundle->id()]);
+
+              // If this bundle is also used in the 'auto_create_bundle'
+              // setting, disable the auto-creation feature completely.
+              $auto_create_bundle = !empty($handler_settings['auto_create_bundle']) ? $handler_settings['auto_create_bundle'] : FALSE;
+              if ($auto_create_bundle && $auto_create_bundle == $bundle->id()) {
+                $handler_settings['auto_create'] = NULL;
+                $handler_settings['auto_create_bundle'] = NULL;
+              }
+
               $bundles_changed = TRUE;
 
               // In case we deleted the only target bundle allowed by the field
-              // we have to log a warning message because the field will not
+              // we have to log a critical message because the field will not
               // function correctly anymore.
               if ($handler_settings['target_bundles'] === []) {
                 \Drupal::logger('entity_reference')->critical('The %target_bundle bundle (entity type: %target_entity_type) was deleted. As a result, the %field_name entity reference field (entity_type: %entity_type, bundle: %bundle) no longer has any valid bundle it can reference. The field is not working correctly anymore and has to be adjusted.', [

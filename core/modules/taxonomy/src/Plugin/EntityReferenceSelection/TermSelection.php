@@ -40,13 +40,6 @@ class TermSelection extends DefaultSelection {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $form['target_bundles']['#title'] = $this->t('Available Vocabularies');
-    // @todo: Currently allow auto-create only on taxonomy terms.
-    $form['auto_create'] = array(
-      '#type' => 'checkbox',
-      '#weight' => -1,
-      '#title' => $this->t("Create referenced entities if they don't already exist"),
-      '#default_value' => isset($this->configuration['handler_settings']['auto_create']) ? $this->configuration['handler_settings']['auto_create'] : FALSE,
-    );
 
     // Sorting is not possible for taxonomy terms because we use
     // \Drupal\taxonomy\TermStorageInterface::loadTree() to retrieve matches.

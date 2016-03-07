@@ -68,3 +68,39 @@ function field_update_8002() {
     }
   }
 }
+
+/**
+ * Populate the new 'auto_create_bundle' setting for entity reference fields.
+ */
+function field_update_8003() {
+  $config = \Drupal::configFactory();
+  /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
+  $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+
+  // Iterate over all fields.
+  foreach ($config->listAll('field.field.') as $field_id) {
+    $field = $config->getEditable($field_id);
+    $class = $field_type_manager->getPluginClass($field->get('field_type'));
+
+    // Deal only with entity reference fields and descendants.
+    if ($class == EntityReferenceItem::class || is_subclass_of($class, EntityReferenceItem::class)) {
+      $handler_settings = $field->get('settings.handler_settings');
+
+      if (is_array($handler_settings) && !empty($handler_settings['auto_create'])) {
+        // If the field can reference multiple bundles, pick the first one
+        // available in order to replicate the previous behavior.
+        if (is_array($handler_settings['target_bundles']) && count($handler_settings['target_bundles']) > 1) {
+          $handler_settings['auto_create_bundle'] = reset($handler_settings['target_bundles']);
+        }
+        // Otherwise, we don't know which bundle to use for auto-creation so we
+        // have to disable the functionality completely.
+        elseif (!$handler_settings['target_bundles']) {
+          $handler_settings['auto_create'] = FALSE;
+          $handler_settings['auto_create_bundle'] = NULL;
+        }
+      }
+
+      $field->set('settings.handler_settings', $handler_settings)->save(TRUE);
+    }
+  }
+}
