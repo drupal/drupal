@@ -24,14 +24,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class HtmlResponseBigPipeSubscriber implements EventSubscriberInterface {
 
   /**
-   * Attribute name of the BigPipe response eligibility test result.
-   *
-   * @see onRespondEarly()
-   * @see onRespond()
-   */
-  const ATTRIBUTE_ELIGIBLE = '_big_pipe_eligible';
-
-  /**
    * The BigPipe service.
    *
    * @var \Drupal\big_pipe\Render\BigPipeInterface
@@ -55,12 +47,8 @@ class HtmlResponseBigPipeSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRespondEarly(FilterResponseEvent $event) {
-    // It does not make sense to have BigPipe responses for subrequests. BigPipe
-    // is never useful internally in Drupal, only externally towards end users.
     $response = $event->getResponse();
-    $is_eligible = $event->isMasterRequest() && $response instanceof HtmlResponse;
-    $event->getRequest()->attributes->set(self::ATTRIBUTE_ELIGIBLE, $is_eligible);
-    if (!$is_eligible) {
+    if (!$response instanceof HtmlResponse) {
       return;
     }
 
@@ -84,13 +72,11 @@ class HtmlResponseBigPipeSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRespond(FilterResponseEvent $event) {
-    // Early return if this response was already found to not be eligible.
-    // @see onRespondEarly()
-    if (!$event->getRequest()->attributes->get(self::ATTRIBUTE_ELIGIBLE)) {
+    $response = $event->getResponse();
+    if (!$response instanceof HtmlResponse) {
       return;
     }
 
-    $response = $event->getResponse();
     $attachments = $response->getAttachments();
 
     // If there are no no-JS BigPipe placeholders, unwrap the scripts_bottom

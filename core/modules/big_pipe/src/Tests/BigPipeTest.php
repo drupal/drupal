@@ -174,6 +174,10 @@ class BigPipeTest extends WebTestBase {
     $this->pass('Verifying BigPipe assets are present…', 'Debug');
     $this->assertFalse(empty($this->getDrupalSettings()), 'drupalSettings present.');
     $this->assertTrue(in_array('big_pipe/big_pipe', explode(',', $this->getDrupalSettings()['ajaxPageState']['libraries'])), 'BigPipe asset library is present.');
+
+    // Verify that 4xx responses work fine. (4xx responses are handled by
+    // subrequests to a route pointing to a controller with the desired output.)
+    $this->drupalGet(Url::fromUri('base:non-existing-path'));
   }
 
   /**
@@ -219,6 +223,10 @@ class BigPipeTest extends WebTestBase {
 
     $this->pass('Verifying BigPipe assets are absent…', 'Debug');
     $this->assertFalse(empty($this->getDrupalSettings()), 'drupalSettings and BigPipe asset library absent.');
+
+    // Verify that 4xx responses work fine. (4xx responses are handled by
+    // subrequests to a route pointing to a controller with the desired output.)
+    $this->drupalGet(Url::fromUri('base:non-existing-path'));
   }
 
   protected function assertBigPipeResponseHeadersPresent() {
