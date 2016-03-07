@@ -106,9 +106,9 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
       '#placeholder' => $this->getSetting('placeholder'),
     );
 
-    if ($this->getSelectionHandlerSetting('auto_create')) {
+    if ($this->getSelectionHandlerSetting('auto_create') && ($bundle = $this->getAutocreateBundle())) {
       $element['#autocreate'] = array(
-        'bundle' => $this->getAutocreateBundle(),
+        'bundle' => $bundle,
         'uid' => ($entity instanceof EntityOwnerInterface) ? $entity->getOwnerId() : \Drupal::currentUser()->id()
       );
     }
@@ -147,18 +147,20 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
    */
   protected function getAutocreateBundle() {
     $bundle = NULL;
-    if ($this->getSelectionHandlerSetting('auto_create')) {
-      // If the 'target_bundles' setting is restricted to a single choice, we
-      // can use that.
-      if (($target_bundles = $this->getSelectionHandlerSetting('target_bundles')) && count($target_bundles) == 1) {
+    if ($this->getSelectionHandlerSetting('auto_create') && $target_bundles = $this->getSelectionHandlerSetting('target_bundles')) {
+      // If there's only one target bundle, use it.
+      if (count($target_bundles) == 1) {
         $bundle = reset($target_bundles);
       }
-      // Otherwise use the first bundle as a fallback.
-      else {
-        // @todo Expose a proper UI for choosing the bundle for autocreated
-        // entities in https://www.drupal.org/node/2412569.
-        $bundles = entity_get_bundles($this->getFieldSetting('target_type'));
-        $bundle = key($bundles);
+      // Otherwise use the target bundle stored in selection handler settings.
+      elseif (!$bundle = $this->getSelectionHandlerSetting('auto_create_bundle')) {
+        // If no bundle has been set as auto create target means that there is
+        // an inconsistency in entity reference field settings.
+        trigger_error(sprintf(
+          "The 'Create referenced entities if they don't already exist' option is enabled but a specific destination bundle is not set. You should re-visit and fix the settings of the '%s' (%s) field.",
+          $this->fieldDefinition->getLabel(),
+          $this->fieldDefinition->getName()
+        ), E_USER_WARNING);
       }
     }
 

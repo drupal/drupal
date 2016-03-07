@@ -112,6 +112,26 @@ class FieldUpdateTest extends UpdatePathTestBase {
   }
 
   /**
+   * Tests field_update_8003().
+   *
+   * @see field_update_8003()
+   */
+  public function testFieldUpdate8003() {
+    // Run updates.
+    $this->runUpdates();
+
+    // Check that the new 'auto_create_bundle' setting is populated correctly.
+    $field = $this->configFactory->get('field.field.node.article.field_ref_autocreate_2412569');
+    $handler_settings = $field->get('settings.handler_settings');
+
+    $expected_target_bundles = ['tags' => 'tags', 'test' => 'test'];
+    $this->assertEqual($handler_settings['target_bundles'], $expected_target_bundles);
+
+    $this->assertTrue($handler_settings['auto_create']);
+    $this->assertEqual($handler_settings['auto_create_bundle'], 'tags');
+  }
+
+  /**
    * Asserts that a config depends on 'entity_reference' or not
    *
    * @param \Drupal\Core\Config\Config $config

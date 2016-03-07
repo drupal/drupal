@@ -26,8 +26,14 @@ $connection->insert('config')
   ])
   ->execute();
 
-// Configuration for an entity_reference field storage.
-$config = Yaml::decode(file_get_contents(__DIR__ . '/field.storage.node.field_ref_views_select_2429191.yml'));
+// Configuration for an entity_reference field storage using the View for
+// selection.
+$field_ref_views_select_2429191 = Yaml::decode(file_get_contents(__DIR__ . '/field.storage.node.field_ref_views_select_2429191.yml'));
+
+// Configuration for an entity_reference field storage using the auto-create
+// feature.
+$field_ref_autocreate_2412569 = Yaml::decode(file_get_contents(__DIR__ . '/field.storage.node.field_ref_autocreate_2412569.yml'));
+
 $connection->insert('config')
   ->fields([
     'collection',
@@ -36,8 +42,13 @@ $connection->insert('config')
   ])
   ->values([
     'collection' => '',
-    'name' => 'field.storage.' . $config['id'],
-    'data' => serialize($config),
+    'name' => 'field.storage.' . $field_ref_views_select_2429191['id'],
+    'data' => serialize($field_ref_views_select_2429191),
+  ])
+  ->values([
+    'collection' => '',
+    'name' => 'field.storage.' . $field_ref_autocreate_2412569['id'],
+    'data' => serialize($field_ref_autocreate_2412569),
   ])
   ->execute();
 // We need to Update the registry of "last installed" field definitions.
@@ -48,7 +59,8 @@ $installed = $connection->select('key_value')
   ->execute()
   ->fetchField();
 $installed = unserialize($installed);
-$installed['field_ref_views_select_2429191'] = new \Drupal\field\Entity\FieldStorageConfig($config);
+$installed['field_ref_views_select_2429191'] = new \Drupal\field\Entity\FieldStorageConfig($field_ref_views_select_2429191);
+$installed['field_ref_autocreate_2412569'] = new \Drupal\field\Entity\FieldStorageConfig($field_ref_autocreate_2412569);
 $connection->update('key_value')
   ->condition('collection', 'entity.definitions.installed')
   ->condition('name', 'node.field_storage_definitions')
@@ -58,7 +70,11 @@ $connection->update('key_value')
   ->execute();
 
 // Configuration for an entity_reference field using the View for selection.
-$config = Yaml::decode(file_get_contents(__DIR__ . '/field.field.node.article.field_ref_views_select_2429191.yml'));
+$field_ref_views_select_2429191 = Yaml::decode(file_get_contents(__DIR__ . '/field.field.node.article.field_ref_views_select_2429191.yml'));
+
+// Configuration for an entity_reference field using the auto-create feature.
+$field_ref_autocreate_2412569 = Yaml::decode(file_get_contents(__DIR__ . '/field.field.node.article.field_ref_autocreate_2412569.yml'));
+
 $connection->insert('config')
   ->fields([
     'collection',
@@ -67,7 +83,12 @@ $connection->insert('config')
   ])
   ->values([
     'collection' => '',
-    'name' => 'field.field.' . $config['id'],
-    'data' => serialize($config),
+    'name' => 'field.field.' . $field_ref_views_select_2429191['id'],
+    'data' => serialize($field_ref_views_select_2429191),
+  ])
+  ->values([
+    'collection' => '',
+    'name' => 'field.field.' . $field_ref_autocreate_2412569['id'],
+    'data' => serialize($field_ref_autocreate_2412569),
   ])
   ->execute();
