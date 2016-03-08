@@ -9,6 +9,7 @@ namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
+use Drupal\ckeditor\CKEditorPluginCssInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Language\LanguageInterface;
@@ -23,7 +24,7 @@ use Drupal\editor\Entity\Editor;
  *   label = @Translation("Language")
  * )
  */
-class Language extends CKEditorPluginBase implements CKEditorPluginConfigurableInterface {
+class Language extends CKEditorPluginBase implements CKEditorPluginConfigurableInterface, CKEditorPluginCssInterface {
 
   /**
    * {@inheritdoc}
@@ -126,6 +127,15 @@ class Language extends CKEditorPluginBase implements CKEditorPluginConfigurableI
     );
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function getCssFiles(Editor $editor) {
+    return array(
+        drupal_get_path('module', 'ckeditor') . '/css/plugins/language/ckeditor.language.css'
+    );
   }
 
 }
