@@ -18,7 +18,7 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Render controller for comments.
+ * View builder handler for comments.
  */
 class CommentViewBuilder extends EntityViewBuilder {
 

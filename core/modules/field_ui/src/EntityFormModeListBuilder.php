@@ -15,7 +15,7 @@ namespace Drupal\field_ui;
 class EntityFormModeListBuilder extends EntityDisplayModeListBuilder {
 
   /**
-   * Filters entities based on their controllers.
+   * Filters entities based on their form mode handlers.
    *
    * @param $entity_type
    *   The entity type of the entity that needs to be validated.

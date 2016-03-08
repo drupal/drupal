@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\node\Entity\Node;
 
 /**
- * Render controller for nodes.
+ * View builder handler for nodes.
  */
 class NodeViewBuilder extends EntityViewBuilder {
 

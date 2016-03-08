@@ -14,7 +14,7 @@ use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Form controller for the node edit forms.
+ * Form handler for the node edit forms.
  */
 class NodeForm extends ContentEntityForm {
 

@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * This interface can be implemented by entity handlers that require
  * dependency injection.
+ *
+ * @ingroup entity_api
  */
 interface EntityHandlerInterface {
 
