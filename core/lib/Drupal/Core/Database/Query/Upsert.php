@@ -18,7 +18,7 @@ use Drupal\Core\Database\Database;
  * Insert except the rows will be set to the desired values even if the key
  * existed before.
  */
-abstract class Upsert extends Query {
+abstract class Upsert extends Query implements \Countable {
 
   use InsertTrait;
 

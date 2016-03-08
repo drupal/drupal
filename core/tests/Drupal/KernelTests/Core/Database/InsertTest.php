@@ -25,6 +25,9 @@ class InsertTest extends DatabaseTestBase {
       'name' => 'Yoko',
       'age' => '29',
     ));
+
+    // Check how many records are queued for insertion.
+    $this->assertIdentical($query->count(), 1, 'One record is queued for insertion.');
     $query->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
@@ -51,9 +54,15 @@ class InsertTest extends DatabaseTestBase {
       'name' => 'Curly',
     ));
 
+    // Check how many records are queued for insertion.
+    $this->assertIdentical($query->count(), 2, 'Two records are queued for insertion.');
+
     // We should be able to say "use the field order".
     // This is not the recommended mechanism for most cases, but it should work.
     $query->values(array('Moe', '32'));
+
+    // Check how many records are queued for insertion.
+    $this->assertIdentical($query->count(), 3, 'Three records are queued for insertion.');
     $query->execute();
 
     $num_records_after = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
@@ -78,6 +87,8 @@ class InsertTest extends DatabaseTestBase {
       'name' => 'Larry',
       'age' => '30',
     ));
+    // Check how many records are queued for insertion.
+    $this->assertIdentical($query->count(), 1, 'One record is queued for insertion.');
     $query->execute();  // This should run the insert, but leave the fields intact.
 
     // We should be able to specify values in any order if named.
@@ -85,10 +96,15 @@ class InsertTest extends DatabaseTestBase {
       'age' => '31',
       'name' => 'Curly',
     ));
+    // Check how many records are queued for insertion.
+    $this->assertIdentical($query->count(), 1, 'One record is queued for insertion.');
     $query->execute();
 
     // We should be able to say "use the field order".
     $query->values(array('Moe', '32'));
+
+    // Check how many records are queued for insertion.
+    $this->assertIdentical($query->count(), 1, 'One record is queued for insertion.');
     $query->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
