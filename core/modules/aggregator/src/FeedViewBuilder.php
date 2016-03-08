@@ -16,7 +16,7 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Render controller for aggregator feed items.
+ * View builder handler for aggregator feeds.
  */
 class FeedViewBuilder extends EntityViewBuilder {
 

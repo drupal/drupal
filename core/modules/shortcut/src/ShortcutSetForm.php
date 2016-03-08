@@ -11,7 +11,7 @@ use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form controller for the shortcut set entity edit forms.
+ * Form handler for the shortcut set entity edit forms.
  */
 class ShortcutSetForm extends BundleEntityFormBase {
 

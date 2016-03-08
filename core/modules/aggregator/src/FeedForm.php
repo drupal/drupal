@@ -12,7 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Form controller for the aggregator feed edit forms.
+ * Form handler for the aggregator feed edit forms.
  */
 class FeedForm extends ContentEntityForm {
 

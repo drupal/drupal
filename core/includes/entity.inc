@@ -143,16 +143,15 @@ function entity_revision_delete($entity_type, $revision_id) {
  * database access if loaded again during the same page request.
  *
  * The actual loading is done through a class that has to implement the
- * Drupal\Core\Entity\EntityStorageInterface interface. By default,
- * Drupal\Core\Entity\Sql\SqlContentEntityStorage is used for content entities
+ * \Drupal\Core\Entity\EntityStorageInterface interface. By default,
+ * \Drupal\Core\Entity\Sql\SqlContentEntityStorage is used for content entities
  * and Drupal\Core\Config\Entity\ConfigEntityStorage for config entities. Entity
  * types can specify that a different class should be used by setting the
- * "controllers['storage']" key in the entity plugin annotation. These classes
- * can either implement the Drupal\Core\Entity\EntityStorageInterface
+ * "handlers['storage']" key in the entity plugin annotation. These classes
+ * can either implement the \Drupal\Core\Entity\EntityStorageInterface
  * interface, or, most commonly, extend the
- * Drupal\Core\Entity\Sql\SqlContentEntityStorage class.
- * See Drupal\node\Entity\Node and Drupal\node\NodeStorage
- * for an example.
+ * \Drupal\Core\Entity\Sql\SqlContentEntityStorage class. See
+ * \Drupal\node\Entity\Node and \Drupal\node\NodeStorage for an example.
  *
  * @param string $entity_type
  *   The entity type to load, e.g. node or user.

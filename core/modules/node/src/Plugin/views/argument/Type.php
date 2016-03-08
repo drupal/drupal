@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Type extends StringArgument {
 
   /**
-   * NodeType storage controller.
+   * NodeType storage handler.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */

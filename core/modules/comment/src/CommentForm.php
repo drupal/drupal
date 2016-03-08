@@ -20,7 +20,7 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base for controller for comment forms.
+ * Base handler for comment forms.
  */
 class CommentForm extends ContentEntityForm {
 

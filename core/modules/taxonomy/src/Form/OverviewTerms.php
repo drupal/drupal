@@ -27,7 +27,7 @@ class OverviewTerms extends FormBase {
   protected $moduleHandler;
 
   /**
-   * The term storage controller.
+   * The term storage handler.
    *
    * @var \Drupal\taxonomy\TermStorageInterface
    */
