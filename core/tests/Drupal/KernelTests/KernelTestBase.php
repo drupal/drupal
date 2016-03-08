@@ -1140,4 +1140,14 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function assertEquals($expected, $actual, $message = '', $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false) {
+    $expected = static::castSafeStrings($expected);
+    $actual = static::castSafeStrings($actual);
+    parent::assertEquals($expected, $actual, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
+  }
+
+
 }
