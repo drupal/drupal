@@ -71,15 +71,15 @@ namespace Drupal\big_pipe\Render;
  *     sent first, the closing </body> tag is not yet sent, and the connection
  *     is kept open. Whenever another BigPipe Placeholder is rendered, Drupal
  *     sends (and so actually appends to the already-sent HTML) something like
- *     <script type="application/json">[{"command":"settings","settings":{…}}, {"command":…}.
+ *     <script type="application/vnd.drupal-ajax">[{"command":"settings","settings":{…}}, {"command":…}.
  *   - So, for every BigPipe placeholder, we send such a <script
- *     type="application/json"> tag. And the contents of that tag is exactly
- *     like an AJAX response. The BigPipe module has JavaScript that listens for
- *     these and applies them. Let's call it an Embedded AJAX Response (since it
- *     is embedded in the HTML response). Now for the interesting bit: each of
- *     those Embedded AJAX Responses must also take into account the cumulative
- *     AJAX page state of the HTML document and all preceding Embedded AJAX
- *     responses.
+ *     type="application/vnd.drupal-ajax"> tag. And the contents of that tag is
+ *     exactly like an AJAX response. The BigPipe module has JavaScript that
+ *     listens for these and applies them. Let's call it an Embedded AJAX
+ *     Response (since it is embedded in the HTML response). Now for the
+ *     interesting bit: each of those Embedded AJAX Responses must also take
+ *     into account the cumulative AJAX page state of the HTML document and all
+ *     preceding Embedded AJAX responses.
  * 2. No-JS BigPipe placeholders: 1 HtmlResponse + N embedded HtmlResponses.
  *   - Before a BigPipe response is sent, it is just a HTML response that
  *     contains no-JS BigPipe placeholders. Those placeholders can take two
@@ -125,8 +125,8 @@ namespace Drupal\big_pipe\Render;
  *  6. [… repeat until all no-JS placeholder replacements are sent …]
  *  7. Send content after last no-JS placeholder.
  *  8. Send script_bottom (markup to load bottom i.e. non-critical JS).
- *  9. 1st placeholder replacement: <script type="application/json">[{"command":"settings","settings":{…}}, {"command":…}
- * 10. 2nd placeholder replacement: <script type="application/json">[{"command":"settings","settings":{…}}, {"command":…}
+ *  9. 1st placeholder replacement: <script type="application/vnd.drupal-ajax">[{"command":"settings","settings":{…}}, {"command":…}
+ * 10. 2nd placeholder replacement: <script type="application/vnd.drupal-ajax">[{"command":"settings","settings":{…}}, {"command":…}
  * 11. [… repeat until all placeholder replacements are sent …]
  * 12. Send </body> and everything after it.
  * 13. Terminate request/response cycle.

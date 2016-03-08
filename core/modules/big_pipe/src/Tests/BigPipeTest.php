@@ -8,6 +8,7 @@
 namespace Drupal\big_pipe\Tests;
 
 use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;
+use Drupal\big_pipe\Render\BigPipe;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
@@ -25,9 +26,6 @@ use Drupal\simpletest\WebTestBase;
  * @group big_pipe
  */
 class BigPipeTest extends WebTestBase {
-
-  const START_SIGNAL= '<script type="application/json" data-big-pipe-event="start"></script>';
-  const STOP_SIGNAL= '<script type="application/json" data-big-pipe-event="stop"></script>';
 
   /**
    * Modules to enable.
@@ -218,8 +216,8 @@ class BigPipeTest extends WebTestBase {
     $this->pass('Verifying there are no BigPipe placeholders & replacements…', 'Debug');
     $this->assertEqual('<none>', $this->drupalGetHeader('BigPipe-Test-Placeholders'));
     $this->pass('Verifying BigPipe start/stop signals are absent…', 'Debug');
-    $this->assertNoRaw(static::START_SIGNAL, 'BigPipe start signal absent.');
-    $this->assertNoRaw(static::STOP_SIGNAL, 'BigPipe stop signal absent.');
+    $this->assertNoRaw(BigPipe::START_SIGNAL, 'BigPipe start signal absent.');
+    $this->assertNoRaw(BigPipe::STOP_SIGNAL, 'BigPipe stop signal absent.');
 
     $this->pass('Verifying BigPipe assets are absent…', 'Debug');
     $this->assertFalse(empty($this->getDrupalSettings()), 'drupalSettings and BigPipe asset library absent.');
@@ -273,7 +271,7 @@ class BigPipeTest extends WebTestBase {
       // Verify expected placeholder replacement.
       $result = $this->xpath('//script[@data-big-pipe-replacement-for-placeholder-with-id=:id]', [':id' => Html::decodeEntities($big_pipe_placeholder_id)]);
       $this->assertEqual($expected_ajax_response, trim((string) $result[0]));
-      $expected_placeholder_replacement = '<script type="application/json" data-big-pipe-replacement-for-placeholder-with-id="' . $big_pipe_placeholder_id . '">';
+      $expected_placeholder_replacement = '<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="' . $big_pipe_placeholder_id . '">';
       $this->assertRaw($expected_placeholder_replacement);
       $pos = strpos($this->getRawContent(), $expected_placeholder_replacement);
       $placeholder_replacement_positions[$pos] = $big_pipe_placeholder_id;
@@ -282,22 +280,22 @@ class BigPipeTest extends WebTestBase {
     $this->assertEqual(array_keys($expected_big_pipe_placeholders), array_values($placeholder_positions));
     $this->assertEqual(count($expected_big_pipe_placeholders), preg_match_all('/' . preg_quote('<div data-big-pipe-placeholder-id="', '/') . '/', $this->getRawContent()));
     $this->assertEqual(array_keys($expected_big_pipe_placeholders), array_values($placeholder_replacement_positions));
-    $this->assertEqual(count($expected_big_pipe_placeholders), preg_match_all('/' . preg_quote('<script type="application/json" data-big-pipe-replacement-for-placeholder-with-id="', '/') . '/', $this->getRawContent()));
+    $this->assertEqual(count($expected_big_pipe_placeholders), preg_match_all('/' . preg_quote('<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="', '/') . '/', $this->getRawContent()));
 
     $this->pass('Verifying BigPipe start/stop signals…', 'Debug');
-    $this->assertRaw(static::START_SIGNAL, 'BigPipe start signal present.');
-    $this->assertRaw(static::STOP_SIGNAL, 'BigPipe stop signal present.');
-    $start_signal_position = strpos($this->getRawContent(), static::START_SIGNAL);
-    $stop_signal_position = strpos($this->getRawContent(), static::STOP_SIGNAL);
+    $this->assertRaw(BigPipe::START_SIGNAL, 'BigPipe start signal present.');
+    $this->assertRaw(BigPipe::STOP_SIGNAL, 'BigPipe stop signal present.');
+    $start_signal_position = strpos($this->getRawContent(), BigPipe::START_SIGNAL);
+    $stop_signal_position = strpos($this->getRawContent(), BigPipe::STOP_SIGNAL);
     $this->assertTrue($start_signal_position < $stop_signal_position, 'BigPipe start signal appears before stop signal.');
 
     $this->pass('Verifying BigPipe placeholder replacements and start/stop signals were streamed in the correct order…', 'Debug');
     $expected_stream_order = array_keys($expected_big_pipe_placeholders);
-    array_unshift($expected_stream_order, static::START_SIGNAL);
-    array_push($expected_stream_order, static::STOP_SIGNAL);
+    array_unshift($expected_stream_order, BigPipe::START_SIGNAL);
+    array_push($expected_stream_order, BigPipe::STOP_SIGNAL);
     $actual_stream_order = $placeholder_replacement_positions + [
-        $start_signal_position => static::START_SIGNAL,
-        $stop_signal_position => static::STOP_SIGNAL,
+        $start_signal_position => BigPipe::START_SIGNAL,
+        $stop_signal_position => BigPipe::STOP_SIGNAL,
       ];
     ksort($actual_stream_order, SORT_NUMERIC);
     $this->assertEqual($expected_stream_order, array_values($actual_stream_order));

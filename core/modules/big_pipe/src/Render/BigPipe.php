@@ -30,6 +30,20 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class BigPipe implements BigPipeInterface {
 
   /**
+   * The BigPipe placeholder replacements start signal.
+   *
+   * @var string
+   */
+  const START_SIGNAL = '<script type="application/vnd.drupal-ajax" data-big-pipe-event="start"></script>';
+
+  /**
+   * The BigPipe placeholder replacements stop signal.
+   *
+   * @var string
+   */
+  const STOP_SIGNAL = '<script type="application/vnd.drupal-ajax" data-big-pipe-event="stop"></script>';
+
+  /**
    * The renderer.
    *
    * @var \Drupal\Core\Render\RendererInterface
@@ -285,7 +299,8 @@ class BigPipe implements BigPipeInterface {
 
     // Send the start signal.
     print "\n";
-    print '<script type="application/json" data-big-pipe-event="start"></script>' . "\n";
+    print static::START_SIGNAL;
+    print "\n";
     flush();
 
     // A BigPipe response consists of a HTML response plus multiple embedded
@@ -296,7 +311,7 @@ class BigPipe implements BigPipeInterface {
     // to be returned.
     // @see \Drupal\Core\EventSubscriber\AjaxResponseSubscriber::onResponse()
     $fake_request = $this->requestStack->getMasterRequest()->duplicate();
-    $fake_request->headers->set('Accept', 'application/json');
+    $fake_request->headers->set('Accept', 'application/vnd.drupal-ajax');
 
     foreach ($placeholder_order as $placeholder_id) {
       if (!isset($placeholders[$placeholder_id])) {
@@ -332,7 +347,7 @@ class BigPipe implements BigPipeInterface {
       // Send this embedded AJAX response.
       $json = $ajax_response->getContent();
       $output = <<<EOF
-    <script type="application/json" data-big-pipe-replacement-for-placeholder-with-id="$placeholder_id">
+    <script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="$placeholder_id">
     $json
     </script>
 EOF;
@@ -348,7 +363,9 @@ EOF;
     }
 
     // Send the stop signal.
-    print '<script type="application/json" data-big-pipe-event="stop"></script>' . "\n";
+    print "\n";
+    print static::STOP_SIGNAL;
+    print "\n";
     flush();
   }
 
