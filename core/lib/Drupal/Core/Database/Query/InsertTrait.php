@@ -181,4 +181,11 @@ trait InsertTrait {
     return $values;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function count() {
+    return count($this->insertValues);
+  }
+
 }

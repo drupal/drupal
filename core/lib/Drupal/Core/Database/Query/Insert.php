@@ -14,7 +14,7 @@ use Drupal\Core\Database\Database;
  *
  * @ingroup database
  */
-class Insert extends Query {
+class Insert extends Query implements \Countable {
 
   use InsertTrait;
 
