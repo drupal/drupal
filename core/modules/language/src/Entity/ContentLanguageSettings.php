@@ -24,6 +24,7 @@ use Drupal\language\ContentLanguageSettingsInterface;
  *   entity_keys = {
  *     "id" = "id"
  *   },
+ *   list_cache_tags = { "rendered" }
  * )
  */
 class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguageSettingsInterface {
