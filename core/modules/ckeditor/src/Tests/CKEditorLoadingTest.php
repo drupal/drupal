@@ -148,6 +148,16 @@ class CKEditorLoadingTest extends WebTestBase {
     $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
     $this->assertTrue(in_array('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries'])), 'CKEditor glue library is present.');
+
+    // Assert that CKEditor uses Drupal's cache-busting query string by
+    // comparing the setting sent with the page with the current query string.
+    $settings = $this->getDrupalSettings();
+    $expected = $settings['ckeditor']['timestamp'];
+    $this->assertIdentical($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct before flushing all caches.");
+    // Flush all caches then make sure that $settings['ckeditor']['timestamp']
+    // still matches.
+    drupal_flush_all_caches();
+    $this->assertIdentical($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct after flushing all caches.");
   }
 
   protected function getThingsToCheck() {
