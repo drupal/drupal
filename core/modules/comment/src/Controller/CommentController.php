@@ -137,7 +137,6 @@ class CommentController extends ControllerBase {
       if ($session = $request->getSession()) {
         $redirect_request->setSession($session);
       }
-      // @todo: Convert the pager to use the request object.
       $request->query->set('page', $page);
       $response = $this->httpKernel->handle($redirect_request, HttpKernelInterface::SUB_REQUEST);
       if ($response instanceof CacheableResponseInterface) {

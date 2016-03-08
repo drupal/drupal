@@ -16,6 +16,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -80,6 +81,11 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
   protected $entityFormBuilder;
 
   /**
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   */
+  protected $routeMatch;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -93,7 +99,8 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       $configuration['third_party_settings'],
       $container->get('current_user'),
       $container->get('entity.manager'),
-      $container->get('entity.form_builder')
+      $container->get('entity.form_builder'),
+      $container->get('current_route_match')
     );
   }
 
@@ -120,14 +127,17 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    *   The entity manager
    * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder
    *   The entity form builder.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match object.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityManagerInterface $entity_manager, EntityFormBuilderInterface $entity_form_builder) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityManagerInterface $entity_manager, EntityFormBuilderInterface $entity_form_builder, RouteMatchInterface $route_match) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->viewBuilder = $entity_manager->getViewBuilder('comment');
     $this->storage = $entity_manager->getStorage('comment');
     $this->currentUser = $current_user;
     $this->entityManager = $entity_manager;
     $this->entityFormBuilder = $entity_form_builder;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -164,6 +174,12 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           if ($comments) {
             $build = $this->viewBuilder->viewMultiple($comments);
             $build['pager']['#type'] = 'pager';
+            // CommentController::commentPermalink() calculates the page number
+            // where a specific comment appears and does a subrequest pointing to
+            // that page, we need to pass that subrequest route to our pager to
+            // keep the pager working.
+            $build['pager']['#route_name'] = $this->routeMatch->getRouteObject();
+            $build['pager']['#route_parameters'] =  $this->routeMatch->getRawParameters()->all();
             if ($this->getSetting('pager_id')) {
               $build['pager']['#element'] = $this->getSetting('pager_id');
             }
