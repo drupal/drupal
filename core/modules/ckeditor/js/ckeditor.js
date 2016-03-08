@@ -273,4 +273,7 @@
     }
   });
 
+  // Set the CKEditor cache-busting string to the same value as Drupal.
+  CKEDITOR.timestamp = drupalSettings.ckeditor.timestamp;
+
 })(Drupal, Drupal.debounce, CKEDITOR, jQuery);

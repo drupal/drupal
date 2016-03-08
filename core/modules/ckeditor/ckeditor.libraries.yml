@@ -8,6 +8,7 @@ drupal.ckeditor:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/drupalSettings
     - core/drupal.debounce
     - core/ckeditor
     - editor/drupal.editor
