@@ -11,7 +11,7 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form controller for the shortcut entity forms.
+ * Form handler for the shortcut entity forms.
  */
 class ShortcutForm extends ContentEntityForm {
 

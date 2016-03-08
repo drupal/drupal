@@ -15,7 +15,7 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Form controller for node type forms.
+ * Form handler for node type forms.
  */
 class NodeTypeForm extends BundleEntityFormBase {
 

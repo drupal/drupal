@@ -11,7 +11,7 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Base for controller for taxonomy term edit forms.
+ * Base for handler for taxonomy term edit forms.
  */
 class TermForm extends ContentEntityForm {
 

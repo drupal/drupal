@@ -16,7 +16,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines a controller class that handles the node grants system.
+ * Defines a storage handler class that handles the node grants system.
  *
  * This is used to build node query access.
  *

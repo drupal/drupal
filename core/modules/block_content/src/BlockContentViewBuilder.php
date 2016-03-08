@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 
 /**
- * Render controller for custom blocks.
+ * View builder handler for custom blocks.
  */
 class BlockContentViewBuilder extends EntityViewBuilder {
 

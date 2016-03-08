@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base form controller for category edit forms.
+ * Base form handler for comment type edit forms.
  */
 class CommentTypeForm extends EntityForm {
 
