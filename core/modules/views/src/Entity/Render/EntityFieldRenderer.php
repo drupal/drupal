@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Entity\Render;
 
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -25,6 +26,7 @@ use Drupal\views\ViewExecutable;
  */
 class EntityFieldRenderer extends RendererBase {
   use EntityTranslationRenderTrait;
+  use DependencySerializationTrait;
 
   /**
    * The relationship being handled.
