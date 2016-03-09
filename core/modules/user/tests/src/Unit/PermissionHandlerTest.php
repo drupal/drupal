@@ -113,6 +113,9 @@ class PermissionHandlerTest extends UnitTestCase {
 "'access module b':
   title: 'Access B'
   description: 'bla bla'
+'access module a via module b':
+  title: 'Access A via B'
+  provider: 'module_a'
 ");
     mkdir($url . '/module_c');
     file_put_contents($url . '/module_c/module_c.permissions.yml',
@@ -239,6 +242,7 @@ access_module_a1: single_description1"
     file_put_contents($url . '/module_b/module_b.permissions.yml',
 "permission_callbacks:
   - 'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription'
+  - 'Drupal\\user\\Tests\\TestPermissionCallbacks::titleProvider'
 ");
     mkdir($url . '/module_c');
     file_put_contents($url . '/module_c/module_c.permissions.yml',
@@ -271,6 +275,10 @@ access_module_a1: single_description1"
       ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
       ->willReturn(array(new TestPermissionCallbacks(), 'titleDescription'));
     $this->controllerResolver->expects($this->at(2))
+      ->method('getControllerFromDefinition')
+      ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleProvider')
+      ->willReturn(array(new TestPermissionCallbacks(), 'titleProvider'));
+    $this->controllerResolver->expects($this->at(3))
       ->method('getControllerFromDefinition')
       ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess')
       ->willReturn(array(new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess'));
@@ -351,7 +359,7 @@ permission_callbacks:
    *   The actual permissions
    */
   protected function assertPermissions(array $actual_permissions) {
-    $this->assertCount(3, $actual_permissions);
+    $this->assertCount(4, $actual_permissions);
     $this->assertEquals($actual_permissions['access_module_a']['title'], 'single_description');
     $this->assertEquals($actual_permissions['access_module_a']['provider'], 'module_a');
     $this->assertEquals($actual_permissions['access module b']['title'], 'Access B');
@@ -359,6 +367,7 @@ permission_callbacks:
     $this->assertEquals($actual_permissions['access_module_c']['title'], 'Access C');
     $this->assertEquals($actual_permissions['access_module_c']['provider'], 'module_c');
     $this->assertEquals($actual_permissions['access_module_c']['restrict access'], TRUE);
+    $this->assertEquals($actual_permissions['access module a via module b']['provider'], 'module_a');
   }
 
 }
@@ -409,6 +418,14 @@ class TestPermissionCallbacks {
     );
   }
 
+  public function titleProvider() {
+    return array(
+      'access module a via module b' => array(
+        'title' => 'Access A via B',
+        'provider' => 'module_a',
+      ),
+    );
+  }
 }
 
 /**
