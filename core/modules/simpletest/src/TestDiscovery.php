@@ -10,9 +10,11 @@ namespace Drupal\simpletest;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Doctrine\Common\Reflection\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\simpletest\Exception\MissingGroupException;
 use PHPUnit_Util_Test;
 
@@ -50,17 +52,37 @@ class TestDiscovery {
   protected $availableExtensions;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a new test discovery.
    *
+   * @param string $root
+   *   The app root.
    * @param $class_loader
    *   The class loader. Normally Composer's ClassLoader, as included by the
    *   front controller, but may also be decorated; e.g.,
    *   \Symfony\Component\ClassLoader\ApcClassLoader.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   (optional) Backend for caching discovery results.
    */
-  public function __construct($class_loader, CacheBackendInterface $cache_backend = NULL) {
+  public function __construct($root, $class_loader, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend = NULL) {
+    $this->root = $root;
     $this->classLoader = $class_loader;
+    $this->moduleHandler = $module_handler;
     $this->cacheBackend = $cache_backend;
   }
 
@@ -80,15 +102,16 @@ class TestDiscovery {
     $existing = $this->classLoader->getPrefixesPsr4();
 
     // Add PHPUnit test namespaces of Drupal core.
-    $this->testNamespaces['Drupal\\Tests\\'] = [DRUPAL_ROOT . '/core/tests/Drupal/Tests'];
-    $this->testNamespaces['Drupal\\KernelTests\\'] = [DRUPAL_ROOT . '/core/tests/Drupal/KernelTests'];
-    $this->testNamespaces['Drupal\\FunctionalTests\\'] = [DRUPAL_ROOT . '/core/tests/Drupal/FunctionalTests'];
+    $this->testNamespaces['Drupal\\Tests\\'] = [$this->root . '/core/tests/Drupal/Tests'];
+    $this->testNamespaces['Drupal\\KernelTests\\'] = [$this->root . '/core/tests/Drupal/KernelTests'];
+    $this->testNamespaces['Drupal\\FunctionalTests\\'] = [$this->root . '/core/tests/Drupal/FunctionalTests'];
+    $this->testNamespaces['Drupal\\FunctionalJavascriptTests\\'] = [$this->root . '/core/tests/Drupal/FunctionalJavascriptTests'];
 
     $this->availableExtensions = array();
     foreach ($this->getExtensions() as $name => $extension) {
       $this->availableExtensions[$extension->getType()][$name] = $name;
 
-      $base_path = DRUPAL_ROOT . '/' . $extension->getPath();
+      $base_path = $this->root . '/' . $extension->getPath();
 
       // Add namespace of disabled/uninstalled extensions.
       if (!isset($existing["Drupal\\$name\\"])) {
@@ -115,11 +138,12 @@ class TestDiscovery {
    *
    * @param string $extension
    *   (optional) The name of an extension to limit discovery to; e.g., 'node'.
+   * @param string[] $types
+   *   An array of included test types.
    *
    * @return array
-   *   An array of tests keyed by the first @group specified in each test's
-   *   PHPDoc comment block, and then keyed by class names. For example:
-   *   @code
+   *   An array of tests keyed by the the group name.
+   * @code
    *     $groups['block'] => array(
    *       'Drupal\block\Tests\BlockTest' => array(
    *         'name' => 'Drupal\block\Tests\BlockTest',
@@ -127,15 +151,12 @@ class TestDiscovery {
    *         'group' => 'block',
    *       ),
    *     );
-   *   @endcode
-   *
-   * @throws \ReflectionException
-   *   If a discovered test class does not match the expected class name.
+   * @endcode
    *
    * @todo Remove singular grouping; retain list of groups in 'group' key.
    * @see https://www.drupal.org/node/2296615
    */
-  public function getTestClasses($extension = NULL) {
+  public function getTestClasses($extension = NULL, array $types = []) {
     $reader = new SimpleAnnotationReader();
     $reader->addNamespace('Drupal\\simpletest\\Annotation');
 
@@ -190,13 +211,20 @@ class TestDiscovery {
     }
 
     // Allow modules extending core tests to disable originals.
-    \Drupal::moduleHandler()->alter('simpletest', $list);
+    $this->moduleHandler->alter('simpletest', $list);
 
     if (!isset($extension)) {
       if ($this->cacheBackend) {
         $this->cacheBackend->set('simpletest:discovery:classes', $list);
       }
     }
+
+    if ($types) {
+      $list = NestedArray::filter($list, function ($element) use ($types) {
+        return !(is_array($element) && isset($element['type']) && !in_array($element['type'], $types));
+      });
+    }
+
     return $list;
   }
 
@@ -450,7 +478,7 @@ class TestDiscovery {
    *   An array of Extension objects, keyed by extension name.
    */
   protected function getExtensions() {
-    $listing = new ExtensionDiscovery(DRUPAL_ROOT);
+    $listing = new ExtensionDiscovery($this->root);
     // Ensure that tests in all profiles are discovered.
     $listing->setProfileDirectories(array());
     $extensions = $listing->scan('module', TRUE);

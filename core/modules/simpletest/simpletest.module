@@ -489,9 +489,10 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  * each module for files matching the PSR-0 standard. Once loaded the test list
  * is cached and stored in a static variable.
  *
- * @param string $module
- *   Name of a module. If set then only tests belonging to this module are
- *   returned.
+ * @param string $extension
+ *   (optional) The name of an extension to limit discovery to; e.g., 'node'.
+ * @param string[] $types
+ *   An array of included test types.
  *
  * @return array[]
  *   An array of tests keyed with the groups, and then keyed by test classes.
@@ -506,8 +507,8 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  *     );
  *   @endcode
  */
-function simpletest_test_get_all($module = NULL) {
-  return \Drupal::service('test_discovery')->getTestClasses($module);
+function simpletest_test_get_all($extension = NULL, array $types = []) {
+  return \Drupal::service('test_discovery')->getTestClasses($extension, $types);
 }
 
 /**
