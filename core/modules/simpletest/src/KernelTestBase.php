@@ -271,6 +271,12 @@ EOD;
     // The temporary stream wrapper is able to operate both with and without
     // configuration.
     $this->registerStreamWrapper('temporary', 'Drupal\Core\StreamWrapper\TemporaryStream');
+
+    // Manually configure the test mail collector implementation to prevent
+    // tests from sending out emails and collect them in state instead.
+    // While this should be enforced via settings.php prior to installation,
+    // some tests expect to be able to test mail system implementations.
+    $GLOBALS['config']['system.mail']['interface']['default'] = 'test_mail_collector';
   }
 
   /**
