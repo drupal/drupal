@@ -125,14 +125,21 @@
           // Make our new row and select field.
           var row = $(this).closest('tr');
           var select = $(this);
-
           // Find the correct region and insert the row as the last in the
           // region.
-          table.find('.region-' + select[0].value + '-message').nextUntil('.region-message').eq(-1).before(row);
-
+          tableDrag.rowObject = new tableDrag.row(row[0]);
+          var region_message = table.find('.region-' + select[0].value + '-message');
+          var region_items = region_message.nextUntil('.region-message, .region-title');
+          if (region_items.length) {
+            region_items.last().after(row);
+          }
+          // We found that region_message is the last row.
+          else {
+            region_message.after(row);
+          }
           updateBlockWeights(table, select[0].value);
           // Modify empty regions with added or removed fields.
-          checkEmptyRegions(table, row);
+          checkEmptyRegions(table, tableDrag.rowObject);
           // Update last placed block indication.
           updateLastPlaced(table, row);
           // Show unsaved changes warning.
