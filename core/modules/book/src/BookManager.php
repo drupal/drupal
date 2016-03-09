@@ -587,18 +587,20 @@ class BookManager implements BookManagerInterface {
    *   The Book ID to find links for.
    * @param array $parameters
    *   (optional) An associative array of build parameters. Possible keys:
-   *   - expanded: An array of parent link ids to return only book links that
-   *     are children of one of the plids in this list. If empty, the whole
-   *     outline is built, unless 'only_active_trail' is TRUE.
-   *   - active_trail: An array of nids, representing the coordinates of the
-   *     currently active book link.
+   *   - expanded: An array of parent link IDs to return only book links that
+   *     are children of one of the parent link IDs in this list. If empty,
+   *     the whole outline is built, unless 'only_active_trail' is TRUE.
+   *   - active_trail: An array of node IDs, representing the currently active
+   *     book link.
    *   - only_active_trail: Whether to only return links that are in the active
-   *     trail. This option is ignored, if 'expanded' is non-empty.
+   *     trail. This option is ignored if 'expanded' is non-empty.
    *   - min_depth: The minimum depth of book links in the resulting tree.
-   *     Defaults to 1, which is the default to build a whole tree for a book.
+   *     Defaults to 1, which is to build the whole tree for the book.
    *   - max_depth: The maximum depth of book links in the resulting tree.
    *   - conditions: An associative array of custom database select query
-   *     condition key/value pairs; see _menu_build_tree() for the actual query.
+   *     condition key/value pairs; see
+   *     \Drupal\book\BookOutlineStorage::getBookMenuTree() for the actual
+   *     query.
    *
    * @return array
    *   A fully built book tree.
@@ -618,7 +620,29 @@ class BookManager implements BookManagerInterface {
    * to further massage the data manually before further processing happens.
    * _menu_tree_check_access() needs to be invoked afterwards.
    *
-   * @see menu_build_tree()
+   * @param int $bid
+   *   The book ID to find links for.
+   * @param array $parameters
+   *   (optional) An associative array of build parameters. Possible keys:
+   *   - expanded: An array of parent link IDs to return only book links that
+   *     are children of one of the parent link IDs in this list. If empty,
+   *     the whole outline is built, unless 'only_active_trail' is TRUE.
+   *   - active_trail: An array of node IDs, representing the currently active
+   *     book link.
+   *   - only_active_trail: Whether to only return links that are in the active
+   *     trail. This option is ignored if 'expanded' is non-empty.
+   *   - min_depth: The minimum depth of book links in the resulting tree.
+   *     Defaults to 1, which is to build the whole tree for the book.
+   *   - max_depth: The maximum depth of book links in the resulting tree.
+   *   - conditions: An associative array of custom database select query
+   *     condition key/value pairs; see
+   *     \Drupal\book\BookOutlineStorage::getBookMenuTree() for the actual
+   *     query.
+   *
+   * @return array
+   *   An array with links representing the tree structure of the book.
+   *
+   * @see \Drupal\book\BookOutlineStorageInterface::getBookMenuTree()
    */
   protected function doBookTreeBuild($bid, array $parameters = array()) {
     // Static cache of already built menu trees.
@@ -885,7 +909,7 @@ class BookManager implements BookManagerInterface {
    * Sets the p1 through p9 properties for a book link being saved.
    *
    * @param array $link
-   *   The book link to update.
+   *   The book link to update, passed by reference.
    * @param array $parent
    *   The parent values to set.
    */
@@ -930,6 +954,9 @@ class BookManager implements BookManagerInterface {
 
   /**
    * Sorts the menu tree and recursively checks access for each item.
+   *
+   * @param array $tree
+   *   The book tree to operate on.
    */
   protected function doBookTreeCheckAccess(&$tree) {
     $new_tree = array();
@@ -1010,6 +1037,20 @@ class BookManager implements BookManagerInterface {
    *
    * The function is a bit complex because the rendering of a link depends on
    * the next book link.
+   *
+   * @param array $links
+   *   A flat array of book links that are part of the book. Each array element
+   *   is an associative array of information about the book link, containing
+   *   the fields from the {book} table. This array must be ordered depth-first.
+   * @param array $parents
+   *   An array of the node ID values that are in the path from the current page
+   *   to the root of the book tree.
+   * @param int $depth
+   *   The minimum depth to include in the returned book tree.
+   *
+   * @return array
+   *   Book tree.
+   *
    */
   protected function buildBookOutlineRecursive(&$links, $parents, $depth) {
     $tree = array();
