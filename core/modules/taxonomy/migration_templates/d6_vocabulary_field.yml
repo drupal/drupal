@@ -8,7 +8,6 @@ source:
     entity_type: node
     type: entity_reference
     target_entity_type: taxonomy_term
-    cardinality: -1
 process:
   entity_type: 'constants/entity_type'
   type: 'constants/type'
@@ -21,7 +20,7 @@ process:
       plugin: skip_on_empty
       method: row
   'settings/target_type': 'constants/target_entity_type'
-  cardinality: 'constants/cardinality'
+  cardinality: cardinality
 destination:
   plugin: md_entity:field_storage_config
 migration_dependencies:

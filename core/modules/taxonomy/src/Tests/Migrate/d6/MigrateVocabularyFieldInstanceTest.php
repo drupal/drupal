@@ -10,6 +10,7 @@ namespace Drupal\taxonomy\Tests\Migrate\d6;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Vocabulary field instance migration.
