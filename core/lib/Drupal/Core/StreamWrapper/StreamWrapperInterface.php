@@ -3,9 +3,16 @@
 /**
  * @file
  * Contains \Drupal\Core\StreamWrapper\StreamWrapperInterface.
+ */
+
+namespace Drupal\Core\StreamWrapper;
+
+/**
+ * Defines a Drupal stream wrapper extension.
  *
  * Provides a Drupal interface and classes to implement PHP stream wrappers for
- * public, private, and temporary files.
+ * public, private, and temporary files. Extends the StreamWrapperInterface
+ * with methods expected by Drupal stream wrapper classes.
  *
  * A stream wrapper is an abstraction of a file system that allows Drupal to
  * use the same set of methods to access both local files and remote resources.
@@ -17,15 +24,6 @@
  *
  * @see http://www.faqs.org/rfcs/rfc3986.html
  * @see http://bugs.php.net/bug.php?id=47070
- */
-
-namespace Drupal\Core\StreamWrapper;
-
-/**
- * Defines a Drupal stream wrapper extension.
- *
- * Extends the StreamWrapperInterface with methods expected by Drupal stream
- * wrapper classes.
  */
 interface StreamWrapperInterface extends PhpStreamWrapperInterface {
 

@@ -3,8 +3,6 @@
 /**
  * @file
  * Contains \Drupal\block\Tests\BlockHookOperationTest.
- *
- * Tests for Block module regarding hook_entity_operations_alter().
  */
 
 namespace Drupal\block\Tests;
@@ -13,7 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Implement hook entity operations alter.
+ * Tests for Block module regarding hook_entity_operations_alter().
  *
  * @group block
  */

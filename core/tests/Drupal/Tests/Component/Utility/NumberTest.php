@@ -3,8 +3,6 @@
 /**
  * @file
  * Contains \Drupal\Tests\Component\Utility\NumberTest.
- *
- * @see \Drupal\Component\Utility\Number
  */
 
 namespace Drupal\Tests\Component\Utility;
@@ -18,6 +16,8 @@ use Drupal\Tests\UnitTestCase;
  * @group Utility
  *
  * @coversDefaultClass \Drupal\Component\Utility\Number
+ *
+ * @see \Drupal\Component\Utility\Number
  */
 class NumberTest extends UnitTestCase {
 
