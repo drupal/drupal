@@ -208,6 +208,12 @@ All arguments are long options.
               Specify the path and the extension
               (i.e. 'core/modules/user/user.test').
 
+  --types
+
+              Runs just tests from the specified test type, for example
+              run-tests.sh
+              (i.e. --types "Simpletest,PHPUnit-Functional")
+
   --directory Run all tests found within the specified file directory.
 
   --xml       <path>
@@ -292,6 +298,7 @@ function simpletest_script_parse_args() {
     'module' => NULL,
     'class' => FALSE,
     'file' => FALSE,
+    'types' => [],
     'directory' => NULL,
     'color' => FALSE,
     'verbose' => FALSE,
@@ -319,6 +326,10 @@ function simpletest_script_parse_args() {
         $previous_arg = $matches[1];
         if (is_bool($args[$previous_arg])) {
           $args[$matches[1]] = TRUE;
+        }
+        elseif (is_array($args[$previous_arg])) {
+          $value = array_shift($_SERVER['argv']);
+          $args[$matches[1]] = array_map('trim', explode(',', $value));
         }
         else {
           $args[$matches[1]] = array_shift($_SERVER['argv']);
@@ -894,7 +905,7 @@ function simpletest_script_get_test_list() {
   $test_list = array();
   if ($args['all'] || $args['module']) {
     try {
-      $groups = simpletest_test_get_all($args['module']);
+      $groups = simpletest_test_get_all($args['module'], $args['types']);
     }
     catch (Exception $e) {
       echo (string) $e;
@@ -916,7 +927,7 @@ function simpletest_script_get_test_list() {
         }
         else {
           try {
-            $groups = simpletest_test_get_all();
+            $groups = simpletest_test_get_all(NULL, $args['types']);
           }
           catch (Exception $e) {
             echo (string) $e;
@@ -1017,7 +1028,7 @@ function simpletest_script_get_test_list() {
     }
     else {
       try {
-        $groups = simpletest_test_get_all();
+        $groups = simpletest_test_get_all(NULL, $args['types']);
       }
       catch (Exception $e) {
         echo (string) $e;

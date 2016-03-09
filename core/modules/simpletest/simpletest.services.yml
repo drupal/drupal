@@ -1,4 +1,4 @@
 services:
   test_discovery:
     class: Drupal\simpletest\TestDiscovery
-    arguments: ['@class_loader', '@?cache.discovery']
+    arguments: ['@app.root', '@class_loader', '@module_handler', '@?cache.discovery']
