@@ -3,11 +3,6 @@
 /**
  * @file
  * Contains \Drupal\Core\Template\TwigExtension.
- *
- * This provides a Twig extension that registers various Drupal specific
- * extensions to Twig.
- *
- * @see \Drupal\Core\CoreServiceProvider
  */
 
 namespace Drupal\Core\Template;
@@ -24,7 +19,8 @@ use Drupal\Core\Url;
 /**
  * A class providing Drupal Twig extensions.
  *
- * Specifically Twig functions, filter and node visitors.
+ * This provides a Twig extension that registers various Drupal-specific
+ * extensions to Twig, specifically Twig functions, filter, and node visitors.
  *
  * @see \Drupal\Core\CoreServiceProvider
  */

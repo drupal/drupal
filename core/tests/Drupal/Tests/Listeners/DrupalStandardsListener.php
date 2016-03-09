@@ -3,15 +3,14 @@
 /**
  * @file
  * Contains \Drupal\Tests\Listeners\DrupalStandardsListener.
- *
- * Listener for PHPUnit tests, to enforce various coding standards within test
- * runs.
  */
 
 namespace Drupal\Tests\Listeners;
 
 /**
  * Listens for PHPUnit tests and fails those with invalid coverage annotations.
+ *
+ * Enforces various coding standards within test runs.
  */
 class DrupalStandardsListener extends \PHPUnit_Framework_BaseTestListener {
 

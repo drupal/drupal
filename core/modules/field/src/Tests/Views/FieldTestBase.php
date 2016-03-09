@@ -5,18 +5,6 @@
  * Contains \Drupal\field\Tests\Views\FieldTestBase.
  */
 
-/**
- * @TODO
- *   - Test on a generic entity not on a node.
- *
- * What has to be tested:
- *   - Make sure that every wanted field is added to the according entity type.
- *   - Make sure the joins are done correctly.
- *   - Use basic fields and make sure that the full wanted object is built.
- *   - Use relationships between different entity types, for example node and
- *     the node author(user).
- */
-
 namespace Drupal\field\Tests\Views;
 
 use Drupal\field\Entity\FieldConfig;
@@ -27,6 +15,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Provides some helper methods for testing fieldapi integration into views.
+ *
+ * @todo Test on a generic entity not on a node. What has to be tested:
+ *   - Make sure that every wanted field is added to the according entity type.
+ *   - Make sure the joins are done correctly.
+ *   - Use basic fields and make sure that the full wanted object is built.
+ *   - Use relationships between different entity types, for example node and
+ *     the node author(user).
  */
 abstract class FieldTestBase extends ViewTestBase {
 

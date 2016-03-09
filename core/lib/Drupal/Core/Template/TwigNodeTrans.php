@@ -3,6 +3,12 @@
 /**
  * @file
  * Contains \Drupal\Core\Template\TwigNodeTrans.
+ */
+
+namespace Drupal\Core\Template;
+
+/**
+ * A class that defines the Twig 'trans' tag for Drupal.
  *
  * This Twig extension was originally based on Twig i18n extension. It has been
  * severely modified to work properly with the complexities of the Drupal
@@ -10,12 +16,6 @@
  *
  * @see http://twig.sensiolabs.org/doc/extensions/i18n.html
  * @see https://github.com/fabpot/Twig-extensions
- */
-
-namespace Drupal\Core\Template;
-
-/**
- * A class that defines the Twig 'trans' tag for Drupal.
  */
 class TwigNodeTrans extends \Twig_Node {
 

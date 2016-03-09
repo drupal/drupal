@@ -3,9 +3,6 @@
 /**
  * @file
  * Contains \Drupal\Core\Routing\UrlGeneratorTrait.
- *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Core\Url instead.
  */
 
 namespace Drupal\Core\Routing;
@@ -19,6 +16,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * classes that would implement ContainerInjectionInterface. Services registered
  * in the Container should not use this trait but inject the appropriate service
  * directly for easier testing.
+ *
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\Url instead.
  */
 trait UrlGeneratorTrait {
 
