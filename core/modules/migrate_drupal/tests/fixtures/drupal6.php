@@ -34072,7 +34072,7 @@ $connection->insert('vocabulary')
   'help' => '',
   'relations' => '1',
   'hierarchy' => '2',
-  'multiple' => '0',
+  'multiple' => '1',
   'required' => '0',
   'tags' => '0',
   'module' => 'taxonomy',
