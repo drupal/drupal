@@ -163,8 +163,8 @@ class PermissionHandler implements PermissionHandlerInterface {
 
               $callback_permission += array(
                 'description' => NULL,
+                'provider' => $provider,
               );
-              $callback_permission['provider'] = $provider;
 
               $all_callback_permissions[$name] = $callback_permission;
             }
@@ -182,7 +182,7 @@ class PermissionHandler implements PermissionHandlerInterface {
         }
         $permission['title'] = $this->t($permission['title']);
         $permission['description'] = isset($permission['description']) ? $this->t($permission['description']) : NULL;
-        $permission['provider'] = $provider;
+        $permission['provider'] = !empty($permission['provider']) ? $permission['provider'] : $provider;
       }
 
       $all_permissions += $permissions;
