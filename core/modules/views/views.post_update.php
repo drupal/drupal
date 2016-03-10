@@ -10,25 +10,6 @@ use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
 /**
- * @addtogroup updates-8.0.x
- * @{
- */
-
-/**
- * Update dependencies to image style.
- */
-function views_post_update_image_style_dependencies() {
-  $views = View::loadMultiple();
-  array_walk($views, function(View $view) {
-    $view->save();
-  });
-}
-
-/**
- * @} End of "addtogroup updates-8.0.x".
- */
-
-/**
  * @addtogroup updates-8.0.0-beta
  * @{
  */
@@ -158,4 +139,23 @@ function views_post_update_cleanup_duplicate_views_data() {
 
 /**
  * @} End of "addtogroup updates-8.0.0-rc".
+ */
+
+/**
+ * @addtogroup updates-8.0.x
+ * @{
+ */
+
+/**
+ * Include field formatter dependencies in a view when the formatter is used.
+ */
+function views_post_update_field_formatter_dependencies() {
+  $views = View::loadMultiple();
+  array_walk($views, function(View $view) {
+    $view->save();
+  });
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.x".
  */
