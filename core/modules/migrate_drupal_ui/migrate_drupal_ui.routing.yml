@@ -4,7 +4,7 @@ migrate_drupal_ui.upgrade:
     _form: '\Drupal\migrate_drupal_ui\Form\MigrateUpgradeForm'
     _title: 'Upgrade'
   requirements:
-    _permission: 'administer software updates'
+    _custom_access: '\Drupal\migrate_drupal_ui\MigrateAccessCheck::checkAccess'
   options:
     _admin_route: TRUE
 
@@ -13,6 +13,6 @@ migrate_drupal_ui.log:
   defaults:
       _controller: '\Drupal\migrate_drupal_ui\Controller\MigrateController::showLog'
   requirements:
-    _permission: 'administer software updates'
+    _custom_access: '\Drupal\migrate_drupal_ui\MigrateAccessCheck::checkAccess'
   options:
     _admin_route: TRUE
