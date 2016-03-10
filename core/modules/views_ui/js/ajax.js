@@ -25,6 +25,38 @@
   };
 
   /**
+   * Ajax command to set the form submit action in the views modal edit form.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   An Ajax object.
+   * @param {object} response
+   *   The Ajax response. Contains .url
+   * @param {string} [status]
+   *   The XHR status code?
+   */
+  Drupal.AjaxCommands.prototype.viewsSetForm = function (ajax, response, status) {
+    var $form = $('.js-views-ui-dialog form');
+    // Identify the button that was clicked so that .ajaxSubmit() can use it.
+    // We need to do this for both .click() and .mousedown() since JavaScript
+    // code might trigger either behavior.
+    var $submit_buttons = $form.find('input[type=submit].js-form-submit, button.js-form-submit').once('views-ajax-submit');
+    $submit_buttons.on('click mousedown', function () {
+      this.form.clk = this;
+    });
+    $form.once('views-ajax-submit').each(function () {
+      var $form = $(this);
+      var element_settings = {
+        url: response.url,
+        event: 'submit',
+        base: $form.attr('id'),
+        element: this
+      };
+      var ajaxForm = Drupal.ajax(element_settings);
+      ajaxForm.$form = $form;
+    });
+  };
+
+  /**
    * Ajax command to show certain buttons in the views edit form.
    *
    * @param {Drupal.Ajax} [ajax]
