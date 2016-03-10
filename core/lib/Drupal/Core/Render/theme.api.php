@@ -324,8 +324,11 @@
  *   namespace Element, and generally extend the
  *   \Drupal\Core\Render\Element\FormElement base class.
  * See the @link plugin_api Plugin API topic @endlink for general information
- * on plugins, and look for classes with the RenderElement or FormElement
- * annotation to discover what render elements are available.
+ * on plugins. You can search for classes with the RenderElement or FormElement
+ * annotation to discover what render elements are available. API reference
+ * sites (such as https://api.drupal.org) generate lists of all existing
+ * elements from these classes. Look for the Elements link in the API Navigation
+ * block.
  *
  * Modules can define render elements by defining an element plugin.
  *
