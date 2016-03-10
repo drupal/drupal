@@ -42,8 +42,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
     $this->createMigrationConnection();
     $this->sourceDatabase = Database::getConnection('default', 'migrate_drupal_ui');
 
-    // Create and log in as user 1. Migrations in the UI can only be performed
-    // as user 1 once https://www.drupal.org/node/2675066 lands.
+    // Log in as user 1. Migrations in the UI can only be performed as user 1.
     $this->drupalLogin($this->rootUser);
   }
 
