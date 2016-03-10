@@ -687,8 +687,8 @@ function template_preprocess_form_element_label(&$variables) {
  *     .module file. The path should be relative to base_path(), and thus should
  *     be built using drupal_get_path().
  *   - css: Array of paths to CSS files to be used on the progress page.
- *   - url_options: options passed to url() when constructing redirect URLs for
- *     the batch.
+ *   - url_options: options passed to the \Drupal\Core\Url object when
+ *     constructing redirect URLs for the batch.
  *   - progressive: A Boolean that indicates whether or not the batch needs to
  *     run progressively. TRUE indicates that the batch will run in more than
  *     one run. FALSE (default) indicates that the batch will finish in a single

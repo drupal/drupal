@@ -412,7 +412,7 @@ function system_authorized_init($callback, $file, $arguments = array(), $page_ti
  * Return the URL for the authorize.php script.
  *
  * @param array $options
- *   Optional array of options to pass to url().
+ *   Optional array of options to set on the \Drupal\Core\Url object.
  * @return \Drupal\Core\Url
  *   The full URL to authorize.php, using HTTPS if available.
  *
@@ -431,7 +431,7 @@ function system_authorized_get_url(array $options = array()) {
  * Returns the URL for the authorize.php script when it is processing a batch.
  *
  * @param array $options
- *   Optional array of options to pass to url().
+ *   Optional array of options to set on the \Drupal\Core\Url object.
  *
  * @return \Drupal\Core\Url
  */
