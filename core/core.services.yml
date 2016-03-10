@@ -1022,6 +1022,11 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@router', '@request_stack', '@router.request_context', NULL]
+  options_request_listener:
+    class: Drupal\Core\EventSubscriber\OptionsRequestSubscriber
+    arguments: ['@router.route_provider']
+    tags:
+      - { name: event_subscriber }
   bare_html_page_renderer:
     class: Drupal\Core\Render\BareHtmlPageRenderer
     arguments: ['@renderer', '@html_response.attachments_processor']
