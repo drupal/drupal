@@ -151,3 +151,42 @@ migrate_entity_constant:
 migrate.source.md_empty:
   type: migrate.source.empty
   label: 'Empty source for migrate_drupal migrations'
+
+migrate.source.i18n_variable:
+  type: migrate_source_sql
+  label: 'i18n Variable'
+  mapping:
+    variables:
+      type: sequence
+      label: 'Variables'
+      sequence:
+        type: string
+        label: 'Variable'
+    constants:
+      type: mapping
+      label: 'Constants'
+      mapping:
+        entity_type:
+          type: string
+          label: 'Entity type'
+        id:
+          type: string
+          label: 'ID'
+        label:
+          type: label
+          label: 'Label'
+        description:
+          type: text
+          label: 'Description'
+        path:
+          type: string
+          label: 'Path'
+        plugin:
+          type: string
+          label: 'Plugin'
+        status:
+          type: boolean
+          label: 'Status'
+        slash:
+          type: string
+          label: 'Slash'
