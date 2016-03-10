@@ -130,6 +130,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
       foreach ($bundles as $bundle_name => $bundle_info) {
         $bundle_options[$bundle_name] = $bundle_info['label'];
       }
+      natsort($bundle_options);
 
       $form['target_bundles'] = array(
         '#type' => 'checkboxes',
