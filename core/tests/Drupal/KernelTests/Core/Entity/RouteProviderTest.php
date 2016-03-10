@@ -37,13 +37,6 @@ class RouteProviderTest extends KernelTestBase {
     $this->installEntitySchema('entity_test_mul');
     $this->installEntitySchema('entity_test_admin_routes');
 
-    $router_builder = \Drupal::service('router.builder');
-    $router_builder->rebuild();
-
-    /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
-    $router_builder = \Drupal::service('router.builder');
-    $router_builder->rebuild();
-
     /** @var \Drupal\user\RoleInterface $role */
     $role = Role::create([
       'id' => RoleInterface::ANONYMOUS_ID

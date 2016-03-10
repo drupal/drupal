@@ -25,6 +25,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\simpletest\AssertContentTrait;
 use Drupal\simpletest\AssertHelperTrait;
 use Drupal\simpletest\RandomGeneratorTrait;
+use Drupal\simpletest\TestServiceProvider;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use org\bovigo\vfs\vfsStream;
@@ -601,6 +602,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       $container->getDefinition('password')
         ->setArguments(array(1));
     }
+    TestServiceProvider::addRouteProvider($container);
   }
 
   /**
@@ -923,6 +925,12 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    *   The rendered string output (typically HTML).
    */
   protected function render(array &$elements) {
+    // \Drupal\Core\Render\BareHtmlPageRenderer::renderBarePage calls out to
+    // system_page_attachments() directly.
+    if (!\Drupal::moduleHandler()->moduleExists('system')) {
+      throw new \Exception(__METHOD__ . ' requires system module to be installed.');
+    }
+
     // Use the bare HTML page renderer to render our links.
     $renderer = $this->container->get('bare_html_page_renderer');
     $response = $renderer->renderBarePage(
