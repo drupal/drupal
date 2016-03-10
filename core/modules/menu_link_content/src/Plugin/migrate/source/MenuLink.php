@@ -51,7 +51,7 @@ class MenuLink extends DrupalSqlBase {
       'link_path' => t('The Drupal path or external path this link points to.'),
       'router_path' => t('For links corresponding to a Drupal path (external = 0), this connects the link to a {menu_router}.path for joins.'),
       'link_title' => t('The text displayed for the link, which may be modified by a title callback stored in {menu_router}.'),
-      'options' => t('A serialized array of options to be passed to the url() or l() function, such as a query string or HTML attributes.'),
+      'options' => t('A serialized array of options to set on the URL, such as a query string or HTML attributes.'),
       'module' => t('The name of the module that generated this link.'),
       'hidden' => t('A flag for whether the link should be rendered in menus. (1 = a disabled menu item that may be shown on admin screens, -1 = a menu callback, 0 = a normal, visible link)'),
       'external' => t('A flag to indicate if the link points to a full URL starting with a protocol, like http:// (1 = external, 0 = internal).'),

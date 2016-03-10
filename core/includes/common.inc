@@ -133,7 +133,7 @@ const JS_THEME = 100;
 const LOCALE_PLURAL_DELIMITER = PluralTranslatableMarkup::DELIMITER;
 
 /**
- * Prepares a 'destination' URL query parameter for use with url().
+ * Prepares a 'destination' URL query parameter.
  *
  * Used to direct the user back to the referring page after completing a form.
  * By default the current URL is returned. If a destination exists in the
