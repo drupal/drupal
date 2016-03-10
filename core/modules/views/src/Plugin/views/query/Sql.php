@@ -1597,84 +1597,16 @@ class Sql extends QueryPluginBase {
   }
 
   public function getAggregationInfo() {
-    // @todo -- need a way to get database specific and customized aggregation
-    // functions into here.
+    // Find plugins for database specific and customized aggregation.
+    $type = \Drupal::service('plugin.manager.views.aggregate');
+    $plugin_definitions = $type->getDefinitions();
+    asort($plugin_definitions);
     return array(
       'group' => array(
         'title' => $this->t('Group results together'),
         'is aggregate' => FALSE,
       ),
-      'count' => array(
-        'title' => $this->t('Count'),
-        'method' => 'aggregationMethodSimple',
-        'handler' => array(
-          'argument' => 'groupby_numeric',
-          'field' => 'numeric',
-          'filter' => 'groupby_numeric',
-          'sort' => 'groupby_numeric',
-        ),
-      ),
-      'count_distinct' => array(
-        'title' => $this->t('Count DISTINCT'),
-        'method' => 'aggregationMethodDistinct',
-        'handler' => array(
-          'argument' => 'groupby_numeric',
-          'field' => 'numeric',
-          'filter' => 'groupby_numeric',
-          'sort' => 'groupby_numeric',
-        ),
-      ),
-      'sum' => array(
-        'title' => $this->t('Sum'),
-        'method' => 'aggregationMethodSimple',
-        'handler' => array(
-          'argument' => 'groupby_numeric',
-          'field' => 'numeric',
-          'filter' => 'groupby_numeric',
-          'sort' => 'groupby_numeric',
-        ),
-      ),
-      'avg' => array(
-        'title' => $this->t('Average'),
-        'method' => 'aggregationMethodSimple',
-        'handler' => array(
-          'argument' => 'groupby_numeric',
-          'field' => 'numeric',
-          'filter' => 'groupby_numeric',
-          'sort' => 'groupby_numeric',
-        ),
-      ),
-      'min' => array(
-        'title' => $this->t('Minimum'),
-        'method' => 'aggregationMethodSimple',
-        'handler' => array(
-          'argument' => 'groupby_numeric',
-          'field' => 'numeric',
-          'filter' => 'groupby_numeric',
-          'sort' => 'groupby_numeric',
-        ),
-      ),
-      'max' => array(
-        'title' => $this->t('Maximum'),
-        'method' => 'aggregationMethodSimple',
-        'handler' => array(
-          'argument' => 'groupby_numeric',
-          'field' => 'numeric',
-          'filter' => 'groupby_numeric',
-          'sort' => 'groupby_numeric',
-        ),
-      ),
-      'stddev_pop' => array(
-        'title' => $this->t('Standard deviation'),
-        'method' => 'aggregationMethodSimple',
-        'handler' => array(
-          'argument' => 'groupby_numeric',
-          'field' => 'numeric',
-          'filter' => 'groupby_numeric',
-          'sort' => 'groupby_numeric',
-        ),
-      )
-    );
+    ) + $plugin_definitions;
   }
 
   public function aggregationMethodSimple($group_type, $field) {
