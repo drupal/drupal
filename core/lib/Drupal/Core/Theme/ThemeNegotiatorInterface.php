@@ -13,9 +13,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
  * Defines an interface for classes which determine the active theme.
  *
  * To set the active theme, create a new service tagged with 'theme_negotiator'
- * (see user.services.yml for an example). The only method this service needs
- * to implement is determineActiveTheme. Return the name of the theme, or NULL
- * if other negotiators like the configured default one should kick in instead.
+ * (see the theme.negotiator.admin_theme service in user.services.yml for an
+ * example). Your service class needs to implement this interface.
  *
  * If you are setting a theme which is closely tied to the functionality of a
  * particular page or set of pages (such that the page might not function
@@ -46,7 +45,8 @@ interface ThemeNegotiatorInterface {
    *   The current route match object.
    *
    * @return string|null
-   *   Returns the active theme name, else return NULL.
+   *   The name of the theme, or NULL if other negotiators, like the configured
+   *   default one, should be used instead.
    */
   public function determineActiveTheme(RouteMatchInterface $route_match);
 
