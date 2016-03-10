@@ -295,11 +295,6 @@ class ViewUI implements ViewEntityInterface {
       $names = array(t('Apply'), t('Apply and continue'));
     }
 
-    // Views provides its own custom handling of AJAX form submissions. Usually
-    // this happens at the same path, but custom paths may be specified in
-    // $form_state.
-    $form_url = $form_state->get('url') ?: Url::fromRouteMatch(\Drupal::routeMatch());
-
     // Forms that are purely informational set an ok_button flag, so we know not
     // to create an "Apply" button for them.
     if (!$form_state->get('ok_button')) {
@@ -314,9 +309,6 @@ class ViewUI implements ViewEntityInterface {
         // take care of running the regular submit handler as appropriate.
         '#submit' => array(array($this, 'standardSubmit')),
         '#button_type' => 'primary',
-        '#ajax' => array(
-          'url' => $form_url,
-        ),
       );
       // Form API button click detection requires the button's #value to be the
       // same between the form build of the initial page request, and the
@@ -342,9 +334,6 @@ class ViewUI implements ViewEntityInterface {
       '#value' => !$form_state->get('ok_button') ? t('Cancel') : t('Ok'),
       '#submit' => array($cancel_submit),
       '#validate' => array(),
-      '#ajax' => array(
-        'path' => $form_url,
-      ),
       '#limit_validation_errors' => array(),
     );
 

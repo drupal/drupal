@@ -16,6 +16,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\Ajax;
+use Drupal\views_ui\Ajax as AjaxUI;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -242,11 +243,17 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       $display .= $output;
 
       $options = array(
-        'dialogClass' => 'views-ui-dialog',
+        'dialogClass' => 'views-ui-dialog js-views-ui-dialog',
         'width' => '75%',
       );
 
       $response->addCommand(new OpenModalDialogCommand($title, $display, $options));
+
+      // Views provides its own custom handling of AJAX form submissions.
+      // Usually this happens at the same path, but custom paths may be
+      // specified in $form_state.
+      $form_url = $form_state->has('url') ? $form_state->get('url')->toString() : $this->url('<current>');
+      $response->addCommand(new AjaxUI\SetFormCommand($form_url));
 
       if ($section = $form_state->get('#section')) {
         $response->addCommand(new Ajax\HighlightCommand('.' . Html::cleanCssIdentifier($section)));

@@ -181,9 +181,6 @@ class ConfigHandler extends ViewsFormBase {
         '#value' => $this->t('Remove'),
         '#submit' => array(array($this, 'remove')),
         '#limit_validation_errors' => array(array('override')),
-        '#ajax' => array(
-          'url' => Url::fromRoute('<current>'),
-        ),
         '#button_type' => 'danger',
       );
     }

@@ -125,7 +125,6 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
         '#type' => 'submit',
         '#value' => $this->t('Expose sort'),
         '#submit' => array(array($this, 'displayExposedForm')),
-        '#attributes' => array('class' => array('use-ajax-submit')),
       );
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 0;
     }
@@ -138,7 +137,6 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
         '#type' => 'submit',
         '#value' => $this->t('Hide sort'),
         '#submit' => array(array($this, 'displayExposedForm')),
-        '#attributes' => array('class' => array('use-ajax-submit')),
       );
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 1;
     }
