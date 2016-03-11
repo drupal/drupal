@@ -7,9 +7,10 @@
 
 namespace Drupal\help\Controller;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
+use Drupal\help\HelpSectionManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -26,13 +27,23 @@ class HelpController extends ControllerBase {
   protected $routeMatch;
 
   /**
+   * The help section plugin manager.
+   *
+   * @var \Drupal\help\HelpSectionManager
+   */
+  protected $helpManager;
+
+  /**
    * Creates a new HelpController.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
+   * @param \Drupal\help\HelpSectionManager $help_manager
+   *   The help section manager.
    */
-  public function __construct(RouteMatchInterface $route_match) {
+  public function __construct(RouteMatchInterface $route_match, HelpSectionManager $help_manager) {
     $this->routeMatch = $route_match;
+    $this->helpManager = $help_manager;
   }
 
   /**
@@ -40,62 +51,57 @@ class HelpController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('current_route_match')
+      $container->get('current_route_match'),
+      $container->get('plugin.manager.help_section')
     );
   }
 
   /**
-   * Prints a page listing a glossary of Drupal terminology.
+   * Prints a page listing various types of help.
    *
-   * @return string
-   *   An HTML string representing the contents of help page.
+   * The page has sections defined by \Drupal\help\HelpSectionPluginInterface
+   * plugins.
+   *
+   * @return array
+   *   A render array for the help page.
    */
   public function helpMain() {
-    $output = array(
-      '#markup' => '<h2>' . $this->t('Help topics') . '</h2><p>' . $this->t('Help is available on the following items:') . '</p>',
-      'links' => $this->helpLinksAsList(),
-    );
-    return $output;
-  }
+    $output = [];
 
-  /**
-   * Provides a formatted list of available help topics.
-   *
-   * @return string
-   *   A string containing the formatted list.
-   */
-  protected function helpLinksAsList() {
-    $modules = array();
-    foreach ($this->moduleHandler()->getImplementations('help') as $module) {
-      $modules[$module] = $this->moduleHandler->getName($module);
-    }
-    asort($modules);
+    // We are checking permissions, so add the user.permissions cache context.
+    $cacheability = new CacheableMetadata();
+    $cacheability->addCacheContexts(['user.permissions']);
 
-    // Output pretty four-column list.
-    $count = count($modules);
-    $break = ceil($count / 4);
-    $column = array(
-      '#type' => 'container',
-      'links' => array('#theme' => 'item_list'),
-      '#attributes' => array('class' => array('layout-column', 'layout-column--quarter')),
-    );
-    $output = array(
-      '#prefix' => '<div class="clearfix">',
-      '#suffix' => '</div>',
-      0 => $column,
-    );
+    $plugins = $this->helpManager->getDefinitions();
+    $cacheability->addCacheableDependency($this->helpManager);
 
-    $i = 0;
-    $current_column = 0;
-    foreach ($modules as $module => $name) {
-      $output[$current_column]['links']['#items'][] = $this->l($name, new Url('help.page', array('name' => $module)));
-      if (($i + 1) % $break == 0 && ($i + 1) != $count) {
-        $current_column++;
-        $output[$current_column] = $column;
+    foreach ($plugins as $plugin_id => $plugin_definition) {
+      // Check the provided permission.
+      if (!empty($plugin_definition['permission']) && !$this->currentuser()->hasPermission($plugin_definition['permission'])) {
+        continue;
       }
-      $i++;
+
+      // Add the section to the page.
+      /** @var \Drupal\help\HelpSectionPluginInterface $plugin */
+      $plugin = $this->helpManager->createInstance($plugin_id);
+      $this_output = [
+        '#theme' => 'help_section',
+        '#title' => $plugin->getTitle(),
+        '#description' => $plugin->getDescription(),
+        '#empty' => $this->t('There is currently nothing in this section.'),
+        '#links' => [],
+      ];
+
+      $links = $plugin->listTopics();
+      if (is_array($links) && count($links)) {
+        $this_output['#links'] = $links;
+      }
+
+      $cacheability->addCacheableDependency($plugin);
+      $output[$plugin_id] = $this_output;
     }
 
+    $cacheability->applyTo($output);
     return $output;
   }
 
