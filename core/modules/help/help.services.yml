@@ -1,0 +1,4 @@
+services:
+  plugin.manager.help_section:
+    class: Drupal\help\HelpSectionManager
+    parent: default_plugin_manager

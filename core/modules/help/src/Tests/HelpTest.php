@@ -20,11 +20,12 @@ class HelpTest extends WebTestBase {
    * Modules to enable.
    *
    * The help_test module implements hook_help() but does not provide a module
-   * overview page.
+   * overview page. The help_page_test module has a page section plugin that
+   * returns no links.
    *
    * @var array.
    */
-  public static $modules = array('help_test');
+  public static $modules = array('help_test', 'help_page_test');
 
   /**
    * Use the Standard profile to test help implementations of many core modules.
@@ -52,7 +53,7 @@ class HelpTest extends WebTestBase {
   }
 
   /**
-   * Logs in users, creates dblog events, and tests dblog functionality.
+   * Logs in users, tests help pages.
    */
   public function testHelp() {
     // Login the root user to ensure as many admin links appear as possible on
@@ -67,10 +68,16 @@ class HelpTest extends WebTestBase {
     // Verify that introductory help text exists, goes for 100% module coverage.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/help');
-    $this->assertRaw(t('For more information, refer to the subjects listed in the Help Topics section or to the <a href=":docs">online documentation</a> and <a href=":support">support</a> pages at <a href=":drupal">drupal.org</a>.', array(':docs' => 'https://www.drupal.org/documentation', ':support' => 'https://www.drupal.org/support', ':drupal' => 'https://www.drupal.org')), 'Help intro text correctly appears.');
+    $this->assertRaw(t('For more information, refer to the help listed on this page or to the <a href=":docs">online documentation</a> and <a href=":support">support</a> pages at <a href=":drupal">drupal.org</a>.', array(':docs' => 'https://www.drupal.org/documentation', ':support' => 'https://www.drupal.org/support', ':drupal' => 'https://www.drupal.org')));
 
-    // Verify that help topics text appears.
-    $this->assertRaw('<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>', 'Help topics text correctly appears.');
+    // Verify that hook_help() section title and description appear.
+    $this->assertRaw('<h2>' . t('Module overviews') . '</h2>');
+    $this->assertRaw('<p>' . t('Module overviews are provided by modules. Overviews available for your installed modules:'), '</p>');
+
+    // Verify that an empty section is handled correctly.
+    $this->assertRaw('<h2>' . t('Empty section') . '</h2>');
+    $this->assertRaw('<p>' . t('This description should appear.'), '</p>');
+    $this->assertText(t('There is currently nothing in this section.'));
 
     // Make sure links are properly added for modules implementing hook_help().
     foreach ($this->getModuleList() as $module => $name) {
@@ -81,10 +88,25 @@ class HelpTest extends WebTestBase {
     // handled correctly.
     $this->clickLink(\Drupal::moduleHandler()->getName('help_test'));
     $this->assertRaw(t('No help is available for module %module.', array('%module' => \Drupal::moduleHandler()->getName('help_test'))));
+
+    // Verify that the order of topics is alphabetical by displayed module
+    // name, by checking the order of some modules, including some that would
+    // have a different order if it was done by machine name instead.
+    $this->drupalGet('admin/help');
+    $page_text = $this->getTextContent();
+    $start = strpos($page_text, 'Module overviews');
+    $pos = $start;
+    $list = ['Block', 'Color', 'Custom Block', 'History', 'Text Editor'];
+    foreach ($list as $name) {
+      $this->assertLink($name);
+      $new_pos = strpos($page_text, $name, $start);
+      $this->assertTrue($new_pos > $pos, 'Order of ' . $name . ' is correct on page');
+      $pos = $new_pos;
+    }
   }
 
   /**
-   * Verifies the logged in user has access to the various help nodes.
+   * Verifies the logged in user has access to the various help pages.
    *
    * @param int $response
    *   (optional) An HTTP response code. Defaults to 200.
@@ -100,7 +122,7 @@ class HelpTest extends WebTestBase {
     }
 
     foreach ($this->getModuleList() as $module => $name) {
-      // View module help node.
+      // View module help page.
       $this->drupalGet('admin/help/' . $module);
       $this->assertResponse($response);
       if ($response == 200) {
