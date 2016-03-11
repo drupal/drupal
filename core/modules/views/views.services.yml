@@ -56,9 +56,6 @@ services:
   plugin.manager.views.wizard:
     class: Drupal\views\Plugin\ViewsPluginManager
     arguments: [wizard, '@container.namespaces', '@cache.discovery', '@module_handler']
-  plugin.manager.views.aggregate:
-    class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [aggregate, '@container.namespaces', '@cache.discovery', '@module_handler']
   views.views_data:
     class: Drupal\views\ViewsData
     arguments: ['@cache.discovery', '@config.factory', '@module_handler', '@language_manager']
