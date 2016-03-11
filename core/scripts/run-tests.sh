@@ -180,6 +180,12 @@ All arguments are long options.
               Note that ':memory:' cannot be used, because this script spawns
               sub-processes. However, you may use e.g. '/tmpfs/test.sqlite'
 
+  --keep-results-table
+
+              Boolean flag to indicate to not cleanup the simpletest result
+              table. For testbots or repeated execution of a single test it can
+              be helpful to not cleanup the simpletest result table.
+
   --dburl     A URI denoting the database driver, credentials, server hostname,
               and database name to use in tests.
               Required when running tests without a Drupal installation that
@@ -303,6 +309,7 @@ function simpletest_script_parse_args() {
     'color' => FALSE,
     'verbose' => FALSE,
     'keep-results' => FALSE,
+    'keep-results-table' => FALSE,
     'test_names' => array(),
     'repeat' => 1,
     'die-on-fail' => FALSE,
@@ -539,7 +546,8 @@ function simpletest_script_setup_database($new = FALSE) {
 
   // Create the Simpletest schema.
   try {
-    $schema = Database::getConnection('default', 'test-runner')->schema();
+    $connection = Database::getConnection('default', 'test-runner');
+    $schema = $connection->schema();
   }
   catch (\PDOException $e) {
     simpletest_script_print_error($databases['test-runner']['default']['driver'] . ': ' . $e->getMessage());
@@ -549,10 +557,13 @@ function simpletest_script_setup_database($new = FALSE) {
     require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'simpletest') . '/simpletest.install';
     foreach (simpletest_schema() as $name => $table_spec) {
       try {
-        if ($schema->tableExists($name)) {
-          $schema->dropTable($name);
+        $table_exists = $schema->tableExists($name);
+        if (empty($args['keep-results-table']) && $table_exists) {
+          $connection->truncate($name)->execute();
         }
-        $schema->createTable($name, $table_spec);
+        if (!$table_exists) {
+          $schema->createTable($name, $table_spec);
+        }
       }
       catch (Exception $e) {
         echo (string) $e;
