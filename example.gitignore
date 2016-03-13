@@ -7,9 +7,12 @@
 # Because .gitignore can be specific to your site, this file has a different
 # name; updating Drupal core will not override your custom .gitignore file.
 
-# Ignore core and vendor when managing dependencies with Composer.
+# Ignore core when managing all of a project's dependencies with Composer
+# including Drupal core.
 # core
-# vendor
+
+# Core's dependencies are managed with Composer.
+vendor
 
 # Ignore configuration files that may contain sensitive information.
 sites/*/settings*.php
