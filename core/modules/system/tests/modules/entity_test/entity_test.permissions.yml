@@ -7,3 +7,6 @@ view test entity translations:
   title: 'View translations of test entities'
 view test entity field:
   title: 'View test entity field'
+administer entity_test_with_bundle content:
+  title: 'administer entity_test_with_bundle content'
+  description: 'administer entity_test_with_bundle content'

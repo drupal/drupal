@@ -217,6 +217,13 @@ function system_theme() {
       'variables' => array('menu_items' => NULL),
       'file' => 'system.admin.inc',
     ),
+    'entity_add_list' => array(
+      'variables' => array(
+        'bundles' => array(),
+        'add_bundle_message' => NULL,
+      ),
+      'template' => 'entity-add-list',
+    ),
   ));
 }
 
@@ -314,6 +321,25 @@ function system_theme_suggestions_field(array $variables) {
   $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'];
 
   return $suggestions;
+}
+
+/**
+ * Prepares variables for the list of available bundles.
+ *
+ * Default template: entity-add-list.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - bundles: An array of bundles with the label, description, add_link keys.
+ *   - add_bundle_message: The message shown when there are no bundles. Only
++ *                         available if the entity type uses bundle entities.
+ */
+function template_preprocess_entity_add_list(&$variables) {
+  foreach ($variables['bundles'] as $bundle_name => $bundle_info) {
+    $variables['bundles'][$bundle_name]['description'] = [
+      '#markup' => $bundle_info['description'],
+    ];
+  }
 }
 
 /**

@@ -24,6 +24,8 @@ use Symfony\Component\Routing\RouteCollection;
  * This class provides the following routes for entities, with title and access
  * callbacks:
  * - canonical
+ * - add-page
+ * - add-form
  * - edit-form
  * - delete-form
  *
@@ -78,8 +80,12 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
     $entity_type_id = $entity_type->id();
 
-    if ($add_route = $this->getAddFormRoute($entity_type)) {
-      $collection->add("entity.{$entity_type_id}.add_form", $add_route);
+    if ($add_page_route = $this->getAddPageRoute($entity_type)) {
+      $collection->add("entity.{$entity_type_id}.add_page", $add_page_route);
+    }
+
+    if ($add_form_route = $this->getAddFormRoute($entity_type)) {
+      $collection->add("entity.{$entity_type_id}.add_form", $add_form_route);
     }
 
     if ($canonical_route = $this->getCanonicalRoute($entity_type)) {
@@ -95,6 +101,29 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
     }
 
     return $collection;
+  }
+
+  /**
+   * Gets the add page route.
+   *
+   * Built only for entity types that have bundles.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type.
+   *
+   * @return \Symfony\Component\Routing\Route|null
+   *   The generated route, if available.
+   */
+  protected function getAddPageRoute(EntityTypeInterface $entity_type) {
+    if ($entity_type->hasLinkTemplate('add-page') && $entity_type->getKey('bundle')) {
+      $route = new Route($entity_type->getLinkTemplate('add-page'));
+      $route->setDefault('_controller', EntityController::class . '::addPage');
+      $route->setDefault('_title_callback', EntityController::class . '::addTitle');
+      $route->setDefault('entity_type_id', $entity_type->id());
+      $route->setRequirement('_entity_create_access', $entity_type->id());
+
+      return $route;
+    }
   }
 
   /**
