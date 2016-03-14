@@ -10,7 +10,6 @@ namespace Drupal\Tests\migrate\Unit\process;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\Migration;
-use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigratePluginManager;

@@ -10,7 +10,6 @@ namespace Drupal\Tests\field\Kernel;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 
 /**
  * Tests the field type manager.

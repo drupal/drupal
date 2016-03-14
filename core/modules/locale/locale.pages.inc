@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Url;
-use Drupal\Core\Render\Element;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**

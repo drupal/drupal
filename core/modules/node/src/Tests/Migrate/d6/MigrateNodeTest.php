@@ -9,7 +9,6 @@ namespace Drupal\node\Tests\Migrate\d6;
 
 use Drupal\migrate\Entity\Migration;
 use Drupal\Core\Database\Database;
-use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\node\Entity\Node;
 

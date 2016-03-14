@@ -7,7 +7,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\system\Tests\TypedData;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**

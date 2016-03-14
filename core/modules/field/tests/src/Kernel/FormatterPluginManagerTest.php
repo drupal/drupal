@@ -8,7 +8,6 @@
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Field\FormatterPluginManager;
 
 /**
  * Tests the field formatter plugin manager.
@@ -23,7 +22,7 @@ class FormatterPluginManagerTest extends FieldKernelTestBase {
    * @see \Drupal\field\Tests\WidgetPluginManagerTest::testNotApplicableFallback()
    */
   public function testNotApplicableFallback() {
-    /** @var FormatterPluginManager $formatter_plugin_manager */
+    /** @var \Drupal\Core\Field\FormatterPluginManager $formatter_plugin_manager */
     $formatter_plugin_manager = \Drupal::service('plugin.manager.field.formatter');
 
     $base_field_definition = BaseFieldDefinition::create('test_field')

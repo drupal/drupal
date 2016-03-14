@@ -8,7 +8,6 @@
 namespace Drupal\user\Tests\Migrate;
 
 use Drupal\migrate\Entity\Migration;
-use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Tests\MigrateTestBase;
 use Drupal\user\Entity\User;
 

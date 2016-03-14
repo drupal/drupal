@@ -11,7 +11,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\comment\CommentInterface;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Drupal\comment\Entity\Comment;
 use Drupal\entity_test\Entity\EntityTest;
@@ -44,7 +43,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
     $request = Request::create('/');
     $request->setSession($session);
 
-    /** @var RequestStack $stack */
+    /** @var \Symfony\Component\HttpFoundation\RequestStack $stack */
     $stack = $this->container->get('request_stack');
     $stack->pop();
     $stack->push($request);

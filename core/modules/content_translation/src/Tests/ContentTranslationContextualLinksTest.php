@@ -10,7 +10,6 @@ namespace Drupal\content_translation\Tests;
 use Drupal\Component\Serialization\Json;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -31,7 +30,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
   /**
    * The content type being tested.
    *
-   * @var NodeType
+   * @var \Drupal\node\Entity\NodeType
    */
   protected $contentType;
 

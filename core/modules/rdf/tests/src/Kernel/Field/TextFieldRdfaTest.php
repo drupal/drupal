@@ -7,7 +7,6 @@
 namespace Drupal\Tests\rdf\Kernel\Field;
 
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\Tests\rdf\Kernel\Field\FieldRdfaTestBase;
 
 /**
  * Tests RDFa output by text field formatters.

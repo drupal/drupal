@@ -8,7 +8,7 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\core\language\languageInterface;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests translation of configuration strings.

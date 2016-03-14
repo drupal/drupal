@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\field\Unit;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\simpletest\AssertHelperTrait;
 use Drupal\Tests\UnitTestCase;
 

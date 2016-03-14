@@ -15,7 +15,6 @@
 
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\field\Entity\FieldStorageConfig;
 
 require_once __DIR__ . '/field_test.entity.inc';
 require_once __DIR__ . '/field_test.field.inc';

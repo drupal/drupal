@@ -5,10 +5,8 @@
  * Allows administrators to attach custom fields to fieldable types.
  */
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Entity\EntityFormModeInterface;

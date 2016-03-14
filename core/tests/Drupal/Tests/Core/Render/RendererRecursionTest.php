@@ -7,8 +7,6 @@
 
 namespace Drupal\Tests\Core\Render;
 
-use Drupal\Core\Render\Element;
-
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
  * @group Render

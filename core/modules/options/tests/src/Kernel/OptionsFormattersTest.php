@@ -8,7 +8,6 @@
 namespace Drupal\Tests\options\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\Tests\options\Kernel\OptionsFieldUnitTestBase;
 
 /**
  * Tests the Options field type formatters.

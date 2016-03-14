@@ -7,8 +7,6 @@
 
 namespace Drupal\Tests\field\Kernel;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Field\WidgetPluginManager;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 
 /**
  * Tests the field widget manager.
@@ -33,7 +31,7 @@ class WidgetPluginManagerTest extends FieldKernelTestBase {
    * @see \Drupal\field\Tests\FormatterPluginManagerTest::testNotApplicableFallback()
    */
   public function testNotApplicableFallback() {
-    /** @var WidgetPluginManager $widget_plugin_manager */
+    /** @var \Drupal\Core\Field\WidgetPluginManager $widget_plugin_manager */
     $widget_plugin_manager = \Drupal::service('plugin.manager.field.widget');
 
     $base_field_definition = BaseFieldDefinition::create('test_field')

@@ -10,7 +10,6 @@ namespace Drupal\language\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element\FormElement;
-use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * Provides language element configuration.
@@ -41,7 +40,7 @@ class LanguageConfiguration extends FormElement {
     // Avoid validation failure since we are moving the '#options' key in the
     // nested 'language' select element.
     unset($element['#options']);
-    /** @var ContentLanguageSettings $default_config */
+    /** @var \Drupal\language\Entity\ContentLanguageSettings $default_config */
     $default_config = $element['#default_value'];
     $element['langcode'] = array(
       '#type' => 'select',

@@ -11,7 +11,6 @@ use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\options\Kernel\OptionsFieldUnitTestBase;
 
 /**
  * Tests for the 'Options' field types.

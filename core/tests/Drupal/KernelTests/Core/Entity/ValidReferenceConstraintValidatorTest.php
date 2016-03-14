@@ -8,7 +8,6 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\system\Tests\TypedData;
 
 /**
  * Tests validation constraints for ValidReferenceConstraintValidator.

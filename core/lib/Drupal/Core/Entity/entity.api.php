@@ -5,7 +5,6 @@
  * Hooks and documentation related to entities.
  */
 
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;

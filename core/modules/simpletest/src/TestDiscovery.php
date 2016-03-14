@@ -11,7 +11,6 @@ use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Doctrine\Common\Reflection\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\ModuleHandlerInterface;

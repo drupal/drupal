@@ -8,7 +8,6 @@
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Render\Element;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Markup;
 

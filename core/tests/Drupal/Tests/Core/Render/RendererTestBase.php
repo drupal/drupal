@@ -11,7 +11,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\ContextCacheKeys;
 use Drupal\Core\Cache\MemoryBackend;
-use Drupal\Core\Render\Element;
 use Drupal\Core\Render\PlaceholderGenerator;
 use Drupal\Core\Render\PlaceholderingRenderCache;
 use Drupal\Core\Render\Renderer;

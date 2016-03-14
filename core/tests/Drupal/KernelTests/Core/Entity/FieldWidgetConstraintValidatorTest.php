@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTestCompositeConstraint;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\system\Tests\TypedData;
 
 /**
  * Tests validation constraints for FieldWidgetConstraintValidatorTest.

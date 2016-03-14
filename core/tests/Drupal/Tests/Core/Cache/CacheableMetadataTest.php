@@ -11,7 +11,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Tests\Core\Render\TestCacheableDependency;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**

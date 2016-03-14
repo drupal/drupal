@@ -7,8 +7,6 @@
 
 namespace Drupal\entity_test\Entity;
 
-use Drupal\Core\Entity\EntityTypeInterface;
-
 /**
  * Defines a test entity class using a custom langcode entity key.
  *

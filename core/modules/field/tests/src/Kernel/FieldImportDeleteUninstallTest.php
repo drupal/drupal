@@ -10,7 +10,6 @@ namespace Drupal\Tests\field\Kernel;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 
 /**
  * Delete field storages and fields during config synchronization and uninstall

@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\TypedData;
 
-use Drupal\user;
-
 /**
  * Interface for typed data objects.
  *

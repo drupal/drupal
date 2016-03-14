@@ -9,7 +9,6 @@ namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\field\Entity\FieldStorageConfig;
 

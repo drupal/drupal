@@ -9,7 +9,6 @@ namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 
 /**
  * Tests exposing field definitions for configurable fields.

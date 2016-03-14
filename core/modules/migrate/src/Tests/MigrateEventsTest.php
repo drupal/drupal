@@ -14,7 +14,6 @@ use Drupal\migrate\Event\MigrateMapSaveEvent;
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\MigrateMessage;
-use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\simpletest\KernelTestBase;
@@ -84,7 +83,7 @@ class MigrateEventsTest extends KernelTestBase {
 
     $migration = Migration::create($config);
 
-    /** @var MigrationInterface $migration */
+    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     // As the import runs, events will be dispatched, recording the received
     // information in state.
