@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Theme override to to present a list of available bundles.
+ *
+ * Available variables:
+ *   - bundles: A list of bundles, each with the following properties:
+ *     - label: Bundle label.
+ *     - description: Bundle description.
+ *     - add_link: Link to create an entity of this bundle.
+ *   - add_bundle_message: The message shown when there are no bundles. Only
+ *                         available if the entity type uses bundle entities.
+ *
+ * @see template_preprocess_entity_add_list()
+ */
+#}
+{% if bundles is not empty %}
+  <ul class="admin-list">
+    {% for bundle in bundles %}
+      <li class="clearfix"><a href="{{ bundle.add_link.url }}"><span class="label">{{ bundle.label }}</span><div class="description">{{ bundle.description }}</div></a></li>
+    {% endfor %}
+  </ul>
+{% elseif add_bundle_message is not empty %}
+  <p>
+    {{ add_bundle_message }}
+  </p>
+{% endif %}

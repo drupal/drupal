@@ -196,7 +196,7 @@ function entity_test_entity_bundle_info() {
   $bundles = array();
   $entity_types = \Drupal::entityManager()->getDefinitions();
   foreach ($entity_types as $entity_type_id => $entity_type) {
-    if ($entity_type->getProvider() == 'entity_test') {
+    if ($entity_type->getProvider() == 'entity_test' && $entity_type_id != 'entity_test_with_bundle') {
       $bundles[$entity_type_id] = \Drupal::state()->get($entity_type_id . '.bundles') ?: array($entity_type_id => array('label' => 'Entity Test Bundle'));
     }
   }

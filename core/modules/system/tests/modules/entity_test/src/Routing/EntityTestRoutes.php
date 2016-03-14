@@ -25,11 +25,6 @@ class EntityTestRoutes {
 
     $routes = array();
     foreach ($types as $entity_type_id) {
-      $routes["entity.$entity_type_id.add_form"] = new Route(
-        "$entity_type_id/add",
-        array('_entity_form' => "$entity_type_id.default"),
-        array('_permission' => 'administer entity_test content')
-      );
       $routes["entity.$entity_type_id.admin_form"] = new Route(
         "$entity_type_id/structure/{bundle}",
         array('_controller' => '\Drupal\entity_test\Controller\EntityTestController::testAdmin'),

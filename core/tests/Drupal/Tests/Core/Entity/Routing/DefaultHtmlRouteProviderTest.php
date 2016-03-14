@@ -59,6 +59,44 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getAddPageRoute
+   * @dataProvider providerTestGetAddPageRoute
+   */
+  public function testGetAddPageRoute(Route $expected = NULL, EntityTypeInterface $entity_type) {
+    $route = $this->routeProvider->getAddPageRoute($entity_type);
+    $this->assertEquals($expected, $route);
+  }
+
+  public function providerTestGetAddPageRoute() {
+    $data = [];
+
+    $entity_type1 = $this->getEntityType();
+    $entity_type1->hasLinkTemplate('add-page')->willReturn(FALSE);
+    $data['no_add_page_link_template'] = [NULL, $entity_type1->reveal()];
+
+    $entity_type2 = $this->getEntityType();
+    $entity_type2->hasLinkTemplate('add-page')->willReturn(TRUE);
+    $entity_type2->getKey('bundle')->willReturn(NULL);
+    $data['no_bundle'] = [NULL, $entity_type2->reveal()];
+
+    $entity_type3 = $this->getEntityType();
+    $entity_type3->hasLinkTemplate('add-page')->willReturn(TRUE);
+    $entity_type3->getLinkTemplate('add-page')->willReturn('/the/add/page/link/template');
+    $entity_type3->id()->willReturn('the_entity_type_id');
+    $entity_type3->getKey('bundle')->willReturn('type');
+    $route = new Route('/the/add/page/link/template');
+    $route->setDefaults([
+      '_controller' => 'Drupal\Core\Entity\Controller\EntityController::addPage',
+      '_title_callback' => 'Drupal\Core\Entity\Controller\EntityController::addTitle',
+      'entity_type_id' => 'the_entity_type_id',
+    ]);
+    $route->setRequirement('_entity_create_access', 'the_entity_type_id');
+    $data['add_page'] = [clone $route, $entity_type3->reveal()];
+
+    return $data;
+  }
+
+  /**
    * @covers ::getAddFormRoute
    * @dataProvider providerTestGetAddFormRoute
    */
@@ -259,6 +297,9 @@ class TestDefaultHtmlRouteProvider extends DefaultHtmlRouteProvider {
 
   public function getEntityTypeIdKeyType(EntityTypeInterface $entity_type) {
     return parent::getEntityTypeIdKeyType($entity_type);
+  }
+  public function getAddPageRoute(EntityTypeInterface $entity_type) {
+    return parent::getAddPageRoute($entity_type);
   }
   public function getAddFormRoute(EntityTypeInterface $entity_type) {
     return parent::getAddFormRoute($entity_type);
