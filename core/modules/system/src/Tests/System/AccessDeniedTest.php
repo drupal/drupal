@@ -107,6 +107,6 @@ class AccessDeniedTest extends WebTestBase {
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Log in'));
 
     // Check that we're still on the same page.
-    $this->assertText(t('Site information'));
+    $this->assertText(t('Basic site settings'));
   }
 }
