@@ -39,7 +39,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   /**
    * The primary migration being tested.
    *
-   * @var \Drupal\migrate\Entity\MigrationInterface
+   * @var \Drupal\migrate\Plugin\MigrationInterface
    */
   protected $migration;
 
@@ -144,7 +144,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   /**
    * Executes a single migration.
    *
-   * @param string|\Drupal\migrate\Entity\MigrationInterface $migration
+   * @param string|\Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to execute, or its ID.
    */
   protected function executeMigration($migration) {
@@ -207,7 +207,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    *
    * This is done in order to test scenarios which require a failed row.
    *
-   * @param string|\Drupal\migrate\Entity\MigrationInterface $migration
+   * @param string|\Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration entity, or its ID.
    * @param array $row
    *   The raw source row which "failed".
@@ -220,7 +220,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
     if (is_string($migration)) {
       $migration = $this->getMigration($migration);
     }
-    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $destination = array_map(function() { return NULL; }, $migration->getDestinationPlugin()->getIds());
     $row = new Row($row, $migration->getSourcePlugin()->getIds());
     $migration->getIdMap()->saveIdMapping($row, $destination, $status);

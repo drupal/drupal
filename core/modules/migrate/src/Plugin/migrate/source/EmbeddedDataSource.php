@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\migrate\Plugin\migrate\source;
-use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
  * Source which takes its data directly from the plugin config.

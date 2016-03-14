@@ -9,6 +9,7 @@ namespace Drupal\Tests\migrate\Unit\destination;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityRevision as RealEntityRevision;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
@@ -22,7 +23,7 @@ use Drupal\Tests\UnitTestCase;
 class EntityRevisionTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\migrate\Entity\MigrationInterface
+   * @var \Drupal\migrate\Plugin\MigrationInterface
    */
   protected $migration;
 
@@ -45,7 +46,7 @@ class EntityRevisionTest extends UnitTestCase {
     parent::setUp();
 
     // Setup mocks to be used when creating a revision destination.
-    $this->migration = $this->prophesize('\Drupal\migrate\Entity\MigrationInterface');
+    $this->migration = $this->prophesize(MigrationInterface::class);
     $this->storage = $this->prophesize('\Drupal\Core\Entity\EntityStorageInterface');
     $this->entityManager = $this->prophesize('\Drupal\Core\Entity\EntityManagerInterface');
     $this->fieldTypeManager = $this->prophesize('\Drupal\Core\Field\FieldTypePluginManagerInterface');

@@ -49,7 +49,7 @@ class MigrateSourceTest extends MigrateTestCase {
   /**
    * The migration entity.
    *
-   * @var \Drupal\migrate\Entity\Migration
+   * @var \Drupal\migrate\Plugin\MigrationInterface
    */
   protected $migration;
 
@@ -371,7 +371,7 @@ class MigrateSourceTest extends MigrateTestCase {
   /**
    * Gets a mock executable for the test.
    *
-   * @param \Drupal\migrate\Entity\MigrationInterface $migration
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration entity.
    *
    * @return \Drupal\migrate\MigrateExecutable

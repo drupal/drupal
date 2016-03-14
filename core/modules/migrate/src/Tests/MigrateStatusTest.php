@@ -8,7 +8,7 @@
 namespace Drupal\migrate\Tests;
 
 use Drupal\migrate\Plugin\Migration;
-use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
  * Tests migration status tracking.

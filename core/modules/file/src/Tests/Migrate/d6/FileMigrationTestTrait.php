@@ -19,7 +19,7 @@ trait FileMigrationTestTrait {
     $this->installEntitySchema('file');
     $this->installConfig(['file']);
 
-    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration_plugin_manager = $this->container->get('plugin.manager.migration');
 
     /** @var \Drupal\migrate\Plugin\migration $migration */

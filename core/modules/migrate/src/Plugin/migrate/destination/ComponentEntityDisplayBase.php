@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
-use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 
 /**

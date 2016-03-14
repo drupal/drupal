@@ -9,7 +9,7 @@ namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Database\Driver\sqlite\Connection;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -34,14 +34,14 @@ abstract class MigrateTestCase extends UnitTestCase {
   /**
    * Local store for mocking setStatus()/getStatus().
    *
-   * @var \Drupal\migrate\Entity\MigrationInterface::STATUS_*
+   * @var \Drupal\migrate\Plugin\MigrationInterface::STATUS_*
    */
   protected $migrationStatus = MigrationInterface::STATUS_IDLE;
 
   /**
    * Retrieves a mocked migration.
    *
-   * @return \Drupal\migrate\Entity\MigrationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\migrate\Plugin\MigrationInterface|\PHPUnit_Framework_MockObject_MockObject
    *   The mocked migration.
    */
   protected function getMigration() {

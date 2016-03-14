@@ -37,7 +37,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    *
    * @var string
    */
-  protected $pluginInterface = 'Drupal\migrate\Entity\MigrationInterface';
+  protected $pluginInterface = 'Drupal\migrate\Plugin\MigrationInterface';
 
   /**
    * The module handler.
@@ -117,7 +117,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    * @param string $tag
    *   A migration tag we want to filter by.
    *
-   * @return array|\Drupal\migrate\Entity\MigrationInterface[]
+   * @return array|\Drupal\migrate\Plugin\MigrationInterface[]
    *   An array of migration objects with the given tag.
    */
   public function createInstancesByTag($tag) {
@@ -163,7 +163,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
     $dependency_graph = [];
     $required_dependency_graph = [];
     foreach ($migrations as $migration) {
-      /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+      /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
       $id = $migration->id();
       $requirements[$id] = [];
       $dependency_graph[$id]['edges'] = [];

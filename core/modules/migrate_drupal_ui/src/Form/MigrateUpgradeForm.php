@@ -928,7 +928,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       // from state.
       $definitions = $this->pluginManager->getDefinitions();
       foreach ($definitions as $id => $definition) {
-        /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+        /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
         $migration = $this->pluginManager->createInstance($id);
         $is_drupal_migration = FALSE;
         foreach ($migration->get('migration_tags') as $migration_tag) {

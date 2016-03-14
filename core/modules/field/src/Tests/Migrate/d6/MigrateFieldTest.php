@@ -96,7 +96,7 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
     $this->assertIdentical("boolean", $field_storage->getType(), t('Field type is @fieldtype. It should be boolean.', array('@fieldtype' => $field_storage->getType())));
 
     // Validate that the source count and processed count match up.
-    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->getMigration('d6_field');
     $this->assertIdentical($migration->getSourcePlugin()->count(), $migration->getIdMap()->processedCount());
 

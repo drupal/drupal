@@ -10,7 +10,7 @@ namespace Drupal\migrate\Tests;
 use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\MigrateMessage;
-use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\simpletest\KernelTestBase;

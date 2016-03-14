@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Entity\MigrationInterface.
+ * Contains \Drupal\migrate\Plugin\MigrationInterface.
  */
 
-namespace Drupal\migrate\Entity;
+namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
@@ -106,7 +106,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @return string
    *   The plugin_id of the plugin instance.
    *
-   * @see \Drupal\migrate\Entity\MigrationInterface::getPluginId()
+   * @see \Drupal\migrate\Plugin\MigrationInterface::getPluginId()
    */
   public function id();
 

@@ -94,7 +94,7 @@ trait MigrationCreationTrait {
    * @param int $drupal_version
    *   The version of Drupal we're getting the migrations for.
    *
-   * @return \Drupal\migrate\Entity\MigrationInterface[]
+   * @return \Drupal\migrate\Plugin\MigrationInterface[]
    *   The migrations for import.
    */
   protected function getMigrations($database_state_key, $drupal_version) {
