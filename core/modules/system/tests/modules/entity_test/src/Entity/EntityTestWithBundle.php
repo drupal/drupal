@@ -44,8 +44,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "canonical" = "/entity_test_with_bundle/{entity_test_with_bundle}",
  *     "add-page" = "/entity_test_with_bundle/add",
  *     "add-form" = "/entity_test_with_bundle/add/{entity_test_bundle}",
- *     "edit-form" = "/entity_test_with_bundle/manage/{entity_test_with_bundle}/edit",
- *     "delete-form" = "/entity_test_with_bundle/delete/entity_test_with_bundle/{entity_test_with_bundle}",
+ *     "edit-form" = "/entity_test_with_bundle/{entity_test_with_bundle}/edit",
+ *     "delete-form" = "/entity_test_with_bundle/{entity_test_with_bundle}/delete",
  *   },
  * )
  */
