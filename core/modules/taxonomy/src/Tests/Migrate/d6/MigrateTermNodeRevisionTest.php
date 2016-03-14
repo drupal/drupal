@@ -29,7 +29,7 @@ class MigrateTermNodeRevisionTest extends MigrateDrupal6TestBase {
     $this->installSchema('node', ['node_access']);
     $this->migrateContent(TRUE);
     $this->migrateTaxonomy();
-    $this->executeMigrations(['d6_term_node:*', 'd6_term_node_revision:*']);
+    $this->executeMigrations(['d6_term_node', 'd6_term_node_revision']);
   }
 
   /**

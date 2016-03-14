@@ -7,13 +7,13 @@
 
 namespace Drupal\Tests\migrate\Unit\Entity;
 
-use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\Plugin\Migration;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the migrate entity.
  *
- * @coversDefaultClass \Drupal\migrate\Entity\Migration
+ * @coversDefaultClass \Drupal\migrate\Plugin\Migration
  * @group migrate
  */
 class MigrationTest extends UnitTestCase {
@@ -24,7 +24,7 @@ class MigrationTest extends UnitTestCase {
    * @covers ::getProcessPlugins
    */
   public function testGetProcessPlugins() {
-    $migration = new Migration([], 'migration');
+    $migration = new Migration([], uniqid(), []);
     $this->assertEquals([], $migration->getProcessPlugins([]));
   }
 

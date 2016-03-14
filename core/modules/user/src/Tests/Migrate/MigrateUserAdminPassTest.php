@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Tests\Migrate;
 
-use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Tests\MigrateTestBase;
 use Drupal\user\Entity\User;
 
@@ -78,7 +78,7 @@ class MigrateUserAdminPassTest extends MigrateTestBase {
       ],
     ];
     $ids = ['id' => ['type' => 'integer']];
-    $config = [
+    $definition = [
       'id' => 'users',
       'migration_tags' => ['Admin password test'],
       'source' => [
@@ -94,7 +94,7 @@ class MigrateUserAdminPassTest extends MigrateTestBase {
       ],
       'destination' => ['plugin' => 'entity:user'],
     ];
-    $migration = Migration::create($config);
+    $migration = new Migration([], $definition['id'], $definition);
     $this->executeMigration($migration);
 
     // Verify that admin username and email were changed, but password was not.

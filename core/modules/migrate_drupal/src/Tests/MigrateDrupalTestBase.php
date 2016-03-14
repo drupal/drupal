@@ -58,6 +58,8 @@ abstract class MigrateDrupalTestBase extends MigrateTestBase {
    *  Drupal version as provided in migration_tags - e.g., 'Drupal 6'.
    */
   protected function installMigrations($version) {
+    // @TODO https://www.drupal.org/node/2668436
+    return;
     $migration_templates = \Drupal::service('migrate.template_storage')->findTemplatesByTag($version);
     $migrations = \Drupal::service('migrate.migration_builder')->createMigrations($migration_templates);
     foreach ($migrations as $migration) {

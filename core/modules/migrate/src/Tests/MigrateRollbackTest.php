@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate\Tests;
 
-use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
@@ -49,7 +49,7 @@ class MigrateRollbackTest extends MigrateTestBase {
       ['id' => '2', 'name' => 'tags', 'weight' => '1'],
     ];
     $ids = ['id' => ['type' => 'integer']];
-    $config = [
+    $definition = [
       'id' => 'vocabularies',
       'migration_tags' => ['Import and rollback test'],
       'source' => [
@@ -65,7 +65,7 @@ class MigrateRollbackTest extends MigrateTestBase {
       'destination' => ['plugin' => 'entity:taxonomy_vocabulary'],
     ];
 
-    $vocabulary_migration = Migration::create($config);
+    $vocabulary_migration = new Migration([], uniqid(), $definition);
     $vocabulary_id_map = $vocabulary_migration->getIdMap();
 
     $this->assertTrue($vocabulary_migration->getDestinationPlugin()->supportsRollback());
@@ -89,7 +89,7 @@ class MigrateRollbackTest extends MigrateTestBase {
       ['id' => '3', 'vocab' => '2', 'name' => 'Beethoven'],
     ];
     $ids = ['id' => ['type' => 'integer']];
-    $config = [
+    $definition = [
       'id' => 'terms',
       'migration_tags' => ['Import and rollback test'],
       'source' => [
@@ -106,7 +106,7 @@ class MigrateRollbackTest extends MigrateTestBase {
       'migration_dependencies' => ['required' => ['vocabularies']],
     ];
 
-    $term_migration = Migration::create($config);
+    $term_migration = new Migration([], uniqid(), $definition);
     $term_id_map = $term_migration->getIdMap();
 
     $this->assertTrue($term_migration->getDestinationPlugin()->supportsRollback());
@@ -160,7 +160,7 @@ class MigrateRollbackTest extends MigrateTestBase {
       ['id' => 1, 'override_selector' => '0', 'terms_per_page_admin' => '10'],
     ];
     $ids = ['id' => ['type' => 'integer']];
-    $config = [
+    $definition = [
       'id' => 'taxonomy_settings',
       'migration_tags' => ['Import and rollback test'],
       'source' => [
@@ -179,7 +179,7 @@ class MigrateRollbackTest extends MigrateTestBase {
       'migration_dependencies' => ['required' => ['vocabularies']],
     ];
 
-    $settings_migration = Migration::create($config);
+    $settings_migration = new Migration([], uniqid(), $definition);
     $this->assertFalse($settings_migration->getDestinationPlugin()->supportsRollback());
   }
 

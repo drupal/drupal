@@ -2,9 +2,8 @@ id: d6_field_instance
 label: Field instance configuration
 migration_tags:
   - Drupal 6
-builder:
-  plugin: d6_cck_migration
-  cck_plugin_method: processFieldInstance
+class: Drupal\migrate_drupal\Plugin\migrate\CckMigration
+cck_plugin_method: processFieldInstance
 source:
   plugin: d6_field_instance
   constants:

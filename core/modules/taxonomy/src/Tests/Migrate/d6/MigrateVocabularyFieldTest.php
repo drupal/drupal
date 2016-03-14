@@ -8,7 +8,6 @@
 namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -45,7 +44,7 @@ class MigrateVocabularyFieldTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('taxonomy_term', $settings['target_type'], "Target type is correct.");
     $this->assertIdentical(1, $field_storage->getCardinality(), "Field cardinality in 1.");
 
-    $this->assertIdentical(array('node', 'tags'), Migration::load('d6_vocabulary_field')->getIdMap()->lookupDestinationID(array(4)), "Test IdMap");
+    $this->assertIdentical(array('node', 'tags'), $this->getMigration('d6_vocabulary_field')->getIdMap()->lookupDestinationID(array(4)), "Test IdMap");
   }
 
 }

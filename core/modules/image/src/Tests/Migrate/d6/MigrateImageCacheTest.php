@@ -9,7 +9,6 @@ namespace Drupal\image\Tests\Migrate\d6;
 
 use Drupal\Core\Database\Database;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -42,7 +41,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
       ->execute();
 
     try {
-      Migration::load('d6_imagecache_presets')
+      $this->getMigration('d6_imagecache_presets')
         ->getSourcePlugin()
         ->checkRequirements();
       $this->fail('Did not catch expected RequirementsException.');

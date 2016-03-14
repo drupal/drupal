@@ -8,13 +8,12 @@
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
-use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate_drupal_ui\MigrateUpgradeRunBatch;
 use Drupal\migrate_drupal\MigrationCreationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -618,11 +617,11 @@ class MigrateUpgradeForm extends ConfirmFormBase {
   protected $renderer;
 
   /**
-   * The migration entity storage.
+   * The migration plugin manager.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
    */
-  protected $entityStorage;
+  protected $pluginManager;
 
   /**
    * Constructs the MigrateUpgradeForm.
@@ -633,14 +632,14 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    *   The date formatter service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
-   *   The migration entity storage.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $plugin_manager
+   *   The migration plugin manager.
    */
-  public function __construct(StateInterface $state, DateFormatterInterface $date_formatter, RendererInterface $renderer, EntityStorageInterface $entity_storage) {
+  public function __construct(StateInterface $state, DateFormatterInterface $date_formatter, RendererInterface $renderer, MigrationPluginManagerInterface $plugin_manager) {
     $this->state = $state;
     $this->dateFormatter = $date_formatter;
     $this->renderer = $renderer;
-    $this->entityStorage = $entity_storage;
+    $this->pluginManager = $plugin_manager;
   }
 
   /**
@@ -651,7 +650,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       $container->get('state'),
       $container->get('date.formatter'),
       $container->get('renderer'),
-      $container->get('entity_type.manager')->getStorage('migration')
+      $container->get('plugin.manager.migration')
     );
   }
 
@@ -927,11 +926,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       // version where converted to migration entities. Find one of those
       // migrations to be able to look up the matching database credentials
       // from state.
-      $query = $this->entityStorage->getQuery('OR');
-      $ids = $query->execute();
-      foreach ($ids as $id) {
+      $definitions = $this->pluginManager->getDefinitions();
+      foreach ($definitions as $id => $definition) {
         /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
-        $migration = Migration::load($id);
+        $migration = $this->pluginManager->createInstance($id);
         $is_drupal_migration = FALSE;
         foreach ($migration->get('migration_tags') as $migration_tag) {
           if (substr($migration_tag, 0, 7) === 'Drupal ') {
@@ -949,30 +947,32 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     }
 
     try {
-      // Get the template for migration.
-      $migration_template = $this->getMigrationTemplates($database, $form_state->getValue('source_base_path'));
-
-      // Get a copy of all the relevant migrations so we run them in next step.
-      $migrations = $this->getMigrations($migration_template);
-
-      // Get the system data from source database.
-      $system_data = $this->getSystemData($database);
-
-      // Convert the migration object into array
-      // so that it can be stored in form storage.
-      $migration_array = [];
-      foreach ($migrations as $migration) {
-        $migration_array[] = $migration->toArray();
+      $connection = $this->getConnection($database);
+      $version = $this->getLegacyDrupalVersion($connection);
+      if (!$version) {
+        $form_state->setErrorByName($database['driver'] . '][0', $this->t('Source database does not contain a recognizable Drupal version.'));
       }
+      else {
+        $this->createDatabaseStateSettings($database, $version);
+        $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
 
-      // Store the retrieved migration templates in form storage.
-      $form_state->set('migration_template', $migration_template);
+        // Get the system data from source database.
+        $system_data = $this->getSystemData($connection);
 
-      // Store the retrieved migration ids in form storage.
-      $form_state->set('migration', $migration_array);
+        // Convert the migration object into array
+        // so that it can be stored in form storage.
+        $migration_array = [];
+        foreach ($migrations as $migration) {
+          $migration_array[$migration->id()] = $migration->label();
+        }
 
-      // Store the retrived system data in from storage.
-      $form_state->set('system_data', $system_data);
+        // Store the retrieved migration IDs in form storage.
+        $form_state->set('migrations', $migration_array);
+        $form_state->set('source_base_path', $form_state->getValue('source_base_path'));
+
+        // Store the retrived system data in form storage.
+        $form_state->set('system_data', $system_data);
+      }
     }
     catch (\Exception $e) {
       $error_message = [
@@ -1031,16 +1031,17 @@ class MigrateUpgradeForm extends ConfirmFormBase {
 
       $table_data = [];
       $system_data = [];
-      foreach ($form_state->get('migration') as $migration) {
-        $migration_id = $migration['id'];
+      foreach ($form_state->get('migrations') as $migration_id => $migration_label) {
         // Fetch the system data at the first opportunity.
         if (empty($system_data)) {
           $system_data = $form_state->get('system_data');
         }
-        $template_id = $migration['template'];
-        $source_module = $this->moduleUpgradePaths[$template_id]['source_module'];
-        $destination_module = $this->moduleUpgradePaths[$template_id]['destination_module'];
-        $table_data[$source_module][$destination_module][$migration_id] = $migration['label'];
+
+        // Handle derivatives.
+        list($migration_id,) = explode(':', $migration_id, 2);
+        $source_module = $this->moduleUpgradePaths[$migration_id]['source_module'];
+        $destination_module = $this->moduleUpgradePaths[$migration_id]['destination_module'];
+        $table_data[$source_module][$destination_module][$migration_id] = $migration_label;
       }
       // Sort the table by source module names and within that destination
       // module names.
@@ -1125,12 +1126,8 @@ class MigrateUpgradeForm extends ConfirmFormBase {
   public function submitConfirmForm(array &$form, FormStateInterface $form_state) {
     $storage = $form_state->getStorage();
     if (isset($storage['upgrade_option']) && $storage['upgrade_option'] == static::MIGRATE_UPGRADE_ROLLBACK) {
-      $query = $this->entityStorage->getQuery();
-      $names = $query->execute();
+      $migrations = $this->pluginManager->createInstances([]);
 
-      // Order the migrations according to their dependencies.
-      /** @var \Drupal\migrate\Entity\MigrationInterface[] $migrations */
-      $migrations = $this->entityStorage->loadMultiple($names);
       // Assume we want all those tagged 'Drupal %'.
       foreach ($migrations as $migration_id => $migration) {
         $keep = FALSE;
@@ -1154,7 +1151,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
         'operations' => [
           [
             [MigrateUpgradeRunBatch::class, 'run'],
-            [array_keys($migrations), 'rollback'],
+            [array_keys($migrations), 'rollback', []],
           ],
         ],
         'finished' => [
@@ -1167,15 +1164,15 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       $this->state->delete('migrate_drupal_ui.performed');
     }
     else {
-      $migration_template = $storage['migration_template'];
-      $migration_ids = $this->createMigrations($migration_template);
+      $migrations = $storage['migrations'];
+      $config['source_base_path'] = $storage['source_base_path'];
       $batch = [
         'title' => $this->t('Running upgrade'),
         'progress_message' => '',
         'operations' => [
           [
             [MigrateUpgradeRunBatch::class, 'run'],
-            [$migration_ids, 'import'],
+            [array_keys($migrations), 'import', $config],
           ],
         ],
         'finished' => [

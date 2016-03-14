@@ -6,8 +6,6 @@
  */
 
 namespace Drupal\migrate_drupal\Tests\d6;
-
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
@@ -58,13 +56,6 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
         'user_picture_entity_form_display',
       ]);
     }
-    else {
-      // These are optional dependencies of d6_user, but we don't need them if
-      // we're not migrating user pictures.
-      Migration::load('d6_user_picture_file')->delete();
-      Migration::load('user_picture_entity_display')->delete();
-      Migration::load('user_picture_entity_form_display')->delete();
-    }
 
     $this->executeMigration('d6_user');
   }
@@ -104,10 +95,10 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
     $this->migrateFields();
 
     $this->installEntitySchema('node');
-    $this->executeMigrations(['d6_node_settings', 'd6_node:*']);
+    $this->executeMigrations(['d6_node_settings', 'd6_node']);
 
     if ($include_revisions) {
-      $this->executeMigrations(['d6_node_revision:*']);
+      $this->executeMigrations(['d6_node_revision']);
     }
   }
 

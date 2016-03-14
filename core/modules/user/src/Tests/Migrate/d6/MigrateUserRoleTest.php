@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests\Migrate\d6;
 
-use Drupal\migrate\Entity\Migration;
 use Drupal\user\Entity\Role;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
@@ -31,7 +30,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    */
   public function testUserRole() {
     /** @var \Drupal\migrate\entity\Migration $migration */
-    $id_map = Migration::load('d6_user_role')->getIdMap();
+    $id_map = $this->getMigration('d6_user_role')->getIdMap();
     $rid = 'anonymous';
     $anonymous = Role::load($rid);
     $this->assertIdentical($rid, $anonymous->id());

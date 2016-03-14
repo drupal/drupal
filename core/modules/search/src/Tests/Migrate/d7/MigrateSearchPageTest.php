@@ -60,9 +60,7 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
       ->execute();
 
     /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
-    $migration = \Drupal::entityManager()
-      ->getStorage('migration')
-      ->loadUnchanged('search_page');
+    $migration = $this->getMigration('search_page');
     // Indicate we're rerunning a migration that's already run.
     $migration->getIdMap()->prepareUpdate();
     $this->executeMigration($migration);

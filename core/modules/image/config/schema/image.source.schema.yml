@@ -1,3 +1,0 @@
-migrate.source.d6_imagecache_presets:
-  type: migrate_source_sql
-  label: 'Drupal 6 ImageCache Presets'

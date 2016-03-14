@@ -1,9 +1,0 @@
-# Schema for the migrate destination plugin.
-
-migrate.destination.entity:user:
-  type: migrate_destination
-  label: 'User'
-  mapping:
-    md5_passwords:
-      type: boolean
-      label: 'Passwords'

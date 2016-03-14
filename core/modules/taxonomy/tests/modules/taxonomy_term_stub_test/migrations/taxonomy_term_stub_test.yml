@@ -1,0 +1,29 @@
+id: taxonomy_term_stub_test
+label: Taxonomy term stub
+migration_tags:
+  - Import and rollback test
+source:
+  plugin: embedded_data
+  data_rows:
+    -
+      id: 1
+      vocab: 1
+      name: music
+      parent: 2
+  ids:
+    id:
+      type: integer
+process:
+  tid: id
+  vid: vocab
+  name: name
+  weight: weight
+  parent:
+    plugin: migration
+    migration: taxonomy_term_stub_test
+    source: parent
+destination:
+  plugin: entity:taxonomy_term
+migration_dependencies:
+  required:
+    - vocabularies

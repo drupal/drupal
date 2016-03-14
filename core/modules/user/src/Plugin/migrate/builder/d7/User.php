@@ -9,7 +9,6 @@ namespace Drupal\user\Plugin\migrate\builder\d7;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\migrate\builder\BuilderBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;

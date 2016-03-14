@@ -30,7 +30,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
    * {@inheritdoc}
    */
   protected function getSourceBasePath() {
-    return __DIR__ . '/files';
+    return './';
   }
 
   /**
@@ -47,7 +47,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
       'editor' => 2,
       'field_config' => 61,
       'field_storage_config' => 42,
-      'file' => 0,
+      'file' => 6,
       'filter_format' => 8,
       'image_style' => 5,
       'migration' => 105,
