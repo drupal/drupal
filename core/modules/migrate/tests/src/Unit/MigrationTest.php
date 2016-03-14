@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
@@ -92,9 +93,9 @@ class MigrationTest extends UnitTestCase {
     // completed yet.
     $migration->setRequirements(['test_a', 'test_b', 'test_c', 'test_d']);
 
-    $migration_b = $this->getMock('Drupal\migrate\Entity\MigrationInterface');
-    $migration_c = $this->getMock('Drupal\migrate\Entity\MigrationInterface');
-    $migration_d = $this->getMock('Drupal\migrate\Entity\MigrationInterface');
+    $migration_b = $this->getMock(MigrationInterface::class);
+    $migration_c = $this->getMock(MigrationInterface::class);
+    $migration_d = $this->getMock(MigrationInterface::class);
 
     $migration_b->expects($this->once())
       ->method('allRowsProcessed')

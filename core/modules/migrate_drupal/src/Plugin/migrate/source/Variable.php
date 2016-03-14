@@ -9,7 +9,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
  * Drupal variable source from database.

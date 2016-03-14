@@ -25,7 +25,7 @@ class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
 
     $this->installEntitySchema('file');
 
-    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->getMigration('d6_user_picture_file');
     $source = $migration->get('source');
     $source['site_path'] = 'core/modules/simpletest';

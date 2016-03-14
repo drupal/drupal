@@ -25,7 +25,7 @@ interface MigrationPluginManagerInterface extends PluginManagerInterface {
    *   An array of configuration relevant to the plugin instances. Keyed by the
    *   plugin ID.
    *
-   * @return \Drupal\migrate\Entity\MigrationInterface[]
+   * @return \Drupal\migrate\Plugin\MigrationInterface[]
    *   Fully configured plugin instances.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException

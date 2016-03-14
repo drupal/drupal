@@ -8,7 +8,7 @@
 namespace Drupal\migrate\Tests;
 
 use Drupal\migrate\MigrateMessage;
-use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\Migration;

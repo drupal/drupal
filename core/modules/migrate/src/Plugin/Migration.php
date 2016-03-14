@@ -12,7 +12,6 @@ use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\migrate\Entity\MigrationInterface;
 
 /**
  * Defines the Migration plugin.
@@ -413,7 +412,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
       // There are no requirements to check.
       return;
     }
-    /** @var \Drupal\migrate\Entity\MigrationInterface[] $required_migrations */
+    /** @var \Drupal\migrate\Plugin\MigrationInterface[] $required_migrations */
     $required_migrations = $this->getMigrationPluginManager()->createInstances($this->requirements);
 
     $missing_migrations = array_diff($this->requirements, array_keys($required_migrations));

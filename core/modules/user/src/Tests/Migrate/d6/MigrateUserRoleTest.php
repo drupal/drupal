@@ -29,7 +29,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    * Tests user role migration.
    */
   public function testUserRole() {
-    /** @var \Drupal\migrate\entity\Migration $migration */
+    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $id_map = $this->getMigration('d6_user_role')->getIdMap();
     $rid = 'anonymous';
     $anonymous = Role::load($rid);

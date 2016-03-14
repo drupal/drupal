@@ -9,7 +9,7 @@ namespace Drupal\ban\Plugin\migrate\destination;
 
 use Drupal\ban\BanIpManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\DestinationBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -39,7 +39,7 @@ class BlockedIP extends DestinationBase implements ContainerFactoryPluginInterfa
    *  The plugin ID.
    * @param mixed $plugin_definition
    *  The plugin definiiton.
-   * @param \Drupal\migrate\Entity\MigrationInterface $migration
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *  The current migration.
    * @param \Drupal\ban\BanIpManagerInterface $ban_manager
    *  The IP manager service.

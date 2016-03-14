@@ -12,7 +12,7 @@ use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate\ProcessPluginBase;
-use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -79,7 +79,7 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
     }
     $this->skipOnEmpty($value);
     $self = FALSE;
-    /** @var \Drupal\migrate\Entity\MigrationInterface[] $migrations */
+    /** @var \Drupal\migrate\Plugin\MigrationInterface[] $migrations */
     $destination_ids = NULL;
     $source_id_values = array();
     $migrations = $this->migrationPluginManager->createInstances($migration_ids);

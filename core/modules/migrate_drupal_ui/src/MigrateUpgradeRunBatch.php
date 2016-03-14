@@ -9,7 +9,7 @@ namespace Drupal\migrate_drupal_ui;
 
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateIdMapMessageEvent;
 use Drupal\migrate\Event\MigrateMapDeleteEvent;

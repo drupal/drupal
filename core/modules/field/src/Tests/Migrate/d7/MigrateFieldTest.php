@@ -114,7 +114,7 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $this->assertIdentical('taxonomy_term', $field->getSetting('target_type'));
 
     // Validate that the source count and processed count match up.
-    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->getMigration('d7_field');
     $this->assertIdentical($migration->getSourcePlugin()->count(), $migration->getIdMap()->processedCount());
   }
