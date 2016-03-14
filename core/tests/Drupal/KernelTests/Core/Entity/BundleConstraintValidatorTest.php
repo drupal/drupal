@@ -9,7 +9,6 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\system\Tests\TypedData;
 
 /**
  * Tests validation constraints for BundleConstraintValidator.

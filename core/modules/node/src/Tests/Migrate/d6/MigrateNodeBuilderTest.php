@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Tests\Migrate\d6;
 
-use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\migrate\Entity\Migration;
 
@@ -17,7 +16,7 @@ use Drupal\migrate\Entity\Migration;
 class MigrateNodeBuilderTest extends MigrateDrupal6TestBase {
 
   /**
-   * @var MigrationInterface[]
+   * @var \Drupal\migrate\Entity\MigrationInterface[]
    */
   protected $builtMigrations = [];
 

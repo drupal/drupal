@@ -8,8 +8,6 @@
 namespace Drupal\language\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Language\Language;
-use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Adds a new language with translations and tests language list order.

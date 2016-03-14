@@ -8,7 +8,6 @@
 namespace Drupal\migrate\Tests;
 
 use Drupal\migrate\Entity\Migration;
-use Drupal\migrate\Row;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -51,7 +50,7 @@ class MigrateEmbeddedDataTest extends KernelTestBase {
 
     // Validate the plugin returns the source data that was provided.
     $results = [];
-    /** @var Row $row */
+    /** @var \Drupal\migrate\Row $row */
     foreach ($source as $row) {
       $data_row = $row->getSource();
       // The "data" row returned by getSource() also includes all source

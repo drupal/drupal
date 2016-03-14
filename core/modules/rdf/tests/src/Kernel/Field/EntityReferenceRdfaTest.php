@@ -7,7 +7,6 @@
 namespace Drupal\Tests\rdf\Kernel\Field;
 
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
-use Drupal\Tests\rdf\Kernel\Field\FieldRdfaTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 

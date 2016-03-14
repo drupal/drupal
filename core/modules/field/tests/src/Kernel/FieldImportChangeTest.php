@@ -8,7 +8,6 @@
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 
 /**
  * Update field storage and fields during config change method invocation.

@@ -10,7 +10,6 @@ namespace Drupal\Tests\field\Kernel;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 
 /**
  * Delete field storages and fields during config delete method invocation.

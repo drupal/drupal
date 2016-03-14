@@ -7,7 +7,6 @@
 
 namespace Drupal\editor\Tests;
 
-use Drupal\Core\Entity\Entity;
 use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;

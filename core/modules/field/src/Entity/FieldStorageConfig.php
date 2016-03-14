@@ -15,7 +15,6 @@ use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\field\FieldStorageConfigInterface;
-use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Defines the Field storage configuration entity.
@@ -650,7 +649,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // If the field item class implements the interface, create an orphaned
     // runtime item object, so that it can be used as the options provider
     // without modifying the entity being worked on.
-    if (is_subclass_of($this->getFieldItemClass(), '\Drupal\Core\TypedData\OptionsProviderInterface')) {
+    if (is_subclass_of($this->getFieldItemClass(), OptionsProviderInterface::class)) {
       $items = $entity->get($this->getName());
       return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($items, 0);
     }

@@ -9,7 +9,6 @@ namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\Core\Entity\Entity;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\node\Entity\Node;

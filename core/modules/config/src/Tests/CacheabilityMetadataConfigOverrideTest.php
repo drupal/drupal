@@ -7,7 +7,6 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\config_override_test\Cache\PirateDayCacheContext;
 use Drupal\simpletest\KernelTestBase;
 
@@ -68,7 +67,7 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
     // Load the User login block and check that its cacheability metadata is
     // overridden correctly. This verifies that the metadata is correctly
     // applied to config entities.
-    /** @var EntityManagerInterface $entity_manager */
+    /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
     $entity_manager = $this->container->get('entity.manager');
     $block = $entity_manager->getStorage('block')->load('call_to_action');
 

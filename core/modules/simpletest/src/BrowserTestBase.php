@@ -9,7 +9,6 @@ namespace Drupal\simpletest;
 
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Element\Element;
-use Behat\Mink\Exception\Exception;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
 use Drupal\Component\Utility\SafeMarkup;
@@ -189,7 +188,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *
    * @var string.
    */
-  protected $minkDefaultDriverClass = '\Behat\Mink\Driver\GoutteDriver';
+  protected $minkDefaultDriverClass = GoutteDriver::class;
 
   /*
    * Mink default driver params.

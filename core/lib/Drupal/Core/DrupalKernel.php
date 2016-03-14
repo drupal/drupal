@@ -8,7 +8,6 @@
 namespace Drupal\Core;
 
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;

@@ -8,8 +8,6 @@
 namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\migrate\Entity\Migration;
-use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\Node;
 

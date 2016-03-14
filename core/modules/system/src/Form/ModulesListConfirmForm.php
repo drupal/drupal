@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -137,7 +136,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
   /**
    * Builds the message list for the confirmation form.
    *
-   * @return MarkupInterface[]
+   * @return \Drupal\Component\Render\MarkupInterface[]
    *   Array of markup for the list of messages on the form.
    *
    * @see \Drupal\system\Form\ModulesListForm::buildModuleList()

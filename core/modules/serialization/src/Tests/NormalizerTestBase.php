@@ -30,7 +30,7 @@ abstract class NormalizerTestBase extends KernelTestBase {
     \Drupal::moduleHandler()->invoke('rest', 'install');
 
     // Auto-create a field for testing.
-    FieldstorageConfig::create(array(
+    FieldStorageConfig::create(array(
       'entity_type' => 'entity_test_mulrev',
       'field_name' => 'field_test_text',
       'type' => 'text',

@@ -9,7 +9,6 @@ namespace Drupal\menu_link_content\Tests\Migrate\d7;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Menu\MenuTreeParameters;
-use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;

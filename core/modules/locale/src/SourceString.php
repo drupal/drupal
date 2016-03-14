@@ -7,8 +7,6 @@
 
 namespace Drupal\locale;
 
-use Drupal\locale\LocaleString;
-
 /**
  * Defines the locale source string object.
  *

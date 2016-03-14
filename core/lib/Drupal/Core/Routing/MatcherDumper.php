@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Core\Database\Query\Query;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\Routing\RouteCollection;

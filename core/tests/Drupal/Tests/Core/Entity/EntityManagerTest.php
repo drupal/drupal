@@ -14,7 +14,6 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Tests\UnitTestCase;
-use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityManager

@@ -7,8 +7,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\system\Tests\TypedData;
-
 /**
  * Tests entity level validation constraints.
  *

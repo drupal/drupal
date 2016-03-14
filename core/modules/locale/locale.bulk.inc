@@ -208,7 +208,7 @@ function locale_translate_batch_import($file, array $options, &$context) {
       // Update the seek and the number of items in the $options array().
       $options['seek'] = $context['sandbox']['parse_state']['seek'];
       $options['items'] = $context['sandbox']['parse_state']['chunk_size'];
-      $report = GetText::fileToDatabase($file, $options);
+      $report = Gettext::fileToDatabase($file, $options);
       // If not yet finished with reading, mark progress based on size and
       // position.
       if ($report['seek'] < filesize($file->uri)) {

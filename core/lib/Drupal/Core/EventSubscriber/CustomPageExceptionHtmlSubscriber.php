@@ -8,7 +8,6 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;

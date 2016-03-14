@@ -9,7 +9,6 @@ namespace Drupal\Tests\field\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 
 /**
  * Tests the new entity API for the test field with dependencies type.

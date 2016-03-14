@@ -8,7 +8,7 @@
 namespace Drupal\user\Tests\Views;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\user\Entity\user;
+use Drupal\user\Entity\User;
 use Drupal\views\Tests\Handler\FieldFieldAccessTestBase;
 
 /**

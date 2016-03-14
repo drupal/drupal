@@ -10,7 +10,6 @@ namespace Drupal\node\Tests;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\Core\Url;
-use Drupal\node\NodeTypeInterface;
 
 /**
  * Ensures that node type functions work correctly.
@@ -126,7 +125,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertRaw('Body', 'Body field was found.');
 
     // Change the name through the API
-    /** @var NodeTypeInterface $node_type */
+    /** @var \Drupal\node\NodeTypeInterface $node_type */
     $node_type = NodeType::load('page');
     $node_type->set('name', 'NewBar');
     $node_type->save();

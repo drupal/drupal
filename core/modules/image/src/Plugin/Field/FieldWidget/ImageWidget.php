@@ -7,7 +7,6 @@
 
 namespace Drupal\image\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;

@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\views\ViewsBundle;
 use Drupal\simpletest\KernelTestBase;
 
 /**

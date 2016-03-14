@@ -8,8 +8,6 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Render\RenderContext;
-use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
