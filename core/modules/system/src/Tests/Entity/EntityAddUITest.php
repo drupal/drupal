@@ -11,7 +11,6 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\simpletest\WebTestBase;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests the /add and /add/{type} controllers.
