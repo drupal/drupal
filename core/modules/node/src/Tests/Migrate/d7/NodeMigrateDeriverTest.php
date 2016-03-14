@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\Tests\Migrate\d7\NodeBuilderTest.
+ * Contains \Drupal\node\Tests\Migrate\d7\NodeMigrateDeriverTest.
  */
 
 namespace Drupal\node\Tests\Migrate\d7;
@@ -10,11 +10,11 @@ namespace Drupal\node\Tests\Migrate\d7;
 use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 
 /**
- * Tests the d7_node builder.
+ * Tests the d7_node node deriver.
  *
  * @group node
  */
-class NodeBuilderTest extends MigrateDrupal7TestBase {
+class NodeMigrateDeriverTest extends MigrateDrupal7TestBase {
 
   public static $modules = ['node'];
 
