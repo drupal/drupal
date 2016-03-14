@@ -32,8 +32,8 @@ class MigrateDependenciesTest extends MigrateDrupal6TestBase {
     $expected_order = array('d6_filter_format', 'd6_node:page', 'd6_comment');
     $this->assertIdentical(array_keys($migrations), $expected_order);
     $expected_requirements = array(
-      // d6_comment depends on d6_node:*, which the storage controller expands
-      // into every variant of d6_node created by the MigrationBuilder.
+      // d6_comment depends on d6_node:*, which the deriver expands into every
+      // variant of d6_node.
       'd6_node:article',
       'd6_node:company',
       'd6_node:employee',
