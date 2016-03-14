@@ -1,7 +1,7 @@
 services:
   book.breadcrumb:
     class: Drupal\book\BookBreadcrumbBuilder
-    arguments: ['@entity.manager', '@access_manager', '@current_user']
+    arguments: ['@entity.manager', '@current_user']
     tags:
       - { name: breadcrumb_builder, priority: 701 }
   book.manager:
