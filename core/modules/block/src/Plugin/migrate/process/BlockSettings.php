@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Plugin\migrate\process;
 
+use Drupal\block\BlockInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -24,8 +25,15 @@ class BlockSettings extends ProcessPluginBase {
    * Set the block configuration.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($plugin, $delta, $old_settings) = $value;
+    list($plugin, $delta, $old_settings, $title) = $value;
     $settings = array();
+    $settings['label'] = $title;
+    if ($title) {
+      $settings['label_display'] = BlockInterface::BLOCK_LABEL_VISIBLE;
+    }
+    else {
+      $settings['label_display'] = '0';
+    }
     switch ($plugin) {
       case 'aggregator_feed_block':
         list(, $id) = explode('-', $delta);

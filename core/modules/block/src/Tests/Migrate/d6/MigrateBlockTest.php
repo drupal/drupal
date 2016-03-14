@@ -69,14 +69,22 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
    *   The theme.
    * @param string $weight
    *   The block weight.
+   * @param string $label
+   *   The block label.
+   * @param string $label_display
+   *   The block label display setting.
    */
-  public function assertEntity($id, $visibility, $region, $theme, $weight) {
+  public function assertEntity($id, $visibility, $region, $theme, $weight, $label, $label_display) {
     $block = Block::load($id);
     $this->assertTrue($block instanceof Block);
     $this->assertIdentical($visibility, $block->getVisibility());
     $this->assertIdentical($region, $block->getRegion());
     $this->assertIdentical($theme, $block->getTheme());
     $this->assertIdentical($weight, $block->getWeight());
+
+    $config = $this->config('block.block.' . $id);
+    $this->assertIdentical($label, $config->get('settings.label'));
+    $this->assertIdentical($label_display, $config->get('settings.label_display'));
   }
 
   /**
@@ -91,10 +99,10 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility['request_path']['id'] = 'request_path';
     $visibility['request_path']['negate'] = TRUE;
     $visibility['request_path']['pages'] = "<front>\n/node/1\n/blog/*";
-    $this->assertEntity('user', $visibility, 'sidebar_first', 'bartik', 0);
+    $this->assertEntity('user', $visibility, 'sidebar_first', 'bartik', 0, '', '0');
 
     $visibility = [];
-    $this->assertEntity('user_1', $visibility, 'sidebar_first', 'bartik', 0);
+    $this->assertEntity('user_1', $visibility, 'sidebar_first', 'bartik', 0, '', '0');
 
     $visibility['user_role']['id'] = 'user_role';
     $roles['authenticated'] = 'authenticated';
@@ -102,7 +110,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $context_mapping['user'] = '@user.current_user_context:current_user';
     $visibility['user_role']['context_mapping'] = $context_mapping;
     $visibility['user_role']['negate'] = FALSE;
-    $this->assertEntity('user_2', $visibility, 'sidebar_second', 'bartik', -9);
+    $this->assertEntity('user_2', $visibility, 'sidebar_second', 'bartik', -9, '', '0');
 
     $visibility = [];
     $visibility['user_role']['id'] = 'user_role';
@@ -112,32 +120,32 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $context_mapping['user'] = '@user.current_user_context:current_user';
     $visibility['user_role']['context_mapping'] = $context_mapping;
     $visibility['user_role']['negate'] = FALSE;
-    $this->assertEntity('user_3', $visibility, 'sidebar_second', 'bartik', -6);
+    $this->assertEntity('user_3', $visibility, 'sidebar_second', 'bartik', -6, '', '0');
 
     // Check system block
     $visibility = [];
     $visibility['request_path']['id'] = 'request_path';
     $visibility['request_path']['negate'] = TRUE;
     $visibility['request_path']['pages'] = '/node/1';
-    $this->assertEntity('system', $visibility, 'footer', 'bartik', -5);
+    $this->assertEntity('system', $visibility, 'footer', 'bartik', -5, '', '0');
 
     // Check menu blocks
     $visibility = [];
-    $this->assertEntity('menu', $visibility, 'header', 'bartik', -5);
+    $this->assertEntity('menu', $visibility, 'header', 'bartik', -5, '', '0');
 
     // Check custom blocks
     $visibility['request_path']['id'] = 'request_path';
     $visibility['request_path']['negate'] = FALSE;
     $visibility['request_path']['pages'] = '<front>';
-    $this->assertEntity('block', $visibility, 'content', 'bartik', 0);
+    $this->assertEntity('block', $visibility, 'content', 'bartik', 0, 'Static Block', 'visible');
 
     $visibility['request_path']['id'] = 'request_path';
     $visibility['request_path']['negate'] = FALSE;
     $visibility['request_path']['pages'] = '/node';
-    $this->assertEntity('block_1', $visibility, 'sidebar_second', 'bluemarine', -4);
+    $this->assertEntity('block_1', $visibility, 'sidebar_second', 'bluemarine', -4, 'Another Static Block', 'visible');
 
     $visibility = [];
-    $this->assertEntity('block_2', $visibility, 'right', 'test_theme', -7);
+    $this->assertEntity('block_2', $visibility, 'right', 'test_theme', -7, '', '0');
 
     // Custom block with php code is not migrated.
     $block = Block::load('block_3');
