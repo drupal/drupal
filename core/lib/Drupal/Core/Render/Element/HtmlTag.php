@@ -28,7 +28,7 @@ use Drupal\Core\Template\Attribute;
  * Usage example:
  * @code
  * $build['hello'] = [
- *   '#type' => 'html_tag'
+ *   '#type' => 'html_tag',
  *   '#tag' => 'p',
  *   '#value' => $this->t('Hello World'),
  * ];
