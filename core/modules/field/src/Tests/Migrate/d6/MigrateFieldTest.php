@@ -8,7 +8,6 @@
 namespace Drupal\field\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -98,7 +97,7 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
 
     // Validate that the source count and processed count match up.
     /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
-    $migration = Migration::load('d6_field');
+    $migration = $this->getMigration('d6_field');
     $this->assertIdentical($migration->getSourcePlugin()->count(), $migration->getIdMap()->processedCount());
 
     // Check that we've reported on a conflict in widget_types.

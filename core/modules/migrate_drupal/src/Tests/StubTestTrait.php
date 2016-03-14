@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\migrate_drupal\Tests;
-use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Row;
 
 /**
@@ -45,14 +45,13 @@ trait StubTestTrait {
    */
   protected function createStub($entity_type_id) {
     // Create a dummy migration to pass to the destination plugin.
-    $config = [
-      'id' => 'dummy',
+    $definition = [
       'migration_tags' => ['Stub test'],
       'source' => ['plugin' => 'empty'],
       'process' => [],
       'destination' => ['plugin' => 'entity:' . $entity_type_id],
     ];
-    $migration = Migration::create($config);
+    $migration = new Migration([], uniqid(), $definition);
     $destination_plugin = $migration->getDestinationPlugin(TRUE);
     $stub_row = new Row([], [], TRUE);
     $destination_ids = $destination_plugin->import($stub_row);

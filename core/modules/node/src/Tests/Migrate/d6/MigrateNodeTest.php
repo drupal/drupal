@@ -7,8 +7,8 @@
 
 namespace Drupal\node\Tests\Migrate\d6;
 
-use Drupal\migrate\Entity\Migration;
 use Drupal\Core\Database\Database;
+use Drupal\file\Tests\Migrate\d6\FileMigrationTestTrait;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\node\Entity\Node;
 
@@ -19,12 +19,16 @@ use Drupal\node\Entity\Node;
  */
 class MigrateNodeTest extends MigrateNodeTestBase {
 
+  use FileMigrationTestTrait;
+
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigrations(['d6_node:*']);
+    $this->setUpMigratedFiles();
+    $this->installSchema('file', ['file_usage']);
+    $this->executeMigrations(['d6_node']);
   }
 
   /**
@@ -50,6 +54,25 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertIdentical('1', $node_revision->getRevisionAuthor()->id(), 'Node revision has the correct user');
     // This is empty on the first revision.
     $this->assertIdentical(NULL, $node_revision->revision_log->value);
+    $this->assertIdentical('This is a shared text field', $node->field_test->value);
+    $this->assertIdentical('filtered_html', $node->field_test->format);
+    $this->assertIdentical('10', $node->field_test_two->value);
+    $this->assertIdentical('20', $node->field_test_two[1]->value);
+
+    $this->assertIdentical('42.42', $node->field_test_three->value, 'Single field second value is correct.');
+    $this->assertIdentical('3412', $node->field_test_integer_selectlist[0]->value);
+    $this->assertIdentical('1', $node->field_test_identical1->value, 'Integer value is correct');
+    $this->assertIdentical('1', $node->field_test_identical2->value, 'Integer value is correct');
+    $this->assertIdentical('This is a field with exclude unset.', $node->field_test_exclude_unset->value, 'Field with exclude unset is correct.');
+
+    // Test that link fields are migrated.
+    $this->assertIdentical('https://www.drupal.org/project/drupal', $node->field_test_link->uri);
+    $this->assertIdentical('Drupal project page', $node->field_test_link->title);
+    $this->assertIdentical(['target' => '_blank'], $node->field_test_link->options['attributes']);
+
+    // Test the file field meta.
+    $this->assertIdentical('desc', $node->field_test_filefield->description);
+    $this->assertIdentical('5', $node->field_test_filefield->target_id);
 
     $node = Node::load(2);
     $this->assertIdentical('Test title rev 3', $node->getTitle());
@@ -85,7 +108,6 @@ class MigrateNodeTest extends MigrateNodeTestBase {
    */
   protected function rerunMigration($new_row = []) {
     $title = $this->randomString();
-    $migration = Migration::load('d6_node__story');
     $source_connection = Database::getConnection('default', 'migrate');
     $source_connection->update('node_revisions')
       ->fields(array(
@@ -94,6 +116,7 @@ class MigrateNodeTest extends MigrateNodeTestBase {
       ))
       ->condition('vid', 3)
       ->execute();
+    $migration = $this->getMigration('d6_node:story');
     $table_name = $migration->getIdMap()->mapTableName();
     $default_connection = \Drupal::database();
     $default_connection->truncate($table_name)->execute();

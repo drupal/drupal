@@ -29,7 +29,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   /**
    * The configuration of the migration to do.
    *
-   * @var \Drupal\migrate\Entity\Migration
+   * @var \Drupal\migrate\Entity\MigrationInterface
    */
   protected $migration;
 

@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Migrate;
 
-use Drupal\migrate\Entity\Migration;
 use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\system\Entity\Menu;
@@ -46,7 +45,7 @@ EOT;
       ->condition('menu_name', 'navigation')
       ->execute();
 
-    $migration = Migration::load('menu');
+    $migration = $this->getMigration('menu');
     \Drupal::database()
         ->truncate($migration->getIdMap()->mapTableName())
         ->execute();

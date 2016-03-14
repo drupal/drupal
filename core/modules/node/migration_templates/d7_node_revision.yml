@@ -2,8 +2,7 @@ id: d7_node_revision
 label: Node revisions
 migration_tags:
   - Drupal 7
-builder:
-  plugin: d7_node
+deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
 source:
   plugin: d7_node_revision
 process:
@@ -28,4 +27,4 @@ destination:
   plugin: entity_revision:node
 migration_dependencies:
   required:
-    - d7_node:*
+    - d7_node

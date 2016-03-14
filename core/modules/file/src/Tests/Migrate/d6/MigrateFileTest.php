@@ -10,7 +10,6 @@ namespace Drupal\file\Tests\Migrate\d6;
 use Drupal\Component\Utility\Random;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Tests\MigrateDumpAlterInterface;
 use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -22,6 +21,8 @@ use Drupal\simpletest\TestBase;
  * @group migrate_drupal_6
  */
 class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlterInterface {
+
+  use FileMigrationTestTrait;
 
   /**
    * The filename of a file used to test temporary file migration.
@@ -36,15 +37,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('file');
-    $this->installConfig(['file']);
-
-    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
-    $migration = Migration::load('d6_file');
-    $source = $migration->get('source');
-    $source['site_path'] = 'core/modules/simpletest';
-    $migration->set('source', $source);
-    $this->executeMigration($migration);
+    $this->setUpMigratedFiles();
   }
 
   /**
@@ -84,8 +77,9 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     $this->assertEntity(5, 'html-1.txt', '24', 'public://html-1.txt', 'text/plain', '1');
 
     // Test that we can re-import and also test with file_directory_path set.
+    $migration_plugin_manager = $this->container->get('plugin.manager.migration');
     \Drupal::database()
-      ->truncate(Migration::load('d6_file')->getIdMap()->mapTableName())
+      ->truncate($migration_plugin_manager->createInstance('d6_file')->getIdMap()->mapTableName())
       ->execute();
 
     // Update the file_directory_path.
@@ -100,7 +94,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
       ->condition('name', 'file_directory_temp')
       ->execute();
 
-    $migration = \Drupal::entityManager()->getStorage('migration')->loadUnchanged('d6_file');
+    $migration = $migration_plugin_manager->createInstance('d6_file');
     $this->executeMigration($migration);
 
     $file = File::load(2);

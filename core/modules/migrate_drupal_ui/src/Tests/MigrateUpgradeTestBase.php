@@ -120,11 +120,19 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
     $drivers = drupal_get_database_types();
     $form = $drivers[$driver]->getFormOptions($connection_options);
     $connection_options = array_intersect_key($connection_options, $form + $form['advanced_options']);
-    $edits = $this->translatePostValues([
-      'driver' => $driver,
+    $edit = [
       $driver => $connection_options,
       'source_base_path' => $this->getSourceBasePath(),
-    ]);
+    ];
+    if (count($drivers) !== 1) {
+      $edit['driver'] = $driver;
+    }
+    $edits = $this->translatePostValues($edit);
+
+    // Ensure submitting the form with invalid database credentials gives us a
+    // nice warning.
+    $this->drupalPostForm(NULL, [$driver . '[database]' => 'wrong'] + $edits, t('Review upgrade'));
+    $this->assertText('Resolve the issue below to continue the upgrade.');
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
     $this->assertResponse(200);

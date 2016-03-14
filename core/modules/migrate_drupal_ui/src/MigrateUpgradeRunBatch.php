@@ -9,7 +9,6 @@ namespace Drupal\migrate_drupal_ui;
 
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateIdMapMessageEvent;
@@ -66,10 +65,12 @@ class MigrateUpgradeRunBatch {
    *   The full set of migration IDs to import.
    * @param string $operation
    *   The operation to perform, 'import' or 'rollback'.
+   * @param array $config
+   *   An array of additional configuration from the form.
    * @param array $context
    *   The batch context.
    */
-  public static function run($initial_ids, $operation, &$context) {
+  public static function run($initial_ids, $operation, $config, &$context) {
     if (!static::$listenersAdded) {
       $event_dispatcher = \Drupal::service('event_dispatcher');
       if ($operation == 'import') {
@@ -108,8 +109,18 @@ class MigrateUpgradeRunBatch {
     static::$numProcessed = 0;
 
     $migration_id = reset($context['sandbox']['migration_ids']);
-    /** @var \Drupal\migrate\Entity\Migration $migration */
-    $migration = Migration::load($migration_id);
+    /** @var \Drupal\migrate\Plugin\Migration $migration */
+    $migration = \Drupal::service('plugin.manager.migration')->createInstance($migration_id);
+
+    // @TODO, remove this in https://www.drupal.org/node/2681869.
+    $destination = $migration->get('destination');
+    if ($destination['plugin'] === 'entity:file') {
+      // Make sure we have a single trailing slash.
+      $source_base_path = rtrim($config['source_base_path'], '/') . '/';
+      $destination['source_base_path'] = $source_base_path;
+      $migration->set('destination', $destination);
+    }
+
     if ($migration) {
       static::$messages = new MigrateMessageCapture();
       $executable = new MigrateExecutable($migration, static::$messages);
@@ -142,7 +153,6 @@ class MigrateUpgradeRunBatch {
             $message = static::getTranslation()->formatPlural(
               $context['sandbox']['num_processed'], 'Rolled back @migration (processed 1 item total)', 'Rolled back @migration (processed @num_processed items total)',
               ['@migration' => $migration_name, '@num_processed' => $context['sandbox']['num_processed']]);
-            $migration->delete();
           }
           $context['sandbox']['messages'][] = $message;
           static::logger()->notice($message);
@@ -203,7 +213,7 @@ class MigrateUpgradeRunBatch {
       // that is running while this message is visible).
       if (!empty($context['sandbox']['migration_ids'])) {
         $migration_id = reset($context['sandbox']['migration_ids']);
-        $migration = Migration::load($migration_id);
+        $migration = \Drupal::service('plugin.manager.migration')->createInstance($migration_id);
         $migration_name = $migration->label() ? $migration->label() : $migration_id;
         if ($operation == 'import') {
           $context['message'] = t('Currently upgrading @migration (@current of @max total tasks)', [

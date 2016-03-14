@@ -34,8 +34,8 @@ class MigrateFileTest extends MigrateDrupal7TestBase {
     $fs->mkdir('public://sites/default/files', NULL, TRUE);
     file_put_contents('public://sites/default/files/cube.jpeg', str_repeat('*', 3620));
 
-    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
-    $migration = entity_load('migration', 'd7_file');
+    /** @var \Drupal\migrate\Plugin\Migration $migration */
+    $migration = $this->getMigration('d7_file');
     // Set the destination plugin's source_base_path configuration value, which
     // would normally be set by the user running the migration.
     $migration->set('destination', [

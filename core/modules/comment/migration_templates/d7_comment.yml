@@ -31,5 +31,5 @@ destination:
   plugin: entity:comment
 migration_dependencies:
   required:
-    - d7_node:*
+    - d7_node
     - d7_comment_type

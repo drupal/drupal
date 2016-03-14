@@ -9,13 +9,14 @@ namespace Drupal\migrate_drupal;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\RequirementsInterface;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 
 /**
  * Creates the appropriate migrations for a given source Drupal database.
+ *
+ * @todo https://www.drupal.org/node/2682585 The trait no longer creates
+ *   migrations.
  */
 trait MigrationCreationTrait {
 
@@ -38,14 +39,13 @@ trait MigrationCreationTrait {
   /**
    * Gets the system data from the system table of the source Drupal database.
    *
-   * @param array $database
-   *   Database array representing the source Drupal database.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Database connection to the source Drupal database.
    *
    * @return array
    *   The system data from the system table of the source Drupal database.
    */
-  protected function getSystemData(array $database) {
-    $connection = $this->getConnection($database);
+  protected function getSystemData(Connection $connection) {
     $system_data = [];
     try {
       $results = $connection->select('system', 's', [
@@ -64,73 +64,49 @@ trait MigrationCreationTrait {
   }
 
   /**
-   * Sets up the relevant migrations for import from a database connection.
+   * Creates the necessary state entries for SqlBase::getDatabase() to work.
+   *
+   * The state entities created here have to exist before migration plugin
+   * instances are created so that derivers such as
+   * \Drupal\taxonomy\Plugin\migrate\D6TermNodeDeriver can access the source
+   * database.
    *
    * @param array $database
-   *   Database array representing the source Drupal database.
-   * @param string $source_base_path
-   *   (Optional) Address of the source Drupal site (e.g., http://example.com/).
+   *   The source database settings.
+   * @param string $drupal_version
+   *   The Drupal version.
    *
-   * @return array
-   *   An array of the migration templates (parsed YAML config arrays) that were
-   *   tagged for the identified source Drupal version. The templates are
-   *   populated with database state key and file source base path information
-   *   for execution. The array is keyed by migration IDs.
-   *
-   * @throws \Exception
+   * @see \Drupal\migrate\Plugin\migrate\source\SqlBase::getDatabase()
    */
-  protected function getMigrationTemplates(array $database, $source_base_path = '') {
-    // Set up the connection.
-    $connection = $this->getConnection($database);
-    if (!$drupal_version = $this->getLegacyDrupalVersion($connection)) {
-      throw new \Exception('Source database does not contain a recognizable Drupal version.');
-    }
+  protected function createDatabaseStateSettings(array $database, $drupal_version) {
     $database_state['key'] = 'upgrade';
     $database_state['database'] = $database;
     $database_state_key = 'migrate_drupal_' . $drupal_version;
     \Drupal::state()->set($database_state_key, $database_state);
-
-    $version_tag = 'Drupal ' . $drupal_version;
-
-    $template_storage = \Drupal::service('migrate.template_storage');
-    $migration_templates = $template_storage->findTemplatesByTag($version_tag);
-    foreach ($migration_templates as $id => $template) {
-      $migration_templates[$id]['source']['database_state_key'] = $database_state_key;
-      // Configure file migrations so they can find the files.
-      if ($template['destination']['plugin'] == 'entity:file') {
-        if ($source_base_path) {
-          // Make sure we have a single trailing slash.
-          $source_base_path = rtrim($source_base_path, '/') . '/';
-          $migration_templates[$id]['destination']['source_base_path'] = $source_base_path;
-        }
-      }
-    }
-    return $migration_templates;
+    \Drupal::state()->set('migrate.fallback_state_key', $database_state_key);
   }
 
   /**
    * Gets the migrations for import.
    *
-   * Uses the migration template connection to ensure that only the relevant
-   * migrations are returned.
-   *
-   * @param array $migration_templates
-   *   Migration templates (parsed YAML config arrays), keyed by the ID.
+   * @param string $database_state_key
+   *   The state key.
+   * @param int $drupal_version
+   *   The version of Drupal we're getting the migrations for.
    *
    * @return \Drupal\migrate\Entity\MigrationInterface[]
    *   The migrations for import.
    */
-  protected function getMigrations(array $migration_templates) {
-    // Let the builder service create our migration configuration entities from
-    // the templates, expanding them to multiple entities where necessary.
-    /** @var \Drupal\migrate\MigrationBuilder $builder */
-    $builder = \Drupal::service('migrate.migration_builder');
-    $initial_migrations = $builder->createMigrations($migration_templates);
+  protected function getMigrations($database_state_key, $drupal_version) {
+    $version_tag = 'Drupal ' . $drupal_version;
+    $plugin_manager = \Drupal::service('plugin.manager.migration');
+    /** @var \Drupal\migrate\Plugin\Migration[] $all_migrations */
+    $all_migrations = $plugin_manager->createInstancesByTag($version_tag);
     $migrations = [];
-    foreach ($initial_migrations as $migration) {
+    foreach ($all_migrations as $migration) {
       try {
-        // Any plugin that has specific requirements to check will implement
-        // RequirementsInterface.
+        // @todo https://drupal.org/node/2681867 We should be able to validate
+        //   the entire migration at this point.
         $source_plugin = $migration->getSourcePlugin();
         if ($source_plugin instanceof RequirementsInterface) {
           $source_plugin->checkRequirements();
@@ -141,39 +117,14 @@ trait MigrationCreationTrait {
         }
         $migrations[] = $migration;
       }
-      // Migrations which are not applicable given the source and destination
-      // site configurations (e.g., what modules are enabled) will be silently
-      // ignored.
       catch (RequirementsException $e) {
-      }
-      catch (PluginNotFoundException $e) {
+        // Migrations which are not applicable given the source and destination
+        // site configurations (e.g., what modules are enabled) will be silently
+        // ignored.
       }
     }
 
     return $migrations;
-  }
-
-  /**
-   * Saves the migrations for import from the provided template connection.
-   *
-   * @param array $migration_templates
-   *   Migration template.
-   *
-   * @return array
-   *   The migration IDs sorted in dependency order.
-   */
-  protected function createMigrations(array $migration_templates) {
-    $migration_ids = [];
-    $migrations = $this->getMigrations($migration_templates);
-    foreach ($migrations as $migration) {
-      // Don't try to resave migrations that already exist.
-      if (!Migration::load($migration->id())) {
-        $migration->save();
-      }
-      $migration_ids[] = $migration->id();
-    }
-    // loadMultiple will sort the migrations in dependency order.
-    return array_keys(Migration::loadMultiple($migration_ids));
   }
 
   /**

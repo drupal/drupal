@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate\Tests;
 
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Drupal\migrate\Event\MigrateMapDeleteEvent;
 use Drupal\migrate\Event\MigrateMapSaveEvent;
@@ -16,6 +15,7 @@ use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\Plugin\Migration;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -65,8 +65,7 @@ class MigrateEventsTest extends KernelTestBase {
   public function testMigrateEvents() {
     // Run a simple little migration, which should trigger one of each event
     // other than map_delete.
-    $config = [
-      'id' => 'sample_data',
+    $definition = [
       'migration_tags' => ['Event test'],
       'source' => [
         'plugin' => 'embedded_data',
@@ -81,9 +80,8 @@ class MigrateEventsTest extends KernelTestBase {
       'destination' => ['plugin' => 'dummy'],
     ];
 
-    $migration = Migration::create($config);
+    $migration = new Migration([], uniqid(), $definition);
 
-    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     // As the import runs, events will be dispatched, recording the received
     // information in state.

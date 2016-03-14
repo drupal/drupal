@@ -41,7 +41,7 @@ class MigrateTrackerUserTest extends MigrateDrupal7TestBase {
       'd7_user_role',
       'd7_user',
       'd7_node_type',
-      'd7_node__test_content_type',
+      'd7_node:test_content_type',
       'd7_tracker_node',
     ]);
   }

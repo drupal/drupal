@@ -43,7 +43,7 @@ class EntityUser extends EntityContentBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param MigrationInterface $migration
+   * @param \Drupal\migrate\Entity\MigrationInterface $migration
    *   The migration.
    * @param EntityStorageInterface $storage
    *   The storage for this entity type.

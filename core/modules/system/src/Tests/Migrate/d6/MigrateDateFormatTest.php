@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Migrate\d6;
 
 use Drupal\Core\Datetime\Entity\DateFormat;
-use Drupal\migrate\Entity\Migration;
 use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
@@ -47,13 +46,11 @@ class MigrateDateFormatTest extends MigrateDrupal6TestBase {
       ->condition('name', 'date_format_short')
       ->execute();
 
+    $migration = $this->getMigration('d6_date_formats');
     \Drupal::database()
-      ->truncate(Migration::load('d6_date_formats')->getIdMap()->mapTableName())
+      ->truncate($migration->getIdMap()->mapTableName())
       ->execute();
 
-    $migration = \Drupal::entityManager()
-      ->getStorage('migration')
-      ->loadUnchanged('d6_date_formats');
     $this->executeMigration($migration);
 
     $short_date_format = DateFormat::load('short');

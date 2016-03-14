@@ -2,15 +2,14 @@ id: d6_term_node
 label: Term/node relationships
 migration_tags:
   - Drupal 6
-builder:
-  plugin: d6_term_node
+deriver: Drupal\taxonomy\Plugin\migrate\D6TermNodeDeriver
 source:
   plugin: d6_term_node
 process:
   nid:
     -
       plugin: migration
-      migration: d6_node:*
+      migration: d6_node
       source: nid
     -
       plugin: skip_on_empty
@@ -23,4 +22,4 @@ migration_dependencies:
   required:
     - d6_vocabulary_entity_display
     - d6_vocabulary_entity_form_display
-    - d6_node:*
+    - d6_node

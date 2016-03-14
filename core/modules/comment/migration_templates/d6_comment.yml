@@ -37,7 +37,7 @@ destination:
   plugin: entity:comment
 migration_dependencies:
   required:
-    - d6_node:*
+    - d6_node
     - d6_comment_type
     - d6_comment_entity_display
     - d6_comment_entity_form_display

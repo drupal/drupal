@@ -23,7 +23,7 @@ class ConfigTest extends UnitTestCase {
     $source = array(
       'test' => 'x',
     );
-    $migration = $this->getMockBuilder('Drupal\migrate\Entity\Migration')
+    $migration = $this->getMockBuilder('Drupal\migrate\Plugin\Migration')
       ->disableOriginalConstructor()
       ->getMock();
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
@@ -73,7 +73,7 @@ class ConfigTest extends UnitTestCase {
     $source = array(
       'langcode' => 'mi',
     );
-    $migration = $this->getMockBuilder('Drupal\migrate\Entity\Migration')
+    $migration = $this->getMockBuilder('Drupal\migrate\Entity\MigrationInterface')
       ->disableOriginalConstructor()
       ->getMock();
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')

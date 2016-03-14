@@ -8,7 +8,6 @@
 namespace Drupal\migrate\Plugin\migrate\builder;
 
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Plugin\MigrateBuilderInterface;
 
 /**

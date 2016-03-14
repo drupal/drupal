@@ -1,7 +1,0 @@
-migrate.source.menu_link:
-  type: migrate_source_sql
-  label: 'Menu link'
-  mapping:
-    constants:
-      type: migrate_entity_constant
-      label: 'Constants'

@@ -7,12 +7,13 @@
 
 namespace Drupal\migrate\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Component\Plugin\DerivativeInspectionInterface;
+use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**
  * Interface for migrations.
  */
-interface MigrationInterface extends ConfigEntityInterface {
+interface MigrationInterface extends PluginInspectionInterface, DerivativeInspectionInterface {
 
   /**
    * A constant used for systemOfRecord.
@@ -98,6 +99,24 @@ interface MigrationInterface extends ConfigEntityInterface {
    * This migration is disabled, skipping.
    */
   const RESULT_DISABLED = 6;
+
+  /**
+   * An alias for getPluginId() for backwards compatibility reasons.
+   *
+   * @return string
+   *   The plugin_id of the plugin instance.
+   *
+   * @see \Drupal\migrate\Entity\MigrationInterface::getPluginId()
+   */
+  public function id();
+
+  /**
+   * Get the plugin label.
+   *
+   * @return string
+   *   The label for this migration.
+   */
+  public function label();
 
   /**
    * Returns the initialized source plugin.
