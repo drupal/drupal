@@ -35,7 +35,7 @@ class ConfigFormOverrideTest extends WebTestBase {
     // Test that everything on the form is the same, but that the override
     // worked for the actual site name.
     $this->drupalGet('admin/config/system/site-information');
-    $this->assertTitle('Site information | ' . $overridden_name);
+    $this->assertTitle('Basic site settings | ' . $overridden_name);
     $elements = $this->xpath('//input[@name="site_name"]');
     $this->assertIdentical((string) $elements[0]['value'], 'Drupal');
 
@@ -44,7 +44,7 @@ class ConfigFormOverrideTest extends WebTestBase {
       'site_name' => 'Custom site name',
     );
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
-    $this->assertTitle('Site information | ' . $overridden_name);
+    $this->assertTitle('Basic site settings | ' . $overridden_name);
     $elements = $this->xpath('//input[@name="site_name"]');
     $this->assertIdentical((string) $elements[0]['value'], $edit['site_name']);
   }
