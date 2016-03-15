@@ -51,6 +51,10 @@ class CckLink extends ProcessPluginBase implements ContainerFactoryPluginInterfa
       $attributes = unserialize($attributes);
     }
 
+    if (!$attributes) {
+      $attributes = [];
+    }
+
     // Massage the values into the correct form for the link.
     $route['uri'] = $value['url'];
     $route['options']['attributes'] = $attributes;
