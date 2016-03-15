@@ -21,20 +21,6 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 class LibraryDiscoveryCollector extends CacheCollector {
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
-   * The lock backend.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
    * The library discovery parser.
    *
    * @var \Drupal\Core\Asset\LibraryDiscoveryParser
