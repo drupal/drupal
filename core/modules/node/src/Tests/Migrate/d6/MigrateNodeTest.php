@@ -57,6 +57,30 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertIdentical('test rev 3', $node->body->value);
     $this->assertIdentical('filtered_html', $node->body->format);
 
+    // Test that link fields are migrated.
+    $this->assertIdentical('http://groups.drupal.org/', $node->field_test_link->uri);
+    $this->assertIdentical('Drupal Groups', $node->field_test_link->title);
+    $this->assertIdentical([], $node->field_test_link->options['attributes']);
+
+    // Rerun migration with invalid link attributes and a different URL and
+    // title. If only the attributes are changed the error does not occur.
+    Database::getConnection('default', 'migrate')
+      ->update('content_type_story')
+      ->fields([
+        'field_test_link_url' => 'https://www.drupal.org/node/2127611',
+        'field_test_link_title' => 'Migrate API in Drupal 8',
+        'field_test_link_attributes' => '',
+      ])
+      ->condition('nid', '2')
+      ->condition('vid', '3')
+      ->execute();
+
+    $this->rerunMigration();
+    $node = Node::load(2);
+    $this->assertIdentical('https://www.drupal.org/node/2127611', $node->field_test_link->uri);
+    $this->assertIdentical('Migrate API in Drupal 8', $node->field_test_link->title);
+    $this->assertIdentical([], $node->field_test_link->options['attributes']);
+
     // Test that we can re-import using the EntityContentBase destination.
     $title = $this->rerunMigration();
     $node = Node::load(2);
