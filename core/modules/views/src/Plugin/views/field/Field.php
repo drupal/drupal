@@ -803,7 +803,7 @@ class Field extends FieldPluginBase implements CacheableDependencyInterface, Mul
       // For grouped results we need to retrieve a massaged entity having
       // grouped field values to ensure that "grouped by" values, especially
       // those with multiple cardinality work properly. See
-      // \Drupal\views\Tests\QueryGroupByTest::testGroupByFieldWithCardinality.
+      // \Drupal\Tests\views\Kernel\QueryGroupByTest::testGroupByFieldWithCardinality.
       $display = [
         'type' => $this->options['type'],
         'settings' => $this->options['settings'],

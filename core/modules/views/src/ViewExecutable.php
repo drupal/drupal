@@ -2460,24 +2460,28 @@ class ViewExecutable implements \Serializable {
   public function unserialize($serialized) {
     list($storage, $current_display, $args, $current_page, $exposed_input, $exposed_raw_input, $exposed_data, $dom_id, $executed) = unserialize($serialized);
 
-    $this->setRequest(\Drupal::request());
-    $this->user = \Drupal::currentUser();
+    // There are cases, like in testing, where we don't have a container
+    // available.
+    if (\Drupal::hasContainer()) {
+      $this->setRequest(\Drupal::request());
+      $this->user = \Drupal::currentUser();
 
-    $this->storage = \Drupal::entityManager()->getStorage('view')->load($storage);
+      $this->storage = \Drupal::entityManager()->getStorage('view')->load($storage);
 
-    $this->setDisplay($current_display);
-    $this->setArguments($args);
-    $this->setCurrentPage($current_page);
-    $this->setExposedInput($exposed_input);
-    $this->exposed_data = $exposed_data;
-    $this->exposed_raw_input = $exposed_raw_input;
-    $this->dom_id = $dom_id;
+      $this->setDisplay($current_display);
+      $this->setArguments($args);
+      $this->setCurrentPage($current_page);
+      $this->setExposedInput($exposed_input);
+      $this->exposed_data = $exposed_data;
+      $this->exposed_raw_input = $exposed_raw_input;
+      $this->dom_id = $dom_id;
 
-    $this->initHandlers();
+      $this->initHandlers();
 
-    // If the display was previously executed, execute it now.
-    if ($executed) {
-      $this->execute($this->current_display);
+      // If the display was previously executed, execute it now.
+      if ($executed) {
+        $this->execute($this->current_display);
+      }
     }
   }
 
