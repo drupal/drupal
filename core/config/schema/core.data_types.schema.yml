@@ -605,10 +605,10 @@ field.field_settings.boolean:
   type: mapping
   mapping:
     on_label:
-      type: string
+      type: label
       label: 'On label'
     off_label:
-      type: string
+      type: label
       label: 'Off label'
 
 field.value.boolean:

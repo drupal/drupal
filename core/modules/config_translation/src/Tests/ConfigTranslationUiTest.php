@@ -8,6 +8,7 @@
 namespace Drupal\config_translation\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
@@ -731,6 +732,42 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->assertEscaped($translatable_field_setting);
     $this->assertText('Translatable storage setting');
     $this->assertEscaped($translatable_storage_setting);
+  }
+
+  /**
+   * Tests the translation of a boolean field settings.
+   */
+  public function testBooleanFieldConfigTranslation() {
+    // Add a test boolean field.
+    $field_name = strtolower($this->randomMachineName());
+    FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'boolean',
+    ])->save();
+
+    $bundle = strtolower($this->randomMachineName());
+    entity_test_create_bundle($bundle);
+    $field = FieldConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'bundle' => $bundle,
+    ]);
+
+    $on_label = $this->randomString();
+    $field->setSetting('on_label', $on_label);
+    $off_label = $this->randomString();
+    $field->setSetting('off_label', $off_label);
+    $field->save();
+
+    $this->drupalLogin($this->translatorUser);
+
+    $this->drupalGet("/entity_test/structure/$bundle/fields/entity_test.$bundle.$field_name/translate");
+    $this->clickLink('Add');
+
+    $this->assertText(Html::escape($on_label) . ' Boolean settings');
+    $this->assertEscaped($on_label);
+    $this->assertEscaped($off_label);
   }
 
   /**
