@@ -119,7 +119,8 @@ class EntityReference extends DisplayPluginBase {
 
     // Make sure the id field is included in the results.
     $id_field = $this->view->storage->get('base_field');
-    $this->id_field_alias = $this->view->query->addField($this->view->storage->get('base_table'), $id_field);
+    $id_table = $this->view->storage->get('base_table');
+    $this->id_field_alias = $this->view->query->addField($id_table, $id_field);
 
     $options = $this->getOption('entity_reference_options');
 
@@ -139,7 +140,8 @@ class EntityReference extends DisplayPluginBase {
         if (!empty($field_id)) {
           // Get the table and field names for the checked field.
           $field_handler = $this->view->field[$field_id];
-          $field_alias = $this->view->query->addField($field_handler->table, $field_handler->realField);
+          $table_alias = $this->view->query->ensureTable($field_handler->table, $field_handler->relationship);
+          $field_alias = $this->view->query->addField($table_alias, $field_handler->realField);
           $field = $this->view->query->fields[$field_alias];
           // Add an OR condition for the field.
           $conditions->condition($field['table'] . '.' . $field['field'], $value, 'LIKE');
@@ -151,7 +153,7 @@ class EntityReference extends DisplayPluginBase {
 
     // Add an IN condition for validation.
     if (!empty($options['ids'])) {
-      $this->view->query->addWhere(0, $id_field, $options['ids'], 'IN');
+      $this->view->query->addWhere(0, $id_table . '.' . $id_field, $options['ids'], 'IN');
     }
 
     $this->view->setItemsPerPage($options['limit']);
