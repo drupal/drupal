@@ -14,6 +14,7 @@ use Drupal\migrate\Plugin\MigrateDestinationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Prophecy\Argument;
 
 /**
@@ -26,29 +27,28 @@ class MigrationTest extends MigrateProcessTestCase {
    * @covers ::transform
    */
   public function testTransformWithStubSkipping() {
-    // @TODO https://www.drupal.org/node/2667620
-    $this->assertSame(TRUE, TRUE);
-    return;
-    $migration_entity = $this->prophesize(MigrationInterface::class);
-    $migration_storage = $this->prophesize(EntityStorageInterface::class);
+    $migration_plugin = $this->prophesize(MigrationInterface::class);
+    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
     $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
 
     $destination_id_map = $this->prophesize(MigrateIdMapInterface::class);
     $destination_migration = $this->prophesize(MigrationInterface::class);
     $destination_migration->getIdMap()->willReturn($destination_id_map->reveal());
-    $migration_storage->loadMultiple(['destination_migration'])
-      ->willReturn(['destination_migration' => $destination_migration->reveal()]);
     $destination_id_map->lookupDestinationId([1])->willReturn(NULL);
+
+    // Ensure the migration plugin manager returns our migration.
+    $migration_plugin_manager->createInstances(Argument::exact(['destination_migration']))
+      ->willReturn(['destination_migration' => $destination_migration->reveal()]);
 
     $configuration = [
       'no_stub' => TRUE,
       'migration' => 'destination_migration',
     ];
 
-    $migration_entity->id()->willReturn('actual_migration');
+    $migration_plugin->id()->willReturn('actual_migration');
     $destination_migration->getDestinationPlugin(TRUE)->shouldNotBeCalled();
 
-    $migration = new Migration($configuration, '', [], $migration_entity->reveal(), $migration_storage->reveal(), $process_plugin_manager->reveal());
+    $migration = new Migration($configuration, '', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertNull($result);
   }
@@ -57,17 +57,14 @@ class MigrationTest extends MigrateProcessTestCase {
    * @covers ::transform
    */
   public function testTransformWithStubbing() {
-    // @TODO https://www.drupal.org/node/2667620
-    $this->assertSame(TRUE, TRUE);
-    return;
-    $migration_entity = $this->prophesize(MigrationInterface::class);
-    $migration_storage = $this->prophesize(EntityStorageInterface::class);
+    $migration_plugin = $this->prophesize(MigrationInterface::class);
+    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
     $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
 
     $destination_id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $destination_migration = $this->prophesize(MigrationInterface::class);
+    $destination_migration = $this->prophesize('Drupal\migrate\Plugin\Migration');
     $destination_migration->getIdMap()->willReturn($destination_id_map->reveal());
-    $migration_storage->loadMultiple(['destination_migration'])
+    $migration_plugin_manager->createInstances(['destination_migration'])
       ->willReturn(['destination_migration' => $destination_migration->reveal()]);
     $destination_id_map->lookupDestinationId([1])->willReturn(NULL);
 
@@ -76,7 +73,7 @@ class MigrationTest extends MigrateProcessTestCase {
       'migration' => 'destination_migration',
     ];
 
-    $migration_entity->id()->willReturn('actual_migration');
+    $migration_plugin->id()->willReturn('actual_migration');
     $destination_migration->id()->willReturn('destination_migration');
     $destination_migration->getDestinationPlugin(TRUE)->shouldBeCalled();
     $destination_migration->get('process')->willReturn([]);
@@ -89,7 +86,7 @@ class MigrationTest extends MigrateProcessTestCase {
     $destination_plugin->import(Argument::any())->willReturn([2]);
     $destination_migration->getDestinationPlugin(TRUE)->willReturn($destination_plugin->reveal());
 
-    $migration = new Migration($configuration, '', [], $migration_entity->reveal(), $migration_storage->reveal(), $process_plugin_manager->reveal());
+    $migration = new Migration($configuration, '', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertEquals(2, $result);
   }
