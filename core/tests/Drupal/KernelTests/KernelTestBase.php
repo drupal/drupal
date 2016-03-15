@@ -359,6 +359,11 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       $this->container->get('module_handler')->loadAll();
     }
 
+    $this->container->get('request_stack')->push($request);
+
+    // Setup the destion to the be frontpage by default.
+    \Drupal::destination()->set('/');
+
     // Write the core.extension configuration.
     // Required for ConfigInstaller::installDefaultConfig() to work.
     $this->container->get('config.storage')->write('core.extension', array(
@@ -1169,6 +1174,5 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $actual = static::castSafeStrings($actual);
     parent::assertEquals($expected, $actual, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
   }
-
 
 }

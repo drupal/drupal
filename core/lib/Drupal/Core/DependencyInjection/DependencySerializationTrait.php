@@ -49,6 +49,10 @@ trait DependencySerializationTrait {
    * {@inheritdoc}
    */
   public function __wakeup() {
+    // Tests in isolation potentially unserialize in the parent process.
+    if (isset($GLOBALS['__PHPUNIT_BOOTSTRAP']) && !\Drupal::hasContainer()) {
+      return;
+    }
     $container = \Drupal::getContainer();
     foreach ($this->_serviceIds as $key => $service_id) {
       $this->$key = $container->get($service_id);
