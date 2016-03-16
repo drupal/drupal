@@ -27,7 +27,6 @@ use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -227,17 +226,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   protected $preserveGlobalState = FALSE;
 
   /**
-   * The base URL.
-   *
-   * @var string
-   */
-   protected $baseUrl;
-
-  /**
    * Initializes Mink sessions.
-   *
-   * @return \Behat\Mink\Session
-   *   The mink session.
    */
   protected function initMink() {
     $driver = $this->getDefaultDriverInstance();
@@ -251,17 +240,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     $this->mink->registerSession('default', $session);
     $this->mink->setDefaultSessionName('default');
     $this->registerSessions();
-
-    // According to the W3C WebDriver specification a cookie can only be set if
-    // the cookie domain is equal to the domain of the active document. When the
-    // browser starts up the active document is not our domain but 'about:blank'
-    // or similar. To be able to set our User-Agent and Xdebug cookies at the
-    // start of the test we now do a request to the front page so the active
-    // document matches the domain.
-    // @see https://w3c.github.io/webdriver/webdriver-spec.html#add-cookie
-    // @see https://www.w3.org/Bugs/Public/show_bug.cgi?id=20975
-    $session = $this->getSession();
-    $session->visit($this->baseUrl);
 
     return $session;
   }
@@ -293,7 +271,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
 
     if (is_array($this->minkDefaultDriverArgs)) {
        // Use ReflectionClass to instantiate class with received params.
-      $reflector = new \ReflectionClass($this->minkDefaultDriverClass);
+      $reflector = new ReflectionClass($this->minkDefaultDriverClass);
       $driver = $reflector->newInstanceArgs($this->minkDefaultDriverArgs);
     }
     else {
@@ -338,8 +316,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
     $path = isset($parsed_url['path']) ? rtrim(rtrim($parsed_url['path']), '/') : '';
     $port = isset($parsed_url['port']) ? $parsed_url['port'] : 80;
-
-    $this->baseUrl = $base_url;
 
     // If the passed URL schema is 'https' then setup the $_SERVER variables
     // properly so that testing will run under HTTPS.
@@ -1357,40 +1333,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     }
 
     return $logged_in;
-  }
-
-  /**
-   * Asserts that the element with the given CSS selector is present.
-   *
-   * @param string $css_selector
-   *   The CSS selector identifying the element to check.
-   * @param string $message
-   *   Optional message to show alongside the assertion.
-   */
-  protected function assertElementPresent($css_selector, $message = '') {
-    $this->assertNotEmpty($this->getSession()->getDriver()->find(CssSelector::toXPath($css_selector)), $message);
-  }
-
-  /**
-   * Asserts that the element with the given CSS selector is not present.
-   *
-   * @param string $css_selector
-   *   The CSS selector identifying the element to check.
-   * @param string $message
-   *   Optional message to show alongside the assertion.
-   */
-  protected function assertElementNotPresent($css_selector, $message = '') {
-    $this->assertEmpty($this->getSession()->getDriver()->find(CssSelector::toXPath($css_selector)), $message);
-  }
-
-  /**
-   * Clicks the element with the given CSS selector.
-   *
-   * @param string $css_selector
-   *   The CSS selector identifying the element to click.
-   */
-  protected function click($css_selector) {
-    $this->getSession()->getDriver()->click(CssSelector::toXPath($css_selector));
   }
 
   /**
