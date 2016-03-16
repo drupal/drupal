@@ -14,6 +14,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\simpletest\Form\SimpletestResultsForm;
 use Drupal\simpletest\TestBase;
+use Drupal\simpletest\TestDiscovery;
 use Symfony\Component\HttpFoundation\Request;
 
 $autoloader = require_once __DIR__ . '/../../autoload.php';
@@ -913,10 +914,12 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
 function simpletest_script_get_test_list() {
   global $args;
 
+  $types_processed = empty($args['types']);
   $test_list = array();
   if ($args['all'] || $args['module']) {
     try {
       $groups = simpletest_test_get_all($args['module'], $args['types']);
+      $types_processed = TRUE;
     }
     catch (Exception $e) {
       echo (string) $e;
@@ -1040,6 +1043,7 @@ function simpletest_script_get_test_list() {
     else {
       try {
         $groups = simpletest_test_get_all(NULL, $args['types']);
+        $types_processed = TRUE;
       }
       catch (Exception $e) {
         echo (string) $e;
@@ -1056,6 +1060,15 @@ function simpletest_script_get_test_list() {
         }
       }
     }
+  }
+
+  // If the test list creation does not automatically limit by test type then
+  // we need to do so here.
+  if (!$types_processed) {
+    $test_list = array_filter($test_list, function ($test_class) use ($args) {
+      $test_info = TestDiscovery::getTestInfo($test_class);
+      return in_array($test_info['type'], $args['types'], TRUE);
+    });
   }
 
   if (empty($test_list)) {
