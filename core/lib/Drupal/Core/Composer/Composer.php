@@ -165,9 +165,6 @@ EOT;
             throw new \RuntimeException(sprintf("Failure removing directory '%s' in package '%s'.", $path, $package->getPrettyName()));
           }
         }
-        else {
-          throw new \RuntimeException(sprintf("The directory '%s' in package '%s' does not exist.", $path, $package->getPrettyName()));
-        }
       }
     }
   }
