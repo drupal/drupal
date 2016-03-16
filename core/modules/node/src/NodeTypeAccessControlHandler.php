@@ -30,10 +30,10 @@ class NodeTypeAccessControlHandler extends EntityAccessControlHandler {
 
       case 'delete':
         if ($entity->isLocked()) {
-          return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
+          return AccessResult::forbidden()->addCacheableDependency($entity);
         }
         else {
-          return parent::checkAccess($entity, $operation, $account)->cacheUntilEntityChanges($entity);
+          return parent::checkAccess($entity, $operation, $account)->addCacheableDependency($entity);
         }
         break;
 

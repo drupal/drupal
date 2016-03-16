@@ -79,7 +79,7 @@ class ContactPageAccess implements AccessInterface {
     }
 
     // If requested user has been blocked, do not allow users to contact them.
-    $access->cacheUntilEntityChanges($contact_account);
+    $access->addCacheableDependency($contact_account);
     if ($contact_account->isBlocked()) {
       return $access;
     }

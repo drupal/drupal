@@ -78,7 +78,7 @@ class ViewModeAccessCheck implements AccessInterface {
       }
 
       if ($view_mode_name != 'default' && $entity_display) {
-        $access->cacheUntilEntityChanges($entity_display);
+        $access->addCacheableDependency($entity_display);
       }
 
       if ($visibility) {

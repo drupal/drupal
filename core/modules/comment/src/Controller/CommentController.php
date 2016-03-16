@@ -288,7 +288,7 @@ class CommentController extends ControllerBase {
 
     $status = $entity->{$field_name}->status;
     $access = $access->andIf(AccessResult::allowedIf($status == CommentItemInterface::OPEN)
-      ->cacheUntilEntityChanges($entity));
+      ->addCacheableDependency($entity));
 
     // $pid indicates that this is a reply to a comment.
     if ($pid) {
@@ -300,7 +300,7 @@ class CommentController extends ControllerBase {
       // Check if the parent comment is published and belongs to the entity.
       $access = $access->andIf(AccessResult::allowedIf($comment && $comment->isPublished() && $comment->getCommentedEntityId() == $entity->id()));
       if ($comment) {
-        $access->cacheUntilEntityChanges($comment);
+        $access->addCacheableDependency($comment);
       }
     }
     return $access;

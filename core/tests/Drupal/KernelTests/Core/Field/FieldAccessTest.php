@@ -69,7 +69,7 @@ class FieldAccessTest extends KernelTestBase {
     $account = User::create($values);
 
     $this->assertFalse($entity->field_test_text->access('view', $account), 'Access to the field was denied.');
-    $expected = AccessResult::forbidden()->cacheUntilEntityChanges($entity);
+    $expected = AccessResult::forbidden()->addCacheableDependency($entity);
     $this->assertEqual($expected, $entity->field_test_text->access('view', $account, TRUE), 'Access to the field was denied.');
 
     $entity->field_test_text = 'access alter value';

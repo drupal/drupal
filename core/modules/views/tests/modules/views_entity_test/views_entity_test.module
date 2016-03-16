@@ -39,7 +39,7 @@ function views_entity_test_entity_field_access($operation, FieldDefinitionInterf
   if ($field_definition->getName() == 'test_text_access') {
     if ($items) {
       if ($items->value == 'no access value') {
-        return AccessResult::forbidden()->cacheUntilEntityChanges($items->getEntity());
+        return AccessResult::forbidden()->addCacheableDependency($items->getEntity());
       }
     }
   }

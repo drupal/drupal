@@ -418,7 +418,7 @@ function entity_test_entity_field_access($operation, FieldDefinitionInterface $f
  */
 function entity_test_entity_field_access_alter(array &$grants, array $context) {
   if ($context['field_definition']->getName() == 'field_test_text' && $context['items']->value == 'access alter value') {
-    $grants[':default'] = AccessResult::forbidden()->inheritCacheability($grants[':default'])->cacheUntilEntityChanges($context['items']->getEntity());
+    $grants[':default'] = AccessResult::forbidden()->inheritCacheability($grants[':default'])->addCacheableDependency($context['items']->getEntity());
   }
 }
 

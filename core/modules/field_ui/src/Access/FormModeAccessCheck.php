@@ -78,7 +78,7 @@ class FormModeAccessCheck implements AccessInterface {
       }
 
       if ($form_mode_name != 'default' && $entity_display) {
-        $access->cacheUntilEntityChanges($entity_display);
+        $access->addCacheableDependency($entity_display);
       }
 
       if ($visibility) {
