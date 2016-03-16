@@ -64,7 +64,7 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
         }
         else {
           // If there is a URL, this is an external link so always accessible.
-          $access = AccessResult::allowed()->cachePerPermissions()->cacheUntilEntityChanges($entity);
+          $access = AccessResult::allowed()->cachePerPermissions()->addCacheableDependency($entity);
           /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
           // We allow access, but only if the link is accessible as well.
           if (($url_object = $entity->getUrlObject()) && $url_object->isRouted()) {
@@ -75,7 +75,7 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
         }
 
       case 'delete':
-        return AccessResult::allowedIf(!$entity->isNew() && $account->hasPermission('administer menu'))->cachePerPermissions()->cacheUntilEntityChanges($entity);
+        return AccessResult::allowedIf(!$entity->isNew() && $account->hasPermission('administer menu'))->cachePerPermissions()->addCacheableDependency($entity);
     }
   }
 

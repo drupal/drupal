@@ -30,10 +30,10 @@ class DateFormatAccessControlHandler extends EntityAccessControlHandler {
     // Locked date formats cannot be updated or deleted.
     elseif (in_array($operation, array('update', 'delete'))) {
       if ($entity->isLocked()) {
-        return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
+        return AccessResult::forbidden()->addCacheableDependency($entity);
       }
       else {
-        return parent::checkAccess($entity, $operation, $account)->cacheUntilEntityChanges($entity);
+        return parent::checkAccess($entity, $operation, $account)->addCacheableDependency($entity);
       }
     }
 

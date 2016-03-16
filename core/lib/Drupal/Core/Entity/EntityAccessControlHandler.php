@@ -148,7 +148,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($operation == 'delete' && $entity->isNew()) {
-      return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
+      return AccessResult::forbidden()->addCacheableDependency($entity);
     }
     if ($admin_permission = $this->entityType->getAdminPermission()) {
       return AccessResult::allowedIfHasPermission($account, $this->entityType->getAdminPermission());

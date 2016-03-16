@@ -61,7 +61,7 @@ class ShortcutAccessControlHandler extends EntityAccessControlHandler implements
     }
     // @todo Fix this bizarre code: how can a shortcut exist without a shortcut
     // set? The above if-test is unnecessary. See https://www.drupal.org/node/2339903.
-    return AccessResult::neutral()->cacheUntilEntityChanges($entity);
+    return AccessResult::neutral()->addCacheableDependency($entity);
   }
 
   /**

@@ -209,7 +209,7 @@ function hook_block_access(\Drupal\block\Entity\Block $block, $operation, \Drupa
   // Example code that would prevent displaying the 'Powered by Drupal' block in
   // a region different than the footer.
   if ($operation == 'view' && $block->getPluginId() == 'system_powered_by_block') {
-    return AccessResult::forbiddenIf($block->getRegion() != 'footer')->cacheUntilEntityChanges($block);
+    return AccessResult::forbiddenIf($block->getRegion() != 'footer')->addCacheableDependency($block);
   }
 
   // No opinion.

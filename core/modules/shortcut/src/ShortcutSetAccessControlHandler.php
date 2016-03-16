@@ -31,7 +31,7 @@ class ShortcutSetAccessControlHandler extends EntityAccessControlHandler {
         if (!$account->hasPermission('access shortcuts')) {
           return AccessResult::neutral()->cachePerPermissions();
         }
-        return AccessResult::allowedIf($account->hasPermission('customize shortcut links') && $entity == shortcut_current_displayed_set($account))->cachePerPermissions()->cacheUntilEntityChanges($entity);
+        return AccessResult::allowedIf($account->hasPermission('customize shortcut links') && $entity == shortcut_current_displayed_set($account))->cachePerPermissions()->addCacheableDependency($entity);
 
       case 'delete':
         return AccessResult::allowedIf($account->hasPermission('administer shortcuts') && $entity->id() != 'default')->cachePerPermissions();

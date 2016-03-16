@@ -26,10 +26,10 @@ class FieldConfigAccessControlHandler extends EntityAccessControlHandler {
     if ($operation == 'delete') {
       $field_storage_entity = $entity->getFieldStorageDefinition();
       if ($field_storage_entity->isLocked()) {
-        return AccessResult::forbidden()->cacheUntilEntityChanges($field_storage_entity);
+        return AccessResult::forbidden()->addCacheableDependency($field_storage_entity);
       }
       else {
-        return AccessResult::allowedIfHasPermission($account, 'administer ' . $entity->getTargetEntityTypeId() . ' fields')->cacheUntilEntityChanges($field_storage_entity);
+        return AccessResult::allowedIfHasPermission($account, 'administer ' . $entity->getTargetEntityTypeId() . ' fields')->addCacheableDependency($field_storage_entity);
       }
     }
     return AccessResult::allowedIfHasPermission($account, 'administer ' . $entity->getTargetEntityTypeId() . ' fields');

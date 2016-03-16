@@ -96,7 +96,7 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
 
     // Don't grant access to disabled blocks.
     if (!$entity->status()) {
-      return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
+      return AccessResult::forbidden()->addCacheableDependency($entity);
     }
     else {
       $conditions = [];
@@ -151,7 +151,7 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
       $this->mergeCacheabilityFromConditions($access, $conditions);
 
       // Ensure that access is evaluated again when the block changes.
-      return $access->cacheUntilEntityChanges($entity);
+      return $access->addCacheableDependency($entity);
     }
   }
 

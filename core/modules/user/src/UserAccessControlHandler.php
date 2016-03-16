@@ -55,7 +55,7 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
       case 'view':
         // Only allow view access if the account is active.
         if ($account->hasPermission('access user profiles') && $entity->isActive()) {
-          return AccessResult::allowed()->cachePerPermissions()->cacheUntilEntityChanges($entity);
+          return AccessResult::allowed()->cachePerPermissions()->addCacheableDependency($entity);
         }
         // Users can view own profiles at all times.
         elseif ($account->id() == $entity->id()) {

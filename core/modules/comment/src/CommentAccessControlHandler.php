@@ -31,7 +31,7 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
     if ($operation == 'approve') {
       return AccessResult::allowedIf($comment_admin && !$entity->isPublished())
         ->cachePerPermissions()
-        ->cacheUntilEntityChanges($entity);
+        ->addCacheableDependency($entity);
     }
 
     if ($comment_admin) {
@@ -41,11 +41,11 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
 
     switch ($operation) {
       case 'view':
-        return AccessResult::allowedIf($account->hasPermission('access comments') && $entity->isPublished())->cachePerPermissions()->cacheUntilEntityChanges($entity)
+        return AccessResult::allowedIf($account->hasPermission('access comments') && $entity->isPublished())->cachePerPermissions()->addCacheableDependency($entity)
           ->andIf($entity->getCommentedEntity()->access($operation, $account, TRUE));
 
       case 'update':
-        return AccessResult::allowedIf($account->id() && $account->id() == $entity->getOwnerId() && $entity->isPublished() && $account->hasPermission('edit own comments'))->cachePerPermissions()->cachePerUser()->cacheUntilEntityChanges($entity);
+        return AccessResult::allowedIf($account->id() && $account->id() == $entity->getOwnerId() && $entity->isPublished() && $account->hasPermission('edit own comments'))->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
 
       default:
         // No opinion.
@@ -122,9 +122,9 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         $admin_access = AccessResult::allowedIfHasPermission($account, 'administer comments');
         $anonymous_access = AccessResult::allowedIf($entity->isNew() && $account->isAnonymous() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT && $account->hasPermission('post comments'))
           ->cachePerPermissions()
-          ->cacheUntilEntityChanges($entity)
-          ->cacheUntilEntityChanges($field_definition->getConfig($commented_entity->bundle()))
-          ->cacheUntilEntityChanges($commented_entity);
+          ->addCacheableDependency($entity)
+          ->addCacheableDependency($field_definition->getConfig($commented_entity->bundle()))
+          ->addCacheableDependency($commented_entity);
         return $admin_access->orIf($anonymous_access);
       }
     }
