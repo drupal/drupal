@@ -8,12 +8,15 @@
 namespace Drupal\migrate_drupal_ui\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate_drupal\MigrationCreationTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Provides a base class for testing migration upgrades in the UI.
  */
 abstract class MigrateUpgradeTestBase extends WebTestBase {
+  use MigrationCreationTrait;
 
   /**
    * Use the Standard profile to test help implementations of many core modules.
@@ -32,7 +35,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['migrate_drupal_ui'];
+  public static $modules = ['migrate_drupal_ui', 'telephone'];
 
   /**
    * {@inheritdoc}
@@ -149,6 +152,32 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
       $real_count = count(\Drupal::entityTypeManager()->getStorage($entity_type)->loadMultiple());
       $expected_count = isset($expected_counts[$entity_type]) ? $expected_counts[$entity_type] : 0;
       $this->assertEqual($expected_count, $real_count, "Found $real_count $entity_type entities, expected $expected_count.");
+    }
+
+    $version_tag = 'Drupal ' . $this->getLegacyDrupalVersion($this->sourceDatabase);
+    $plugin_manager = \Drupal::service('plugin.manager.migration');
+    /** @var \Drupal\migrate\Plugin\Migration[] $all_migrations */
+    $all_migrations = $plugin_manager->createInstancesByTag($version_tag);
+    foreach ($all_migrations as $migration) {
+      $id_map = $migration->getIdMap();
+      foreach ($id_map as $source_id => $map) {
+        // Convert $source_id into a keyless array so that
+        // \Drupal\migrate\Plugin\migrate\id_map\Sql::getSourceHash() works as
+        // expected.
+        $source_id_values = array_values(unserialize($source_id));
+        $row = $id_map->getRowBySource($source_id_values);
+        $destination = serialize($id_map->currentDestination());
+        $message = "Successful migration of $source_id to $destination as part of the {$migration->id()} migration. The source row status is " . $row['source_row_status'];
+        // A completed migration should have maps with
+        // MigrateIdMapInterface::STATUS_IGNORED or
+        // MigrateIdMapInterface::STATUS_IMPORTED.
+        if ($row['source_row_status'] == MigrateIdMapInterface::STATUS_FAILED || $row['source_row_status'] == MigrateIdMapInterface::STATUS_NEEDS_UPDATE) {
+          $this->fail($message);
+        }
+        else {
+          $this->pass($message);
+        }
+      }
     }
   }
 
