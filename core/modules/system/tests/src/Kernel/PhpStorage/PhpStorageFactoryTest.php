@@ -65,18 +65,28 @@ class PhpStorageFactoryTest extends KernelTestBase {
     $this->setSettings('test', array('bin' => NULL));
     $php = PhpStorageFactory::get('test');
     $this->assertTrue($php instanceof MockPhpStorage, 'An MockPhpStorage instance was returned from overridden settings.');
-    $this->assertIdentical('test', $php->getConfigurationValue('bin'), 'Name value was used for bin.');
+    $this->assertSame('test', $php->getConfigurationValue('bin'), 'Name value was used for bin.');
 
     // Test that a default directory is set if it's empty.
     $this->setSettings('test', array('directory' => NULL));
     $php = PhpStorageFactory::get('test');
     $this->assertTrue($php instanceof MockPhpStorage, 'An MockPhpStorage instance was returned from overridden settings.');
-    $this->assertIdentical(PublicStream::basePath() . '/php', $php->getConfigurationValue('directory'), 'Default file directory was used.');
+    $this->assertSame(PublicStream::basePath() . '/php', $php->getConfigurationValue('directory'), 'Default file directory was used.');
 
     // Test that a default storage class is set if it's empty.
     $this->setSettings('test', array('class' => NULL));
     $php = PhpStorageFactory::get('test');
     $this->assertTrue($php instanceof MTimeProtectedFileStorage, 'An MTimeProtectedFileStorage instance was returned from overridden settings with no class.');
+
+    // Test that a default secret is not returned if it's set in the override.
+    $this->setSettings('test');
+    $php = PhpStorageFactory::get('test');
+    $this->assertNotEquals('mock hash salt', $php->getConfigurationValue('secret'), 'The default secret is not used if a secret is set in the overridden settings.');
+
+    // Test that a default secret is set if it's empty.
+    $this->setSettings('test', array('secret' => NULL));
+    $php = PhpStorageFactory::get('test');
+    $this->assertSame('mock hash salt', $php->getConfigurationValue('secret'), 'The default secret is used if one is not set in the overridden settings.');
   }
 
   /**
@@ -94,6 +104,7 @@ class PhpStorageFactoryTest extends KernelTestBase {
       'secret' => $this->randomString(),
       'bin' => 'test',
     );
+    $settings['hash_salt'] = 'mock hash salt';
     new Settings($settings);
   }
 

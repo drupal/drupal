@@ -34,6 +34,7 @@ class PhpStorageFactory {
    *   An instantiated storage for the specified name.
    */
   static function get($name) {
+    $configuration = array();
     $overrides = Settings::get('php_storage');
     if (isset($overrides[$name])) {
       $configuration = $overrides[$name];
@@ -41,13 +42,11 @@ class PhpStorageFactory {
     elseif (isset($overrides['default'])) {
       $configuration = $overrides['default'];
     }
-    else {
-      $configuration = array(
-        'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',
-        'secret' => Settings::getHashSalt(),
-      );
-    }
+    // Make sure all the necessary configuration values are set.
     $class = isset($configuration['class']) ? $configuration['class'] : 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage';
+    if (!isset($configuration['secret'])) {
+      $configuration['secret'] = Settings::getHashSalt();
+    }
     if (!isset($configuration['bin'])) {
       $configuration['bin'] = $name;
     }
