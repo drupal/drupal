@@ -36,13 +36,6 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
   protected $translatedString;
 
   /**
-   * A bool that statically caches whether locale_get_plural() exists.
-   *
-   * @var bool
-   */
-  protected static $localeEnabled;
-
-  /**
    * Constructs a new PluralTranslatableMarkup object.
    *
    * Parses values passed into this class through the format_plural() function
@@ -157,10 +150,13 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    * @return int
    */
   protected function getPluralIndex() {
-    if (!isset(static::$localeEnabled)) {
-      static::$localeEnabled = function_exists('locale_get_plural');
-    }
-    if (function_exists('locale_get_plural')) {
+    // We have to test both if the function and the service exist since in
+    // certain situations it is possible that locale code might be loaded but
+    // the service does not exist. For example, where the parent test site has
+    // locale installed but the child site does not.
+    // @todo Refactor in https://www.drupal.org/node/2660338 so this code does
+    // not depend on knowing that the Locale module exists.
+    if (function_exists('locale_get_plural') && \Drupal::hasService('locale.plural.formula')) {
       return locale_get_plural($this->count, $this->getOption('langcode'));
     }
     return -1;
