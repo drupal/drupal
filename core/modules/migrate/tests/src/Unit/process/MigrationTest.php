@@ -67,6 +67,7 @@ class MigrationTest extends MigrateProcessTestCase {
     $migration_plugin_manager->createInstances(['destination_migration'])
       ->willReturn(['destination_migration' => $destination_migration->reveal()]);
     $destination_id_map->lookupDestinationId([1])->willReturn(NULL);
+    $destination_id_map->saveIdMapping(Argument::any(), Argument::any(), MigrateIdMapInterface::STATUS_NEEDS_UPDATE)->willReturn(NULL);
 
     $configuration = [
       'no_stub' => FALSE,

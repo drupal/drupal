@@ -11,6 +11,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -139,7 +140,11 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
         $destination_ids = $destination_plugin->import($stub_row);
       }
       catch (\Exception $e) {
-        $migrate_executable->saveMessage($e->getMessage());
+        $migration->getIdMap()->saveMessage($stub_row->getSourceIdValues(), $e->getMessage());
+      }
+
+      if ($destination_ids) {
+        $migration->getIdMap()->saveIdMapping($stub_row, $destination_ids, MigrateIdMapInterface::STATUS_NEEDS_UPDATE);
       }
     }
     if ($destination_ids) {
