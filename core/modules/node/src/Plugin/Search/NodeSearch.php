@@ -429,8 +429,23 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     // per cron run.
     $limit = (int) $this->searchSettings->get('index.cron_limit');
 
-    $result = $this->database->queryRange("SELECT n.nid, MAX(sd.reindex) FROM {node} n LEFT JOIN {search_dataset} sd ON sd.sid = n.nid AND sd.type = :type WHERE sd.sid IS NULL OR sd.reindex <> 0 GROUP BY n.nid ORDER BY MAX(sd.reindex) is null DESC, MAX(sd.reindex) ASC, n.nid ASC", 0, $limit, array(':type' => $this->getPluginId()), array('target' => 'replica'));
-    $nids = $result->fetchCol();
+    $query = db_select('node', 'n', array('target' => 'replica'));
+    $query->addField('n', 'nid');
+    $query->leftJoin('search_dataset', 'sd', 'sd.sid = n.nid AND sd.type = :type', array(':type' => $this->getPluginId()));
+    $query->addExpression('CASE MAX(sd.reindex) WHEN NULL THEN 0 ELSE 1 END', 'ex');
+    $query->addExpression('MAX(sd.reindex)', 'ex2');
+    $query->condition(
+        $query->orConditionGroup()
+        ->where('sd.sid IS NULL')
+        ->condition('sd.reindex', 0, '<>')
+      );
+    $query->orderBy('ex', 'DESC')
+      ->orderBy('ex2')
+      ->orderBy('n.nid')
+      ->groupBy('n.nid')
+      ->range(0, $limit);
+
+    $nids = $query->execute()->fetchCol();
     if (!$nids) {
       return;
     }
