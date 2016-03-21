@@ -800,7 +800,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $display_options['cache']['type'] = 'tag';
     $display_options['query']['type'] = 'views_query';
     $display_options['exposed_form']['type'] = 'basic';
-    $display_options['pager']['type'] = 'full';
+    $display_options['pager']['type'] = 'mini';
     $display_options['style']['type'] = 'default';
     $display_options['row']['type'] = 'fields';
 
@@ -1038,9 +1038,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     if (empty($page['items_per_page'])) {
       $display_options['pager']['type'] = 'none';
     }
-    // If the user checked the pager checkbox use a full pager.
+    // If the user checked the pager checkbox use a mini pager.
     elseif (!empty($page['pager'])) {
-      $display_options['pager']['type'] = 'full';
+      $display_options['pager']['type'] = 'mini';
     }
     // If the user doesn't have checked the checkbox use the pager which just
     // displays a certain amount of items.
