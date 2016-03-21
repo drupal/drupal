@@ -1,6 +1,6 @@
 type: module
 name: Inline Form Errors
-description: 'Enabling inline form errors improves accessibility of web forms errors so that they meet WCAG 2.0 requirements. Unfortunately, some functionality within Forms API may not work as desired.'
+description: 'Adds WCAG 2.0 accessibility compliance for web form errors. Some form functionality may not work with this experimental module.'
 version: VERSION
 core: 8.x
 package: Core (Experimental)
