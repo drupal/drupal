@@ -2,10 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\node\Tests\Migrate\d6\MigrateNodeRevisionTest.
+ * Contains \Drupal\Tests\node\Kernel\Migrate\d6\MigrateNodeRevisionTest.
  */
 
 namespace Drupal\node\Tests\Migrate\d6;
+use Drupal\Tests\node\Kernel\Migrate\d6\MigrateNodeTestBase;
 
 /**
  * Node content revisions migration.

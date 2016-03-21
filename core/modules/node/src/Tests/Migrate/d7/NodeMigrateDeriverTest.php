@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Tests\Migrate\d7;
 
-use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
+use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
  * Tests the d7_node node deriver.
