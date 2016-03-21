@@ -93,6 +93,7 @@ abstract class RESTTestBase extends WebTestBase {
 
     $url = $this->buildUrl($url);
 
+    $curl_options = array();
     switch ($method) {
       case 'GET':
         // Set query if there are additional GET parameters.
@@ -104,6 +105,16 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_HTTPHEADER => array('Accept: ' . $mime_type),
         );
         break;
+
+        case 'HEAD':
+          $curl_options = array(
+            CURLOPT_HTTPGET => FALSE,
+            CURLOPT_CUSTOMREQUEST => 'HEAD',
+            CURLOPT_URL => $url,
+            CURLOPT_NOBODY => TRUE,
+            CURLOPT_HTTPHEADER => array('Accept: ' . $mime_type),
+          );
+          break;
 
       case 'POST':
         $curl_options = array(
