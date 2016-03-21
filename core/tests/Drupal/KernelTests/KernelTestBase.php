@@ -288,6 +288,13 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   }
 
   /**
+   * @return string
+   */
+  public function getDatabasePrefix() {
+    return $this->databasePrefix;
+  }
+
+  /**
    * Bootstraps a kernel for a test.
    */
   private function bootKernel() {
