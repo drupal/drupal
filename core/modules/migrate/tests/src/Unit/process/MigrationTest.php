@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\Migration;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
