@@ -107,6 +107,11 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
  * @see \Drupal\contextual\ContextualController::render()
  */
 function contextual_preprocess(&$variables, $hook, $info) {
+  $variables['#cache']['contexts'][] = 'user.permissions';
+  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
+    return;
+  }
+
   // Determine the primary theme function argument.
   if (!empty($info['variables'])) {
     $keys = array_keys($info['variables']);

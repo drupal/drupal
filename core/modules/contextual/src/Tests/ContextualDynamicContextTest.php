@@ -105,6 +105,12 @@ class ContextualDynamicContextTest extends WebTestBase {
     $this->assertIdentical($json[$ids[2]], '<ul class="contextual-links"><li class="entitynodeedit-form"><a href="' . base_path() . 'node/3/edit">Edit</a></li></ul>');
     $this->assertIdentical($json[$ids[3]], '');
 
+    // Verify that link language is properly handled.
+    $node3->addTranslation('it')->set('title', $this->randomString())->save();
+    $id = 'node:node=' . $node3->id() . ':changed=' . $node3->getChangedTime() . '&langcode=it';
+    $this->drupalGet('node', ['language' => ConfigurableLanguage::createFromLangcode('it')]);
+    $this->assertContextualLinkPlaceHolder($id);
+
     // Authenticated user: can access contextual links, cannot edit articles.
     $this->drupalLogin($this->authenticatedUser);
     $this->drupalGet('node');
@@ -126,18 +132,12 @@ class ContextualDynamicContextTest extends WebTestBase {
     $this->drupalLogin($this->anonymousUser);
     $this->drupalGet('node');
     for ($i = 0; $i < count($ids); $i++) {
-      $this->assertContextualLinkPlaceHolder($ids[$i]);
+      $this->assertNoContextualLinkPlaceHolder($ids[$i]);
     }
     $this->renderContextualLinks(array(), 'node');
     $this->assertResponse(403);
     $this->renderContextualLinks($ids, 'node');
     $this->assertResponse(403);
-
-    // Verify that link language is properly handled.
-    $node3->addTranslation('it')->set('title', $this->randomString())->save();
-    $id = 'node:node=' . $node3->id() . ':changed=' . $node3->getChangedTime() . '&langcode=it';
-    $this->drupalGet('node', ['language' => ConfigurableLanguage::createFromLangcode('it')]);
-    $this->assertContextualLinkPlaceHolder($id);
 
     // Get a page where contextual links are directly rendered.
     $this->drupalGet(Url::fromRoute('menu_test.contextual_test'));
