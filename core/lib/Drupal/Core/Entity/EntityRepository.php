@@ -56,7 +56,7 @@ class EntityRepository implements EntityRepositoryInterface {
 
     $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadByProperties([$uuid_key => $uuid]);
 
-    return reset($entities);
+    return ($entities) ? reset($entities) : NULL;
   }
 
   /**
