@@ -26,16 +26,6 @@ class MigrateUpgradeForm extends ConfirmFormBase {
   use MigrationCreationTrait;
 
   /**
-   * If a migration has previously run, perform an incremental migration.
-   */
-  const MIGRATE_UPGRADE_INCREMENTAL = 1;
-
-  /**
-   * If a migration has previously run, roll it back and start fresh.
-   */
-  const MIGRATE_UPGRADE_ROLLBACK = 2;
-
-  /**
    * Mapping of known migrations and their source and destination modules.
    *
    * @todo https://www.drupal.org/node/2569805 Hardcoding this information is
@@ -705,21 +695,15 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     $form['#title'] = $this->t('Drupal Upgrade');
 
     if ($date_performed = $this->state->get('migrate_drupal_ui.performed')) {
+      // @todo Add back support for rollbacks and incremental migrations.
+      //   https://www.drupal.org/node/2687843
+      //   https://www.drupal.org/node/2687849
       $form['upgrade_option_item'] = [
         '#type' => 'item',
-        '#prefix' => $this->t('<p>An upgrade has already been performed on this site.</p>'),
+        '#prefix' => $this->t('An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal 8. Rollbacks and incremental migrations are not yet supported through the user interface. For more information, see the <a href=":url">upgrading handbook</a>.', [':url' => 'https://www.drupal.org/upgrade/migrate']),
         '#description' => $this->t('<p>Last upgrade: @date</p>', ['@date' => $this->dateFormatter->format($date_performed)]),
       ];
-      $form['upgrade_option'] = array(
-        '#type' => 'radios',
-        '#title' => $this->t('You have two options:'),
-        '#default_value' => static::MIGRATE_UPGRADE_INCREMENTAL,
-        '#options' => [
-          static::MIGRATE_UPGRADE_INCREMENTAL => $this->t('<strong>Rerun</strong>: Import additional configuration and content that was not available when running the upgrade previously.'),
-          static::MIGRATE_UPGRADE_ROLLBACK => $this->t('<strong>Rollback</strong>: Remove content and configuration entities (such as fields and node types). Default values of other configuration will not be reverted (such as site name).'),
-        ],
-      );
-      $validate = ['::validateCredentialForm'];
+      return $form;
     }
     else {
       $form['info_header'] = [
@@ -769,19 +753,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    *   The current state of the form.
    */
   public function submitOverviewForm(array &$form, FormStateInterface $form_state) {
-    switch ($form_state->getValue('upgrade_option')) {
-      case static::MIGRATE_UPGRADE_INCREMENTAL:
-        $form_state->setValue('step', 'confirm');
-        break;
-
-      case static::MIGRATE_UPGRADE_ROLLBACK:
-        $form_state->setValue('step', 'confirm');
-        break;
-
-      default:
-        $form_state->setValue('step', 'credentials');
-        break;
-    }
+    $form_state->setValue('step', 'credentials');
     $form_state->setRebuild();
   }
 
@@ -894,56 +866,26 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    *   The current state of the form.
    */
   public function validateCredentialForm(array &$form, FormStateInterface $form_state) {
-    // Skip if rollback was chosen.
-    if ($form_state->getValue('upgrade_option') == static::MIGRATE_UPGRADE_ROLLBACK) {
-      return;
-    }
 
     // Retrieve the database driver from the form, use reflection to get the
     // namespace, and then construct a valid database array the same as in
     // settings.php.
-    if ($driver = $form_state->getValue('driver')) {
-      $drivers = $this->getDatabaseTypes();
-      $reflection = new \ReflectionClass($drivers[$driver]);
-      $install_namespace = $reflection->getNamespaceName();
+    $driver = $form_state->getValue('driver');
+    $drivers = $this->getDatabaseTypes();
+    $reflection = new \ReflectionClass($drivers[$driver]);
+    $install_namespace = $reflection->getNamespaceName();
 
-      $database = $form_state->getValue($driver);
-      // Cut the trailing \Install from namespace.
-      $database['namespace'] = substr($install_namespace, 0, strrpos($install_namespace, '\\'));
-      $database['driver'] = $driver;
+    $database = $form_state->getValue($driver);
+    // Cut the trailing \Install from namespace.
+    $database['namespace'] = substr($install_namespace, 0, strrpos($install_namespace, '\\'));
+    $database['driver'] = $driver;
 
-      // Validate the driver settings and just end here if we have any issues.
-      if ($errors = $drivers[$driver]->validateDatabaseSettings($database)) {
-        foreach ($errors as $name => $message) {
-          $form_state->setErrorByName($name, $message);
-        }
-        return;
+    // Validate the driver settings and just end here if we have any issues.
+    if ($errors = $drivers[$driver]->validateDatabaseSettings($database)) {
+      foreach ($errors as $name => $message) {
+        $form_state->setErrorByName($name, $message);
       }
-    }
-    else {
-      $database = [];
-      // Migration templates that had matching tags for the source Drupal
-      // version where converted to migration entities. Find one of those
-      // migrations to be able to look up the matching database credentials
-      // from state.
-      $definitions = $this->pluginManager->getDefinitions();
-      foreach ($definitions as $id => $definition) {
-        /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-        $migration = $this->pluginManager->createInstance($id);
-        $is_drupal_migration = FALSE;
-        foreach ($migration->get('migration_tags') as $migration_tag) {
-          if (substr($migration_tag, 0, 7) === 'Drupal ') {
-            $is_drupal_migration = TRUE;
-            break;
-          }
-        }
-        if ($is_drupal_migration) {
-          $source = $migration->get('source');
-          if ($database = $this->state->get($source['database_state_key'])['database']) {
-            break;
-          }
-        }
-      }
+      return;
     }
 
     try {
@@ -1005,7 +947,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
   }
 
   /**
-   * Confirmation form for rollbacks, missing migrations, etc.
+   * Confirmation form for missing migrations, etc.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
@@ -1019,98 +961,89 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     $form = parent::buildForm($form, $form_state);
     $form['actions']['submit']['#submit'] = ['::submitConfirmForm'];
 
-    if ($rollback = $form_state->getValue('upgrade_option') == static::MIGRATE_UPGRADE_ROLLBACK) {
-      $form_state->setStorage(['upgrade_option' => static::MIGRATE_UPGRADE_ROLLBACK]);
-      $form['rollback'] = [
-        '#markup' => $this->t('All previously imported content, as well as configuration such as field definitions, will be removed.'),
-      ];
-      $form['actions']['submit']['#value'] = $this->t('Perform rollback');
+    $form['actions']['submit']['#value'] = $this->t('Perform upgrade');
+
+    $table_data = [];
+    $system_data = [];
+    foreach ($form_state->get('migrations') as $migration_id => $migration_label) {
+      // Fetch the system data at the first opportunity.
+      if (empty($system_data)) {
+        $system_data = $form_state->get('system_data');
+      }
+
+      // Handle derivatives.
+      list($migration_id,) = explode(':', $migration_id, 2);
+      $source_module = $this->moduleUpgradePaths[$migration_id]['source_module'];
+      $destination_module = $this->moduleUpgradePaths[$migration_id]['destination_module'];
+      $table_data[$source_module][$destination_module][$migration_id] = $migration_label;
     }
-    else {
-      $form['actions']['submit']['#value'] = $this->t('Perform upgrade');
+    // Sort the table by source module names and within that destination
+    // module names.
+    ksort($table_data);
+    foreach ($table_data as $source_module => $destination_module_info) {
+      ksort($table_data[$source_module]);
+    }
+    $unmigrated_source_modules = array_diff_key($system_data['module'], $table_data);
 
-      $table_data = [];
-      $system_data = [];
-      foreach ($form_state->get('migrations') as $migration_id => $migration_label) {
-        // Fetch the system data at the first opportunity.
-        if (empty($system_data)) {
-          $system_data = $form_state->get('system_data');
-        }
-
-        // Handle derivatives.
-        list($migration_id,) = explode(':', $migration_id, 2);
-        $source_module = $this->moduleUpgradePaths[$migration_id]['source_module'];
-        $destination_module = $this->moduleUpgradePaths[$migration_id]['destination_module'];
-        $table_data[$source_module][$destination_module][$migration_id] = $migration_label;
-      }
-      // Sort the table by source module names and within that destination
-      // module names.
-      ksort($table_data);
-      foreach ($table_data as $source_module => $destination_module_info) {
-        ksort($table_data[$source_module]);
-      }
-      $unmigrated_source_modules = array_diff_key($system_data['module'], $table_data);
-
-      // Missing migrations.
-      $form['missing_module_list_title'] = [
-        '#type' => 'item',
-        '#title' => $this->t('Missing upgrade paths'),
-        '#description' => $this->t('The following items will not be upgraded. For more information see <a href=":migrate">Upgrading from Drupal 6 or 7 to Drupal 8</a>.', array(':migrate' => 'https://www.drupal.org/upgrade/migrate')),
-      ];
-      $form['missing_module_list'] = [
-        '#type' => 'table',
-        '#header' => [
-          $this->t('Source'),
-          $this->t('Destination'),
-        ],
-      ];
-      $missing_count = 0;
-      ksort($unmigrated_source_modules);
-      foreach ($unmigrated_source_modules as $source_module => $module_data) {
-        if ($module_data['status']) {
-          $missing_count++;
-          $form['missing_module_list'][$source_module] = [
-            'source_module' => ['#plain_text' => $source_module],
-            'destination_module' => ['#plain_text' => 'Missing'],
-          ];
-        }
-      }
-      // Available migrations.
-      $form['available_module_list'] = [
-        '#tree' => TRUE,
-        '#type' => 'details',
-        '#title' => $this->t('Available upgrade paths'),
-      ];
-
-      $form['available_module_list']['module_list'] = [
-        '#type' => 'table',
-        '#header' => [
-          $this->t('Source'),
-          $this->t('Destination'),
-        ],
-      ];
-
-      $available_count = 0;
-      foreach ($table_data as $source_module => $destination_module_info) {
-        $available_count++;
-        $destination_details = [];
-        foreach ($destination_module_info as $destination_module => $migration_ids) {
-          $destination_details[$destination_module] = [
-            '#type' => 'item',
-            '#plain_text' => $destination_module,
-          ];
-        }
-        $form['available_module_list']['module_list'][$source_module] = [
+    // Missing migrations.
+    $form['missing_module_list_title'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Missing upgrade paths'),
+      '#description' => $this->t('The following items will not be upgraded. For more information see <a href=":migrate">Upgrading from Drupal 6 or 7 to Drupal 8</a>.', array(':migrate' => 'https://www.drupal.org/upgrade/migrate')),
+    ];
+    $form['missing_module_list'] = [
+      '#type' => 'table',
+      '#header' => [
+        $this->t('Source'),
+        $this->t('Destination'),
+      ],
+    ];
+    $missing_count = 0;
+    ksort($unmigrated_source_modules);
+    foreach ($unmigrated_source_modules as $source_module => $module_data) {
+      if ($module_data['status']) {
+        $missing_count++;
+        $form['missing_module_list'][$source_module] = [
           'source_module' => ['#plain_text' => $source_module],
-          'destination_module' => $destination_details,
+          'destination_module' => ['#plain_text' => 'Missing'],
         ];
       }
-      $form['counts'] = [
-        '#type' => 'item',
-        '#title' => '<ul><li>' . $this->t('@count available upgrade paths', ['@count' => $available_count]) . '</li><li>' . $this->t('@count missing upgrade paths', ['@count' => $missing_count]) . '</li></ul>',
-        '#weight' => -15,
+    }
+    // Available migrations.
+    $form['available_module_list'] = [
+      '#tree' => TRUE,
+      '#type' => 'details',
+      '#title' => $this->t('Available upgrade paths'),
+    ];
+
+    $form['available_module_list']['module_list'] = [
+      '#type' => 'table',
+      '#header' => [
+        $this->t('Source'),
+        $this->t('Destination'),
+      ],
+    ];
+
+    $available_count = 0;
+    foreach ($table_data as $source_module => $destination_module_info) {
+      $available_count++;
+      $destination_details = [];
+      foreach ($destination_module_info as $destination_module => $migration_ids) {
+        $destination_details[$destination_module] = [
+          '#type' => 'item',
+          '#plain_text' => $destination_module,
+        ];
+      }
+      $form['available_module_list']['module_list'][$source_module] = [
+        'source_module' => ['#plain_text' => $source_module],
+        'destination_module' => $destination_details,
       ];
     }
+    $form['counts'] = [
+      '#type' => 'item',
+      '#title' => '<ul><li>' . $this->t('@count available upgrade paths', ['@count' => $available_count]) . '</li><li>' . $this->t('@count missing upgrade paths', ['@count' => $missing_count]) . '</li></ul>',
+      '#weight' => -15,
+    ];
 
     return $form;
   }
@@ -1125,65 +1058,26 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    */
   public function submitConfirmForm(array &$form, FormStateInterface $form_state) {
     $storage = $form_state->getStorage();
-    if (isset($storage['upgrade_option']) && $storage['upgrade_option'] == static::MIGRATE_UPGRADE_ROLLBACK) {
-      $migrations = $this->pluginManager->createInstances([]);
 
-      // Assume we want all those tagged 'Drupal %'.
-      foreach ($migrations as $migration_id => $migration) {
-        $keep = FALSE;
-        $tags = $migration->get('migration_tags');
-        foreach ($tags as $tag) {
-          if (strpos($tag, 'Drupal ') === 0) {
-            $keep = TRUE;
-            break;
-          }
-        }
-        if (!$keep) {
-          unset($migrations[$migration_id]);
-        }
-      }
-      // Roll back in reverse order.
-      $migrations = array_reverse($migrations);
-
-      $batch = [
-        'title' => $this->t('Rolling back upgrade'),
-        'progress_message' => '',
-        'operations' => [
-          [
-            [MigrateUpgradeRunBatch::class, 'run'],
-            [array_keys($migrations), 'rollback', []],
-          ],
+    $migrations = $storage['migrations'];
+    $config['source_base_path'] = $storage['source_base_path'];
+    $batch = [
+      'title' => $this->t('Running upgrade'),
+      'progress_message' => '',
+      'operations' => [
+        [
+          [MigrateUpgradeRunBatch::class, 'run'],
+          [array_keys($migrations), 'import', $config],
         ],
-        'finished' => [
-          MigrateUpgradeRunBatch::class,
-          'finished',
-        ],
-      ];
-      batch_set($batch);
-      $form_state->setRedirect('migrate_drupal_ui.upgrade');
-      $this->state->delete('migrate_drupal_ui.performed');
-    }
-    else {
-      $migrations = $storage['migrations'];
-      $config['source_base_path'] = $storage['source_base_path'];
-      $batch = [
-        'title' => $this->t('Running upgrade'),
-        'progress_message' => '',
-        'operations' => [
-          [
-            [MigrateUpgradeRunBatch::class, 'run'],
-            [array_keys($migrations), 'import', $config],
-          ],
-        ],
-        'finished' => [
-          MigrateUpgradeRunBatch::class,
-          'finished',
-        ],
-      ];
-      batch_set($batch);
-      $form_state->setRedirect('<front>');
-      $this->state->set('migrate_drupal_ui.performed', REQUEST_TIME);
-    }
+      ],
+      'finished' => [
+        MigrateUpgradeRunBatch::class,
+        'finished',
+      ],
+    ];
+    batch_set($batch);
+    $form_state->setRedirect('<front>');
+    $this->state->set('migrate_drupal_ui.performed', REQUEST_TIME);
   }
 
   /**
