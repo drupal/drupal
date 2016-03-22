@@ -64,11 +64,14 @@ class MigrateUpgradeRunBatch {
    * @param int[] $initial_ids
    *   The full set of migration IDs to import.
    * @param string $operation
-   *   The operation to perform, 'import' or 'rollback'.
+   *   The operation to perform. Only 'import' is currently supported.
    * @param array $config
    *   An array of additional configuration from the form.
    * @param array $context
    *   The batch context.
+   *
+   * @todo Remove the $operation parameter and conditionals for it below, and
+   *   refactor this method. https://www.drupal.org/node/2687851
    */
   public static function run($initial_ids, $operation, $config, &$context) {
     if (!static::$listenersAdded) {
@@ -77,10 +80,6 @@ class MigrateUpgradeRunBatch {
         $event_dispatcher->addListener(MigrateEvents::POST_ROW_SAVE, [static::class, 'onPostRowSave']);
         $event_dispatcher->addListener(MigrateEvents::MAP_SAVE, [static::class, 'onMapSave']);
         $event_dispatcher->addListener(MigrateEvents::IDMAP_MESSAGE, [static::class, 'onIdMapMessage']);
-      }
-      else {
-        $event_dispatcher->addListener(MigrateEvents::POST_ROW_DELETE, [static::class, 'onPostRowDelete']);
-        $event_dispatcher->addListener(MigrateEvents::MAP_DELETE, [static::class, 'onMapDelete']);
       }
       static::$maxExecTime = ini_get('max_execution_time');
       if (static::$maxExecTime <= 0) {
@@ -131,9 +130,6 @@ class MigrateUpgradeRunBatch {
         if ($operation == 'import') {
           $migration_status = $executable->import();
         }
-        else {
-          $migration_status = $executable->rollback();
-        }
       }
       catch (\Exception $e) {
         static::logger()->error($e->getMessage());
@@ -147,11 +143,6 @@ class MigrateUpgradeRunBatch {
           if ($operation == 'import') {
             $message = static::getTranslation()->formatPlural(
               $context['sandbox']['num_processed'], 'Upgraded @migration (processed 1 item total)', 'Upgraded @migration (processed @num_processed items total)',
-              ['@migration' => $migration_name, '@num_processed' => $context['sandbox']['num_processed']]);
-          }
-          else {
-            $message = static::getTranslation()->formatPlural(
-              $context['sandbox']['num_processed'], 'Rolled back @migration (processed 1 item total)', 'Rolled back @migration (processed @num_processed items total)',
               ['@migration' => $migration_name, '@num_processed' => $context['sandbox']['num_processed']]);
           }
           $context['sandbox']['messages'][] = $message;
@@ -222,13 +213,6 @@ class MigrateUpgradeRunBatch {
             '@max' => $context['sandbox']['max'],
           ]) . "<br />\n" . $context['message'];
         }
-        else {
-          $context['message'] = t('Currently rolling back @migration (@current of @max total tasks)', [
-            '@migration' => $migration_name,
-            '@current' => $context['sandbox']['current'],
-            '@max' => $context['sandbox']['max'],
-          ]) . "<br />\n" . $context['message'];
-        }
       }
     }
     else {
@@ -281,9 +265,6 @@ class MigrateUpgradeRunBatch {
       if ($results['operation'] == 'import') {
         drupal_set_message(static::getTranslation()->formatPlural($successes, 'Completed 1 upgrade task successfully', 'Completed @count upgrade tasks successfully'));
       }
-      else {
-        drupal_set_message(static::getTranslation()->formatPlural($successes, 'Completed 1 rollback task successfully', 'Completed @count rollback tasks successfully'));
-      }
     }
 
     // If we had failures, log them and show the migration failed.
@@ -292,19 +273,12 @@ class MigrateUpgradeRunBatch {
         drupal_set_message(static::getTranslation()->formatPlural($failures, '1 upgrade failed', '@count upgrades failed'));
         drupal_set_message(t('Upgrade process not completed'), 'error');
       }
-      else {
-        drupal_set_message(static::getTranslation()->formatPlural($failures, '1 rollback failed', '@count rollbacks failed'));
-        drupal_set_message(t('Rollback process not completed'), 'error');
-      }
     }
     else {
       if ($results['operation'] == 'import') {
         // Everything went off without a hitch. We may not have had successes
         // but we didn't have failures so this is fine.
         drupal_set_message(t('Congratulations, you upgraded Drupal!'));
-      }
-      else {
-        drupal_set_message(t('Rollback of the upgrade is complete - you may now start the upgrade process from scratch.'));
       }
     }
 
