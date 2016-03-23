@@ -118,7 +118,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    * Makes a subrequest to retrieve the default error page.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process
+   *   The event to process.
    * @param string $url
    *   The path/url to which to make a subrequest for this error message.
    * @param int $status_code

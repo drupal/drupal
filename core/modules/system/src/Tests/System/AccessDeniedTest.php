@@ -23,7 +23,7 @@ class AccessDeniedTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['block'];
+  public static $modules = ['block', 'node', 'system_test'];
 
   protected $adminUser;
 
@@ -34,6 +34,8 @@ class AccessDeniedTest extends WebTestBase {
 
     // Create an administrative user.
     $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer site configuration', 'link to any page', 'administer blocks']);
+    $this->adminUser->roles[] = 'administrator';
+    $this->adminUser->save();
 
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access user profiles'));
     user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access user profiles'));
@@ -109,4 +111,27 @@ class AccessDeniedTest extends WebTestBase {
     // Check that we're still on the same page.
     $this->assertText(t('Basic site settings'));
   }
+
+  /**
+   * Tests that an inaccessible custom 403 page falls back to the default.
+   */
+  public function testAccessDeniedCustomPageWithAccessDenied() {
+    // Sets up a 403 page not accessible by the anonymous user.
+    $this->config('system.site')->set('page.403', '/system-test/custom-4xx')->save();
+
+    $this->drupalGet('/system-test/always-denied');
+    $this->assertNoText('Admin-only 4xx response');
+    $this->assertText('You are not authorized to access this page.');
+    $this->assertResponse(403);
+    // Verify the access cacheability metadata for custom 403 is bubbled.
+    $this->assertCacheContext('user.roles');
+
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('/system-test/always-denied');
+    $this->assertText('Admin-only 4xx response');
+    $this->assertResponse(403);
+    // Verify the access cacheability metadata for custom 403 is bubbled.
+    $this->assertCacheContext('user.roles');
+  }
+
 }
