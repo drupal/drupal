@@ -17,6 +17,14 @@ use Drupal\user\RoleInterface;
  * @group system
  */
 class PageNotFoundTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = ['system_test'];
+
   protected $adminUser;
 
   protected function setUp() {
@@ -24,6 +32,8 @@ class PageNotFoundTest extends WebTestBase {
 
     // Create an administrative user.
     $this->adminUser = $this->drupalCreateUser(array('administer site configuration', 'link to any page'));
+    $this->adminUser->roles[] = 'administrator';
+    $this->adminUser->save();
 
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access user profiles'));
     user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access user profiles'));
@@ -50,4 +60,28 @@ class PageNotFoundTest extends WebTestBase {
     $this->drupalGet($this->randomMachineName(10));
     $this->assertText($this->adminUser->getUsername(), 'Found the custom 404 page');
   }
+
+  /**
+   * Tests that an inaccessible custom 404 page falls back to the default.
+   */
+  public function testPageNotFoundCustomPageWithAccessDenied() {
+    // Sets up a 404 page not accessible by the anonymous user.
+    $this->config('system.site')->set('page.404', '/system-test/custom-4xx')->save();
+
+    $this->drupalGet('/this-path-does-not-exist');
+    $this->assertNoText('Admin-only 4xx response');
+    $this->assertText('The requested page could not be found.');
+    $this->assertResponse(404);
+    // Verify the access cacheability metadata for custom 404 is bubbled.
+    $this->assertCacheContext('user.roles');
+
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('/this-path-does-not-exist');
+    $this->assertText('Admin-only 4xx response');
+    $this->assertNoText('The requested page could not be found.');
+    $this->assertResponse(404);
+    // Verify the access cacheability metadata for custom 404 is bubbled.
+    $this->assertCacheContext('user.roles');
+  }
+
 }

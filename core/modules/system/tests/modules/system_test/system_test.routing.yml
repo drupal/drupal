@@ -159,3 +159,19 @@ system_test.date:
     no_cache: 'TRUE'
   requirements:
     _access: 'TRUE'
+
+system_test.custom_4xx_with_limited_access:
+  path: '/system-test/custom-4xx'
+  defaults:
+    _title: 'Admin-only 4xx response'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
+  requirements:
+    _role: 'administrator'
+
+system_test.always_denied:
+  path: '/system-test/always-denied'
+  defaults:
+    _title: 'Always denied'
+    _controller: 'chop'
+  requirements:
+    _access: 'FALSE'
