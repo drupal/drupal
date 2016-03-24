@@ -232,7 +232,7 @@ class ConfigSync extends FormBase {
     $form_state->set('storage_comparer', $storage_comparer);
 
     // Add the AJAX library to the form for dialog support.
-    $form['#attached']['library'][] = 'core/drupal.ajax';
+    $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
 
     foreach ($storage_comparer->getAllCollectionNames() as $collection) {
       if ($collection != StorageInterface::DEFAULT_COLLECTION) {
