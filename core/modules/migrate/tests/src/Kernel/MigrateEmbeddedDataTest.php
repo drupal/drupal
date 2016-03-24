@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
-use Drupal\migrate\Plugin\Migration;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -44,7 +43,7 @@ class MigrateEmbeddedDataTest extends KernelTestBase {
       'destination' => ['plugin' => 'null'],
     ];
 
-    $migration = new Migration([], uniqid(), $definition);
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
     $source = $migration->getSourcePlugin();
 
     // Validate the plugin returns the source data that was provided.
