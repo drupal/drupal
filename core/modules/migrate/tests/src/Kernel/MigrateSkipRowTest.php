@@ -12,7 +12,6 @@ use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\migrate\Plugin\Migration;
 
 /**
  * Tests row skips triggered during hook_migrate_prepare_row().
@@ -54,7 +53,7 @@ class MigrateSkipRowTest extends KernelTestBase {
       'load' => ['plugin' => 'null'],
     ];
 
-    $migration = new Migration([], uniqid(), $definition);
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     $result = $executable->import();

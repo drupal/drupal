@@ -31,7 +31,7 @@ trait MigrationDeriverTrait {
         'plugin' => 'null',
       ],
     ];
-    return (new Migration([], uniqid(), $definition))->getSourcePlugin();
+    return \Drupal::service('plugin.manager.migration')->createStubMigration($definition)->getSourcePlugin();
   }
 
 }

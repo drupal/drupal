@@ -35,7 +35,7 @@ class User extends Migration {
       $definition['destination']['plugin'] = 'null';
       if (\Drupal::moduleHandler()->moduleExists('field')) {
         $definition['source']['plugin'] = 'd7_field_instance';
-        $field_migration = new Migration([], uniqid(), $definition);
+        $field_migration = $this->migrationPluginManager->createStubMigration($definition);
         foreach ($field_migration->getSourcePlugin() as $row) {
           $field_name = $row->getSourceProperty('field_name');
           $this->process[$field_name] = $field_name;
@@ -43,7 +43,7 @@ class User extends Migration {
       }
       try {
         $definition['source']['plugin'] = 'profile_field';
-        $profile_migration = new Migration([], uniqid(), $definition);
+        $profile_migration = $this->migrationPluginManager->createStubMigration($definition);
         // Ensure that Profile is enabled in the source DB.
         $profile_migration->checkRequirements();
         foreach ($profile_migration->getSourcePlugin() as $row) {

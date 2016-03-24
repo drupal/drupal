@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
-use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
@@ -32,7 +31,7 @@ class MigrateStatusTest extends MigrateTestBase {
       ],
       'process' => ['foo' => 'bar'],
     ];
-    $migration = new Migration([], uniqid(), $definition);
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
     // Default status is idle.
     $status = $migration->getStatus();

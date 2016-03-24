@@ -223,4 +223,12 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
     $graph[$id]['edges'] += array_combine($dependencies, $dependencies);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function createStubMigration(array $definition) {
+    $id = isset($definition['id']) ? $definition['id'] : uniqid();
+    return Migration::create(\Drupal::getContainer(), [], $id, $definition);
+  }
+
 }

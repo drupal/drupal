@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
-use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -60,7 +59,7 @@ class MigrateInterruptionTest extends KernelTestBase {
       'destination' => ['plugin' => 'dummy'],
     ];
 
-    $migration = new Migration([], uniqid(), $definition);
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     // When the import runs, the first row imported will trigger an

@@ -8,7 +8,6 @@
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateIdMapMessageEvent;
@@ -76,7 +75,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
       ],
     ];
 
-    $this->migration = new Migration([], uniqid(), $definition);
+    $this->migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
   }
 
   /**

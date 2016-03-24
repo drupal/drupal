@@ -12,7 +12,6 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\migrate\Exception\RequirementsException;
-use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Plugin\MigrationDeriverTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -99,7 +98,7 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
         ]);
         $values['source']['node_type'] = $node_type;
 
-        $migration = new Migration([], uniqid(), $values);
+        $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($values);
         if (isset($fields[$node_type])) {
           foreach ($fields[$node_type] as $field_name => $info) {
             $field_type = $info['type'];
