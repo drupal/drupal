@@ -136,7 +136,7 @@ class VerticalTabs extends RenderElement {
     $element[$name . '__active_tab'] = array(
       '#type' => 'hidden',
       '#default_value' => $element['#default_tab'],
-      '#attributes' => array('class' => array('vertical-tabs-active-tab')),
+      '#attributes' => array('class' => array('vertical-tabs__active-tab')),
     );
     // Clean up the active tab value so it's not accidentally stored in
     // settings forms.
