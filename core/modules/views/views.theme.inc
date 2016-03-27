@@ -277,11 +277,29 @@ function template_preprocess_views_view_summary(&$variables) {
 
     if (!empty($argument->options['summary_options']['base_path'])) {
       $base_path = $argument->options['summary_options']['base_path'];
-      $tokens = $this->getArgumentsTokens();
-      $base_path = $this->viewsTokenReplace($base_path, $tokens);
+      $tokens = $view->getDisplay()->getArgumentsTokens();
+      $base_path = $argument->globalTokenReplace($base_path, $tokens);
       // @todo Views should expect and store a leading /. See:
       //   https://www.drupal.org/node/2423913
       $url = Url::fromUserInput('/' . $base_path);
+      try {
+        /** @var \Symfony\Component\Routing\Route $route */
+        $route_name = $url->getRouteName();
+        $route = \Drupal::service('router.route_provider')->getRouteByName($route_name);
+
+        $route_variables = $route->compile()->getVariables();
+        $parameters = $url->getRouteParameters();
+
+        foreach ($route_variables as $variable_name) {
+          $parameters[$variable_name] = array_shift($args);
+        }
+
+        $url->setRouteParameters($parameters);
+      }
+      catch (Exception $e) {
+        // If the given route doesn't exist, default to <front>
+        $url = Url::fromRoute('<front>');
+      }
     }
     else {
       $url = $view->getUrl($args)->setOptions($url_options);
@@ -307,6 +325,7 @@ function template_preprocess_views_view_summary(&$variables) {
  *       visually distinct.
  */
 function template_preprocess_views_view_summary_unformatted(&$variables) {
+  /** @var \Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
   $argument = $view->argument[$view->build_info['summary_level']];
 
@@ -346,11 +365,27 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
 
     if (!empty($argument->options['summary_options']['base_path'])) {
       $base_path = $argument->options['summary_options']['base_path'];
-      $tokens = $this->getArgumentsTokens();
-      $base_path = $this->viewsTokenReplace($base_path, $tokens);
+      $tokens = $view->getDisplay()->getArgumentsTokens();
+      $base_path = $argument->globalTokenReplace($base_path, $tokens);
       // @todo Views should expect and store a leading /. See:
       //   https://www.drupal.org/node/2423913
       $url = Url::fromUserInput('/' . $base_path);
+      try {
+        /** @var \Symfony\Component\Routing\Route $route */
+        $route = \Drupal::service('router.route_provider')->getRouteByName($url->getRouteName());
+        $route_variables = $route->compile()->getVariables();
+        $parameters = $url->getRouteParameters();
+
+        foreach ($route_variables as $variable_name) {
+          $parameters[$variable_name] = array_shift($args);
+        }
+
+        $url->setRouteParameters($parameters);
+      }
+      catch (Exception $e) {
+        // If the given route doesn't exist, default to <front>
+        $url = Url::fromRoute('<front>');
+      }
     }
     else {
       $url = $view->getUrl($args)->setOptions($url_options);
