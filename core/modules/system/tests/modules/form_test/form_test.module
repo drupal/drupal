@@ -104,3 +104,10 @@ function form_test_form_form_test_vertical_tabs_access_form_alter(&$form, &$form
   $form['fieldset1']['#access'] = FALSE;
   $form['container']['#access'] = FALSE;
 }
+
+/**
+ * Ajax callback that returns the form element.
+ */
+function form_test_tableselect_ajax_callback($form, FormStateInterface $form_state) {
+  return $form['tableselect'];
+}
