@@ -192,7 +192,7 @@ function template_preprocess_fieldset(&$variables) {
   $element = $variables['element'];
   Element::setAttributes($element, array('id'));
   Element\RenderElement::setAttributes($element);
-  $variables['attributes'] = $element['#attributes'];
+  $variables['attributes'] = isset($element['#attributes']) ? $element['#attributes'] : array();
   $variables['prefix'] = isset($element['#field_prefix']) ? $element['#field_prefix'] : NULL;
   $variables['suffix'] = isset($element['#field_suffix']) ? $element['#field_suffix'] : NULL;
   $variables['title_display'] = isset($element['#title_display']) ? $element['#title_display'] : NULL;
@@ -204,7 +204,13 @@ function template_preprocess_fieldset(&$variables) {
   }
 
   $variables['legend']['attributes'] = new Attribute();
-  $variables['legend_span']['attributes'] = new Attribute();
+  // Add 'visually-hidden' class to legend span.
+  if ($variables['title_display'] == 'invisible') {
+    $variables['legend_span']['attributes'] = new Attribute(array('class' => 'visually-hidden'));
+  }
+  else {
+    $variables['legend_span']['attributes'] = new Attribute();
+  }
 
   if (!empty($element['#description'])) {
     $description_id = $element['#attributes']['id'] . '--description';
