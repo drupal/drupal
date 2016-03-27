@@ -259,6 +259,7 @@ class Tableselect extends Table {
               '#return_value' => $key,
               '#default_value' => isset($value[$key]) ? $key : NULL,
               '#attributes' => $element['#attributes'],
+              '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
             );
           }
           else {
