@@ -1046,18 +1046,29 @@ function node_query_node_access_alter(AlterableInterface $query) {
 
   $tables = $query->getTables();
   $base_table = $query->getMetaData('base_table');
-  // If the base table is not given, default to node if present.
+  // If the base table is not given, default to one of the node base tables.
   if (!$base_table) {
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = \Drupal::entityTypeManager()->getStorage('node')->getTableMapping();
+    $node_base_tables = $table_mapping->getTableNames();
+
     foreach ($tables as $table_info) {
       if (!($table_info instanceof SelectInterface)) {
         $table = $table_info['table'];
-        // If the node table is in the query, it wins immediately.
+        // Ensure that 'node' and 'node_field_data' are always preferred over
+        // 'node_revision' and 'node_field_revision'.
         if ($table == 'node' || $table == 'node_field_data') {
           $base_table = $table;
           break;
         }
+        // If one of the node base tables are in the query, add it to the list
+        // of possible base tables to join against.
+        if (in_array($table, $node_base_tables)) {
+          $base_table = $table;
+        }
       }
     }
+
     // Bail out if the base table is missing.
     if (!$base_table) {
       throw new Exception(t('Query tagged for node access but there is no node table, specify the base_table using meta data.'));
