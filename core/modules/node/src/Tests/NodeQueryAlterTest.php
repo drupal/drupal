@@ -73,6 +73,24 @@ class NodeQueryAlterTest extends NodeTestBase {
   }
 
   /**
+   * Tests 'node_access' query alter with revision-enabled nodes.
+   */
+  public function testNodeQueryAlterWithRevisions() {
+    // Execute a query that only deals with the 'node_revision' table.
+    try {
+      $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
+      $result = $query
+        ->allRevisions()
+        ->execute();
+
+      $this->assertEqual(count($result), 4, 'User with access can see correct nodes');
+    }
+    catch (\Exception $e) {
+      $this->fail('Altered query is malformed');
+    }
+  }
+
+  /**
    * Tests 'node_access' query alter, for user without access.
    *
    * Verifies that a non-standard table alias can be used, and that a user
