@@ -909,6 +909,11 @@ services:
     tags:
       - { name: paramconverter }
     arguments: ['@entity.manager']
+  paramconverter.entity_revision:
+    class: Drupal\Core\ParamConverter\EntityRevisionParamConverter
+    tags:
+      - { name: paramconverter }
+    arguments: ['@entity_type.manager']
   paramconverter.configentity_admin:
     class: Drupal\Core\ParamConverter\AdminPathConfigEntityConverter
     tags:
@@ -963,6 +968,10 @@ services:
     class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
     tags:
       - { name: route_enhancer, priority: 20 }
+  route_enhancer.entity_revision:
+    class: Drupal\Core\Routing\Enhancer\EntityRevisionRouteEnhancer
+    tags:
+      - { name: route_enhancer }
   route_special_attributes_subscriber:
     class: Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
     tags:
