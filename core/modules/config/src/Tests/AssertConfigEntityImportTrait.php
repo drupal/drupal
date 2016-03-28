@@ -13,7 +13,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  * Provides test assertions for testing config entity synchronization.
  *
  * Can be used by test classes that extend \Drupal\simpletest\WebTestBase or
- * \Drupal\simpletest\KernelTestBase.
+ * \Drupal\KernelTests\KernelTestBase.
  */
 trait AssertConfigEntityImportTrait {
 
