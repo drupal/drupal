@@ -58,7 +58,13 @@ entity.entity_test.collection:
 entity.entity_test_rev.revision:
   path: '/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/view'
   defaults:
-    _entity_view: 'entity_test_rev'
+    _controller: '\Drupal\Core\Entity\Controller\EntityViewController::viewRevision'
+  options:
+    parameters:
+      entity_test_rev:
+        type: entity:entity_test_rev
+      entity_test_rev_revision:
+        type: entity_revision:entity_test_rev
   requirements:
     _access: 'TRUE'
 
