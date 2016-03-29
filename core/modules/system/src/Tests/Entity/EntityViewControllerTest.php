@@ -68,6 +68,17 @@ class EntityViewControllerTest extends WebTestBase {
       $this->assertRaw('full');
     }
 
+    // Test viewing a revisionable entity.
+    $entity_test_rev = $this->createTestEntity('entity_test_rev');
+    $entity_test_rev->save();
+    $entity_test_rev->name->value = 'rev 2';
+    $entity_test_rev->setNewRevision(TRUE);
+    $entity_test_rev->isDefaultRevision(TRUE);
+    $entity_test_rev->save();
+    $this->drupalGet('entity_test_rev/' . $entity_test_rev->id() . '/revision/' . $entity_test_rev->revision_id->value . '/view');
+    $this->assertRaw($entity_test_rev->label());
+    $this->assertRaw($get_label_markup($entity_test_rev->label()));
+
     // As entity_test IDs must be integers, make sure requests for non-integer
     // IDs return a page not found error.
     $this->drupalGet('entity_test/invalid');
