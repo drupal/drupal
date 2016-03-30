@@ -332,4 +332,51 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    */
   public function getMigrationDependencies();
 
+  /**
+   * Get the destination configuration, with at least a 'plugin' key.
+   *
+   * @return array
+   *   The destination configuration.
+   */
+  public function getDestinationConfiguration();
+
+  /**
+   * Get the source configuration, with at least a 'plugin' key.
+   *
+   * @return array
+   *   The source configuration.
+   */
+  public function getSourceConfiguration();
+
+  /**
+   * Get information on the property used as the high watermark.
+   *
+   * Array of 'name' & (optional) db 'alias' properties used for high watermark.
+   *
+   * @see Drupal\migrate\Plugin\migrate\source\SqlBase::initializeIterator()
+   *
+   * @return array
+   *   The property used as the high watermark.
+   */
+  public function getHighWaterProperty();
+
+  /**
+   * If true, track time of last import.
+   *
+   * @return bool
+   *   Flag to determine desire of tracking time of last import.
+   */
+  public function getTrackLastImported();
+
+  /**
+   * The destination identifiers.
+   *
+   * An array of destination identifiers: the keys are the name of the
+   * properties, the values are dependent on the ID map plugin.
+   *
+   * @return array
+   *   Destination identifiers.
+   */
+  public function getDestinationIds();
+
 }

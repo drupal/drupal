@@ -75,7 +75,7 @@ class EntityFieldStorageConfig extends BaseEntityFieldStorageConfig {
     $this->dependencies = parent::calculateDependencies();
     // Add a dependency on the module that provides the field type using the
     // source plugin configuration.
-    $source_configuration = $this->migration->get('source');
+    $source_configuration = $this->migration->getSourceConfiguration();
     if (isset($source_configuration['constants']['type'])) {
       $field_type = $this->fieldTypePluginManager->getDefinition($source_configuration['constants']['type']);
       $this->addDependency('module', $field_type['provider']);

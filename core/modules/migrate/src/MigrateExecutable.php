@@ -261,7 +261,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $this->handleException($e);
         }
       }
-      if ($high_water_property = $this->migration->get('highWaterProperty')) {
+      if ($high_water_property = $this->migration->getHighWaterProperty()) {
         $this->migration->saveHighWater($row->getSourceProperty($high_water_property['name']));
       }
 
