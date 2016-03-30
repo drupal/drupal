@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\hal\Kernel\EntityTest.
+ * Contains \Drupal\Tests\hal\Kernel\EntityNormalizeTest.
  */
 
 namespace Drupal\Tests\hal\Kernel;
@@ -21,7 +21,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *
  * @group hal
  */
-class EntityTest extends NormalizerTestBase {
+class EntityNormalizeTest extends NormalizerTestBase {
 
   use CommentTestTrait;
 
