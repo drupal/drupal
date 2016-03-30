@@ -34,5 +34,4 @@ class Container extends DrupalContainer {
     assert(FALSE, 'The container was serialized.');
     return array_keys(get_object_vars($this));
   }
-
 }

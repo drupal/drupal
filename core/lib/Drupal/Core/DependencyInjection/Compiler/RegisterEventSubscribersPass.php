@@ -14,6 +14,10 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  * Registers all event subscribers to the event dispatcher.
  */
 class RegisterEventSubscribersPass implements CompilerPassInterface {
+
+  /**
+   * {@inheritdoc}
+   */
   public function process(ContainerBuilder $container) {
     if (!$container->hasDefinition('event_dispatcher')) {
       return;
@@ -24,7 +28,8 @@ class RegisterEventSubscribersPass implements CompilerPassInterface {
     $event_subscriber_info = [];
     foreach ($container->findTaggedServiceIds('event_subscriber') as $id => $attributes) {
 
-      // We must assume that the class value has been correctly filled, even if the service is created by a factory
+      // We must assume that the class value has been correctly filled, even if
+      // the service is created by a factory.
       $class = $container->getDefinition($id)->getClass();
 
       $refClass = new \ReflectionClass($class);
@@ -58,4 +63,5 @@ class RegisterEventSubscribersPass implements CompilerPassInterface {
 
     $definition->addArgument($event_subscriber_info);
   }
+
 }

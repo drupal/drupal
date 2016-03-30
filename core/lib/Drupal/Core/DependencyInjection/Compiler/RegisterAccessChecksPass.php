@@ -16,14 +16,13 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 class RegisterAccessChecksPass implements CompilerPassInterface {
 
   /**
-   * Implements CompilerPassInterface::process().
-   *
-   * Adds services tagged 'access_check' to the access_manager service.
+   * {@inheritdoc}
    */
   public function process(ContainerBuilder $container) {
     if (!$container->hasDefinition('access_manager')) {
       return;
     }
+    // Add services tagged 'access_check' to the access_manager service.
     $access_manager = $container->getDefinition('access_manager.check_provider');
     foreach ($container->findTaggedServiceIds('access_check') as $id => $attributes) {
       $applies = array();
@@ -43,4 +42,5 @@ class RegisterAccessChecksPass implements CompilerPassInterface {
       $access_manager->addMethodCall('addCheckService', array($id, $method, $applies, $needs_incoming_request));
     }
   }
+
 }
