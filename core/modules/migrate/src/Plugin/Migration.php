@@ -131,7 +131,9 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $destinationIds = [];
 
   /**
-   * Information on the high water mark.
+   * Information on the property used as the high watermark.
+   *
+   * Array of 'name' & (optional) db 'alias' properties used for high watermark.
    *
    * @var array
    */
@@ -331,6 +333,9 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    *
    * @return mixed
    *   The value for that property, or NULL if the property does not exist.
+   *
+   * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.x. Use
+   *   more specific getters instead.
    */
   public function get($property) {
     return isset($this->$property) ? $this->$property : NULL;
@@ -676,5 +681,40 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
       $definition[$key] = isset($this->$key) ? $this->$key : $value;
     }
     return $definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDestinationConfiguration() {
+    return $this->destination;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSourceConfiguration() {
+    return $this->source;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHighWaterProperty() {
+    return $this->highWaterProperty;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTrackLastImported() {
+    $this->trackLastImported;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDestinationIds() {
+    $this->destinationIds;
   }
 }

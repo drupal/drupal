@@ -76,8 +76,8 @@ class MigrationTest extends MigrateProcessTestCase {
     $migration_plugin->id()->willReturn('actual_migration');
     $destination_migration->id()->willReturn('destination_migration');
     $destination_migration->getDestinationPlugin(TRUE)->shouldBeCalled();
-    $destination_migration->get('process')->willReturn([]);
-    $destination_migration->get('source')->willReturn([]);
+    $destination_migration->getProcess()->willReturn([]);
+    $destination_migration->getSourceConfiguration()->willReturn([]);
 
     $source_plugin = $this->prophesize(MigrateSourceInterface::class);
     $source_plugin->getIds()->willReturn(['nid']);

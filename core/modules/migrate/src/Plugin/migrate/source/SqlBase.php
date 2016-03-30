@@ -166,7 +166,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    */
   protected function initializeIterator() {
     $this->prepareQuery();
-    $high_water_property = $this->migration->get('highWaterProperty');
+    $high_water_property = $this->migration->getHighWaterProperty();
 
     // Get the key values, for potential use in joining to the map table.
     $keys = array();
@@ -208,7 +208,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
         $map_key = 'sourceid' . $count;
         $this->query->addField($alias, $map_key, "migrate_map_$map_key");
       }
-      if ($n = count($this->migration->get('destinationIds'))) {
+      if ($n = count($this->migration->getDestinationIds())) {
         for ($count = 1; $count <= $n; $count++) {
           $map_key = 'destid' . $count++;
           $this->query->addField($alias, $map_key, "migrate_map_$map_key");

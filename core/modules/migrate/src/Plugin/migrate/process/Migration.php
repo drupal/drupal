@@ -121,7 +121,7 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
       }
       $destination_plugin = $migration->getDestinationPlugin(TRUE);
       // Only keep the process necessary to produce the destination ID.
-      $process = $migration->get('process');
+      $process = $migration->getProcess();
 
       // We already have the source ID values but need to key them for the Row
       // constructor.
@@ -131,7 +131,7 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
         $values[$source_id] = $source_id_values[$migration->id()][$index];
       }
 
-      $stub_row = new Row($values + $migration->get('source'), $source_ids, TRUE);
+      $stub_row = new Row($values + $migration->getSourceConfiguration(), $source_ids, TRUE);
 
       // Do a normal migration with the stub row.
       $migrate_executable->processRow($stub_row, $process);
