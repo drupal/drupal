@@ -71,7 +71,7 @@ class TermViewsData extends EntityViewsData {
     );
 
     $data['taxonomy_term_field_data']['vid']['help'] = $this->t('Filter the results of "Taxonomy: Term" to a particular vocabulary.');
-    $data['taxonomy_term_field_data']['vid']['field']['help'] = $this->t('The vocabulary name.');
+    unset($data['taxonomy_term_field_data']['vid']['field']);
     unset($data['taxonomy_term_field_data']['vid']['argument']);
     unset($data['taxonomy_term_field_data']['vid']['sort']);
 
