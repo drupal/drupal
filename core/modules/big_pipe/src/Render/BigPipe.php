@@ -205,6 +205,12 @@ class BigPipe implements BigPipeInterface {
    * @param \Drupal\Core\Asset\AttachedAssetsInterface $cumulative_assets
    *   The cumulative assets sent so far; to be updated while rendering no-JS
    *   BigPipe placeholders.
+   *
+   * @throws \Exception
+   *   If an exception is thrown during the rendering of a placeholder, it is
+   *   caught to allow the other placeholders to still be replaced. But when
+   *   error logging is configured to be verbose, the exception is rethrown to
+   *   simplify debugging.
    */
   protected function sendNoJsPlaceholders($html, $no_js_placeholders, AttachedAssetsInterface $cumulative_assets) {
     // Split the HTML on every no-JS placeholder string.
@@ -238,7 +244,19 @@ class BigPipe implements BigPipeInterface {
           ],
         ],
       ];
-      $elements = $this->renderPlaceholder($placeholder, $placeholder_plus_cumulative_settings);
+      try {
+        $elements = $this->renderPlaceholder($placeholder, $placeholder_plus_cumulative_settings);
+      }
+      catch (\Exception $e) {
+        if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+          throw $e;
+        }
+        else {
+          trigger_error($e, E_USER_ERROR);
+          continue;
+        }
+      }
+
 
       // Create a new HtmlResponse. Ensure the CSS and (non-bottom) JS is sent
       // before the HTML they're associated with. In other words: ensure the
@@ -263,7 +281,19 @@ class BigPipe implements BigPipeInterface {
       // - the HTML to load the JS (at the top) can be rendered.
       $fake_request = $this->requestStack->getMasterRequest()->duplicate();
       $fake_request->request->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())]);
-      $html_response = $this->filterEmbeddedResponse($fake_request, $html_response);
+      try {
+        $html_response = $this->filterEmbeddedResponse($fake_request, $html_response);
+      }
+      catch (\Exception $e) {
+        if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+          throw $e;
+        }
+        else {
+          trigger_error($e, E_USER_ERROR);
+          continue;
+        }
+      }
+
 
       // Send this embedded HTML response.
       print $html_response->getContent();
@@ -290,6 +320,12 @@ class BigPipe implements BigPipeInterface {
    * @param \Drupal\Core\Asset\AttachedAssetsInterface $cumulative_assets
    *   The cumulative assets sent so far; to be updated while rendering BigPipe
    *   placeholders.
+   *
+   * @throws \Exception
+   *   If an exception is thrown during the rendering of a placeholder, it is
+   *   caught to allow the other placeholders to still be replaced. But when
+   *   error logging is configured to be verbose, the exception is rethrown to
+   *   simplify debugging.
    */
   protected function sendPlaceholders(array $placeholders, array $placeholder_order, AttachedAssetsInterface $cumulative_assets) {
     // Return early if there are no BigPipe placeholders to send.
@@ -320,7 +356,18 @@ class BigPipe implements BigPipeInterface {
 
       // Render the placeholder.
       $placeholder_render_array = $placeholders[$placeholder_id];
-      $elements = $this->renderPlaceholder($placeholder_id, $placeholder_render_array);
+      try {
+        $elements = $this->renderPlaceholder($placeholder_id, $placeholder_render_array);
+      }
+      catch (\Exception $e) {
+        if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+          throw $e;
+        }
+        else {
+          trigger_error($e, E_USER_ERROR);
+          continue;
+        }
+      }
 
       // Create a new AjaxResponse.
       $ajax_response = new AjaxResponse();
@@ -342,7 +389,18 @@ class BigPipe implements BigPipeInterface {
       //   allows us to track the total set of asset libraries sent in the
       //   initial HTML response plus all embedded AJAX responses sent so far.
       $fake_request->request->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())] + $cumulative_assets->getSettings()['ajaxPageState']);
-      $ajax_response = $this->filterEmbeddedResponse($fake_request, $ajax_response);
+      try {
+        $ajax_response = $this->filterEmbeddedResponse($fake_request, $ajax_response);
+      }
+      catch (\Exception $e) {
+        if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+          throw $e;
+        }
+        else {
+          trigger_error($e, E_USER_ERROR);
+          continue;
+        }
+      }
 
       // Send this embedded AJAX response.
       $json = $ajax_response->getContent();

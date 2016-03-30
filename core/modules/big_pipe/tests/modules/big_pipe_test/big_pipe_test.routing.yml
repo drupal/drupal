@@ -6,11 +6,11 @@ big_pipe_test:
   requirements:
     _access: 'TRUE'
 
-big_pipe_test.no_big_pipe:
+no_big_pipe:
   path: '/no_big_pipe'
   defaults:
-    _controller: '\Drupal\big_pipe_test\BigPipeTestController::test'
-    _title: 'BigPipe test'
+    _controller: '\Drupal\big_pipe_test\BigPipeTestController::nope'
+    _title: '_no_big_pipe route option test'
   options:
     _no_big_pipe: TRUE
   requirements:
