@@ -24,6 +24,7 @@ class ModifyServiceDefinitionsPass implements CompilerPassInterface {
     if (!$container->has('kernel')) {
       return;
     }
+
     $kernel = $container->get('kernel');
     if (!($kernel instanceof DrupalKernelInterface)) {
       return;
