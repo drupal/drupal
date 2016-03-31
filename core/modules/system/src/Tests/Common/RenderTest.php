@@ -57,7 +57,7 @@ class RenderTest extends KernelTestBase {
     $build['#attached']['drupal_process_states'][] = [];
     $renderer = $this->container->get('bare_html_page_renderer');
     try {
-      $renderer->renderBarePage($build, '', $this->container->get('theme.manager')->getActiveTheme()->getName());
+      $renderer->renderBarePage($build, '', 'maintenance_page');
       $this->fail("Invalid #attachment 'drupal_process_states' allowed");
     }
     catch (\LogicException $e) {
