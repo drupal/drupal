@@ -75,8 +75,6 @@ class BigPipeStrategyTest extends UnitTestCase {
       $cases['html_attribute_value_subset']->placeholder      => $cases['html_attribute_value_subset']->placeholderRenderArray,
       $cases['edge_case__invalid_html']->placeholder          => $cases['edge_case__invalid_html']->placeholderRenderArray,
       $cases['edge_case__html_non_lazy_builder']->placeholder => $cases['edge_case__html_non_lazy_builder']->placeholderRenderArray,
-      $cases['exception__lazy_builder']->placeholder          => $cases['exception__lazy_builder']->placeholderRenderArray,
-      $cases['exception__embedded_response']->placeholder     => $cases['exception__embedded_response']->placeholderRenderArray,
     ];
 
     return [
@@ -92,8 +90,6 @@ class BigPipeStrategyTest extends UnitTestCase {
         $cases['html_attribute_value_subset']->placeholder      => $cases['html_attribute_value_subset']->bigPipeNoJsPlaceholderRenderArray,
         $cases['edge_case__invalid_html']->placeholder          => $cases['edge_case__invalid_html']->bigPipeNoJsPlaceholderRenderArray,
         $cases['edge_case__html_non_lazy_builder']->placeholder => $cases['edge_case__html_non_lazy_builder']->bigPipePlaceholderRenderArray,
-        $cases['exception__lazy_builder']->placeholder          => $cases['exception__lazy_builder']->bigPipePlaceholderRenderArray,
-        $cases['exception__embedded_response']->placeholder     => $cases['exception__embedded_response']->bigPipePlaceholderRenderArray,
       ]],
       '_no_big_pipe absent, session, no-JS cookie present: no-JS BigPipe placeholder used for HTML placeholders' => [$placeholders, FALSE, TRUE, TRUE, [
         $cases['html']->placeholder                             => $cases['html']->bigPipeNoJsPlaceholderRenderArray,
@@ -101,8 +97,6 @@ class BigPipeStrategyTest extends UnitTestCase {
         $cases['html_attribute_value_subset']->placeholder      => $cases['html_attribute_value_subset']->bigPipeNoJsPlaceholderRenderArray,
         $cases['edge_case__invalid_html']->placeholder          => $cases['edge_case__invalid_html']->bigPipeNoJsPlaceholderRenderArray,
         $cases['edge_case__html_non_lazy_builder']->placeholder => $cases['edge_case__html_non_lazy_builder']->bigPipeNoJsPlaceholderRenderArray,
-        $cases['exception__lazy_builder']->placeholder          => $cases['exception__lazy_builder']->bigPipeNoJsPlaceholderRenderArray,
-        $cases['exception__embedded_response']->placeholder     => $cases['exception__embedded_response']->bigPipeNoJsPlaceholderRenderArray,
       ]],
     ];
   }
