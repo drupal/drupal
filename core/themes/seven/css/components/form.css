@@ -199,6 +199,7 @@ textarea.form-textarea {
   width: auto;
 }
 
+.form-item-options-group-info-identifier,
 .form-item-pass .description {
   clear: both;
 }
