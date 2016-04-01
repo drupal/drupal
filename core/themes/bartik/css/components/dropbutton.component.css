@@ -3,10 +3,6 @@
  * Visual styles for Bartik's dropbutton component.
  */
 
-.js .dropbutton-wrapper .dropbutton-widget {
-  /* This is required to win over specifity of .js td .dropbutton-widget */
-  position: relative;
-}
 .js .dropbutton-widget {
   border: 1px solid;
   border-color: #e4e4e4 #d2d2d2 #b4b4b4 #d2d2d2;
