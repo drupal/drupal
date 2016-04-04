@@ -140,6 +140,15 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->drupalPostForm(NULL, $edit, t('Submit'));
     $this->assertTrue( count($this->drupalGetMails(array('id' => 'user_password_reset'))) === $before + 1, 'Email sent when requesting password reset using email address.');
 
+    // Visit the user edit page without pass-reset-token and make sure it does
+    // not cause an error.
+    $resetURL = $this->getResetURL();
+    $this->drupalGet($resetURL);
+    $this->drupalPostForm(NULL, NULL, t('Log in'));
+    $this->drupalGet('user/' . $this->account->id() . '/edit');
+    $this->assertNoText('Expected user_string to be a string, NULL given');
+    $this->drupalLogout();
+
     // Create a password reset link as if the request time was 60 seconds older than the allowed limit.
     $timeout = $this->config('user.settings')->get('password_reset_timeout');
     $bogus_timestamp = REQUEST_TIME - $timeout - 60;
