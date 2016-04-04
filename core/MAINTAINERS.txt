@@ -533,7 +533,7 @@ participate in mentoring.
 - Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
 - Valery Lourie 'valthebald' https://www.drupal.org/u/valthebald
 - Alina Mackenzie 'alimac' https://www.drupal.org/u/alimac
-- Chris McCaferty 'cilefen' https://www.drupal.org/u/cilefen
+- Chris McCafferty 'cilefen' https://www.drupal.org/u/cilefen
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Andrea Soper 'ZenDoodles' https://www.drupal.org/u/zendoodles
 - Cathy Theys 'YesCT' https://www.drupal.org/u/yesct
