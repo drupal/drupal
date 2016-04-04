@@ -301,12 +301,13 @@ function t($string, array $args = array(), array $options = array()) {
 /**
  * Formats a string for HTML display by replacing variable placeholders.
  *
- * @see \Drupal\Component\Utility\SafeMarkup::format()
+ * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
+ * @see \Drupal\Component\Render\FormattableMarkup
  * @see t()
  * @ingroup sanitization
  *
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
- *   Use \Drupal\Component\Utility\SafeMarkup::format().
+ *   Use \Drupal\Component\Render\FormattableMarkup.
  */
 function format_string($string, array $args) {
   return SafeMarkup::format($string, $args);
