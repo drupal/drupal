@@ -128,10 +128,12 @@ class ConfigTranslationUiTest extends WebTestBase {
   public function testSiteInformationTranslationUi() {
     $this->drupalLogin($this->adminUser);
 
-    $site_name = 'Site name for testing configuration translation';
+    $site_name = 'Name of the site for testing configuration translation';
     $site_slogan = 'Site slogan for testing configuration translation';
+    $site_name_label = 'Site name';
     $fr_site_name = 'Nom du site pour tester la configuration traduction';
     $fr_site_slogan = 'Slogan du site pour tester la traduction de configuration';
+    $fr_site_name_label = 'Libellé du champ "Nom du site"';
     $translation_base_url = 'admin/config/system/site-information/translate';
 
     // Set site name and slogan for default language.
@@ -189,6 +191,37 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->drupalGet("fr/$translation_base_url/fr/edit");
     $this->assertText($site_name);
     $this->assertText($site_slogan);
+
+    // Translate 'Site name' label in French.
+    $search = array(
+      'string' => $site_name_label,
+      'langcode' => 'fr',
+      'translation' => 'untranslated',
+    );
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+
+    $textarea = current($this->xpath('//textarea'));
+    $lid = (string) $textarea[0]['name'];
+    $edit = array(
+      $lid => $fr_site_name_label,
+    );
+    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
+
+    // Ensure that the label is in French (and not in English).
+    $this->drupalGet("fr/$translation_base_url/fr/edit");
+    $this->assertText($fr_site_name_label);
+    $this->assertNoText($site_name_label);
+
+    // Ensure that the label is also in French (and not in English)
+    // when editing another language with the interface in French.
+    $this->drupalGet("fr/$translation_base_url/ta/edit");
+    $this->assertText($fr_site_name_label);
+    $this->assertNoText($site_name_label);
+
+    // Ensure that the label is not translated when the interface is in English.
+    $this->drupalGet("$translation_base_url/fr/edit");
+    $this->assertText($site_name_label);
+    $this->assertNoText($fr_site_name_label);
   }
 
   /**
