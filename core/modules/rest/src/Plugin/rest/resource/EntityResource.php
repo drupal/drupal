@@ -18,6 +18,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * Represents entities as resources.
  *
+ * @see \Drupal\rest\Plugin\Deriver\EntityDeriver
+ *
  * @RestResource(
  *   id = "entity",
  *   label = @Translation("Entity"),
@@ -28,8 +30,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *     "https://www.drupal.org/link-relations/create" = "/entity/{entity_type}"
  *   }
  * )
- *
- * @see \Drupal\rest\Plugin\Deriver\EntityDeriver
  */
 class EntityResource extends ResourceBase {
 
