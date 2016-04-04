@@ -40,11 +40,65 @@ class CommentViewsData extends EntityViewsData {
     $data['comment_field_data']['created']['title'] = $this->t('Post date');
     $data['comment_field_data']['created']['help'] = $this->t('Date and time of when the comment was created.');
 
+    $data['comment_field_data']['created_fulldata'] = array(
+      'title' => $this->t('Created date'),
+      'help' => $this->t('Date in the form of CCYYMMDD.'),
+      'argument' => array(
+        'field' => 'created',
+        'id' => 'date_fulldate',
+      ),
+    );
+
+    $data['comment_field_data']['created_year_month'] = array(
+      'title' => $this->t('Created year + month'),
+      'help' => $this->t('Date in the form of YYYYMM.'),
+      'argument' => array(
+        'field' => 'created',
+        'id' => 'date_year_month',
+      ),
+    );
+
+    $data['comment_field_data']['created_year'] = array(
+      'title' => $this->t('Created year'),
+      'help' => $this->t('Date in the form of YYYY.'),
+      'argument' => array(
+        'field' => 'created',
+        'id' => 'date_year',
+      ),
+    );
+
+    $data['comment_field_data']['created_month'] = array(
+      'title' => $this->t('Created month'),
+      'help' => $this->t('Date in the form of MM (01 - 12).'),
+      'argument' => array(
+        'field' => 'created',
+        'id' => 'date_month',
+      ),
+    );
+
+    $data['comment_field_data']['created_day'] = array(
+      'title' => $this->t('Created day'),
+      'help' => $this->t('Date in the form of DD (01 - 31).'),
+      'argument' => array(
+        'field' => 'created',
+        'id' => 'date_day',
+      ),
+    );
+
+    $data['comment_field_data']['created_week'] = array(
+      'title' => $this->t('Created week'),
+      'help' => $this->t('Date in the form of WW (01 - 53).'),
+      'argument' => array(
+        'field' => 'created',
+        'id' => 'date_week',
+      ),
+    );
+
     $data['comment_field_data']['changed']['title'] = $this->t('Updated date');
     $data['comment_field_data']['changed']['help'] = $this->t('Date and time of when the comment was last updated.');
 
     $data['comment_field_data']['changed_fulldata'] = array(
-      'title' => $this->t('Created date'),
+      'title' => $this->t('Changed date'),
       'help' => $this->t('Date in the form of CCYYMMDD.'),
       'argument' => array(
         'field' => 'changed',
@@ -53,7 +107,7 @@ class CommentViewsData extends EntityViewsData {
     );
 
     $data['comment_field_data']['changed_year_month'] = array(
-      'title' => $this->t('Created year + month'),
+      'title' => $this->t('Changed year + month'),
       'help' => $this->t('Date in the form of YYYYMM.'),
       'argument' => array(
         'field' => 'changed',
@@ -62,7 +116,7 @@ class CommentViewsData extends EntityViewsData {
     );
 
     $data['comment_field_data']['changed_year'] = array(
-      'title' => $this->t('Created year'),
+      'title' => $this->t('Changed year'),
       'help' => $this->t('Date in the form of YYYY.'),
       'argument' => array(
         'field' => 'changed',
@@ -71,7 +125,7 @@ class CommentViewsData extends EntityViewsData {
     );
 
     $data['comment_field_data']['changed_month'] = array(
-      'title' => $this->t('Created month'),
+      'title' => $this->t('Changed month'),
       'help' => $this->t('Date in the form of MM (01 - 12).'),
       'argument' => array(
         'field' => 'changed',
@@ -80,7 +134,7 @@ class CommentViewsData extends EntityViewsData {
     );
 
     $data['comment_field_data']['changed_day'] = array(
-      'title' => $this->t('Created day'),
+      'title' => $this->t('Changed day'),
       'help' => $this->t('Date in the form of DD (01 - 31).'),
       'argument' => array(
         'field' => 'changed',
@@ -89,7 +143,7 @@ class CommentViewsData extends EntityViewsData {
     );
 
     $data['comment_field_data']['changed_week'] = array(
-      'title' => $this->t('Created week'),
+      'title' => $this->t('Changed week'),
       'help' => $this->t('Date in the form of WW (01 - 53).'),
       'argument' => array(
         'field' => 'changed',
