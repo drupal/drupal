@@ -42,7 +42,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *
    * @var array
    */
-  protected $cacheTags = array();
+  protected $cacheTags = [];
 
   /**
    * Name of the alter hook if one should be invoked.
@@ -73,7 +73,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *
    * @var array
    */
-  protected $defaults = array();
+  protected $defaults = [];
 
   /**
    * The name of the annotation that contains the plugin definition.
@@ -98,6 +98,14 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $namespaces;
 
   /**
+   * Additional namespaces the annotation discovery mechanism should scan for
+   * annotation definitions.
+   *
+   * @var string[]
+   */
+  protected $additionalAnnotationNamespaces = [];
+
+  /**
    * Creates the discovery object.
    *
    * @param string|bool $subdir
@@ -112,13 +120,16 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * @param string $plugin_definition_annotation_name
    *   (optional) The name of the annotation that contains the plugin definition.
    *   Defaults to 'Drupal\Component\Annotation\Plugin'.
+   * @param string[] $additional_annotation_namespaces
+   *   (optional) Additional namespaces to scan for annotation definitions.
    */
-  public function __construct($subdir, \Traversable $namespaces, ModuleHandlerInterface $module_handler, $plugin_interface = NULL, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin') {
+  public function __construct($subdir, \Traversable $namespaces, ModuleHandlerInterface $module_handler, $plugin_interface = NULL, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin', array $additional_annotation_namespaces = []) {
     $this->subdir = $subdir;
     $this->namespaces = $namespaces;
     $this->pluginDefinitionAnnotationName = $plugin_definition_annotation_name;
     $this->pluginInterface = $plugin_interface;
     $this->moduleHandler = $module_handler;
+    $this->additionalAnnotationNamespaces = $additional_annotation_namespaces;
   }
 
   /**
@@ -242,7 +253,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    */
   protected function getDiscovery() {
     if (!$this->discovery) {
-      $discovery = new AnnotatedClassDiscovery($this->subdir, $this->namespaces, $this->pluginDefinitionAnnotationName);
+      $discovery = new AnnotatedClassDiscovery($this->subdir, $this->namespaces, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces);
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
     }
     return $this->discovery;

@@ -47,6 +47,13 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   protected $annotationReader;
 
   /**
+   * Additional namespaces to be scanned for annotation classes.
+   *
+   * @var string[]
+   */
+  protected $annotationNamespaces = [];
+
+  /**
    * Constructs a new instance.
    *
    * @param string[] $plugin_namespaces
@@ -55,10 +62,13 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
    * @param string $plugin_definition_annotation_name
    *   (optional) The name of the annotation that contains the plugin definition.
    *   Defaults to 'Drupal\Component\Annotation\Plugin'.
+   * @param string[] $annotation_namespaces
+   *   (optional) Additional namespaces to be scanned for annotation classes.
    */
-  function __construct($plugin_namespaces = array(), $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin') {
+  function __construct($plugin_namespaces = array(), $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin', array $annotation_namespaces = []) {
     $this->pluginNamespaces = $plugin_namespaces;
     $this->pluginDefinitionAnnotationName = $plugin_definition_annotation_name;
+    $this->annotationNamespaces = $annotation_namespaces;
   }
 
   /**
@@ -74,6 +84,11 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
       // Add the namespaces from the main plugin annotation, like @EntityType.
       $namespace = substr($this->pluginDefinitionAnnotationName, 0, strrpos($this->pluginDefinitionAnnotationName, '\\'));
       $this->annotationReader->addNamespace($namespace);
+
+      // Register additional namespaces to be scanned for annotations.
+      foreach ($this->annotationNamespaces as $namespace) {
+        $this->annotationReader->addNamespace($namespace);
+      }
     }
     return $this->annotationReader;
   }
