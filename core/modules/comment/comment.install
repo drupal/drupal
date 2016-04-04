@@ -127,3 +127,10 @@ function comment_update_8001() {
 /**
  * @} End of "addtogroup updates-8.0.0-rc".
  */
+
+/**
+ * Clear caches to fix Comment Views context filter.
+ */
+function comment_update_8002() {
+  // Empty update to cause a cache flush.
+}
