@@ -231,7 +231,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       ->select('search_index', 'i', array('target' => 'replica'))
       ->extend('Drupal\search\SearchQuery')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
-    $query->join('node_field_data', 'n', 'n.nid = i.sid');
+    $query->join('node_field_data', 'n', 'n.nid = i.sid AND n.langcode = i.langcode');
     $query->condition('n.status', 1)
       ->addTag('node_access')
       ->searchExpression($keys, $this->getPluginId());

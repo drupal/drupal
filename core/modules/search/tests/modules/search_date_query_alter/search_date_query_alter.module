@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Adds date conditions to node searches.
+ */
+
+use Drupal\Core\Database\Query\AlterableInterface;
+
+/**
+ * Implements hook_query_TAG_alter(): tag search_$type with $type node_search.
+ */
+function search_date_query_alter_query_search_node_search_alter(AlterableInterface $query) {
+  // Start date Sat, 19 Mar 2016 00:00:00 GMT.
+  $query->condition('n.created', 1458345600, '>=');
+  // End date Sun, 20 Mar 2016 00:00:00 GMT.
+  $query->condition('n.created', 1458432000, '<');
+}
