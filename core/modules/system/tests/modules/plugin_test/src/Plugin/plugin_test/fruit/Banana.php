@@ -13,11 +13,7 @@ namespace Drupal\plugin_test\Plugin\plugin_test\fruit;
  *   label = "Banana",
  *   color = "yellow",
  *   uses = {
- *     "bread" = @Translation("Banana bread"),
- *     "loaf" = @PluralTranslation(
- *       singular = "@count loaf",
- *       plural = "@count loaves"
- *     )
+ *     "bread" = @Translation("Banana bread")
  *   }
  * )
  */
