@@ -10,6 +10,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Exception\EntityTypeIdLengthException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides an implementation of an entity type and its metadata.
@@ -186,6 +187,29 @@ class EntityType implements EntityTypeInterface {
   protected $label = '';
 
   /**
+   * The indefinite singular name of the type.
+   *
+   * @var string
+   */
+  protected $label_singular = '';
+
+  /**
+   * The indefinite plural name of the type.
+   *
+   * @var string
+   */
+  protected $label_plural = '';
+
+  /**
+   * A definite singular/plural name of the type.
+   *
+   * Needed keys: "singular" and "plural".
+   *
+   * @var string[]
+   */
+  protected $label_count = [];
+
+  /**
    * A callable that can be used to provide the entity URI.
    *
    * @var callable|null
@@ -290,7 +314,6 @@ class EntityType implements EntityTypeInterface {
     if (empty($this->list_cache_tags)) {
       $this->list_cache_tags = [$definition['id'] . '_list'];
     }
-
   }
 
   /**
@@ -718,6 +741,39 @@ class EntityType implements EntityTypeInterface {
    */
   public function getLowercaseLabel() {
     return Unicode::strtolower($this->getLabel());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSingularLabel() {
+    if (empty($this->label_singular)) {
+      $lowercase_label = $this->getLowercaseLabel();
+      $this->label_singular = $lowercase_label;
+    }
+    return $this->label_singular;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluralLabel() {
+    if (empty($this->label_plural)) {
+      $lowercase_label = $this->getLowercaseLabel();
+      $this->label_plural = new TranslatableMarkup('@label entities', ['@label' => $lowercase_label], [], $this->getStringTranslation());
+    }
+    return $this->label_plural;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCountLabel($count) {
+    if (empty($this->label_count)) {
+      return $this->formatPlural($count, '@count @label', '@count @label entities', ['@label' => $this->getLowercaseLabel()], ['context' => 'Entity type label']);
+    }
+    $context = isset($this->label_count['context']) ? $this->label_count['context'] : 'Entity type label';
+    return $this->formatPlural($count, $this->label_count['singular'], $this->label_count['plural'], ['context' => $context]);
   }
 
   /**
