@@ -631,6 +631,33 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getLowercaseLabel();
 
   /**
+   * Gets the singular label of the entity type.
+   *
+   * @return string
+   *   The singular label.
+   */
+  public function getSingularLabel();
+
+  /**
+   * Gets the plural label of the entity type.
+   *
+   * @return string
+   *   The plural label.
+   */
+  public function getPluralLabel();
+
+  /**
+   * Gets the count label of the entity type
+   *
+   * @param int $count
+   *   The item count to display if the plural form was requested.
+   *
+   * @return string
+   *   The count label.
+   */
+  public function getCountLabel($count);
+
+  /**
    * Gets a callable that can be used to provide the entity URI.
    *
    * This is only called if there is no matching link template for the link
