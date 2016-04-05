@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\user\Kernel\Views;
 
-use Drupal\Tests\user\Kernel\Views\UserKernelTestBase;
 use Drupal\views\Views;
 
 /**

@@ -9,7 +9,6 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\Plugin\migrate\source\TestSqlBase;
 use Drupal\Core\Database\Database;
-use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 
 /**
  * Tests the functionality of SqlBase.

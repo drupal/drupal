@@ -10,7 +10,6 @@ namespace Drupal\Tests\hal\Kernel;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\comment\Entity\Comment;
 use Drupal\node\Entity\Node;
-use Drupal\Tests\hal\Kernel\NormalizerTestBase;
 use Drupal\user\Entity\User;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;

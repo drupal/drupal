@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\file\Kernel;
 
-use Drupal\Tests\file\Kernel\FileManagedUnitTestBase;
 
 /**
  * Tests the file_validate() function.

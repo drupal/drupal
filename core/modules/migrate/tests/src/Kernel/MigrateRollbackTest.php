@@ -12,7 +12,6 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 
 /**
  * Tests rolling back of imports.

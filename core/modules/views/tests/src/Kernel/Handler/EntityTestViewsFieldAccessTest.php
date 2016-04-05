@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\Tests\views\Kernel\Handler\FieldFieldAccessTestBase;
 
 /**
  * Tests base field access in Views for the entity_test entity.

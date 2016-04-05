@@ -8,7 +8,6 @@
 namespace Drupal\Tests\comment\Kernel\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Tests\comment\Kernel\Migrate\d6\MigrateCommentVariableDisplayBase;
 
 /**
  * Upgrade comment variables to core.entity_form_display.node.*.default.yml.

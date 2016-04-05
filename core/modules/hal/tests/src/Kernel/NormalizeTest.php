@@ -10,7 +10,6 @@ namespace Drupal\Tests\hal\Kernel;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\Tests\hal\Kernel\NormalizerTestBase;
 
 /**
  * Tests that entities can be normalized in HAL.
