@@ -9,7 +9,6 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\simpletest\UserCreationTrait;
 use Drupal\views\Views;
-use Drupal\Tests\views\Kernel\Plugin\RelationshipJoinTestBase;
 
 /**
  * Tests the base relationship handler.

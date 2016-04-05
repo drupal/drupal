@@ -15,7 +15,6 @@ use Drupal\hal\Normalizer\FileEntityNormalizer;
 use Drupal\rest\LinkManager\LinkManager;
 use Drupal\rest\LinkManager\RelationLinkManager;
 use Drupal\rest\LinkManager\TypeLinkManager;
-use Drupal\Tests\hal\Kernel\NormalizerTestBase;
 use Symfony\Component\Serializer\Serializer;
 
 

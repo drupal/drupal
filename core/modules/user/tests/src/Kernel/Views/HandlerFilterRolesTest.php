@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\user\Kernel\Views;
 
-use Drupal\Tests\user\Kernel\Views\UserKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;

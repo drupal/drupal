@@ -9,7 +9,6 @@ namespace Drupal\Tests\hal\Kernel;
 
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\Tests\hal\Kernel\NormalizerTestBase;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**

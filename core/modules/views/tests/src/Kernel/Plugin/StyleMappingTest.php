@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
-use Drupal\Tests\views\Kernel\Plugin\StyleTestBase;
 use Drupal\views\Views;
 
 /**
