@@ -1503,3 +1503,178 @@ class FilePrivateTestCase extends FileFieldTestCase {
     $this->assertResponse(403, 'Confirmed that access is denied for the file without view field access permission after attempting to attach it to a new node.');
   }
 }
+
+/**
+ * Confirm that file field submissions work correctly for anonymous visitors.
+ */
+class FileFieldAnonymousSubmission extends FileFieldTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'File form anonymous submission',
+      'description' => 'Test anonymous form submission.',
+      'group' => 'File',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Allow node submissions by anonymous users.
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'create article content',
+      'access content',
+    ));
+  }
+
+  /**
+   * Tests the basic node submission for an anonymous visitor.
+   */
+  function testAnonymousNode() {
+    $bundle_label = 'Article';
+    $node_title = 'Test page';
+
+    // Load the node form.
+    $this->drupalGet('node/add/article');
+    $this->assertResponse(200, 'Loaded the article node form.');
+    $this->assertText(strip_tags(t('Create @name', array('@name' => $bundle_label))));
+
+    $edit = array(
+      'title' => $node_title,
+      'body[und][0][value]' => 'Test article',
+      'body[und][0][format]' => 'filtered_html',
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertResponse(200);
+    $t_args = array('@type' => $bundle_label, '%title' => $node_title);
+    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
+    $matches = array();
+    if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
+      $nid = end($matches);
+      $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
+      $node = node_load($nid);
+      $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
+    }
+  }
+
+  /**
+   * Tests file submission for an anonymous visitor.
+   */
+  function testAnonymousNodeWithFile() {
+    $bundle_label = 'Article';
+    $node_title = 'Test page';
+
+    // Load the node form.
+    $this->drupalGet('node/add/article');
+    $this->assertResponse(200, 'Loaded the article node form.');
+    $this->assertText(strip_tags(t('Create @name', array('@name' => $bundle_label))));
+
+    // Generate an image file.
+    $image = $this->getTestImage();
+
+    // Submit the form.
+    $edit = array(
+      'title' => $node_title,
+      'body[und][0][value]' => 'Test article',
+      'body[und][0][format]' => 'filtered_html',
+      'files[field_image_und_0]' => drupal_realpath($image->uri),
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertResponse(200);
+    $t_args = array('@type' => $bundle_label, '%title' => $node_title);
+    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
+    $matches = array();
+    if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
+      $nid = end($matches);
+      $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
+      $node = node_load($nid);
+      $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
+      $this->assertEqual($node->field_image[LANGUAGE_NONE][0]['filename'], $image->filename, 'The image was uploaded successfully.');
+    }
+  }
+
+  /**
+   * Tests file submission for an anonymous visitor with a missing node title.
+   */
+  function testAnonymousNodeWithFileWithoutTitle() {
+    $this->drupalLogout();
+    $this->_testNodeWithFileWithoutTitle();
+  }
+
+  /**
+   * Tests file submission for an authenticated user with a missing node title.
+   */
+  function testAuthenticatedNodeWithFileWithoutTitle() {
+    $admin_user = $this->drupalCreateUser(array(
+      'bypass node access',
+      'access content overview',
+      'administer nodes',
+    ));
+    $this->drupalLogin($admin_user);
+    $this->_testNodeWithFileWithoutTitle();
+  }
+
+  /**
+   * Helper method to test file submissions with missing node titles.
+   */
+  protected function _testNodeWithFileWithoutTitle() {
+    $bundle_label = 'Article';
+    $node_title = 'Test page';
+
+    // Load the node form.
+    $this->drupalGet('node/add/article');
+    $this->assertResponse(200, 'Loaded the article node form.');
+    $this->assertText(strip_tags(t('Create @name', array('@name' => $bundle_label))));
+
+    // Generate an image file.
+    $image = $this->getTestImage();
+
+    // Submit the form but exclude the title field.
+    $edit = array(
+      'body[und][0][value]' => 'Test article',
+      'body[und][0][format]' => 'filtered_html',
+      'files[field_image_und_0]' => drupal_realpath($image->uri),
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertResponse(200);
+    $t_args = array('@type' => $bundle_label, '%title' => $node_title);
+    $this->assertNoText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
+    $this->assertText(t('!name field is required.', array('!name' => t('Title'))));
+
+    // Submit the form again but this time with the missing title field. This
+    // should still work.
+    $edit = array(
+      'title' => $node_title,
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Confirm the final submission actually worked.
+    $t_args = array('@type' => $bundle_label, '%title' => $node_title);
+    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
+    $matches = array();
+    if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
+      $nid = end($matches);
+      $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
+      $node = node_load($nid);
+      $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
+      $this->assertEqual($node->field_image[LANGUAGE_NONE][0]['filename'], $image->filename, 'The image was uploaded successfully.');
+    }
+  }
+
+  /**
+   * Generates a test image.
+   *
+   * @return stdClass
+   *   A file object.
+   */
+  function getTestImage() {
+    // Get a file to upload.
+    $file = current($this->drupalGetTestFiles('image'));
+
+    // Add a filesize property to files as would be read by file_load().
+    $file->filesize = filesize($file->uri);
+
+    return $file;
+  }
+
+}
