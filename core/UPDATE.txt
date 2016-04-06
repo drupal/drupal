@@ -7,10 +7,10 @@ To upgrade from a previous major version (for example, Drupal 6 or 7), the
 process involves importing site configuration and content from your old site
 into a new Drupal 8 site. The tools and process are currently experimental,
 rather than being fully supported, so be sure to test in a development
-environment. You will need to use the contributed Drupal Upgrade module
-(https://www.drupal.org/project/migrate_upgrade), as well as the core Migrate
-and Migrate Drupal modules. See https://www.drupal.org/upgrade/migrate for
-details, and https://www.drupal.org/node/2167633 for known issues.
+environment. You will need to use the core Drupal Upgrade UI module which
+provides a user interface for the Migrate and Migrate Drupal modules included
+in core. See https://www.drupal.org/upgrade/migrate for details, and
+https://www.drupal.org/node/2167633 for known issues.
 
 First steps and definitions:
 
@@ -38,19 +38,19 @@ First steps and definitions:
     version you are upgrading or updating to on the Drupal project page
     (https://www.drupal.org/project/drupal).
 
-UPGRADE PROBLEMS
+UPDATE PROBLEMS
 ----------------
 If you encounter errors during this process,
 
   * Note any error messages you see.
 
   * Restore your site to its previous state, using the file and database backups
-    you created before you started the upgrade process. Do not attempt to do
-    further upgrades on a site that had update problems.
+    you created before you started the update process. Do not attempt to do
+    further updates on a site that had update problems.
 
   * Consult one of the support options listed on https://www.drupal.org/support
 
-More in-depth information on upgrading can be found at
+More in-depth information on updating and upgrading can be found at
 https://www.drupal.org/upgrade
 
 MINOR AND PATCH VERSION UPDATES
@@ -130,8 +130,8 @@ following the instructions in the INTRODUCTION section at the top of this file:
    - Change it into:
      $settings['update_free_access'] = TRUE;
 
-   - Once the upgrade is done, $settings['update_free_access'] must be
-     reverted to FALSE.
+   - Once the update is done, $settings['update_free_access'] must be reverted
+     to FALSE.
 
 7. Go to Administration > Reports > Status report. Verify that everything is
    working as expected.
