@@ -260,12 +260,94 @@ class BigPipePlaceholderTestCases {
     $current_time->embeddedHtmlResponse = '<time datetime=1991-03-14"></time>';
 
 
+    // 6. Edge case: #lazy_builder that throws an exception.
+    $exception = new BigPipePlaceholderTestCase(
+      [
+        '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::exception', ['llamas', 'suck']],
+        '#create_placeholder' => TRUE,
+      ],
+      '<drupal-render-placeholder callback="\Drupal\big_pipe_test\BigPipeTestController::exception" arguments="0=llamas&amp;1=suck" token="68a75f1a"></drupal-render-placeholder>',
+      [
+        '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::exception', ['llamas', 'suck']],
+      ]
+    );
+    $exception->bigPipePlaceholderId = 'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=68a75f1a';
+    $exception->bigPipePlaceholderRenderArray = [
+      '#markup' => '<div data-big-pipe-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=68a75f1a"></div>',
+      '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
+      '#attached' => [
+        'library' => ['big_pipe/big_pipe'],
+        'drupalSettings' => [
+          'bigPipePlaceholderIds' => [
+            'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&args[0]=llamas&args[1]=suck&token=68a75f1a' => TRUE,
+          ],
+        ],
+        'big_pipe_placeholders' => [
+          'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=68a75f1a' => $exception->placeholderRenderArray,
+        ],
+      ],
+    ];
+    $exception->embeddedAjaxResponseCommands = NULL;
+    $exception->bigPipeNoJsPlaceholder = '<div data-big-pipe-nojs-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=68a75f1a"></div>';
+    $exception->bigPipeNoJsPlaceholderRenderArray = [
+      '#markup' => $exception->bigPipeNoJsPlaceholder,
+      '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
+      '#attached' => [
+        'big_pipe_nojs_placeholders' => [
+          $exception->bigPipeNoJsPlaceholder => $exception->placeholderRenderArray,
+        ],
+      ],
+    ];
+    $exception->embeddedHtmlResponse = NULL;
+
+    // 7. Edge case: response filter throwing an exception for this placeholder.
+    $embedded_response_exception = new BigPipePlaceholderTestCase(
+      [
+        '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::responseException', []],
+        '#create_placeholder' => TRUE,
+      ],
+      '<drupal-render-placeholder callback="\Drupal\big_pipe_test\BigPipeTestController::responseException" arguments="" token="2a9bd022"></drupal-render-placeholder>',
+      [
+        '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::responseException', []],
+      ]
+    );
+    $embedded_response_exception->bigPipePlaceholderId = 'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=2a9bd022';
+    $embedded_response_exception->bigPipePlaceholderRenderArray = [
+      '#markup' => '<div data-big-pipe-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=2a9bd022"></div>',
+      '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
+      '#attached' => [
+        'library' => ['big_pipe/big_pipe'],
+        'drupalSettings' => [
+          'bigPipePlaceholderIds' => [
+            'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&&token=2a9bd022' => TRUE,
+          ],
+        ],
+        'big_pipe_placeholders' => [
+          'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=2a9bd022' => $embedded_response_exception->placeholderRenderArray,
+        ],
+      ],
+    ];
+    $embedded_response_exception->embeddedAjaxResponseCommands = NULL;
+    $embedded_response_exception->bigPipeNoJsPlaceholder = '<div data-big-pipe-nojs-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=2a9bd022"></div>';
+    $embedded_response_exception->bigPipeNoJsPlaceholderRenderArray = [
+      '#markup' => $embedded_response_exception->bigPipeNoJsPlaceholder,
+      '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
+      '#attached' => [
+        'big_pipe_nojs_placeholders' => [
+          $embedded_response_exception->bigPipeNoJsPlaceholder => $embedded_response_exception->placeholderRenderArray,
+        ],
+      ],
+    ];
+    $exception->embeddedHtmlResponse = NULL;
+
     return [
       'html' => $status_messages,
       'html_attribute_value' => $form_action,
       'html_attribute_value_subset' => $csrf_token,
       'edge_case__invalid_html' => $hello,
       'edge_case__html_non_lazy_builder' => $current_time,
+      'exception__lazy_builder' => $exception,
+      'exception__embedded_response' => $embedded_response_exception,
     ];
   }
 
