@@ -104,6 +104,8 @@ function drupal_phpunit_populate_class_loader() {
   // Start with classes in known locations.
   $loader->add('Drupal\\Tests', __DIR__);
   $loader->add('Drupal\\KernelTests', __DIR__);
+  $loader->add('Drupal\\FunctionalTests', __DIR__);
+  $loader->add('Drupal\\FunctionalJavascriptTests', __DIR__);
 
   if (!isset($GLOBALS['namespaces'])) {
     // Scan for arbitrary extension namespaces from core and contrib.
