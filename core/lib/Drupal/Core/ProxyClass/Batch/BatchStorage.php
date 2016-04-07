@@ -1,9 +1,5 @@
 <?php
-
-/**
- * @file
- * Contains \Drupal\Core\ProxyClass\Batch\BatchStorage.
- */
+// @codingStandardsIgnoreFile
 
 /**
  * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Batch\BatchStorage' "core/lib/Drupal/Core".
@@ -109,6 +105,14 @@ namespace Drupal\Core\ProxyClass\Batch {
         public function create(array $batch)
         {
             return $this->lazyLoadItself()->create($batch);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function schemaDefinition()
+        {
+            return $this->lazyLoadItself()->schemaDefinition();
         }
 
     }

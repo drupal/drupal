@@ -1,9 +1,5 @@
 <?php
-
-/**
- * @file
- * Contains \Drupal\filter\ProxyClass\FilterUninstallValidator.
- */
+// @codingStandardsIgnoreFile
 
 /**
  * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\filter\FilterUninstallValidator' "core/modules/filter/src".

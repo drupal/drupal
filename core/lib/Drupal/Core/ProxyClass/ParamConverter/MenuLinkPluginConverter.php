@@ -1,9 +1,5 @@
 <?php
-
-/**
- * @file
- * Contains \Drupal\Core\ProxyClass\ParamConverter\MenuLinkPluginConverter.
- */
+// @codingStandardsIgnoreFile
 
 /**
  * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\ParamConverter\MenuLinkPluginConverter' "core/lib/Drupal/Core".

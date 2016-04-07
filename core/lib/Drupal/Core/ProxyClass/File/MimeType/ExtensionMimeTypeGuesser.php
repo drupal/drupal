@@ -1,9 +1,5 @@
 <?php
-
-/**
- * @file
- * Contains \Drupal\Core\ProxyClass\File\MimeType\ExtensionMimeTypeGuesser.
- */
+// @codingStandardsIgnoreFile
 
 /**
  * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser' "core/lib/Drupal/Core".
