@@ -9,12 +9,12 @@ namespace Drupal\datetime\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\simpletest\WebTestBase;
-use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests Datetime field functionality.
@@ -802,6 +802,48 @@ class DateTimeFieldTest extends WebTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid second value %time has been caught.', array('%time' => $time_value)));
+  }
+
+  /**
+   * Tests that 'Date' field storage setting form is disabled if field has data.
+   */
+  public function testDateStorageSettings() {
+    // Create a test content type.
+    $this->drupalCreateContentType(['type' => 'date_content']);
+
+    // Create a field storage with settings to validate.
+    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'type' => 'datetime',
+      'settings' => [
+        'datetime_type' => 'date',
+      ],
+    ]);
+    $field_storage->save();
+    $field = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'field_name' => $field_name,
+      'bundle' => 'date_content',
+    ]);
+    $field->save();
+
+    entity_get_form_display('node', 'date_content', 'default')
+      ->setComponent($field_name, [
+        'type' => 'datetime_default',
+      ])
+      ->save();
+    $edit = [
+      'title[0][value]' => $this->randomString(),
+      'body[0][value]' => $this->randomString(),
+      $field_name . '[0][value][date]' => '2016-04-01',
+    ];
+    $this->drupalPostForm('node/add/date_content', $edit, t('Save'));
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name . '/storage');
+    $result = $this->xpath("//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]");
+    $this->assertEqual(count($result), 1, "Changing datetime setting is disabled.");
+    $this->assertText('There is data for this field in the database. The field settings can no longer be changed.');
   }
 
   /**
