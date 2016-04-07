@@ -73,11 +73,7 @@ class GenerateProxyClassCommand extends Command {
 
       $file_string = <<<EOF
 <?php
-
-/**
- * @file
- * Contains \{{ proxy_class_name }}.
- */
+// @codingStandardsIgnoreFile
 
 /**
  * This file was generated via php core/scripts/generate-proxy-class.php '$class_name' "$namespace_root".

@@ -1,9 +1,5 @@
 <?php
-
-/**
- * @file
- * Contains \Drupal\views_ui\ProxyClass\ParamConverter\ViewUIConverter.
- */
+// @codingStandardsIgnoreFile
 
 /**
  * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\views_ui\ParamConverter\ViewUIConverter' "core/modules/views_ui/src".

@@ -1,9 +1,5 @@
 <?php
-
-/**
- * @file
- * Contains \Drupal\Core\ProxyClass\Lock\DatabaseLockBackend.
- */
+// @codingStandardsIgnoreFile
 
 /**
  * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Lock\DatabaseLockBackend' "core/lib/Drupal/Core".
@@ -101,6 +97,14 @@ namespace Drupal\Core\ProxyClass\Lock {
         public function releaseAll($lock_id = NULL)
         {
             return $this->lazyLoadItself()->releaseAll($lock_id);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function schemaDefinition()
+        {
+            return $this->lazyLoadItself()->schemaDefinition();
         }
 
         /**
