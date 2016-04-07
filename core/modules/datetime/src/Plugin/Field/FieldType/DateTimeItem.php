@@ -97,6 +97,7 @@ class DateTimeItem extends FieldItemBase {
         static::DATETIME_TYPE_DATETIME => t('Date and time'),
         static::DATETIME_TYPE_DATE => t('Date only'),
       ),
+      '#disabled' => $has_data,
     );
 
     return $element;
