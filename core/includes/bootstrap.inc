@@ -621,9 +621,9 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   // string.
   $http_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : NULL;
   $user_agent = isset($_COOKIE['SIMPLETEST_USER_AGENT']) ? $_COOKIE['SIMPLETEST_USER_AGENT'] : $http_user_agent;
-  if (isset($user_agent) && preg_match("/^(simpletest\d+);(.+);(.+);(.+)$/", $user_agent, $matches)) {
+  if (isset($user_agent) && preg_match("/^(simpletest\d+):(.+):(.+):(.+)$/", $user_agent, $matches)) {
     list(, $prefix, $time, $salt, $hmac) = $matches;
-    $check_string =  $prefix . ';' . $time . ';' . $salt;
+    $check_string =  $prefix . ':' . $time . ':' . $salt;
     // Read the hash salt prepared by drupal_generate_test_ua().
     // This function is called before settings.php is read and Drupal's error
     // handlers are set up. While Drupal's error handling may be properly
@@ -680,8 +680,8 @@ function drupal_generate_test_ua($prefix) {
   }
   // Generate a moderately secure HMAC based on the database credentials.
   $salt = uniqid('', TRUE);
-  $check_string = $prefix . ';' . time() . ';' . $salt;
-  return $check_string . ';' . Crypt::hmacBase64($check_string, $key);
+  $check_string = $prefix . ':' . time() . ':' . $salt;
+  return $check_string . ':' . Crypt::hmacBase64($check_string, $key);
 }
 
 /**
