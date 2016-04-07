@@ -3,9 +3,6 @@
 /**
  * @file
  * Contains \Drupal\Core\Template\TwigTransTokenParser.
- *
- * @see http://twig.sensiolabs.org/doc/extensions/i18n.html
- * @see https://github.com/fabpot/Twig-extensions
  */
 
 namespace Drupal\Core\Template;
@@ -18,6 +15,8 @@ namespace Drupal\Core\Template;
  * into PHP code usable for runtime execution of the template.
  *
  * @see \Twig_TokenParser
+ * @see http://twig.sensiolabs.org/doc/extensions/i18n.html
+ * @see https://github.com/fabpot/Twig-extensions
  */
 class TwigTransTokenParser extends \Twig_TokenParser {
 
