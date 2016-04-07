@@ -3,6 +3,7 @@
 namespace Drupal\big_pipe_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
+use Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber;
 
 class BigPipeTestController {
 
@@ -34,7 +35,20 @@ class BigPipeTestController {
     // 5. Edge case: non-#lazy_builder placeholder.
     $build['edge_case__html_non_lazy_builder'] = $cases['edge_case__html_non_lazy_builder']->renderArray;
 
+    // 6. Exception: #lazy_builder that throws an exception.
+    $build['exception__lazy_builder'] = $cases['exception__lazy_builder']->renderArray;
+
+    // 7. Exception: placeholder that causes response filter to throw exception.
+    $build['exception__embedded_response'] = $cases['exception__embedded_response']->renderArray;
+
     return $build;
+  }
+
+  /**
+   * @return array
+   */
+  public static function nope() {
+    return ['#markup' => '<p>Nope.</p>'];
   }
 
   /**
@@ -61,6 +75,26 @@ class BigPipeTestController {
       '#markup' => BigPipeMarkup::create('<marquee>Yarhar llamas forever!</marquee>'),
       '#cache' => ['max-age' => 0],
     ];
+  }
+
+  /**
+   * #lazy_builder callback; throws exception.
+   *
+   * @throws \Exception
+   */
+  public static function exception() {
+    throw new \Exception('You are not allowed to say llamas are not cool!');
+  }
+
+  /**
+   * #lazy_builder callback; returns content that will trigger an exception.
+   *
+   * @see \Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber::onRespondTriggerException()
+   *
+   * @return array
+   */
+  public static function responseException() {
+    return ['#plain_text' => BigPipeTestSubscriber::CONTENT_TRIGGER_EXCEPTION];
   }
 
 }
