@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Support module for BigPipe testing.
+ */
+
+/**
  * Implements hook_page_top().
  */
 function big_pipe_test_page_top(array &$page_top) {
