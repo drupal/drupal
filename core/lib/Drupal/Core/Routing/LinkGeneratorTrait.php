@@ -3,9 +3,6 @@
 /**
  * @file
  * Contains \Drupal\Core\Routing\LinkGeneratorTrait.
- *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Core\Link instead.
  */
 
 namespace Drupal\Core\Routing;
@@ -21,6 +18,9 @@ use Drupal\Core\Utility\LinkGeneratorInterface;
  * classes that would implement ContainerInjectionInterface. Services registered
  * in the Container should not use this trait but inject the appropriate service
  * directly for easier testing.
+ *
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\Link instead.
  */
 trait LinkGeneratorTrait {
 

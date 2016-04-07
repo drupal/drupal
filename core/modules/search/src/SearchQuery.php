@@ -3,8 +3,6 @@
 /**
  * @file
  * Contains \Drupal\search\SearchQuery.
- *
- * Search query extender and helper functions.
  */
 
 namespace Drupal\search;
@@ -14,6 +12,8 @@ use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
 
 /**
+ * Search query extender and helper functions.
+ *
  * Performs a query on the full-text search index for a word or words.
  *
  * This query is used by search plugins that use the search index (not all

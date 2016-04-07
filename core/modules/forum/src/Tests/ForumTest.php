@@ -3,8 +3,6 @@
 /**
  * @file
  * Contains \Drupal\forum\Tests\ForumTest.
- *
- * Tests for forum.module.
  */
 
 namespace Drupal\forum\Tests;
@@ -18,6 +16,8 @@ use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
+ * Tests for forum.module.
+ *
  * Create, view, edit, delete, and change forum entries and verify its
  * consistency in the database.
  *
