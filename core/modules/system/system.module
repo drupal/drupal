@@ -332,7 +332,7 @@ function system_theme_suggestions_field(array $variables) {
  *   An associative array containing:
  *   - bundles: An array of bundles with the label, description, add_link keys.
  *   - add_bundle_message: The message shown when there are no bundles. Only
-+ *                         available if the entity type uses bundle entities.
+ *     available if the entity type uses bundle entities.
  */
 function template_preprocess_entity_add_list(&$variables) {
   foreach ($variables['bundles'] as $bundle_name => $bundle_info) {
