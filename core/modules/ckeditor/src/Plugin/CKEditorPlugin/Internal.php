@@ -8,6 +8,7 @@
 namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginBase;
+use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -24,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("CKEditor core")
  * )
  */
-class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInterface {
+class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInterface, CKEditorPluginContextualInterface {
 
   /**
    * The cache backend.
@@ -78,6 +79,15 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function isInternal() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEnabled(Editor $editor) {
+    // This plugin represents the core CKEditor plugins. They're always enabled:
+    // its configuration is always necessary.
     return TRUE;
   }
 
