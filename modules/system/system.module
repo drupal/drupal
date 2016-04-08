@@ -3317,7 +3317,7 @@ function system_goto_action_form($context) {
   $form['url'] = array(
     '#type' => 'textfield',
     '#title' => t('URL'),
-    '#description' => t('The URL to which the user should be redirected. This can be an internal URL like node/1234 or an external URL like http://drupal.org.'),
+    '#description' => t('The URL to which the user should be redirected. This can be an internal path like node/1234 or an external URL like http://example.com.'),
     '#default_value' => isset($context['url']) ? $context['url'] : '',
     '#required' => TRUE,
   );

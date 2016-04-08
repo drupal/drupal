@@ -305,7 +305,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
       '#title' => t('Path'),
       '#maxlength' => 255,
       '#default_value' => $path,
-      '#description' => t('The path for this menu link. This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org')),
+      '#description' => t('The path for this menu link. This can be an internal path such as %add-node or an external URL such as %example. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%example' => 'http://example.com')),
       '#required' => TRUE,
     );
     $form['actions']['delete'] = array(

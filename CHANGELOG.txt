@@ -1,6 +1,9 @@
 
 Drupal 7.44, xxxx-xx-xx (development version)
 -----------------------
+- Changed the help text when editing menu links and configuring URL redirect
+  actions so that it does not reference "Drupal" or the drupal.org website
+  (administrative-facing translatable string change).
 - Fixed a regression introduced in Drupal 7.43 that allowed files uploaded by
   anonymous users to be lost after form validation errors, and that also caused
   regressions with certain contributed modules.
