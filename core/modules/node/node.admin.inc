@@ -102,6 +102,9 @@ function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode
  *   An array of node IDs.
  * @param array $updates
  *   Associative array of updates.
+ * @param string $langcode
+ *   The language updates should be applied to. If none is specified all
+ *   available languages are processed.
  * @param bool $load
  *   TRUE if $nodes contains an array of node IDs to be loaded, FALSE if it
  *   contains fully loaded nodes.
@@ -111,7 +114,7 @@ function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode
  * @param array|\ArrayAccess $context.
  *   An array of contextual key/values.
  */
-function _node_mass_update_batch_process(array $nodes, array $updates, $load, $revisions, &$context) {
+function _node_mass_update_batch_process(array $nodes, array $updates, $langcode, $load, $revisions, &$context) {
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($nodes);
@@ -127,7 +130,7 @@ function _node_mass_update_batch_process(array $nodes, array $updates, $load, $r
       $node = $revisions ?
         entity_revision_load('node', $node) : Node::load($node);
     }
-    $node = _node_mass_update_helper($node, $updates);
+    $node = _node_mass_update_helper($node, $updates, $langcode);
 
     // Store result for post-processing in the finished callback.
     $context['results'][] = \Drupal::l($node->label(), $node->urlInfo());

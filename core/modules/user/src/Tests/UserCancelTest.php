@@ -374,6 +374,53 @@ class UserCancelTest extends WebTestBase {
   }
 
   /**
+   * Delete account and anonymize all content using a batch process.
+   */
+  public function testUserAnonymizeBatch() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    $user_storage = $this->container->get('entity.manager')->getStorage('user');
+
+    // Create a user.
+    $account = $this->drupalCreateUser(array('cancel account'));
+    $this->drupalLogin($account);
+    // Load a real user object.
+    $user_storage->resetCache([$account->id()]);
+    $account = $user_storage->load($account->id());
+
+    // Create 11 nodes in order to trigger batch processing in
+    // node_mass_update().
+    $nodes = [];
+    for ($i = 0; $i < 11; $i++) {
+      $node = $this->drupalCreateNode(['uid' => $account->id()]);
+      $nodes[$node->id()] = $node;
+    }
+
+    // Attempt to cancel account.
+    $this->drupalGet('user/' . $account->id() . '/edit');
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
+    $this->assertText(t('Are you sure you want to cancel your account?'), 'Confirmation form to cancel account displayed.');
+    $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', array('%anonymous-name' => $this->config('user.settings')->get('anonymous'))), 'Informs that all content will be attributed to anonymous account.');
+
+    // Confirm account cancellation.
+    $timestamp = time();
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
+    $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
+
+    // Confirm account cancellation request.
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
+    $user_storage->resetCache([$account->id()]);
+    $this->assertFalse($user_storage->load($account->id()), 'User is not found in the database.');
+
+    // Confirm that user's content has been attributed to anonymous user.
+    $node_storage->resetCache(array_keys($nodes));
+    $test_nodes = $node_storage->loadMultiple(array_keys($nodes));
+    foreach ($test_nodes as $test_node) {
+      $this->assertTrue(($test_node->getOwnerId() == 0 && $test_node->isPublished()), 'Node ' . $test_node->id() . ' of the user has been attributed to anonymous user.');
+    }
+  }
+
+  /**
    * Delete account and remove all content.
    */
   function testUserDelete() {
