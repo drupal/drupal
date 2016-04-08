@@ -30,8 +30,9 @@
  *
  * @return
  *   Array with optional keys:
- *   - title: Title for the tab on the search page for this module. Defaults
- *     to the module name if not given.
+ *   - title: Title for the tab on the search page for this module. Title must
+ *     be untranslated. Outside of this return array, pass the title through the
+ *     t() function to register it as a translatable string.
  *   - path: Path component after 'search/' for searching with this module.
  *     Defaults to the module name if not given.
  *   - conditions_callback: An implementation of callback_search_conditions().
@@ -39,6 +40,9 @@
  * @ingroup search
  */
 function hook_search_info() {
+  // Make the title translatable.
+  t('Content');
+
   return array(
     'title' => 'Content',
     'path' => 'node',
