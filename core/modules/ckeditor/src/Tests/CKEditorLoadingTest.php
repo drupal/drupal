@@ -160,6 +160,45 @@ class CKEditorLoadingTest extends WebTestBase {
     $this->assertIdentical($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct after flushing all caches.");
   }
 
+  /**
+   * Tests presence of essential configuration even without Internal's buttons.
+   */
+  protected function testLoadingWithoutInternalButtons() {
+    // Change the CKEditor text editor configuration to only have link buttons.
+    // This means:
+    // - 0 buttons are from \Drupal\ckeditor\Plugin\CKEditorPlugin\Internal
+    // - 2 buttons are from \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalLink
+    $filtered_html_editor = Editor::load('filtered_html');
+    $settings = $filtered_html_editor->getSettings();
+    $settings['toolbar']['rows'] = [
+      0 => [
+        0 => [
+          'name' => 'Links',
+          'items' => [
+            'DrupalLink',
+            'DrupalUnlink',
+          ],
+        ],
+      ],
+    ];
+    $filtered_html_editor->setSettings($settings)->save();
+
+    // Even when no buttons of \Drupal\ckeditor\Plugin\CKEditorPlugin\Internal
+    // are in use, its configuration (Internal::getConfig()) is still essential:
+    // this is configuration that is associated with the (custom, optimized)
+    // build of CKEditor that Drupal core ships with. For example, it configures
+    // CKEditor to not perform its default action of loading a config.js file,
+    // to not convert special characters into HTML entities, and the allowedContent
+    // setting to configure CKEditor's Advanced Content Filter.
+    $this->drupalLogin($this->normalUser);
+    $this->drupalGet('node/add/article');
+    $editor_settings = $this->getDrupalSettings()['editor']['formats']['filtered_html']['editorSettings'];
+    $this->assertTrue(isset($editor_settings['customConfig']));
+    $this->assertTrue(isset($editor_settings['entities']));
+    $this->assertTrue(isset($editor_settings['allowedContent']));
+    $this->assertTrue(isset($editor_settings['disallowedContent']));
+  }
+
   protected function getThingsToCheck() {
     $settings = $this->getDrupalSettings();
     return array(
