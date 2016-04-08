@@ -25,24 +25,28 @@ class EntityAddUITest extends WebTestBase {
   public static $modules = ['entity_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $web_user = $this->drupalCreateUser([
-      "administer entity_test_with_bundle content",
-      "administer entity_test content",
-    ]);
-    $this->drupalLogin($web_user);
-  }
-
-  /**
    * Tests the add page for an entity type using bundle entities.
    */
   public function testAddPageWithBundleEntities() {
+    $admin_user = $this->drupalCreateUser([
+      'administer entity_test_with_bundle content',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    // Users without create access for bundles do not have access to the add
+    // page if there are no bundles.
     $this->drupalGet('/entity_test_with_bundle/add');
-    // No bundles exist, the add bundle message should be present.
+    $this->assertResponse(403);
+
+    $bundle_admin_user = $this->drupalCreateUser([
+      'administer entity_test_with_bundle content',
+      'administer entity_test_bundle content',
+    ]);
+    $this->drupalLogin($bundle_admin_user);
+
+    // No bundles exist, the add bundle message should be present as the user
+    // has the necessary permissions.
+    $this->drupalGet('/entity_test_with_bundle/add');
     $this->assertText('There is no test entity bundle yet.');
     $this->assertLink('Add a new test entity bundle.');
 
@@ -74,12 +78,57 @@ class EntityAddUITest extends WebTestBase {
     $this->drupalPostForm(NULL, ['name[0][value]' => 'test name'], t('Save'));
     $entity = EntityTestWithBundle::load(1);
     $this->assertEqual('test name', $entity->label());
+
+    // Create a new user that only has bundle specific permissions.
+    $user = $this->drupalCreateUser([
+      'create test entity_test_with_bundle entities',
+      'create test2 entity_test_with_bundle entities',
+    ]);
+    $this->drupalLogin($user);
+
+    // Create a bundle that the user does not have create permissions for.
+    EntityTestBundle::create([
+      'id' => 'test3',
+      'label' => 'Test3 label',
+      'description' => 'My test3 description',
+    ])->save();
+    $this->drupalGet('/entity_test_with_bundle/add');
+    $this->assertLink('Test label');
+    $this->assertLink('Test2 label');
+    $this->assertNoLink('Test3 label');
+    $this->clickLink(t('Test label'));
+    $this->assertResponse(200);
+
+    // Without any permissions, access must be denied.
+    $this->drupalLogout();
+    $this->drupalGet('/entity_test_with_bundle/add');
+    $this->assertResponse(403);
+
+    // Create a new user that has bundle create permissions.
+    $user = $this->drupalCreateUser([
+      'administer entity_test_bundle content',
+    ]);
+    $this->drupalLogin($user);
+
+    // User has access to the add page but no bundles are shown because the user
+    // does not have bundle specific permissions. The add bundle message is
+    // present as the user has bundle create permissions.
+    $this->drupalGet('/entity_test_with_bundle/add');
+    $this->assertNoLink('Test label');
+    $this->assertNoLink('Test2 label');
+    $this->assertNoLink('Test3 label');
+    $this->assertLink('Add a new test entity bundle.');
   }
 
   /**
    * Tests the add page for an entity type not using bundle entities.
    */
   public function testAddPageWithoutBundleEntities() {
+    $admin_user = $this->drupalCreateUser([
+      'administer entity_test content',
+    ]);
+    $this->drupalLogin($admin_user);
+
     entity_test_create_bundle('test', 'Test label', 'entity_test_mul');
     // Delete the default bundle, so that we can rely on our own.
     entity_test_delete_bundle('entity_test_mul', 'entity_test_mul');

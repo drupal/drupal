@@ -1069,6 +1069,11 @@ services:
     arguments: ['@entity.manager']
     tags:
       - { name: access_check, applies_to: _entity_create_access }
+  access_check.entity_create_any:
+    class: Drupal\Core\Entity\EntityCreateAnyAccessCheck
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info']
+    tags:
+      - { name: access_check, applies_to: _entity_create_any_access }
   access_check.theme:
     class: Drupal\Core\Theme\ThemeAccessCheck
     arguments: ['@theme_handler']
