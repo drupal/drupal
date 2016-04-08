@@ -1,6 +1,9 @@
 
 Drupal 7.44, xxxx-xx-xx (development version)
 -----------------------
+- Changed wording on the Update Manager settings page to clarify that the
+  option to check for disabled module updates also applies to uninstalled
+  modules (administrative-facing translatable string change).
 - Changed the help text when editing menu links and configuring URL redirect
   actions so that it does not reference "Drupal" or the drupal.org website
   (administrative-facing translatable string change).

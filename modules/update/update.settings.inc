@@ -26,7 +26,7 @@ function update_settings($form) {
 
   $form['update_check_disabled'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Check for updates of disabled modules and themes'),
+    '#title' => t('Check for updates of disabled and uninstalled modules and themes'),
     '#default_value' => variable_get('update_check_disabled', FALSE),
   );
 
@@ -98,10 +98,11 @@ function update_settings_validate($form, &$form_state) {
  * Form submission handler for update_settings().
  *
  * Also invalidates the cache of available updates if the "Check for updates of
- * disabled modules and themes" setting is being changed. The available updates
- * report needs to refetch available update data after this setting changes or
- * it would show misleading things (e.g., listing the disabled projects on the
- * site with the "No available releases found" warning).
+ * disabled and uninstalled modules and themes" setting is being changed. The
+ * available updates report needs to refetch available update data after this
+ * setting changes or it would show misleading things (e.g., listing the
+ * disabled projects on the site with the "No available releases found"
+ * warning).
  *
  * @see update_settings_validate()
  */
