@@ -1,6 +1,6 @@
 {
-  "name": "drupal/core-gettext",
-  "description": "PHP library for reading PO files.",
+  "name": "drupal/core-transliteration",
+  "description": "Transliteration.",
   "type": "library",
   "license": "GPL-2.0+",
   "support": {
@@ -8,13 +8,9 @@
     "irc": "irc://irc.freenode.net/drupal-contribute",
     "source": "https://www.drupal.org/project/drupal/git-instructions"
   },
-  "require": {
-    "php": ">=5.5.9",
-    "drupal/core-utility": "~8.2"
-  },
   "autoload": {
     "psr-4": {
-      "Drupal\\Component\\Gettext\\": ""
+      "Drupal\\Component\\Transliteration\\": ""
     }
   }
 }

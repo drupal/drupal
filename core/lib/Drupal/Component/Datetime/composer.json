@@ -1,0 +1,16 @@
+{
+  "name": "drupal/core-datetime",
+  "description": "This class wraps the PHP DateTime class with more flexible initialization parameters, allowing a date to be created from an existing date object, a timestamp, a string with an unknown format, a string with a known format, or an array of date parts. It also adds an errors array and a __toString() method to the date object.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.5.9",
+    "drupal/core-utility": "~8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Datetime\\": ""
+    }
+  }
+}

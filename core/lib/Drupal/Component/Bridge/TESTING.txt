@@ -15,5 +15,4 @@ Each component in the Drupal\Component namespace has its own annotated test
 group. You can use this group to run only the tests for this component. Like
 this:
 
-$ cd ./core
 $ ./vendor/bin/phpunit -c core --group Bridge

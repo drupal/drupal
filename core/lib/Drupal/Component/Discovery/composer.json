@@ -1,16 +1,17 @@
 {
-  "name": "drupal/core-bridge",
-  "description": "Bridge.",
+  "name": "drupal/core-discovery",
+  "description": "Discovery.",
   "keywords": ["drupal"],
   "homepage": "https://www.drupal.org/project/drupal",
   "license": "GPL-2.0+",
   "require": {
     "php": ">=5.5.9",
-    "zendframework/zend-feed": "~2.4"
+    "drupal/core-filecache": "~8.2",
+    "drupal/core-serialization": "~8.2"
   },
   "autoload": {
     "psr-4": {
-      "Drupal\\Component\\Bridge\\": ""
+      "Drupal\\Component\\Discovery\\": ""
     }
   }
 }
