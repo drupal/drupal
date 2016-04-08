@@ -20,7 +20,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   handlers = {
  *     "list_builder" = "Drupal\entity_test\EntityTestListBuilder",
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
- *     "access" = "\Drupal\Core\Entity\EntityAccessControlHandler",
+ *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
  *     "form" = {
  *       "default" = "\Drupal\Core\Entity\ContentEntityForm",
  *       "delete" = "\Drupal\Core\Entity\EntityDeleteForm"

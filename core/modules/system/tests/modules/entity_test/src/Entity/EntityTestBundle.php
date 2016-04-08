@@ -25,7 +25,7 @@ use Drupal\Core\Entity\EntityDescriptionInterface;
  *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
  *     },
  *   },
- *   admin_permission = "administer entity_test_with_bundle content",
+ *   admin_permission = "administer entity_test_bundle content",
  *   config_prefix = "entity_test_bundle",
  *   bundle_of = "entity_test_with_bundle",
  *   entity_keys = {

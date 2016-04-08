@@ -90,7 +90,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
       '_title_callback' => 'Drupal\Core\Entity\Controller\EntityController::addTitle',
       'entity_type_id' => 'the_entity_type_id',
     ]);
-    $route->setRequirement('_entity_create_access', 'the_entity_type_id');
+    $route->setRequirement('_entity_create_any_access', 'the_entity_type_id');
     $data['add_page'] = [clone $route, $entity_type3->reveal()];
 
     return $data;
@@ -119,9 +119,11 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
 
     $entity_type1 = $this->getEntityType();
     $entity_type1->hasLinkTemplate('add-form')->willReturn(FALSE);
+
     $data['no_add_form_link_template'] = [NULL, $entity_type1->reveal()];
 
     $entity_type2 = $this->getEntityType();
+    $entity_type2->getBundleEntityType()->willReturn(NULL);
     $entity_type2->hasLinkTemplate('add-form')->willReturn(TRUE);
     $entity_type2->id()->willReturn('the_entity_type_id');
     $entity_type2->getLinkTemplate('add-form')->willReturn('/the/add/form/link/template');
@@ -145,19 +147,23 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $entity_type4 = $this->getEntityType($entity_type3);
     $entity_type4->getKey('bundle')->willReturn('the_bundle_key');
     $entity_type4->getBundleEntityType()->willReturn(NULL);
+    $entity_type4->getLinkTemplate('add-form')->willReturn('/the/add/form/link/template/{the_bundle_key}');
+    $route->setPath('/the/add/form/link/template/{the_bundle_key}');
     $route
       ->setDefault('_title_callback', 'Drupal\Core\Entity\Controller\EntityController::addBundleTitle')
       ->setDefault('bundle_parameter', 'the_bundle_key')
-      ->setRequirement('_entity_create_access', 'the_entity_type_id:the_bundle_key');
+      ->setRequirement('_entity_create_access', 'the_entity_type_id:{the_bundle_key}');
     $data['add_form_bundle_static'] = [clone $route, $entity_type4->reveal()];
 
     $entity_type5 = $this->getEntityType($entity_type4);
     $entity_type5->getBundleEntityType()->willReturn('the_bundle_entity_type_id');
+    $entity_type5->getLinkTemplate('add-form')->willReturn('/the/add/form/link/template/{the_bundle_entity_type_id}');
     $bundle_entity_type = $this->getEntityType();
     $bundle_entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE);
+    $route->setPath('/the/add/form/link/template/{the_bundle_entity_type_id}');
     $route
       ->setDefault('bundle_parameter', 'the_bundle_entity_type_id')
-      ->setRequirement('_entity_create_access', 'the_entity_type_id:the_bundle_entity_type_id')
+      ->setRequirement('_entity_create_access', 'the_entity_type_id:{the_bundle_entity_type_id}')
       ->setOption('parameters', ['the_bundle_entity_type_id' => [
         'type' => 'entity:the_bundle_entity_type_id',
       ]]);

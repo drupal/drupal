@@ -120,7 +120,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       $route->setDefault('_controller', EntityController::class . '::addPage');
       $route->setDefault('_title_callback', EntityController::class . '::addTitle');
       $route->setDefault('entity_type_id', $entity_type->id());
-      $route->setRequirement('_entity_create_access', $entity_type->id());
+      $route->setRequirement('_entity_create_any_access', $entity_type->id());
 
       return $route;
     }
@@ -151,7 +151,11 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       // If the entity has bundles, we can provide a bundle-specific title
       // and access requirements.
-      if ($bundle_key = $entity_type->getKey('bundle')) {
+      $expected_parameter = $entity_type->getBundleEntityType() ?: $entity_type->getKey('bundle');
+      // @todo: We have to check if a route contains a bundle in its path as
+      //   test entities have inconsistent usage of "add-form" link templates.
+      //   Fix it in https://www.drupal.org/node/2699959.
+      if (($bundle_key = $entity_type->getKey('bundle')) && strpos($route->getPath(), '{' . $expected_parameter . '}') !== FALSE) {
         $route->setDefault('_title_callback', EntityController::class . '::addBundleTitle');
         // If the bundles are entities themselves, we can add parameter
         // information to the route options.
@@ -162,7 +166,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
             // The title callback uses the value of the bundle parameter to
             // fetch the respective bundle at runtime.
             ->setDefault('bundle_parameter', $bundle_entity_type_id)
-            ->setRequirement('_entity_create_access', "{$entity_type_id}:{$bundle_entity_type_id}");
+            ->setRequirement('_entity_create_access', $entity_type_id . ':{' . $bundle_entity_type_id . '}');
 
           // Entity types with serial IDs can specify this in their route
           // requirements, improving the matching process.
@@ -185,7 +189,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
           // route parameter name directly.
           $route
             ->setDefault('bundle_parameter', $bundle_key)
-            ->setRequirement('_entity_create_access', "{$entity_type_id}:{$bundle_key}");
+            ->setRequirement('_entity_create_access', $entity_type_id . ':{' . $bundle_key . '}');
         }
       }
       else {
