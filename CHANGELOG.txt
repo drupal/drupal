@@ -1,8 +1,6 @@
 
 Drupal 7.44, xxxx-xx-xx (development version)
 -----------------------
-- Changed help text on image fields to clarify that uploaded images which are
-  too large will be resized rather than rejected (translatable string change).
 - Changed wording on the Update Manager settings page to clarify that the
   option to check for disabled module updates also applies to uninstalled
   modules (administrative-facing translatable string change).
