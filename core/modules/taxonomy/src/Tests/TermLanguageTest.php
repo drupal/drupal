@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\TermLanguageTest.
- */
-
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Language\LanguageInterface;

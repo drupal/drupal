@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\SharedTempStoreFactory.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;

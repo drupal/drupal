@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\statistics\Plugin\Block\StatisticsPopularBlock.
- */
-
 namespace Drupal\statistics\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;

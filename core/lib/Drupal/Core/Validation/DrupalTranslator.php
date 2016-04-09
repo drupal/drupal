@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Validation\DrupalTranslator.
- */
-
 namespace Drupal\Core\Validation;
 
 use Drupal\Component\Render\MarkupInterface;

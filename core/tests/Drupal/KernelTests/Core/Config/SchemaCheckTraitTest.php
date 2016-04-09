@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Config\SchemaCheckTraitTest.
- */
-
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\Schema\SchemaCheckTrait;

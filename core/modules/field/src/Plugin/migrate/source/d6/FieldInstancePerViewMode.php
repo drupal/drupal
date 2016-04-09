@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Plugin\migrate\source\d6\FieldInstancePerViewMode.
- */
-
 namespace Drupal\field\Plugin\migrate\source\d6;
 
 use Drupal\node\Plugin\migrate\source\d6\ViewModeBase;

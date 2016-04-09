@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\CommentTypeInterface.
- */
-
 namespace Drupal\comment;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

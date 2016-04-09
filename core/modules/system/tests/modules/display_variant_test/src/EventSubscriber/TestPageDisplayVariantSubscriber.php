@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\display_variant_test\EventSubscriber\TestPageDisplayVariantSubscriber.
- */
-
 namespace Drupal\display_variant_test\EventSubscriber;
 
 use Drupal\Core\Plugin\Context\Context;

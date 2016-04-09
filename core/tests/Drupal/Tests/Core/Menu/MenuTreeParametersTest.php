@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Menu\MenuTreeParametersTest.
- */
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\MenuTreeParameters;

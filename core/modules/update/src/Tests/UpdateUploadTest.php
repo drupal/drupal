@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\update\Tests\UpdateUploadTest.
- */
-
 namespace Drupal\update\Tests;
 
 use Drupal\Core\Extension\InfoParserDynamic;

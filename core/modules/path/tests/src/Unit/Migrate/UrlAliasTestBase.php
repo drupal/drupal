@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\path\Unit\Migrate\UrlAliasTestBase.
- */
-
 namespace Drupal\Tests\path\Unit\Migrate;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;

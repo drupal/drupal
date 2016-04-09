@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Asset\Exception\InvalidLibrariesExtendSpecificationException.
- */
-
 namespace Drupal\Core\Asset\Exception;
 
 /**

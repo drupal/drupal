@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Plugin\PluginBase.
- */
-
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\PluginBase as ComponentPluginBase;

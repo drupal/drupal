@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Handler\FieldFieldAccessTestBase.
- */
-
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\user\Entity\Role;

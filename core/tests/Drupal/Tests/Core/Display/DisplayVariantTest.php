@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Display\DisplayVariantTest.
- */
-
 namespace Drupal\Tests\Core\Display;
 
 use Drupal\Core\Form\FormState;

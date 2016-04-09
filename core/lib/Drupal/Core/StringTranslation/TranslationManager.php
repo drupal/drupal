@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\StringTranslation\TranslationManager.
- */
-
 namespace Drupal\Core\StringTranslation;
 
 use Drupal\Core\Language\LanguageDefault;

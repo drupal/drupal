@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Annotation\ViewsFilter.
- */
-
 namespace Drupal\views\Annotation;
 
 /**

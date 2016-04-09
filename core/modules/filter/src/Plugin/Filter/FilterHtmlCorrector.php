@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter\Plugin\Filter\FilterHtmlCorrector.
- */
-
 namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;

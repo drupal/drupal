@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Plugin\ObjectWithPluginCollectionInterface.
- */
-
 namespace Drupal\Core\Plugin;
 
 /**

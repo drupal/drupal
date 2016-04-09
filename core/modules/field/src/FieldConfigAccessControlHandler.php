@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\FieldConfigAccessControlHandler.
- */
-
 namespace Drupal\field;
 
 use Drupal\Core\Access\AccessResult;

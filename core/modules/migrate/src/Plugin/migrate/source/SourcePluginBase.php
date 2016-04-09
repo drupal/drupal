@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\source\SourcePluginBase.
- */
-
 namespace Drupal\migrate\Plugin\migrate\source;
 
 use Drupal\Core\Plugin\PluginBase;

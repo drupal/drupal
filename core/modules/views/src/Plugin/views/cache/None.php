@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\cache\None.
- */
-
 namespace Drupal\views\Plugin\views\cache;
 
 /**

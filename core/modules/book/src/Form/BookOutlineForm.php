@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\Form\BookOutlineForm.
- */
-
 namespace Drupal\book\Form;
 
 use Drupal\book\BookManagerInterface;

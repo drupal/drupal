@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Plugin\Discovery\HookDiscoveryTest.
- */
-
 namespace Drupal\Tests\Core\Plugin\Discovery {
 
 use Drupal\Core\Plugin\Discovery\HookDiscovery;

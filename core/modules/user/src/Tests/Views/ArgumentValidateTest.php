@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\Views\ArgumentValidateTest.
- */
-
 namespace Drupal\user\Tests\Views;
 
 use Drupal\Core\Form\FormState;

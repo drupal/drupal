@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\link\Plugin\Validation\Constraint\LinkExternalProtocolsConstraintValidator.
- */
-
 namespace Drupal\link\Plugin\Validation\Constraint;
 
 use Drupal\Component\Utility\UrlHelper;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\ConfigImporterFieldPurger.
- */
-
 namespace Drupal\field;
 
 use Drupal\Core\Config\ConfigImporter;

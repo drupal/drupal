@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Plugin\views\filter\Search.
- */
-
 namespace Drupal\search\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;

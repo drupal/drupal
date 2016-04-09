@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_ui\Tests\MenuLanguageTest.
- */
-
 namespace Drupal\menu_ui\Tests;
 
 use Drupal\Component\Utility\Unicode;

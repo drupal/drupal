@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\CommentAnonymousTest.
- */
-
 namespace Drupal\comment\Tests;
 
 use Drupal\user\RoleInterface;

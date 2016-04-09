@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dynamic_page_cache\PageCache\RequestPolicy\DefaultRequestPolicy.
- */
-
 namespace Drupal\dynamic_page_cache\PageCache\RequestPolicy;
 
 use Drupal\Core\PageCache\ChainRequestPolicy;

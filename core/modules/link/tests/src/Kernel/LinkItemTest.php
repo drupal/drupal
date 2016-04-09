@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\link\Kernel\LinkItemTest.
- */
-
 namespace Drupal\Tests\link\Kernel;
 
 use Drupal\Component\Utility\UrlHelper;

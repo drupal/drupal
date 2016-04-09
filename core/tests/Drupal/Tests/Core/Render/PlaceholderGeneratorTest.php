@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\PlaceholderGeneratorTest.
- */
-
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Utility\Html;

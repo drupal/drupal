@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\argument\GroupByNumeric.
- */
-
 namespace Drupal\views\Plugin\views\argument;
 
 /**

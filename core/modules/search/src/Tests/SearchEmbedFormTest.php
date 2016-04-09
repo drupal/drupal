@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchEmbedFormTest.
- */
-
 namespace Drupal\search\Tests;
 
 /**

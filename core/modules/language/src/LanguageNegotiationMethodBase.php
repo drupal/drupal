@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\LanguageNegotiationMethodBase.
- */
-
 namespace Drupal\language;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

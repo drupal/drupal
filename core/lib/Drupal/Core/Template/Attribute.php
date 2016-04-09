@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Template\Attribute.
- */
-
 namespace Drupal\Core\Template;
 
 use Drupal\Component\Render\PlainTextOutput;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_test\Plugin\Condition\BaloneySpam.
- */
-
 namespace Drupal\block_test\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;

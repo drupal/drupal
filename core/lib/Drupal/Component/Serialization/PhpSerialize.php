@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Serialization\PhpSerialize.
- */
-
 namespace Drupal\Component\Serialization;
 
 /**

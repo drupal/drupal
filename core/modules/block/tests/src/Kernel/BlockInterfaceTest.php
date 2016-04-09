@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block\Kernel\BlockInterfaceTest.
- */
-
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\Core\Form\FormState;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_test_data\Controller\ViewsTestFormMultipleController.
- */
-
 namespace Drupal\views_test_data\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

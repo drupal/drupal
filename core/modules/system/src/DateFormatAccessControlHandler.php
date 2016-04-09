@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\DateFormatAccessControlHandler.
- */
-
 namespace Drupal\system;
 
 use Drupal\Core\Access\AccessResult;

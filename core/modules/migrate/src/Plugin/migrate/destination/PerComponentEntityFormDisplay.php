@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\PerComponentEntityFormDisplay.
- */
-
 namespace Drupal\migrate\Plugin\migrate\destination;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\CacheTagsChecksumInterface.
- */
-
 namespace Drupal\Core\Cache;
 
 /**

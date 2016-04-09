@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserActionConfigSchemaTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;

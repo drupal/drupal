@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\ForumUninstallValidator.
- */
-
 namespace Drupal\forum;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Tests\FileManagedFileElementTest.
- */
-
 namespace Drupal\file\Tests;
 
 /**

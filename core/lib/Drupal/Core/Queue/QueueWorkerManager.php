@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Queue\QueueWorkerManager.
- */
-
 namespace Drupal\Core\Queue;
 
 use Drupal\Core\Cache\CacheBackendInterface;

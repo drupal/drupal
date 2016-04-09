@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\locale\Unit\LocaleLookupTest.
- */
-
 namespace Drupal\Tests\locale\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

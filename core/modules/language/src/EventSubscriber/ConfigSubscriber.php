@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\EventSubscriber\ConfigSubscriber.
- */
-
 namespace Drupal\language\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

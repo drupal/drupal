@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Routing\TrustedRedirectResponseTest.
- */
-
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Cache\CacheableMetadata;

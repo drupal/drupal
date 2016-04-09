@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\String\StringFieldTest.
- */
-
 namespace Drupal\field\Tests\String;
 
 use Drupal\Component\Utility\Unicode;

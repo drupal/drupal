@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\Views\TaxonomyFieldFilterTest.
- */
-
 namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\Core\Language\LanguageInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\RevisionableContentEntityBase.
- */
-
 namespace Drupal\Core\Entity;
 
 /**

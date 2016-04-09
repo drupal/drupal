@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\ContextualLinkDefault.
- */
-
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\PluginBase;

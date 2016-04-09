@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Plugin\DefaultFactoryTest.
- */
-
 namespace Drupal\Tests\Component\Plugin;
 
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;

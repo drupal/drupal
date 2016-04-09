@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Session\SessionHandler.
- */
-
 namespace Drupal\Core\Session;
 
 use Drupal\Component\Utility\Crypt;

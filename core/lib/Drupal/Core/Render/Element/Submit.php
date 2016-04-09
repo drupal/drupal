@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Element\Submit.
- */
-
 namespace Drupal\Core\Render\Element;
 
 /**

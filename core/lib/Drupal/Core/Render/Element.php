@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Element.
- */
-
 namespace Drupal\Core\Render;
 
 use Drupal\Component\Utility\SafeMarkup;

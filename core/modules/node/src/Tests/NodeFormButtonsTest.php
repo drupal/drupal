@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeFormButtonsTest.
- */
-
 namespace Drupal\node\Tests;
 
 /**

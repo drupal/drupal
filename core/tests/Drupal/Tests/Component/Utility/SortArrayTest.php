@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Utility\SortArrayTest.
- */
-
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Tests\UnitTestCase;

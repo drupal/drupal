@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\LanguageAccessControlHandler.
- */
-
 namespace Drupal\language;
 
 use Drupal\Core\Access\AccessResult;

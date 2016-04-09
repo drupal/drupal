@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Tests\ItemCacheTagsTest.
- */
-
 namespace Drupal\aggregator\Tests;
 
 use Drupal\aggregator\Entity\Feed;

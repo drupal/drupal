@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\ConfirmFormInterface.
- */
-
 namespace Drupal\Core\Form;
 
 /**

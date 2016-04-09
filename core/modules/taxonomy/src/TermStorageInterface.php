@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\TermStorageInterface.
-*/
-
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;

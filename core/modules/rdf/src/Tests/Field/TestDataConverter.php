@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\rdf\Tests\Field\TestDataConverter.
- */
 
 namespace Drupal\rdf\Tests\Field;
 

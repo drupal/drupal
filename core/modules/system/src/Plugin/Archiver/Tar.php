@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\Archiver\Tar.
- */
-
 namespace Drupal\system\Plugin\Archiver;
 
 use Drupal\Core\Archiver\Tar as BaseTar;

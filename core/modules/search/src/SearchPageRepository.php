@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\SearchPageRepository.
- */
-
 namespace Drupal\search;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

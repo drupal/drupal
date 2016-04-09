@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\OptionsProviderInterface.
- */
-
 namespace Drupal\Core\TypedData;
 
 use Drupal\Core\Session\AccountInterface;

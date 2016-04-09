@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\action\Form\ActionAdminManageForm.
- */
-
 namespace Drupal\action\Form;
 
 use Drupal\Core\Form\FormBase;

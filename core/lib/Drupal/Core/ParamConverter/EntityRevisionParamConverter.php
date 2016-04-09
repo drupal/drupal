@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ParamConverter\EntityRevisionParamConverter.
- */
-
 namespace Drupal\Core\ParamConverter;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\Update\FieldUpdateTest.
- */
-
 namespace Drupal\field\Tests\Update;
 
 use Drupal\Core\Config\Config;

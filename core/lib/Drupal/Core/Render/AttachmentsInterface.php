@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\AttachmentsInterface.
- */
-
 namespace Drupal\Core\Render;
 
 /**

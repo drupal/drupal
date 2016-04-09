@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\ViewsFormMultipleTest.
- */
-
 namespace Drupal\views\Tests;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Http\ClientFactory.
- */
-
 namespace Drupal\Core\Http;
 
 use Drupal\Component\Utility\NestedArray;

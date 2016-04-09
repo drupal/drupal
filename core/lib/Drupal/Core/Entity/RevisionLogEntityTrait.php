@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\RevisionLogEntityTrait.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Field\BaseFieldDefinition;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Gettext.
- */
-
 namespace Drupal\locale;
 
 use Drupal\Component\Gettext\PoStreamReader;

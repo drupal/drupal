@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeCacheTagsTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Entity\EntityInterface;

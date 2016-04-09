@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\StreamWrapper\PrivateStream.
- */
-
 namespace Drupal\Core\StreamWrapper;
 
 use Drupal\Core\Routing\UrlGeneratorTrait;

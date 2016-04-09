@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\breakpoint\BreakpointInterface.
- */
-
 namespace Drupal\breakpoint;
 
 /**

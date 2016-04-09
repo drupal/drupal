@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Menu\LocalTaskManagerTest.
- */
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Access\AccessResult;

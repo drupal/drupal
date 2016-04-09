@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Common\AttributesTest.
- */
-
 namespace Drupal\Tests\Core\Common;
 
 use Drupal\Core\Template\Attribute;

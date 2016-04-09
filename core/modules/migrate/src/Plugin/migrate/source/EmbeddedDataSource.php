@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\source\EmbeddedDataSource.
- */
-
 namespace Drupal\migrate\Plugin\migrate\source;
 use Drupal\migrate\Plugin\MigrationInterface;
 

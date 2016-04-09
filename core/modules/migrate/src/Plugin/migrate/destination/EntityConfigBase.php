@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\EntityConfigBase.
- */
-
 namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Component\Utility\NestedArray;

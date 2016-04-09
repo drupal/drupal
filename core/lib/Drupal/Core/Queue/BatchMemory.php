@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Queue\BatchMemory.
- */
-
 namespace Drupal\Core\Queue;
 
 /**

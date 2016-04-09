@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Bootstrap\GetFilenameUnitTest.
- */
-
 namespace Drupal\system\Tests\Bootstrap;
 
 use Drupal\simpletest\KernelTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\Controller\ConfigTranslationFieldListBuilder.
- */
-
 namespace Drupal\config_translation\Controller;
 
 use Drupal\Component\Utility\Unicode;

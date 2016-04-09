@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Tests\ImageAdminStylesTest.
- */
-
 namespace Drupal\image\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

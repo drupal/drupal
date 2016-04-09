@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeTokenReplaceTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\Component\Render\FormattableMarkup;

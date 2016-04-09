@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\UserListBuilder.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\Cache\CacheableMetadata;

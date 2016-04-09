@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field_ui\Kernel\EntityDisplayTest.
- */
-
 namespace Drupal\Tests\field_ui\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;

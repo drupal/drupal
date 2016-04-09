@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\url_alter_test\PathProcessorTest.
- */
-
 namespace Drupal\url_alter_test;
 
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserEntityTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\KernelTestBase;

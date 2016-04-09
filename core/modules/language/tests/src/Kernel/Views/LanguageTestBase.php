@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\language\Kernel\Views\LanguageTestBase.
- */
-
 namespace Drupal\Tests\language\Kernel\Views;
 
 use Drupal\language\Entity\ConfigurableLanguage;

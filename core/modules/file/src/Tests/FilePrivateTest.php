@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Tests\FilePrivateTest.
- */
-
 namespace Drupal\file\Tests;
 
 use Drupal\Core\Entity\Plugin\Validation\Constraint\ReferenceAccessConstraint;

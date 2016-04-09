@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system_test\MockFileTransfer.
- */
-
 namespace Drupal\system_test;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Tests\ImageFieldWidgetTest.
- */
-
 namespace Drupal\image\Tests;
 
 /**

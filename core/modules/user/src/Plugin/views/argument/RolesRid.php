@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\views\argument\RolesRid.
- */
-
 namespace Drupal\user\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityManagerInterface;

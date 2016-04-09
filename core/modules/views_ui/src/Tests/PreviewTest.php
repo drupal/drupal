@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Tests\PreviewTest.
- */
-
 namespace Drupal\views_ui\Tests;
 
 use Drupal\Component\Serialization\Json;

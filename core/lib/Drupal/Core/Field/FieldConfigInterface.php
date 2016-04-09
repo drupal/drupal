@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\FieldConfigInterface.
- */
-
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

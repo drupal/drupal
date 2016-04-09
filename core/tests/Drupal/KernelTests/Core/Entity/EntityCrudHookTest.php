@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityCrudHookTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\comment\Entity\Comment;

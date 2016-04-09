@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Form\DateFormatDeleteForm.
- */
-
 namespace Drupal\system\Form;
 
 use Drupal\Core\Datetime\DateFormatterInterface;

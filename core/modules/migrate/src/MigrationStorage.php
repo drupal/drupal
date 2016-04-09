@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\MigrationStorage.
- */
-
 namespace Drupal\migrate;
 
 use Drupal\Component\Graph\Graph;

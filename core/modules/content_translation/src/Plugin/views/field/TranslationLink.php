@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Plugin\views\field\TranslationLink.
- */
-
 namespace Drupal\content_translation\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\EntityLink;

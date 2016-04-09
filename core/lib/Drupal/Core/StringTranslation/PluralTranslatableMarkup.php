@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\StringTranslation\PluralTranslatableMarkup.
- */
-
 namespace Drupal\Core\StringTranslation;
 
 /**

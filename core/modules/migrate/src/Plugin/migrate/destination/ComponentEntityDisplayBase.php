@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\ComponentEntityDisplayBase.
- */
-
 namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\migrate\Plugin\MigrationInterface;

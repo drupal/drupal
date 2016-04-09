@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\Views\CommentViewsKernelTestBase.
- */
-
 namespace Drupal\Tests\comment\Kernel\Views;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;

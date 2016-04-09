@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\StorageComparer.
- */
-
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Cache\MemoryBackend;

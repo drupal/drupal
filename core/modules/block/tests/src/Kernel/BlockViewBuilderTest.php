@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block\Kernel\BlockViewBuilderTest.
- */
-
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\Component\Utility\Html;

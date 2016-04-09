@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\serialization\EntityResolver\UuidResolver.
- */
-
 namespace Drupal\serialization\EntityResolver;
 
 use Drupal\Core\Entity\EntityManagerInterface;

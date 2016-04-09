@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Render\MarkupInterface.
- */
-
 namespace Drupal\Component\Render;
 
 /**

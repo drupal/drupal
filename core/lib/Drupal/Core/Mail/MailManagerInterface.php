@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Mail\MailManagerInterface.
- */
-
 namespace Drupal\Core\Mail;
 
 use Drupal\Component\Plugin\PluginManagerInterface;

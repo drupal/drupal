@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\LinkManager\TypeLinkManager.
- */
-
 namespace Drupal\rest\LinkManager;
 
 use Drupal\Core\Cache\Cache;

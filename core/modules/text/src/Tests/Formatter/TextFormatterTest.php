@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\text\Tests\Formatter\TextFormatterTest.
- */
-
 namespace Drupal\text\Tests\Formatter;
 
 use Drupal\field\Entity\FieldConfig;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserAccountFormFieldsTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\Core\Form\FormState;

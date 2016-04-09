@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\responsive_image_test_module\Plugin\Field\FieldFormatter\ResponsiveImageTestFormatter.
- */
-
 namespace Drupal\responsive_image_test_module\Plugin\Field\FieldFormatter;
 
 use Drupal\responsive_image\Plugin\Field\FieldFormatter\ResponsiveImageFormatter;

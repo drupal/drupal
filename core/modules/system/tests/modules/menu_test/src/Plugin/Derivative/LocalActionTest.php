@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_test\Plugin\Derivative\LocalActionTest.
- */
-
 namespace Drupal\menu_test\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;

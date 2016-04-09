@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Theme\AjaxBasePageNegotiator.
- */
-
 namespace Drupal\Core\Theme;
 
 use Drupal\Core\Access\CsrfTokenGenerator;

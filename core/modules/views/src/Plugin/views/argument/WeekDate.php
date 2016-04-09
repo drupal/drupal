@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\argument\WeekDate.
- */
-
 namespace Drupal\views\Plugin\views\argument;
 
 /**

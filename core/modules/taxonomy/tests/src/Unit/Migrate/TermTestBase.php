@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\taxonomy\Unit\Migrate\TermTestBase.
- */
-
 namespace Drupal\Tests\taxonomy\Unit\Migrate;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;

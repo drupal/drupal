@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\aggregator\Unit\Plugin\migrate\source\d6\AggregatorFeedTest.
- */
-
 namespace Drupal\Tests\aggregator\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;

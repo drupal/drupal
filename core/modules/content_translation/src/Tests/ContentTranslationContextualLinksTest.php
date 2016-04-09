@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Tests\ContentTranslationContextualLinksTest.
- */
-
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Component\Serialization\Json;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\contact\Kernel\MessageEntityTest.
- */
 
 namespace Drupal\Tests\contact\Kernel;
 

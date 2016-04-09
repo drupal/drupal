@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\SearchPageAccessControlHandler.
- */
-
 namespace Drupal\search;
 
 use Drupal\Core\Access\AccessResult;

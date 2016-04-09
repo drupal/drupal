@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserRegistrationTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;

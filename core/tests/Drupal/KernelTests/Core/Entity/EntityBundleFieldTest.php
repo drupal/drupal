@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityBundleFieldTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 /**

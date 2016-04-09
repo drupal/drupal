@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\shortcut\ShortcutSetForm.
- */
-
 namespace Drupal\shortcut;
 
 use Drupal\Core\Entity\BundleEntityFormBase;

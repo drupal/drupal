@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\MigrationDeriverTrait.
- */
-
 namespace Drupal\migrate\Plugin;
 
 /**

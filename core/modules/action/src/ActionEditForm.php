@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\action\ActionEditForm.
- */
-
 namespace Drupal\action;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Update\UpdateRegistryTest.
- */
-
 namespace Drupal\Tests\Core\Update;
 
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;

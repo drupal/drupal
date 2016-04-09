@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\StaticMenuLinkOverrides.
- */
-
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

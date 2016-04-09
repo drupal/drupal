@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeBlockFunctionalTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\block\Entity\Block;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Query\QueryAggregateInterface.
- */
-
 namespace Drupal\Core\Entity\Query;
 
 /**

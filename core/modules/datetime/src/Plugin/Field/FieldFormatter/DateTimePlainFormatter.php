@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\datetime\Plugin\Field\FieldFormatter\DateTimePlainFormatter.
- */
-
 namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Entity\Item.
- */
-
 namespace Drupal\aggregator\Entity;
 
 use Drupal\Core\Cache\Cache;

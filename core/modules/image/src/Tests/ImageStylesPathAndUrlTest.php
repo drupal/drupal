@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Tests\ImageStylesPathAndUrlTest.
- */
-
 namespace Drupal\image\Tests;
 
 use Drupal\image\Entity\ImageStyle;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\update\UpdateProcessorInterface.
- */
 
 namespace Drupal\update;
 

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\user\Kernel\Migrate\MigrateUserPictureFieldTest.
- */
-
 namespace Drupal\Tests\user\Kernel\Migrate;
 
 use Drupal\field\Entity\FieldStorageConfig;

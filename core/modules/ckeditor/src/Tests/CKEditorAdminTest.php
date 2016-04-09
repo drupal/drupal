@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\Tests\CKEditorAdminTest.
- */
-
 namespace Drupal\ckeditor\Tests;
 
 use Drupal\Component\Serialization\Json;

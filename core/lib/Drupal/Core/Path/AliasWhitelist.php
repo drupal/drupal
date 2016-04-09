@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Path\AliasWhitelist.
- */
-
 namespace Drupal\Core\Path;
 
 use Drupal\Core\Cache\CacheBackendInterface;

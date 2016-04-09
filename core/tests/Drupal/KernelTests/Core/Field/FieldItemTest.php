@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Field\FieldItemTest.
- */
-
 namespace Drupal\KernelTests\Core\Field;
 
 use Drupal\Component\Utility\Unicode;

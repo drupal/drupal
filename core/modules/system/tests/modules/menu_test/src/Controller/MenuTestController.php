@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_test\Controller\MenuTestController.
- */
-
 namespace Drupal\menu_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

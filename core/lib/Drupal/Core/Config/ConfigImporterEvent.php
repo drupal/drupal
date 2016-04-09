@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\ConfigImporterEvent.
- */
-
 namespace Drupal\Core\Config;
 
 use Symfony\Component\EventDispatcher\Event;

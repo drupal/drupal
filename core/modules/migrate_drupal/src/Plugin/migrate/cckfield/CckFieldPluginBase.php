@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase.
- */
-
 namespace Drupal\migrate_drupal\Plugin\migrate\cckfield;
 
 use Drupal\Core\Plugin\PluginBase;

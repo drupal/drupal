@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\Block\SyndicateBlock.
- */
-
 namespace Drupal\node\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;

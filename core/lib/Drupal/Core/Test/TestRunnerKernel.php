@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Test\TestRunnerKernel.
- */
-
 namespace Drupal\Core\Test;
 
 use Drupal\Core\DrupalKernel;

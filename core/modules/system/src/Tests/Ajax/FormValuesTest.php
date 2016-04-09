@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Ajax\FormValuesTest.
- */
-
 namespace Drupal\system\Tests\Ajax;
 
 use Drupal\Core\Ajax\DataCommand;

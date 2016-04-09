@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\error_test\Controller\ErrorTestController.
- */
 
 namespace Drupal\error_test\Controller;
 

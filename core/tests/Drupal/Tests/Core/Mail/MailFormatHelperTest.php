@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Mail\MailFormatHelperTest.
- */
-
 namespace Drupal\Tests\Core\Mail;
 
 use Drupal\Core\Mail\MailFormatHelper;

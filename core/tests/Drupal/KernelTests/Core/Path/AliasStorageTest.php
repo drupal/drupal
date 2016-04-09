@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Path\AliasStorageTest.
- */
-
 namespace Drupal\KernelTests\Core\Path;
 
 use Drupal\Core\Language\LanguageInterface;

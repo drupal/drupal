@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Extension\ModuleHandler.
- */
-
 namespace Drupal\Core\Extension;
 
 use Drupal\Component\Graph\Graph;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException.
- */
-
 namespace Drupal\Core\Asset\Exception;
 
 /**

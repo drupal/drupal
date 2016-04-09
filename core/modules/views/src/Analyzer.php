@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Analyzer.
- */
-
 namespace Drupal\views;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

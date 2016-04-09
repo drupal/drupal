@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Routing\ContentNegotiationRoutingTest.
- */
-
 namespace Drupal\system\Tests\Routing;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

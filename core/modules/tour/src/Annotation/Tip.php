@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tour\Annotation\Tip.
- */
-
 namespace Drupal\tour\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

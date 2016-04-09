@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Language\LanguageManager.
- */
-
 namespace Drupal\Core\Language;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;

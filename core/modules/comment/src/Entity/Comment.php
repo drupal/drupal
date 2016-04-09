@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Entity\Comment.
- */
-
 namespace Drupal\comment\Entity;
 
 use Drupal\Component\Utility\Number;

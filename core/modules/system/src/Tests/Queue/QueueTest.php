@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Queue\QueueTest.
- */
-
 namespace Drupal\system\Tests\Queue;
 
 use Drupal\Core\Database\Database;

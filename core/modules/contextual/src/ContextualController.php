@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contextual\ContextualController.
- */
-
 namespace Drupal\contextual;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;

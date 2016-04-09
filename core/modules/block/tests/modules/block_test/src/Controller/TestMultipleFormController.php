@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\block_test\Controller\TestMultipleFormController.
- */
 
 namespace Drupal\block_test\Controller;
 

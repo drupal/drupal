@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Tests\ConfigInstallWebTest.
- */
-
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\PreExistingConfigException;

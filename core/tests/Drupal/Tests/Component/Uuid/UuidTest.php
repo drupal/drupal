@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Uuid\UuidTest.
- */
-
 namespace Drupal\Tests\Component\Uuid;
 
 use Drupal\Component\Uuid\Uuid;

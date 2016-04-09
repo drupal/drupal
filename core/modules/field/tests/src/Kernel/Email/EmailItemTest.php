@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\Email\EmailItemTest.
- */
-
 namespace Drupal\Tests\field\Kernel\Email;
 
 use Drupal\Core\Field\FieldItemListInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\TestHelperPlugin.
- */
-
 namespace Drupal\views\Tests;
 
 use Drupal\views\Plugin\views\PluginBase;

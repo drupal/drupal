@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\text\TextProcessed.
- */
-
 namespace Drupal\text;
 
 use Drupal\Core\TypedData\DataDefinitionInterface;

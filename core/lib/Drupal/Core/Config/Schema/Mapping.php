@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\Schema\Mapping.
- */
-
 namespace Drupal\Core\Config\Schema;
 
 /**

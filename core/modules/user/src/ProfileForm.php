@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\ProfileForm.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityManagerInterface;

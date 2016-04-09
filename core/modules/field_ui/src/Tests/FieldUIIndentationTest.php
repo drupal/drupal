@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\Tests\FieldUIIndentationTest.
- */
-
 namespace Drupal\field_ui\Tests;
 
 use Drupal\simpletest\WebTestBase;

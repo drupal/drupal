@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Controller\SystemInfoController.
- */
-
 namespace Drupal\system\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\ConfigPrefixLengthException.
- */
-
 namespace Drupal\Core\Config;
 
 /**

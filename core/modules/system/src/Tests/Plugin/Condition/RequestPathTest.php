@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Plugin\Condition\RequestPathTest.
- */
-
 namespace Drupal\system\Tests\Plugin\Condition;
 
 use Drupal\Core\Path\CurrentPathStack;

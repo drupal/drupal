@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Controller\TaxonomyController.
- */
-
 namespace Drupal\taxonomy\Controller;
 
 use Drupal\Component\Utility\Xss;

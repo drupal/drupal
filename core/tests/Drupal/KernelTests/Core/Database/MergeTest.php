@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Database\MergeTest.
- */
-
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Query\Merge;

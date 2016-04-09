@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\ViewsTest.
- */
-
 namespace Drupal\Tests\views\Unit;
 
 use Drupal\Core\Entity\Query\QueryFactory;

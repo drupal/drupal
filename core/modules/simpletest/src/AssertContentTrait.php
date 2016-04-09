@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\AssertContentTrait.
- */
-
 namespace Drupal\simpletest;
 
 use Drupal\Component\Serialization\Json;

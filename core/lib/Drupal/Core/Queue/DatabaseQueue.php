@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Queue\DatabaseQueue.
- */
-
 namespace Drupal\Core\Queue;
 
 use Drupal\Core\Database\Connection;

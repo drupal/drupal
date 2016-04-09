@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Render\FormattableMarkup.
- */
-
 namespace Drupal\Component\Render;
 
 use Drupal\Component\Utility\Html;

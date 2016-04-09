@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Plugin\migrate\destination\EntityComment.
- */
-
 namespace Drupal\comment\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityManagerInterface;

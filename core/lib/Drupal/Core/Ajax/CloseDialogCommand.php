@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\CloseDialogCommand.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

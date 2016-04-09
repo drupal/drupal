@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Display\PageVariantInterface.
- */
-
 namespace Drupal\Core\Display;
 
 /**

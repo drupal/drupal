@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\FileViewsData.
- */
-
 namespace Drupal\file;
 
 use Drupal\views\EntityViewsData;

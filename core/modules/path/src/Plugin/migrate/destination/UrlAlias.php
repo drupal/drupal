@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\Plugin\migrate\destination\UrlAlias.
- */
-
 namespace Drupal\path\Plugin\migrate\destination;
 
 use Drupal\Core\Path\AliasStorage;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Field\FieldModuleUninstallValidatorTest.
- */
-
 namespace Drupal\KernelTests\Core\Field;
 
 use Drupal\Core\Extension\ModuleUninstallValidatorException;

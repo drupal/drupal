@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Logger\RfcLogLevel.
- */
-
 namespace Drupal\Core\Logger;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;

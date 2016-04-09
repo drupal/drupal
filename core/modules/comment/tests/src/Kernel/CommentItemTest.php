@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\CommentItemTest.
- */
-
 namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;

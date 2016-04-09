@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\VocabularyUiTest.
- */
-
 namespace Drupal\taxonomy\Tests;
 use Drupal\Component\Utility\Unicode;
 

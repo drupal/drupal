@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\quickedit\EditorSelector.
- */
-
 namespace Drupal\quickedit;
 
 use Drupal\Component\Plugin\PluginManagerInterface;

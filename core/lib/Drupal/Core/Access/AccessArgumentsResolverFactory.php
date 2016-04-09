@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Access\AccessArgumentsResolverFactory.
- */
-
 namespace Drupal\Core\Access;
 
 use Drupal\Component\Utility\ArgumentsResolver;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\content_translation\Kernel\ContentTranslationSettingsApiTest.
- */
-
 namespace Drupal\Tests\content_translation\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;

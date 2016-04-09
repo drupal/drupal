@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Utility\UpdateException.
- */
-
 namespace Drupal\Core\Utility;
 
 /**

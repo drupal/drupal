@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\MenuParentFormSelectorInterface.
- */
-
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Cache\CacheableMetadata;

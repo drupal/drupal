@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\MessageForm.
- */
-
 namespace Drupal\contact;
 
 use Drupal\Core\Datetime\DateFormatterInterface;

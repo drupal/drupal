@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\telephone\Kernel\TelephoneItemTest.
- */
-
 namespace Drupal\Tests\telephone\Kernel;
 
 use Drupal\Core\Field\FieldItemListInterface;

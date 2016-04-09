@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Lock\LockBackendAbstractTest.
- */
-
 namespace Drupal\Tests\Core\Lock;
 
 use Drupal\Tests\UnitTestCase;

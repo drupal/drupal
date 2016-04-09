@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\ConfigurableImageEffectBase.
- */
-
 namespace Drupal\image;
 
 use Drupal\Core\Form\FormStateInterface;

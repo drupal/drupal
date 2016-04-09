@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Update\ImageStyleDependencyUpdateTest.
- */
-
 namespace Drupal\views\Tests\Update;
 
 use Drupal\system\Tests\Update\UpdatePathTestBase;

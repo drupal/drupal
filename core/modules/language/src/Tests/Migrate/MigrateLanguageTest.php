@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Tests\Migrate\MigrateLanguageTest.
- */
-
 namespace Drupal\language\Tests\Migrate;
 
 use Drupal\language\ConfigurableLanguageInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\filter\Standard.
- */
-
 namespace Drupal\views\Plugin\views\filter;
 
 /**

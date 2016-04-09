@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\Views\NodeRevisionWizardTest.
- */
-
 namespace Drupal\node\Tests\Views;
 
 use Drupal\views\Tests\Wizard\WizardTestBase;

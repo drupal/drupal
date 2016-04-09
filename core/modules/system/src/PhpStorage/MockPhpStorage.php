@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\PhpStorage\MockPhpStorage.
- */
-
 namespace Drupal\system\PhpStorage;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\Exception\MissingDataException.
- */
-
 namespace Drupal\Core\TypedData\Exception;
 
 /**

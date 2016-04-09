@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\Controller\BookController.
- */
-
 namespace Drupal\book\Controller;
 
 use Drupal\book\BookExport;

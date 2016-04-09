@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Plugin\ContainerFactoryPluginInterface.
- */
-
 namespace Drupal\Core\Plugin;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;

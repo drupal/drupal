@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\accept_header_routing_test\AcceptHeaderMiddleware.
- */
-
 namespace Drupal\accept_header_routing_test;
 
 use Symfony\Component\HttpFoundation\Request;

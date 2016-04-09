@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\big_pipe\Render\BigPipeResponseAttachmentsProcessor.
- */
 
 namespace Drupal\big_pipe\Render;
 

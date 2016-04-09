@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\Controller\ConfigTranslationEntityListBuilder.
- */
-
 namespace Drupal\config_translation\Controller;
 
 use Drupal\Core\Entity\EntityInterface;

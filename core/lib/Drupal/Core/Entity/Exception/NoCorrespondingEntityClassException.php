@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException.
- */
-
 namespace Drupal\Core\Entity\Exception;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Common\AttachedAssetsTest.
- */
-
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Serialization\Json;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\MailHandlerInterface.
- */
-
 namespace Drupal\contact;
 
 use Drupal\Core\Session\AccountInterface;

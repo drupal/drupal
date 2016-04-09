@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Controller\DbUpdateController.
- */
-
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Cache\CacheBackendInterface;

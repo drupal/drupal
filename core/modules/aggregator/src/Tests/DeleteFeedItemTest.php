@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Tests\DeleteFeedItemTest.
- */
-
 namespace Drupal\aggregator\Tests;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\forum\Unit\ForumUninstallValidatorTest.
- */
-
 namespace Drupal\Tests\forum\Unit;
 
 use Drupal\simpletest\AssertHelperTrait;

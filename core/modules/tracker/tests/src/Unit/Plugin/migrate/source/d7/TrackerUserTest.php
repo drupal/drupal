@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\tracker\Unit\Plugin\migrate\source\d7\TrackerUserTest.
- */
-
 namespace Drupal\Tests\tracker\Unit\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;

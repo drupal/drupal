@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\migrate\source\d6\NodeType.
- */
-
 namespace Drupal\node\Plugin\migrate\source\d6;
 
 use Drupal\migrate\Row;

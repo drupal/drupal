@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\ContentEntityNullStorageTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\contact\Entity\ContactForm;

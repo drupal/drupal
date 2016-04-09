@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Image\ToolkitTestBase.
- */
-
 namespace Drupal\system\Tests\Image;
 
 use Drupal\simpletest\WebTestBase;

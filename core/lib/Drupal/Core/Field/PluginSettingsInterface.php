@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\PluginSettingsInterface.
- */
-
 namespace Drupal\Core\Field;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

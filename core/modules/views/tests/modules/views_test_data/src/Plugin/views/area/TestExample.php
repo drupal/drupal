@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_test_data\Plugin\views\area\TestExample.
- */
-
 namespace Drupal\views_test_data\Plugin\views\area;
 
 use Drupal\Core\Form\FormStateInterface;

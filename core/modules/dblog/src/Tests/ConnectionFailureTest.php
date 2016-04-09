@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dblog\Tests\ConnectionFailureTest.
- */
-
 namespace Drupal\dblog\Tests;
 
 use Drupal\Core\Database\Database;

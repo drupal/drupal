@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\ResourceResponse.
- */
-
 namespace Drupal\rest;
 
 use Drupal\Core\Cache\CacheableResponseInterface;

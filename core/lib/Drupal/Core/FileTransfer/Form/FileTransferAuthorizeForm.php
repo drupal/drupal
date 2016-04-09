@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\FileTransfer\Form\FileTransferAuthorizeForm.
- */
-
 namespace Drupal\Core\FileTransfer\Form;
 
 use Drupal\Core\Form\FormBase;

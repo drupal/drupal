@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Plugin\migrate\process\d6\FieldType.
- */
-
 namespace Drupal\field\Plugin\migrate\process\d6;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;

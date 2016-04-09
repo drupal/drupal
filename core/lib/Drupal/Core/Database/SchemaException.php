@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\SchemaException.
- */
-
 namespace Drupal\Core\Database;
 
 /**

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Core\Cache\CacheableDependencyInterface.
- */
 
 namespace Drupal\Core\Cache;
 

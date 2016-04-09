@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Installer\Form\SelectProfileForm.
- */
-
 namespace Drupal\Core\Installer\Form;
 
 use Drupal\Core\Form\FormBase;

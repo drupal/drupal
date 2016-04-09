@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\KeyValueStore\GarbageCollectionTest.
- */
-
 namespace Drupal\system\Tests\KeyValueStore;
 
 use Drupal\Component\Serialization\PhpSerialize;

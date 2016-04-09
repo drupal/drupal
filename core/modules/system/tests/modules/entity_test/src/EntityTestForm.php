@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\entity_test\EntityTestForm.
- */
 
 namespace Drupal\entity_test;
 

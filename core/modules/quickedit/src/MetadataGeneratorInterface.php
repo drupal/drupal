@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\quickedit\MetadataGeneratorInterface.
- */
-
 namespace Drupal\quickedit;
 
 use Drupal\Core\Entity\EntityInterface;

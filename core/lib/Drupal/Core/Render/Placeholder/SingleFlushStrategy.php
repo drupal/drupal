@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Placeholder\SingleFlushStrategy.
- */
-
 namespace Drupal\Core\Render\Placeholder;
 
 /**

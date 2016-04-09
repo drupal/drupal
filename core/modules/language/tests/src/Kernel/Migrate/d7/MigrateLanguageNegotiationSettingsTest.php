@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\language\Kernel\Migrate\d7\MigrateLanguageNegotiationSettingsTest.
- */
-
 namespace Drupal\Tests\language\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;

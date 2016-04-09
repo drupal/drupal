@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\DependencyInjection\PhpArrayContainerTest.
- */
-
 namespace Drupal\Tests\Component\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;

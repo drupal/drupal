@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Entity\EntityAddUITest.
- */
-
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\entity_test\Entity\EntityTestBundle;

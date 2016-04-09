@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\node\NodeAccessControlHandlerInterface.
- */
 
 namespace Drupal\node;
 

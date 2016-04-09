@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\action\Kernel\Migrate\d7\MigrateActionsTest.
- */
-
 namespace Drupal\Tests\action\Kernel\Migrate\d7;
 
 use Drupal\system\Entity\Action;

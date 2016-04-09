@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\BlockViewBuilder.
- */
-
 namespace Drupal\block;
 
 use Drupal\Core\Block\MainContentBlockPluginInterface;

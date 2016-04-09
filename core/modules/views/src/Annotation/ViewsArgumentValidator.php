@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Annotation\ViewsArgumentValidator.
- */
-
 namespace Drupal\views\Annotation;
 
 /**

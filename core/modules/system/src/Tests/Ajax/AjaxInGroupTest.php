@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Ajax\AjaxInGroupTest.
- */
-
 namespace Drupal\system\Tests\Ajax;
 
 /**

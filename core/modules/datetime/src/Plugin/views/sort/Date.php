@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\datetime\Plugin\views\sort\Date.
- */
-
 namespace Drupal\datetime\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\sort\Date as NumericDate;

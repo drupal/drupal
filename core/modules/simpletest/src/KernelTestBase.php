@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\KernelTestBase.
- */
-
 namespace Drupal\simpletest;
 
 use Drupal\Component\Utility\Html;

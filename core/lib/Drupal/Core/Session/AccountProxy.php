@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Session\AccountProxy.
- */
-
 namespace Drupal\Core\Session;
 
 /**

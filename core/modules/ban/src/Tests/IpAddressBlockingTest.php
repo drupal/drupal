@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ban\Tests\IpAddressBlockingTest.
- */
-
 namespace Drupal\ban\Tests;
 
 use Drupal\simpletest\WebTestBase;

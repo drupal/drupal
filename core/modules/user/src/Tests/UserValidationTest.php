@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserValidationTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\Core\Entity\EntityInterface;

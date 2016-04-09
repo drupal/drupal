@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\MatcherDumper.
- */
-
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Database\SchemaObjectExistsException;

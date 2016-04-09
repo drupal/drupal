@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Plugin\Validation\Constraint\FeedTitleConstraint.
- */
-
 namespace Drupal\aggregator\Plugin\Validation\Constraint;
 
 use Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldConstraint;

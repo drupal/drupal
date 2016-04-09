@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\sort\Broken.
- */
-
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\BrokenHandlerTrait;

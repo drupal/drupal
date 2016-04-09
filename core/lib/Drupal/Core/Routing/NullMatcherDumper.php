@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\NullMatcherDumper.
- */
-
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\Routing\RouteCollection;

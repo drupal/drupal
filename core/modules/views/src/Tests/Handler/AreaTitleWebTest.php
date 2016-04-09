@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Handler\AreaTitleWebTest.
- */
-
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Entity\View;

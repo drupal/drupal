@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\ResettableStackedRouteMatchInterface.
- */
-
 namespace Drupal\Core\Routing;
 
 /**

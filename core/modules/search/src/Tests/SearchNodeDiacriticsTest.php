@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchNodeDiacriticsTest.
- */
-
 namespace Drupal\search\Tests;
 
 /**

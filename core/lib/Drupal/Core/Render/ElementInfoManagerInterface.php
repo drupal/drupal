@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\ElementInfoManagerInterface.
- */
-
 namespace Drupal\Core\Render;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Tests\ContentTranslationWorkflowsTest.
- */
-
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

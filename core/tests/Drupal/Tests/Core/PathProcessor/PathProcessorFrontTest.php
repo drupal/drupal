@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\Core\PathProcess\PathProcessorFrontTest
- */
 
 namespace Drupal\Tests\Core\PathProcessor;
 

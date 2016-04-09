@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\responsive_image\Tests\ResponsiveImageFieldDisplayTest.
- */
-
 namespace Drupal\responsive_image\Tests;
 
 use Drupal\Component\Utility\Unicode;

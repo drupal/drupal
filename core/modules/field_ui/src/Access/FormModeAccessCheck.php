@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\Access\FormModeAccessCheck.
- */
-
 namespace Drupal\field_ui\Access;
 
 use Drupal\Core\Access\AccessResult;

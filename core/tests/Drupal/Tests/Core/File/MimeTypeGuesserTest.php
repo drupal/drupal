@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\File\MimeTypeGuesserTest.
- */
-
 namespace Drupal\Tests\Core\File;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

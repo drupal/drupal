@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd.
- */
-
 namespace Drupal\menu_ui\Plugin\Menu\LocalAction;
 
 use Drupal\Core\Menu\LocalActionDefault;

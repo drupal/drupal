@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\System\ResponseGeneratorTest.
- */
-
 namespace Drupal\system\Tests\System;
 
 use Drupal\rest\Tests\RESTTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\twig_theme_test\ExampleRenderable.
- */
-
 namespace Drupal\twig_theme_test;
 
 use Drupal\Core\Render\RenderableInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_events_test\Plugin\migrate\destination\DummyDestination.
- */
-
 namespace Drupal\migrate_events_test\Plugin\migrate\destination;
 
 use Drupal\migrate\Plugin\MigrationInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback.
- */
-
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
 use Drupal\language\LanguageNegotiationMethodBase;

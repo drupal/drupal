@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Session\SessionAuthenticationTest.
- */
-
 namespace Drupal\system\Tests\Session;
 
 use Drupal\Core\Url;

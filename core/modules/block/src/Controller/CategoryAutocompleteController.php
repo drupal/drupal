@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Controller\CategoryAutocompleteController.
- */
-
 namespace Drupal\block\Controller;
 
 use Drupal\Component\Utility\Html;

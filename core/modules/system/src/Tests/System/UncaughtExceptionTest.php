@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\system\Tests\System\UncaughtExceptionTest.
- */
 
 namespace Drupal\system\Tests\System;
 
@@ -261,7 +257,7 @@ class UncaughtExceptionTest extends WebTestBase {
     $this->assertTrue(strpos($errors[0], 'Failed to log error') !== FALSE, 'The error handling logs when an error could not be logged to the logger.');
 
     $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';
-    $expected_line = 63;
+    $expected_line = 59;
     $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line ${expected_line} of ${expected_path})";
     $this->assert(strpos($errors[0], $expected_entry) !== FALSE, 'Original error logged to the PHP error log when an exception is thrown by a logger');
 

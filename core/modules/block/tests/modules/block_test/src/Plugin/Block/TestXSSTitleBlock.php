@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_test\Plugin\Block\TestXSSTitleBlock.
- */
-
 namespace Drupal\block_test\Plugin\Block;
 
 /**

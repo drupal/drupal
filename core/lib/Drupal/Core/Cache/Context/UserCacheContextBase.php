@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\Context\UserCacheContextBase.
- */
-
 namespace Drupal\Core\Cache\Context;
 
 use Drupal\Core\Session\AccountInterface;

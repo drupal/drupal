@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\quickedit\Tests\QuickEditTestBase.
- */
-
 namespace Drupal\quickedit\Tests;
 
 use Drupal\field\Entity\FieldConfig;

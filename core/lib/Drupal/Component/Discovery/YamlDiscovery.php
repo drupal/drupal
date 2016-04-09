@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Discovery\YamlDiscovery.
- */
-
 namespace Drupal\Component\Discovery;
 
 use Drupal\Component\Serialization\Yaml;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityQueryTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Utility\Unicode;

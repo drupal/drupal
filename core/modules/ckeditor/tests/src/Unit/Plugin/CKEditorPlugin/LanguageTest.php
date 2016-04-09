@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\ckeditor\Unit\Plugin\CKEditorPlugin\LanguageTest.
- */
-
 namespace Drupal\Tests\ckeditor\Unit\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\Plugin\CKEditorPlugin\Language;

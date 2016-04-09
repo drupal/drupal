@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\file\Kernel\ValidateTest.
- */
-
 namespace Drupal\Tests\file\Kernel;
 
 

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\big_pipe\Controller\BigPipeController.
- */
-
 namespace Drupal\big_pipe\Controller;
 
 use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;

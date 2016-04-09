@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Form\BasicSettingsForm.
- */
-
 namespace Drupal\views_ui\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

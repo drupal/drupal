@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\relationship\EntityReverse.
- */
-
 namespace Drupal\views\Plugin\views\relationship;
 
 use Drupal\views\Plugin\ViewsHandlerManager;

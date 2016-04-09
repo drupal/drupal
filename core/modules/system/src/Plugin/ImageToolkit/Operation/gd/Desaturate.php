@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\ImageToolkit\Operation\gd\Desaturate.
- */
-
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityConfirmFormBase.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Form\ConfirmFormHelper;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter\Tests\FilterHtmlImageSecureTest.
- */
-
 namespace Drupal\filter\Tests;
 
 use Drupal\comment\Tests\CommentTestTrait;

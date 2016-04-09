@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\language\Unit\Config\LanguageConfigOverrideTest.
- */
-
 namespace Drupal\Tests\language\Unit\Config;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

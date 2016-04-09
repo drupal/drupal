@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Site\Settings.
- */
-
 namespace Drupal\Core\Site;
 
 use Drupal\Component\Utility\Crypt;

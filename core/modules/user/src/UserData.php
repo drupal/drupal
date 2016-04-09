@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\UserData.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\Database\Connection;

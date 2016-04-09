@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\FieldTestBase.
- */
-
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\EntityInterface;

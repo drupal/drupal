@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views_ui\Kernel\TagTest.
- */
-
 namespace Drupal\Tests\views_ui\Kernel;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;

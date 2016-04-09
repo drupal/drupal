@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_link_content\MenuLinkContentInterface.
- */
-
 namespace Drupal\menu_link_content;
 
 use Drupal\Core\Entity\EntityChangedInterface;

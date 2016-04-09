@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ProxyClass\Routing\RouteProvider.
- */
-
 namespace Drupal\simpletest;
 
 use Drupal\Core\Routing\PreloadableRouteProviderInterface;

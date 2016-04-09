@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\views\filter\Current.
- */
-
 namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\display\DisplayPluginBase;

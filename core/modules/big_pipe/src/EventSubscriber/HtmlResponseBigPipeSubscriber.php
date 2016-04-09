@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\big_pipe\EventSubscriber\HtmlResponseBigPipeSubscriber.
- */
-
 namespace Drupal\big_pipe\EventSubscriber;
 
 use Drupal\Core\Render\HtmlResponse;

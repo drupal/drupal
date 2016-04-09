@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\rdf\CommonDataConverter.
- */
 
 namespace Drupal\rdf;
 

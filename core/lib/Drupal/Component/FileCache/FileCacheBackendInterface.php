@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\FileCache\FileCacheBackendInterface.
- */
-
 namespace Drupal\Component\FileCache;
 
 /**

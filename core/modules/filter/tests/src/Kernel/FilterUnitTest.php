@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\filter\Kernel\FilterUnitTest.
- */
-
 namespace Drupal\Tests\filter\Kernel;
 
 use Drupal\Component\Utility\Html;

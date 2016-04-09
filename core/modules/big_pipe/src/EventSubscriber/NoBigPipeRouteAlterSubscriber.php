@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\big_pipe\EventSubscriber\NoBigPipeRouteAlterSubscriber.
- */
-
 namespace Drupal\big_pipe\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

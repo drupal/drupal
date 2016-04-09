@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\book\Kernel\BookUninstallTest.
- */
-
 namespace Drupal\Tests\book\Kernel;
 
 use Drupal\node\Entity\Node;

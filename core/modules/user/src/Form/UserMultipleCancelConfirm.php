@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Form\UserMultipleCancelConfirm.
- */
-
 namespace Drupal\user\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;

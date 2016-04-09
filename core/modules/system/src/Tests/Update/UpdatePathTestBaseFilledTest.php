@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Update\UpdatePathTestBaseFilledTest.
- */
-
 namespace Drupal\system\Tests\Update;
 
 use Drupal\node\Entity\Node;

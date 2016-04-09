@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Element\PageTitle.
- */
-
 namespace Drupal\Core\Render\Element;
 
 /**

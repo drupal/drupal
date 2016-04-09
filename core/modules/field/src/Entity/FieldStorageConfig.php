@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Entity\FieldStorageConfig.
- */
-
 namespace Drupal\field\Entity;
 
 use Drupal\Component\Utility\Unicode;

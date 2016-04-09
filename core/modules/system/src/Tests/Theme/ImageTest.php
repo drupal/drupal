@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Theme\ImageTest.
- */
-
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\simpletest\KernelTestBase;

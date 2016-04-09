@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchPageCacheTagsTest.
- */
-
 namespace Drupal\search\Tests;
 
 use Drupal\Core\Cache\Cache;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Entity\EntityViewMode.
- */
-
 namespace Drupal\Core\Entity\Entity;
 
 use Drupal\Core\Entity\EntityDisplayModeBase;

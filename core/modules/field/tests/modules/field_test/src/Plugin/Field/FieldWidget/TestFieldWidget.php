@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidget.
- */
-
 namespace Drupal\field_test\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;

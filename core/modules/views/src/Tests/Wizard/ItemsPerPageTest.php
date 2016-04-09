@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Wizard\ItemsPerPageTest.
- */
-
 namespace Drupal\views\Tests\Wizard;
 
 /**

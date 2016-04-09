@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Template\TwigEnvironment.
- */
-
 namespace Drupal\Core\Template;
 
 use Drupal\Core\Cache\CacheBackendInterface;

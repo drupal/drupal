@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Tests\ContentTranslationSyncImageTest.
- */
-
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Entity\EntityInterface;

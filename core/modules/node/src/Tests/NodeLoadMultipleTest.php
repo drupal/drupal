@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeLoadMultipleTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\node\Entity\Node;

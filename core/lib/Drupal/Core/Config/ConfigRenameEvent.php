@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\ConfigRenameEvent.
- */
-
 namespace Drupal\Core\Config;
 
 /**

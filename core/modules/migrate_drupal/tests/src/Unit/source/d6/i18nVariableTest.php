@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\i18nVariableTest.
- */
-
 namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;

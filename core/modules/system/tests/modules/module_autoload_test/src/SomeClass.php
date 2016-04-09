@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\module_autoload_test\SomeClass.
- */
-
 namespace Drupal\module_autoload_test;
 
 class SomeClass {

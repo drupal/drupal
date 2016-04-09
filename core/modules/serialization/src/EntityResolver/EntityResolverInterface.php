@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\serialization\EntityResolver\EntityResolverInterface.
- */
-
 namespace Drupal\serialization\EntityResolver;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

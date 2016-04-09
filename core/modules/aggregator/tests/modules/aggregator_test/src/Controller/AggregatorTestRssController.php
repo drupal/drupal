@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\aggregator_test\Controller\AggregatorTestRssController.
- */
 
 namespace Drupal\aggregator_test\Controller;
 

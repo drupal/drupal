@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Database\NextIdTest.
- */
-
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\KernelTests\KernelTestBase;

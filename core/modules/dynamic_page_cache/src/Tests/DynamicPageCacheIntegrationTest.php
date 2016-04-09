@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dynamic_page_cache\Tests\DynamicPageCacheIntegrationTest.
- */
-
 namespace Drupal\dynamic_page_cache\Tests;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\Boolean\BooleanFormatterTest.
- */
-
 namespace Drupal\Tests\field\Kernel\Boolean;
 
 use Drupal\Component\Utility\Unicode;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rdf\Tests\StandardProfileTest.
- */
-
 namespace Drupal\rdf\Tests;
 
 use Drupal\Core\Url;

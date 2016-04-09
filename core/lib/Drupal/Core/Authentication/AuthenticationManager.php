@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Authentication\AuthenticationManager.
- */
-
 namespace Drupal\Core\Authentication;
 
 use Drupal\Core\Routing\RouteMatch;

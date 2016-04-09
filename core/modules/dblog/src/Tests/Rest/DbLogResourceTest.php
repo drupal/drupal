@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dblog\Tests\Rest\DbLogResourceTest.
- */
-
 namespace Drupal\dblog\Tests\Rest;
 
 use Drupal\Component\Serialization\Json;

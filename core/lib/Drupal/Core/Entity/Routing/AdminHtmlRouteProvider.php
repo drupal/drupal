@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Routing\AdminHtmlRouteProvider.
- */
-
 namespace Drupal\Core\Entity\Routing;
 
 use Drupal\Core\Entity\EntityTypeInterface;

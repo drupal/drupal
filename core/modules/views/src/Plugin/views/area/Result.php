@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\area\Result.
- */
-
 namespace Drupal\views\Plugin\views\area;
 
 use Drupal\Component\Utility\Html;

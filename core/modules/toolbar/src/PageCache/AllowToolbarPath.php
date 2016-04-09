@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\toolbar\PageCache\AllowToolbarPath.
- */
-
 namespace Drupal\toolbar\PageCache;
 
 use Drupal\Core\PageCache\RequestPolicyInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system_test\Controller\SystemTestController.
- */
-
 namespace Drupal\system_test\Controller;
 
 use Drupal\Core\Access\AccessResult;

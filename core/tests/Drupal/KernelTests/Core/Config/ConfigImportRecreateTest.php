@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Config\ConfigImportRecreateTest.
- */
-
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\Unicode;

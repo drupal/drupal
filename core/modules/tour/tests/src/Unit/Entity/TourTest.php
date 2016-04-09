@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\tour\Unit\Entity\TourTest.
- */
 
 namespace Drupal\Tests\tour\Unit\Entity;
 

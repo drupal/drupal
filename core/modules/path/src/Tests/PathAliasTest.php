@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\Tests\PathAliasTest.
- */
-
 namespace Drupal\path\Tests;
 
 use Drupal\Component\Utility\Unicode;

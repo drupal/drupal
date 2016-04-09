@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\image\Unit\PageCache\DenyPrivateImageStyleDownloadTest.
- */
-
 namespace Drupal\Tests\image\Unit\PageCache;
 
 use Drupal\Core\PageCache\ResponsePolicyInterface;

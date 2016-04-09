@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\hal\Kernel\DenormalizeTest.
- */
-
 namespace Drupal\Tests\hal\Kernel;
 
 use Drupal\Core\Url;

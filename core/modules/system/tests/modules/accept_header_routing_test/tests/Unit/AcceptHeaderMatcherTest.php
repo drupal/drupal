@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\accept_header_routing_teste\Unit\Routing\AcceptHeaderMatcherTest.
- */
-
 namespace Drupal\Tests\accept_header_routing_teste\Unit\Routing;
 
 use Drupal\accept_header_routing_test\Routing\AcceptHeaderMatcher;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Config\CachedStorageTest.
- */
-
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Tests\UnitTestCase;

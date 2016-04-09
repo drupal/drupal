@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\StyleTableTest.
- */
-
 namespace Drupal\views\Tests\Plugin;
 
 /**

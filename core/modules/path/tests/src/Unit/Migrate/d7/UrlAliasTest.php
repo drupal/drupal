@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\path\Unit\Migrate\d7\UrlAliasTest.
- */
-
 namespace Drupal\Tests\path\Unit\Migrate\d7;
 
 use Drupal\Tests\path\Unit\Migrate\UrlAliasTestBase;

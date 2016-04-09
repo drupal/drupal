@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\Tests\BookTest.
- */
-
 namespace Drupal\book\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

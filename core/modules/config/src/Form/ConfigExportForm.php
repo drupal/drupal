@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Form\ConfigExportForm.
- */
-
 namespace Drupal\config\Form;
 
 use Drupal\Core\Form\FormBase;

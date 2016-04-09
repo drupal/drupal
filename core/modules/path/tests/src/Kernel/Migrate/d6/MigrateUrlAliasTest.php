@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\path\Kernel\Migrate\d6\MigrateUrlAliasTest.
- */
-
 namespace Drupal\Tests\path\Kernel\Migrate\d6;
 
 use Drupal\migrate\Plugin\MigrateIdMapInterface;

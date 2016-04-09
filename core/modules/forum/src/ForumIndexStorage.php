@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\ForumIndexStorage.
- */
-
 namespace Drupal\forum;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Database\Connection;

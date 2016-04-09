@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware.
- */
-
 namespace Drupal\Core\Test\HttpClientMiddleware;
 
 use Drupal\Core\Utility\Error;

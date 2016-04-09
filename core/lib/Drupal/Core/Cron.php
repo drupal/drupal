@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cron.
- */
-
 namespace Drupal\Core;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

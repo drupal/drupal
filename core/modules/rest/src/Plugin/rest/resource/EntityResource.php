@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Plugin\rest\resource\EntityResource.
- */
-
 namespace Drupal\rest\Plugin\rest\resource;
 
 use Drupal\Core\Entity\EntityInterface;

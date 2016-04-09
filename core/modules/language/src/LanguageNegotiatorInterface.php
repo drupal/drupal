@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\LanguageNegotiatorInterface.
- */
-
 namespace Drupal\language;
 
 use Drupal\Core\Session\AccountInterface;

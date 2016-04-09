@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Form\ModulesListConfirmForm.
- */
-
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\PreExistingConfigException;

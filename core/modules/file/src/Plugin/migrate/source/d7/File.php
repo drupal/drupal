@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Plugin\migrate\source\d7\File.
- */
-
 namespace Drupal\file\Plugin\migrate\source\d7;
 
 use Drupal\Core\Database\Query\Condition;

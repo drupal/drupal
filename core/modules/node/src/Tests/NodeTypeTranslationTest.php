@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeTypeTranslationTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\Component\Utility\Unicode;

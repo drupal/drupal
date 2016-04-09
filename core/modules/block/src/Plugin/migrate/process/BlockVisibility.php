@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Plugin\migrate\process\BlockVisibility.
- */
-
 namespace Drupal\block\Plugin\migrate\process;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

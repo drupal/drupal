@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_link_content\Tests\PathAliasMenuLinkContentTest.
- */
-
 namespace Drupal\menu_link_content\Tests;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

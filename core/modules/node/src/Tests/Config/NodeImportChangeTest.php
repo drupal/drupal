@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\Config\NodeImportChangeTest.
- */
-
 namespace Drupal\node\Tests\Config;
 
 use Drupal\node\Entity\NodeType;

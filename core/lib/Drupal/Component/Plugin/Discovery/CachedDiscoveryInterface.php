@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface.
- */
-
 namespace Drupal\Component\Plugin\Discovery;
 
 /**

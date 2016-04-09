@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Tests\ConfigLanguageOverrideWebTest.
- */
-
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Language\LanguageInterface;

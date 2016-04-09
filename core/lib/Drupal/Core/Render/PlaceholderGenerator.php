@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\PlaceholderGenerator.
- */
-
 namespace Drupal\Core\Render;
 
 use Drupal\Component\Utility\Html;

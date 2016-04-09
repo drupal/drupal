@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\views\field\BulkForm.
- */
-
 namespace Drupal\system\Plugin\views\field;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;

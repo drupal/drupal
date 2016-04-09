@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Form\ModulesUninstallConfirmForm.
- */
-
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigManagerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\Validation\Constraint\UserMailRequired.
- */
-
 namespace Drupal\user\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraint;

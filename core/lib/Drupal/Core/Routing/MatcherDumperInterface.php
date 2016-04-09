@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\MatcherDumperInterface.
- */
-
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface as SymfonyMatcherDumperInterface;

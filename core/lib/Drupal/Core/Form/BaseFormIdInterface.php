@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\BaseFormIdInterface.
- */
-
 namespace Drupal\Core\Form;
 
 /**

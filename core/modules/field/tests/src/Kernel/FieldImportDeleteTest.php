@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\FieldImportDeleteTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Component\Utility\SafeMarkup;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\RandomGeneratorTrait.
- */
-
 namespace Drupal\simpletest;
 
 use Drupal\Component\Utility\Random;

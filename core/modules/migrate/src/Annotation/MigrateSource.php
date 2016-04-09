@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Annotation\MigrateSource.
- */
-
 namespace Drupal\migrate\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

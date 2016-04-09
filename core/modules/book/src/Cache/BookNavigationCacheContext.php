@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\Cache\BookNavigationCacheContext.
- */
-
 namespace Drupal\book\Cache;
 
 use Drupal\Core\Cache\CacheableMetadata;

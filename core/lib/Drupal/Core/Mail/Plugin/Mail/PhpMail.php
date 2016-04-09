@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Mail\Plugin\Mail\PhpMail.
- */
-
 namespace Drupal\Core\Mail\Plugin\Mail;
 
 use Drupal\Component\Utility\Unicode;

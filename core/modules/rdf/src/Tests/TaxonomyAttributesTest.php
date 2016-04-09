@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rdf\Tests\TaxonomyAttributesTest.
- */
-
 namespace Drupal\rdf\Tests;
 
 use Drupal\taxonomy\Tests\TaxonomyTestBase;

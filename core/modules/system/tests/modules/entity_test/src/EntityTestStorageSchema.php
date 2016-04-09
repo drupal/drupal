@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\EntityTestStorageSchema.
- */
-
 namespace Drupal\entity_test;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;

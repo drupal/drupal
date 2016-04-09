@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\ContentEntityDeleteForm.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Form\FormStateInterface;

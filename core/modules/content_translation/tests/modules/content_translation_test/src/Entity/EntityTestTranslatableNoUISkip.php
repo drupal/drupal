@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation_test\Entity\EntityTestTranslatableNoUISkip.
- */
-
 namespace Drupal\content_translation_test\Entity;
 
 use Drupal\entity_test\Entity\EntityTest;

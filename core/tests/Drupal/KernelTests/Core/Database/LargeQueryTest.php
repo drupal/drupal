@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Database\LargeQueryTest.
- */
-
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Component\Utility\Environment;

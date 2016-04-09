@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tour_test\Plugin\tour\tip\TipPluginImage.
- */
-
 namespace Drupal\tour_test\Plugin\tour\tip;
 
 use Drupal\Component\Utility\Html;

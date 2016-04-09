@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Tests\Views\RelationshipUserFileDataTest.
- */
-
 namespace Drupal\file\Tests\Views;
 
 use Drupal\field\Entity\FieldConfig;

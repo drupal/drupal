@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Flood\DatabaseBackend.
- */
-
 namespace Drupal\Core\Flood;
 
 use Drupal\Core\Database\SchemaObjectExistsException;

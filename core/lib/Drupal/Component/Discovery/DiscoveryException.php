@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Discovery\DiscoveryException.
- */
-
 namespace Drupal\Component\Discovery;
 
 /**

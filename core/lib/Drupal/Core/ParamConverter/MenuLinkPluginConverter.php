@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ParamConverter\MenuLinkPluginConverter.
- */
-
 namespace Drupal\Core\ParamConverter;
 
 use Drupal\Core\Menu\MenuLinkManagerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\Element\TableSelectTest.
- */
-
 namespace Drupal\Tests\Core\Render\Element;
 
 use Drupal\Core\Form\FormState;

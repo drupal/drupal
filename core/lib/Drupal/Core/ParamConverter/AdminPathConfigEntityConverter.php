@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ParamConverter\AdminPathConfigEntityConverter.
- */
-
 namespace Drupal\Core\ParamConverter;
 
 use Drupal\Core\Routing\AdminContext;

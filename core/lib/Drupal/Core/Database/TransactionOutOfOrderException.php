@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\TransactionOutOfOrderException.
- */
-
 namespace Drupal\Core\Database;
 
 /**

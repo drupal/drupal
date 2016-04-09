@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\toolbar\Element\ToolbarItem.
- */
-
 namespace Drupal\toolbar\Element;
 
 use Drupal\Core\Render\Element\RenderElement;

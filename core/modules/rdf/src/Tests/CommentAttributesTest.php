@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rdf\Tests\CommentAttributesTest.
- */
-
 namespace Drupal\rdf\Tests;
 
 use Drupal\comment\CommentInterface;

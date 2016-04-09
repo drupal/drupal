@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Command\DbCommandBase.
- */
-
 namespace Drupal\Core\Command;
 
 use Drupal\Core\Database\Database;

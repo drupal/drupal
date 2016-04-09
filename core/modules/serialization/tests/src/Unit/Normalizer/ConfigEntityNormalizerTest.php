@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\serialization\Unit\Normalizer\ConfigEntityNormalizerTest.
- */
-
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\serialization\Normalizer\ConfigEntityNormalizer;

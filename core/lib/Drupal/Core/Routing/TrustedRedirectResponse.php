@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\TrustedRedirectResponse.
- */
-
 namespace Drupal\Core\Routing;
 
 /**

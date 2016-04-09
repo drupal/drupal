@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\RevisionLogInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\user\UserInterface;

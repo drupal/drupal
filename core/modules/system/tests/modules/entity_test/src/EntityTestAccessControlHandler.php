@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\EntityTestAccessControlHandler.
- */
-
 namespace Drupal\entity_test;
 
 use Drupal\Core\Access\AccessResult;

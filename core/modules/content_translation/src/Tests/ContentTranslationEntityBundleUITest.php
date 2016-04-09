@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Tests\ContentTranslationEntityBundleUITest.
- */
-
 namespace Drupal\content_translation\Tests;
 
 use Drupal\simpletest\WebTestBase;

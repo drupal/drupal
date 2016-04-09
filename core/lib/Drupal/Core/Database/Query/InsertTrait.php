@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Query\InsertTrait.
- */
-
 namespace Drupal\Core\Database\Query;
 
 /**

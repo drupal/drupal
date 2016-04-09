@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\views\argument\Uid.
- */
-
 namespace Drupal\user\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityStorageInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\Form\BookAdminEditForm.
- */
-
 namespace Drupal\book\Form;
 
 use Drupal\book\BookManager;

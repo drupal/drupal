@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\StreamWrapper\TranslationsStream.
- */
-
 namespace Drupal\locale\StreamWrapper;
 
 use Drupal\Core\StreamWrapper\LocalStream;

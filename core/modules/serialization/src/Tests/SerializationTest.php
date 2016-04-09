@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\serialization\Tests\SerializationTest.
- */
-
 namespace Drupal\serialization\Tests;
 
 use Drupal\simpletest\KernelTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\StringTranslation\StringTranslationTraitTest.
- */
-
 namespace Drupal\Tests\Core\StringTranslation;
 
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;

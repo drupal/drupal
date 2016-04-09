@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Plugin\Derivative\DeriverInterface.
- */
-
 namespace Drupal\Component\Plugin\Derivative;
 
 /**

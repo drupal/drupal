@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Form\FormCacheTest.
- */
-
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Form\FormCache;

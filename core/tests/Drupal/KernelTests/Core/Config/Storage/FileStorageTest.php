@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Config\Storage\FileStorageTest.
- */
-
 namespace Drupal\KernelTests\Core\Config\Storage;
 
 use Drupal\Component\Serialization\Yaml;

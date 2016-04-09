@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\taxonomy\Kernel\Migrate\MigrateTaxonomyConfigsTest.
- */
-
 namespace Drupal\Tests\taxonomy\Kernel\Migrate;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;

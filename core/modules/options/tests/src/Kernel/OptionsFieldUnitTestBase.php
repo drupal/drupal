@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\options\Kernel\OptionsFieldUnitTestBase.
- */
-
 namespace Drupal\Tests\options\Kernel;
 
 use Drupal\field\Entity\FieldConfig;

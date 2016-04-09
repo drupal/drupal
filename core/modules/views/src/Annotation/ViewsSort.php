@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Annotation\ViewsSort.
- */
-
 namespace Drupal\views\Annotation;
 
 /**

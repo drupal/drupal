@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Core\Asset\AssetCollectionOptimizerInterface.
- */
 
 namespace Drupal\Core\Asset;
 

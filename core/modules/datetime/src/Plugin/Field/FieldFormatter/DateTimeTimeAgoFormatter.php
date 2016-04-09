@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeTimeAgoFormatter.
- */
-
 namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\SafeMarkup;

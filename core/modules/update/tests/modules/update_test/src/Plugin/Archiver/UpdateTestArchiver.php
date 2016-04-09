@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\update_test\Plugin\Archiver\UpdateTestArchiver.
- */
-
 namespace Drupal\update_test\Plugin\Archiver;
 
 use Drupal\Core\Archiver\ArchiverInterface;

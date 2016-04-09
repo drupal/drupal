@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_link_content\Form\MenuLinkContentForm.
- */
-
 namespace Drupal\menu_link_content\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;

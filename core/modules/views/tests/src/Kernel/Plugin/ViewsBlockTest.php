@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Plugin\ViewsBlockTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\views\Plugin\Block\ViewsBlock;

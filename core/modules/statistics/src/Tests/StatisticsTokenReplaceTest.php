@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\statistics\Tests\StatisticsTokenReplaceTest.
- */
-
 namespace Drupal\statistics\Tests;
 
 /**

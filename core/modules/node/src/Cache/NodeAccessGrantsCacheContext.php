@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Cache\NodeAccessGrantsCacheContext.
- */
-
 namespace Drupal\node\Cache;
 
 use Drupal\Core\Cache\CacheableMetadata;

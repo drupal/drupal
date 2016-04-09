@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Update\UpdatePathTestBase.
- */
-
 namespace Drupal\system\Tests\Update;
 
 use Drupal\Component\Utility\Crypt;

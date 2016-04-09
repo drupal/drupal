@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\ThemeTest.
- */
-
 namespace Drupal\taxonomy\Tests;
 
 /**

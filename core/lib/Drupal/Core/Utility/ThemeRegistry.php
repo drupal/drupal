@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Utility\ThemeRegistry.
- */
-
 namespace Drupal\Core\Utility;
 
 use Drupal\Core\Cache\Cache;

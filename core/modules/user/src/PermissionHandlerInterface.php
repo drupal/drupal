@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\PermissionHandlerInterface.
- */
-
 namespace Drupal\user;
 
 /**

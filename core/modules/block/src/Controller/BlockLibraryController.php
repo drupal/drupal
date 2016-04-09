@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Controller\BlockLibraryController.
- */
-
 namespace Drupal\block\Controller;
 
 use Drupal\Component\Serialization\Json;

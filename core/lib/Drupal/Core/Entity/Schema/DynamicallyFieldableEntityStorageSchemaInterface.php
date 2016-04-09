@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface.
- */
-
 namespace Drupal\Core\Entity\Schema;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;

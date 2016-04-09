@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Plugin\Derivative\SearchLocalTask.
- */
-
 namespace Drupal\search\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;

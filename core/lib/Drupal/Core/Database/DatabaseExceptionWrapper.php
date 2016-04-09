@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\DatabaseExceptionWrapper.
- */
-
 namespace Drupal\Core\Database;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Handler\SortDateTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Component\Utility\SafeMarkup;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Core\Field\AllowedTagsXssTrait.
- */
 
 namespace Drupal\Core\Field;
 

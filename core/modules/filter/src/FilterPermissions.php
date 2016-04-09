@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter\FilterPermissions.
- */
-
 namespace Drupal\filter;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

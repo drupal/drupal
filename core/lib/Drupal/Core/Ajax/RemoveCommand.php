@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\RemoveCommand.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

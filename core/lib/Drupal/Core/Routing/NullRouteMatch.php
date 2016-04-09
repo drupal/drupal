@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\NullRouteMatch.
- */
-
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\ParameterBag;

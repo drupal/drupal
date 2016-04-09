@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\options\Tests\OptionsFieldUITest.
- */
-
 namespace Drupal\options\Tests;
 
 use Drupal\field\Entity\FieldConfig;

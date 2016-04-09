@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Entity\EntityReferenceSelection\EntityReferenceSelectionAccessTest.
- */
-
 namespace Drupal\system\Tests\Entity\EntityReferenceSelection;
 
 use Drupal\comment\Tests\CommentTestTrait;

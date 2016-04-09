@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\serialization\Tests\EntityResolverTest.
- */
 
 namespace Drupal\serialization\Tests;
 

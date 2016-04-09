@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Annotation\ViewsHandlerAnnotationBase.
- */
-
 namespace Drupal\views\Annotation;
 
 use Drupal\Component\Annotation\PluginID;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Unit\Plugin\migrate\source\d6\FieldInstancePerFormDisplayTest.
- */
-
 namespace Drupal\Tests\field\Unit\Plugin\migrate\source\d6;
 
 use Drupal\field\Plugin\migrate\source\d6\FieldInstancePerFormDisplay;

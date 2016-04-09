@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\FieldException.
- */
-
 namespace Drupal\Core\Field;
 
 /**

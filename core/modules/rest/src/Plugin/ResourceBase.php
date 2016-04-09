@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Plugin\ResourceBase.
- */
-
 namespace Drupal\rest\Plugin;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

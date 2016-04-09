@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\Timestamp\TimestampFormatterTest.
- */
-
 namespace Drupal\Tests\field\Kernel\Timestamp;
 
 use Drupal\Component\Utility\SafeMarkup;

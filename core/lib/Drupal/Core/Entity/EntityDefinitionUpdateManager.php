@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityDefinitionUpdateManager.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;

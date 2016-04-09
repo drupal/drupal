@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\Schema\SchemaIncompleteException.
- */
-
 namespace Drupal\Core\Config\Schema;
 
 /**

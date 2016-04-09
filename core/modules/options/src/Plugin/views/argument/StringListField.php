@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\options\Plugin\views\argument\StringListField.
- */
-
 namespace Drupal\options\Plugin\views\argument;
 
 use Drupal\Core\Field\AllowedTagsXssTrait;

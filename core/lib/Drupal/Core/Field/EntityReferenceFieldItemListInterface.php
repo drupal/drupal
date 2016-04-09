@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\EntityReferenceFieldItemListInterface.
- */
-
 namespace Drupal\Core\Field;
 
 /**

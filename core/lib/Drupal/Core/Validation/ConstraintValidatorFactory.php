@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Validation\ConstraintValidatorFactory.
- */
-
 namespace Drupal\Core\Validation;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;

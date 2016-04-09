@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException.
- */
-
 namespace Drupal\Core\Asset\Exception;
 
 /**

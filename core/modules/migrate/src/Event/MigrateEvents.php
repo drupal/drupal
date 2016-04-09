@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Event\MigrateEvents.
- */
-
 namespace Drupal\migrate\Event;
 
 /**

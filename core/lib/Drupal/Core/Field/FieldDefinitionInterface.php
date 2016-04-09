@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\FieldDefinitionInterface.
- */
-
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;

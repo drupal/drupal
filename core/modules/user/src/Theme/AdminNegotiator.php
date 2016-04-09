@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Theme\AdminNegotiator.
- */
-
 namespace Drupal\user\Theme;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

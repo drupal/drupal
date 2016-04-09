@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Form\CommentTypeDeleteForm.
- */
-
 namespace Drupal\comment\Form;
 
 use Drupal\comment\CommentManagerInterface;

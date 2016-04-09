@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserCacheTagsTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\views_test_data\Form\ViewsTestDataElementEmbedForm.
- */
 
 namespace Drupal\views_test_data\Form;
 

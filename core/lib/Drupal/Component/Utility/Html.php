@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Utility\Html.
- */
-
 namespace Drupal\Component\Utility;
 
 /**

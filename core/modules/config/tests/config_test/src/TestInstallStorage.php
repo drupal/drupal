@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_test\TestInstallStorage.
- */
-
 namespace Drupal\config_test;
 
 use Drupal\Core\Config\InstallStorage;

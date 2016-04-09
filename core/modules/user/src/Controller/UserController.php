@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Controller\UserController.
- */
-
 namespace Drupal\user\Controller;
 
 use Drupal\Component\Utility\Crypt;

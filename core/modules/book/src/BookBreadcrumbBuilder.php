@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\BookBreadcrumbBuilder.
- */
-
 namespace Drupal\book;
 
 use Drupal\Core\Breadcrumb\Breadcrumb;

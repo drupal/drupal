@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\editor\Tests\QuickEditIntegrationLoadingTest.
- */
-
 namespace Drupal\editor\Tests;
 
 use Drupal\Component\Serialization\Json;

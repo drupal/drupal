@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\FieldStorageConfigStorage.
- */
-
 namespace Drupal\field;
 
 use Drupal\Component\Uuid\UuidInterface;

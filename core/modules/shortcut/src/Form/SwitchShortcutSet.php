@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\shortcut\Form\SwitchShortcutSet.
- */
-
 namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Form\FormBase;

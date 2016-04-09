@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\CommentValidationTest.
- */
-
 namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\CommentInterface;

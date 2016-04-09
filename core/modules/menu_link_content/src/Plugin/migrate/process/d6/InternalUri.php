@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_link_content\Plugin\migrate\process\d6\InternalUri.
- */
-
 namespace Drupal\menu_link_content\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutableInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Entity\KeyValueStore\KeyValueEntityStorageTest.
- */
-
 namespace Drupal\Tests\Core\Entity\KeyValueStore {
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\Component\Utility\TextWrapper.
- */
 
 namespace Drupal\Tests\Component\Utility;
 

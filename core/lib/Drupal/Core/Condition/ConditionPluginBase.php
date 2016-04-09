@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Condition\ConditionPluginBase.
- */
-
 namespace Drupal\Core\Condition;
 
 use Drupal\Core\Executable\ExecutableManagerInterface;

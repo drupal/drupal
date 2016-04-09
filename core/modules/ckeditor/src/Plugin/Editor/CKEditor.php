@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\Plugin\Editor\CKEditor.
- */
-
 namespace Drupal\ckeditor\Plugin\Editor;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

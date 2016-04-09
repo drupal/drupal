@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\ForumManager.
- */
-
 namespace Drupal\forum;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

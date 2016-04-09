@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\Type\DurationInterface.
- */
-
 namespace Drupal\Core\TypedData\Type;
 
 /**

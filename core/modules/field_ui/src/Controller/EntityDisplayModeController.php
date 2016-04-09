@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\Controller\EntityDisplayModeController.
- */
-
 namespace Drupal\field_ui\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

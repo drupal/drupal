@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\File\FileSaveHtaccessLoggingTest.
- */
-
 namespace Drupal\system\Tests\File;
 
 use Drupal\Component\PhpStorage\FileStorage;

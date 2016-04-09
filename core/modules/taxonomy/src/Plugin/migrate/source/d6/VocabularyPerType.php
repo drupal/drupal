@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyPerType.
- */
-
 namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
 /**

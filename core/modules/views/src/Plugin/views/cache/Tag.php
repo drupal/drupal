@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\cache\Tag.
- */
-
 namespace Drupal\views\Plugin\views\cache;
 
 use Drupal\Core\Cache\CacheBackendInterface;

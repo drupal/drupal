@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Tests\FileFieldWidgetTest.
- */
-
 namespace Drupal\file\Tests;
 
 use Drupal\comment\Entity\Comment;

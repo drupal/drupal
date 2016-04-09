@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Tests\LocaleUpdateInterfaceTest.
- */
-
 namespace Drupal\locale\Tests;
 
 use Drupal\Component\Render\FormattableMarkup;

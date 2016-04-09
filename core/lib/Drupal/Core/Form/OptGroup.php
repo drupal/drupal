@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\OptGroup.
- */
-
 namespace Drupal\Core\Form;
 
 /**

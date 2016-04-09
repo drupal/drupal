@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\user\Unit\Migrate\UserPictureInstanceTest.
- */
-
 namespace Drupal\Tests\user\Unit\Migrate;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;

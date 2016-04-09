@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Form\TranslateFilterForm.
- */
-
 namespace Drupal\locale\Form;
 
 use Drupal\Core\Form\FormStateInterface;

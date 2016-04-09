@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeFieldAccessTest.
- */
 
 namespace Drupal\node\Tests;
 

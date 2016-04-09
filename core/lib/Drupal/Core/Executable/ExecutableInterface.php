@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Executable\ExecutableInterface.
- */
-
 namespace Drupal\Core\Executable;
 
 /**

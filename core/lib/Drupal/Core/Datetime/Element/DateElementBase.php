@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Datetime\Element\DateElementBase.
- */
-
 namespace Drupal\Core\Datetime\Element;
 
 use Drupal\Core\Datetime\DrupalDateTime;

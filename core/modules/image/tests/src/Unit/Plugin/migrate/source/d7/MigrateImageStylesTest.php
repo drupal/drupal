@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\image\Unit\Plugin\migrate\source\d7\MigrateImageStylesTest.
- */
-
 namespace Drupal\Tests\image\Unit\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;

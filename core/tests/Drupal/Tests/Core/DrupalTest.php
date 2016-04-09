@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\DrupalTest.
- */
-
 namespace Drupal\Tests\Core;
 
 use Drupal\Tests\UnitTestCase;

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @file
- *
- * Contains \Drupal\field_test\Plugin\Field\FieldFormatter\TestFieldNoSettingsFormatter.
- */
-
 namespace Drupal\field_test\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;

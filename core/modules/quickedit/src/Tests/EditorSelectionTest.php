@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\quickedit\Tests\EditorSelectionTest.
- */
-
 namespace Drupal\quickedit\Tests;
 
 use Drupal\entity_test\Entity\EntityTest;

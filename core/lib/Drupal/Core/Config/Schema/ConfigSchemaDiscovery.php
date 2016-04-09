@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\Schema\ConfigSchemaDiscovery.
- */
-
 namespace Drupal\Core\Config\Schema;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;

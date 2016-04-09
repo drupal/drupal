@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\Action\PromoteNode.
- */
-
 namespace Drupal\node\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;

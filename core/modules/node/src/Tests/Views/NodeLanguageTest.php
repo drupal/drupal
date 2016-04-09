@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\Views\NodeLanguageTest.
- */
-
 namespace Drupal\node\Tests\Views;
 
 use Drupal\Core\Language\LanguageInterface;

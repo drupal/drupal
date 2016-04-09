@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\aggregator\Unit\ItemWithoutFeedTest.
- */
-
 namespace Drupal\Tests\aggregator\Kernel;
 
 use Drupal\aggregator\Entity\Item;

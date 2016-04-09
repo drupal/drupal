@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\shortcut\Plugin\Block\ShortcutsBlock.
- */
-
 namespace Drupal\shortcut\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;

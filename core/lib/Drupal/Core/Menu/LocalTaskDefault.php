@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\LocalTaskDefault.
- */
-
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\PluginBase;

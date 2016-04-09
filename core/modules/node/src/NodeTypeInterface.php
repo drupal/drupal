@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\NodeTypeInterface.
- */
-
 namespace Drupal\node;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

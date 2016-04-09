@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeQueryAlterTest.
- */
-
 namespace Drupal\node\Tests;
 
 /**

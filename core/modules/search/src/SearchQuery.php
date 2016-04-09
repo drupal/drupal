@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\SearchQuery.
- */
-
 namespace Drupal\search;
 
 use Drupal\Component\Utility\Unicode;

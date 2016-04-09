@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\serialization\Tests\EntitySerializationTest.
- */
-
 namespace Drupal\serialization\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

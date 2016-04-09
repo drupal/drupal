@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityListBuilderInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 /**

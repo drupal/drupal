@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tour\Tests\TourTest.
- */
-
 namespace Drupal\tour\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;

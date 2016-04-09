@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\TypedConfigManagerInterface.
- */
-
 namespace Drupal\Core\Config;
 
 use Drupal\Core\TypedData\TypedDataManagerInterface;

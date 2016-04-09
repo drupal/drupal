@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityRepositoryInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 /**

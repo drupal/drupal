@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\file\Kernel\LoadTest.
- */
-
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\file\Entity\File;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Installer\Form\SelectLanguageForm.
- */
-
 namespace Drupal\Core\Installer\Form;
 
 use Drupal\Component\Utility\UserAgent;

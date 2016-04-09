@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Route\RoleAccessCheckTest.
- */
-
 namespace Drupal\Tests\Core\Route;
 
 use Drupal\Core\Access\AccessResult;

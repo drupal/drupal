@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\RouteProcessor\RouteProcessorCurrentIntegrationTest.
- */
-
 namespace Drupal\system\Tests\RouteProcessor;
 
 use Drupal\Core\Cache\Cache;

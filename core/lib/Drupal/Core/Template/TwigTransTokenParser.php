@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Template\TwigTransTokenParser.
- */
-
 namespace Drupal\Core\Template;
 
 /**

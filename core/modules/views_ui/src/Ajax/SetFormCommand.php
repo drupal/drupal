@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Ajax\SetFormCommand.
- */
-
 namespace Drupal\views_ui\Ajax;
 
 use Drupal\Core\Ajax\CommandInterface;

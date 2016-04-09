@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\FormAjaxException.
- */
-
 namespace Drupal\Core\Form;
 
 /**

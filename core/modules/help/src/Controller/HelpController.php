@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\help\Controller\HelpController.
- */
-
 namespace Drupal\help\Controller;
 
 use Drupal\Core\Cache\CacheableMetadata;

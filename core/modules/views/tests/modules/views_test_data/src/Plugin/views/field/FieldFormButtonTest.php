@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_test_data\Plugin\views\field\FieldFormButtonTest.
- */
-
 namespace Drupal\views_test_data\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;

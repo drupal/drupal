@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\forum\ForumIndexStorageInterface.
- */
 
 namespace Drupal\forum;
 

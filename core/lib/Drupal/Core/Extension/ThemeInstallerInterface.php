@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Extension\ThemeInstallerInterface.
- */
-
 namespace Drupal\Core\Extension;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\MigrationPluginManager.
- */
-
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Graph\Graph;

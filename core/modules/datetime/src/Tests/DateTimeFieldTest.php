@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\datetime\Tests\DateTimeFieldTest.
- */
-
 namespace Drupal\datetime\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

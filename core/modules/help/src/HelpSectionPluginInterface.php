@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\help\HelpSectionPluginInterface.
- */
-
 namespace Drupal\help;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

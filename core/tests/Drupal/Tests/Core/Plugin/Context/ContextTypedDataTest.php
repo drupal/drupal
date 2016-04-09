@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Plugin\Context\ContextTypedDataTest.
- */
-
 namespace Drupal\Tests\Core\Plugin\Context;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\big_pipe\Render\Placeholder\BigPipeStrategy
- */
-
 namespace Drupal\big_pipe\Render\Placeholder;
 
 use Drupal\Component\Utility\Html;

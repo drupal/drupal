@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\StatementInterface.
- */
-
 namespace Drupal\Core\Database;
 
 /**

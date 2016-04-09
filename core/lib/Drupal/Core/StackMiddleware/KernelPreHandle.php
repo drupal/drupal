@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\StackMiddleware\KernelPreHandle.
- */
-
 namespace Drupal\Core\StackMiddleware;
 
 use Drupal\Core\DrupalKernelInterface;

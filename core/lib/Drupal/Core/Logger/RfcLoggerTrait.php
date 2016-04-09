@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Logger\RfcLoggerTrait.
- */
-
 namespace Drupal\Core\Logger;
 
 /**

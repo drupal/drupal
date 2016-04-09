@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Common\RenderElementTypesTest.
- */
-
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\Html;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\action_test\Plugin\Action\SaveEntity.
- */
-
 namespace Drupal\action_test\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;

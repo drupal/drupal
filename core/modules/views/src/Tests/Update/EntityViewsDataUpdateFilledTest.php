@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Update\EntityViewsDataUpdateFilledTest.
- */
-
 namespace Drupal\views\Tests\Update;
 
 /**

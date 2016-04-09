@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\NodeTypeForm.
- */
-
 namespace Drupal\node;
 
 use Drupal\Core\Entity\BundleEntityFormBase;

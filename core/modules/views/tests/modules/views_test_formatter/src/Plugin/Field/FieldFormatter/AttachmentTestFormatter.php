@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_test_formatter\Plugin\Field\FieldFormatter\AttachmentTestFormatter.
- */
-
 namespace Drupal\views_test_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;

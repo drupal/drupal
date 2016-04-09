@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\Routing\ViewPageControllerTest.
- */
-
 namespace Drupal\Tests\views\Unit\Routing {
 
 use Drupal\Core\Routing\RouteMatch;

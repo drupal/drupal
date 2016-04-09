@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\plugin_test\CustomDirectoryExample1.
- */
-
 namespace Drupal\plugin_test;
 
 /**

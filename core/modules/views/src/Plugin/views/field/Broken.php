@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\field\Broken.
- */
-
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\Plugin\views\BrokenHandlerTrait;

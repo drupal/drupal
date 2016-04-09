@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Annotation\RenderElement.
- */
-
 namespace Drupal\Core\Render\Annotation;
 
 use Drupal\Component\Annotation\PluginID;

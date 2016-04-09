@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserCreateTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\field\Entity\FieldConfig;

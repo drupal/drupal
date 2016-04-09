@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_content\Entity\BlockContent.
- */
-
 namespace Drupal\block_content\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;

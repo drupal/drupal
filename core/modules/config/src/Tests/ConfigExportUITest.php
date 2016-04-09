@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Tests\ConfigExportUITest.
- */
-
 namespace Drupal\config\Tests;
 
 use Drupal\Component\Serialization\Yaml;

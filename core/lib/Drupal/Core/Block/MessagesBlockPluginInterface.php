@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Block\MessagesBlockPluginInterface.
- */
-
 namespace Drupal\Core\Block;
 
 /**

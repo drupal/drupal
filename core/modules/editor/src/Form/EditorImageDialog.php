@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\editor\Form\EditorImageDialog.
- */
-
 namespace Drupal\editor\Form;
 
 use Drupal\Component\Utility\Bytes;

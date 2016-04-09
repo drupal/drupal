@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Core\Render\AttachmentsResponseProcessorInterface.
- */
 
 namespace Drupal\Core\Render;
 

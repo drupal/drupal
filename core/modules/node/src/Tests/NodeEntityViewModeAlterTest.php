@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeEntityViewModeAlterTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Cache\Cache;

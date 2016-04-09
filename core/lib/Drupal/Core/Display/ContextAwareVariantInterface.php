@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Display\ContextAwareVariantInterface.
- */
-
 namespace Drupal\Core\Display;
 
 /**

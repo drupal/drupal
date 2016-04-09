@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\CacheCollectorInterface.
- */
-
 namespace Drupal\Core\Cache;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityTypeConstraintsTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 /**

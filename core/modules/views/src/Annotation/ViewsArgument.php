@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Annotation\ViewsArgument.
- */
-
 namespace Drupal\views\Annotation;
 
 /**

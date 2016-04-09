@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Theme\ThemeSettingsTest.
- */
-
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\Core\Config\InstallStorage;

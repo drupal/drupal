@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Update\FilterHtmlUpdateTest.
- */
-
 namespace Drupal\system\Tests\Update;
 
 use Drupal\filter\Entity\FilterFormat;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\responsive_image\ResponsiveImageStyleListBuilder.
- */
-
 namespace Drupal\responsive_image;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;

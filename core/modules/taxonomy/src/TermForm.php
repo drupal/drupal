@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\TermForm.
- */
-
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\ContentEntityForm;

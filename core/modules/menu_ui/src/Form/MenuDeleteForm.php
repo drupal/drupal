@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_ui\Form\MenuDeleteForm.
- */
-
 namespace Drupal\menu_ui\Form;
 
 use Drupal\Core\Database\Connection;

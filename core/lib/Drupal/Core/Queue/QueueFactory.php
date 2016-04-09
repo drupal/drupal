@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Queue\QueueFactory.
- */
-
 namespace Drupal\Core\Queue;
 
 use Drupal\Core\Site\Settings;

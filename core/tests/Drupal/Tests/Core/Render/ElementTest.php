@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\ElementTest.
- */
-
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Access\AccessResult;

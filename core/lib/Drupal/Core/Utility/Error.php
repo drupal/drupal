@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Utility\Error.
- */
-
 namespace Drupal\Core\Utility;
 
 use Drupal\Component\Utility\SafeMarkup;

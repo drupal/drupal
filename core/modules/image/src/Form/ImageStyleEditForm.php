@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Form\ImageStyleEditForm.
- */
-
 namespace Drupal\image\Form;
 
 use Drupal\Core\Entity\EntityStorageInterface;

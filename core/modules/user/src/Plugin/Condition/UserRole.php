@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\Condition\UserRole.
- */
-
 namespace Drupal\user\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;

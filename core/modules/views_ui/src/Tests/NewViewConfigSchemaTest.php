@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Tests\NewViewConfigSchemaTest.
- */
-
 namespace Drupal\views_ui\Tests;
 
 use Drupal\simpletest\WebTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Breadcrumb\Breadcrumb.
- */
-
 namespace Drupal\Core\Breadcrumb;
 
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;

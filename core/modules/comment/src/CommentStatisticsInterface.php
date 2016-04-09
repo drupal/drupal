@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\comment\CommentStatisticsInterface.
- */
 
 namespace Drupal\comment;
 

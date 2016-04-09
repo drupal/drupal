@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\Views\NodeFieldFilterTest.
- */
-
 namespace Drupal\node\Tests\Views;
 
 use Drupal\language\Entity\ConfigurableLanguage;

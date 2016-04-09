@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\ItemStorage.
- */
-
 namespace Drupal\aggregator;
 
 use Drupal\Core\Entity\Query\QueryInterface;

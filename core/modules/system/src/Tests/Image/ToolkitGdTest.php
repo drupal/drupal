@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Image\ToolkitGdTest.
- */
-
 namespace Drupal\system\Tests\Image;
 
 use Drupal\Core\Image\ImageInterface;

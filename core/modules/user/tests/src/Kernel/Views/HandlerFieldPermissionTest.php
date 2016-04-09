@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\user\Kernel\Views\HandlerFieldPermissionTest.
- */
-
 namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\views\Views;

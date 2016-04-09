@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_content\Form\BlockContentDeleteForm.
- */
-
 namespace Drupal\block_content\Form;
 
 use Drupal\Core\Entity\ContentEntityDeleteForm;

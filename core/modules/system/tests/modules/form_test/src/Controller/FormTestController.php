@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\form_test\Controller\FormTestController.
- */
 
 namespace Drupal\form_test\Controller;
 

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\Condition\RequestPath.
- */
-
 namespace Drupal\system\Plugin\Condition;
 
 use Drupal\Component\Utility\Unicode;

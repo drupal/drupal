@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter\FilterProcessResult.
- */
-
 namespace Drupal\filter;
 
 use Drupal\Component\Utility\Html;

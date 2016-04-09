@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Plugin\Type\ResourcePluginManager.
- */
-
 namespace Drupal\rest\Plugin\Type;
 
 use Drupal\Core\Cache\CacheBackendInterface;

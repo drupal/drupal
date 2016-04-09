@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\history\Tests\HistoryTest.
- */
-
 namespace Drupal\history\Tests;
 
 use Drupal\Component\Serialization\Json;

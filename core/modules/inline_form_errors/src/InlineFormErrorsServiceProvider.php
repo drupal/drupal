@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\inline_form_errors\InlineFormErrorsServiceProvider.
- */
-
 namespace Drupal\inline_form_errors;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

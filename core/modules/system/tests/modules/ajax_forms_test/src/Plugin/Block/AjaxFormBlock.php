@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ajax_forms_test\Plugin\Block\AjaxFormBlock.
- */
-
 namespace Drupal\ajax_forms_test\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;

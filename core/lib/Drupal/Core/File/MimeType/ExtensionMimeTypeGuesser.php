@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser.
- */
-
 namespace Drupal\Core\File\MimeType;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

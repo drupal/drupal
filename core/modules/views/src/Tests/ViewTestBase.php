@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\ViewTestBase.
- */
-
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Database\Query\SelectInterface;

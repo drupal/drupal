@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeRevisionsAllTest.
- */
-
 namespace Drupal\node\Tests;
 
 /**

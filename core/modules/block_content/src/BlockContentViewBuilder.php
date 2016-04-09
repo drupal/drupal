@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_content\BlockContentViewBuilder.
- */
-
 namespace Drupal\block_content;
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;

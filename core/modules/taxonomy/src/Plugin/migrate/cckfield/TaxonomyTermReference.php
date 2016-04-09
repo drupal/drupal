@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\migrate\cckfield\TaxonomyTermReference.
- */
-
 namespace Drupal\taxonomy\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Plugin\MigrationInterface;

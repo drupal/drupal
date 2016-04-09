@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\MenuAccessControlHandler.
- */
-
 namespace Drupal\system;
 
 use Drupal\Core\Access\AccessResult;

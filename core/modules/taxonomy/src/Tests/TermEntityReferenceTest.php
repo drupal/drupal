@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\TermEntityReferenceTest.
- */
-
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\field\Entity\FieldStorageConfig;

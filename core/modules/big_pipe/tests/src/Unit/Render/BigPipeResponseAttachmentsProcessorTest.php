@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\big_pipe\Unit\Render\BigPipeResponseAttachmentsProcessorTest.
- */
-
 namespace Drupal\Tests\big_pipe\Unit\Render;
 
 use Drupal\big_pipe\Render\BigPipeResponse;

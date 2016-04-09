@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Extension\Extension.
- */
-
 namespace Drupal\Core\Extension;
 
 /**

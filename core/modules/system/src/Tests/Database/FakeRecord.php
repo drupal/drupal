@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Database\FakeRecord.
- */
-
 namespace Drupal\system\Tests\Database;
 
 /**

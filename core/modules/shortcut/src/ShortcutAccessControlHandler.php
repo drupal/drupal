@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\shortcut\ShortcutAccessControlHandler.
- */
-
 namespace Drupal\shortcut;
 
 use Drupal\Core\Access\AccessResult;

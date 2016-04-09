@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\taxonomy\Unit\Migrate\d6\VocabularyTest.
- */
-
 namespace Drupal\Tests\taxonomy\Unit\Migrate\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;

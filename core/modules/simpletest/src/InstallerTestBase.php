@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\InstallerTestBase.
- */
-
 namespace Drupal\simpletest;
 
 use Drupal\Core\DrupalKernel;

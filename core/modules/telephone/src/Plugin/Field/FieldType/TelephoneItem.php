@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\telephone\Plugin\Field\FieldType\TelephoneItem.
- */
-
 namespace Drupal\telephone\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;

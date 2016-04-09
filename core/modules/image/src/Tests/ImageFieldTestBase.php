@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Tests\ImageFieldTestBase.
- */
-
 namespace Drupal\image\Tests;
 
 use Drupal\field\Entity\FieldConfig;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Update\SevenSecondaryLocalTasksConvertedIntoBlockUpdateTest.
- */
-
 namespace Drupal\system\Tests\Update;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search_extra_type\Plugin\Search\SearchExtraTypeSearch.
- */
-
 namespace Drupal\search_extra_type\Plugin\Search;
 
 use Drupal\Component\Utility\SafeMarkup;

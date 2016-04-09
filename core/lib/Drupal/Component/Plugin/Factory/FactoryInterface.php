@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Component\Plugin\Factory\FactoryInterface.
- */
 
 namespace Drupal\Component\Plugin\Factory;
 

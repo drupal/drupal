@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\NodeStorage.
- */
-
 namespace Drupal\node;
 
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;

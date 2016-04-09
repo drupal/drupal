@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeAccessGrantsTest.
- */
-
 namespace Drupal\node\Tests;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\ConfigFieldDefinitionTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Field\FieldDefinitionInterface;

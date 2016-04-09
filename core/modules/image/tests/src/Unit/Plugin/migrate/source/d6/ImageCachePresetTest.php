@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\image\Unit\Plugin\migrate\source\d6\ImageCachePresetTest.
- */
-
 namespace Drupal\Tests\image\Unit\Plugin\migrate\source\d6;
 
 use Drupal\image\Plugin\migrate\source\d6\ImageCachePreset;

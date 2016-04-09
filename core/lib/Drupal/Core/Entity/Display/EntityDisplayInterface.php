@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Display\EntityDisplayInterface.
- */
-
 namespace Drupal\Core\Entity\Display;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

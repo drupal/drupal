@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Plugin\ConfigurableSearchPluginInterface.
- */
-
 namespace Drupal\search\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;

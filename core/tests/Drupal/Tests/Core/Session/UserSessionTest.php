@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Session\UserSessionTest.
- */
-
 namespace Drupal\Tests\Core\Session;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

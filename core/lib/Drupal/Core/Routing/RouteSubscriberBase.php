@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\RouteSubscriberBase.
- */
-
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

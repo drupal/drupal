@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Core\Asset\AssetResolver.
- */
 
 namespace Drupal\Core\Asset;
 

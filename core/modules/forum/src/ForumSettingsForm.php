@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\ForumSettingsForm.
- */
-
 namespace Drupal\forum;
 
 use Drupal\Core\Form\ConfigFormBase;

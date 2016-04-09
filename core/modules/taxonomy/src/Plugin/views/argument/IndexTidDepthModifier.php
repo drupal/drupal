@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\views\argument\IndexTidDepthModifier.
- */
-
 namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\Core\Form\FormStateInterface;

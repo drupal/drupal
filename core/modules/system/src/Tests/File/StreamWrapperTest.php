@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\File\StreamWrapperTest.
- */
-
 namespace Drupal\system\Tests\File;
 
 use Drupal\Core\DrupalKernel;

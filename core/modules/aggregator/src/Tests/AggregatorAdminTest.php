@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Tests\AggregatorAdminTest.
- */
-
 namespace Drupal\aggregator\Tests;
 
 /**

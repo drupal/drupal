@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Entity\ViewNonTranslatableEntityTest.
- */
-
 namespace Drupal\views\Tests\Entity;
 
 use Drupal\language\Entity\ConfigurableLanguage;

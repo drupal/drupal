@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\EntityTestViewBuilder.
- */
-
 namespace Drupal\entity_test;
 
 use Drupal\Core\Entity\EntityInterface;

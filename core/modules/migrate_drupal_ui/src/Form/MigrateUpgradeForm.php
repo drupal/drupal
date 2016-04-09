@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal_ui\Form\MigrateUpgradeForm.
- */
-
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Core\Datetime\DateFormatterInterface;

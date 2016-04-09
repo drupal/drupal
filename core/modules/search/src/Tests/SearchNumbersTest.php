@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchNumbersTest.
- */
-
 namespace Drupal\search\Tests;
 
 use Drupal\Core\Language\LanguageInterface;

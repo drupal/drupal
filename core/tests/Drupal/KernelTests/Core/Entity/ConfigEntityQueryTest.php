@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\ConfigEntityQueryTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Config\Entity\Query\QueryFactory;

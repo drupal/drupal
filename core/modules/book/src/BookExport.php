@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\BookExport.
- */
-
 namespace Drupal\book;
 
 use Drupal\Core\Entity\EntityManagerInterface;

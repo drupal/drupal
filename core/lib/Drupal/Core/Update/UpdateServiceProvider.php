@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Update\UpdateServiceProvider.
- */
-
 namespace Drupal\Core\Update;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

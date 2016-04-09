@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\Tests\CKEditorLoadingTest.
- */
-
 namespace Drupal\ckeditor\Tests;
 
 use Drupal\editor\Entity\Editor;

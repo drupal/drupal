@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Utility\UnroutedUrlAssembler.
- */
-
 namespace Drupal\Core\Utility;
 
 use Drupal\Component\Utility\UrlHelper;

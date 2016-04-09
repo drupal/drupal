@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\action\Tests\BulkFormTest.
- */
-
 namespace Drupal\action\Tests;
 
 use Drupal\simpletest\WebTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\TranslatableInterface.
- */
-
 namespace Drupal\Core\TypedData;
 
 /**

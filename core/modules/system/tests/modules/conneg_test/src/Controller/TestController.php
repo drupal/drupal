@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\conneg_test\Controller\TestController.
- */
-
 namespace Drupal\conneg_test\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;

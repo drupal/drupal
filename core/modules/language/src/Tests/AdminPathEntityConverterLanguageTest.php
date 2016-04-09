@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Tests\AdminPathEntityConverterLanguageTest.
- */
-
 namespace Drupal\language\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\EventSubscriber\MaintenanceModeSubscriber.
- */
-
 namespace Drupal\user\EventSubscriber;
 
 use Drupal\Core\Routing\RouteMatch;

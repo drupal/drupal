@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Queue\Batch.
- */
-
 namespace Drupal\Core\Queue;
 
 /**

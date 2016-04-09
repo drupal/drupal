@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Database\EmptyStatementTest.
- */
-
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\StatementEmpty;

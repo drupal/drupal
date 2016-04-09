@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Block\Annotation\Block.
- */
-
 namespace Drupal\Core\Block\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

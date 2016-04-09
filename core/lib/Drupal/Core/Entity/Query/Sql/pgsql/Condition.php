@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Query\Sql\pgsql\Condition.
- */
-
 namespace Drupal\Core\Entity\Query\Sql\pgsql;
 
 use Drupal\Core\Database\Query\SelectInterface;

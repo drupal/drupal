@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\Uri\UriItemTest.
- */
-
 namespace Drupal\Tests\field\Kernel\Uri;
 
 use Drupal\Component\Utility\Unicode;

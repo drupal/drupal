@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\quickedit\Tests\QuickEditAutocompleteTermTest.
- */
-
 namespace Drupal\quickedit\Tests;
 
 use Drupal\Component\Serialization\Json;

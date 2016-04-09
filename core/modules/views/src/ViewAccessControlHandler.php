@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\ViewAccessControlHandler.
- */
-
 namespace Drupal\views;
 
 use Drupal\Core\Access\AccessResult;

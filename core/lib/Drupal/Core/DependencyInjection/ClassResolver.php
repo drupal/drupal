@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\DependencyInjection\ClassResolver.
- */
-
 namespace Drupal\Core\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;

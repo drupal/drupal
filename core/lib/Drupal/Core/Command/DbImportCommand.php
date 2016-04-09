@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Command\DbImportCommand.
- */
-
 namespace Drupal\Core\Command;
 
 use Drupal\Core\Database\Connection;

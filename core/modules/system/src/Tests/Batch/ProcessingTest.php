@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Batch\ProcessingTest.
- */
-
 namespace Drupal\system\Tests\Batch;
 
 use Drupal\Core\Url;

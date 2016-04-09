@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\BrowserTestBase.
- */
-
 namespace Drupal\simpletest;
 
 use Behat\Mink\Driver\GoutteDriver;

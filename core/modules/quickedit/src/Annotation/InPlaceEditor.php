@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\quickedit\Annotation\InPlaceEditor.
- */
-
 namespace Drupal\quickedit\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

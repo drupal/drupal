@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\aggregator\Kernel\Migrate\d7\MigrateAggregatorItemTest.
- */
-
 namespace Drupal\Tests\aggregator\Kernel\Migrate\d7;
 
 use Drupal\aggregator\Entity\Item;

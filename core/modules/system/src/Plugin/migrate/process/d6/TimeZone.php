@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\migrate\process\d6\TimeZone.
- */
-
 namespace Drupal\system\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutableInterface;

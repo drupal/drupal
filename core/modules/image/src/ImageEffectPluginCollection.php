@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\ImageEffectPluginCollection.
- */
-
 namespace Drupal\image;
 
 use Drupal\Core\Plugin\DefaultLazyPluginCollection;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\BlockAccessControlHandler.
- */
-
 namespace Drupal\block;
 
 use Drupal\Component\Plugin\Exception\ContextException;

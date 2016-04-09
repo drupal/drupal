@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\Action\UnblockUser.
- */
-
 namespace Drupal\user\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Entity\EntityViewControllerTest.
- */
-
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\entity_test\Entity\EntityTest;

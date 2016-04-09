@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Extension\ModuleInstallerInterface.
- */
-
 namespace Drupal\Core\Extension;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image_test\Plugin\ImageToolkit\DerivedToolkit.
- */
-
 namespace Drupal\image_test\Plugin\ImageToolkit;
 
 /**

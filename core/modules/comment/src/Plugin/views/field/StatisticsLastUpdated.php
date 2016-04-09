@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Plugin\views\field\StatisticsLastUpdated.
- */
-
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Date;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Query\Null\Query.
- */
-
 namespace Drupal\Core\Entity\Query\Null;
 
 use Drupal\Core\Entity\Query\QueryAggregateInterface;

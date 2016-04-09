@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Utility\ProjectInfo.
- */
-
 namespace Drupal\Core\Utility;
 
 use Drupal\Core\Extension\Extension;

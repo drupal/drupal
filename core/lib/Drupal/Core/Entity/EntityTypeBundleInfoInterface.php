@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityTypeBundleInfoInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\image\Unit\ImageStyleTest.
- */
-
 namespace Drupal\Tests\image\Unit;
 
 use Drupal\Tests\UnitTestCase;

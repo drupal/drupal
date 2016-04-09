@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Plugin\migrate\destination\EntityFile.
- */
-
 namespace Drupal\file\Plugin\migrate\destination;
 
 use Drupal\Component\Utility\Unicode;

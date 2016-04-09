@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\BulkDeleteTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Entity\EntityInterface;

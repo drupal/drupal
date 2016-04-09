@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\search\Kernel\Migrate\d6\MigrateSearchPageTest.
- */
-
 namespace Drupal\Tests\search\Kernel\Migrate\d6;
 
 use Drupal\Core\Database\Database;

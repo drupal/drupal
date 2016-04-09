@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Plugin\ResourceInterface.
- */
-
 namespace Drupal\rest\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

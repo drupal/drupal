@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\editor\Plugin\EditorBase.
- */
-
 namespace Drupal\editor\Plugin;
 
 use Drupal\Core\Form\FormStateInterface;

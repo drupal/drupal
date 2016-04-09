@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Form\ArbitraryRebuildTest.
- */
-
 namespace Drupal\system\Tests\Form;
 
 use Drupal\field\Entity\FieldConfig;

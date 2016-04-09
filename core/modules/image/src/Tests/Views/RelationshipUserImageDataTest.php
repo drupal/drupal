@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Tests\Views\RelationshipUserImageDataTest.
- */
-
 namespace Drupal\image\Tests\Views;
 
 use Drupal\field\Entity\FieldConfig;

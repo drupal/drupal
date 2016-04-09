@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\TransactionExplicitCommitNotAllowedException.
- */
-
 namespace Drupal\Core\Database;
 
 /**

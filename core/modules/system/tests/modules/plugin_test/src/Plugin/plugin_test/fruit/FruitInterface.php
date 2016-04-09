@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface.
- */
-
 namespace Drupal\plugin_test\Plugin\plugin_test\fruit;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\node\Kernel\Migrate\d6\MigrateViewModesTest.
- */
-
 namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;

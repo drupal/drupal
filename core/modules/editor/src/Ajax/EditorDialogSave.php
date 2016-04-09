@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\editor\Ajax\EditorDialogSave.
- */
-
 namespace Drupal\editor\Ajax;
 
 use Drupal\Core\Ajax\CommandInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\update\UpdateSettingsForm.
- */
-
 namespace Drupal\update;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

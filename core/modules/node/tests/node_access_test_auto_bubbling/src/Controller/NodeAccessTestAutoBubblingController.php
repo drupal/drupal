@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node_access_test_auto_bubbling\Controller\NodeAccessTestAutoBubblingController.
- */
-
 namespace Drupal\node_access_test_auto_bubbling\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

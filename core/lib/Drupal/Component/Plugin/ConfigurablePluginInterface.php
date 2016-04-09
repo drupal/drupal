@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Plugin\ConfigurablePluginInterface.
- */
-
 namespace Drupal\Component\Plugin;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Element\LanguageConfiguration.
- */
-
 namespace Drupal\language\Element;
 
 use Drupal\Core\Form\FormStateInterface;

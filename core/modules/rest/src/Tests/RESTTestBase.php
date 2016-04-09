@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Tests\RESTTestBase.
- */
-
 namespace Drupal\rest\Tests;
 
 use Drupal\node\NodeInterface;

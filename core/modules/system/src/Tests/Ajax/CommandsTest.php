@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Ajax\CommandsTest.
- */
-
 namespace Drupal\system\Tests\Ajax;
 
 use Drupal\Core\Ajax\AddCssCommand;

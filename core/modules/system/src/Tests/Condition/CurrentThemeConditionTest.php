@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Condition\CurrentThemeConditionTest.
- */
-
 namespace Drupal\system\Tests\Condition;
 
 use Drupal\Component\Utility\SafeMarkup;

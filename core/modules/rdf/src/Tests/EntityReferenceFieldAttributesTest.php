@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rdf\Tests\EntityReferenceFieldAttributesTest.
- */
-
 namespace Drupal\rdf\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;

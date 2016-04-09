@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\file\Kernel\Formatter\FileEntityFormatterTest.
- */
-
 namespace Drupal\Tests\file\Kernel\Formatter;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;

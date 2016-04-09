@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_content\Tests\PageEditTest.
- */
-
 namespace Drupal\block_content\Tests;
 
 use Drupal\block_content\Entity\BlockContent;

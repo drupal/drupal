@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Form\UserLoginForm.
- */
-
 namespace Drupal\user\Form;
 
 use Drupal\Core\Flood\FloodInterface;

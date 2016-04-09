@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\Enhancer\FormRouteEnhancer.
- */
-
 namespace Drupal\Core\Routing\Enhancer;
 
 use Symfony\Component\HttpFoundation\Request;

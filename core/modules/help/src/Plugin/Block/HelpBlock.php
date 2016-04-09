@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\help\Plugin\Block\HelpBlock.
- */
-
 namespace Drupal\help\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;

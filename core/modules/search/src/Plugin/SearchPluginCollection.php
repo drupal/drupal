@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Plugin\SearchPluginCollection.
- */
-
 namespace Drupal\search\Plugin;
 
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;

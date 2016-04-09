@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Path\PathValidatorInterface.
- */
-
 namespace Drupal\Core\Path;
 
 /**

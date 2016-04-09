@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\file\Kernel\UsageTest.
- */
-
 namespace Drupal\Tests\file\Kernel;
 
 /**

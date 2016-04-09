@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\DisplayTest.
- */
-
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\language\Entity\ConfigurableLanguage;

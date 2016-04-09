@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Update\UpdateRegistryFactory.
- */
-
 namespace Drupal\Core\Update;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\Plugin\migrate\process\d6\UrlAliasLanguage.
- */
-
 namespace Drupal\path\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutableInterface;

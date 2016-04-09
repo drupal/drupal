@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Handler\AreaEntityTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\block\Entity\Block;

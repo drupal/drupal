@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\RenderCacheIntegrationTest.
- */
-
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Core\Cache\Cache;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\EntityReference\Views\EntityReferenceRelationshipTest.
- */
-
 namespace Drupal\Tests\field\Kernel\EntityReference\Views;
 
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;

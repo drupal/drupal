@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_test\ConfigTestController.
- */
-
 namespace Drupal\config_test;
 
 use Drupal\Core\Controller\ControllerBase;

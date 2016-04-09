@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Form\UserPermissionsForm.
- */
-
 namespace Drupal\user\Form;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

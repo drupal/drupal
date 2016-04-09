@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Image\Image.
- */
-
 namespace Drupal\Core\Image;
 
 use Drupal\Core\ImageToolkit\ImageToolkitInterface;

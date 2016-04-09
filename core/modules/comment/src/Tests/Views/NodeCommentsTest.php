@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\Views\NodeCommentsTest.
- */
-
 namespace Drupal\comment\Tests\Views;
 
 /**

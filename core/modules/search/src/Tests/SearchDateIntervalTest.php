@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchDateIntervalTest.
- */
-
 namespace Drupal\search\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;

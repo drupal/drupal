@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\Tests\ConfigTranslationOverviewTest.
- */
-
 namespace Drupal\config_translation\Tests;
 
 use Drupal\Component\Utility\Html;

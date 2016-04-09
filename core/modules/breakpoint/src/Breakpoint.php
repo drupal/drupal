@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\breakpoint\Breakpoint.
- */
-
 namespace Drupal\breakpoint;
 
 use Drupal\Core\Plugin\PluginBase;

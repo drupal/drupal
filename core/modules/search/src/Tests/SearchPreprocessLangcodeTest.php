@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchPreprocessLangcodeTest.
- */
 
 namespace Drupal\search\Tests;
 

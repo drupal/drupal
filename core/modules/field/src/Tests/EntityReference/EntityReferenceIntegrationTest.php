@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\EntityReference\EntityReferenceIntegrationTest.
- */
-
 namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Component\Utility\SafeMarkup;

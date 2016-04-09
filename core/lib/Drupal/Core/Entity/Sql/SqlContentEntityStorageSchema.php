@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema.
- */
-
 namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Core\Database\Connection;

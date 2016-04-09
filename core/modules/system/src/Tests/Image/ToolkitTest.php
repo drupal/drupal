@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Image\ToolkitTest.
- */
-
 namespace Drupal\system\Tests\Image;
 
 /**

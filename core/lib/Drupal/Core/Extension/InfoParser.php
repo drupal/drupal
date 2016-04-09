@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Extension\InfoParser.
- */
-
 namespace Drupal\Core\Extension;
 
 /**

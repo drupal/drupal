@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\datetime\Tests\Views\DateTimeHandlerTestBase.
- */
-
 namespace Drupal\datetime\Tests\Views;
 
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;

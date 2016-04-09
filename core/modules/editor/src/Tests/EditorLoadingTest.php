@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\editor\Tests\EditorLoadingTest.
- */
-
 namespace Drupal\editor\Tests;
 
 use Drupal\editor\Entity\Editor;

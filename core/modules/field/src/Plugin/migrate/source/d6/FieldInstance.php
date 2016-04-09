@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Plugin\migrate\source\d6\FieldInstance.
- */
-
 namespace Drupal\field\Plugin\migrate\source\d6;
 
 use Drupal\migrate\Row;

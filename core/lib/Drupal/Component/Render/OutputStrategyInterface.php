@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Render\OutputStrategyInterface.
- */
-
 namespace Drupal\Component\Render;
 
 /**

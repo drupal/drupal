@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserFieldsTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\user\Entity\User;

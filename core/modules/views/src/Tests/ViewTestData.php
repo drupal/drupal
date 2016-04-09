@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\ViewTestData.
- */
-
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Config\FileStorage;

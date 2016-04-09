@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\Plugin\Field\FieldType\CreatedItem.
- */
-
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 /**

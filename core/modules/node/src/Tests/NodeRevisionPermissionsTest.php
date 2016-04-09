@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeRevisionPermissionsTest.
- */
-
 namespace Drupal\node\Tests;
 
 /**

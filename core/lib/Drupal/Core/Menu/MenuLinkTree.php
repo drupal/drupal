@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\MenuLinkTree.
- */
-
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Utility\NestedArray;

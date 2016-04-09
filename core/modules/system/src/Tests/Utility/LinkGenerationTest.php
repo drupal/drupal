@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Utility\LinkGenerationTest.
- */
-
 namespace Drupal\system\Tests\Utility;
 
 use Drupal\Component\Render\MarkupInterface;

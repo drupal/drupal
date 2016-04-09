@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\Tests\ContactLanguageTest.
- */
-
 namespace Drupal\contact\Tests;
 
 use Drupal\simpletest\WebTestBase;

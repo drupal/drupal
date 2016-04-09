@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\color\Tests\ColorConfigSchemaTest.
- */
-
 namespace Drupal\color\Tests;
 
 use Drupal\simpletest\WebTestBase;

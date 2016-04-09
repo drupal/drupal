@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\argument\Formula.
- */
-
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\display\DisplayPluginBase;

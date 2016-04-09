@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\text\Plugin\migrate\cckfield\TextField.
- */
-
 namespace Drupal\text\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Plugin\MigrationInterface;

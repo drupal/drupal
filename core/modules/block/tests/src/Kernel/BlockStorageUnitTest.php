@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block\Kernel\BlockStorageUnitTest.
- */
-
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorage;

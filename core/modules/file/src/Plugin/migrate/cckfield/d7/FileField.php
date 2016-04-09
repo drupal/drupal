@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Plugin\migrate\cckfield\d7\FileField.
- */
-
 namespace Drupal\file\Plugin\migrate\cckfield\d7;
 
 use Drupal\migrate\Plugin\MigrationInterface;

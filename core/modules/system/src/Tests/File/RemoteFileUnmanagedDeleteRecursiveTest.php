@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\File\RemoteFileUnmanagedDeleteRecursiveTest.
- */
-
 namespace Drupal\system\Tests\File;
 
 /**

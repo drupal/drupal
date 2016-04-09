@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Plugin\CategorizingPluginManagerInterface.
- */
-
 namespace Drupal\Component\Plugin;
 
 /**

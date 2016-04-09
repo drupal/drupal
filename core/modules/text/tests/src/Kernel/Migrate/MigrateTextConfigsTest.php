@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\text\Kernel\Migrate\MigrateTextConfigsTest.
- */
-
 namespace Drupal\Tests\text\Kernel\Migrate;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;

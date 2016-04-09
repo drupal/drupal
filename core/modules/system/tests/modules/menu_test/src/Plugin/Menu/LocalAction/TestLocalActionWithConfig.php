@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_test\Plugin\Menu\LocalAction\TestLocalActionWithConfig.
- */
-
 namespace Drupal\menu_test\Plugin\Menu\LocalAction;
 
 use Drupal\Core\Config\Config;

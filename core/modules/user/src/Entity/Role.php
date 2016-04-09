@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Entity\Role.
- */
-
 namespace Drupal\user\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

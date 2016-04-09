@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\migrate\process\d6\NodeUpdate7008.
- */
-
 namespace Drupal\node\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutableInterface;

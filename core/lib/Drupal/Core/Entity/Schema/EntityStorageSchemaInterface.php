@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Schema\EntityStorageSchemaInterface.
- */
-
 namespace Drupal\Core\Entity\Schema;
 
 use Drupal\Core\Entity\EntityTypeInterface;

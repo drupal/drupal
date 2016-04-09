@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\ExposedFormTest.
- */
-
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\Component\Utility\Html;

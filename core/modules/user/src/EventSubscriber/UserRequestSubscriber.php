@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\EventSubscriber\UserRequestSubscriber.
- */
-
 namespace Drupal\user\EventSubscriber;
 
 use Drupal\Core\Entity\EntityManagerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\migrate\D6TermNodeDeriver.
- */
-
 namespace Drupal\taxonomy\Plugin\migrate;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;

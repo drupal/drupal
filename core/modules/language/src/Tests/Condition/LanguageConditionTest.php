@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Tests\Condition\LanguageConditionTest.
- */
-
 namespace Drupal\language\Tests\Condition;
 
 use Drupal\language\Entity\ConfigurableLanguage;

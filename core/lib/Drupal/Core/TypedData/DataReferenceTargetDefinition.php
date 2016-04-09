@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Core\TypedData\DataReferenceTargetDefinition.
- */
 
 namespace Drupal\Core\TypedData;
 

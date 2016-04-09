@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\filter\InOperator.
- */
-
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Component\Utility\Unicode;

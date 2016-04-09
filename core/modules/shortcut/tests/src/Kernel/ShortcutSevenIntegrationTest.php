@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\shortcut\Kernel\ShortcutSevenIntegrationTest.
- */
-
 namespace Drupal\Tests\shortcut\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;

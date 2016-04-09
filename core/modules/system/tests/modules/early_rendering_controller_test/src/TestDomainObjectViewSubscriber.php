@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\early_rendering_controller_test\TestDomainObjectViewSubscriber.
- */
-
 namespace Drupal\early_rendering_controller_test;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

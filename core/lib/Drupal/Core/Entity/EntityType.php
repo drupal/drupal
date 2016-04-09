@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityType.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Utility\Unicode;

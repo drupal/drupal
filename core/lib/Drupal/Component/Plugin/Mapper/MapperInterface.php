@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Component\Plugin\Mapper\MapperInterface.
- */
 
 namespace Drupal\Component\Plugin\Mapper;
 

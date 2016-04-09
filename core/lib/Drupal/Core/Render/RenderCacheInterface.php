@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\RenderCacheInterface.
- */
-
 namespace Drupal\Core\Render;
 
 /**

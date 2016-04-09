@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\user\Kernel\Migrate\MigrateUserPictureEntityFormDisplayTest.
- */
-
 namespace Drupal\Tests\user\Kernel\Migrate;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;

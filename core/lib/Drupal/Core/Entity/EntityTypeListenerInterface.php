@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityTypeListenerInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 /**

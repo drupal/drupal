@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\options\Plugin\views\filter\ListField.
- */
-
 namespace Drupal\options\Plugin\views\filter;
 
 use Drupal\views\FieldAPIHandlerTrait;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface.
- */
-
 namespace Drupal\Core\Breadcrumb;
 
 use Drupal\Core\Routing\RouteMatchInterface;

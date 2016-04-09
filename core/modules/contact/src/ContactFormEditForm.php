@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\ContactFormEditForm.
- */
-
 namespace Drupal\contact;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

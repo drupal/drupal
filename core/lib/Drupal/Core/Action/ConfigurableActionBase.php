@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Action\ConfigurableActionBase.
- */
-
 namespace Drupal\Core\Action;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;

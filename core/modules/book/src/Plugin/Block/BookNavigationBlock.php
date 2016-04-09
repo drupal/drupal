@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\Plugin\Block\BookNavigationBlock.
- */
-
 namespace Drupal\book\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;

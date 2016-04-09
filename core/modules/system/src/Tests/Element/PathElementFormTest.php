@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Element\PathElementFormTest.
- */
-
 namespace Drupal\system\Tests\Element;
 
 use Drupal\Core\Form\FormInterface;

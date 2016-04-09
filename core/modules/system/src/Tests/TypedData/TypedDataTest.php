@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\TypedData\TypedDataTest.
- */
-
 namespace Drupal\system\Tests\TypedData;
 
 use Drupal\Core\Field\BaseFieldDefinition;

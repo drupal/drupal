@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Controller\ImageStyleDownloadController.
- */
-
 namespace Drupal\image\Controller;
 
 use Drupal\Component\Utility\Crypt;

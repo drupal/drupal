@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\StringTranslation\Translator\CustomStrings.
- */
-
 namespace Drupal\Core\StringTranslation\Translator;
 
 use Drupal\Core\Site\Settings;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\StyleOpmlTest.
- */
-
 namespace Drupal\views\Tests\Plugin;
 
 /**

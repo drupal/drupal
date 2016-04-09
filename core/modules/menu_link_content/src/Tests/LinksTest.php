@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_link_content\Tests\LinksTest.
- */
-
 namespace Drupal\menu_link_content\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

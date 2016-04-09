@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Path\UrlAlterFunctionalTest.
- */
-
 namespace Drupal\system\Tests\Path;
 
 use Drupal\simpletest\WebTestBase;

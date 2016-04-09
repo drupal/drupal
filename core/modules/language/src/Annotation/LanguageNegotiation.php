@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Annotation\LanguageNegotiation.
- */
-
 namespace Drupal\language\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

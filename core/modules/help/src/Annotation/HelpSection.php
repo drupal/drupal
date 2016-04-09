@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\help\Annotation\HelpSection.
- */
-
 namespace Drupal\help\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

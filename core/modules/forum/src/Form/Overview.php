@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\Form\Overview.
- */
-
 namespace Drupal\forum\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;

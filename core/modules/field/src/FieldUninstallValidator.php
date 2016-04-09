@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\FieldUninstallValidator.
- */
-
 namespace Drupal\field;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

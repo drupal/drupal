@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\Tests\ForumUninstallTest.
- */
-
 namespace Drupal\forum\Tests;
 
 use Drupal\comment\CommentInterface;

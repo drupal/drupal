@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\UrlGeneratorTrait.
- */
-
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;

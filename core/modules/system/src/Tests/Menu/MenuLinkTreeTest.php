@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Menu\MenuLinkTreeTest.
- */
-
 namespace Drupal\system\Tests\Menu;
 
 use Drupal\Core\Menu\MenuLinkTreeElement;

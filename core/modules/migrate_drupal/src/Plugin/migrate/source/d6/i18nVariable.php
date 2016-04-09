@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\i18nVariable.
- */
-
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
 use Drupal\Core\Entity\EntityManagerInterface;

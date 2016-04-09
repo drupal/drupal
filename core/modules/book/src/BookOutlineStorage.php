@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\BookOutlineStorage.
- */
-
 namespace Drupal\book;
 
 use Drupal\Core\Database\Connection;

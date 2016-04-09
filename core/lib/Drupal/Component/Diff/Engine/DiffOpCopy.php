@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Diff\Engine\DiffOpCopy.
- */
-
 namespace Drupal\Component\Diff\Engine;
 
 /**

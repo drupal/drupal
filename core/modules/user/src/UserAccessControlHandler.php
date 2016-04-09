@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\UserAccessControlHandler.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\Access\AccessResult;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\KeyValueStore\KeyValueContentEntityStorage.
- */
-
 namespace Drupal\Core\Entity\KeyValueStore;
 
 use Drupal\Core\Entity\ContentEntityInterface;

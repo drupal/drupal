@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Core\Asset\AssetCollectionGrouperInterface.
- */
 
 namespace Drupal\Core\Asset;
 

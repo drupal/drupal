@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Installer\Exception\NoProfilesException.
- */
-
 namespace Drupal\Core\Installer\Exception;
 
 use Drupal\Core\StringTranslation\TranslationInterface;

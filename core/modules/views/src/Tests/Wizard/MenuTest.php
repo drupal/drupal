@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Wizard\MenuTest.
- */
-
 namespace Drupal\views\Tests\Wizard;
 
 use Drupal\Component\Utility\SafeMarkup;

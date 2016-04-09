@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityConstraintViolationListInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Session\AccountInterface;

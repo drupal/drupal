@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Executable\ExecutablePluginBase.
- */
-
 namespace Drupal\Core\Executable;
 
 use Drupal\Core\Plugin\ContextAwarePluginBase;

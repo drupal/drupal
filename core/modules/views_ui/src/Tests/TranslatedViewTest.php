@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Tests\TranslatedStringTest.
- */
-
 namespace Drupal\views_ui\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;

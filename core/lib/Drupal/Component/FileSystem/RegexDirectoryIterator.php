@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\FileSystem\RegexDirectoryIterator.
- */
-
 namespace Drupal\Component\FileSystem;
 
 /**

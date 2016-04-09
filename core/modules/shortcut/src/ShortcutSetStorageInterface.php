@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\shortcut\ShortcutSetStorageInterface.
- */
-
 namespace Drupal\shortcut;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;

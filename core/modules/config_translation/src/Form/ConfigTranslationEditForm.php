@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\Form\ConfigTranslationEditForm.
- */
-
 namespace Drupal\config_translation\Form;
 
 use Drupal\Core\Form\FormStateInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\KeyValueStore\StorageTestBase.
- */
-
 namespace Drupal\system\Tests\KeyValueStore;
 
 use Drupal\simpletest\KernelTestBase;

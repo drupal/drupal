@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Tests\LanguageTourTest.
- */
-
 namespace Drupal\language\Tests;
 
 use Drupal\tour\Tests\TourTestBase;

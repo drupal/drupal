@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Path\AliasManagerInterface.
- */
-
 namespace Drupal\Core\Path;
 
 /**

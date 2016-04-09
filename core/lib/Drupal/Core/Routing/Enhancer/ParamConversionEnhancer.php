@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\Enhancer\ParamConversionEnhancer.
- */
-
 namespace Drupal\Core\Routing\Enhancer;
 
 use Drupal\Core\ParamConverter\ParamConverterManagerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_test_data\Cache\ViewsTestCacheContext.
- */
-
 namespace Drupal\views_test_data\Cache;
 
 use Drupal\Core\Cache\CacheableMetadata;

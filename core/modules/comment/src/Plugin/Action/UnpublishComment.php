@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Plugin\Action\UnpublishComment.
- */
-
 namespace Drupal\comment\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;

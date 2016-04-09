@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\Menu\Form\ViewsMenuLinkForm.
- */
-
 namespace Drupal\views\Plugin\Menu\Form;
 
 use Drupal\Core\Form\FormStateInterface;

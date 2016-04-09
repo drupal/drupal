@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Cache\CacheContextOptimizationTest.
- */
-
 namespace Drupal\system\Tests\Cache;
 
 use Drupal\simpletest\KernelTestBase;

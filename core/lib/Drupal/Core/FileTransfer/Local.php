@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\FileTransfer\Local.
- */
-
 namespace Drupal\Core\FileTransfer;
 
 /**

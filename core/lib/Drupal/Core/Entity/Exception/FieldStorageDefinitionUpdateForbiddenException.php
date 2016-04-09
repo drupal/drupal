@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException.
- */
-
 namespace Drupal\Core\Entity\Exception;
 
 use Drupal\Core\Entity\EntityStorageException;

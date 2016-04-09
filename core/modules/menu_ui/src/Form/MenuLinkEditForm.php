@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_ui\Form\MenuLinkEditForm.
- */
-
 namespace Drupal\menu_ui\Form;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;

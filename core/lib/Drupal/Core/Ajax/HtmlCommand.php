@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\HtmlCommand.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

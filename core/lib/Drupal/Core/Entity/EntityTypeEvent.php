@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityTypeEvent.
- */
-
 namespace Drupal\Core\Entity;
 
 use Symfony\Component\EventDispatcher\GenericEvent;

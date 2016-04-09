@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\Views\HandlerFieldFieldTest.
- */
-
 namespace Drupal\field\Tests\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;

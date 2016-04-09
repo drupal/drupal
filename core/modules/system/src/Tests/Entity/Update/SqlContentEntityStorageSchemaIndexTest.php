@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Entity\Update\SqlContentEntityStorageSchemaIndexTest.
- */
-
 namespace Drupal\system\Tests\Entity\Update;
 
 use Drupal\system\Tests\Update\UpdatePathTestBase;

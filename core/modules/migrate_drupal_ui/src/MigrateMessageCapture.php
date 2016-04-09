@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal_ui\MigrateMessageCapture.
- */
-
 namespace Drupal\migrate_drupal_ui;
 
 use Drupal\migrate\MigrateMessageInterface;

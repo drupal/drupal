@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Form\BreakLockForm.
- */
-
 namespace Drupal\views_ui\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;

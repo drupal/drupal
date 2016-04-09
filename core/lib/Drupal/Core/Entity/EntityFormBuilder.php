@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityFormBuilder.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Form\FormBuilderInterface;

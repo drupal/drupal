@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\action\ActionAddForm.
- */
-
 namespace Drupal\action;
 
 use Drupal\Component\Utility\Crypt;

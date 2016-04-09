@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Controller\BlockController.
- */
-
 namespace Drupal\block\Controller;
 
 use Drupal\Component\Utility\Html;

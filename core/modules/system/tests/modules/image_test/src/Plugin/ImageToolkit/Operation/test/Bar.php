@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image_test\Plugin\ImageToolkit\Operation\test\Bar
- */
-
 namespace Drupal\image_test\Plugin\ImageToolkit\Operation\test;
 
 /**

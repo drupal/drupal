@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\DriverNotSpecifiedException.
- */
-
 namespace Drupal\Core\Database;
 
 /**

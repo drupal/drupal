@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\PermissionHandler.
- */
-
 namespace Drupal\user;
 
 use Drupal\Component\Discovery\YamlDiscovery;

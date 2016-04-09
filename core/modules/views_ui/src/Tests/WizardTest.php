@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Tests\WizardTest.
- */
-
 namespace Drupal\views_ui\Tests;
 
 use Drupal\views\Tests\Wizard\WizardTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\aggregator\Kernel\FeedValidationTest.
- */
-
 namespace Drupal\Tests\aggregator\Kernel;
 
 use Drupal\aggregator\Entity\Feed;

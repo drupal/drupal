@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\DependencyInjection\Fixture\BarClass.
- */
-
 namespace Drupal\Tests\Core\DependencyInjection\Fixture;
 
 /**

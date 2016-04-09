@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Tests\StyleTableTest.
- */
-
 namespace Drupal\views_ui\Tests;
 
 use Drupal\views\Views;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\taxonomy\Unit\Migrate\TermSourceWithVocabularyFilterTest.
- */
-
 namespace Drupal\Tests\taxonomy\Unit\Migrate;
 
 /**

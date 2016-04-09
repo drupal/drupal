@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Access\DbUpdateAccessCheck.
- */
-
 namespace Drupal\system\Access;
 
 use Drupal\Core\Routing\Access\AccessInterface;

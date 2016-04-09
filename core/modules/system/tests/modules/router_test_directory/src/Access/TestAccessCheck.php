@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\router_test\Access\TestAccessCheck.
- */
-
 namespace Drupal\router_test\Access;
 
 use Drupal\Core\Access\AccessResult;

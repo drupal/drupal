@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\Views\NodeContextualLinksTest.
- */
-
 namespace Drupal\node\Tests\Views;
 
 use Drupal\Component\Serialization\Json;

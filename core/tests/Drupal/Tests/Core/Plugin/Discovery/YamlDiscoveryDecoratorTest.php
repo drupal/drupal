@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Plugin\Discovery\YamlDiscoveryDecoratorTest.
- */
-
 namespace Drupal\Tests\Core\Plugin\Discovery;
 
 use Drupal\Tests\UnitTestCase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Installer\DistributionProfileTranslationQueryTest.
- */
-
 namespace Drupal\system\Tests\Installer;
 
 use Drupal\Component\Serialization\Yaml;

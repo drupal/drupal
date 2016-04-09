@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Tests\GroupByTest.
- */
-
 namespace Drupal\views_ui\Tests;
 
 /**

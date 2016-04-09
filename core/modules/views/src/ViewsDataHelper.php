@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\ViewsDataHelper.
- */
-
 namespace Drupal\views;
 
 use Drupal\Component\Utility\Unicode;

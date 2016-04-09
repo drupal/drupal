@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dblog\Form\DblogClearLogForm.
- */
-
 namespace Drupal\dblog\Form;
 
 use Drupal\Core\Database\Connection;

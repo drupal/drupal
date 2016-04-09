@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\TermCacheTagsTest.
- */
-
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;

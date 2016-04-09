@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser.
- */
-
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
 use Drupal\Component\Utility\UserAgent;

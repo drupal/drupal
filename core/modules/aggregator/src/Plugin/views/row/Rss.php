@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Plugin\views\row\Rss.
- */
-
 namespace Drupal\aggregator\Plugin\views\row;
 
 use Drupal\views\Plugin\views\row\RssPluginBase;

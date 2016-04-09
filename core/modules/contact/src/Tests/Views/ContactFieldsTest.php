@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\Tests\Views\ContactFieldsTest.
- */
-
 namespace Drupal\contact\Tests\Views;
 
 use Drupal\field\Entity\FieldConfig;

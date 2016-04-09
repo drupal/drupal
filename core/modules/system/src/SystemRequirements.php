@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\SystemRequirements.
- */
-
 namespace Drupal\system;
 
 /**

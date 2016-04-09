@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Tests\DeleteTest.
- */
-
 namespace Drupal\rest\Tests;
 
 use Drupal\Core\Url;

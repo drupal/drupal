@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dblog\Plugin\views\field\DblogOperations.
- */
-
 namespace Drupal\dblog\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;

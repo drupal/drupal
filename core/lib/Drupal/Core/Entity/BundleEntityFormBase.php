@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\BundleEntityFormBase.
- */
-
 namespace Drupal\Core\Entity;
 
 /**

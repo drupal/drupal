@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\system\Tests\Queue\QueueSerializationTest.
- */
 
 namespace Drupal\system\Tests\Queue;
 

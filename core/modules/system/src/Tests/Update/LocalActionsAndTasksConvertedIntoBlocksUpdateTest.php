@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Update\LocalActionsAndTasksConvertedIntoBlocksUpdateTest.
- */
-
 namespace Drupal\system\Tests\Update;
 
 use Drupal\node\Entity\Node;

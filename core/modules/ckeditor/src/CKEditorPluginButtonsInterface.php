@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\CKEditorPluginButtonsInterface.
- */
-
 namespace Drupal\ckeditor;
 
 /**

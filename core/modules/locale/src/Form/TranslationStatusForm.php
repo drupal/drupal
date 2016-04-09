@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Form\TranslationStatusForm.
- */
-
 namespace Drupal\locale\Form;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\EntityReference\EntityReferenceSettingsTest.
- */
-
 namespace Drupal\Tests\field\Kernel\EntityReference;
 
 use Drupal\Component\Utility\Unicode;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\relationship\RelationshipPluginBase.
- */
-
 namespace Drupal\views\Plugin\views\relationship;
 
 use Drupal\Core\Form\FormStateInterface;

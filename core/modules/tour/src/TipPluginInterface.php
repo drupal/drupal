@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tour\TipPluginInterface.
- */
-
 namespace Drupal\tour;
 
 /**

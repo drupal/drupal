@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\File\UrlRewritingTest.
- */
-
 namespace Drupal\system\Tests\File;
 
 use Symfony\Component\HttpFoundation\Request;

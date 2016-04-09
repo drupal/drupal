@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\ServiceProvider\ServiceProviderWebTest.
- */
-
 namespace Drupal\system\Tests\ServiceProvider;
 
 use Drupal\simpletest\WebTestBase;

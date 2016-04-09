@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Transliteration\PhpTransliterationTest.
- */
-
 namespace Drupal\Tests\Component\Transliteration;
 
 use Drupal\Component\Transliteration\PhpTransliteration;

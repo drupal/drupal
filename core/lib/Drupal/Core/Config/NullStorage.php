@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\NullStorage.
- */
-
 namespace Drupal\Core\Config;
 
 /**

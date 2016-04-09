@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\Type\DateTimeInterface.
- */
-
 namespace Drupal\Core\TypedData\Type;
 
 use Drupal\Core\Datetime\DrupalDateTime;

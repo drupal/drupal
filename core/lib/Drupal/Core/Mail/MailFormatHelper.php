@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Mail\MailFormatHelper.
- */
-
 namespace Drupal\Core\Mail;
 
 use Drupal\Component\Utility\Html;

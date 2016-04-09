@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\StreamWrapper\PublicStream.
- */
-
 namespace Drupal\Core\StreamWrapper;
 
 use Drupal\Component\Utility\UrlHelper;

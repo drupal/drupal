@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\options\Kernel\Views\OptionsListArgumentTest.
- */
-
 namespace Drupal\Tests\options\Kernel\Views;
 
 use Drupal\views\Views;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Module\InstallUninstallTest.
- */
-
 namespace Drupal\system\Tests\Module;
 
 use Drupal\Core\Logger\RfcLogLevel;

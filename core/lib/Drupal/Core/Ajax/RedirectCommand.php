@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\RedirectCommand.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

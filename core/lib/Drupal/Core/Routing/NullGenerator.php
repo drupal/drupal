@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\NullGenerator.
- */
-
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Render\BubbleableMetadata;

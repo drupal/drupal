@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\syslog\Logger\SysLog.
- */
-
 namespace Drupal\syslog\Logger;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

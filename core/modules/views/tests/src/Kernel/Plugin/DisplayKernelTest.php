@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Plugin\DisplayKernelTest.
- */
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 

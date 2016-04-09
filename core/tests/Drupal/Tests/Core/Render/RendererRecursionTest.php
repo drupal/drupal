@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\RendererRecursionTest.
- */
-
 namespace Drupal\Tests\Core\Render;
 
 /**

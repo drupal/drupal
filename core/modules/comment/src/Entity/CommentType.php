@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Entity\CommentType.
- */
-
 namespace Drupal\comment\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;

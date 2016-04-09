@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Session\AccountInterface.
- */
-
 namespace Drupal\Core\Session;
 
 /**

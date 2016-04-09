@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tracker\Tests\TrackerNodeAccessTest.
- */
-
 namespace Drupal\tracker\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;

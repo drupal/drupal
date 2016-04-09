@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\Views\ArgumentDefaultTest.
- */
-
 namespace Drupal\user\Tests\Views;
 
 use Drupal\views\Views;

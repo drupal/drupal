@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Update\UpdateKernel.
- */
-
 namespace Drupal\Core\Update;
 
 use Drupal\Core\DrupalKernel;

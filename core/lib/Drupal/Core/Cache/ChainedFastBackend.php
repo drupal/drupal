@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\ChainedFastBackend.
- */
-
 namespace Drupal\Core\Cache;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tour\Tests\TourHelpPageTest.
- */
-
 namespace Drupal\tour\Tests;
 
 use Drupal\simpletest\WebTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\FileUsage\DatabaseFileUsageBackend.
- */
-
 namespace Drupal\file\FileUsage;
 
 use Drupal\Core\Database\Connection;

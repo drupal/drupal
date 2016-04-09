@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter\Form\FilterDisableForm.
- */
-
 namespace Drupal\filter\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;

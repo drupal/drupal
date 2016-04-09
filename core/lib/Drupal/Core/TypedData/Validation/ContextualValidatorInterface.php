@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\Validation\ContextualValidatorInterface.
- */
-
 namespace Drupal\Core\TypedData\Validation;
 
 use Symfony\Component\Validator\Validator\ContextualValidatorInterface as ContextualValidatorInterfaceBase;

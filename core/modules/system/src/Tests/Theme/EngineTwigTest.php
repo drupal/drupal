@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Theme\EngineTwigTest.
- */
-
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\Core\Url;

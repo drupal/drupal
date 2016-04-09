@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\PathProcessor\PathProcessorAliasTest.
- */
-
 namespace Drupal\Tests\Core\PathProcessor;
 
 use Drupal\Core\Cache\Cache;

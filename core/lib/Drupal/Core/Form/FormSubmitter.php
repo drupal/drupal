@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\FormSubmitter.
- */
-
 namespace Drupal\Core\Form;
 
 use Drupal\Core\Url;

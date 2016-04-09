@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\link\Unit\Plugin\Validation\Constraint\LinkAccessConstraintValidatorTest.
- */
-
 namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
 use Drupal\link\Plugin\Validation\Constraint\LinkAccessConstraint;

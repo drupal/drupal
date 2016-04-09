@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\System\ThemeTest.
- */
-
 namespace Drupal\system\Tests\System;
 
 use Drupal\Core\StreamWrapper\PublicStream;

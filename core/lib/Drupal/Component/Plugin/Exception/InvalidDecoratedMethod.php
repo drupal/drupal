@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Component\Plugin\Exception\InvalidDecoratedMethod.
- */
 
 namespace Drupal\Component\Plugin\Exception;
 

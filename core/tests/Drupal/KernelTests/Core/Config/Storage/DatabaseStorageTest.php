@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Config\Storage\DatabaseStorageTest.
- */
-
 namespace Drupal\KernelTests\Core\Config\Storage;
 
 use Drupal\Core\Config\DatabaseStorage;

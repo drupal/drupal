@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserCancelTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\comment\Tests\CommentTestTrait;

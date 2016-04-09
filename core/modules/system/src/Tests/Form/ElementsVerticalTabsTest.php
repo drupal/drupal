@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Form\ElementsVerticalTabsTest.
- */
-
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Component\Utility\SafeMarkup;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\RequestProcessing\RedirectOnExceptionTest.
- */
-
 namespace Drupal\KernelTests\RequestProcessing;
 
 use Drupal\KernelTests\KernelTestBase;

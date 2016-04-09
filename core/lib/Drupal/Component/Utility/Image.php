@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Utility\Image.
- */
-
 namespace Drupal\Component\Utility;
 
 /**

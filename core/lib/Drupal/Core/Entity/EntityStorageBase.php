@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityStorageBase.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Query\QueryInterface;

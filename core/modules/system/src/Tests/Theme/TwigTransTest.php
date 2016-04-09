@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Theme\TwigTransTest.
- */
-
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\Core\Language\LanguageInterface;

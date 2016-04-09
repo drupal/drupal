@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\FieldTypePluginManagerTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Component\Utility\SafeMarkup;

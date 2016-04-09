@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Entity\Node.
- */
-
 namespace Drupal\node\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;

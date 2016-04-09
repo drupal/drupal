@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Tests\BlockTest.
- */
-
 namespace Drupal\block\Tests;
 
 use Drupal\Component\Utility\Html;

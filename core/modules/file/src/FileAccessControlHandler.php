@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\FileAccessControlHandler.
- */
-
 namespace Drupal\file;
 
 use Drupal\Core\Access\AccessResult;

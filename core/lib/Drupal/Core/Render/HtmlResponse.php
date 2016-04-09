@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\HtmlResponse.
- */
-
 namespace Drupal\Core\Render;
 
 use Drupal\Core\Cache\CacheableMetadata;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Common\TagsTest.
- */
-
 namespace Drupal\Tests\Core\Common;
 
 use Drupal\Component\Utility\Tags;

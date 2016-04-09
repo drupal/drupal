@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\link\Plugin\Field\FieldWidget\LinkWidget.
- */
-
 namespace Drupal\link\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\Element\EntityAutocomplete;

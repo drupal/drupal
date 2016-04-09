@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Element\SystemCompactLink.
- */
-
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Url as BaseUrl;

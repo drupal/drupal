@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_import_test\EventSubscriber.
- */
-
 namespace Drupal\config_import_test;
 
 use Drupal\Core\Config\ConfigCrudEvent;

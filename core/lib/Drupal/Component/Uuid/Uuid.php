@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Uuid\Uuid.
- */
-
 namespace Drupal\Component\Uuid;
 
 /**

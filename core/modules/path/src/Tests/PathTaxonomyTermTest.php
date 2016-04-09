@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\Tests\PathTaxonomyTermTest.
- */
-
 namespace Drupal\path\Tests;
 
 use Drupal\taxonomy\Entity\Vocabulary;

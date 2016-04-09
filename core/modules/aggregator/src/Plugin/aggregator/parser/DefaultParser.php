@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Plugin\aggregator\parser\DefaultParser.
- */
-
 namespace Drupal\aggregator\Plugin\aggregator\parser;
 
 use Drupal\aggregator\Plugin\ParserInterface;

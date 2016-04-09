@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\PluginInstanceTest.
- */
-
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\views\Views;

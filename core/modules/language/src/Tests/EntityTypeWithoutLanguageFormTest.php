@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Tests\EntityTypeWithoutLanguageFormTest.
- */
-
 namespace Drupal\language\Tests;
 
 use Drupal\simpletest\WebTestBase;

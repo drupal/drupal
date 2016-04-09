@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Template\TwigNodeTrans.
- */
-
 namespace Drupal\Core\Template;
 
 /**

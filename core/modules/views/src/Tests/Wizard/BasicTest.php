@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Wizard\BasicTest.
- */
-
 namespace Drupal\views\Tests\Wizard;
 
 use Drupal\Component\Serialization\Json;

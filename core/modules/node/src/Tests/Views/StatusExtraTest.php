@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\Views\StatusExtraTest.
- */
-
 namespace Drupal\node\Tests\Views;
 
 /**

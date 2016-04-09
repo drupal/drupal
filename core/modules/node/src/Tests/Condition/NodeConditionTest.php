@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\Condition\NodeConditionTest.
- */
-
 namespace Drupal\node\Tests\Condition;
 
 use Drupal\node\Entity\Node;

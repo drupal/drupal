@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\views\argument\IndexTid.
- */
-
 namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\taxonomy\Entity\Term;

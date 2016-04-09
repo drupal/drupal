@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Listeners\DrupalStandardsListener.
- */
-
 namespace Drupal\Tests\Listeners;
 
 /**

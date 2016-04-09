@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\File\MimeTypeTest.
- */
-
 namespace Drupal\system\Tests\File;
 
 /**

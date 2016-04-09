@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\system\Tests\Theme\TwigWhiteListTest.php.
- */
 
 namespace Drupal\system\Tests\Theme;
 

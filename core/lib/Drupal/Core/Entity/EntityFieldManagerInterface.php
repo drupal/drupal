@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityFieldManagerInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 /**

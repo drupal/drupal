@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Extension\MissingDependencyException.
- */
-
 namespace Drupal\Core\Extension;
 
 /**

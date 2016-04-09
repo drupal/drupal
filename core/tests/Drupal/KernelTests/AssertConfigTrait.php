@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\AssertConfigTrait.
- */
-
 namespace Drupal\KernelTests;
 
 use Drupal\Component\Diff\Diff;

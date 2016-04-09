@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Utility\Xss.
- */
-
 namespace Drupal\Component\Utility;
 
 /**

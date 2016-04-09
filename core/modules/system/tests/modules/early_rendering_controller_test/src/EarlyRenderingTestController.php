@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\early_rendering_controller_test\EarlyRenderingTestController.
- */
-
 namespace Drupal\early_rendering_controller_test;
 
 use Drupal\Core\Ajax\AjaxResponse;

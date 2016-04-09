@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Asset\JsCollectionGrouper.
- */
-
 namespace Drupal\Core\Asset;
 
 /**

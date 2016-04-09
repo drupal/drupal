@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Template\TwigSandboxPolicy.
- */
-
 namespace Drupal\Core\Template;
 
 use Drupal\Core\Site\Settings;

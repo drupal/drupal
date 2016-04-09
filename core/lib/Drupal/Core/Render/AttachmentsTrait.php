@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\AttachmentsTrait.
- */
-
 namespace Drupal\Core\Render;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\Entity\Update\SqlContentEntityStorageSchemaColumnTest.
- */
-
 namespace Drupal\Tests\field\Kernel\Entity\Update;
 
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;

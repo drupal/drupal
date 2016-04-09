@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Plugin\ContextPluginTest.
- */
-
 namespace Drupal\system\Tests\Plugin;
 
 use Drupal\Component\Plugin\Exception\ContextException;

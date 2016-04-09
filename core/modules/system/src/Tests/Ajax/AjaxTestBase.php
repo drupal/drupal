@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Ajax\AjaxTestBase.
- */
-
 namespace Drupal\system\Tests\Ajax;
 
 use Drupal\simpletest\WebTestBase;

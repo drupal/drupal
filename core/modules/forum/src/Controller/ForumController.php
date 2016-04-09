@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\Controller\ForumController.
- */
-
 namespace Drupal\forum\Controller;
 
 use Drupal\Core\Cache\Cache;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\argument_default\Raw.
- */
-
 namespace Drupal\views\Plugin\views\argument_default;
 
 use Drupal\Core\Cache\Cache;

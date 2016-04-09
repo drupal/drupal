@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\Placeholder\ChainedPlaceholderStrategyTest.
- */
-
 namespace Drupal\Tests\Core\Render\Placeholder;
 
 use Drupal\Core\Render\Placeholder\ChainedPlaceholderStrategy;

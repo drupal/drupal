@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\pager\SqlBase.
- */
-
 namespace Drupal\views\Plugin\views\pager;
 
 use Drupal\Core\Cache\Cache;

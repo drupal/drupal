@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Database\SelectSubqueryTest.
- */
-
 namespace Drupal\KernelTests\Core\Database;
 
 /**

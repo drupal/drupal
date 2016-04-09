@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\toolbar\Element\Toolbar.
- */
-
 namespace Drupal\toolbar\Element;
 
 use Drupal\Component\Utility\Html;

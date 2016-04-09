@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Tests\CreateTest.
- */
-
 namespace Drupal\rest\Tests;
 
 use Drupal\comment\Tests\CommentTestTrait;

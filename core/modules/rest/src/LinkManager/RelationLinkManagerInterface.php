@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\LinkManager\RelationLinkManagerInterface.
- */
-
 namespace Drupal\rest\LinkManager;
 
 interface RelationLinkManagerInterface extends ConfigurableLinkManagerInterface {

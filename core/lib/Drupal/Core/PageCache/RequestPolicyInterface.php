@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\PageCache\RequestPolicyInterface.
- */
-
 namespace Drupal\Core\PageCache;
 
 use Symfony\Component\HttpFoundation\Request;

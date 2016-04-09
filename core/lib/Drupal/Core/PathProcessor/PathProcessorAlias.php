@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\PathProcessor\PathProcessorAlias.
- */
-
 namespace Drupal\Core\PathProcessor;
 
 use Drupal\Core\Path\AliasManagerInterface;

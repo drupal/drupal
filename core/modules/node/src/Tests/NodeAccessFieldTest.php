@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeAccessFieldTest.
- */
-
 namespace Drupal\node\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;

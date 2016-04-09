@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Entity\Update\SqlContentEntityStorageSchemaIndexFilledTest.
- */
-
 namespace Drupal\system\Tests\Entity\Update;
 
 /**

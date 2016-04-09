@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Component\Utility\SafeMarkupKernelTest.
- */
-
 namespace Drupal\KernelTests\Component\Utility;
 
 use Drupal\Component\Utility\SafeMarkup;

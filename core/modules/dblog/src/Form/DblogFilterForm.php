@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dblog\Form\DblogFilterForm.
- */
-
 namespace Drupal\dblog\Form;
 
 use Drupal\Core\Form\FormBase;

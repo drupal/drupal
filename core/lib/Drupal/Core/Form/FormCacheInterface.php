@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\FormCacheInterface.
- */
-
 namespace Drupal\Core\Form;
 
 /**

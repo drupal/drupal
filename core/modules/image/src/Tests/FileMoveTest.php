@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Tests\FileMoveTest.
- */
-
 namespace Drupal\image\Tests;
 
 use Drupal\file\Entity\File;

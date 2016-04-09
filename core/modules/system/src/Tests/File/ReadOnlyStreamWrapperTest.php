@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\File\ReadOnlyStreamWrapperTest.
- */
-
 namespace Drupal\system\Tests\File;
 
 /**

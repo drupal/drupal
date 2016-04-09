@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\Plugin\migrate\source\d6\UrlAlias.
- */
-
 namespace Drupal\path\Plugin\migrate\source\d6;
 
 use Drupal\path\Plugin\migrate\source\UrlAliasBase;

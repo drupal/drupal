@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Theme\ThemeSuggestionsAlterTest.
- */
-
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\Component\Utility\Xss;

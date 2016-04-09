@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Access\AccessibleInterface.
- */
-
 namespace Drupal\Core\Access;
 
 use Drupal\Core\Session\AccountInterface;

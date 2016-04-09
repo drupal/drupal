@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\Entity\ConfigEntityBundleBase.
- */
-
 namespace Drupal\Core\Config\Entity;
 
 use Drupal\Core\Config\ConfigNameException;

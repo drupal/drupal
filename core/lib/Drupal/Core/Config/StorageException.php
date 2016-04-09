@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\StorageException.
- */
-
 namespace Drupal\Core\Config;
 
 /**

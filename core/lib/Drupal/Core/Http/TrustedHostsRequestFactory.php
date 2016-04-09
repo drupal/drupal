@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Http\TrustedHostsRequestFactory.
- */
-
 namespace Drupal\Core\Http;
 
 use Symfony\Component\HttpFoundation\Request;

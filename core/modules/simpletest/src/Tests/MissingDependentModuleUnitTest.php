@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\Tests\MissingDependentModuleUnitTest.
- */
-
 namespace Drupal\simpletest\Tests;
 
 use Drupal\simpletest\KernelTestBase;

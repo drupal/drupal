@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation.
- */
-
 namespace Drupal\Core\ImageToolkit\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

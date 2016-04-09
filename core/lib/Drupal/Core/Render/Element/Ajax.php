@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Element\Ajax.
- */
-
 namespace Drupal\Core\Render\Element;
 
 /**

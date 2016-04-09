@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Utility\TokenTest.
- */
-
 namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Component\Utility\Html;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\basic_auth\PageCache\DisallowBasicAuthRequests.
- */
-
 namespace Drupal\basic_auth\PageCache;
 
 use Drupal\Core\PageCache\RequestPolicyInterface;

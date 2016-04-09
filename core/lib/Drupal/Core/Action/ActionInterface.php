@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Action\ActionInterface.
- */
-
 namespace Drupal\Core\Action;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\link\Plugin\migrate\cckfield\LinkField.
- */
-
 namespace Drupal\link\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Plugin\MigrationInterface;

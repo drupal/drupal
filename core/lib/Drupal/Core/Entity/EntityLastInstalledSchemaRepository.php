@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityLastInstalledSchemaRepository.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;

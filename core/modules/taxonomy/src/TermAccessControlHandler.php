@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\TermAccessControlHandler.
- */
-
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Access\AccessResult;

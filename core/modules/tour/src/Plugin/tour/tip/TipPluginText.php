@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tour\Plugin\tour\tip\TipPluginText.
- */
-
 namespace Drupal\tour\Plugin\tour\tip;
 
 use Drupal\Component\Utility\Html;

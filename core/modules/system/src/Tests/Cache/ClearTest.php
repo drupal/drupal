@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Cache\ClearTest.
- */
-
 namespace Drupal\system\Tests\Cache;
 
 /**

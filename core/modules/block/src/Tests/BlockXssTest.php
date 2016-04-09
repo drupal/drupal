@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Tests\BlockXssTest.
- */
-
 namespace Drupal\block\Tests;
 
 use Drupal\block_content\Entity\BlockContent;

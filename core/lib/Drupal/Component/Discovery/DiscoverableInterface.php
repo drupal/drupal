@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Discovery\DiscoverableInterface.
- */
-
 namespace Drupal\Component\Discovery;
 
 /**

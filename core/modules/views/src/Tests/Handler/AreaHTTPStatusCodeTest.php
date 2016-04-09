@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Handler\AreaHTTPStatusCodeTest.
- */
-
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Views;

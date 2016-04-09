@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\file\Unit\Plugin\migrate\source\d6\UploadInstanceTest.
- */
-
 namespace Drupal\Tests\file\Unit\Plugin\migrate\source\d6;
 
 use Drupal\file\Plugin\migrate\source\d6\UploadInstance;

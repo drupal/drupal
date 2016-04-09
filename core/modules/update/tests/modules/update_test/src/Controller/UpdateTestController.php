@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\update_test\Controller\UpdateTestController.
- */
-
 namespace Drupal\update_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

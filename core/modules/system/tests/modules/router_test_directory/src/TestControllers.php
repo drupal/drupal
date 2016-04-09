@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\router_test\TestControllers.
- */
-
 namespace Drupal\router_test;
 
 use Drupal\Core\Cache\CacheableResponse;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Session\MetadataBag.
- */
-
 namespace Drupal\Core\Session;
 
 use Drupal\Core\Site\Settings;

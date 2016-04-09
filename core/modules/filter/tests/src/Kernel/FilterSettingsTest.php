@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\filter\Kernel\FilterSettingsTest.
- */
-
 namespace Drupal\Tests\filter\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;

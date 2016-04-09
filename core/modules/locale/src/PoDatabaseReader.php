@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\PoDatabaseReader.
- */
-
 namespace Drupal\locale;
 
 use Drupal\Component\Gettext\PoHeader;

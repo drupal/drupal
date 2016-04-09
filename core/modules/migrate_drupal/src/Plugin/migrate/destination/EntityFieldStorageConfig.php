@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\destination\EntityFieldStorageConfig.
- */
-
 namespace Drupal\migrate_drupal\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityStorageInterface;

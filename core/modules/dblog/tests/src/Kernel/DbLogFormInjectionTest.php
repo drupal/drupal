@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\dblog\Kernel\DbLogFormInjectionTest.
- */
 
 namespace Drupal\Tests\dblog\Kernel;
 

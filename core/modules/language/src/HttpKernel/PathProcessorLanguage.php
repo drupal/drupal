@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\HttpKernel\PathProcessorLanguage.
- */
-
 namespace Drupal\language\HttpKernel;
 
 use Drupal\Component\Utility\Unicode;

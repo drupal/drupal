@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Component\Assertion\Inspector.
- */
 
 namespace Drupal\Component\Assertion;
 

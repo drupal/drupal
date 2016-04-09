@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException.
- */
-
 namespace Drupal\Core\Asset\Exception;
 
 /**

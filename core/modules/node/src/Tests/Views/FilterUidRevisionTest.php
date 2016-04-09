@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\Views\FilterUidRevisionTest.
- */
-
 namespace Drupal\node\Tests\Views;
 
 use Drupal\views\Views;

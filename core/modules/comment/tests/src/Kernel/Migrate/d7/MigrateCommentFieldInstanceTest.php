@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\Migrate\d7\MigrateCommentFieldInstanceTest.
- */
-
 namespace Drupal\Tests\comment\Kernel\Migrate\d7;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;

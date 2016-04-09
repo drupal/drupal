@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\options\Tests\OptionsDynamicValuesApiTest.
- */
-
 namespace Drupal\options\Tests;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\automated_cron\EventSubscriber\AutomatedCron.
- */
-
 namespace Drupal\automated_cron\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

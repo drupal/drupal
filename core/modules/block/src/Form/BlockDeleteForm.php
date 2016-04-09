@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Form\BlockDeleteForm.
- */
-
 namespace Drupal\block\Form;
 
 use Drupal\Core\Entity\EntityDeleteForm;

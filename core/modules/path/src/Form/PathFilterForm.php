@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\Form\PathFilterForm.
- */
-
 namespace Drupal\path\Form;
 
 use Drupal\Core\Form\FormBase;

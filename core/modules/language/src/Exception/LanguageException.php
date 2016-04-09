@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Exception\LanguageException.
- */
-
 namespace Drupal\language\Exception;
 
 /**

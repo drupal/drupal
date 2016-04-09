@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\editor\Kernel\EditorFileReferenceFilterTest.
- */
-
 namespace Drupal\Tests\editor\Kernel;
 
 use Drupal\Core\Cache\Cache;

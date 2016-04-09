@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\PreExistingConfigException.
- */
-
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\SafeMarkup;

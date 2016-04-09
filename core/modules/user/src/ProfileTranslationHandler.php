@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\ProfileTranslationHandler.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityInterface;

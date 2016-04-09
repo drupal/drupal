@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\MigrateExecutableMemoryExceededTest.
- */
-
 namespace Drupal\Tests\migrate\Unit;
 
 /**

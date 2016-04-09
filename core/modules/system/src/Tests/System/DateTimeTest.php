@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\System\DateTimeTest.
- */
-
 namespace Drupal\system\Tests\System;
 
 use Drupal\Core\Datetime\Entity\DateFormat;

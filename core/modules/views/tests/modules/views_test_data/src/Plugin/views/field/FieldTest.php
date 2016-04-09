@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_test_data\Plugin\views\field\FieldTest.
- */
-
 namespace Drupal\views_test_data\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;

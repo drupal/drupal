@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\condition_test\Plugin\Condition\ConditionTestDualUser.
- */
-
 namespace Drupal\condition_test\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;

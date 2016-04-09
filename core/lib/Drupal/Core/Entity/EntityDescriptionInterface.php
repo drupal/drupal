@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityDescriptionInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\shortcut\Plugin\migrate\destination\ShortcutSetUsers.
- */
-
 namespace Drupal\shortcut\Plugin\migrate\destination;
 
 use Drupal\shortcut\ShortcutSetStorageInterface;

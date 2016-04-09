@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeCreationTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Database\Database;

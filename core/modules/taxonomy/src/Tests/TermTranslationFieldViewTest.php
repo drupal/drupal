@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\TermTranslationFieldViewTest.
- */
-
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\node\Entity\Node;

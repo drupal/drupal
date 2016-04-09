@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\TestDiscovery.
- */
-
 namespace Drupal\simpletest;
 
 use Doctrine\Common\Annotations\SimpleAnnotationReader;

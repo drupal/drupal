@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\Entity\BaseFieldOverride.
- */
-
 namespace Drupal\Core\Field\Entity;
 
 use Drupal\Core\Entity\EntityStorageInterface;

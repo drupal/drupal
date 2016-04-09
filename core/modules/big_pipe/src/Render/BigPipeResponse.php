@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\big_pipe\Render\BigPipeResponse.
- */
-
 namespace Drupal\big_pipe\Render;
 
 use Drupal\Core\Render\HtmlResponse;

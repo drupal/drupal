@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block\Unit\Plugin\DisplayVariant\BlockPageVariantTest.
- */
-
 namespace Drupal\Tests\block\Unit\Plugin\DisplayVariant;
 
 use Drupal\Core\Cache\CacheableMetadata;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal_ui\Tests\d7\MigrateUpgrade7Test.
- */
-
 namespace Drupal\migrate_drupal_ui\Tests\d7;
 
 use Drupal\migrate_drupal_ui\Tests\MigrateUpgradeTestBase;

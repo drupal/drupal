@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Tests\FeedParserTest.
- */
-
 namespace Drupal\aggregator\Tests;
 
 use Drupal\Core\Url;

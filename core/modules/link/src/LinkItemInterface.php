@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\link\LinkItemInterface.
- */
-
 namespace Drupal\link;
 
 use Drupal\Core\Field\FieldItemInterface;

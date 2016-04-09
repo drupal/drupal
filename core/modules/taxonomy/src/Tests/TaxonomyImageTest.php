@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\TaxonomyImageTest.
- */
-
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\field\Entity\FieldConfig;

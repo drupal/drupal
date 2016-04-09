@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tour\Plugin\HelpSection\TourHelpSection.
- */
-
 namespace Drupal\tour\Plugin\HelpSection;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

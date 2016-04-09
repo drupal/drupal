@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\aggregator\Unit\Plugin\AggregatorPluginSettingsBaseTest.
- */
-
 namespace Drupal\Tests\aggregator\Unit\Plugin {
 
 use Drupal\aggregator\Form\SettingsForm;

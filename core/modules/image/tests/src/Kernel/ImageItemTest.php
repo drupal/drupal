@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\image\Kernel\ImageItemTest.
- */
-
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Field\FieldItemInterface;

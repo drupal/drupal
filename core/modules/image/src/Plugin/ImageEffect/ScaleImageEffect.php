@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Plugin\ImageEffect\ScaleImageEffect.
- */
-
 namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Component\Utility\Image;

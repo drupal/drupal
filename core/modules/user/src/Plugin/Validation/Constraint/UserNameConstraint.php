@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\Validation\Constraint\UserNameConstraint.
- */
-
 namespace Drupal\user\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraint;

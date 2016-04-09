@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Database\SelectComplexTest.
- */
-
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;

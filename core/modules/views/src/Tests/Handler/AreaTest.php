@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Handler\AreaTest.
- */
-
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\Component\Utility\Xss;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Render\UrlBubbleableMetadataBubblingTest.
- */
-
 namespace Drupal\system\Tests\Render;
 
 use Drupal\Core\Url;

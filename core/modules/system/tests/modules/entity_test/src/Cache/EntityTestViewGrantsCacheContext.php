@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\Cache\EntityTestViewGrantsCacheContext.
- */
-
 namespace Drupal\entity_test\Cache;
 
 use Drupal\Core\Cache\CacheableMetadata;

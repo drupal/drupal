@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_test\Entity\ConfigQueryTest.
- */
-
 namespace Drupal\config_test\Entity;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\system\Kernel\PhpStorage\PhpStorageFactoryTest.
- */
-
 namespace Drupal\Tests\system\Kernel\PhpStorage;
 
 use Drupal\Component\PhpStorage\MTimeProtectedFileStorage;

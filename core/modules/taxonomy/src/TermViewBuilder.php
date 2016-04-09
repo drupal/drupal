@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\TermViewBuilder.
- */
-
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;

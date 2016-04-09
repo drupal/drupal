@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\taxonomy\Kernel\Migrate\d7\MigrateNodeTaxonomyTest.
- */
-
 namespace Drupal\Tests\taxonomy\Kernel\Migrate\d7;
 
 use Drupal\field\Entity\FieldConfig;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Update\FieldSchemaDataUninstallUpdateTest.
- */
-
 namespace Drupal\system\Tests\Update;
 
 /**
