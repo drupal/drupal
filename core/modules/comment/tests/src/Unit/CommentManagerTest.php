@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Unit\CommentManagerTest.
- */
-
 namespace Drupal\Tests\comment\Unit;
 
 use Drupal\comment\CommentManager;

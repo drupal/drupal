@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Mail\MailInterface.
- */
-
 namespace Drupal\Core\Mail;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ajax_test\Controller\AjaxTestController.
- */
-
 namespace Drupal\ajax_test\Controller;
 
 use Drupal\Core\Ajax\AjaxResponse;

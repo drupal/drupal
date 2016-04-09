@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\help\Kernel\HelpEmptyPageTest.
- */
-
 namespace Drupal\Tests\help\Kernel;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

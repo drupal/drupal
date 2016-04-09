@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\image\Kernel\Migrate\d6\MigrateImageCacheTest.
- */
-
 namespace Drupal\Tests\image\Kernel\Migrate\d6;
 
 use Drupal\Core\Database\Database;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\form_test\ConfirmFormTestForm.
- */
-
 namespace Drupal\form_test;
 
 use Drupal\Core\Form\ConfirmFormBase;

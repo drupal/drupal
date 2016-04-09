@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber.
- */
-
 namespace Drupal\dynamic_page_cache\EventSubscriber;
 
 use Drupal\Core\Cache\Cache;

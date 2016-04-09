@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\error_service_test\ErrorServiceTestServiceProvider.
- */
-
 namespace Drupal\error_service_test;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

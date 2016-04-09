@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\config_translation\Unit\ConfigEntityMapperTest.
- */
-
 namespace Drupal\Tests\config_translation\Unit;
 
 use Drupal\config_translation\ConfigEntityMapper;

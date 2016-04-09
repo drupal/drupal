@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\link\Tests\Views\LinkViewsTokensTest.
- */
-
 namespace Drupal\link\Tests\Views;
 
 use Drupal\field\Entity\FieldConfig;

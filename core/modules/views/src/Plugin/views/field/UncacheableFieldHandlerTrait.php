@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\field\UncacheableFieldHandlerTrait.
- */
-
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\ResultRow;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Core\Asset\AssetCollectionRendererInterface.
- */
 
 namespace Drupal\Core\Asset;
 

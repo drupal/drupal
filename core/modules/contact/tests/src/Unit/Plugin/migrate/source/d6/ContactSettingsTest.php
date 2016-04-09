@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\contact\Unit\Plugin\migrate\source\d6\ContactSettingsTest.
- */
-
 namespace Drupal\Tests\contact\Unit\Plugin\migrate\source\d6;
 
 use Drupal\contact\Plugin\migrate\source\ContactSettings;

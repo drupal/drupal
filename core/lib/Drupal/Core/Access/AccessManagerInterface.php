@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Access\AccessManagerInterface.
- */
-
 namespace Drupal\Core\Access;
 
 use Symfony\Component\HttpFoundation\Request;

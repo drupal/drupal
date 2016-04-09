@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\link\Unit\Plugin\Validation\Constraint\LinkNotExistingInternalConstraintValidatorTest.
- */
-
 namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
 use Drupal\Core\Url;

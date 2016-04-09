@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Cache\PageCacheTagsTestBase.
- */
-
 namespace Drupal\system\Tests\Cache;
 
 use Drupal\Core\Url;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Entity\BaseFieldAccessTest.
- */
-
 namespace Drupal\views\Tests\Entity;
 
 use Drupal\entity_test\Entity\EntityTest;

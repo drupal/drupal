@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\Controller\EntityTestController.
- */
-
 namespace Drupal\entity_test\Controller;
 
 use Drupal\Core\Cache\Cache;

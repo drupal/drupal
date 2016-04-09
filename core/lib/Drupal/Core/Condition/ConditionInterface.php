@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Condition\ConditionInterface.
- */
-
 namespace Drupal\Core\Condition;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;

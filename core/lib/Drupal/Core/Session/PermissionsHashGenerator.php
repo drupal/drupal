@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Session\PermissionsHashGenerator.
- */
-
 namespace Drupal\Core\Session;
 
 use Drupal\Core\PrivateKey;

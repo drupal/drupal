@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\contextual\Kernel\ContextualUnitTest.
- */
-
 namespace Drupal\Tests\contextual\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;

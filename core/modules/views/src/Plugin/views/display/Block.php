@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\display\Block.
- */
-
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Core\Entity\EntityManagerInterface;

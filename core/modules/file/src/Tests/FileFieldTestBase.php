@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Tests\FileFieldTestBase.
- */
-
 namespace Drupal\file\Tests;
 
 use Drupal\field\Entity\FieldStorageConfig;

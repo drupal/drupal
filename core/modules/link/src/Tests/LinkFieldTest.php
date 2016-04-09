@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\link\Tests\LinkFieldTest.
- */
-
 namespace Drupal\link\Tests;
 
 use Drupal\Component\Utility\Html;

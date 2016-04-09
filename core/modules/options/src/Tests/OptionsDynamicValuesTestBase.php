@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\options\Tests\OptionsDynamicValuesTestBase.
- */
-
 namespace Drupal\options\Tests;
 
 use Drupal\field\Entity\FieldConfig;

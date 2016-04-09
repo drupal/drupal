@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\Views\BulkFormTest.
- */
-
 namespace Drupal\user\Tests\Views;
 
 use Drupal\user\RoleInterface;

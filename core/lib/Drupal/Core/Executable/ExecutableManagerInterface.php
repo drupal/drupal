@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Executable\ExecutableManagerInterface.
- */
-
 namespace Drupal\Core\Executable;
 
 use Drupal\Component\Plugin\PluginManagerInterface;

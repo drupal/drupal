@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\file\Kernel\Views\ExtensionViewsFieldTest.
- */
-
 namespace Drupal\Tests\file\Kernel\Views;
 
 use Drupal\Core\Render\RenderContext;

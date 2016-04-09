@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Asset\CssCollectionGrouper.
- */
-
 namespace Drupal\Core\Asset;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\quickedit\Plugin\InPlaceEditor\FormEditor.
- */
-
 namespace Drupal\quickedit\Plugin\InPlaceEditor;
 
 use Drupal\Core\Field\FieldItemListInterface;

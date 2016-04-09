@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Plugin\migrate\process\d6\FieldSettings.
- */
-
 namespace Drupal\field\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutableInterface;

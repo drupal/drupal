@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Query\Select.
- */
-
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;

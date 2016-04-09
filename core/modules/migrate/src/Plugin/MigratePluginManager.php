@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\MigratePluginManager.
- */
-
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;

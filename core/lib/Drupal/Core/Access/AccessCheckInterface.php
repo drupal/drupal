@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Access\AccessCheckInterface.
- */
-
 namespace Drupal\Core\Access;
 
 use Symfony\Component\Routing\Route;

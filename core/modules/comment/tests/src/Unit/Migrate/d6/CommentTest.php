@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Unit\Migrate\d6\CommentTest.
- */
-
 namespace Drupal\Tests\comment\Unit\Migrate\d6;
 
 /**

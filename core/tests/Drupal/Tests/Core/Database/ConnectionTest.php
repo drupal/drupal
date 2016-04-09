@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Database\ConnectionTest.
- */
-
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Tests\Core\Database\Stub\StubConnection;

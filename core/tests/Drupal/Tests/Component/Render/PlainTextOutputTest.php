@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Render\PlainTextOutputTest.
- */
-
 namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\PlainTextOutput;

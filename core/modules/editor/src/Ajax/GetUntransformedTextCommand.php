@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\editor\Ajax\GetUntransformedTextCommand.
- */
-
 namespace Drupal\editor\Ajax;
 
 use Drupal\Core\Ajax\BaseCommand;

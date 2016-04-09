@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\big_pipe\Render\BigPipeInterface.
- */
-
 namespace Drupal\big_pipe\Render;
 
 /**

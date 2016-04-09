@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase.
- */
-
 namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;
 
 /**

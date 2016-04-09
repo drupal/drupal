@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\test_page_test\Controller\Test.
- */
-
 namespace Drupal\test_page_test\Controller;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 

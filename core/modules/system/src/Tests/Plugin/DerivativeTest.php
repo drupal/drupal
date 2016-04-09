@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Plugin\DerivativeTest.
- */
-
 namespace Drupal\system\Tests\Plugin;
 
 /**

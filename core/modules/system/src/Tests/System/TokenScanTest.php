@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\System\TokenScanTest.
- */
-
 namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;

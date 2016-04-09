@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\views\field\RevisionLink.
- */
-
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\Core\Url;

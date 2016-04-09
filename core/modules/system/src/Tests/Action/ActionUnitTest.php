@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Action\ActionUnitTest.
- */
-
 namespace Drupal\system\Tests\Action;
 
 use Drupal\simpletest\KernelTestBase;

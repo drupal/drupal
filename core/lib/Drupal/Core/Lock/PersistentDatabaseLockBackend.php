@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Lock\PersistentDatabaseLockBackend.
- */
-
 namespace Drupal\Core\Lock;
 
 use Drupal\Core\Database\Connection;

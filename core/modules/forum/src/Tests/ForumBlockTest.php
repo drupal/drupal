@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\Tests\ForumBlockTest.
- */
-
 namespace Drupal\forum\Tests;
 
 use Drupal\simpletest\WebTestBase;

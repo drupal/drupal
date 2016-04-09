@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\StreamWrapper\ReadOnlyStream.
- */
-
 namespace Drupal\Core\StreamWrapper;
 
 /**

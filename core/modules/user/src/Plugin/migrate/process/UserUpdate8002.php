@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\migrate\process\UserUpdate8002.
- */
-
 namespace Drupal\user\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateExecutableInterface;

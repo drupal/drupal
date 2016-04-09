@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Plugin\Discovery\StaticDiscoveryDecoratorTest.
- */
-
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
 use Drupal\Tests\UnitTestCase;

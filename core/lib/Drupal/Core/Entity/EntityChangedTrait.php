@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityChangedTrait.
- */
-
 namespace Drupal\Core\Entity;
 
 /**

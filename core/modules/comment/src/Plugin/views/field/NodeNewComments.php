@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Plugin\views\field\NodeNewComments.
- */
-
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\Core\Database\Connection;

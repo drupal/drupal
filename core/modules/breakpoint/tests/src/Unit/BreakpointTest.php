@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\breakpoint\Unit\BreakpointTest.
- */
-
 namespace Drupal\Tests\breakpoint\Unit;
 
 use Drupal\breakpoint\Breakpoint;

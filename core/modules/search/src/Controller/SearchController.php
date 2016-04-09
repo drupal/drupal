@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Controller\SearchController.
- */
-
 namespace Drupal\search\Controller;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;

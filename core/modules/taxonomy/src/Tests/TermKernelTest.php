@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\TermKernelTest.
- */
-
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\taxonomy\Entity\Term;

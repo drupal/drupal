@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Tests\UpdateTest.
- */
-
 namespace Drupal\rest\Tests;
 
 use Drupal\Component\Serialization\Json;

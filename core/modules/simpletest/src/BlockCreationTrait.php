@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\BlockCreationTrait.
- */
-
 namespace Drupal\simpletest;
 
 use Drupal\block\Entity\Block;

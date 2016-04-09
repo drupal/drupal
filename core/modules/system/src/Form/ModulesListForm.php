@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Form\ModulesListForm.
- */
-
 namespace Drupal\system\Form;
 
 use Drupal\Component\Utility\Unicode;

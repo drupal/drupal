@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\DependencyInjection\ContainerBuilderTest.
- */
-
 namespace Drupal\Tests\Core\DependencyInjection;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

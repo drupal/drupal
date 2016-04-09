@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Common\AlterTest.
- */
-
 namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\WebTestBase;

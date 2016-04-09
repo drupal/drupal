@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Menu\BreadcrumbTest.
- */
-
 namespace Drupal\system\Tests\Menu;
 
 use Drupal\Core\Url;

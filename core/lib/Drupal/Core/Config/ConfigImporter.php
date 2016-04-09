@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\ConfigImporter.
- */
-
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Config\Importer\MissingContentEvent;

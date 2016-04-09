@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\CommentFieldAccessTest.
- */
 
 namespace Drupal\Tests\comment\Kernel;
 

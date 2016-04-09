@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeAccessPagerTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\comment\CommentInterface;

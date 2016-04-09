@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Menu\DynamicMenuLinkMock.
- */
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Session\AccountInterface;

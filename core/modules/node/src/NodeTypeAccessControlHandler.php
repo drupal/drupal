@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\NodeTypeAccessControlHandler.
- */
-
 namespace Drupal\node;
 
 use Drupal\Core\Access\AccessResult;

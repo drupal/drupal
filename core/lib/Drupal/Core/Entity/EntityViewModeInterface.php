@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityViewModeInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 /**

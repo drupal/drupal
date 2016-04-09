@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\Migrate\d6\MigrateCommentTypeTest.
- */
-
 namespace Drupal\Tests\comment\Kernel\Migrate\d6;
 
 use Drupal\comment\Entity\CommentType;

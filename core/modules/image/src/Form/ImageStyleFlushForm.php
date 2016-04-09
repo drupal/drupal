@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Form\ImageStyleFlushForm.
- */
-
 namespace Drupal\image\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;

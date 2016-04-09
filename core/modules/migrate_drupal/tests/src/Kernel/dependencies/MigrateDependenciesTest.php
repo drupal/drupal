@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate_drupal\Kernel\dependencies\MigrateDependenciesTest.
- */
-
 namespace Drupal\Tests\migrate_drupal\Kernel\dependencies;
 
 use Drupal\Component\Utility\SafeMarkup;

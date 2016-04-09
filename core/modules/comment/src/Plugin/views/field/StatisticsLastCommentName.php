@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Plugin\views\field\StatisticsLastCommentName.
- */
-
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\user\Entity\User;

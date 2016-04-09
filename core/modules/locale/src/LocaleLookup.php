@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\LocaleLookup.
- */
-
 namespace Drupal\locale;
 
 use Drupal\Core\Cache\CacheBackendInterface;

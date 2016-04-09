@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Element\InlineTemplate.
- */
-
 namespace Drupal\Core\Render\Element;
 
 /**

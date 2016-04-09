@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Plugin\Context\ContextInterface.
- */
-
 namespace Drupal\Component\Plugin\Context;
 
 /**

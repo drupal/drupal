@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block_content\Kernel\Migrate\MigrateBlockContentBodyFieldTest.
- */
-
 namespace Drupal\Tests\block_content\Kernel\Migrate;
 
 use Drupal\field\Entity\FieldConfig;

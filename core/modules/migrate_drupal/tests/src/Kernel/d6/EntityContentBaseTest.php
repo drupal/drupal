@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate_drupal\Kernel\d6\EntityContentBaseTest.
- */
-
 namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
 use Drupal\field\Entity\FieldConfig;

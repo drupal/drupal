@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\ban\Kernel\Migrate\d7\MigrateBlockedIPsTest.
- */
-
 namespace Drupal\Tests\ban\Kernel\Migrate\d7;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\MigrateDestinationInterface.
- */
-
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

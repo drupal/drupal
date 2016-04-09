@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\CommentStringIdEntitiesTest.
- */
-
 namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\Entity\CommentType;

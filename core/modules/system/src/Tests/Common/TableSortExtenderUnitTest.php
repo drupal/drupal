@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Common\TableSortExtenderUnitTest.
- */
-
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\Html;

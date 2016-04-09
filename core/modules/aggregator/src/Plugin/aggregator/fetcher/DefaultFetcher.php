@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Plugin\aggregator\fetcher\DefaultFetcher.
- */
-
 namespace Drupal\aggregator\Plugin\aggregator\fetcher;
 
 use Drupal\aggregator\Plugin\FetcherInterface;

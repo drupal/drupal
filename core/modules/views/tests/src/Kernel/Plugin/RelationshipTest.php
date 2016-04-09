@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Plugin\RelationshipTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\simpletest\UserCreationTrait;

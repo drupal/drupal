@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Datetime\Entity\DateFormat.
- */
-
 namespace Drupal\Core\Datetime\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

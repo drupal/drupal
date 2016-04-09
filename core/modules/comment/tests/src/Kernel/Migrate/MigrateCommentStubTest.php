@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\Migrate\MigrateCommentStubTest.
- */
-
 namespace Drupal\Tests\comment\Kernel\Migrate;
 
 use Drupal\comment\Entity\CommentType;

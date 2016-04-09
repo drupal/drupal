@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\Views\FieldTestBase.
- */
-
 namespace Drupal\field\Tests\Views;
 
 use Drupal\field\Entity\FieldConfig;

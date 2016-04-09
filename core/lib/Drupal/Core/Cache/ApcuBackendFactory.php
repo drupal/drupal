@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\ApcuBackendFactory.
- */
-
 namespace Drupal\Core\Cache;
 
 use Drupal\Core\Site\Settings;

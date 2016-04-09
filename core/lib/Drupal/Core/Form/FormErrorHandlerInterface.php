@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\FormErrorHandlerInterface.
- */
-
 namespace Drupal\Core\Form;
 
 /**

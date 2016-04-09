@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Block\BlockManager.
- */
-
 namespace Drupal\Core\Block;
 
 use Drupal\Component\Plugin\FallbackPluginManagerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\CacheableRedirectResponse.
- */
-
 namespace Drupal\Core\Cache;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;

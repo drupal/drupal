@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\twig_extension_test\TwigExtension\TestExtension.
- */
-
 namespace Drupal\twig_extension_test\TwigExtension;
 
 use Drupal\Core\Template\TwigExtension;

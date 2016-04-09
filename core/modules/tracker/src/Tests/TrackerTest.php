@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tracker\Tests\TrackerTest.
- */
-
 namespace Drupal\tracker\Tests;
 
 use Drupal\comment\CommentInterface;

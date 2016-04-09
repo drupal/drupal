@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\options\Tests\OptionsWidgetsTest.
- */
-
 namespace Drupal\options\Tests;
 
 use Drupal\entity_test\Entity\EntityTest;

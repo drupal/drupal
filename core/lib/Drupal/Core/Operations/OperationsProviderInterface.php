@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Operations\OperationsProviderInterface.
- */
-
 namespace Drupal\Core\Operations;
 
 /**

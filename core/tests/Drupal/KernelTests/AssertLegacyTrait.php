@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\AssertLegacyTrait.
- */
-
 namespace Drupal\KernelTests;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Access\AccessException.
- */
-
 namespace Drupal\Core\Access;
 
 /**

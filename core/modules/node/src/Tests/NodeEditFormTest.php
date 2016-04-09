@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeEditFormTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\node\NodeInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Template\Loader\FilesystemLoader.
- */
-
 namespace Drupal\Core\Template\Loader;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

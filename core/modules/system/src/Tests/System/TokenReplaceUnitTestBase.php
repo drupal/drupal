@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\System\TokenReplaceUnitTestBase.
- */
-
 namespace Drupal\system\Tests\System;
 
 use Drupal\system\Tests\Entity\EntityUnitTestBase;

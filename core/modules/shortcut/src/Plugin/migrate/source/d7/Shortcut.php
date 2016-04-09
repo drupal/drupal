@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\shortcut\Plugin\migrate\source\d7\Shortcut.
- */
 
 namespace Drupal\shortcut\Plugin\migrate\source\d7;
 

@@ -1,7 +1,4 @@
 <?php
-/**
- * @file \Drupal\KernelTests\Core\Cache\CacheCollectorTest.
- */
 
 namespace Drupal\KernelTests\Core\Cache;
 

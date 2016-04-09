@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Access\NodePreviewAccessCheck.
- */
-
 namespace Drupal\node\Access;
 
 use Drupal\Core\Entity\EntityManagerInterface;

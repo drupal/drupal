@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\node\Kernel\Migrate\MigrateNodeStubTest.
- */
-
 namespace Drupal\Tests\node\Kernel\Migrate;
 
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;

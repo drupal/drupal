@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Session\PermissionsHashGeneratorInterface.
- */
-
 namespace Drupal\Core\Session;
 
 /**

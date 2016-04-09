@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Archiver\Zip.
- */
-
 namespace Drupal\Core\Archiver;
 
 /**

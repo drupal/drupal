@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\AlertCommand.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

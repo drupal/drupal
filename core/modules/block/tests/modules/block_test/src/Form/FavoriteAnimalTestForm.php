@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_test\Form\FavoriteAnimalTestForm.
- */
-
 namespace Drupal\block_test\Form;
 
 use Drupal\Core\Form\FormBase;

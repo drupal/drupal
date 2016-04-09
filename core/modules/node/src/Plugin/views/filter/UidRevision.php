@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\views\filter\UidRevision.
- */
-
 namespace Drupal\node\Plugin\views\filter;
 
 use Drupal\user\Plugin\views\filter\Name;

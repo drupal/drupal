@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Datetime\DateFormatterInterface.
- */
-
 namespace Drupal\Core\Datetime;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\serialization\Unit\EntityResolver\UuidResolverTest.
- */
-
 namespace Drupal\Tests\serialization\Unit\EntityResolver;
 
 use Drupal\Tests\UnitTestCase;

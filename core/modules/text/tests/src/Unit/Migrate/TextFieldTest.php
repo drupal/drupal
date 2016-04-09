@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\text\Unit\Migrate\TextFieldTest.
- */
-
 namespace Drupal\Tests\text\Unit\Migrate;
 
 use Drupal\migrate\Plugin\MigrationInterface;

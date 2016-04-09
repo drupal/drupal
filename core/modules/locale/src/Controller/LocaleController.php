@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\locale\Controller\LocaleController.
- */
 
 namespace Drupal\locale\Controller;
 

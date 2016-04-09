@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\DependencyInjection\Compiler\GuzzleMiddlewarePass.
- */
-
 namespace Drupal\Core\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;

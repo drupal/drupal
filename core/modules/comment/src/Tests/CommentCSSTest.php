@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\CommentCSSTest.
- */
-
 namespace Drupal\comment\Tests;
 
 use Drupal\Core\Language\LanguageInterface;

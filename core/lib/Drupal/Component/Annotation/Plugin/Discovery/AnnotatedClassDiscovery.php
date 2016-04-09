@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery.
- */
-
 namespace Drupal\Component\Annotation\Plugin\Discovery;
 
 use Drupal\Component\Annotation\AnnotationInterface;

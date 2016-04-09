@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\DependencyInjection\Dumper\PhpArrayDumperTest.
- */
-
 namespace Drupal\Tests\Component\DependencyInjection\Dumper;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;

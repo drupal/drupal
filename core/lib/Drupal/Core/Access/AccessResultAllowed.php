@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Access\AccessResultAllowed.
- */
-
 namespace Drupal\Core\Access;
 
 /**

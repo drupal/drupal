@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\contact\Kernel\Migrate\MigrateContactCategoryTest.
- */
-
 namespace Drupal\Tests\contact\Kernel\Migrate;
 
 use Drupal\contact\Entity\ContactForm;

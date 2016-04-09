@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Plugin\views\row\Rss.
- */
-
 namespace Drupal\comment\Plugin\views\row;
 
 use Drupal\views\Plugin\views\row\RssPluginBase;

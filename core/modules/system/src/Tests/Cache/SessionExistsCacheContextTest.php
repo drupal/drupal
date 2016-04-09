@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Cache\SessionExistsCacheContextTest.
- */
-
 namespace Drupal\system\Tests\Cache;
 
 use Drupal\Core\Url;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Common\AddFeedTest.
- */
-
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Core\Url;

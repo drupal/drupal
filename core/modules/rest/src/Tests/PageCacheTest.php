@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Tests\PageCacheTest.
- */
-
 namespace Drupal\rest\Tests;
 
 /**

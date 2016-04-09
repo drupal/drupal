@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityDefinitionUpdateTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;

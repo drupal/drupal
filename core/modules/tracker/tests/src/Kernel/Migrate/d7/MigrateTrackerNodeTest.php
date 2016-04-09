@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\tracker\Kernel\Migrate\d7\MigrateTrackerNodeTest.
- */
-
 namespace Drupal\Tests\tracker\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;

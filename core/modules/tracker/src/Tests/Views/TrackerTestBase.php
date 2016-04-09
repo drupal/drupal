@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tracker\Tests\Views\TrackerTestBase.
- */
-
 namespace Drupal\tracker\Tests\Views;
 
 use Drupal\comment\Tests\CommentTestTrait;

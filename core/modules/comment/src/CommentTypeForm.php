@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\CommentTypeForm.
- */
-
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityForm;

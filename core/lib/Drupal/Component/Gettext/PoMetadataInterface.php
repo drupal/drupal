@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Gettext\PoMetadataInterface.
- */
-
 namespace Drupal\Component\Gettext;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\action\Plugin\Action\EmailAction.
- */
-
 namespace Drupal\action\Plugin\Action;
 
 use Drupal\Component\Render\PlainTextOutput;

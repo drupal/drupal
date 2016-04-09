@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\locale\Tests\LocaleLibraryAlterTest.
- */
 
 namespace Drupal\locale\Tests;
 

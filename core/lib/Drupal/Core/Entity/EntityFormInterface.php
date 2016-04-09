@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityFormInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

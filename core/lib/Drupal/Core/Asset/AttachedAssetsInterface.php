@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Core\Asset\AttachedAssetsInterface.
- */
 
 namespace Drupal\Core\Asset;
 

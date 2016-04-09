@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Updater\UpdaterFileTransferException.
- */
-
 namespace Drupal\Core\Updater;
 
 /**

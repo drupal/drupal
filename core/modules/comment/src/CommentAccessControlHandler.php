@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\CommentAccessControlHandler.
- */
-
 namespace Drupal\comment;
 
 use Drupal\Core\Access\AccessResult;

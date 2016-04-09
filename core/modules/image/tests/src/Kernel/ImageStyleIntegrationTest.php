@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\image\Kernel\ImageStyleIntegrationTest.
- */
-
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;

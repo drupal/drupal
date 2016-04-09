@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Theme\ThemeManager.
- */
-
 namespace Drupal\Core\Theme;
 
 use Drupal\Component\Render\MarkupInterface;

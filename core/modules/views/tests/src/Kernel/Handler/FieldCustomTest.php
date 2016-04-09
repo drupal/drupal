@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Handler\FieldCustomTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Component\Utility\Xss;

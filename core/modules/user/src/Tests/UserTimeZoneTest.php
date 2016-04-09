@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserTimeZoneTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;

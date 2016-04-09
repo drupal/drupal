@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\ckeditor\Kernel\CKEditorTest.
- */
-
 namespace Drupal\Tests\ckeditor\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;

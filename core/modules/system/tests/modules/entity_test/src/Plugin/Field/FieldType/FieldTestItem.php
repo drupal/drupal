@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\Plugin\Field\FieldType\FieldTestItem.
- */
-
 namespace Drupal\entity_test\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\image\Kernel\Views\ImageViewsDataTest.
- */
-
 namespace Drupal\Tests\image\Kernel\Views;
 
 use Drupal\field\Entity\FieldStorageConfig;

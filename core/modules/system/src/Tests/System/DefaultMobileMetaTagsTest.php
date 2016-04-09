@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\System\DefaultMobileMetaTagsTest.
- */
-
 namespace Drupal\system\Tests\System;
 
 use Drupal\Component\Utility\SafeMarkup;

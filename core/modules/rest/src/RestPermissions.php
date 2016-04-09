@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\RestPermissions.
- */
-
 namespace Drupal\rest;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

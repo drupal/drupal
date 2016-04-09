@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\ViewResultAssertionTrait.
- */
-
 namespace Drupal\views\Tests;
 
 use Drupal\views\Plugin\views\field\Field;

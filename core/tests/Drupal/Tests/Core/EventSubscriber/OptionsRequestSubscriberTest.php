@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\EventSubscriber\OptionsRequestSubscriberTest.
- */
-
 namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Core\EventSubscriber\OptionsRequestSubscriber;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\TermViewsData.
- */
-
 namespace Drupal\taxonomy;
 
 use Drupal\views\EntityViewsData;

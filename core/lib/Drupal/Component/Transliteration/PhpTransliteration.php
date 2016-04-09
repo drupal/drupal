@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Transliteration\PhpTransliteration.
- */
-
 namespace Drupal\Component\Transliteration;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\views\field\NodeBulkForm.
- */
-
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\system\Plugin\views\field\BulkForm;

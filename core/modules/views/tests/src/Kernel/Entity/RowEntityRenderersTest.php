@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Entity\RowEntityRenderersTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Entity;
 
 use Drupal\language\Entity\ConfigurableLanguage;

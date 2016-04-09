@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\ckeditor\Unit\CKEditorPluginManagerTest.
- */
-
 namespace Drupal\Tests\ckeditor\Unit;
 
 use Drupal\ckeditor\CKEditorPluginManager;

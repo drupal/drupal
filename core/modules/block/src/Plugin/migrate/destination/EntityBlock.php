@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Plugin\migrate\destination\EntityBlock.
- */
-
 namespace Drupal\block\Plugin\migrate\destination;
 
 use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;

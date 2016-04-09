@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem.
- */
-
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Html;

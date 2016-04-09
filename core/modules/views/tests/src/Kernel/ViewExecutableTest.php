@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\ViewExecutableTest.
- */
-
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\comment\Tests\CommentTestTrait;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\CommentTypeListBuilder.
- */
-
 namespace Drupal\comment;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;

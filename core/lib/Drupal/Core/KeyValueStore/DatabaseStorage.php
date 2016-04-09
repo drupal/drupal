@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\KeyValueStore\DatabaseStorage.
- */
-
 namespace Drupal\Core\KeyValueStore;
 
 use Drupal\Component\Serialization\SerializationInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Form\ProgrammaticTest.
- */
-
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Core\Form\FormState;

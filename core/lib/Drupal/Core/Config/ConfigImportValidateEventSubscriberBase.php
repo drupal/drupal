@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\ConfigImportValidateEventSubscriberBase.
- */
-
 namespace Drupal\Core\Config;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;

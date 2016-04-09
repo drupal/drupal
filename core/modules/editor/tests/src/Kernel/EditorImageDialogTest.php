@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\editor\Kernel\EditorImageDialogTest.
- */
-
 namespace Drupal\Tests\editor\Kernel;
 
 use Drupal\Core\Form\FormState;

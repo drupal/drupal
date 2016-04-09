@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\session_test\Controller\SessionTestController.
- */
-
 namespace Drupal\session_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

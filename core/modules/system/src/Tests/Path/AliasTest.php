@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Path\AliasTest.
- */
-
 namespace Drupal\system\Tests\Path;
 
 use Drupal\Core\Cache\MemoryCounterBackend;

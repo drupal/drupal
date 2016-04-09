@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\style\Grid.
- */
-
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Component\Utility\Html;

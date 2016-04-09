@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ban\BanMiddleware.
- */
-
 namespace Drupal\ban;
 
 use Drupal\Component\Utility\SafeMarkup;

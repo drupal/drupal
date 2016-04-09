@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\twig_loader_test\Loader\TestLoader.
- */
-
 namespace Drupal\twig_loader_test\Loader;
 
 /**

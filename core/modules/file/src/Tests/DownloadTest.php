@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Tests\DownloadTest.
- */
-
 namespace Drupal\file\Tests;
 
 /**

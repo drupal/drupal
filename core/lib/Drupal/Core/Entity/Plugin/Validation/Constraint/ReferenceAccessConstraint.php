@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Plugin\Validation\Constraint\ReferenceAccessConstraint.
- */
-
 namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraint;

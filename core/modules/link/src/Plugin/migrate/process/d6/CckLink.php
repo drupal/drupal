@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\link\Plugin\migrate\process\d6\CckLink.
- */
-
 namespace Drupal\link\Plugin\migrate\process\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

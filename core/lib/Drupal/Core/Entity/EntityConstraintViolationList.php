@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityConstraintViolationList.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;

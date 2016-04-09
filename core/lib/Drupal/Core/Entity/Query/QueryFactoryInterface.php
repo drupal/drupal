@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Query\QueryFactoryInterface.
- */
-
 namespace Drupal\Core\Entity\Query;
 use Drupal\Core\Entity\EntityTypeInterface;
 

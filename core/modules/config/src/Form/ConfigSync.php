@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Form\ConfigSync.
- */
-
 namespace Drupal\config\Form;
 
 use Drupal\Core\Config\ConfigImporterException;

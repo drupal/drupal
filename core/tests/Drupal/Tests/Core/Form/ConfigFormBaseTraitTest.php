@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Form\ConfigFormBaseTraitTest.
- */
-
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Tests\UnitTestCase;

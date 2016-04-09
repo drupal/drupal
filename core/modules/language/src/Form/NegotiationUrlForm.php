@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Form\NegotiationUrlForm.
- */
-
 namespace Drupal\language\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

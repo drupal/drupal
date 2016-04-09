@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\user\Kernel\Migrate\d6\MigrateUserRoleTest.
- */
-
 namespace Drupal\Tests\user\Kernel\Migrate\d6;
 
 use Drupal\user\Entity\Role;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\content_translation\Kernel\ContentTranslationSyncUnitTest.
- */
-
 namespace Drupal\Tests\content_translation\Kernel;
 
 use Drupal\content_translation\FieldTranslationSynchronizer;

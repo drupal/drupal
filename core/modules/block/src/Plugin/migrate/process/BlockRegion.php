@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Plugin\migrate\process\BlockRegion.
- */
-
 namespace Drupal\block\Plugin\migrate\process;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

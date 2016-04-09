@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_content\Plugin\views\area\ListingEmpty.
- */
-
 namespace Drupal\block_content\Plugin\views\area;
 
 use Drupal\Core\Access\AccessManagerInterface;

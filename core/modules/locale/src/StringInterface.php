@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\StringInterface.
- */
-
 namespace Drupal\locale;
 
 /**

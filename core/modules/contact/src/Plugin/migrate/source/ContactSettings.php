@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\Plugin\migrate\source\ContactSettings.
- */
-
 namespace Drupal\contact\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\Variable;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Routing\SearchPageRoutes.
- */
-
 namespace Drupal\search\Routing;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

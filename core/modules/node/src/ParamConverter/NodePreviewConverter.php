@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\ParamConverter\NodePreviewConverter.
- */
-
 namespace Drupal\node\ParamConverter;
 
 use Drupal\user\PrivateTempStoreFactory;

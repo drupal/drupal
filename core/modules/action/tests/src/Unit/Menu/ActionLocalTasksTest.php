@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\action\Unit\Menu\ActionLocalTasksTest.
- */
-
 namespace Drupal\Tests\action\Unit\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;

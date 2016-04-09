@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\TransactionException.
- */
-
 namespace Drupal\Core\Database;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\GeneratedLink.
- */
-
 namespace Drupal\Core;
 
 use Drupal\Component\Render\MarkupInterface;

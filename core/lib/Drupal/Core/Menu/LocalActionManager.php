@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\LocalActionManager.
- */
-
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Access\AccessManagerInterface;

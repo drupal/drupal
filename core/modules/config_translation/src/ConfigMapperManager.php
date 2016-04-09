@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\ConfigMapperManager.
- */
-
 namespace Drupal\config_translation;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;

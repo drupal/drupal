@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\Type\UriInterface.
- */
-
 namespace Drupal\Core\TypedData\Type;
 
 use Drupal\Core\TypedData\PrimitiveInterface;

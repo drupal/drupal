@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\quickedit\Access\EditEntityFieldAccessCheckInterface.
- */
-
 namespace Drupal\quickedit\Access;
 
 use Drupal\Core\Entity\EntityInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\MetadataBubblingUrlGeneratorTest.
- */
-
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Render\MetadataBubblingUrlGenerator;

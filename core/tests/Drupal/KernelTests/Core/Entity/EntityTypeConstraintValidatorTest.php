@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityTypeConstraintValidatorTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\TypedData\DataDefinition;

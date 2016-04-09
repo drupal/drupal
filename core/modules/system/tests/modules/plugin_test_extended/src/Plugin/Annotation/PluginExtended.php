@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\plugin_test_extended\Plugin\Annotation\PluginExampleExtended
- */
-
 namespace Drupal\plugin_test_extended\Plugin\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

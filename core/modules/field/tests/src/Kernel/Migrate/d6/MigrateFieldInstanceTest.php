@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\Migrate\d6\MigrateFieldInstanceTest.
- */
-
 namespace Drupal\Tests\field\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;

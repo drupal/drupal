@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\RedirectDestinationTrait.
- */
-
 namespace Drupal\Core\Routing;
 
 /**

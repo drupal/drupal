@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\Email\EmailFieldTest.
- */
-
 namespace Drupal\field\Tests\Email;
 
 use Drupal\Component\Utility\Unicode;

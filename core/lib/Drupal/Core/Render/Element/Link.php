@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Element\Link.
- */
-
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Utility\NestedArray;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserLanguageTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\Core\Language\LanguageInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Utility\TimerTest.
- */
-
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Tests\UnitTestCase;

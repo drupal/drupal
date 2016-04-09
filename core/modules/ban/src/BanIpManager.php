@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ban\BanIpManager.
- */
-
 namespace Drupal\ban;
 
 use Drupal\Core\Database\Connection;

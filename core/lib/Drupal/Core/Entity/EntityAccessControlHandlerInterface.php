@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityAccessControlHandlerInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Field\FieldItemListInterface;

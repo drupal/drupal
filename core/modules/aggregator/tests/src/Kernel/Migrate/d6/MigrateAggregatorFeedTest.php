@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\aggregator\Kernel\Migrate\d6\MigrateAggregatorFeedTest.
- */
-
 namespace Drupal\Tests\aggregator\Kernel\Migrate\d6;
 
 use Drupal\aggregator\Entity\Feed;

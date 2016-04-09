@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\user\Kernel\Views\HandlerFilterRolesTest.
- */
-
 namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\user\Entity\Role;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\Entity\Message.
- */
-
 namespace Drupal\contact\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\FeedViewBuilder.
- */
-
 namespace Drupal\aggregator;
 
 use Drupal\Core\Entity\EntityManagerInterface;

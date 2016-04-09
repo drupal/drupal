@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Tests\ImageFieldValidateTest.
- */
-
 namespace Drupal\image\Tests;
 
 /**

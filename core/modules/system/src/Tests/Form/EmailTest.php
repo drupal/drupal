@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Form\EmailTest.
- */
-
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Component\Serialization\Json;

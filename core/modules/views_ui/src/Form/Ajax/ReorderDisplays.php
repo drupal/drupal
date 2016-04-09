@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Form\Ajax\ReorderDisplays.
- */
-
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Component\Utility\SafeMarkup;

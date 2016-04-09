@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Wizard\TaggedWithTest.
- */
-
 namespace Drupal\views\Tests\Wizard;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;

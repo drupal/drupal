@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\FeedForm.
- */
-
 namespace Drupal\aggregator;
 
 use Drupal\Core\Entity\ContentEntityForm;

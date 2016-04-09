@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\StringTranslation\Translator\StaticTranslation.
- */
-
 namespace Drupal\Core\StringTranslation\Translator;
 
 /**

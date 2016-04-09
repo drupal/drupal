@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\views\argument_validator\Term.
- */
-
 namespace Drupal\taxonomy\Plugin\views\argument_validator;
 
 use Drupal\views\ViewExecutable;

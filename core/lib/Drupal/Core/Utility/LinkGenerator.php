@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Utility\LinkGenerator.
- */
-
 namespace Drupal\Core\Utility;
 
 use Drupal\Component\Serialization\Json;

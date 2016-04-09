@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\ItemViewBuilder.
- */
-
 namespace Drupal\aggregator;
 
 use Drupal\Core\Entity\EntityViewBuilder;

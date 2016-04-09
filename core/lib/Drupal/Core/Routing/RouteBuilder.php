@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\RouteBuilder.
- */
-
 namespace Drupal\Core\Routing;
 
 use Drupal\Component\Discovery\YamlDiscovery;

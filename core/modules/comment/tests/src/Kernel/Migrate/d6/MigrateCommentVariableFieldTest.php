@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\Migrate\d6\MigrateCommentVariableFieldTest.
- */
-
 namespace Drupal\Tests\comment\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;

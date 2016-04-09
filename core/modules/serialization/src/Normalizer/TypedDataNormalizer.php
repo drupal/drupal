@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\serialization\Normalizer\TypedDataNormalizer.
- */
-
 namespace Drupal\serialization\Normalizer;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\quickedit\Plugin\InPlaceEditorInterface.
- */
-
 namespace Drupal\quickedit\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

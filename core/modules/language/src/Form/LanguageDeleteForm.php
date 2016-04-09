@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Form\LanguageDeleteForm.
- */
-
 namespace Drupal\language\Form;
 
 use Drupal\Core\Entity\EntityDeleteForm;

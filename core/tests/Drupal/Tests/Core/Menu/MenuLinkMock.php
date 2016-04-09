@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Menu\MenuLinkMock.
- */
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Cache\Cache;

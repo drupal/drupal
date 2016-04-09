@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\PreloadableRouteProviderInterface.
- */
-
 namespace Drupal\Core\Routing;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Annotation\Plugin.
- */
-
 namespace Drupal\Component\Annotation;
 
 use Drupal\Component\Utility\NestedArray;

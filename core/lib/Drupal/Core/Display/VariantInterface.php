@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Display\VariantInterface.
- */
-
 namespace Drupal\Core\Display;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;

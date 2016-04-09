@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\service_provider_test\ServiceProviderTestServiceProvider.
- */
-
 namespace Drupal\service_provider_test;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

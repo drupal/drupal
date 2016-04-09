@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Tests\Views\StyleSerializerTest.
- */
-
 namespace Drupal\rest\Tests\Views;
 
 use Drupal\Core\Cache\Cache;

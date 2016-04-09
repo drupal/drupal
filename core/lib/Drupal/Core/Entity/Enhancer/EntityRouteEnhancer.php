@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer.
- */
-
 namespace Drupal\Core\Entity\Enhancer;
 
 use Drupal\Core\Routing\Enhancer\RouteEnhancerInterface;

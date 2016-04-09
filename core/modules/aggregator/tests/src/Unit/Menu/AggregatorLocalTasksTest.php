@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\aggregator\Unit\Menu\AggregatorLocalTasksTest.
- */
-
 namespace Drupal\Tests\aggregator\Unit\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;

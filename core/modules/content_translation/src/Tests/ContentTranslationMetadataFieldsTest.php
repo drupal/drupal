@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Tests\ContentTranslationMetadataFieldsTest.
- */
-
 namespace Drupal\content_translation\Tests;
 
 /**

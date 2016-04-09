@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Tests\FileFieldPathTest.
- */
-
 namespace Drupal\file\Tests;
 
 use Drupal\file\Entity\File;

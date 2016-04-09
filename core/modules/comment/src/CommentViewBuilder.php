@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\CommentViewBuilder.
- */
-
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;

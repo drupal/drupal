@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\ApcuBackend.
- */
-
 namespace Drupal\Core\Cache;
 
 /**

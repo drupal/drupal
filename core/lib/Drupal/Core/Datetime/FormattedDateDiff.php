@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Datetime\FormattedDateDiff.
- */
-
 namespace Drupal\Core\Datetime;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;

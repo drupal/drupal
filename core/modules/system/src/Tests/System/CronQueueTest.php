@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\System\CronQueueTest.
- */
-
 namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;

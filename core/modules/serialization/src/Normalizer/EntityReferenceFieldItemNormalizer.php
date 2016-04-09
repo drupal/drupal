@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\serialization\Normalizer\EntityReferenceFieldItemNormalizer.
- */
-
 namespace Drupal\serialization\Normalizer;
 
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;

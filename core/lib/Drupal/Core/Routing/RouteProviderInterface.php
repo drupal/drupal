@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\RouteProviderInterface.
- */
-
 namespace Drupal\Core\Routing;
 
 use Symfony\Cmf\Component\Routing\RouteProviderInterface as RouteProviderBaseInterface;

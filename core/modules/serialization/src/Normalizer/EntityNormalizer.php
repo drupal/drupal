@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\serialization\Normalizer\EntityNormalizer.
- */
-
 namespace Drupal\serialization\Normalizer;
 
 use Drupal\Core\Entity\EntityManagerInterface;

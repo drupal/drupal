@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeAccessGrantsCacheContextTest.
- */
-
 namespace Drupal\node\Tests;
 
 /**

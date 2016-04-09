@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\File\FileSystemInterface.
- */
-
 namespace Drupal\Core\File;
 
 /**

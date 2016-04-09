@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Menu\MenuLinkDefaultFormTest.
- */
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

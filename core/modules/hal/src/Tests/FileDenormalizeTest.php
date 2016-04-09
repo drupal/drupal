@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\hal\Tests\FileDenormalizeTest.
- */
-
 namespace Drupal\hal\Tests;
 
 use Drupal\file\Entity\File;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\Update\UserUpdateEmailToken.
- */
-
 namespace Drupal\user\Tests\Update;
 
 use Drupal\system\Tests\Update\UpdatePathTestBase;

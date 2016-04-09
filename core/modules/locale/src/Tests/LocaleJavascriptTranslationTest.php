@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Tests\LocaleJavascriptTranslationTest.
- */
-
 namespace Drupal\locale\Tests;
 
 use Drupal\Core\Language\LanguageInterface;

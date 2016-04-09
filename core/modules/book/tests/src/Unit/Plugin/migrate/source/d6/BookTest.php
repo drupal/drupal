@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\book\Unit\Plugin\migrate\source\d6\BookTest.
- */
-
 namespace Drupal\Tests\book\Unit\Plugin\migrate\source\d6;
 
 use Drupal\book\Plugin\migrate\source\d6\Book;

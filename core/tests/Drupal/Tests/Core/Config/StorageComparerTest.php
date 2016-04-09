@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Config\StorageComparerTest.
- */
-
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Component\Uuid\Php;

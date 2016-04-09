@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\contact\Kernel\Migrate\d6\MigrateContactSettingsTest.
- */
-
 namespace Drupal\Tests\contact\Kernel\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;

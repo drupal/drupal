@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Query\Delete.
- */
-
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;

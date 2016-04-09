@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Lock\LockBackendAbstract.
- */
-
 namespace Drupal\Core\Lock;
 
 /**

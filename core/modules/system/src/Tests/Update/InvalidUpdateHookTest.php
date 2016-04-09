@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Update\InvalidUpdateHookTest.
- */
-
 namespace Drupal\system\Tests\Update;
 
 use Drupal\simpletest\WebTestBase;

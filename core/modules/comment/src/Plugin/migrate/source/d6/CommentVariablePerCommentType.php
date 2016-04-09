@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Plugin\migrate\source\d6\CommentVariablePerCommentType.
- */
-
 namespace Drupal\comment\Plugin\migrate\source\d6;
 
 /**

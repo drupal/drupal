@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\VocabularyStorage.
- */
-
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorage;

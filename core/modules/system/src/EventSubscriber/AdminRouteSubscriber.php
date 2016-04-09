@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\EventSubscriber\AdminRouteSubscriber.
- */
-
 namespace Drupal\system\EventSubscriber;
 
 use Drupal\Core\Routing\RouteSubscriberBase;

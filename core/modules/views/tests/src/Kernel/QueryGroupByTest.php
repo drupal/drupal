@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\QueryGroupByTest.
- */
-
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\entity_test\Entity\EntityTestMul;

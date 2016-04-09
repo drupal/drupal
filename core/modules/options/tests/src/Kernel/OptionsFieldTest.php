@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\options\Kernel\OptionsFieldTest.
- */
-
 namespace Drupal\Tests\options\Kernel;
 
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;

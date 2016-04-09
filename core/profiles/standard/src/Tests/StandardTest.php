@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\standard\Tests\StandardTest.
- */
-
 namespace Drupal\standard\Tests;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;

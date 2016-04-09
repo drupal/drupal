@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser.
- */
-
 namespace Drupal\user\Plugin\LanguageNegotiation;
 
 use Drupal\language\LanguageNegotiationMethodBase;

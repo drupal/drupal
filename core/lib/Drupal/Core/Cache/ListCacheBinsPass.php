@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\ListCacheBinsPass.
- */
-
 namespace Drupal\Core\Cache;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\BookUninstallValidator.
- */
-
 namespace Drupal\book;
 
 use Drupal\Core\Entity\Query\QueryFactory;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\router_test\TestContent.
- */
-
 namespace Drupal\router_test;
 
 use Drupal\Core\Controller\ControllerBase;

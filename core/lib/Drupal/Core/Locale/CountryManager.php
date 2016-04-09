@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Locale\CountryManager.
- */
-
 namespace Drupal\Core\Locale;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

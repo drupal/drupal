@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\MenuLinkManagerInterface.
- */
-
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\PluginManagerInterface;

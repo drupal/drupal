@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Plugin\SearchPluginBase.
- */
-
 namespace Drupal\search\Plugin;
 
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;

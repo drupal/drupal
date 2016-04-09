@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\TermStorage.
- */
-
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;

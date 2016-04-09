@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Entity\Feed.
- */
-
 namespace Drupal\aggregator\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;

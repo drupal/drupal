@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\Tests\ForumTest.
- */
-
 namespace Drupal\forum\Tests;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;

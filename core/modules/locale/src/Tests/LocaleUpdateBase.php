@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Tests\LocaleUpdateBase.
- */
-
 namespace Drupal\locale\Tests;
 
 use Drupal\Core\StreamWrapper\PublicStream;

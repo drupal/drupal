@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\ContentEntityBase.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Utility\SafeMarkup;

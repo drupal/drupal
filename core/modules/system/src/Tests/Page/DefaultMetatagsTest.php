@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Page\DefaultMetatagsTest.
- */
-
 namespace Drupal\system\Tests\Page;
 
 use Drupal\simpletest\WebTestBase;

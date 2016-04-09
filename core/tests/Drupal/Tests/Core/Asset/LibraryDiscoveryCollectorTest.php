@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Asset\LibraryDiscoveryCollectorTest.
- */
-
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\LibraryDiscoveryCollector;

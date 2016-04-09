@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Block\BlockPluginInterface.
- */
-
 namespace Drupal\Core\Block;
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;

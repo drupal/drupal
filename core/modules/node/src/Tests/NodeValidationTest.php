@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeValidationTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\node\Entity\Node;

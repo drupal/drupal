@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\form_test\EventSubscriber\FormTestEventSubscriber.
- */
-
 namespace Drupal\form_test\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

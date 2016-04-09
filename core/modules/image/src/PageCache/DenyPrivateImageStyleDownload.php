@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\PageCache\DenyPrivateImageStyleDownload.
- */
-
 namespace Drupal\image\PageCache;
 
 use Drupal\Core\PageCache\ResponsePolicyInterface;

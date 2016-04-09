@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rdf\Tests\GetNamespacesTest.
- */
-
 namespace Drupal\rdf\Tests;
 
 use Drupal\simpletest\WebTestBase;

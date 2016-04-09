@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\InvalidQueryException.
- */
-
 namespace Drupal\Core\Database;
 
 /**

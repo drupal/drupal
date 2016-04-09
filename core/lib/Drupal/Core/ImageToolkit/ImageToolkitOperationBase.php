@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ImageToolkit\ImageToolkitOperationBase.
- */
-
 namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;

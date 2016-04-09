@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\SourceString.
- */
-
 namespace Drupal\locale;
 
 /**

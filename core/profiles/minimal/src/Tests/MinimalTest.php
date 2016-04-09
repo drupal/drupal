@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\minimal\Tests\MinimalTest.
- */
-
 namespace Drupal\minimal\Tests;
 
 use Drupal\simpletest\WebTestBase;

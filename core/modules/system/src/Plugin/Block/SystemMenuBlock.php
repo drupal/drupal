@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\Block\SystemMenuBlock.
- */
-
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;

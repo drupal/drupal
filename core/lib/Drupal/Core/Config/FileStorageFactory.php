@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\FileStorageFactory.
- */
-
 namespace Drupal\Core\Config;
 
 /**

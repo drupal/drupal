@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Controller\ThemeController.
- */
-
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

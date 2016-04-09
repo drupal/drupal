@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\File\DirectoryTest.
- */
-
 namespace Drupal\system\Tests\File;
 
 use Drupal\Component\PhpStorage\FileStorage;

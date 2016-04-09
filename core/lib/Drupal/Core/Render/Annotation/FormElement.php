@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Annotation\FormElement.
- */
-
 namespace Drupal\Core\Render\Annotation;
 
 /**

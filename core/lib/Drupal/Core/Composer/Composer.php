@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Composer\Composer.
- */
-
 namespace Drupal\Core\Composer;
 
 use Drupal\Component\PhpStorage\FileStorage;

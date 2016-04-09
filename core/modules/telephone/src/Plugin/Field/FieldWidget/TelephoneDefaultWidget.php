@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\telephone\Plugin\Field\FieldWidget\TelephoneDefaultWidget.
- */
-
 namespace Drupal\telephone\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;

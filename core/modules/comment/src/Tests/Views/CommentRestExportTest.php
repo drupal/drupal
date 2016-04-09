@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\Views\CommentRestExportTest.
- */
-
 namespace Drupal\comment\Tests\Views;
 
 use Drupal\Component\Serialization\Json;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\MigrateExecutable.
- */
-
 namespace Drupal\migrate;
 
 use Drupal\Core\Utility\Error;

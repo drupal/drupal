@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Utility\RandomTest.
- */
-
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Random;

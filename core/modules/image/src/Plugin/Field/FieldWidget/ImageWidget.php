@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Plugin\Field\FieldWidget\ImageWidget.
- */
-
 namespace Drupal\image\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Utility\Unicode.
- */
-
 namespace Drupal\Component\Utility;
 
 /**

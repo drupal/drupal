@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\EventSubscriber\ResponseGeneratorSubscriber.
- */
-
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\VocabularyListBuilder.
- */
-
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Config\Entity\DraggableListBuilder;

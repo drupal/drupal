@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Form\NodeRevisionRevertForm.
- */
-
 namespace Drupal\node\Form;
 
 use Drupal\Core\Datetime\DateFormatterInterface;

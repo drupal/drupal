@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\menu_ui\Controller\MenuController.
- */
-
 namespace Drupal\menu_ui\Controller;
 
 use Drupal\Component\Utility\Xss;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\ExposedFormCache.
- */
-
 namespace Drupal\views;
 
 /**

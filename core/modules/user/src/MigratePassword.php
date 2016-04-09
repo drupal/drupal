@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\MigratePassword.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\Password\PasswordInterface;

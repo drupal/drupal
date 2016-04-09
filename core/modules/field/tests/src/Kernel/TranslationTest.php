@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\TranslationTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Component\Utility\Unicode;

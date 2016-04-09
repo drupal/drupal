@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\hal\Kernel\EntityNormalizeTest.
- */
-
 namespace Drupal\Tests\hal\Kernel;
 
 use Drupal\comment\Tests\CommentTestTrait;

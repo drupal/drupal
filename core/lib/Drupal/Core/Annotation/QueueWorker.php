@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Annotation\QueueWorker.
- */
-
 namespace Drupal\Core\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

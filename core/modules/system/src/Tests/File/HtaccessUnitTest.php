@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\File\HtaccessUnitTest.
- */
-
 namespace Drupal\system\Tests\File;
 
 use Drupal\Component\Utility\SafeMarkup;

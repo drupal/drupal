@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\EventSubscriber\LocaleTranslationCacheTag.
- */
-
 namespace Drupal\locale\EventSubscriber;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;

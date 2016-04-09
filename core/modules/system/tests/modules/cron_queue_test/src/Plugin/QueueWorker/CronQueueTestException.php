@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestException.
- */
-
 namespace Drupal\cron_queue_test\Plugin\QueueWorker;
 
 use Drupal\Core\Queue\QueueWorkerBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\TempStoreDatabaseTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;

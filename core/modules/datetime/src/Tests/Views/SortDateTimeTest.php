@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\datetime\Tests\Views\SortDateTimeTest.
- */
-
 namespace Drupal\datetime\Tests\Views;
 
 use Drupal\views\Views;

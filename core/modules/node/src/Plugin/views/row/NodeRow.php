@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\views\row\NodeRow.
- */
-
 namespace Drupal\node\Plugin\views\row;
 
 use Drupal\views\Plugin\views\row\EntityRow;

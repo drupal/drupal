@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\Config.
- */
-
 namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Component\Plugin\DependentPluginInterface;

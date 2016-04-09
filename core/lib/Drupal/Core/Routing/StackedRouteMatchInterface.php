@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\StackedRouteMatchInterface.
- */
-
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;

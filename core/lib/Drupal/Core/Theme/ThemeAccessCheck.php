@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Theme\ThemeAccessCheck.
- */
-
 namespace Drupal\Core\Theme;
 
 use Drupal\Core\Access\AccessResult;

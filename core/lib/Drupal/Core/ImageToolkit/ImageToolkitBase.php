@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ImageToolkit\ImageToolkitBase.
- */
-
 namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;

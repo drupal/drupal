@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\BareHtmlPageRendererInterface.
- */
-
 namespace Drupal\Core\Render;
 
 /**

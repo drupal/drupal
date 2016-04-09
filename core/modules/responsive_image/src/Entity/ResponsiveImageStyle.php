@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\responsive_image\Entity\ResponsiveImageStyle.
- */
-
 namespace Drupal\responsive_image\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

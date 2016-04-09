@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Log.
- */
-
 namespace Drupal\Core\Database;
 
 /**

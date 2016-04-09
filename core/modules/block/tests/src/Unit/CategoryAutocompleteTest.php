@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block\Unit\CategoryAutocompleteTest.
- */
-
 namespace Drupal\Tests\block\Unit;
 
 use Drupal\Component\Utility\Html;

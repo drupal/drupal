@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\Action\RemoveRoleUser.
- */
-
 namespace Drupal\user\Plugin\Action;
 
 /**

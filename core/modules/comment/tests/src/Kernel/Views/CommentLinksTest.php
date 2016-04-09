@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\Views\CommentLinksTest.
- */
-
 namespace Drupal\Tests\comment\Kernel\Views;
 
 use Drupal\comment\CommentInterface;

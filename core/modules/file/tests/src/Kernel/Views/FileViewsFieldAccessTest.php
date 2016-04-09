@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\file\Kernel\Views\FileViewsFieldAccessTest.
- */
-
 namespace Drupal\Tests\file\Kernel\Views;
 
 use Drupal\file\Entity\File;

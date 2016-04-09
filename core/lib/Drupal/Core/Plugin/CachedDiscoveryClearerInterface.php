@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Plugin\CachedDiscoveryClearerInterface.
- */
-
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\comment\Unit\Entity\CommentLockTest.
- */
 
 namespace Drupal\Tests\comment\Unit\Entity;
 

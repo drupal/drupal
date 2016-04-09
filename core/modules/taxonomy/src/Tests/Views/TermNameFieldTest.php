@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\Views\TermNameFieldTest.
- */
-
 namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\views\Views;

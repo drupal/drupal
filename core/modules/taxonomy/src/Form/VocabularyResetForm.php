@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Form\VocabularyResetForm.
- */
-
 namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\DefaultLanguageItem.
- */
-
 namespace Drupal\language;
 
 use Drupal\Core\Entity\EntityInterface;

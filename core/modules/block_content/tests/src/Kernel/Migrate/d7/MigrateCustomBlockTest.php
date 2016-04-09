@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block_content\Kernel\Migrate\d7\MigrateCustomBlockTest.
- */
-
 namespace Drupal\Tests\block_content\Kernel\Migrate\d7;
 
 use Drupal\block_content\BlockContentInterface;

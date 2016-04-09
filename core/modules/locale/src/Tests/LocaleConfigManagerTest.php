@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Tests\LocaleConfigManagerTest.
- */
-
 namespace Drupal\locale\Tests;
 
 use Drupal\block\Entity\Block;

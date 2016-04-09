@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\system\Form\ThemeAdminForm.
- */
 
 namespace Drupal\system\Form;
 

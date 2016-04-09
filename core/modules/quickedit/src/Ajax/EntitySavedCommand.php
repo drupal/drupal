@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\quickedit\Ajax\EntitySavedCommand.
- */
-
 namespace Drupal\quickedit\Ajax;
 
 use Drupal\Core\Ajax\BaseCommand;

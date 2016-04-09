@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\MigrateExecutableTest.
- */
-
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Component\Utility\Html;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\Entity\ContactForm.
- */
-
 namespace Drupal\contact\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;

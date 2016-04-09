@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\RoutingEvents.
- */
-
 namespace Drupal\Core\Routing;
 
 /**

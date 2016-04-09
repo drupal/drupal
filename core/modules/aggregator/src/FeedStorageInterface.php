@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\FeedStorageInterface.
- */
-
 namespace Drupal\aggregator;
 
 use Drupal\Core\Entity\ContentEntityStorageInterface;

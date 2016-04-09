@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\BubbleableMetadataTest.
- */
-
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Cache\Cache;

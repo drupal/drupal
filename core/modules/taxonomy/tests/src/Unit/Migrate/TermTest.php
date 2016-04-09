@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\taxonomy\Unit\Migrate\TermTest.
- */
-
 namespace Drupal\Tests\taxonomy\Unit\Migrate;
 
 /**

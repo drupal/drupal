@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Tests\ImageFieldDefaultImagesTest.
- */
-
 namespace Drupal\image\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;

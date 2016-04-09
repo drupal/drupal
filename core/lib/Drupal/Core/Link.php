@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Link.
- */
-
 namespace Drupal\Core;
 
 use Drupal\Core\Render\RenderableInterface;

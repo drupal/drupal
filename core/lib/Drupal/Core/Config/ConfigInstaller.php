@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\ConfigInstaller.
- */
-
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\Crypt;

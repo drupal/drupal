@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Theme\ThemeTest.
- */
-
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\Component\Serialization\Json;

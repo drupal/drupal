@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\Validation\Constraint\UserNameConstraintValidator.
- */
-
 namespace Drupal\user\Plugin\Validation\Constraint;
 
 use Drupal\Component\Utility\Unicode;

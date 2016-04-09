@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\CommentTitleTest.
- */
-
 namespace Drupal\comment\Tests;
 
 /**

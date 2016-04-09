@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Serialization\Exception\InvalidDataTypeException.
- */
-
 namespace Drupal\Component\Serialization\Exception;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Render\FormattableMarkupTest.
- */
-
 namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\FormattableMarkup;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\PathProcessor\InboundPathProcessorInterface.
- */
-
 namespace Drupal\Core\PathProcessor;
 
 use Symfony\Component\HttpFoundation\Request;

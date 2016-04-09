@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase.
- */
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;

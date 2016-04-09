@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\Views\TaxonomyTermViewTest.
- */
-
 namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\Component\Utility\Unicode;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\RouteProcessor\RouteProcessorCurrent.
- */
-
 namespace Drupal\Core\RouteProcessor;
 
 use Drupal\Core\Render\BubbleableMetadata;

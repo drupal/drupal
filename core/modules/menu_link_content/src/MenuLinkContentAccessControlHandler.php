@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\menu_link_content\MenuLinkContentAccessControlHandler.
- */
 
 namespace Drupal\menu_link_content;
 

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\CommentCacheTagsTest.
- */
-
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentInterface;

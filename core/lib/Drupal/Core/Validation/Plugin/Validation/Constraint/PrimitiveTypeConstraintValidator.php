@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraintValidator.
- */
-
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\TypedData\Type\BinaryInterface;

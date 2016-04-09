@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Query\PagerSelectExtender.
- */
-
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;

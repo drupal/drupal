@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Access\CronAccessCheck.
- */
-
 namespace Drupal\system\Access;
 
 use Drupal\Core\Access\AccessResult;

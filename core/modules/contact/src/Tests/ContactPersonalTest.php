@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\Tests\ContactPersonalTest.
- */
-
 namespace Drupal\contact\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

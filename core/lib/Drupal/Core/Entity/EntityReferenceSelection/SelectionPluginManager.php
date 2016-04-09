@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager.
- */
-
 namespace Drupal\Core\Entity\EntityReferenceSelection;
 
 use Drupal\Component\Plugin\FallbackPluginManagerInterface;

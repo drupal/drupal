@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Tests\LocaleUpdateTest.
- */
-
 namespace Drupal\locale\Tests;
 
 use Drupal\Core\Language\LanguageInterface;

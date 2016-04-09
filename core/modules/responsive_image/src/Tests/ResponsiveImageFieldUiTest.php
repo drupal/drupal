@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\responsive_image\Tests\ResponsiveImageFieldUiTest.
- */
-
 namespace Drupal\responsive_image\Tests;
 
 

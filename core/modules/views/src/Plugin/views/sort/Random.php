@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\sort\Random.
- */
-
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;

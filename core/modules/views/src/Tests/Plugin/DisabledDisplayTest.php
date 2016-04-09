@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\DisabledDisplayTest.
- */
-
 namespace Drupal\views\Tests\Plugin;
 
 /**

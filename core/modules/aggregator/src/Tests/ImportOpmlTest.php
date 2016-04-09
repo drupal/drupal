@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Tests\ImportOpmlTest.
- */
-
 namespace Drupal\aggregator\Tests;
 
 /**

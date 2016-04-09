@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Form\UserPasswordForm.
- */
-
 namespace Drupal\user\Form;
 
 use Drupal\Core\Form\FormBase;

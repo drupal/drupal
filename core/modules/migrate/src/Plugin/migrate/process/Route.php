@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\process\Route.
- */
-
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;

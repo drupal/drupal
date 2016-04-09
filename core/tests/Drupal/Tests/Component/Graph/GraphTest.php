@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Graph\GraphTest.
- */
-
 namespace Drupal\Tests\Component\Graph;
 
 use Drupal\Component\Graph\Graph;

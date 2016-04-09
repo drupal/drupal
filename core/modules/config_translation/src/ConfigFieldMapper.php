@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\ConfigFieldMapper.
- */
-
 namespace Drupal\config_translation;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\UserAuth.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityManagerInterface;

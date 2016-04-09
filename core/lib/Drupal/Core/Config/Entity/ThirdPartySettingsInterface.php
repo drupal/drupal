@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\Entity\ThirdPartySettingsInterface.
- */
-
 namespace Drupal\Core\Config\Entity;
 
 /**

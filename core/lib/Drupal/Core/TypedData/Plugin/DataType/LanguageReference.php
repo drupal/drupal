@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\Plugin\DataType\LanguageReference.
- */
-
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
 use Drupal\Core\TypedData\DataReferenceBase;

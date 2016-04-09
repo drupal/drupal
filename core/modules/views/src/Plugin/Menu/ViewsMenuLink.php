@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\Menu\ViewsMenuLink.
- */
-
 namespace Drupal\views\Plugin\Menu;
 
 use Drupal\Core\Menu\MenuLinkBase;

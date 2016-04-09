@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\StackMiddleware\ReverseProxyMiddlewareTest.
- */
-
 namespace Drupal\Tests\Core\StackMiddleware;
 
 use Drupal\Core\Site\Settings;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\FileTransfer\FTPExtension.
- */
-
 namespace Drupal\Core\FileTransfer;
 
 /**

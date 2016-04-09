@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Plugin\DisplayPageTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Core\Menu\MenuTreeParameters;

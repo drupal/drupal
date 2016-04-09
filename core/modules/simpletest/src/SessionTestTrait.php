@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\SessionTestTrait.
- */
-
 namespace Drupal\simpletest;
 
 use Symfony\Component\HttpFoundation\Request;

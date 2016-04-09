@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Utility\SafeMarkup.
- */
-
 namespace Drupal\Component\Utility;
 
 use Drupal\Component\Render\HtmlEscapedText;

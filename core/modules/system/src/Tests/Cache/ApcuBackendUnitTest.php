@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Cache\ApcuBackendUnitTest.
- */
-
 namespace Drupal\system\Tests\Cache;
 
 use Drupal\Core\Cache\Apcu4Backend;

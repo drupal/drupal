@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\Search\NodeSearch.
- */
-
 namespace Drupal\node\Plugin\Search;
 
 use Drupal\Core\Access\AccessResult;

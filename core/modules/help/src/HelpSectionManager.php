@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\help\HelpSectionManager.
- */
-
 namespace Drupal\help;
 
 use Drupal\Core\Cache\CacheBackendInterface;

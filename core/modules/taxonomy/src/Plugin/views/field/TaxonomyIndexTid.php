@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\views\field\TaxonomyIndexTid.
- */
-
 namespace Drupal\taxonomy\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;

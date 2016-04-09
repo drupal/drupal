@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Updater\UpdaterInterface.
- */
-
 namespace Drupal\Core\Updater;
 
 /**

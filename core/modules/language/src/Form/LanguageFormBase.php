@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Form\LanguageFormBase.
- */
-
 namespace Drupal\language\Form;
 
 use Drupal\Component\Utility\Html;

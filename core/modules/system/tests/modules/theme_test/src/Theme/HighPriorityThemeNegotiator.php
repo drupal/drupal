@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\theme_test\Theme\HighPriorityThemeNegotiator.
- */
-
 namespace Drupal\theme_test\Theme;
 
 use Drupal\Core\Routing\RouteMatchInterface;

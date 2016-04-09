@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\argument\FullDate.
- */
-
 namespace Drupal\views\Plugin\views\argument;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\Block\ViewsBlockBase.
- */
-
 namespace Drupal\views\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;

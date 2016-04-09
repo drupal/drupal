@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\KeyValueStore\KeyValueContentEntityStorageTest.
- */
-
 namespace Drupal\system\Tests\KeyValueStore;
 
 use Drupal\Core\Entity\EntityMalformedException;

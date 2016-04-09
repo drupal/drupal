@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\condition_test\FormController.
- */
-
 namespace Drupal\condition_test;
 
 use Drupal\Core\Form\FormInterface;

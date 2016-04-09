@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass.
- */
-
 namespace Drupal\Core\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;

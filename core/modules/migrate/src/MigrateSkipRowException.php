@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\MigrateSkipRowException.
- */
-
 namespace Drupal\migrate;
 
 /**

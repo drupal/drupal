@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Access\CheckProviderInterface.
- */
-
 namespace Drupal\Core\Access;
 
 use Symfony\Component\Routing\RouteCollection;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\sort\Date.
- */
-
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\Core\Form\FormStateInterface;

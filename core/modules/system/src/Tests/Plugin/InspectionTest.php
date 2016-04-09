@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Plugin\InspectionTest.
- */
-
 namespace Drupal\system\Tests\Plugin;
 
 /**

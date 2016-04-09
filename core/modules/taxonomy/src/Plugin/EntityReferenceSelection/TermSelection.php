@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\EntityReferenceSelection\TermSelection.
- */
-
 namespace Drupal\taxonomy\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;

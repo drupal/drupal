@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Routing\RouteMatchTest.
- */
-
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\RouteMatch;

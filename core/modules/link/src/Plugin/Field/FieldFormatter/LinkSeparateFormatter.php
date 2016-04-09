@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\link\Plugin\Field\FieldFormatter\LinkSeparateFormatter.
- */
-
 namespace Drupal\link\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Unicode;

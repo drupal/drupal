@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\ComposerIntegrationTest.
- */
-
 namespace Drupal\Tests;
 
 /**

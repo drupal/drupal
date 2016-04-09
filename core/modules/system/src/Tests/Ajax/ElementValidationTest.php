@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Ajax\ElementValidationTest.
- */
-
 namespace Drupal\system\Tests\Ajax;
 
 /**

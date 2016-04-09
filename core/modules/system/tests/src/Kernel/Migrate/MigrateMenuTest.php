@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\system\Kernel\Migrate\MigrateMenuTest.
- */
-
 namespace Drupal\Tests\system\Kernel\Migrate;
 
 use Drupal\Core\Database\Database;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\rdf\SchemaOrgDataConverter.
- */
 
 namespace Drupal\rdf;
 

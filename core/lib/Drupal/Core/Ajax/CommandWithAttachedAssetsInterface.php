@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\CommandWithAttachedAssetsInterface.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

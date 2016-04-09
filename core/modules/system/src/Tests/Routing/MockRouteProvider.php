@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Routing\MockRouteProvider.
- */
-
 namespace Drupal\system\Tests\Routing;
 
 use Symfony\Component\HttpFoundation\Request;

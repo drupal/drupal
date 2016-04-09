@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Installer\InstallerExistingDatabaseSettingsTest.
- */
-
 namespace Drupal\system\Tests\Installer;
 
 use Drupal\simpletest\InstallerTestBase;

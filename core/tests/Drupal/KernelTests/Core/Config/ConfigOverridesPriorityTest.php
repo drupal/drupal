@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Config\ConfigOverridesPriorityTest.
- */
-
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Language\Language;

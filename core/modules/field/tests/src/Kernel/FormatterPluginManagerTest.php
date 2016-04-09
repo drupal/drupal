@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\FormatterPluginManagerTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Field\BaseFieldDefinition;

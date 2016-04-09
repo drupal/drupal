@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\action\Plugin\Action\MessageAction.
- */
-
 namespace Drupal\action\Plugin\Action;
 
 use Drupal\Core\Access\AccessResult;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_test\Plugin\Validation\Constraint\TestFieldConstraint.
- */
-
 namespace Drupal\field_test\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraints\NotEqualTo;

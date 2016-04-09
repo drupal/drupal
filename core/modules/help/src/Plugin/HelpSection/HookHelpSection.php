@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\help\Plugin\HelpSection\HookHelpSection.
- */
-
 namespace Drupal\help\Plugin\HelpSection;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

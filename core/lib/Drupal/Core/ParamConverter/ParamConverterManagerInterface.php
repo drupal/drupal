@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ParamConverter\ParamConverterManagerInterface.
- */
-
 namespace Drupal\Core\ParamConverter;
 
 use Symfony\Component\Routing\RouteCollection;

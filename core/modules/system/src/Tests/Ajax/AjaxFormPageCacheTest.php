@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Ajax\AjaxFormPageCacheTest.
- */
-
 namespace Drupal\system\Tests\Ajax;
 
 /**

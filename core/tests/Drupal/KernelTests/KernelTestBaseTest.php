@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\KernelTestBaseTest.
- */
-
 namespace Drupal\KernelTests;
 
 use Drupal\Component\FileCache\FileCacheFactory;

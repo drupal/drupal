@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\PathProcessor\NullPathProcessorManager.
- */
-
 namespace Drupal\Core\PathProcessor;
 
 use Drupal\Core\Render\BubbleableMetadata;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\process\StaticMapTest.
- */
 
 namespace Drupal\Tests\migrate\Unit\process;
 

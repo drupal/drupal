@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\ForumManagerInterface.
- */
-
 namespace Drupal\forum;
 
 use Drupal\Core\Session\AccountInterface;

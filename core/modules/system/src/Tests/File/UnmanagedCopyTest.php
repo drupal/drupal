@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\File\UnmanagedCopyTest.
- */
-
 namespace Drupal\system\Tests\File;
 
 use Drupal\Core\Site\Settings;

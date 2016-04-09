@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\Tests\user\Kernel\Migrate\d7\UserMigrationClassTest.
- */
-
 namespace Drupal\Tests\user\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;

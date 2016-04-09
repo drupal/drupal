@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\StringDatabaseStorage.
- */
-
 namespace Drupal\locale;
 
 use Drupal\Core\Database\Connection;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Config\ConfigLanguageOverrideTest.
- */
-
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\language\Entity\ConfigurableLanguage;

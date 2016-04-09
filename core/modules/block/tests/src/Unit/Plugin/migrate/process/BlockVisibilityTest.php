@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block\Unit\Plugin\migrate\process\BlockVisibilityTest.
- */
-
 namespace Drupal\Tests\block\Unit\Plugin\migrate\process;
 
 use Drupal\block\Plugin\migrate\process\BlockVisibility;

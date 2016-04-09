@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Tests\LanguageFallbackTest.
- */
-
 namespace Drupal\language\Tests;
 
 use Drupal\Core\Language\LanguageInterface;

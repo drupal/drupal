@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\RestripeCommand.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

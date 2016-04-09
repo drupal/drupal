@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Diff\Engine\DiffOpDelete.
- */
-
 namespace Drupal\Component\Diff\Engine;
 
 /**

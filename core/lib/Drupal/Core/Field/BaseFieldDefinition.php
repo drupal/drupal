@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\BaseFieldDefinition.
- */
-
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;

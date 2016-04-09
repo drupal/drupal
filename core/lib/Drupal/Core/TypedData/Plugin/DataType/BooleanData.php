@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\Plugin\DataType\BooleanData.
- */
-
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
 use Drupal\Core\TypedData\PrimitiveBase;

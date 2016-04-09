@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ImageToolkit\ImageToolkitOperationManager.
- */
-
 namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Core\Cache\CacheBackendInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\Element\FieldUiTable.
- */
-
 namespace Drupal\field_ui\Element;
 
 use Drupal\Component\Utility\Html;

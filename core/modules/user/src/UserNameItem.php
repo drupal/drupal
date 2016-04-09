@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\UserNameItem.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;

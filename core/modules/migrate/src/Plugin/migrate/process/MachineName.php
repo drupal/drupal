@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\process\MachineName.
- */
-
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Component\Transliteration\TransliterationInterface;

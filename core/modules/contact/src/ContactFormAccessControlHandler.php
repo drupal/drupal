@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\ContactFormAccessControlHandler.
- */
-
 namespace Drupal\contact;
 
 use Drupal\Core\Access\AccessResult;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Database\OrderByTest.
- */
-
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\Query\Select;

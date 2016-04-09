@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\HttpKernel\StackKernelIntegrationTest.
- */
-
 namespace Drupal\system\Tests\HttpKernel;
 
 use Drupal\simpletest\KernelTestBase;

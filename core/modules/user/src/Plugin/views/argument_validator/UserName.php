@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\views\argument_validator\UserName.
- */
-
 namespace Drupal\user\Plugin\views\argument_validator;
 
 use Drupal\Core\Form\FormStateInterface;

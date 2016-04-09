@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\FieldApiDataTest.
- */
-
 namespace Drupal\views\Tests;
 
 use Drupal\Component\Render\MarkupInterface;

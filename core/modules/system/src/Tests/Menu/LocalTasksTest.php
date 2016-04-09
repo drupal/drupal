@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Menu\LocalTasksTest.
- */
-
 namespace Drupal\system\Tests\Menu;
 
 use Drupal\Component\Utility\Html;

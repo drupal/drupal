@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Unit\CommentLinkBuilderTest.
- */
-
 namespace Drupal\Tests\comment\Unit {
 
 use Drupal\comment\CommentLinkBuilder;

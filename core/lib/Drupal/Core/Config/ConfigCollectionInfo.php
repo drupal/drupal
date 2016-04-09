@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\ConfigCollectionInfo.
- */
-
 namespace Drupal\Core\Config;
 
 use Symfony\Component\EventDispatcher\Event;

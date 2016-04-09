@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\Form\SimpletestResultsForm.
- */
-
 namespace Drupal\simpletest\Form;
 
 use Drupal\Core\Database\Connection;

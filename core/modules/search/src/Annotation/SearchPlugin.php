@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Annotation\SearchPlugin.
- */
-
 namespace Drupal\search\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

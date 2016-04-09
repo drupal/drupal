@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Asset\JsOptimizer.
- */
-
 namespace Drupal\Core\Asset;
 
 use Drupal\Component\Utility\Unicode;

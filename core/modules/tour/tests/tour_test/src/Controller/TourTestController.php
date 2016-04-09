@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tour_test\Controller\TourTestController.
- */
-
 namespace Drupal\tour_test\Controller;
 
 /**

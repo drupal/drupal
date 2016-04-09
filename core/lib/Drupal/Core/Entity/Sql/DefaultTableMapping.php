@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Sql\DefaultTableMapping.
- */
-
 namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;

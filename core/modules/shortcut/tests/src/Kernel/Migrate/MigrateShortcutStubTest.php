@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\shortcut\Kernel\Migrate\MigrateShortcutStubTest.
- */
-
 namespace Drupal\Tests\shortcut\Kernel\Migrate;
 
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;

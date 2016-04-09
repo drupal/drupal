@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Form\ModulesListExperimentalConfirmForm.
- */
-
 namespace Drupal\system\Form;
 
 /**

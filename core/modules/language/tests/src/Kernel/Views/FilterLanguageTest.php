@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\language\Kernel\Views\FilterLanguageTest.
- */
-
 namespace Drupal\Tests\language\Kernel\Views;
 
 use Drupal\views\Views;

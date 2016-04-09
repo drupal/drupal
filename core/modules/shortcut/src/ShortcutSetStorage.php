@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\shortcut\ShortcutSetStorage.
- */
-
 namespace Drupal\shortcut;
 
 use Drupal\Component\Uuid\UuidInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Driver\mysql\Install\Tasks.
- */
-
 namespace Drupal\Core\Database\Driver\mysql\Install;
 
 use Drupal\Core\Database\Install\Tasks as InstallTasks;

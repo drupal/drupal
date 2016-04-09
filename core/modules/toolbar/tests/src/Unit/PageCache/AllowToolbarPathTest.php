@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\toolbar\Unit\PageCache\AllowToolbarPathTest.
- */
-
 namespace Drupal\Tests\toolbar\Unit\PageCache;
 
 use Drupal\toolbar\PageCache\AllowToolbarPath;

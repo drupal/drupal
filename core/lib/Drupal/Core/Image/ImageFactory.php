@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Image\ImageFactory.
- */
-
 namespace Drupal\Core\Image;
 
 use Drupal\Core\ImageToolkit\ImageToolkitManager;

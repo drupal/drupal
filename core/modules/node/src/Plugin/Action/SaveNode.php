@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\Action\SaveNode.
- */
-
 namespace Drupal\node\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;

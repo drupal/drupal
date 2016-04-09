@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Utility\Bytes.
- */
-
 namespace Drupal\Component\Utility;
 
 /**

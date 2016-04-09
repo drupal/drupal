@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Utility\Crypt.
- */
-
 namespace Drupal\Component\Utility;
 
 /**

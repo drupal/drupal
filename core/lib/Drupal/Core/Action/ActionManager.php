@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Action\ActionManager.
- */
-
 namespace Drupal\Core\Action;
 
 use Drupal\Component\Plugin\CategorizingPluginManagerInterface;

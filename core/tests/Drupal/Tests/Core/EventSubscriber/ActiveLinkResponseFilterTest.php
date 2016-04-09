@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\EventSubscriber\ActiveLinkResponseFilterTest.
- */
-
 namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Component\Serialization\Json;

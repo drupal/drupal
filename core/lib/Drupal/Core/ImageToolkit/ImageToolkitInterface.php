@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ImageToolkit\ImageToolkitInterface.
- */
-
 namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

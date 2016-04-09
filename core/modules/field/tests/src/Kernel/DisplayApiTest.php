@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\DisplayApiTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\TestBase.
- */
-
 namespace Drupal\simpletest;
 
 use Drupal\Component\Render\MarkupInterface;

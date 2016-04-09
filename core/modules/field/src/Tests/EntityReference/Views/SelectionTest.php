@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\EntityReference\Views\SelectionTest.
- */
-
 namespace Drupal\field\Tests\EntityReference\Views;
 
 use Drupal\field\Entity\FieldConfig;

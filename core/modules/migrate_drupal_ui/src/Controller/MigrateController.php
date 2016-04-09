@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal_ui\Controller\MigrateController.
- */
-
 namespace Drupal\migrate_drupal_ui\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

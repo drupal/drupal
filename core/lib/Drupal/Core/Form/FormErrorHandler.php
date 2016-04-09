@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\FormErrorHandler.
- */
-
 namespace Drupal\Core\Form;
 
 use Drupal\Core\Render\Element;

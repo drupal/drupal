@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeRevisionsUiBypassAccessTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\node\Entity\NodeType;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\rest\Unit\CollectRoutesTest.
- */
-
 namespace Drupal\Tests\rest\Unit;
 
 use Drupal\Tests\UnitTestCase;

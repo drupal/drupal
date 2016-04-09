@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Update\CompatibilityFixTest.
- */
-
 namespace Drupal\system\Tests\Update;
 
 use Drupal\simpletest\KernelTestBase;

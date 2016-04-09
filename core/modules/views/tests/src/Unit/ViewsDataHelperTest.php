@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\ViewsDataHelperTest.
- */
-
 namespace Drupal\Tests\views\Unit;
 
 use Drupal\Tests\UnitTestCase;

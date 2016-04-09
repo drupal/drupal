@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Utility\ImageTest.
- */
-
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Image;

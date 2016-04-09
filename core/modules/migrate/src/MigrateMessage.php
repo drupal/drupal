@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\MigrateMessage.
- */
-
 namespace Drupal\migrate;
 
 use Drupal\Core\Logger\RfcLogLevel;

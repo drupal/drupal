@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\migrate\source\d7\NodeRevision.
- */
-
 namespace Drupal\node\Plugin\migrate\source\d7;
 
 /**

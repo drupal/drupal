@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\error_service_test\MonkeysInTheControlRoom.
- */
 
 namespace Drupal\error_service_test;
 

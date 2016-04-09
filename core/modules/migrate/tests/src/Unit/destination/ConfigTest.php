@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\destination\ConfigTest.
- */
-
 namespace Drupal\Tests\migrate\Unit\destination;
 
 use Drupal\migrate\Plugin\MigrationInterface;

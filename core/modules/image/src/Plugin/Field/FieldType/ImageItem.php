@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Plugin\Field\FieldType\ImageItem.
- */
-
 namespace Drupal\image\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;

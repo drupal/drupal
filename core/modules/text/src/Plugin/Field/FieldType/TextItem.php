@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\text\Plugin\Field\FieldType\TextItem.
- */
-
 namespace Drupal\text\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;

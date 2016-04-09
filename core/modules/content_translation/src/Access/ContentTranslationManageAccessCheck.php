@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Access\ContentTranslationManageAccessCheck.
- */
-
 namespace Drupal\content_translation\Access;
 
 use Drupal\Core\Access\AccessResult;

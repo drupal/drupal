@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Theme\StableTemplateOverrideTest.
- */
-
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Core\Theme\Registry;

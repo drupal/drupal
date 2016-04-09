@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\migrate\source\d6\TermNode.
- */
-
 namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
 use Drupal\migrate\Row;

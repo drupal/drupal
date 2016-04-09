@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\LanguageListBuilder.
- */
-
 namespace Drupal\language;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

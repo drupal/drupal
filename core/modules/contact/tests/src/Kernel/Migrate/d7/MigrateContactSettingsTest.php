@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\contact\Kernel\Migrate\d7\MigrateContactSettingsTest.
- */
-
 namespace Drupal\Tests\contact\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;

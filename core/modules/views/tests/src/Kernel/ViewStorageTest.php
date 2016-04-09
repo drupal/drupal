@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\ViewStorageTest.
- */
-
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Core\Entity\EntityTypeInterface;

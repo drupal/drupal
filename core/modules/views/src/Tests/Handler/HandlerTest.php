@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Handler\HandlerTest.
- */
-
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\comment\Tests\CommentTestTrait;

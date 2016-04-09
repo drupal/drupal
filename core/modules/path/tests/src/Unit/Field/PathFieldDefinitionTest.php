@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\path\Unit\Field\PathFieldDefinitionTest.
- */
-
 namespace Drupal\Tests\path\Unit\Field;
 
 use Drupal\Tests\Core\Field\BaseFieldDefinitionTestBase;

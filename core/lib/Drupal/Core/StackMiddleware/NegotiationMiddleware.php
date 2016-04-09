@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\StackMiddleware\NegotiationMiddleware.
- */
-
 namespace Drupal\Core\StackMiddleware;
 
 use Symfony\Component\HttpFoundation\Request;

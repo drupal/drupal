@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\PathProcessor\PathProcessorTest.
- */
-
 namespace Drupal\Tests\Core\PathProcessor;
 
 use Drupal\Core\Language\Language;

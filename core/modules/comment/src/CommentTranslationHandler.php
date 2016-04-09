@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\CommentTranslationHandler.
- */
-
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;

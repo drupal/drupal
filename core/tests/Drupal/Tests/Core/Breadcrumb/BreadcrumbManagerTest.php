@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Breadcrumb\BreadcrumbManagerTest.
- */
-
 namespace Drupal\Tests\Core\Breadcrumb;
 
 use Drupal\Core\Breadcrumb\Breadcrumb;

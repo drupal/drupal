@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\FormBase.
- */
-
 namespace Drupal\Core\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

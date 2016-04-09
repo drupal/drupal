@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Block\Plugin\Block\Broken.
- */
-
 namespace Drupal\Core\Block\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Ajax\TriggerPreviewCommand.
- */
-
 namespace Drupal\views\Ajax;
 
 use Drupal\Core\Ajax\CommandInterface;

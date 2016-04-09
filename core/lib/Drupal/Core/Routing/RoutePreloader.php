@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\RoutePreloader.
- */
-
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Cache\Cache;

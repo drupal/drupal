@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\FieldConfigListBuilder.
- */
-
 namespace Drupal\field_ui;
 
 use Drupal\Component\Utility\Html;

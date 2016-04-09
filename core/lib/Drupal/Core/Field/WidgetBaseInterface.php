@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\WidgetBaseInterface.
- */
-
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Form\FormStateInterface;

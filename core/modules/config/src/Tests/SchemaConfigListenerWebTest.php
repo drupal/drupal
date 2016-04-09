@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Tests\SchemaConfigListenerWebTest.
- */
-
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\Schema\SchemaIncompleteException;

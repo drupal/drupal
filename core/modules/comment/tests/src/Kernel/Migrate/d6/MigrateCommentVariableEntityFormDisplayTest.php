@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\Migrate\d6\MigrateCommentVariableEntityFormDisplayTest.
- */
-
 namespace Drupal\Tests\comment\Kernel\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;

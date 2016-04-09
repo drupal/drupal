@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchLanguageTest.
- */
-
 namespace Drupal\search\Tests;
 
 use Drupal\field\Entity\FieldStorageConfig;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Tests\RestLinkManagerTest.
- */
-
 namespace Drupal\rest\Tests;
 use Drupal\Core\Url;
 use Drupal\simpletest\KernelTestBase;

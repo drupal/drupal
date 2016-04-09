@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\process\Explode.
- */
-
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\migrate\ProcessPluginBase;

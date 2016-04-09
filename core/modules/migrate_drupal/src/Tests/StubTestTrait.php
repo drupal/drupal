@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal\Tests\StubTestTrait.
- */
-
 namespace Drupal\migrate_drupal\Tests;
 
 use Drupal\migrate\Row;

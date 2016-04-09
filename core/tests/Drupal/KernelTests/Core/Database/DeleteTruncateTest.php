@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Database\DeleteTruncateTest.
- */
-
 namespace Drupal\KernelTests\Core\Database;
 
 /**

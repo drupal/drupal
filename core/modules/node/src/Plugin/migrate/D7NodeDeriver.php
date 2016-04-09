@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\migrate\D7NodeDeriver.
- */
-
 namespace Drupal\node\Plugin\migrate;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;

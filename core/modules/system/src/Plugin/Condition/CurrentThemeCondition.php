@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\Condition\CurrentThemeCondition.
- */
-
 namespace Drupal\system\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;

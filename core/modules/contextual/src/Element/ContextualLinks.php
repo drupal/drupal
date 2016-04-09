@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contextual\Element\ContextualLinks.
- */
-
 namespace Drupal\contextual\Element;
 
 use Drupal\Component\Utility\Html;

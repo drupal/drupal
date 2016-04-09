@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Plugin\Discovery\CustomDirectoryAnnotatedClassDiscoveryTest.
- */
-
 namespace Drupal\system\Tests\Plugin\Discovery;
 
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;

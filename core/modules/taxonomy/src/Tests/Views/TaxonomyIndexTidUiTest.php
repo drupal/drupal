@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\Views\TaxonomyIndexTidUiTest.
- */
-
 namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;

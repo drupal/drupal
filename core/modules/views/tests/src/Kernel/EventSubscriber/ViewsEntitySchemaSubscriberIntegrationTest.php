@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\EventSubscriber\ViewsEntitySchemaSubscriberIntegrationTest.
- */
-
 namespace Drupal\Tests\views\Kernel\EventSubscriber;
 
 use Drupal\Core\Entity\EntityTypeEvent;

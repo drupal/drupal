@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\ImageToolkit\ImageToolkitOperationInterface.
- */
-
 namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

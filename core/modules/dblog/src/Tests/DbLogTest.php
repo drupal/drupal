@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dblog\Tests\DbLogTest.
- */
-
 namespace Drupal\dblog\Tests;
 
 use Drupal\Component\Utility\Html;

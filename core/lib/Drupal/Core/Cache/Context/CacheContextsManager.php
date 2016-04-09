@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\Context\CacheContextsManager.
- */
-
 namespace Drupal\Core\Cache\Context;
 
 use Drupal\Core\Cache\CacheableMetadata;

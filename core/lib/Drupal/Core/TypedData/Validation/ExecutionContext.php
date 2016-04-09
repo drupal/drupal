@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\Validation\ExecutionContext.
- */
-
 namespace Drupal\Core\TypedData\Validation;
 
 use Drupal\Core\Validation\TranslatorInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\user\Kernel\Migrate\MigrateUserPictureFieldInstanceTest.
- */
-
 namespace Drupal\Tests\user\Kernel\Migrate;
 
 use Drupal\Core\Field\FieldConfigInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Routing\DestinationTest.
- */
-
 namespace Drupal\system\Tests\Routing;
 
 use Drupal\Core\Url;

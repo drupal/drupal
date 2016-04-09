@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\CachedStorage.
- */
-
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Cache\CacheBackendInterface;

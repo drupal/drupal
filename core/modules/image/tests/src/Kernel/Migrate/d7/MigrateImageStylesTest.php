@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\image\Kernel\Migrate\d7\MigrateImageStylesTest.
- */
-
 namespace Drupal\Tests\image\Kernel\Migrate\d7;
 
 use Drupal\image\Entity\ImageStyle;

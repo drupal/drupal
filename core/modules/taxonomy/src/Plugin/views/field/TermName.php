@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\views\field\TermName.
- */
 
 namespace Drupal\taxonomy\Plugin\views\field;
 

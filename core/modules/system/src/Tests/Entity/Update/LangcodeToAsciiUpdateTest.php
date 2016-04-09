@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Entity\Update\LangcodeToAsciiUpdateTest.
- */
-
 namespace Drupal\system\Tests\Entity\Update;
 
 use Drupal\Core\Database\Database;

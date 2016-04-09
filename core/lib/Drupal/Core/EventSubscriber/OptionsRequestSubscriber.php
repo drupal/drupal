@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\EventSubscriber\OptionsRequestSubscriber.
- */
-
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;

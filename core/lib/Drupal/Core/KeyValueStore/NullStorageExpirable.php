@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\KeyValueStore\NullStorageExpirable.
- */
-
 namespace Drupal\Core\KeyValueStore;
 
 /**

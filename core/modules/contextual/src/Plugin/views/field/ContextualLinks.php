@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contextual\Plugin\views\field\ContextualLinks.
- */
-
 namespace Drupal\contextual\Plugin\views\field;
 
 use Drupal\Component\Serialization\Json;

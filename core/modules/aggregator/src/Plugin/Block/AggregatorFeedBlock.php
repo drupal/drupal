@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Plugin\Block\AggregatorFeedBlock.
- */
-
 namespace Drupal\aggregator\Plugin\Block;
 
 use Drupal\aggregator\FeedStorageInterface;

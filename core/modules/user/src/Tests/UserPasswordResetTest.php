@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserPasswordResetTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\system\Tests\Cache\PageCacheTagsTestBase;

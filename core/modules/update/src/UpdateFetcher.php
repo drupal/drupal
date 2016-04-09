@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\update\UpdateFetcher.
- */
-
 namespace Drupal\update;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\early_rendering_controller_test\AttachmentsTestDomainObject.
- */
-
 namespace Drupal\early_rendering_controller_test;
 
 use Drupal\Core\Render\AttachmentsInterface;

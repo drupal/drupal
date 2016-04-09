@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\ImmutableConfig.
- */
-
 namespace Drupal\Core\Config;
 
 /**

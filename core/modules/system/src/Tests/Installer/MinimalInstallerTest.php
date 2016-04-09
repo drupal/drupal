@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Installer\MinimalInstallerTest.
- */
-
 namespace Drupal\system\Tests\Installer;
 
 use Drupal\KernelTests\AssertConfigTrait;

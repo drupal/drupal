@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\EventSubscriber\BlockPageDisplayVariantSubscriber.
- */
-
 namespace Drupal\block\EventSubscriber;
 
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;

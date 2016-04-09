@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Field\BaseFieldDefinitionTestBase.
- */
-
 namespace Drupal\Tests\Core\Field;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Entity\EntityTranslationFormTest.
- */
-
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Language\LanguageInterface;

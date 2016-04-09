@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\node\Unit\PageCache\DenyNodePreviewTest.
- */
-
 namespace Drupal\Tests\node\Unit\PageCache;
 
 use Drupal\Core\PageCache\ResponsePolicyInterface;

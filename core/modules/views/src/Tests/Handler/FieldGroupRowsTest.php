@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Handler\FieldGroupRowsTest.
- */
-
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block\Kernel\Migrate\d7\MigrateBlockTest.
- */
-
 namespace Drupal\Tests\block\Kernel\Migrate\d7;
 
 use Drupal\block\Entity\Block;

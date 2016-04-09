@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\Exception\RequirementsExceptionTest.
- */
-
 namespace Drupal\Tests\migrate\Unit\Exception;
 
 use Drupal\migrate\Exception\RequirementsException;

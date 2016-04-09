@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Gettext\PoStreamWriter.
- */
-
 namespace Drupal\Component\Gettext;
 
 /**

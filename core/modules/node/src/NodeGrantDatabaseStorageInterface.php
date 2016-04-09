@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\NodeGrantDatabaseStorageInterface.
- */
-
 namespace Drupal\node;
 
 use Drupal\Core\Session\AccountInterface;

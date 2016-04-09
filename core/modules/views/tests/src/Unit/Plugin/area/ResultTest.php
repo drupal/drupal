@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\Plugin\area\ResultTest.
- */
-
 namespace Drupal\Tests\views\Unit\Plugin\area;
 
 use Drupal\Core\Routing\RouteProviderInterface;

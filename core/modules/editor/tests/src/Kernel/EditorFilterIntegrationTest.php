@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\editor\Kernel\EditorFilterIntegrationTest.
- */
-
 namespace Drupal\Tests\editor\Kernel;
 
 use Drupal\Component\Utility\Unicode;

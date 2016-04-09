@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\EventSubscriber\MaintenanceModeSubscriber.
- */
-
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Utility\SafeMarkup;

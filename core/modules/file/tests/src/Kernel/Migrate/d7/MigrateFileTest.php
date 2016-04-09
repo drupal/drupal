@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\file\Kernel\Migrate\d7\MigrateFileTest.
- */
-
 namespace Drupal\Tests\file\Kernel\Migrate\d7;
 
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;

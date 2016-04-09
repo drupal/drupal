@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\join\JoinPluginBase.
- */
-
 namespace Drupal\views\Plugin\views\join;
 
 use Drupal\Core\Plugin\PluginBase;

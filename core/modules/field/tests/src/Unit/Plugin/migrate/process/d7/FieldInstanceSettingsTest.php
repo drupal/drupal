@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Unit\Plugin\migrate\process\d7\FieldInstanceSettingsTest.
- */
-
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d7;
 
 use Drupal\field\Plugin\migrate\process\d7\FieldInstanceSettings;

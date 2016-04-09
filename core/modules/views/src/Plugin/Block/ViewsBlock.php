@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\Block\ViewsBlock.
- */
-
 namespace Drupal\views\Plugin\Block;
 
 use Drupal\Component\Utility\Xss;

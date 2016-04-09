@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserSaveTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;

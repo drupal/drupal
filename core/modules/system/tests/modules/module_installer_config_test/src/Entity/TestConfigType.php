@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\module_installer_config_test\Entity\TestConfigType.
- */
-
 namespace Drupal\module_installer_config_test\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

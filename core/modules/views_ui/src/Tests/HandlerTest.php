@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Tests\HandlerTest.
- */
-
 namespace Drupal\views_ui\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

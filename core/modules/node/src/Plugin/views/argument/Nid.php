@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\views\argument\Nid.
- */
-
 namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\node\NodeStorageInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\Field\UserNameFormatterTest.
- */
-
 namespace Drupal\user\Tests\Field;
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;

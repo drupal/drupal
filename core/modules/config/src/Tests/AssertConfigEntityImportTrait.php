@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Tests\AssertConfigEntityImportTrait.
- */
-
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

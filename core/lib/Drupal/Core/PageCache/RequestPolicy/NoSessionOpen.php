@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\PageCache\RequestPolicy\NoSessionOpen.
- */
-
 namespace Drupal\Core\PageCache\RequestPolicy;
 
 use Drupal\Core\PageCache\RequestPolicyInterface;

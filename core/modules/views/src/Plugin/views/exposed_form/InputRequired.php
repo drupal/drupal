@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\exposed_form\InputRequired.
- */
-
 namespace Drupal\views\Plugin\views\exposed_form;
 
 use Drupal\Core\Form\FormStateInterface;

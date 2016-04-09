@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Wizard\WizardPluginBaseKernelTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Wizard;
 
 use Drupal\Core\Form\FormState;

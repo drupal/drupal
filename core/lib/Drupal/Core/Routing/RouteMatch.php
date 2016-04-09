@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\RouteMatch.
- */
-
 namespace Drupal\Core\Routing;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;

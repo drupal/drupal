@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\editor\Tests\EditorAdminTest.
- */
-
 namespace Drupal\editor\Tests;
 
 use Drupal\Component\Utility\Unicode;

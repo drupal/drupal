@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\file\Kernel\Migrate\d6\MigrateUploadFieldTest.
- */
-
 namespace Drupal\Tests\file\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;

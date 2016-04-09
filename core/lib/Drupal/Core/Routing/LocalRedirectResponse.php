@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\LocalRedirectResponse.
- */
-
 namespace Drupal\Core\Routing;
 
 /**

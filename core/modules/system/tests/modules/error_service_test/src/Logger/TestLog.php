@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\error_service_test\Logger\TestLog.
- */
-
 namespace Drupal\error_service_test\Logger;
 
 use Drupal\Core\Logger\RfcLoggerTrait;

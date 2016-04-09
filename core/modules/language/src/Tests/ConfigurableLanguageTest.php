@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\language\Tests\ConfigurableLanguageTest.
- */
 
 namespace Drupal\language\Tests;
 

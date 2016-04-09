@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Config\ConfigFileContentTest.
- */
-
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\FileStorage;

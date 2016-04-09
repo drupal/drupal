@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\String\UuidFormatterTest.
- */
-
 namespace Drupal\Tests\field\Kernel\String;
 
 use Drupal\entity_test\Entity\EntityTest;

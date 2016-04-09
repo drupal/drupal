@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\update\Access\UpdateManagerAccessCheck.
- */
-
 namespace Drupal\update\Access;
 
 use Drupal\Core\Access\AccessResult;

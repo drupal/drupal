@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\database_test\Controller\DatabaseTestController.
- */
-
 namespace Drupal\database_test\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;

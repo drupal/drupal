@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dblog\Controller\DbLogController.
- */
-
 namespace Drupal\dblog\Controller;
 
 use Drupal\Component\Utility\Html;

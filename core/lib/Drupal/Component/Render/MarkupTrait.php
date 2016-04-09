@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Render\MarkupTrait.
- */
-
 namespace Drupal\Component\Render;
 
 use Drupal\Component\Utility\Unicode;

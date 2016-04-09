@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\image\Kernel\ImageImportTest.
- */
-
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\image\Entity\ImageStyle;

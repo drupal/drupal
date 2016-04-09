@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\ckeditor\Tests\CKEditorToolbarButtonTest.
- */
 
 namespace Drupal\ckeditor\Tests;
 

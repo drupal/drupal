@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ajax_forms_test\Form\AjaxFormsTestCommandsForm.
- */
-
 namespace Drupal\ajax_forms_test\Form;
 
 use Drupal\Core\Form\FormBase;

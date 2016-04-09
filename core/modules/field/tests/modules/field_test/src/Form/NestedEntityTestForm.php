@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_test\Form\NestedEntityTestForm.
- */
-
 namespace Drupal\field_test\Form;
 
 use Drupal\Core\Entity\EntityInterface;

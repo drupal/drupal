@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contextual\Tests\ContextualDynamicContextTest.
- */
-
 namespace Drupal\contextual\Tests;
 
 use Drupal\Component\Serialization\Json;

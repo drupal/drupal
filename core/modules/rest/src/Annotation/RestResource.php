@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rest\Annotation\RestResource.
- */
-
 namespace Drupal\rest\Annotation;
 
 use \Drupal\Component\Annotation\Plugin;

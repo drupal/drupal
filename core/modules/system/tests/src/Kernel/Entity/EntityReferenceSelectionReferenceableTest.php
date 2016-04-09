@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\system\Kernel\Entity\EntityReferenceSelectionReferenceableTest.
- */
-
 namespace Drupal\Tests\system\Kernel\Entity;
 
 use Drupal\Component\Utility\Html;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Database\Stub\StubPDO.
- */
-
 namespace Drupal\Tests\Core\Database\Stub;
 
 /**

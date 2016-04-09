@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\forum\Plugin\Block\ForumBlockBase.
- */
-
 namespace Drupal\forum\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;

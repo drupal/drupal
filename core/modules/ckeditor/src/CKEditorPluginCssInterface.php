@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\CKEditorPluginCssInterface.
- */
-
 namespace Drupal\ckeditor;
 
 use Drupal\editor\Entity\Editor;

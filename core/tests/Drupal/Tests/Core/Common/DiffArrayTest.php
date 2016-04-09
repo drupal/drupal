@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Common\DiffArrayTest.
- */
-
 namespace Drupal\Tests\Core\Common;
 
 use Drupal\Component\Utility\DiffArray;

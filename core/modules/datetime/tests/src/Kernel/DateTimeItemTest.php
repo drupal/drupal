@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\datetime\Kernel\DateTimeItemTest.
- */
-
 namespace Drupal\Tests\datetime\Kernel;
 
 use Drupal\Core\Field\FieldItemListInterface;

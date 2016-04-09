@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\Routing\EntityTestRoutes.
- */
-
 namespace Drupal\entity_test\Routing;
 
 use Symfony\Component\Routing\Route;

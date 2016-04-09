@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ban\Form\BanAdmin.
- */
-
 namespace Drupal\ban\Form;
 
 use Drupal\Core\Form\FormBase;

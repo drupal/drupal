@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\FieldStorageConfigInterface.
- */
-
 namespace Drupal\field;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

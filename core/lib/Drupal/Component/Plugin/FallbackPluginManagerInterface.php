@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Plugin\FallbackPluginManagerInterface.
- */
-
 namespace Drupal\Component\Plugin;
 
 /**

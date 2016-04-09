@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\MainContent\ModalRenderer.
- */
-
 namespace Drupal\Core\Render\MainContent;
 
 use Drupal\Core\Ajax\AjaxResponse;

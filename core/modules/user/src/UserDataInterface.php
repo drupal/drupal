@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\UserDataInterface.
- */
-
 namespace Drupal\user;
 
 /**

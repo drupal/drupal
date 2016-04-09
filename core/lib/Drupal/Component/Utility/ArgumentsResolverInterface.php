@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Utility\ArgumentsResolverInterface.
- */
-
 namespace Drupal\Component\Utility;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\shortcut\Tests\ShortcutSetsTest.
- */
-
 namespace Drupal\shortcut\Tests;
 
 use Drupal\shortcut\Entity\ShortcutSet;

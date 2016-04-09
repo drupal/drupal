@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityAutocompleteMatcher.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Utility\Html;

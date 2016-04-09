@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Controller\CommentController.
- */
-
 namespace Drupal\comment\Controller;
 
 use Drupal\comment\CommentInterface;

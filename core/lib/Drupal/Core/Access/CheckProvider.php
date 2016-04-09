@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Access\CheckProvider.
- */
-
 namespace Drupal\Core\Access;
 
 use Drupal\Core\Routing\Access\AccessInterface;

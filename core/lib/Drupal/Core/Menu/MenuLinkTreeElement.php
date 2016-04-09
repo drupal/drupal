@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\MenuLinkTreeElement.
- */
-
 namespace Drupal\Core\Menu;
 
 /**

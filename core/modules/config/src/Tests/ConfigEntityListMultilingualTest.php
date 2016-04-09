@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Tests\ConfigEntityListMultilingualTest.
- */
-
 namespace Drupal\config\Tests;
 
 use Drupal\simpletest\WebTestBase;

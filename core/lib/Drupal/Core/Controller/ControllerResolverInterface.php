@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Controller\ControllerResolverInterface.
- */
-
 namespace Drupal\Core\Controller;
 
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface as BaseControllerResolverInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Exception\DeleteDefaultLanguageException.
- */
-
 namespace Drupal\language\Exception;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\Entity\EntityTestDefaultAccess.
- */
-
 namespace Drupal\entity_test\Entity;
 
 /**

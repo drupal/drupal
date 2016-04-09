@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\batch_test\Form\BatchTestMultiStepForm.
- */
-
 namespace Drupal\batch_test\Form;
 
 use Drupal\Core\Form\FormBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\Entity\ConfigEntityType.
- */
-
 namespace Drupal\Core\Config\Entity;
 
 use Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException;

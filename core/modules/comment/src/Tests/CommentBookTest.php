@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\CommentBookTest.
- */
-
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentInterface;

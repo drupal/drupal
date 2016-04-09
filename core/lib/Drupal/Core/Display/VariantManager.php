@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Display\VariantManager.
- */
-
 namespace Drupal\Core\Display;
 
 use Drupal\Core\Cache\CacheBackendInterface;

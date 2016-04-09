@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Utility\Rectangle.
- */
-
 namespace Drupal\Component\Utility;
 
 /**

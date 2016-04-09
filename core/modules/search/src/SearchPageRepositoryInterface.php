@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\SearchPageRepositoryInterface.
- */
-
 namespace Drupal\search;
 
 /**

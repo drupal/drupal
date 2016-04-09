@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\form_test\StackMiddleware\FormTestMiddleware.
- */
 
 namespace Drupal\form_test\StackMiddleware;
 

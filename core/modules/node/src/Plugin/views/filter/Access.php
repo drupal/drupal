@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\views\filter\Access.
- */
-
 namespace Drupal\node\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;

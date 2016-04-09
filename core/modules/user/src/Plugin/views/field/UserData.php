@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\views\field\UserData.
- */
-
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

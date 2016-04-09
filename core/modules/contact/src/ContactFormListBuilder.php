@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\ContactFormListBuilder.
- */
-
 namespace Drupal\contact;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;

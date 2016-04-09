@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tests\aggregator\Kernel\Migrate\MigrateAggregatorStubTest.
- */
-
 namespace Drupal\tests\aggregator\Kernel\Migrate;
 
 use Drupal\migrate\MigrateException;

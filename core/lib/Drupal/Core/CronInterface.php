@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\CronInterface.
- */
-
 namespace Drupal\Core;
 
 /**

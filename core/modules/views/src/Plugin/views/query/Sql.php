@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\query\Sql.
- */
-
 namespace Drupal\views\Plugin\views\query;
 
 use Drupal\Component\Utility\NestedArray;

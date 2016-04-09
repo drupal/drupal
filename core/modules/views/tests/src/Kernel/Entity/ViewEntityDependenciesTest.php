@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Entity\ViewEntityDependenciesTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Entity;
 
 use Drupal\Component\Utility\Unicode;

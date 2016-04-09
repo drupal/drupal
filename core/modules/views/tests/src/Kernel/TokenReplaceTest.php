@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\TokenReplaceTest.
- */
-
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Core\Render\BubbleableMetadata;

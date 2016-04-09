@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Entity\ConfigEntityImportTest.
- */
-
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchNodePunctuationTest.
- */
-
 namespace Drupal\search\Tests;
 
 /**

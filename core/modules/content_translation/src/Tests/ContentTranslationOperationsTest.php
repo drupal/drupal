@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Tests\ContentTranslationOperationsTest.
- */
-
 namespace Drupal\content_translation\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;

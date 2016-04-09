@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\style\Opml.
- */
-
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Core\Url;

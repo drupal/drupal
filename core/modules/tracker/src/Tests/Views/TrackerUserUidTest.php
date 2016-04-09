@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\tracker\Tests\Views\TrackerUserUidTest.
- */
-
 namespace Drupal\tracker\Tests\Views;
 
 use Drupal\views\Views;

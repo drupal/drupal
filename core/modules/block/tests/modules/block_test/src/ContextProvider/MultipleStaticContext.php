@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_test\ContextProvider\MultipleStaticContext.
- */
-
 namespace Drupal\block_test\ContextProvider;
 
 use Drupal\Core\Cache\CacheableMetadata;

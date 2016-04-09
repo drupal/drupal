@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\TestItemWithDependenciesTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\field\Entity\FieldConfig;

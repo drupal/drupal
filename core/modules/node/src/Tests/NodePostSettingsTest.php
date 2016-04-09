@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodePostSettingsTest.
- */
-
 namespace Drupal\node\Tests;
 
 /**

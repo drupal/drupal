@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Config\ConfigDependencyTest.
- */
-
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\entity_test\Entity\EntityTest;

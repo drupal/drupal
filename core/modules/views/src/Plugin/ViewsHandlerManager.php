@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\ViewsHandlerManager.
- */
-
 namespace Drupal\views\Plugin;
 
 use Drupal\Component\Plugin\FallbackPluginManagerInterface;

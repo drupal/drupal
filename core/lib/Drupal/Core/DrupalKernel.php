@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\DrupalKernel.
- */
-
 namespace Drupal\Core;
 
 use Drupal\Component\FileCache\FileCacheFactory;

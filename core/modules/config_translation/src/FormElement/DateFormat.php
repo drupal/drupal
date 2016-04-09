@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\FormElement\DateFormat.
- */
-
 namespace Drupal\config_translation\FormElement;
 
 use Drupal\Core\Language\LanguageInterface;

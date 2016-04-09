@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\filter\BooleanOperator.
- */
-
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Database\Query\Condition;

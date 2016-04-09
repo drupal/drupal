@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Tests\CustomBooleanTest.
- */
-
 namespace Drupal\views_ui\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

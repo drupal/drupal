@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Batch\BatchStorage.
- */
-
 namespace Drupal\Core\Batch;
 
 use Drupal\Core\Database\Connection;

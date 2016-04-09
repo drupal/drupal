@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\CommentInterfaceTest.
- */
-
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentManagerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\history\Controller\HistoryController.
- */
-
 namespace Drupal\history\Controller;
 
 use Symfony\Component\HttpFoundation\Request;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\SetDialogTitleCommand.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

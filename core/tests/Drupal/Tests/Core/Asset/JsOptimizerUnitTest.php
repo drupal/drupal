@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Asset\JsOptimizerUnitTest.
- */
-
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\JsOptimizer;

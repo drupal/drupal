@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\ImageStyleStorageInterface.
- */
-
 namespace Drupal\image;
 
 /**

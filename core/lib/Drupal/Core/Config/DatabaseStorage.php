@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\DatabaseStorage.
- */
-
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Database;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityTypeListener.
- */
-
 namespace Drupal\Core\Entity;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

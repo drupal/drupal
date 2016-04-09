@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\process\Callback.
- */
-
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateExecutableInterface;

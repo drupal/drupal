@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\Plugin\Derivative\ConfigTranslationLocalTasks.
- */
-
 namespace Drupal\config_translation\Plugin\Derivative;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;

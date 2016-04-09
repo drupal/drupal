@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\Tests\ContactStorageTest.
- */
-
 namespace Drupal\contact\Tests;
 
 use Drupal\Component\Utility\Unicode;

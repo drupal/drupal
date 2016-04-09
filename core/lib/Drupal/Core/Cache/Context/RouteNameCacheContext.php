@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\Context\RouteNameCacheContext.
- */
-
 namespace Drupal\Core\Cache\Context;
 
 /**

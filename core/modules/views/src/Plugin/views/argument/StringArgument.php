@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\argument\StringArgument.
- */
-
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Utility\Unicode;

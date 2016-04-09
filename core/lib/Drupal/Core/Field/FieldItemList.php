@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\FieldItemList.
- */
-
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Access\AccessResult;

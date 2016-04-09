@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Plugin\aggregator\processor\DefaultProcessor.
- */
-
 namespace Drupal\aggregator\Plugin\aggregator\processor;
 
 use Drupal\aggregator\Entity\Item;

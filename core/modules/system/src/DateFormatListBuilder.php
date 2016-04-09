@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\DateFormatListBuilder.
- */
-
 namespace Drupal\system;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;

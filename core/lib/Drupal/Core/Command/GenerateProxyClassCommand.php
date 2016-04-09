@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Command\GenerateProxyClassCommand.
- */
-
 namespace Drupal\Core\Command;
 
 use Drupal\Component\ProxyBuilder\ProxyBuilder;

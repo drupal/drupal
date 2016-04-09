@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityAccessControlHandlerTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Language\LanguageInterface;

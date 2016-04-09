@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Query\ConditionFundamentals.
- */
-
 namespace Drupal\Core\Entity\Query;
 
 /**

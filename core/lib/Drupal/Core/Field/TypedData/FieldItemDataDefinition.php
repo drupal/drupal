@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\TypedData\FieldItemDataDefinition.
- */
-
 namespace Drupal\Core\Field\TypedData;
 
 use Drupal\Core\Field\BaseFieldDefinition;

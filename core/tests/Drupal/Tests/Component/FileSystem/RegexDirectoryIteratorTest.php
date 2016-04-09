@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\FileSystem\RegexDirectoryIteratorTest.
- */
-
 namespace Drupal\Tests\Component\FileSystem;
 
 use Drupal\Component\FileSystem\RegexDirectoryIterator;

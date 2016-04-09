@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\dblog\Kernel\Views\ViewsIntegrationTest.
- */
-
 namespace Drupal\Tests\dblog\Kernel\Views;
 
 use Drupal\Component\Utility\SafeMarkup;

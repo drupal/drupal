@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\Plugin\Field\FieldType\PathItem.
- */
-
 namespace Drupal\path\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;

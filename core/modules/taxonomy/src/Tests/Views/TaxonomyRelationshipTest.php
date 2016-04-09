@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\Views\TaxonomyRelationshipTest.
- */
-
 namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\node\NodeInterface;

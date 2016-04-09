@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Language\LanguageManagerInterface.
- */
-
 namespace Drupal\Core\Language;
 
 use Drupal\Core\Url;

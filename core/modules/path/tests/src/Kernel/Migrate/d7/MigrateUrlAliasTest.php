@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\path\Kernel\Migrate\d7\MigrateUrlAliasTest.
- */
-
 namespace Drupal\Tests\path\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;

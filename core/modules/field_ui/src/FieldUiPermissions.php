@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\FieldUiPermissions.
- */
-
 namespace Drupal\field_ui;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

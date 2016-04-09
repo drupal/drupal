@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityManager.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Field\FieldDefinitionInterface;

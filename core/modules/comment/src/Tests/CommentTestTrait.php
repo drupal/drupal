@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\CommentTestTrait.
- */
-
 namespace Drupal\comment\Tests;
 
 use Drupal\Component\Utility\Unicode;

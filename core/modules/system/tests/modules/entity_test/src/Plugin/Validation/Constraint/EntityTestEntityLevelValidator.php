@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\Plugin\Validation\Constraint\EntityTestEntityLevelValidator.
- */
-
 namespace Drupal\entity_test\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraint;

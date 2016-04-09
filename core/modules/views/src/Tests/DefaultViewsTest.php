@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\DefaultViewsTest.
- */
-
 namespace Drupal\views\Tests;
 
 use Drupal\comment\CommentInterface;

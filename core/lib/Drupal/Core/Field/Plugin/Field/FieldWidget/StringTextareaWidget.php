@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextareaWidget.
- */
-
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;

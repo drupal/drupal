@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\update\Tests\UpdateTestBase.
- */
-
 namespace Drupal\update\Tests;
 
 use Drupal\Core\DrupalKernel;

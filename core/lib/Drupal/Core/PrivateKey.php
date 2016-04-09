@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\PrivateKey.
- */
-
 namespace Drupal\Core;
 
 use Drupal\Core\State\StateInterface;

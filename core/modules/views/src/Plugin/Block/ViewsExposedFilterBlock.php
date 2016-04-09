@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\Block\ViewsExposedFilterBlock.
- */
-
 namespace Drupal\views\Plugin\Block;
 use Drupal\Core\Cache\Cache;
 

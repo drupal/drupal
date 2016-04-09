@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\Tests\ManageFieldsTest.
- */
-
 namespace Drupal\field_ui\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

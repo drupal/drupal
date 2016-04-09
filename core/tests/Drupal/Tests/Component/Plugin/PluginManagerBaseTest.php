@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Plugin\PluginManagerBaseTest.
- */
-
 namespace Drupal\Tests\Component\Plugin;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;

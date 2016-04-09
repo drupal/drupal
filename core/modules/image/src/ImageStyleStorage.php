@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\ImageStyleStorage.
- */
-
 namespace Drupal\image;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorage;

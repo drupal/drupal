@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\VocabularyPermissionsTest.
- */
-
 namespace Drupal\taxonomy\Tests;
 
 /**

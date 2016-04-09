@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\EventSubscriber\AccessDeniedSubscriber.
- */
-
 namespace Drupal\user\EventSubscriber;
 
 use Drupal\Core\Session\AccountInterface;

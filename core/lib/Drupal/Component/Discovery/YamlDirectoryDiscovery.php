@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Discovery\YamlDirectoryDiscovery.
- */
-
 namespace Drupal\Component\Discovery;
 
 use Drupal\Component\FileSystem\RegexDirectoryIterator;

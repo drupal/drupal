@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\EntityDisplayModeListBuilder.
- */
-
 namespace Drupal\field_ui;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;

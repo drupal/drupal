@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Kernel\Migrate\d7\MigrateCommentEntityDisplayTest.
- */
-
 namespace Drupal\Tests\comment\Kernel\Migrate\d7;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;

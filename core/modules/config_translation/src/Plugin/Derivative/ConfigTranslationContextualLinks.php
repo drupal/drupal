@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\Plugin\Derivative\ConfigTranslationContextualLinks.
- */
-
 namespace Drupal\config_translation\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;

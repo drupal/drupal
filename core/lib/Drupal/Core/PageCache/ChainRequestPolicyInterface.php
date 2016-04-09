@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\PageCache\ChainRequestPolicyInterface.
- */
-
 namespace Drupal\Core\PageCache;
 
 /**

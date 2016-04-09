@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\telephone\Tests\TelephoneFieldTest.
- */
-
 namespace Drupal\telephone\Tests;
 
 use Drupal\field\Entity\FieldConfig;

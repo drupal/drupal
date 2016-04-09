@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\user\Unit\Plugin\Core\Entity\UserTest.
- */
-
 namespace Drupal\Tests\user\Unit\Plugin\Core\Entity;
 
 use Drupal\Tests\Core\Session\UserSessionTest;

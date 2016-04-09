@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\breakpoint\Kernel\BreakpointDiscoveryTest.
- */
 
 namespace Drupal\Tests\breakpoint\Kernel;
 

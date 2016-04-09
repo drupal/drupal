@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Theme\ActiveTheme.
- */
-
 namespace Drupal\Core\Theme;
 
 /**

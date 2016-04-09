@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\MigrateTestCase.
- */
-
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Database\Driver\sqlite\Connection;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\MailHandlerException.
- */
-
 namespace Drupal\contact;
 
 /**

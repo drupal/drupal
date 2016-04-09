@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\ConfigValueException.
- */
-
 namespace Drupal\Core\Config;
 
 /**

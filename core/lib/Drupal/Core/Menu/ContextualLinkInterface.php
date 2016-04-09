@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\ContextualLinkInterface.
- */
-
 namespace Drupal\Core\Menu;
 
 /**

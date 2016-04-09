@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Controller\ContentTranslationController.
- */
-
 namespace Drupal\content_translation\Controller;
 
 use Drupal\content_translation\ContentTranslationManagerInterface;

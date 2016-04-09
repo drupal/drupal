@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\language_elements_test\Form\LanguageConfigurationElementTest.
- */
 
 namespace Drupal\language_elements_test\Form;
 

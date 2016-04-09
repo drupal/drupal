@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\style\StylePluginBase.
- */
-
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Component\Utility\Html;

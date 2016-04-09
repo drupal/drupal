@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\Plugin\migrate\destination\Book.
- */
-
 namespace Drupal\book\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityInterface;

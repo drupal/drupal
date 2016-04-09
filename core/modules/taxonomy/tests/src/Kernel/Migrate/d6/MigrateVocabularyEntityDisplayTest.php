@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\taxonomy\Kernel\Migrate\d6\MigrateVocabularyEntityDisplayTest.
- */
-
 namespace Drupal\Tests\taxonomy\Kernel\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;

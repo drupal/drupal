@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\serialization\Unit\Encoder\JsonEncoderTest.
- */
-
 namespace Drupal\Tests\serialization\Unit\Encoder;
 
 use Drupal\serialization\Encoder\JsonEncoder;

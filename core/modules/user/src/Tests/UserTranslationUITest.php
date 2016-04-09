@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserTranslationUITest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\content_translation\Tests\ContentTranslationUITestBase;

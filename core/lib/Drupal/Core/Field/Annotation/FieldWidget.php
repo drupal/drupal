@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\Annotation\FieldWidget.
- */
-
 namespace Drupal\Core\Field\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

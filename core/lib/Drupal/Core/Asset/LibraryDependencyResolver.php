@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Asset\LibraryDependencyResolver.
- */
-
 namespace Drupal\Core\Asset;
 
 /**

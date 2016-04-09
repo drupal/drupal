@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\hal\Normalizer\ContentEntityNormalizer.
- */
-
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;

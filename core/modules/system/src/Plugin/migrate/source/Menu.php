@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\migrate\source\Menu.
- */
-
 namespace Drupal\system\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;

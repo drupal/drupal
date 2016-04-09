@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchPageOverrideTest.
- */
-
 namespace Drupal\search\Tests;
 
 /**

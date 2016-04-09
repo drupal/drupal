@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\Controller\ConfigTranslationMapperList.
- */
-
 namespace Drupal\config_translation\Controller;
 
 use Drupal\config_translation\ConfigMapperInterface;

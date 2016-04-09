@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\ViewListBuilder.
- */
-
 namespace Drupal\views_ui;
 
 use Drupal\Component\Plugin\PluginManagerInterface;

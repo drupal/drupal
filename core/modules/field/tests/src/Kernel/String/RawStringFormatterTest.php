@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\String\RawStringFormatterTest.
- */
-
 namespace Drupal\Tests\field\Kernel\String;
 
 use Drupal\Component\Utility\Html;

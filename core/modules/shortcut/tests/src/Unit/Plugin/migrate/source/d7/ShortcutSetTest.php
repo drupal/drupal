@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\shortcut\Unit\Plugin\migrate\source\d7\ShortcutSetTest.
- */
-
 namespace Drupal\Tests\shortcut\Unit\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;

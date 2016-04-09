@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\filter\Kernel\FilterAPITest.
- */
-
 namespace Drupal\Tests\filter\Kernel;
 
 use Drupal\Core\Language\LanguageInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\editor\Plugin\EditorManager.
- */
-
 namespace Drupal\editor\Plugin;
 
 use Drupal\Core\Plugin\DefaultPluginManager;

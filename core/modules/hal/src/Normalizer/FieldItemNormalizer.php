@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\hal\Normalizer\FieldItemNormalizer.
- */
-
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Core\Field\FieldItemInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Tests\CacheabilityMetadataConfigOverrideIntegrationTest.
- */
-
 namespace Drupal\config\Tests;
 
 use Drupal\simpletest\WebTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\KeyValueStore\KeyValueExpirableFactory.
- */
-
 namespace Drupal\Core\KeyValueStore;
 
 /**

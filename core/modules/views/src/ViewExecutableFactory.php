@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\ViewExecutableFactory.
- */
-
 namespace Drupal\views;
 
 use Drupal\Core\Routing\RouteProviderInterface;

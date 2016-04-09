@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Asset\LibraryDiscoveryParser.
- */
-
 namespace Drupal\Core\Asset;
 
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;

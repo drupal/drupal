@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\Form\FieldStorageAddForm.
- */
-
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

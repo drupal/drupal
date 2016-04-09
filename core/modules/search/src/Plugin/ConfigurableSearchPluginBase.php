@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Plugin\ConfigurableSearchPluginBase.
- */
-
 namespace Drupal\search\Plugin;
 
 use Drupal\Component\Utility\NestedArray;

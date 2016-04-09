@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\Enhancer\EntityRevisionRouteEnhancer.
- */
-
 namespace Drupal\Core\Routing\Enhancer;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;

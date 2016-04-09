@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\UpdateBuildIdCommand.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

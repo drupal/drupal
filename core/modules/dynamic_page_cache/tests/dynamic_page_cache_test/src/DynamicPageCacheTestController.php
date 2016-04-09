@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dynamic_page_cache_test\DynamicPageCacheTestController.
- */
-
 namespace Drupal\dynamic_page_cache_test;
 
 use Drupal\Core\Cache\CacheableResponse;

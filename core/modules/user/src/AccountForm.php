@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\AccountForm.
- */
-
 namespace Drupal\user;
 
 use Drupal\Component\Utility\Crypt;

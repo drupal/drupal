@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Test\AssertMailTrait.
- */
-
 namespace Drupal\Core\Test;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\serialization\Normalizer\MarkupNormalizer.
- */
-
 namespace Drupal\serialization\Normalizer;
 
 /**

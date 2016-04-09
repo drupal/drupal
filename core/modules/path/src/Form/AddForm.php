@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\Form\AddForm.
- */
-
 namespace Drupal\path\Form;
 
 use Drupal\Core\Language\LanguageInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\ConfigFactoryInterface.
- */
-
 namespace Drupal\Core\Config;
 
 /**

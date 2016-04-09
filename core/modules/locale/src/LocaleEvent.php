@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\LocaleEvent.
- */
-
 namespace Drupal\locale;
 
 use Symfony\Component\EventDispatcher\Event;

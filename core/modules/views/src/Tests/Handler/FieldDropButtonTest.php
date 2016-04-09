@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Handler\FieldDropButtonTest.
- */
-
 namespace Drupal\views\Tests\Handler;
 
 /**

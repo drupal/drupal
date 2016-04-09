@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block\Unit\BlockFormTest.
- */
-
 namespace Drupal\Tests\block\Unit;
 
 use Drupal\block\BlockForm;

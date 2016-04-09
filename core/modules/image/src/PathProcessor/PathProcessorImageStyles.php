@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\PathProcessor\PathProcessorImageStyles.
- */
-
 namespace Drupal\image\PathProcessor;
 
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;

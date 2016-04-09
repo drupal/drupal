@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views_ui\Unit\ViewUIObjectTest.
- */
-
 namespace Drupal\Tests\views_ui\Unit;
 
 use Drupal\Core\Language\LanguageInterface;

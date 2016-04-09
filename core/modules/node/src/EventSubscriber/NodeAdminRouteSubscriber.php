@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\EventSubscriber\NodeAdminRouteSubscriber.
- */
-
 namespace Drupal\node\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

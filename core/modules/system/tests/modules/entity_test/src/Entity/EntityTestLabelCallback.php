@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\Entity\EntityTestLabelCallback.
- */
-
 namespace Drupal\entity_test\Entity;
 
 /**

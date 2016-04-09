@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Form\ThemeSettingsForm.
- */
-
 namespace Drupal\system\Form;
 
 use Drupal\Core\Extension\ThemeHandlerInterface;

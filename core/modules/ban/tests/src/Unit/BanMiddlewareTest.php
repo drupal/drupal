@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\ban\Unit\BanMiddlewareTest.
- */
-
 namespace Drupal\Tests\ban\Unit;
 
 use Drupal\ban\BanMiddleware;

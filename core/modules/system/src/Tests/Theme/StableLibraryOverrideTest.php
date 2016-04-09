@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Theme\StableLibraryOverrideTest.
- */
-
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\simpletest\KernelTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\MigrateSkipProcessException.
- */
-
 namespace Drupal\migrate;
 
 /**

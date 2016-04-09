@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Path\AliasStorage.
- */
-
 namespace Drupal\Core\Path;
 
 use Drupal\Core\Cache\Cache;

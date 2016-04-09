@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Field\Annotation\FieldType.
- */
-
 namespace Drupal\Core\Field\Annotation;
 
 use Drupal\Core\TypedData\Annotation\DataType;

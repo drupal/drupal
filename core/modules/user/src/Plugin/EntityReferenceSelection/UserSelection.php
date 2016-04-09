@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\EntityReferenceSelection\UserSelection.
- */
-
 namespace Drupal\user\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Database\Connection;

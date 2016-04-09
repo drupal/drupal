@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\FieldDefinitionIntegrityTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Extension\Extension;

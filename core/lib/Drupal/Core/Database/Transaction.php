@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Transaction.
- */
-
 namespace Drupal\Core\Database;
 
 /**

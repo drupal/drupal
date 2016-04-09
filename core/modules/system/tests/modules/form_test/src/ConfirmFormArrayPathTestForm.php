@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\form_test\ConfirmFormArrayPathTestForm.
- */
-
 namespace Drupal\form_test;
 
 use Drupal\Core\Url;

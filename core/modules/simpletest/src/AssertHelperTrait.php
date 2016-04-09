@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simpletest\AssertHelperTrait.
- */
-
 namespace Drupal\simpletest;
 
 use Drupal\Component\Render\MarkupInterface;

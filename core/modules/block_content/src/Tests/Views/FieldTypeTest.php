@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_content\Tests\Views\FieldTypeTest.
- */
-
 namespace Drupal\block_content\Tests\Views;
 
 use Drupal\views\Views;

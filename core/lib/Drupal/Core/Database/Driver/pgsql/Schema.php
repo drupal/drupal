@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Driver\pgsql\Schema.
- */
-
 namespace Drupal\Core\Database\Driver\pgsql;
 
 use Drupal\Component\Utility\Unicode;

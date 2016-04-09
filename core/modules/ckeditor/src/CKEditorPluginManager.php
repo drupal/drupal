@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\CKEditorPluginManager.
- */
-
 namespace Drupal\ckeditor;
 
 use Drupal\Component\Utility\NestedArray;

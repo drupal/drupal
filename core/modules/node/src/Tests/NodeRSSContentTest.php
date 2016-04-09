@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeRSSContentTest.
- */
-
 namespace Drupal\node\Tests;
 
 /**

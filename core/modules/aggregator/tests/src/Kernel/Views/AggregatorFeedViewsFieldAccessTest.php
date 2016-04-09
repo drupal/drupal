@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\aggregator\Kernel\Views\AggregatorFeedViewsFieldAccessTest.
- */
-
 namespace Drupal\Tests\aggregator\Kernel\Views;
 
 use Drupal\aggregator\Entity\Feed;

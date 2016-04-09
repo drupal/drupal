@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\filter\Kernel\TextFormatElementFormTest.
- */
-
 namespace Drupal\Tests\filter\Kernel;
 
 use Drupal\Core\Form\FormInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\Enhancer\RouteEnhancerInterface.
- */
-
 namespace Drupal\Core\Routing\Enhancer;
 
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface as BaseRouteEnhancerInterface;

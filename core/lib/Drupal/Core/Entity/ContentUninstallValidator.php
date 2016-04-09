@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\ContentUninstallValidator.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;

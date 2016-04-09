@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Element\ManagedFile.
- */
-
 namespace Drupal\file\Element;
 
 use Drupal\Component\Utility\NestedArray;

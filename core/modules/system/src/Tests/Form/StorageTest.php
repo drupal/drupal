@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Form\StorageTest.
- */
-
 namespace Drupal\system\Tests\Form;
 
 use Drupal\simpletest\WebTestBase;

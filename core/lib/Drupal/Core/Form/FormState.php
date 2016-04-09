@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\FormState.
- */
-
 namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\NestedArray;

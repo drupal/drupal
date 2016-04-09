@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Entity\View.
- */
-
 namespace Drupal\views\Entity;
 
 use Drupal\Component\Utility\NestedArray;

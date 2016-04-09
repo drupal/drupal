@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\menu_link_content\Kernel\Migrate\d6\MigrateMenuLinkTest.
- */
-
 namespace Drupal\Tests\menu_link_content\Kernel\Migrate\d6;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;

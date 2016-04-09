@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_test_data\Plugin\views\filter\FilterTest.
- */
-
 namespace Drupal\views_test_data\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;

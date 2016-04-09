@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\MenuLinkTest.
- */
-
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;

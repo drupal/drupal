@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Annotation\ViewsExposedForm.
- */
-
 namespace Drupal\views\Annotation;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\SearchPluginManager.
- */
-
 namespace Drupal\search;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

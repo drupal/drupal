@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Config\Entity\ConfigEntityStorageTest.
- */
-
 namespace Drupal\Tests\Core\Config\Entity {
 
 use Drupal\Core\Cache\Cache;

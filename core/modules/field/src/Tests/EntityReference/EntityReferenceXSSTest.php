@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\EntityReference\EntityReferenceXSSTest.
- */
-
 namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;

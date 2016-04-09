@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\field\FieldHandlerInterface.
- */
-
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\ResultRow;

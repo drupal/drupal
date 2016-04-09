@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\OpenDialogCommand.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

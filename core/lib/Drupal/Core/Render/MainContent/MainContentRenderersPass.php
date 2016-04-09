@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\MainContent\MainContentRenderersPass.
- */
-
 namespace Drupal\Core\Render\MainContent;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\Tests\ConfigTranslationUiTest.
- */
-
 namespace Drupal\config_translation\Tests;
 
 use Drupal\Component\Serialization\Json;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Common\FormatDateTest.
- */
-
 namespace Drupal\system\Tests\Common;
 
 use Drupal\language\Entity\ConfigurableLanguage;

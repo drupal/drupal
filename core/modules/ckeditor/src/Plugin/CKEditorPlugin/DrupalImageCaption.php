@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalImageCaption.
- */
-
 namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 
 use Drupal\Component\Plugin\PluginBase;

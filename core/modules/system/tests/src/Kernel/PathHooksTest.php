@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\system\Kernel\PathHooksTest.
- */
-
 namespace Drupal\Tests\system\Kernel;
 
 use Drupal\Core\Language\LanguageInterface;

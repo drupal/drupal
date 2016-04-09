@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\views\filter\Name.
- */
-
 namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\Core\Entity\Element\EntityAutocomplete;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\KeyValueStore\Query\Condition.
- */
-
 namespace Drupal\Core\Entity\KeyValueStore\Query;
 
 use Drupal\Core\Config\Entity\Query\Condition as ConditionParent;

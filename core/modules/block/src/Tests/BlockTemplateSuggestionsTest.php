@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Tests\BlockTemplateSuggestionsTest.
- */
-
 namespace Drupal\block\Tests;
 
 use Drupal\block\Entity\Block;

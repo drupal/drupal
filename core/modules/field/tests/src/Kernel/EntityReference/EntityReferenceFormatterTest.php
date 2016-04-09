@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\EntityReference\EntityReferenceFormatterTest.
- */
-
 namespace Drupal\Tests\field\Kernel\EntityReference;
 
 use Drupal\Core\Cache\Cache;

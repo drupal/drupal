@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\ViewExecutable.
- */
-
 namespace Drupal\views;
 
 use Drupal\Component\Utility\Html;

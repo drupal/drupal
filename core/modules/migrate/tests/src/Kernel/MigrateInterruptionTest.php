@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Kernel\MigrateInterruptionTest.
- */
-
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\Event\MigratePostRowSaveEvent;

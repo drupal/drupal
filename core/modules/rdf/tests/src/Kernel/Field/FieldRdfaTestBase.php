@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\rdf\Kernel\Field\FieldRdfaTestBase.
- */
 
 namespace Drupal\Tests\rdf\Kernel\Field;
 

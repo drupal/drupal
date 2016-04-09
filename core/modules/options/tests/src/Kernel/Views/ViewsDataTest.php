@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\options\Kernel\Views\ViewsDataTest.
- */
 
 namespace Drupal\Tests\options\Kernel\Views;
 

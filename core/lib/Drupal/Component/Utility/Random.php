@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Utility\Random.
- */
-
 namespace Drupal\Component\Utility;
 
 /**

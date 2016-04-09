@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchBlockTest.
- */
-
 namespace Drupal\search\Tests;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Unit\Migrate\d6\CommentVariableTest.
- */
-
 namespace Drupal\Tests\comment\Unit\Migrate\d6;
 
 use Drupal\comment\Plugin\migrate\source\d6\CommentVariable;

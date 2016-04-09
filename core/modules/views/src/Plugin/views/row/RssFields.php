@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\row\RssFields.
- */
-
 namespace Drupal\views\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;

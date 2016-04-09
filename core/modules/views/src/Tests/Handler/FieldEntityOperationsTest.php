@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Handler\FieldEntityOperationsTest.
- */
-
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\Core\Url;

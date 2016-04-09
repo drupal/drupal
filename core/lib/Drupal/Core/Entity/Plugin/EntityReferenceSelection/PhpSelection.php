@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Plugin\EntityReferenceSelection\PhpSelection.
- */
-
 namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;

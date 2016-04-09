@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Form\SiteMaintenanceModeForm.
- */
-
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

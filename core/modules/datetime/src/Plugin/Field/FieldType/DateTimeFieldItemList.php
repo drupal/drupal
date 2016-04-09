@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList.
- */
-
 namespace Drupal\datetime\Plugin\Field\FieldType;
 
 use Drupal\Core\Datetime\DrupalDateTime;

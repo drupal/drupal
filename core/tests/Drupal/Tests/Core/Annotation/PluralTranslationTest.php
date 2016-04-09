@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Annotation\PluralTranslationTest.
- */
-
 namespace Drupal\Tests\Core\Annotation;
 
 use Drupal\Core\Annotation\PluralTranslation;

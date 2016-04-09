@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\big_pipe\Render\BigPipeMarkup.
- */
-
 namespace Drupal\big_pipe\Render;
 
 use Drupal\Component\Render\MarkupInterface;

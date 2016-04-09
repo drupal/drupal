@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter.
- */
-
 namespace Drupal\comment\Plugin\Field\FieldFormatter;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;

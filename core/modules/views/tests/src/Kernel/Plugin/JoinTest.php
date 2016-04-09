@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Plugin\JoinTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\views_test_data\Plugin\views\join\JoinTest as JoinTestPlugin;

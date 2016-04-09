@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\Element\MachineName.
- */
-
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Utility\NestedArray;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\help\Plugin\HelpSection\HelpSectionPluginBase.
- */
-
 namespace Drupal\help\Plugin\HelpSection;
 
 use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;

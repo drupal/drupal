@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\aggregator\Kernel\AggregatorTitleTest.
- */
-
 namespace Drupal\Tests\aggregator\Kernel;
 
 use Drupal\aggregator\Entity\Feed;

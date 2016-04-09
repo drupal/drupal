@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Queue\QueueGarbageCollectionInterface.
- */
-
 namespace Drupal\Core\Queue;
 
 /**

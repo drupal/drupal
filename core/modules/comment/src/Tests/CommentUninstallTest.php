@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\CommentUninstallTest.
- */
-
 namespace Drupal\comment\Tests;
 
 use Drupal\field\Entity\FieldStorageConfig;

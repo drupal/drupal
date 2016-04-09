@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Query\Null\Condition.
- */
-
 namespace Drupal\Core\Entity\Query\Null;
 
 use Drupal\Core\Entity\Query\ConditionBase;

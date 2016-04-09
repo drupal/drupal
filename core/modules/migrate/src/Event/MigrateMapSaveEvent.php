@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Event\MigrateMapSaveEvent.
- */
-
 namespace Drupal\migrate\Event;
 
 use Drupal\migrate\Plugin\MigrateIdMapInterface;

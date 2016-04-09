@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Driver\sqlite\Connection.
- */
-
 namespace Drupal\Core\Database\Driver\sqlite;
 
 use Drupal\Core\Database\Database;

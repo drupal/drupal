@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Entity\Enhancer\EntityRouteEnhancerTest.
- */
-
 namespace Drupal\Tests\Core\Entity\Enhancer;
 
 use Drupal\Core\Entity\Enhancer\EntityRouteEnhancer;

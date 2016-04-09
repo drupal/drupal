@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Tests\QueryTest.
- */
-
 namespace Drupal\views_ui\Tests;
 
 use Drupal\views\Views;

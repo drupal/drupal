@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Plugin\QueueWorker\AggregatorRefresh.
- */
-
 namespace Drupal\aggregator\Plugin\QueueWorker;
 
 use Drupal\aggregator\FeedInterface;

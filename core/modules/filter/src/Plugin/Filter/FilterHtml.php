@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter\Plugin\Filter\FilterHtml.
- */
-
 namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Xss;

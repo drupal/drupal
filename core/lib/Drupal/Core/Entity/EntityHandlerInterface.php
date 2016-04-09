@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityHandlerInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;

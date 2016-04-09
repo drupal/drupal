@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\join\Standard.
- */
-
 namespace Drupal\views\Plugin\views\join;
 
 /**

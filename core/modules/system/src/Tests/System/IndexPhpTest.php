@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\System\IndexPhpTest.
- */
-
 namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;

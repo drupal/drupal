@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\user\Unit\UserAccessControlHandlerTest.
- */
-
 namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Access\AccessResult;

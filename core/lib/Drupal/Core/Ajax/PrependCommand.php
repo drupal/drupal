@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\PrependCommand.
- */
-
 namespace Drupal\Core\Ajax;
 
 /**

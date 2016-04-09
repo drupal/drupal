@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\shortcut\Entity\ShortcutSet.
- */
-
 namespace Drupal\shortcut\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;

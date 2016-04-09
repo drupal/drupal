@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\LocaleConfigManager.
- */
-
 namespace Drupal\locale;
 
 use Drupal\Component\Utility\NestedArray;

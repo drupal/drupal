@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\Views\RolesRidArgumentTest.
- */
-
 namespace Drupal\user\Tests\Views;
 
 /**

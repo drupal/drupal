@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Installer\InstallerLanguagePageTest.
- */
-
 namespace Drupal\system\Tests\Installer;
 
 use Drupal\Core\Language\LanguageManager;

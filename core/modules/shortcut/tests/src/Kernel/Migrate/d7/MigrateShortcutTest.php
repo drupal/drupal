@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\shortcut\Kernel\Migrate\d7\MigrateShortcutTest.
- */
-
 namespace Drupal\Tests\shortcut\Kernel\Migrate\d7;
 
 use Drupal\shortcut\Entity\Shortcut;

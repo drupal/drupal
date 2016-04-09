@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_content\BlockContentTypeInterface.
- */
-
 namespace Drupal\block_content;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

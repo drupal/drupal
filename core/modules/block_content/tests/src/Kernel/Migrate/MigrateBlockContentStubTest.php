@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block_content\Kernel\Migrate\MigrateBlockContentStubTest.
- */
-
 namespace Drupal\Tests\block_content\Kernel\Migrate;
 
 use Drupal\block_content\Entity\BlockContentType;

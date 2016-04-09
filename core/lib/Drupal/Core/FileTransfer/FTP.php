@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\FileTransfer\FTP.
- */
-
 namespace Drupal\Core\FileTransfer;
 
 /**

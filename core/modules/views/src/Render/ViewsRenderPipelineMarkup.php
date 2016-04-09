@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Render\ViewsRenderPipelineMarkup.
- */
-
 namespace Drupal\views\Render;
 
 use Drupal\Component\Render\MarkupInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\filter\Kernel\Migrate\d7\MigrateFilterFormatTest.
- */
-
 namespace Drupal\Tests\filter\Kernel\Migrate\d7;
 
 use Drupal\filter\Entity\FilterFormat;

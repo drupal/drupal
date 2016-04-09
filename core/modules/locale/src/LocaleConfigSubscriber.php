@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\locale\LocaleConfigSubscriber.
- */
 
 namespace Drupal\locale;
 

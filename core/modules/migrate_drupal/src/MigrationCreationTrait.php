@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal\MigrationCreationTrait.
- */
-
 namespace Drupal\migrate_drupal;
 
 use Drupal\Core\Database\Connection;

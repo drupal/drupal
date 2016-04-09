@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Authentication\AuthenticationProviderChallengeInterface.
- */
-
 namespace Drupal\Core\Authentication;
 
 use Symfony\Component\HttpFoundation\Request;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ajax_forms_test\Callbacks.
- */
-
 namespace Drupal\ajax_forms_test;
 
 use Drupal\Core\Ajax\AjaxResponse;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Gettext\PoReaderInterface.
- */
-
 namespace Drupal\Component\Gettext;
 
 /**

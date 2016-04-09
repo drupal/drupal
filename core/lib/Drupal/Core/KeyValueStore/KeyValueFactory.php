@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\KeyValueStore\KeyValueFactory.
- */
-
 namespace Drupal\Core\KeyValueStore;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_test\Entity\EntityTestMulChanged.
- */
-
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityChangedInterface;

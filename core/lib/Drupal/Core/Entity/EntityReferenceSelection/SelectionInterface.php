@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface.
- */
-
 namespace Drupal\Core\Entity\EntityReferenceSelection;
 
 use Drupal\Core\Database\Query\SelectInterface;

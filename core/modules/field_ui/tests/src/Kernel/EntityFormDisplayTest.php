@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field_ui\Kernel\EntityFormDisplayTest.
- */
-
 namespace Drupal\Tests\field_ui\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;

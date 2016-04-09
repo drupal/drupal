@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Menu\MenuLinkDefaultIntegrationTest.
- */
-
 namespace Drupal\system\Tests\Menu;
 
 use Drupal\Core\Menu\MenuTreeParameters;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\style\DefaultStyle.
- */
-
 namespace Drupal\views\Plugin\views\style;
 
 /**

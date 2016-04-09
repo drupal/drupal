@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\LegacyTest.
- */
-
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Datetime\DrupalDateTime;

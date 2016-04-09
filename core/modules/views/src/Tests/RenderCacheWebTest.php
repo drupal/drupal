@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\RenderCacheWebTest.
- */
-
 namespace Drupal\views\Tests;
 
 use Drupal\node\Entity\Node;

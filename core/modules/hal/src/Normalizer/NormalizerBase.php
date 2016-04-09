@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\hal\Normalizer\NormalizerBase.
- */
-
 namespace Drupal\hal\Normalizer;
 
 use Drupal\serialization\Normalizer\NormalizerBase as SerializationNormalizerBase;

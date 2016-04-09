@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\system\Kernel\Extension\ModuleHandlerTest.
- */
-
 namespace Drupal\Tests\system\Kernel\Extension;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

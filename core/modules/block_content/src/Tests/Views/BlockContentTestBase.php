@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_content\Tests\Views\BlockContentTestBase.
- */
-
 namespace Drupal\block_content\Tests\Views;
 
 use Drupal\block_content\Entity\BlockContent;

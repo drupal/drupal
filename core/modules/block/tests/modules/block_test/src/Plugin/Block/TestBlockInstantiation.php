@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_test\Plugin\Block\TestBlockInstantiation.
- */
-
 namespace Drupal\block_test\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Asset\LibraryDiscoveryIntegrationTest.
- */
-
 namespace Drupal\system\Tests\Asset;
 
 use Drupal\Core\Asset\Exception\InvalidLibrariesExtendSpecificationException;

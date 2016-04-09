@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Block\BlockBase.
- */
-
 namespace Drupal\Core\Block;
 
 use Drupal\block\BlockInterface;

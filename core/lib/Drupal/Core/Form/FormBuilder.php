@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\FormBuilder.
- */
-
 namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\Crypt;

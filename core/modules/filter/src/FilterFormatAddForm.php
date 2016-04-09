@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter\FilterFormatAddForm.
- */
-
 namespace Drupal\filter;
 
 use Drupal\Core\Form\FormStateInterface;

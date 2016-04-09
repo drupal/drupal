@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\page_cache\Tests\PageCacheTest.
- */
-
 namespace Drupal\page_cache\Tests;
 
 use Drupal\Component\Datetime\DateTimePlus;

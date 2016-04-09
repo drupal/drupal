@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\migrate\User.
- */
-
 namespace Drupal\user\Plugin\migrate;
 
 use Drupal\migrate\Exception\RequirementsException;

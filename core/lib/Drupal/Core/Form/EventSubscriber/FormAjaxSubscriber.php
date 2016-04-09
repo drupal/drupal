@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber.
- */
-
 namespace Drupal\Core\Form\EventSubscriber;
 
 use Drupal\Core\Ajax\AjaxResponse;

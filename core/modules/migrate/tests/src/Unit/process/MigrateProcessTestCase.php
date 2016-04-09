@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase.
- */
-
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\Tests\migrate\Unit\MigrateTestCase;

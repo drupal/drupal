@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\tests\Kernel\PathNoCanonicalLinkTest.
- */
-
 namespace Drupal\Tests\path\Kernel;
 
 use Drupal\content_translation_test\Entity\EntityTestTranslatableUISkip;

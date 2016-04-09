@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contextual\Element\ContextualLinksPlaceholder.
- */
-
 namespace Drupal\contextual\Element;
 
 use Drupal\Core\Template\Attribute;

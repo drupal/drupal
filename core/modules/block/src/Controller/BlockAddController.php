@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Controller\BlockAddController.
- */
-
 namespace Drupal\block\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

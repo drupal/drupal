@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\exposed_form\Basic.
- */
-
 namespace Drupal\views\Plugin\views\exposed_form;
 
 /**

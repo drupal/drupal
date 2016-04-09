@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityFieldManager.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;

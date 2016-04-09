@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\RoleStorageInterface.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Controller\TitleResolverInterface.
- */
-
 namespace Drupal\Core\Controller;
 
 use Symfony\Component\Routing\Route;

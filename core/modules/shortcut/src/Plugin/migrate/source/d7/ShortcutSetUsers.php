@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\shortcut\Plugin\migrate\source\d7\ShortcutSetUsers.
- */
 
 namespace Drupal\shortcut\Plugin\migrate\source\d7;
 

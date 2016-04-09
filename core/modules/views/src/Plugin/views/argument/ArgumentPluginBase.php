@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\argument\ArgumentPluginBase.
- */
-
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Plugin\DependentPluginInterface;

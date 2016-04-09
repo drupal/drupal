@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\Field\FieldFormatter\AuthorFormatter.
- */
-
 namespace Drupal\user\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Access\AccessResult;

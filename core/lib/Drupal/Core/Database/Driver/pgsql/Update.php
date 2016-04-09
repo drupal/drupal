@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Driver\pgsql\Update.
- */
-
 namespace Drupal\Core\Database\Driver\pgsql;
 
 use Drupal\Core\Database\Database;

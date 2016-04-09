@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\page_cache_form_test\Form\TestForm.
- */
-
 namespace Drupal\page_cache_form_test\Form;
 
 use Drupal\Core\Form\FormBase;

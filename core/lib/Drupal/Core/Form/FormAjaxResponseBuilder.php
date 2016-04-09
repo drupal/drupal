@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\FormAjaxResponseBuilder.
- */
-
 namespace Drupal\Core\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;

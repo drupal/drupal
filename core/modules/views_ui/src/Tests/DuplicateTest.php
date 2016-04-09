@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Tests\DuplicateTest.
- */
-
 namespace Drupal\views_ui\Tests;
 
 /**

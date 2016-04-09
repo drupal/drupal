@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\KeyValueStore\MemoryStorage.
- */
-
 namespace Drupal\Core\KeyValueStore;
 
 /**

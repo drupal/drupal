@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\Deriver\EntityDeriver.
- */
-
 namespace Drupal\Core\Entity\Plugin\DataType\Deriver;
 
 use Drupal\Core\Entity\EntityManagerInterface;

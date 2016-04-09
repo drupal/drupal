@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Form\ExportForm.
- */
-
 namespace Drupal\locale\Form;
 
 use Drupal\Component\Gettext\PoStreamWriter;

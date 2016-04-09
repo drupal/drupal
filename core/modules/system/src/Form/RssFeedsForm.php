@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Form\RssFeedsForm.
- */
-
 namespace Drupal\system\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

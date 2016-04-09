@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\ElementInfoManager.
- */
-
 namespace Drupal\Core\Render;
 
 use Drupal\Core\Cache\Cache;

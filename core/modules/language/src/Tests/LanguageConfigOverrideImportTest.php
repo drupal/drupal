@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Tests\LanguageConfigOverrideImportTest.
- */
-
 namespace Drupal\language\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;

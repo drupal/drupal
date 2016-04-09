@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\tracker\Plugin\migrate\source\d7\TrackerNode.
- */
 
 namespace Drupal\tracker\Plugin\migrate\source\d7;
 

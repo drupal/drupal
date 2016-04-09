@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Element\EntityAutocomplete.
- */
-
 namespace Drupal\Core\Entity\Element;
 
 use Drupal\Component\Utility\Crypt;

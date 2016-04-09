@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Gettext\PoStreamReader.
- */
-
 namespace Drupal\Component\Gettext;
 
 use Drupal\Component\Utility\SafeMarkup;

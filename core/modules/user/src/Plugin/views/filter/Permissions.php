@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\views\filter\Permissions.
- */
-
 namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\Component\Utility\Html;

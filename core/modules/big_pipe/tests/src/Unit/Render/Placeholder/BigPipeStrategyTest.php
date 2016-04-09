@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\big_pipe\Unit\Render\Placeholder\BigPipeStrategyTest.
- */
-
 namespace Drupal\Tests\big_pipe\Unit\Render\Placeholder;
 
 use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;

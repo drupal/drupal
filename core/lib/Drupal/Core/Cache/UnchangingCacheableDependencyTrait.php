@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\UnchangingCacheableDependencyTrait.
- */
-
 namespace Drupal\Core\Cache;
 
 /**

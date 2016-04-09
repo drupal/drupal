@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\simpletest\Unit\SimpletestPhpunitRunCommandTest.
- */
-
 namespace Drupal\Tests\simpletest\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

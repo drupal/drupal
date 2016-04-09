@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\content_translation\Kernel\ContentTranslationConfigImportTest.
- */
-
 namespace Drupal\Tests\content_translation\Kernel;
 
 use Drupal\Core\Config\ConfigImporter;

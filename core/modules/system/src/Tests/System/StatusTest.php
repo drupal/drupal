@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\System\StatusTest.
- */
-
 namespace Drupal\system\Tests\System;
 
 use Drupal\Core\Url;

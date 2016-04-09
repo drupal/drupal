@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Theme\EntityFilteringThemeTest.
- */
-
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\comment\Tests\CommentTestTrait;

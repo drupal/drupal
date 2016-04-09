@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\EnforcedResponseException.
- */
-
 namespace Drupal\Core\Form;
 
 use Symfony\Component\HttpFoundation\Response;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Tests\ConfigImportInstallProfileTest.
- */
-
 namespace Drupal\config\Tests;
 
 use Drupal\simpletest\WebTestBase;

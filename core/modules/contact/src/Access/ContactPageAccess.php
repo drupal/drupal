@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\Access\ContactPageAccess.
- */
-
 namespace Drupal\contact\Access;
 
 use Drupal\Core\Access\AccessResult;

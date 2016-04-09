@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\ComplexDataDefinitionInterface.
- */
-
 namespace Drupal\Core\TypedData;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\migrate\source\d6\Role.
- */
-
 namespace Drupal\user\Plugin\migrate\source\d6;
 
 use Drupal\migrate\Row;

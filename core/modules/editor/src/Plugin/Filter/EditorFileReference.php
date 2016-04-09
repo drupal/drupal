@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\editor\Plugin\Filter\EditorFileReference.
- */
-
 namespace Drupal\editor\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;

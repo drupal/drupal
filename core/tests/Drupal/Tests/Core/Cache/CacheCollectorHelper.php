@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Cache\CacheCollectorHelper.
- */
-
 namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Core\Cache\CacheCollector;

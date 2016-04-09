@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\action_test\Plugin\Action\NoType.
- */
-
 namespace Drupal\action_test\Plugin\Action;
 
 use Drupal\Core\Access\AccessResult;

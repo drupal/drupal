@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Transliteration\PhpTransliterationTest.
- */
-
 namespace Drupal\Tests\Core\Transliteration;
 
 use Drupal\Component\Utility\Random;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Plugin\Action\UnpublishByKeywordComment.
- */
-
 namespace Drupal\comment\Plugin\Action;
 
 use Drupal\Component\Utility\Tags;

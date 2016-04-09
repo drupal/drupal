@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Updater\Module.
- */
-
 namespace Drupal\Core\Updater;
 
 use Drupal\Core\Url;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Form\DeleteMultiple.
- */
-
 namespace Drupal\node\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;

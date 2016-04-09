@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityFieldDefaultValueTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Uuid\Uuid;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\field\Date.
- */
-
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityStorageInterface;

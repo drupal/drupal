@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\MenuActiveTrailInterface.
- */
-
 namespace Drupal\Core\Menu;
 
 /**

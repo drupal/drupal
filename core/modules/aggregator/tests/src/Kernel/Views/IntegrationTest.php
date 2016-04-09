@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\aggregator\Kernel\Views\IntegrationTest.
- */
-
 namespace Drupal\Tests\aggregator\Kernel\Views;
 
 use Drupal\Component\Utility\Xss;

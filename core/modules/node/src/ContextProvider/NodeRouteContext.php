@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\ContextProvider\NodeRouteContext.
- */
-
 namespace Drupal\node\ContextProvider;
 
 use Drupal\Core\Cache\CacheableMetadata;

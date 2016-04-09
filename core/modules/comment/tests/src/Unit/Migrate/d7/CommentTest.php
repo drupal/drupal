@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\comment\Unit\Migrate\d7\CommentTest.
- */
-
 namespace Drupal\Tests\comment\Unit\Migrate\d7;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;

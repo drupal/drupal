@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\KeyValueStore\KeyValueStoreInterface.
- */
-
 namespace Drupal\Core\KeyValueStore;
 
 /**

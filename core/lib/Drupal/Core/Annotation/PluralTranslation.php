@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Annotation\PluralTranslation.
- */
-
 namespace Drupal\Core\Annotation;
 
 use Drupal\Component\Annotation\AnnotationBase;

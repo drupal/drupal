@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\CKEditorPluginConfigurableInterface.
- */
-
 namespace Drupal\ckeditor;
 
 use Drupal\Core\Form\FormStateInterface;

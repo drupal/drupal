@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Tests\Update\BlockContextMappingUpdateTest.
- */
-
 namespace Drupal\block\Tests\Update;
 
 use Drupal\block\Entity\Block;

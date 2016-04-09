@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Condition\ConditionAccessResolverTrait.
- */
-
 namespace Drupal\Core\Condition;
 
 use Drupal\Component\Plugin\Exception\ContextException;

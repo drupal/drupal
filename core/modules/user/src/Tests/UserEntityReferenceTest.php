@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserEntityReferenceTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;

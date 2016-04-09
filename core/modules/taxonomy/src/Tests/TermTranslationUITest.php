@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\TermTranslationUITest.
- */
-
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\content_translation\Tests\ContentTranslationUITestBase;

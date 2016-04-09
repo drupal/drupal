@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\ConfigMapperInterface.
- */
-
 namespace Drupal\config_translation;
 
 use Drupal\Core\Language\LanguageInterface;

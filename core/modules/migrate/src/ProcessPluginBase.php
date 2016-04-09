@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\ProcessPluginBase.
- */
-
 namespace Drupal\migrate;
 
 use Drupal\Core\Plugin\PluginBase;

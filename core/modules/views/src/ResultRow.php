@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\ResultRow.
- */
-
 namespace Drupal\views;
 
 /**

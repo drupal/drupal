@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\FormTest.
- */
-
 namespace Drupal\field\Tests;
 
 use Drupal\Component\Utility\Html;

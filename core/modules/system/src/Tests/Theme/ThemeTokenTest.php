@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Theme\ThemeTokenTest.
- */
-
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\simpletest\WebTestBase;

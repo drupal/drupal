@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Controller\BatchController.
- */
-
 namespace Drupal\system\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

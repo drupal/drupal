@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Routing\UrlGeneratorTraitTest.
- */
-
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Tests\UnitTestCase;

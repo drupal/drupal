@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\FormStateInterface.
- */
-
 namespace Drupal\Core\Form;
 
 use Drupal\Core\Url;

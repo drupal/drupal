@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\FieldValidationTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 
 /**

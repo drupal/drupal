@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\hal\Unit\NormalizerDenormalizeExceptionsUnitTestBase.
- */
-
 namespace Drupal\Tests\hal\Unit;
 
 use Drupal\Tests\UnitTestCase;

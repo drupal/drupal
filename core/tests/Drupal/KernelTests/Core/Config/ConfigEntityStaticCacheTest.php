@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Config\ConfigEntityStaticCacheTest.
- */
-
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\config_entity_static_cache_test\ConfigOverrider;

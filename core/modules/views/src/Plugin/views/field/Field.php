@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\field\Field.
- */
-
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Plugin\DependentPluginInterface;

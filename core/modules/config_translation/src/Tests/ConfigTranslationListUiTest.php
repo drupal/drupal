@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\Tests\ConfigTranslationListUiTest.
- */
-
 namespace Drupal\config_translation\Tests;
 
 use Drupal\block_content\Entity\BlockContentType;

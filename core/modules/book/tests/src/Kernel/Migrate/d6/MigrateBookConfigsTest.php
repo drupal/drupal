@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\book\Kernel\Migrate\d6\MigrateBookConfigsTest.
- */
-
 namespace Drupal\Tests\book\Kernel\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;

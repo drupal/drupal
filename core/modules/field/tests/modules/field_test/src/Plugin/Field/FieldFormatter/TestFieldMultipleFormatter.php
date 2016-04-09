@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_test\Plugin\Field\FieldFormatter\TestFieldMultipleFormatter.
- */
-
 namespace Drupal\field_test\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;

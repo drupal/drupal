@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\Validation\TypedDataMetadata.
- */
-
 namespace Drupal\Core\TypedData\Validation;
 
 use Drupal\Core\TypedData\TypedDataInterface;

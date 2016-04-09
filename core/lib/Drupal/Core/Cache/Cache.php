@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Cache\Cache.
- */
-
 namespace Drupal\Core\Cache;
 
 use Drupal\Core\Database\Query\SelectInterface;

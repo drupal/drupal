@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\Core\Database\Driver\pgsql\PostgresqlSchemaTest.
- */
 
 namespace Drupal\Tests\Core\Database\Driver\pgsql;
 

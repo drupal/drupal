@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\Validation\RecursiveContextualValidator.
- */
-
 namespace Drupal\Core\TypedData\Validation;
 
 use Drupal\Core\TypedData\ComplexDataInterface;

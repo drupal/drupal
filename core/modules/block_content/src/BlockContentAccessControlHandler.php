@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_content\BlockContentAccessControlHandler.
- */
-
 namespace Drupal\block_content;
 
 use Drupal\Core\Access\AccessResult;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\Views\NodeFieldTokensTest.
- */
-
 namespace Drupal\node\Tests\Views;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;

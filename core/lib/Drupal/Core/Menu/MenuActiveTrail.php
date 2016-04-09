@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\MenuActiveTrail.
- */
-
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Cache\CacheBackendInterface;

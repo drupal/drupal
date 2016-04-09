@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\PluginBase.
- */
-
 namespace Drupal\views\Plugin\views;
 
 use Drupal\Component\Plugin\DependentPluginInterface;

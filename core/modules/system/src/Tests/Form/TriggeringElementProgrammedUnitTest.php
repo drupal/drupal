@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Form\TriggeringElementProgrammedUnitTest.
- */
-
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Core\Form\FormInterface;

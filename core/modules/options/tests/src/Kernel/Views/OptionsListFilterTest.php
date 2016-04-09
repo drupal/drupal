@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\options\Kernel\Views\OptionsListFilterTest.
- */
-
 namespace Drupal\Tests\options\Kernel\Views;
 
 use Drupal\views\Views;

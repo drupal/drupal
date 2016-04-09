@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\EventSubscriber\DefaultExceptionSubscriber.
- */
-
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Utility\SafeMarkup;

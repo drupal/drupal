@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\shortcut\Tests\Migrate\d7\MigrateShortcutSetUsersTest.
- */
-
 namespace Drupal\Tests\shortcut\Kernel\Migrate\d7;
 
 use Drupal\user\Entity\User;

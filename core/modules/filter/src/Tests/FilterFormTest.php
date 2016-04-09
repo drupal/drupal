@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter\Tests\FilterFormTest.
- */
-
 namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

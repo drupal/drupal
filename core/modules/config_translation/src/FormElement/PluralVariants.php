@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\FormElement\PluralVariants.
- */
-
 namespace Drupal\config_translation\FormElement;
 
 use Drupal\Component\Utility\SafeMarkup;

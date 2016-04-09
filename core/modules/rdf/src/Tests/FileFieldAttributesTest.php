@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\rdf\Tests\FileFieldAttributesTest.
- */
-
 namespace Drupal\rdf\Tests;
 
 use Drupal\file\Tests\FileFieldTestBase;

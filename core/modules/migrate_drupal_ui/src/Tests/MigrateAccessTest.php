@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal_ui\Tests\MigrateAccessTest.
- */
-
 namespace Drupal\migrate_drupal_ui\Tests;
 
 use Drupal\simpletest\WebTestBase;

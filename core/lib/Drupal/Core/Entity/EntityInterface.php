@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityInterface.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Access\AccessibleInterface;

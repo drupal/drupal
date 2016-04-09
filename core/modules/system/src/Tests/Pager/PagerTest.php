@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Pager\PagerTest.
- */
-
 namespace Drupal\system\Tests\Pager;
 
 use Drupal\simpletest\WebTestBase;

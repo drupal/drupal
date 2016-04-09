@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\toolbar\Tests\ToolbarAdminMenuTest.
- */
-
 namespace Drupal\toolbar\Tests;
 
 use Drupal\Core\Language\LanguageInterface;

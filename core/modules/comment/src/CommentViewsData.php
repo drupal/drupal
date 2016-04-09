@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\CommentViewsData.
- */
-
 namespace Drupal\comment;
 
 use Drupal\views\EntityViewsData;

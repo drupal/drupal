@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Queue\RequeueException.
- */
-
 namespace Drupal\Core\Queue;
 
 /**

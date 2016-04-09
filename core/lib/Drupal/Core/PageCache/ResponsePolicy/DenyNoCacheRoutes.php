@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\PageCache\ResponsePolicy\DenyNoCacheRoutes.
- */
-
 namespace Drupal\Core\PageCache\ResponsePolicy;
 
 use Drupal\Core\PageCache\ResponsePolicyInterface;

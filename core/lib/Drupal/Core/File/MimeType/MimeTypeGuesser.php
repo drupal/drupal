@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\File\MimeType\MimeTypeGuesser.
- */
-
 namespace Drupal\Core\File\MimeType;
 
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Tests\Views\TaxonomyTestBase.
- */
-
 namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Tests\LocaleConfigSubscriberForeignTest.
- */
-
 namespace Drupal\locale\Tests;
 
 use Drupal\Core\Language\Language;

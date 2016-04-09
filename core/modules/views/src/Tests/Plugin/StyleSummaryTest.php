@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\StyleSummaryTest.
- */
-
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\entity_test\Entity\EntityTest;

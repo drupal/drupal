@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Gettext\PoItem.
- */
-
 namespace Drupal\Component\Gettext;
 
 /**

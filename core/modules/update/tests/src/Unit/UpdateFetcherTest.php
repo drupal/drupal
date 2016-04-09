@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\update\Unit\UpdateFetcherTest.
- */
-
 namespace Drupal\Tests\update\Unit;
 
 use Drupal\Tests\UnitTestCase;

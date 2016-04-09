@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Driver\mysql\Upsert.
- */
-
 namespace Drupal\Core\Database\Driver\mysql;
 
 use Drupal\Core\Database\Query\Upsert as QueryUpsert;

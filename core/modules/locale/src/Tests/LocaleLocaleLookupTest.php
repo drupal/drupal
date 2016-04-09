@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\Tests\LocaleLocaleLookupTest.
- */
-
 namespace Drupal\locale\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;

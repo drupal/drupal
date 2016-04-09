@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Install\Tasks.
- */
-
 namespace Drupal\Core\Database\Install;
 
 use Drupal\Core\Database\Database;

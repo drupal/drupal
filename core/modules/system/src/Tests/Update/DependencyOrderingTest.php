@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Update\DependencyOrderingTest.
- */
-
 namespace Drupal\system\Tests\Update;
 
 use Drupal\simpletest\WebTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\LazyRouteEnhancer.
- */
-
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Routing\Enhancer\RouteEnhancerInterface;

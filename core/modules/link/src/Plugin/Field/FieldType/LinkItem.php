@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\link\Plugin\Field\FieldType\LinkItem.
- */
-
 namespace Drupal\link\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;

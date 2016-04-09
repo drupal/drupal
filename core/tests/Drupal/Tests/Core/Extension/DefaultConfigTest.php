@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Extension\DefaultConfigTest.
- */
-
 namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Tests\UnitTestCase;

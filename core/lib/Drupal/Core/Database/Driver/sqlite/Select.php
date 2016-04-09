@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Driver\sqlite\Select.
- */
-
 namespace Drupal\Core\Database\Driver\sqlite;
 
 use Drupal\Core\Database\Query\Select as QuerySelect;

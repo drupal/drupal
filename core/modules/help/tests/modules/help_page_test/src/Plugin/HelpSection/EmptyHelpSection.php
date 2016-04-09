@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\help_page_test\Plugin\HelpSection\EmptyHelpSection.
- */
-
 namespace Drupal\help_page_test\Plugin\HelpSection;
 
 use Drupal\help\Plugin\HelpSection\HelpSectionPluginBase;

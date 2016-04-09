@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\taxonomy\Kernel\Migrate\MigrateTaxonomyTermStubTest.
- */
-
 namespace Drupal\Tests\taxonomy\Kernel\Migrate;
 
 use Drupal\migrate\MigrateExecutable;

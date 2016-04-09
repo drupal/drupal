@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\Tests\SearchPageTextTest.
- */
-
 namespace Drupal\search\Tests;
 
 use Drupal\Component\Utility\Html;

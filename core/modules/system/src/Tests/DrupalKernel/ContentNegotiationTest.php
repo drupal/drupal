@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\DrupalKernel\ContentNegotiationTest.
- */
-
 namespace Drupal\system\Tests\DrupalKernel;
 
 use Drupal\simpletest\WebTestBase;

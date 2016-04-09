@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\page_cache\Tests\PageCacheTagsIntegrationTest.
- */
-
 namespace Drupal\page_cache\Tests;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;

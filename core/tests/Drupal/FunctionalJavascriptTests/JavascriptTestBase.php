@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\FunctionalJavascriptTests\JavascriptTestBase.
- */
-
 namespace Drupal\FunctionalJavascriptTests;
 
 use Drupal\simpletest\BrowserTestBase;

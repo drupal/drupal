@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\entity_reference\Plugin\views\row\EntityReference.
- */
-
 namespace Drupal\entity_reference\Plugin\views\row;
 
 use Drupal\views\Plugin\views\row\EntityReference as ViewsEntityReference;

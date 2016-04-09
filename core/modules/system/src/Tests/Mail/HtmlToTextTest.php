@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Mail\HtmlToTextTest.
- */
-
 namespace Drupal\system\Tests\Mail;
 
 use Drupal\Component\Utility\Html;

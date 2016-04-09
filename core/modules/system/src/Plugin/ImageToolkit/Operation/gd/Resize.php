@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\ImageToolkit\Operation\gd\Resize.
- */
-
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\PageCache\DenyNodePreview.
- */
-
 namespace Drupal\node\PageCache;
 
 use Drupal\Core\PageCache\ResponsePolicyInterface;

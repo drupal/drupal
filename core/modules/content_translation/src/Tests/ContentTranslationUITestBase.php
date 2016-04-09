@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Tests\ContentTranslationUITestBase.
- */
-
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Cache\Cache;

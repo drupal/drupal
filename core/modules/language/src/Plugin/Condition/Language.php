@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Plugin\Condition\Language.
- */
-
 namespace Drupal\language\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;

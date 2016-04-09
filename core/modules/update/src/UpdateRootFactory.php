@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\update\UpdateRootFactory.
- */
-
 namespace Drupal\update;
 
 use Drupal\Core\DrupalKernelInterface;

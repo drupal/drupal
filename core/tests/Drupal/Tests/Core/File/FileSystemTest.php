@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\File\FileSystemTest.
- */
-
 namespace Drupal\Tests\Core\File;
 
 use Drupal\Core\File\FileSystem;

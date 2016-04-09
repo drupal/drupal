@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Database\Driver\mysql\Schema.
- */
-
 namespace Drupal\Core\Database\Driver\mysql;
 
 use Drupal\Core\Database\Query\Condition;

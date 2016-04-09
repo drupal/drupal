@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\UserStorageSchema.
- */
-
 namespace Drupal\user;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;

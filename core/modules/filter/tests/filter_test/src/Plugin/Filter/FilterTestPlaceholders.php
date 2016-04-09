@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter_test\Plugin\Filter\FilterTestPlaceholders.
- */
-
 namespace Drupal\filter_test\Plugin\Filter;
 
 use Drupal\filter\FilterProcessResult;

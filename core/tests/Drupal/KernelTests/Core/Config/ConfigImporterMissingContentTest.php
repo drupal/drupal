@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Config\ConfigImporterMissingContentTest.
- */
-
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\ConfigImporter;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Plugin\Block\LanguageBlock.
- */
-
 namespace Drupal\language\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\search\SearchPageListBuilder.
- */
-
 namespace Drupal\search;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

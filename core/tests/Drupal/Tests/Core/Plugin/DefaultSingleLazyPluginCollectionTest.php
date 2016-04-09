@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Plugin\DefaultSingleLazyPluginCollectionTest.
- */
-
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Entity\Render\EntityFieldRenderer.
- */
-
 namespace Drupal\views\Entity\Render;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;

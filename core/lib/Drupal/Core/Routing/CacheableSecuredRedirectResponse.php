@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Routing\CacheableSecuredRedirectResponse.
- */
-
 namespace Drupal\Core\Routing;
 
 use Drupal\Component\HttpFoundation\SecuredRedirectResponse;

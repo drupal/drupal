@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\Action\BlockUser.
- */
-
 namespace Drupal\user\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;

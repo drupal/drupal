@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Form\FeedItemsDeleteForm.
- */
-
 namespace Drupal\aggregator\Form;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Cache\ChainedFastBackendTest.
- */
-
 namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Core\Cache\ChainedFastBackend;

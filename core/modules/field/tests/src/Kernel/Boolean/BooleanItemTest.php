@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\Boolean\BooleanItemTest.
- */
-
 namespace Drupal\Tests\field\Kernel\Boolean;
 
 use Drupal\Core\Field\FieldItemListInterface;

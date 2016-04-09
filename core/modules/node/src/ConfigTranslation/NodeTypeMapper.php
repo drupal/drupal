@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\ConfigTranslation\NodeTypeMapper.
- */
-
 namespace Drupal\node\ConfigTranslation;
 
 use Drupal\config_translation\ConfigEntityMapper;

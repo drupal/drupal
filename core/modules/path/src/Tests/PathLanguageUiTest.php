@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\Tests\PathLanguageUiTest.
- */
-
 namespace Drupal\path\Tests;
 
 /**

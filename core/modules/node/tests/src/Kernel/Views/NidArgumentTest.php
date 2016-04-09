@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\node\Kernel\Views\NidArgumentTest.
- */
-
 namespace Drupal\Tests\node\Kernel\Views;
 
 use Drupal\node\Entity\Node;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Kernel\Plugin\StyleTableUnitTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\views\Views;

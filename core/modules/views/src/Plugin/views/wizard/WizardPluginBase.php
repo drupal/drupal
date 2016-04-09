@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\wizard\WizardPluginBase.
- */
-
 namespace Drupal\views\Plugin\views\wizard;
 
 use Drupal\Component\Utility\NestedArray;

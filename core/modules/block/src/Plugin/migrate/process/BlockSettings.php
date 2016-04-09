@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Plugin\migrate\process\BlockSettings.
- */
-
 namespace Drupal\block\Plugin\migrate\process;
 
 use Drupal\block\BlockInterface;

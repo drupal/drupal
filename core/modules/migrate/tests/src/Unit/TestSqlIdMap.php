@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\TestSqlIdMap.
- */
-
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Database\Connection;

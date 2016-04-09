@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\AccessTest.
- */
-
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\Tests\ViewTestData;

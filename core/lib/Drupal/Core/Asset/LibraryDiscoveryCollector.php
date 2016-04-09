@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Asset\LibraryDiscoveryCollector.
- */
-
 namespace Drupal\Core\Asset;
 
 use Drupal\Component\Utility\NestedArray;

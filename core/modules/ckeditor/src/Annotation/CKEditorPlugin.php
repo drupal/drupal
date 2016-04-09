@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\Annotation\CKEditorPlugin.
- */
-
 namespace Drupal\ckeditor\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\Routing\FieldUiRouteEnhancer.
- */
-
 namespace Drupal\field_ui\Routing;
 
 use Drupal\Core\Entity\EntityManagerInterface;

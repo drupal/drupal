@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass.
- */
-
 namespace Drupal\Core\DependencyInjection\Compiler;
 
 use Drupal\Component\ProxyBuilder\ProxyBuilder;

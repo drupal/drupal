@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Template\TwigNodeVisitor.
- */
-
 namespace Drupal\Core\Template;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\StorageInterface.
- */
-
 namespace Drupal\Core\Config;
 
 /**

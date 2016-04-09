@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\CKEditorPluginBase.
- */
-
 namespace Drupal\ckeditor;
 
 use Drupal\Core\Plugin\PluginBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Theme\BatchNegotiator.
- */
-
 namespace Drupal\system\Theme;
 
 use Drupal\Core\Batch\BatchStorageInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\basic_auth\Authentication\Provider\BasicAuth.
- */
-
 namespace Drupal\basic_auth\Authentication\Provider;
 
 use Drupal\Component\Utility\SafeMarkup;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\update\Form\UpdateManagerUpdate.
- */
-
 namespace Drupal\update\Form;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

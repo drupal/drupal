@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\CKEditorPluginInterface.
- */
-
 namespace Drupal\ckeditor;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

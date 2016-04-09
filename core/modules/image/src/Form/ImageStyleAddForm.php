@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image\Form\ImageStyleAddForm.
- */
-
 namespace Drupal\image\Form;
 
 use Drupal\Core\Form\FormStateInterface;

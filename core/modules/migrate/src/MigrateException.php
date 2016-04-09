@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\MigrateException.
- */
-
 namespace Drupal\migrate;
 
 use Drupal\migrate\Plugin\MigrateIdMapInterface;

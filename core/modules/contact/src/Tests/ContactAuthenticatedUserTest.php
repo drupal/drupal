@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\contact\Tests\ContactAuthenticatedUserTest.
- */
-
 namespace Drupal\contact\Tests;
 
 use Drupal\simpletest\WebTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\LanguageConverter.
- */
-
 namespace Drupal\language;
 
 use Drupal\Core\Language\LanguageManagerInterface;

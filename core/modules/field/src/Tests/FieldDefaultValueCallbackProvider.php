@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\FieldDefaultValueCallbackProvider.
- */
-
 namespace Drupal\field\Tests;
 
 /**

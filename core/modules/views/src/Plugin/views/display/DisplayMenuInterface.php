@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\display\DisplayMenuInterface.
- */
-
 namespace Drupal\views\Plugin\views\display;
 
 /**

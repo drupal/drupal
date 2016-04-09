@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\Views\CommentFieldFilterTest.
- */
-
 namespace Drupal\comment\Tests\Views;
 
 use Drupal\language\Entity\ConfigurableLanguage;

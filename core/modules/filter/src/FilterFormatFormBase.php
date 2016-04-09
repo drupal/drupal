@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter\FilterFormatFormBase.
- */
-
 namespace Drupal\filter;
 
 use Drupal\Core\Entity\EntityForm;

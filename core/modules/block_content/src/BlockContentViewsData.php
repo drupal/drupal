@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_content\BlockContentViewsData.
- */
-
 namespace Drupal\block_content;
 
 use Drupal\views\EntityViewsData;

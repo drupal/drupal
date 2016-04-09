@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\menu_test\Access\AccessCheck.
- */
 
 namespace Drupal\menu_test\Access;
 

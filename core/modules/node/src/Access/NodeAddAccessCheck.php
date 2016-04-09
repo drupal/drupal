@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Access\NodeAddAccessCheck.
- */
-
 namespace Drupal\node\Access;
 
 use Drupal\Core\Access\AccessResult;

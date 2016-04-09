@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\big_pipe_test\Form\BigPipeTestForm.
- */
-
 namespace Drupal\big_pipe_test\Form;
 
 use Drupal\Core\Form\FormBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\system\Kernel\Scripts\DbToolsApplicationTest.
- */
-
 namespace Drupal\Tests\system\Kernel\Scripts;
 
 use Drupal\Core\Command\DbToolsApplication;

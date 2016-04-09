@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Ajax\CommandWithAttachedAssetsTrait.
- */
-
 namespace Drupal\Core\Ajax;
 
 use Drupal\Core\Asset\AttachedAssets;

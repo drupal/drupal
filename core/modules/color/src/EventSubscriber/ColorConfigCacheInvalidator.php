@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\color\EventSubscriber\ColorConfigCacheInvalidator.
- */
-
 namespace Drupal\color\EventSubscriber;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;

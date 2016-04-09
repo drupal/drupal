@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Command\DbDumpApplication.
- */
-
 namespace Drupal\Core\Command;
 
 use Symfony\Component\Console\Application;

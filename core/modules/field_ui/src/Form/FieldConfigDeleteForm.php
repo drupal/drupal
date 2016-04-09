@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\Form\FieldConfigDeleteForm.
- */
-
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

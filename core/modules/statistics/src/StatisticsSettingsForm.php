@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\statistics\StatisticsSettingsForm.
- */
 
 namespace Drupal\statistics;
 

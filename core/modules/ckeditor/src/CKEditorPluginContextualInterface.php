@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ckeditor\CKEditorPluginContextualInterface.
- */
-
 namespace Drupal\ckeditor;
 
 use Drupal\editor\Entity\Editor;

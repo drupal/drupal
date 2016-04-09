@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\ArgumentDefaultTest.
- */
-
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\node\Entity\Node;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Entity\FilterEntityBundleTest.
- */
-
 namespace Drupal\views\Tests\Entity;
 
 use Drupal\node\Entity\Node;

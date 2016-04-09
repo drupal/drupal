@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\PhpStorage\FileReadOnlyStorage.
- */
-
 namespace Drupal\Component\PhpStorage;
 
 /**

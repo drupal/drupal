@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\ViewsEscapingTest.
- */
-
 namespace Drupal\views\Tests;
 
 /**

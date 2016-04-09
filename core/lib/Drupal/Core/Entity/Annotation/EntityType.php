@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Annotation\EntityType.
- */
-
 namespace Drupal\Core\Entity\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

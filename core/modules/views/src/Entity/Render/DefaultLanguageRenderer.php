@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Entity\Render\DefaultLanguageRenderer.
- */
-
 namespace Drupal\views\Entity\Render;
 
 use Drupal\views\ResultRow;

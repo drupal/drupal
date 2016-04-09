@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\DependencyInjection\Dumper\OptimizedPhpArrayDumper.
- */
-
 namespace Drupal\Component\DependencyInjection\Dumper;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;

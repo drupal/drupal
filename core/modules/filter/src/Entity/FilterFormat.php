@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\filter\Entity\FilterFormat.
- */
-
 namespace Drupal\filter\Entity;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

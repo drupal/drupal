@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\PageCache\DefaultRequestPolicy.
- */
-
 namespace Drupal\Core\PageCache;
 
 use Drupal\Core\Session\SessionConfigurationInterface;

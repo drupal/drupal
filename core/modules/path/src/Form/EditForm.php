@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\path\Form\EditForm.
- */
-
 namespace Drupal\path\Form;
 
 use Drupal\Core\Form\FormStateInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\aggregator\Plugin\AggregatorPluginSettingsBase.
- */
-
 namespace Drupal\aggregator\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;

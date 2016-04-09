@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Archiver\Tar.
- */
-
 namespace Drupal\Core\Archiver;
 
 /**

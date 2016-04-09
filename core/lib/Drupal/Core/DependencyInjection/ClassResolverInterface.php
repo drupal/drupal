@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\DependencyInjection\ClassResolverInterface.
- */
-
 namespace Drupal\Core\DependencyInjection;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\text\Tests\TextSummaryTest.
- */
-
 namespace Drupal\text\Tests;
 
 use Drupal\simpletest\KernelTestBase;

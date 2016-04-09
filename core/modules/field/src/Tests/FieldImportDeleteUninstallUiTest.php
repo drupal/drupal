@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\FieldImportDeleteUninstallUiTest.
- */
-
 namespace Drupal\field\Tests;
 
 use Drupal\entity_test\Entity\EntityTest;

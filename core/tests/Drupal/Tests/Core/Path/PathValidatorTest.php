@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Path\PathValidatorTest.
- */
-
 namespace Drupal\Tests\Core\Path;
 
 use Drupal\Core\ParamConverter\ParamNotConvertedException;

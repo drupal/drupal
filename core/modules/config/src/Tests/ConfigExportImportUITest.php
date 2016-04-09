@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config\Tests\ConfigExportImportUITest.
- */
-
 namespace Drupal\config\Tests;
 
 use Drupal\Component\Utility\Unicode;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber.
- */
-
 namespace Drupal\views\EventSubscriber;
 
 use Drupal\Core\Entity\EntityManagerInterface;

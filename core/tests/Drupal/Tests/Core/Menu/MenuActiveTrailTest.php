@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Menu\MenuActiveTrailTest.
- */
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\MenuActiveTrail;

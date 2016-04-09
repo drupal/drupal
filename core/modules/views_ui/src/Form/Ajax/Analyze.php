@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\Form\Ajax\Analyze.
- */
-
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormStateInterface;

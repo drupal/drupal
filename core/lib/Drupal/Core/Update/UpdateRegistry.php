@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Update\UpdateRegistry.
- */
-
 namespace Drupal\Core\Update;
 
 use Drupal\Core\Extension\Extension;

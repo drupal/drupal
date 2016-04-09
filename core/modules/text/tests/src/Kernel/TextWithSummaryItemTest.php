@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\text\Kernel\TextWithSummaryItemTest.
- */
-
 namespace Drupal\Tests\text\Kernel;
 
 use Drupal\Core\Field\FieldItemListInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Entity\FieldEntityTranslationTest.
- */
-
 namespace Drupal\views\Tests\Entity;
 
 use Drupal\Core\Language\Language;

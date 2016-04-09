@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\FieldAttachStorageTest.
- */
-
 namespace Drupal\Tests\field\Kernel;
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;

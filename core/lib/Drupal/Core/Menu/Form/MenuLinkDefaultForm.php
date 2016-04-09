@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\Form\MenuLinkDefaultForm.
- */
-
 namespace Drupal\Core\Menu\Form;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

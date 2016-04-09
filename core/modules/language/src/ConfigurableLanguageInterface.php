@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\ConfigurableLanguageInterface.
- */
-
 namespace Drupal\language;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

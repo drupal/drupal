@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface.
- */
-
 namespace Drupal\migrate_drupal\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

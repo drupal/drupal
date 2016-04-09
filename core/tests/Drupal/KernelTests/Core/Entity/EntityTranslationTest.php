@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityTranslationTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Utility\SafeMarkup;

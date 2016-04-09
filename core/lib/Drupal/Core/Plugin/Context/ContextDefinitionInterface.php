@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Plugin\Context\ContextDefinitionInterface.
- */
-
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\ContextDefinitionInterface as ComponentContextDefinitionInterface;

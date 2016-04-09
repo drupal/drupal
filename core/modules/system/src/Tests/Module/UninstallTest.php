@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Module\UninstallTest.
- */
-
 namespace Drupal\system\Tests\Module;
 
 use Drupal\Core\Cache\Cache;

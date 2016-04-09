@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\locale\LocaleDefaultConfigStorage.
- */
-
 namespace Drupal\locale;
 
 use Drupal\Core\Config\ExtensionInstallStorage;

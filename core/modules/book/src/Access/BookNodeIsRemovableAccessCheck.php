@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\Access\BookNodeIsRemovableAccessCheck.
- */
-
 namespace Drupal\book\Access;
 
 use Drupal\book\BookManagerInterface;

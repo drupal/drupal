@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Tests\BlockSystemBrandingTest.
- */
-
 namespace Drupal\block\Tests;
 
 /**

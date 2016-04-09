@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_translation\Tests\Views\ContentTranslationViewsUITest.
- */
-
 namespace Drupal\content_translation\Tests\Views;
 
 use Drupal\views_ui\Tests\UITestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Menu\Plugin\Block\LocalActionsBlock.
- */
-
 namespace Drupal\Core\Menu\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;

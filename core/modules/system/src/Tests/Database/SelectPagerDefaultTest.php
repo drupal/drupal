@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Database\SelectPagerDefaultTest.
- */
-
 namespace Drupal\system\Tests\Database;
 use Symfony\Component\HttpFoundation\Request;
 

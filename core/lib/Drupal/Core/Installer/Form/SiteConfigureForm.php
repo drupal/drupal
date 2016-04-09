@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Installer\Form\SiteConfigureForm.
- */
-
 namespace Drupal\Core\Installer\Form;
 
 use Drupal\Core\Extension\ModuleInstallerInterface;

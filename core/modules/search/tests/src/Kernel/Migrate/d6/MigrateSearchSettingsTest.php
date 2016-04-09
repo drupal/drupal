@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\search\Kernel\Migrate\d6\MigrateSearchSettingsTest.
- */
-
 namespace Drupal\Tests\search\Kernel\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;

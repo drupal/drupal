@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_test_data\Plugin\views\filter\FilterExceptionTest.
- */
-
 namespace Drupal\views_test_data\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\FilterPluginBase;

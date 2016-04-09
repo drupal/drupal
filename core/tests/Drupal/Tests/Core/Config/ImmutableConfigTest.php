@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Config\ImmutableConfigTest.
- */
-
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\Config\ImmutableConfig;

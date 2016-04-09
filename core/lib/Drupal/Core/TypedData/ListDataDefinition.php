@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\ListDataDefinition.
- */
-
 namespace Drupal\Core\TypedData;
 
 /**

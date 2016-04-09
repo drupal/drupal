@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityUUIDTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 /**

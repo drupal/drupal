@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeAdminTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\user\RoleInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\views\argument_validator\TermName.
- */
-
 namespace Drupal\taxonomy\Plugin\views\argument_validator;
 
 use Drupal\Core\Form\FormStateInterface;

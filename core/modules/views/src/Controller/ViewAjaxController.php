@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Controller\ViewAjaxController.
- */
-
 namespace Drupal\views\Controller;
 
 use Drupal\Component\Utility\UrlHelper;

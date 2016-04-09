@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Kernel\Number\NumberItemTest.
- */
-
 namespace Drupal\Tests\field\Kernel\Number;
 
 use Drupal\Core\Field\FieldItemInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Lock\LockUnitTest.
- */
-
 namespace Drupal\system\Tests\Lock;
 
 use Drupal\Core\Lock\DatabaseLockBackend;

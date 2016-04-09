@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\book\BookOutlineStorageInterface.
-*/
-
 namespace Drupal\book;
 
 /**

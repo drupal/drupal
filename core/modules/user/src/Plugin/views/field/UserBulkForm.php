@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\views\field\UserBulkForm.
- */
-
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;

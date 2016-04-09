@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Logger\LoggerChannel.
- */
-
 namespace Drupal\Core\Logger;
 
 use Drupal\Core\Session\AccountInterface;

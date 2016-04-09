@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\Condition\UserRoleConditionTest.
- */
-
 namespace Drupal\user\Tests\Condition;
 
 use Drupal\Component\Utility\SafeMarkup;

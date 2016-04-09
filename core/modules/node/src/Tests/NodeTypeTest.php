@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Tests\NodeTypeTest.
- */
-
 namespace Drupal\node\Tests;
 
 use Drupal\field\Entity\FieldConfig;

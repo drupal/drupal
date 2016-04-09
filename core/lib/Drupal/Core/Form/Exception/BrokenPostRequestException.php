@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Form\Exception\BrokenPostRequestException.
- */
-
 namespace Drupal\Core\Form\Exception;
 
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;

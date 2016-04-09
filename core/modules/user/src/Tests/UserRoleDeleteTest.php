@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Tests\UserRoleDeleteTest.
- */
-
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\KernelTestBase;

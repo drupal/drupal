@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_test\Plugin\Field\FieldType\TestItemWithPreconfiguredOptions.
- */
-
 namespace Drupal\field_test\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;

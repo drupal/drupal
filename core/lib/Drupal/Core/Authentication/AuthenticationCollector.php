@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Authentication\AuthenticationCollector.
- */
-
 namespace Drupal\Core\Authentication;
 
 /**

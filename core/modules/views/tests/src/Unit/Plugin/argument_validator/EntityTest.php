@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\Plugin\argument_validator\EntityTest.
- */
-
 namespace Drupal\Tests\views\Unit\Plugin\argument_validator;
 
 use Drupal\Tests\UnitTestCase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Plugin\ImageToolkit\GDToolkit.
- */
-
 namespace Drupal\system\Plugin\ImageToolkit;
 
 use Drupal\Component\Utility\Color;

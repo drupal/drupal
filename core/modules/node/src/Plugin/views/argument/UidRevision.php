@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\views\argument\UidRevision.
- */
-
 namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\user\Plugin\views\argument\Uid;

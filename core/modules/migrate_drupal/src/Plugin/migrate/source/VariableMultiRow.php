@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow.
- */
-
 namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
 use Drupal\migrate\Row;

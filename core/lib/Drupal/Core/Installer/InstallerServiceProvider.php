@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Installer\InstallerServiceProvider.
- */
-
 namespace Drupal\Core\Installer;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

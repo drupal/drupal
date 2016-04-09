@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\DrupalKernel\DiscoverServiceProvidersTest.
- */
-
 namespace Drupal\Tests\Core\DrupalKernel;
 
 use Drupal\Core\DrupalKernel;

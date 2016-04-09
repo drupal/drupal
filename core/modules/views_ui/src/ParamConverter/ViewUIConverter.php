@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views_ui\ParamConverter\ViewUIConverter.
- */
-
 namespace Drupal\views_ui\ParamConverter;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

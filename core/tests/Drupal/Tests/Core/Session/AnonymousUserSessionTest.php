@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Session\AnonymousUserSessionTest.
- */
-
 namespace Drupal\Tests\Core\Session;
 
 use Drupal\Tests\UnitTestCase;

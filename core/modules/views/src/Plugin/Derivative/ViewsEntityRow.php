@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\Derivative\ViewsEntityRow.
- */
-
 namespace Drupal\views\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityManagerInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\language\Config\LanguageConfigOverrideEvents.
- */
-
 namespace Drupal\language\Config;
 
 /**

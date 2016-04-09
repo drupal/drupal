@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\CronController.
- */
-
 namespace Drupal\system;
 
 use Drupal\Core\Controller\ControllerBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\editor\Unit\EditorConfigEntityUnitTest.
- */
-
 namespace Drupal\Tests\editor\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

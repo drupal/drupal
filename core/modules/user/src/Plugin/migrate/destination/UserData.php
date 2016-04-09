@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\migrate\destination\UserData.
- */
-
 namespace Drupal\user\Plugin\migrate\destination;
 
 use Drupal\migrate\Plugin\MigrationInterface;

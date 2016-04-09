@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ban\Form\BanDelete.
- */
-
 namespace Drupal\ban\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;

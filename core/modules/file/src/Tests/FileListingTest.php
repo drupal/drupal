@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\file\Tests\FileListingTest.
- */
-
 namespace Drupal\file\Tests;
 
 use Drupal\node\Entity\Node;

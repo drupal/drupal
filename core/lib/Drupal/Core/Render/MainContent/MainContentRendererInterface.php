@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Render\MainContent\MainContentRendererInterface.
- */
-
 namespace Drupal\Core\Render\MainContent;
 
 use Drupal\Core\Routing\RouteMatchInterface;

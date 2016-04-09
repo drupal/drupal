@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Plugin\Validation\Constraint\UserMailUnique.
- */
-
 namespace Drupal\user\Plugin\Validation\Constraint;
 
 use Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldConstraint;

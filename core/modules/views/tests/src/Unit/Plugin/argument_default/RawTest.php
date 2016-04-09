@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\Plugin\argument_default\RawTest.
- */
-
 namespace Drupal\Tests\views\Unit\Plugin\argument_default;
 
 use Drupal\Core\Path\CurrentPathStack;

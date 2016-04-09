@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\hal\Kernel\NormalizerTestBase.
- */
-
 namespace Drupal\Tests\hal\Kernel;
 
 use Drupal\Core\Cache\MemoryBackend;

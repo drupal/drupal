@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\comment\Tests\CommentNewIndicatorTest.
- */
-
 namespace Drupal\comment\Tests;
 
 use Drupal\Component\Serialization\Json;

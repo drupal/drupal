@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Database\TaggingTest.
- */
-
 namespace Drupal\KernelTests\Core\Database;
 
 /**

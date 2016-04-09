@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\PrivateKeyTest.
- */
-
 namespace Drupal\Tests\Core;
 
 use Drupal\Core\PrivateKey;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\DependencyInjection\YamlFileLoader.
- */
-
 namespace Drupal\Core\DependencyInjection;
 
 use Drupal\Component\FileCache\FileCacheFactory;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\options\Kernel\OptionsFormattersTest.
- */
-
 namespace Drupal\Tests\options\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;

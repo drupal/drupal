@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\TypedData\PrimitiveBase.
- */
-
 namespace Drupal\Core\TypedData;
 
 /**

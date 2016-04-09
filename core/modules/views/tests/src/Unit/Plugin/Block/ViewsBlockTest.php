@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\Plugin\Block\ViewsBlockTest.
- */
-
 namespace Drupal\Tests\views\Unit\Plugin\Block {
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

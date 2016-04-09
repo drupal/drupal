@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Installer\InstallerLanguageTest.
- */
-
 namespace Drupal\system\Tests\Installer;
 
 use Drupal\simpletest\KernelTestBase;

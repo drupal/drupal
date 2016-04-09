@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Validation\AllowedValuesConstraintValidatorTest.
- */
-
 namespace Drupal\system\Tests\Validation;
 
 use Drupal\Core\TypedData\DataDefinition;

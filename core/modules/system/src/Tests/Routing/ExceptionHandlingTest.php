@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Routing\ExceptionHandlingTest.
- */
-
 namespace Drupal\system\Tests\Routing;
 
 use Drupal\Component\Utility\Html;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block\Tests\BlockHookOperationTest.
- */
-
 namespace Drupal\block\Tests;
 
 use Drupal\Component\Utility\Unicode;

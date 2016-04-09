@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecoratorTest.
- */
-
 namespace Drupal\Tests\Core\Plugin\Discovery;
 
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;

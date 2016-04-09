@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Routing\UrlGeneratorTest.
- */
-
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Cache\Cache;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Config\Testing\ConfigSchemaChecker.
- */
-
 namespace Drupal\Core\Config\Testing;
 
 use Drupal\Component\Utility\SafeMarkup;

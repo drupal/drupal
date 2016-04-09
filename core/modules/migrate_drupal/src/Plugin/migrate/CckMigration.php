@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\CckMigration.
- */
-
 namespace Drupal\migrate_drupal\Plugin\migrate;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

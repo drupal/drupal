@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityReferenceFieldTest.
- */
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;

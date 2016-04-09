@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Plugin\DefaultLazyPluginCollectionTest.
- */
-
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;

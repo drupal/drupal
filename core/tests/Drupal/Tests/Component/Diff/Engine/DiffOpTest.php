@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Diff\Engine\DiffOpTest.
- */
-
 namespace Drupal\Tests\Component\Diff\Engine;
 
 use Drupal\Component\Diff\Engine\DiffOp;

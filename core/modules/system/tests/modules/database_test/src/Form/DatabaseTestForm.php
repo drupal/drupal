@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\database_test\Form\DatabaseTestForm.
- */
-
 namespace Drupal\database_test\Form;
 
 use Drupal\Core\Form\FormBase;

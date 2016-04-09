@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\config_translation\FormElement\Textfield.
- */
-
 namespace Drupal\config_translation\FormElement;
 
 use Drupal\Core\Language\LanguageInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\Controller\EntityViewController.
- */
-
 namespace Drupal\Core\Entity\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

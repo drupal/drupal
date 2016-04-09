@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\system\Tests\Update\MenuTreeSerializationTitleTest.
- */
-
 namespace Drupal\system\Tests\Update;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;

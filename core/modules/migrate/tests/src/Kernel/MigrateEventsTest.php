@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Kernel\MigrateEventsTest.
- */
-
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\Event\MigrateImportEvent;

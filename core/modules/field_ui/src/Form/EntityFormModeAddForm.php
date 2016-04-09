@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_ui\Form\EntityFormModeAddForm.
- */
-
 namespace Drupal\field_ui\Form;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

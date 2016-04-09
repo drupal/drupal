@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views_ui\Unit\Form\Ajax\RearrangeFilterTest.
- */
-
 namespace Drupal\Tests\views_ui\Unit\Form\Ajax;
 
 use Drupal\Tests\UnitTestCase;

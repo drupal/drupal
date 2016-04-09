@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\user\Authentication\Provider\Cookie.
- */
-
 namespace Drupal\user\Authentication\Provider;
 
 use Drupal\Core\Authentication\AuthenticationProviderInterface;

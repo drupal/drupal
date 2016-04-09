@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Component\Gettext\PoHeader.
- */
-
 namespace Drupal\Component\Gettext;
 
 /**

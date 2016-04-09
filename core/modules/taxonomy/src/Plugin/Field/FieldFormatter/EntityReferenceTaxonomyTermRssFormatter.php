@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\taxonomy\Plugin\Field\FieldFormatter\EntityReferenceTaxonomyTermRssFormatter.
- */
-
 namespace Drupal\taxonomy\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;

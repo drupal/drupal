@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Form\ViewsExposedForm.
- */
-
 namespace Drupal\views\Form;
 
 use Drupal\Component\Utility\Html;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\basic_auth\Tests\BasicAuthTestTrait.
- */
-
 namespace Drupal\basic_auth\Tests;
 
 /**

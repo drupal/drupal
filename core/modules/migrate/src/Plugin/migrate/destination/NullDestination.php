@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\NullDestination.
- */
-
 namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\migrate\Plugin\MigrationInterface;
