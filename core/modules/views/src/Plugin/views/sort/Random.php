@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\UncacheableDependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -11,6 +12,8 @@ use Drupal\Core\Form\FormStateInterface;
  * @ViewsSort("random")
  */
 class Random extends SortPluginBase implements CacheableDependencyInterface {
+
+  use UncacheableDependencyTrait;
 
   /**
    * {@inheritdoc}
@@ -26,27 +29,6 @@ class Random extends SortPluginBase implements CacheableDependencyInterface {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['order']['#access'] = FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheMaxAge() {
-    return 0;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheContexts() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheTags() {
-    return [];
   }
 
 }
