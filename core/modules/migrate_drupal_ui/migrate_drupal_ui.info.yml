@@ -1,6 +1,6 @@
 name: 'Drupal Upgrade UI'
 type: module
-description: 'UI for direct upgrades from older Drupal versions.'
+description: 'Provides a user interface for migrating from older Drupal versions.'
 package: 'Core (Experimental)'
 version: VERSION
 core: 8.x
