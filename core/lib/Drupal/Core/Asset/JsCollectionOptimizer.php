@@ -138,10 +138,8 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
           break;
 
         case 'external':
-        case 'setting':
-        case 'inline':
-          // We don't do any aggregation and hence also no caching for external,
-          // setting or inline JS assets.
+          // We don't do any aggregation and hence also no caching for external
+          // JS assets.
           $uri = $js_group['items'][0]['data'];
           $js_assets[$order]['data'] = $uri;
           break;
