@@ -14,15 +14,19 @@ function content_translation_install() {
   // Assign a fairly low weight to ensure our implementation of
   // hook_module_implements_alter() is run among the last ones.
   module_set_weight('content_translation', 10);
+
   // Translation works when at least two languages are added.
   if (count(\Drupal::languageManager()->getLanguages()) < 2) {
-    // @todo: Switch to Url::fromRoute() once https://www.drupal.org/node/2589967 is resolved.
-    $t_args = [':language_url' => Url::fromUri('internal:/admin/config/regional/language')->toString()];
+    $t_args = [
+      ':language_url' => Url::fromRoute('entity.configurable_language.collection')->toString()
+    ];
     $message = t('This site has only a single language enabled. <a href=":language_url">Add at least one more language</a> in order to translate content.', $t_args);
     drupal_set_message($message, 'warning');
   }
   // Point the user to the content translation settings.
-  $t_args = [':settings_url' => Url::fromUri('internal:/admin/config/regional/content-language')->toString()];
+  $t_args = [
+    ':settings_url' => Url::fromRoute('language.content_settings_page')->toString()
+  ];
   $message = t('<a href=":settings_url">Enable translation</a> for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em>, or any other element you wish to translate.', $t_args);
   drupal_set_message($message, 'warning');
 }

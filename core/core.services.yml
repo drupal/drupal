@@ -473,7 +473,7 @@ services:
     class: Drupal\Core\Extension\ModuleInstaller
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['@app.root', '@module_handler', '@kernel']
+    arguments: ['@app.root', '@module_handler', '@kernel', '@router.builder']
     lazy: true
   content_uninstall_validator:
     class: Drupal\Core\Entity\ContentUninstallValidator
@@ -763,6 +763,9 @@ services:
     tags:
       - { name: event_subscriber }
       - { name: backend_overridable }
+  router.route_provider.lazy_builder:
+    class: Drupal\Core\Routing\RouteProviderLazyBuilder
+    arguments: ['@router.route_provider', '@router.builder']
   router.route_preloader:
     class: Drupal\Core\Routing\RoutePreloader
     arguments: ['@router.route_provider', '@state', '@cache.bootstrap']

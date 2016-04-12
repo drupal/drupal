@@ -198,6 +198,12 @@ function hook_modules_installed($modules) {
  * If the module implements hook_schema(), the database tables will
  * be created before this hook is fired.
  *
+ * If the module provides a MODULE.routing.yml or alters routing information
+ * these changes will not be available when this hook is fired. If up-to-date
+ * router information is required, for example to use \Drupal\Core\Url, then
+ * (preferably) use hook_modules_installed() or rebuild the router in the
+ * hook_install() implementation.
+ *
  * Implementations of this hook are by convention declared in the module's
  * .install file. The implementation can rely on the .module file being loaded.
  * The hook will only be called when a module is installed. The module's schema
