@@ -1,5 +1,5 @@
 {
-  "name": "drupal/core-gettext",
+  "name": "drupal/core-uuid",
   "description": "PHP library for reading PO files.",
   "type": "library",
   "license": "GPL-2.0+",
@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Drupal\\Component\\Gettext\\": ""
+      "Drupal\\Component\\Uuid\\": ""
     }
   }
 }

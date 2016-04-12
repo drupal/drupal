@@ -1,0 +1,15 @@
+{
+  "name": "drupal/core-assertion",
+  "description": "Provides runtime assertions similar to those in PHP 7, under PHP 5.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.5.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Assertion\\": ""
+    }
+  }
+}

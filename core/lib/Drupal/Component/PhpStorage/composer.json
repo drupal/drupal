@@ -1,16 +1,15 @@
 {
-  "name": "drupal/core-bridge",
-  "description": "Bridge.",
+  "name": "drupal/core-phpStorage",
+  "description": "PhpStorage.",
   "keywords": ["drupal"],
   "homepage": "https://www.drupal.org/project/drupal",
   "license": "GPL-2.0+",
   "require": {
-    "php": ">=5.5.9",
-    "zendframework/zend-feed": "~2.4"
+    "php": ">=5.5.9"
   },
   "autoload": {
     "psr-4": {
-      "Drupal\\Component\\Bridge\\": ""
+      "Drupal\\Component\\PhpStorage\\": ""
     }
   }
 }
