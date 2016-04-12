@@ -276,7 +276,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
    * Tests a CSS asset with 'type' => 'external'.
    */
   function testTypeExternal() {
-    $this->setExpectedException('Exception', 'Only file or inline CSS assets can be optimized.');
+    $this->setExpectedException('Exception', 'Only file CSS assets can be optimized.');
 
     $css_asset = array(
       'group' => -100,

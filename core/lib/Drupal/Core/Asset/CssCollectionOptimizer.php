@@ -133,16 +133,6 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
           }
           break;
 
-        case 'inline':
-          // We don't do any caching for inline CSS assets.
-          $data = '';
-          foreach ($css_group['items'] as $css_asset) {
-            $data .= $this->optimizer->optimize($css_asset);
-          }
-          unset($css_assets[$order]['data']['items']);
-          $css_assets[$order]['data'] = $data;
-          break;
-
         case 'external':
           // We don't do any aggregation and hence also no caching for external
           // CSS assets.

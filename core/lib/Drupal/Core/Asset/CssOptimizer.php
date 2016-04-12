@@ -20,19 +20,14 @@ class CssOptimizer implements AssetOptimizerInterface {
    * {@inheritdoc}
    */
   public function optimize(array $css_asset) {
-    if (!in_array($css_asset['type'], array('file', 'inline'))) {
-      throw new \Exception('Only file or inline CSS assets can be optimized.');
+    if ($css_asset['type'] != 'file') {
+      throw new \Exception('Only file CSS assets can be optimized.');
     }
-    if ($css_asset['type'] === 'file' && !$css_asset['preprocess']) {
+    if (!$css_asset['preprocess']) {
       throw new \Exception('Only file CSS assets with preprocessing enabled can be optimized.');
     }
 
-    if ($css_asset['type'] === 'file') {
-      return $this->processFile($css_asset);
-    }
-    else {
-      return $this->processCss($css_asset['data'], $css_asset['preprocess']);
-    }
+    return $this->processFile($css_asset);
   }
 
   /**
