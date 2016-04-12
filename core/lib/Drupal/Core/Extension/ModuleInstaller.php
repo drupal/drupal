@@ -279,6 +279,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // @see https://www.drupal.org/node/2208429
         \Drupal::service('theme_handler')->refreshInfo();
 
+        // In order to make uninstalling transactional if anything uses routes.
+        \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));
+        \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.lazy_builder'));
+
         // Allow the module to perform install tasks.
         $this->moduleHandler->invoke($module, 'install');
 
@@ -289,7 +293,15 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     // If any modules were newly installed, invoke hook_modules_installed().
     if (!empty($modules_installed)) {
-      \Drupal::service('router.builder')->setRebuildNeeded();
+      \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
+      if (!\Drupal::service('router.route_provider.lazy_builder')->hasRebuilt()) {
+        // Rebuild routes after installing module. This is done here on top of
+        // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
+        // fastCGI which executes ::destruct() after the module installation
+        // page was sent already.
+        \Drupal::service('router.builder')->rebuild();
+      }
+
       $this->moduleHandler->invokeAll('modules_installed', array($modules_installed));
     }
 
@@ -378,6 +390,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Remove all configuration belonging to the module.
       \Drupal::service('config.manager')->uninstall('module', $module);
 
+      // In order to make uninstalling transactional if anything uses routes.
+      \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));
+      \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.lazy_builder'));
+
       // Notify interested components that this module's entity types are being
       // deleted. For example, a SQL-based storage handler can use this as an
       // opportunity to drop the corresponding database tables.
@@ -450,7 +466,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $post_update_registry = \Drupal::service('update.post_update_registry');
       $post_update_registry->filterOutInvokedUpdatesByModule($module);
     }
-    \Drupal::service('router.builder')->setRebuildNeeded();
+    // Rebuild routes after installing module. This is done here on top of
+    // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
+    // fastCGI which executes ::destruct() after the Module uninstallation page
+    // was sent already.
+    \Drupal::service('router.builder')->rebuild();
     drupal_get_installed_schema_version(NULL, TRUE);
 
     // Let other modules react.
