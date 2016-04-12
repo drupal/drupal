@@ -40,7 +40,7 @@
         "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
         "mikey179/vfsStream": "~1.2",
         "phpunit/phpunit": "~4.8",
-        "symfony/css-selector": "2.7.*"
+        "symfony/css-selector": "~2.8"
     },
     "replace": {
         "drupal/action": "self.version",
