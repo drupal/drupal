@@ -84,28 +84,28 @@ class ErrorTest extends UnitTestCase {
     $data = array();
 
     // Test with no function, main should be in the backtrace.
-    $data[] = array(array($this->createBacktraceItem(NULL, NULL)), "main() (Line: 10)\n");
+    $data[] = array(array($this->createBacktraceItem(NULL, NULL)), "main() (Line: 10:test_file)\n");
 
     $base = array($this->createBacktraceItem());
-    $data[] = array($base, "test_function() (Line: 10)\n");
+    $data[] = array($base, "test_function() (Line: 10:test_file)\n");
 
     // Add a second item.
     $second_item = $base;
     $second_item[] = $this->createBacktraceItem('test_function_2');
 
-    $data[] = array($second_item, "test_function() (Line: 10)\ntest_function_2() (Line: 10)\n");
+    $data[] = array($second_item, "test_function() (Line: 10:test_file)\ntest_function_2() (Line: 10:test_file)\n");
 
     // Add a second item, with a class.
     $second_item_class = $base;
     $second_item_class[] = $this->createBacktraceItem('test_function_2', 'TestClass');
 
-    $data[] = array($second_item_class, "test_function() (Line: 10)\nTestClass->test_function_2() (Line: 10)\n");
+    $data[] = array($second_item_class, "test_function() (Line: 10:test_file)\nTestClass->test_function_2() (Line: 10:test_file)\n");
 
     // Add a second item, with a class.
     $second_item_args = $base;
     $second_item_args[] = $this->createBacktraceItem('test_function_2', NULL, array('string', 10, new \stdClass()));
 
-    $data[] = array($second_item_args, "test_function() (Line: 10)\ntest_function_2('string', 10, Object) (Line: 10)\n");
+    $data[] = array($second_item_args, "test_function() (Line: 10:test_file)\ntest_function_2('string', 10, Object) (Line: 10:test_file)\n");
 
     return $data;
   }
