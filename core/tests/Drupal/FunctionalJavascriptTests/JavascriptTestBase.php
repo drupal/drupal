@@ -2,7 +2,7 @@
 
 namespace Drupal\FunctionalJavascriptTests;
 
-use Drupal\simpletest\BrowserTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Symfony\Component\CssSelector\CssSelector;
 use Zumba\Mink\Driver\PhantomJSDriver;
 
