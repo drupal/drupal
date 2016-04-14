@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityCreateAnyAccessCheck.
- */
-
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Access\AccessResult;
