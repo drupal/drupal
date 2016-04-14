@@ -10,6 +10,7 @@ egulias/email-validator
 fabpot/goutte
 guzzlehttp/guzzle
 masterminds/html5
+paragonie/random_compat
 stack/builder
 symfony/class-loader
 symfony/console
@@ -17,6 +18,7 @@ symfony/dependency-injection
 symfony/event-dispatcher
 symfony/http-foundation
 symfony/http-kernel
+symfony/polyfill-iconv
 symfony/routing
 symfony/serializer
 symfony/validator
