@@ -17,7 +17,7 @@ namespace Drupal\Core\Render\Element;
  * Usage Example:
  * @code
  * $form['actions']['submit'] = array(
- *   '#type' => 'submit,
+ *   '#type' => 'submit',
  *   '#value' => $this->t('Save'),
  * );
  * @endcode
