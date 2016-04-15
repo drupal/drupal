@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Tests\Path;
 
+use Drupal\Core\Database\Database;
 use Drupal\simpletest\WebTestBase;
 use Drupal\taxonomy\Entity\Term;
 
@@ -23,6 +24,9 @@ class UrlAlterFunctionalTest extends WebTestBase {
    * Test that URL altering works and that it occurs in the correct order.
    */
   function testUrlAlter() {
+    // Ensure that the url_alias table exists after Drupal installation.
+    $this->assertTrue(Database::getConnection()->schema()->tableExists('url_alias'), 'The url_alias table exists after Drupal installation.');
+
     $account = $this->drupalCreateUser(array('administer url aliases'));
     $this->drupalLogin($account);
 
