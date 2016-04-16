@@ -36,7 +36,7 @@ use Drupal\user\Entity\User;
  * @param array $data
  *   An associative array of data objects to be used when generating replacement
  *   values, as supplied in the $data parameter to
- *  \Drupal\Core\Utility\Token::replace().
+ *   \Drupal\Core\Utility\Token::replace().
  * @param array $options
  *   An associative array of options for token replacement; see
  *   \Drupal\Core\Utility\Token::replace() for possible values.

@@ -650,8 +650,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * #lazy_builder callback; renders form CSRF token.
    *
    * @param string $placeholder
-   *  A string containing a placeholder, matching the value of the form's
-   *  #token.
+   *   A string containing a placeholder, matching the value of the form's
+   *   #token.
    *
    * @return array
    *   A renderable array containing the CSRF token.

@@ -196,7 +196,7 @@ abstract class Tasks {
    * Return driver specific configuration options.
    *
    * @param $database
-   *  An array of driver specific configuration options.
+   *   An array of driver specific configuration options.
    *
    * @return
    *   The options form array.

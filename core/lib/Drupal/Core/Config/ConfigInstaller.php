@@ -227,7 +227,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @param StorageInterface $storage
    *   The configuration storage to read configuration from.
    * @param string $collection
-   *  The configuration collection to use.
+   *   The configuration collection to use.
    * @param string $prefix
    *   (optional) Limit to configuration starting with the provided string.
    * @param \Drupal\Core\Config\StorageInterface[] $profile_storages

@@ -34,7 +34,7 @@ class UpdateManagerUpdate extends FormBase {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\State\StateInterface $state
-   *  The state service.
+   *   The state service.
    */
   public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state) {
     $this->moduleHandler = $module_handler;

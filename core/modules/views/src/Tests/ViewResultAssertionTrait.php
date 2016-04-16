@@ -45,7 +45,7 @@ trait ViewResultAssertionTrait {
    *   An expected result set.
    * @param array $column_map
    *   (optional) An associative array mapping the columns of the result set
-   *  from the view (as keys) and the expected result set (as values).
+   *   from the view (as keys) and the expected result set (as values).
    * @param string $message
    *   (optional) A custom message to display with the assertion. Defaults to
    *   'Non-identical result set.'

@@ -59,7 +59,7 @@ function options_field_storage_config_delete(FieldStorageConfigInterface $field_
  * @param \Drupal\Core\Entity\FieldableEntityInterface|NULL $entity
  *   (optional) The specific entity when this function is called from the
  *   context of a specific field on a specific entity. This allows custom
- *  'allowed_values_function' callbacks to either restrict the values or
+ *   'allowed_values_function' callbacks to either restrict the values or
  *   customize the labels for particular bundles and entities. NULL when
  *   there is not a specific entity available, such as for Views filters.
  *

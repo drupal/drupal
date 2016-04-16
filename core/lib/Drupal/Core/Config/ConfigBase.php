@@ -71,7 +71,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    * Sets the name of this configuration object.
    *
    * @param string $name
-   *  The name of the configuration object.
+   *   The name of the configuration object.
    *
    * @return $this
    *   The configuration object.
@@ -85,7 +85,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    * Validates the configuration object name.
    *
    * @param string $name
-   *  The name of the configuration object.
+   *   The name of the configuration object.
    *
    * @throws \Drupal\Core\Config\ConfigNameException
    *

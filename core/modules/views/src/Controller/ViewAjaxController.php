@@ -101,7 +101,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
    * Loads and renders a view via AJAX.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
-   *  The current request object.
+   *   The current request object.
    *
    * @return \Drupal\views\Ajax\ViewAjaxResponse
    *  The view response as ajax response.

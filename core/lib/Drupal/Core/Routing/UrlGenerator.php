@@ -245,10 +245,10 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @param $name
    *   The route name or other debug message.
    * @param \Symfony\Component\Routing\Route $route
-   *  The route object.
+   *   The route object.
    * @param array $parameters
-   *  An array of parameters as passed to
-   *  \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate().
+   *   An array of parameters as passed to
+   *   \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate().
    * @param array $query_params
    *   An array of query string parameter, which will get any extra values from
    *   $parameters merged in.

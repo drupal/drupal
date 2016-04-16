@@ -47,7 +47,7 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *  The config factory.
+   *   The config factory.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */

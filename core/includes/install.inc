@@ -715,11 +715,11 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file') {
  * Creates a directory with the specified permissions.
  *
  * @param $file
- *  The name of the directory to create;
+ *   The name of the directory to create;
  * @param $mask
- *  The permissions of the directory to create.
+ *   The permissions of the directory to create.
  * @param $message
- *  (optional) Whether to output messages. Defaults to TRUE.
+ *   (optional) Whether to output messages. Defaults to TRUE.
  *
  * @return
  *  TRUE/FALSE whether or not the directory was successfully created.
@@ -764,11 +764,11 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
  * 0700 and get the correct value of 0500.
  *
  * @param $file
- *  The name of the file with permissions to fix.
+ *   The name of the file with permissions to fix.
  * @param $mask
- *  The desired permissions for the file.
+ *   The desired permissions for the file.
  * @param $message
- *  (optional) Whether to output messages. Defaults to TRUE.
+ *   (optional) Whether to output messages. Defaults to TRUE.
  *
  * @return
  *  TRUE/FALSE whether or not we were able to fix the file's permissions.
