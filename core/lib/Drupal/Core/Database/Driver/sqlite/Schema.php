@@ -710,7 +710,7 @@ class Schema extends DatabaseSchema {
       // Can't use query placeholders for the schema because the query would
       // have to be :prefixsqlite_master, which does not work. We also need to
       // ignore the internal SQLite tables.
-      $result = db_query("SELECT name FROM " . $schema . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", array(
+      $result = $this->connection->query("SELECT name FROM " . $schema . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", array(
         ':type' => 'table',
         ':table_name' => $table_expression,
         ':pattern' => 'sqlite_%',
