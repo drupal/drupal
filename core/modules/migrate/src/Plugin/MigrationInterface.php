@@ -137,7 +137,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * Returns the initialized destination plugin.
    *
    * @param bool $stub_being_requested
-   *  TRUE to indicate that this destination will be asked to construct a stub.
+   *   TRUE to indicate that this destination will be asked to construct a stub.
    *
    * @return \Drupal\migrate\Plugin\MigrateDestinationInterface
    *   The destination plugin.
@@ -271,10 +271,10 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *
    * @param string $property
    *   The property of which to merge the passed in process pipeline
-   * configuration.
+   *   configuration.
    * @param array $process_of_property
    *   The process pipeline configuration to be merged with the existing process
-   * pipeline configuration.
+   *   pipeline configuration.
    *
    * @return $this
    *   The migration entity.

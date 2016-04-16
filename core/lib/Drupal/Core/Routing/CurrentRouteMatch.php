@@ -28,7 +28,7 @@ class CurrentRouteMatch implements ResettableStackedRouteMatchInterface {
    * Constructs a CurrentRouteMatch object.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *  The request stack.
+   *   The request stack.
    */
   public function __construct(RequestStack $request_stack) {
     $this->requestStack = $request_stack;

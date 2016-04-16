@@ -61,7 +61,7 @@ interface NodeStorageInterface extends ContentEntityStorageInterface {
    * Unsets the language for all nodes with the given language.
    *
    * @param \Drupal\Core\Language\LanguageInterface $language
-   *  The language object.
+   *   The language object.
    */
   public function clearRevisionsLanguage(LanguageInterface $language);
 }

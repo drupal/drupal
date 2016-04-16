@@ -25,7 +25,7 @@ interface UpdaterInterface {
    * Returns the system name of the project.
    *
    * @param string $directory
-   *  A directory containing a project.
+   *   A directory containing a project.
    */
   public static function getProjectName($directory);
 

@@ -113,7 +113,7 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
    * Extracts a form AJAX exception.
    *
    * @param \Exception $e
-   *  A generic exception that might contain a form AJAX exception.
+   *   A generic exception that might contain a form AJAX exception.
    *
    * @return \Drupal\Core\Form\FormAjaxException|null
    *   Either the form AJAX exception, or NULL if none could be found.

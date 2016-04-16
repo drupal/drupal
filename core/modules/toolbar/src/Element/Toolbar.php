@@ -56,7 +56,7 @@ class Toolbar extends RenderElement {
    * rendering to ensure that it is built only if it will be displayed.
    *
    * @param array $element
-   *  A renderable array.
+   *   A renderable array.
    *
    * @return array
    *  A renderable array.

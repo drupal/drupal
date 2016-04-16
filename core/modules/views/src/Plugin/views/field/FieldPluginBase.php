@@ -143,11 +143,11 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Add 'additional' fields to the query.
    *
    * @param $fields
-   * An array of fields. The key is an identifier used to later find the
-   * field alias used. The value is either a string in which case it's
-   * assumed to be a field on this handler's table; or it's an array in the
-   * form of
-   * @code array('table' => $tablename, 'field' => $fieldname) @endcode
+   *   An array of fields. The key is an identifier used to later find the
+   *   field alias used. The value is either a string in which case it's
+   *   assumed to be a field on this handler's table; or it's an array in the
+   *   form of
+   *   @code array('table' => $tablename, 'field' => $fieldname) @endcode
    */
   protected function addAdditionalFields($fields = NULL) {
     if (!isset($fields)) {

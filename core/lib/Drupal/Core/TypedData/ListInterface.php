@@ -62,9 +62,9 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
    * @param int $index
    *   The position of the item in the list. Since a List only contains
    *   sequential, 0-based indexes, $index has to be:
-   * - Either the position of an existing item in the list. This updates the
+   *   - Either the position of an existing item in the list. This updates the
    *   item value.
-   * - Or the next available position in the sequence of the current list
+   *   - Or the next available position in the sequence of the current list
    *   indexes. This appends a new item with the provided value at the end of
    *   the list.
    * @param mixed $value

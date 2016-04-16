@@ -278,21 +278,21 @@ class Views {
    * checkboxes and radios as #options.
    *
    * @param bool $views_only
-   *  If TRUE, only return views, not displays.
+   *   If TRUE, only return views, not displays.
    * @param string $filter
-   *  Filters the views on status. Can either be 'all' (default), 'enabled' or
-   *  'disabled'
+   *   Filters the views on status. Can either be 'all' (default), 'enabled' or
+   *   'disabled'
    * @param mixed $exclude_view
-   *  view or current display to exclude
-   *  either a
-   *  - views object (containing $exclude_view->storage->name and $exclude_view->current_display)
-   *  - views name as string:  e.g. my_view
-   *  - views name and display id (separated by ':'): e.g. my_view:default
+   *   view or current display to exclude
+   *   either a
+   *   - views object (containing $exclude_view->storage->name and $exclude_view->current_display)
+   *   - views name as string:  e.g. my_view
+   *   - views name and display id (separated by ':'): e.g. my_view:default
    * @param bool $optgroup
-   *  If TRUE, returns an array with optgroups for each view (will be ignored for
-   *  $views_only = TRUE). Can be used by select
+   *   If TRUE, returns an array with optgroups for each view (will be ignored for
+   *   $views_only = TRUE). Can be used by select
    * @param bool $sort
-   *  If TRUE, the list of views is sorted ascending.
+   *   If TRUE, the list of views is sorted ascending.
    *
    * @return array
    *  an associative array for use in select.

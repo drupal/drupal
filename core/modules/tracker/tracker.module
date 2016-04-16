@@ -304,7 +304,7 @@ function _tracker_calculate_changed($node) {
  * Cleans up indexed data when nodes or comments are removed.
  *
  * @param int $nid
- *  The node ID.
+ *   The node ID.
  * @param int $uid
  *   The author of the node or comment.
  * @param int $changed

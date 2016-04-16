@@ -266,7 +266,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED.
    *
    * @param int $cardinality
-   *  The field cardinality.
+   *   The field cardinality.
    *
    * @return $this
    */

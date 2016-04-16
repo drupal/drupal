@@ -1083,7 +1083,7 @@ function install_verify_completed_task() {
  * Verifies that settings.php specifies a valid database connection.
  *
  * @param string $site_path
- *  The site path.
+ *   The site path.
  *
  * @return bool
  *  TRUE if there are no database errors.
@@ -1377,7 +1377,7 @@ function install_retrieve_file($uri, $destination) {
  *  Checks if the localization server can be contacted.
  *
  * @param string $uri
- *  The URI to contact.
+ *   The URI to contact.
  *
  * @return string
  *   TRUE if the URI was contacted successfully, FALSE if not.

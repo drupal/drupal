@@ -44,7 +44,7 @@ class RouteMatch implements RouteMatchInterface {
    * Constructs a RouteMatch object.
    *
    * @param string $route_name
-   *  The name of the route.
+   *   The name of the route.
    * @param \Symfony\Component\Routing\Route $route
    *   The route.
    * @param array $parameters

@@ -36,13 +36,13 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
    *
    * @dataProvider testNodeTypeDataProvider
    * @param string $id
-   *  The node type ID.
+   *   The node type ID.
    * @param string $label
-   *  The expected label.
+   *   The expected label.
    * @param string $description
-   *  The expected node type description.
+   *   The expected node type description.
    * @param string $help
-   *  The expected help text.
+   *   The expected help text.
    */
   protected function assertEntity($id, $label, $description, $help, $display_submitted, $new_revision, $body_label = NULL) {
     /** @var \Drupal\node\NodeTypeInterface $entity */

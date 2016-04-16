@@ -48,7 +48,7 @@ const MAINTENANCE_MODE = 'update';
  * have access to the 'administer software updates' permission.
  *
  * @param \Symfony\Component\HttpFoundation\Request $request
- *  The incoming request.
+ *   The incoming request.
  *
  * @return bool
  *   TRUE if the current user can run authorize.php, and FALSE if not.

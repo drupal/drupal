@@ -258,7 +258,7 @@ class PlaceholdersTest {
    * #lazy_builder callback; attaches setting, generates markup.
    *
    * @param string $animal
-   *  An animal.
+   *   An animal.
    *
    * @return array
    *   A renderable array.
@@ -282,7 +282,7 @@ class PlaceholdersTest {
    * #lazy_builder callback; attaches setting, generates markup, user-specific.
    *
    * @param string $animal
-   *  An animal.
+   *   An animal.
    *
    * @return array
    *   A renderable array.
@@ -297,7 +297,7 @@ class PlaceholdersTest {
    * #lazy_builder callback; attaches setting, generates markup, cache tag.
    *
    * @param string $animal
-   *  An animal.
+   *   An animal.
    *
    * @return array
    *   A renderable array.

@@ -134,7 +134,7 @@ class Random {
    * Generate a string that looks like a word (letters only, alternating consonants and vowels).
    *
    * @param int $length
-   *  The desired word length.
+   *   The desired word length.
    *
    * @return string
    */

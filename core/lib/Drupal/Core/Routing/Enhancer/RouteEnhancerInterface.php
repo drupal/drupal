@@ -14,7 +14,7 @@ interface RouteEnhancerInterface extends BaseRouteEnhancerInterface {
    * Declares if the route enhancer applies to the given route.
    *
    * @param \Symfony\Component\Routing\Route $route
-   *  The route to consider attaching to.
+   *   The route to consider attaching to.
    *
    * @return bool
    *   TRUE if the check applies to the passed route, False otherwise.

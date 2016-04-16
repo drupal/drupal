@@ -1110,7 +1110,7 @@ class RecursivePlaceholdersTest {
    * #lazy_builder callback; bubbles another placeholder.
    *
    * @param string $animal
-   *  An animal.
+   *   An animal.
    *
    * @return array
    *   A renderable array.

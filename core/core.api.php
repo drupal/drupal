@@ -1957,34 +1957,34 @@ function hook_queue_info_alter(&$queues) {
  *
  * @param $message
  *   An array containing the message data. Keys in this array include:
- *  - 'id':
+ *   - 'id':
  *     The MailManagerInterface->mail() id of the message. Look at module source
  *     code or MailManagerInterface->mail() for possible id values.
- *  - 'to':
+ *   - 'to':
  *     The address or addresses the message will be sent to. The
  *     formatting of this string must comply with RFC 2822.
- *  - 'from':
+ *   - 'from':
  *     The address the message will be marked as being from, which is
  *     either a custom address or the site-wide default email address.
- *  - 'subject':
+ *   - 'subject':
  *     Subject of the email to be sent. This must not contain any newline
  *     characters, or the email may not be sent properly.
- *  - 'body':
+ *   - 'body':
  *     An array of strings or objects that implement
  *     \Drupal\Component\Render\MarkupInterface containing the message text. The
  *     message body is created by concatenating the individual array strings
  *     into a single text string using "\n\n" as a separator.
- *  - 'headers':
+ *   - 'headers':
  *     Associative array containing mail headers, such as From, Sender,
  *     MIME-Version, Content-Type, etc.
- *  - 'params':
+ *   - 'params':
  *     An array of optional parameters supplied by the caller of
  *     MailManagerInterface->mail() that is used to build the message before
  *     hook_mail_alter() is invoked.
- *  - 'language':
+ *   - 'language':
  *     The language object used to build the message before hook_mail_alter()
  *     is invoked.
- *  - 'send':
+ *   - 'send':
  *     Set to FALSE to abort sending this email message.
  *
  * @see \Drupal\Core\Mail\MailManagerInterface::mail()
