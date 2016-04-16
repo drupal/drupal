@@ -36,7 +36,7 @@ thousands of contributed modules (for functionality not included with Drupal
 core) available for download.
 
 More about configuration:
- * Install, update and maintain Drupal:
+ * Install, update, and maintain Drupal:
    See INSTALL.txt and UPDATE.txt in the "core" directory.
  * Learn about how to use Drupal to create your site:
    https://www.drupal.org/documentation
