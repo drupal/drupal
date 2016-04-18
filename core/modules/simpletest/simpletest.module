@@ -181,6 +181,8 @@ function simpletest_run_tests($test_list) {
 function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames, &$status = NULL) {
   $phpunit_file = simpletest_phpunit_xml_filepath($test_id);
   simpletest_phpunit_run_command($unescaped_test_classnames, $phpunit_file, $status);
+
+  $rows = simpletest_phpunit_xml_to_rows($test_id, $phpunit_file);
   // A $status of 0 = passed test, 1 = failed test, > 1 indicates segfault
   // timeout, or other type of failure.
   if ($status > 1) {
@@ -196,9 +198,6 @@ function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames
       'line' => '0',
       'file' => $phpunit_file,
     ];
-  }
-  else {
-    $rows = simpletest_phpunit_xml_to_rows($test_id, $phpunit_file);
   }
   return $rows;
 }
