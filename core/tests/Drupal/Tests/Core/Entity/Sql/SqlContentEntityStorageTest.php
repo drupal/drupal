@@ -467,6 +467,42 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   }
 
   /**
+   * Tests getTableMapping() with a base field that requires a dedicated table.
+   *
+   * @covers ::__construct
+   * @covers ::getTableMapping
+   */
+  public function testGetTableMappingSimpleWithDedicatedStorageFields() {
+    $base_field_names = ['multi_valued_base_field'];
+
+    // Set up one entity key in order to have a base table.
+    $this->fieldDefinitions = $this->mockFieldDefinitions(['test_id']);
+
+    // Set up the multi-valued base field.
+    $this->fieldDefinitions += $this->mockFieldDefinitions($base_field_names, [
+      'hasCustomStorage' => FALSE,
+      'isMultiple' => TRUE,
+      'getTargetEntityTypeId' => 'entity_test',
+    ]);
+
+    $this->setUpEntityStorage();
+
+    $mapping = $this->entityStorage->getTableMapping();
+    $this->assertEquals(['entity_test', 'entity_test__multi_valued_base_field'], $mapping->getTableNames());
+    $this->assertEquals($base_field_names, $mapping->getFieldNames('entity_test__multi_valued_base_field'));
+
+    $extra_columns = array(
+      'bundle',
+      'deleted',
+      'entity_id',
+      'revision_id',
+      'langcode',
+      'delta',
+    );
+    $this->assertEquals($extra_columns, $mapping->getExtraColumns('entity_test__multi_valued_base_field'));
+  }
+
+  /**
    * Tests getTableMapping() with a revisionable, non-translatable entity type.
    *
    * @param string[] $entity_keys

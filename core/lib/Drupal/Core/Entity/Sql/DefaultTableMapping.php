@@ -147,15 +147,16 @@ class DefaultTableMapping implements TableMappingInterface {
       //   https://www.drupal.org/node/2274017.
       /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage */
       $storage = \Drupal::entityManager()->getStorage($this->entityType->id());
+      $storage_definition = $this->fieldStorageDefinitions[$field_name];
       $table_names = array(
         $storage->getDataTable(),
         $storage->getBaseTable(),
         $storage->getRevisionTable(),
+        $this->getDedicatedDataTableName($storage_definition),
       );
 
       // Collect field columns.
       $field_columns = array();
-      $storage_definition = $this->fieldStorageDefinitions[$field_name];
       foreach (array_keys($storage_definition->getColumns()) as $property_name) {
         $field_columns[] = $this->getFieldColumnName($storage_definition, $property_name);
       }

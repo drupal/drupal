@@ -282,13 +282,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $definitions = $storage_definitions ?: $this->entityManager->getFieldStorageDefinitions($this->entityTypeId);
       $table_mapping = new DefaultTableMapping($this->entityType, $definitions);
 
-      $definitions = array_filter($definitions, function (FieldStorageDefinitionInterface $definition) use ($table_mapping) {
+      $shared_table_definitions = array_filter($definitions, function (FieldStorageDefinitionInterface $definition) use ($table_mapping) {
         return $table_mapping->allowsSharedTableStorage($definition);
       });
 
       $key_fields = array_values(array_filter(array($this->idKey, $this->revisionKey, $this->bundleKey, $this->uuidKey, $this->langcodeKey)));
-      $all_fields = array_keys($definitions);
-      $revisionable_fields = array_keys(array_filter($definitions, function (FieldStorageDefinitionInterface $definition) {
+      $all_fields = array_keys($shared_table_definitions);
+      $revisionable_fields = array_keys(array_filter($shared_table_definitions, function (FieldStorageDefinitionInterface $definition) {
         return $definition->isRevisionable();
       }));
       // Make sure the key fields come first in the list of fields.
@@ -355,7 +355,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       }
 
       // Add dedicated tables.
-      $definitions = array_filter($definitions, function (FieldStorageDefinitionInterface $definition) use ($table_mapping) {
+      $dedicated_table_definitions = array_filter($definitions, function (FieldStorageDefinitionInterface $definition) use ($table_mapping) {
         return $table_mapping->requiresDedicatedTableStorage($definition);
       });
       $extra_columns = array(
@@ -366,8 +366,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         'langcode',
         'delta',
       );
-      foreach ($definitions as $field_name => $definition) {
-        foreach (array($table_mapping->getDedicatedDataTableName($definition), $table_mapping->getDedicatedRevisionTableName($definition)) as $table_name) {
+      foreach ($dedicated_table_definitions as $field_name => $definition) {
+        $tables = [$table_mapping->getDedicatedDataTableName($definition)];
+        if ($revisionable && $definition->isRevisionable()) {
+          $tables[] = $table_mapping->getDedicatedRevisionTableName($definition);
+        }
+        foreach ($tables as $table_name) {
           $table_mapping->setFieldNames($table_name, array($field_name));
           $table_mapping->setExtraColumns($table_name, $extra_columns);
         }
@@ -1582,7 +1586,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * {@inheritdoc}
    */
   public function countFieldData($storage_definition, $as_bool = FALSE) {
-    $table_mapping = $this->getTableMapping();
+    // The table mapping contains stale data during a request when a field
+    // storage definition is added, so bypass the internal storage definitions
+    // and fetch the table mapping using the passed in storage definition.
+    // @todo Fix this in https://www.drupal.org/node/2705205.
+    $storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->entityTypeId);
+    $storage_definitions[$storage_definition->getName()] = $storage_definition;
+    $table_mapping = $this->getTableMapping($storage_definitions);
 
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
       $is_deleted = $this->storageDefinitionIsDeleted($storage_definition);
