@@ -2262,7 +2262,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function calculateCacheMetadata () {
+  public function calculateCacheMetadata() {
     $cache_metadata = new CacheableMetadata();
 
     // Iterate over ordinary views plugins.

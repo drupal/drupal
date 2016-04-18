@@ -164,7 +164,7 @@ class NodeCreationTest extends NodeTestBase {
   /**
    * Check node/add when no node types exist.
    */
-  function testNodeAddWithoutContentTypes () {
+  function testNodeAddWithoutContentTypes() {
     $this->drupalGet('node/add');
     $this->assertResponse(200);
     $this->assertNoLinkByHref('/admin/structure/types/add');

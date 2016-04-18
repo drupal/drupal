@@ -20,6 +20,8 @@
   <rule ref="Drupal.ControlStructures.ElseIf"/>
   <rule ref="Drupal.Files.TxtFileLineLength"/>
   <rule ref="Drupal.Functions.DiscouragedFunctions"/>
+  <rule ref="Drupal.Functions.FunctionDeclaration.SpaceAfter"/>
+  <rule ref="Drupal.Functions.FunctionDeclaration.SpaceBeforeParenthesis"/>
   <rule ref="Drupal.InfoFiles.AutoAddedKeys"/>
   <rule ref="Drupal.InfoFiles.ClassFiles"/>
   <rule ref="Drupal.InfoFiles.DuplicateEntry"/>

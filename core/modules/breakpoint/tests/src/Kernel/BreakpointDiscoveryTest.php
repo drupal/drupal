@@ -91,7 +91,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
   /**
    * Test the custom breakpoint group provided by a theme and a module.
    */
-  public function testCustomBreakpointGroups () {
+  public function testCustomBreakpointGroups() {
     // Verify the breakpoint group for breakpoint_theme_test.group2 was created.
     $expected_breakpoints = array(
       'breakpoint_theme_test.group2.narrow' => array(
