@@ -235,7 +235,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     // Load all typed data definitions of all fields. This should cover each of
     // the entity base, revision, data tables.
     $field_definitions = $this->entityManager->getBaseFieldDefinitions($this->entityType->id());
-    if ($table_mapping = $this->storage->getTableMapping()) {
+    if ($table_mapping = $this->storage->getTableMapping($field_definitions)) {
       // Fetch all fields that can appear in both the base table and the data
       // table.
       $entity_keys = $this->entityType->getKeys();
