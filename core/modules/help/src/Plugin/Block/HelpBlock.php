@@ -80,46 +80,24 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
   }
 
   /**
-   * Returns the help associated with the active menu item.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
-   *
-   * @return array|string
-   *   Render array or string containing the help of the matched route item.
+   * {@inheritdoc}
    */
-  protected function getActiveHelp(Request $request) {
+  public function build() {
     // Do not show on a 403 or 404 page.
-    if ($request->attributes->has('exception')) {
-      return '';
+    if ($this->request->attributes->has('exception')) {
+      return [];
     }
 
     $help = $this->moduleHandler->invokeAll('help', array($this->routeMatch->getRouteName(), $this->routeMatch));
     $build = [];
-    foreach ($help as $item) {
-      if (!is_array($item)) {
-        $item = ['#markup' => $item];
-      }
-      $build[] = $item;
-    }
 
+    // Remove any empty strings from $help.
+    foreach (array_filter($help) as $item) {
+      // Convert strings to #markup render arrays so that they will XSS admin
+      // filtered.
+      $build[] = is_array($item) ? $item : ['#markup' => $item];
+    }
     return $build;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function build() {
-    $help = $this->getActiveHelp($this->request);
-    if (!$help) {
-      return [];
-    }
-    elseif (!is_array($help)) {
-      return ['#markup' => $help];
-    }
-    else {
-      return $help;
-    }
   }
 
   /**
