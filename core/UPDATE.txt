@@ -7,7 +7,7 @@ To upgrade from a previous major version (for example, Drupal 6 or 7), the
 process involves importing site configuration and content from your old site
 into a new Drupal 8 site. The tools and process are currently experimental,
 rather than being fully supported, so be sure to test in a development
-environment. You will need to use the core Drupal Upgrade UI module which
+environment. You will need to use the core Migrate Drupal UI module which
 provides a user interface for the Migrate and Migrate Drupal modules included
 in core. See https://www.drupal.org/upgrade/migrate for details, and
 https://www.drupal.org/node/2167633 for known issues.

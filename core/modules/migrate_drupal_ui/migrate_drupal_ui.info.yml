@@ -1,4 +1,4 @@
-name: 'Drupal Upgrade UI'
+name: 'Migrate Drupal UI'
 type: module
 description: 'Provides a user interface for migrating from older Drupal versions.'
 package: 'Core (Experimental)'

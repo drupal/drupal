@@ -8,7 +8,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Checks access for migrate_drupal_ui routes.
  *
- * The Drupal Upgrade UI can only be used by user 1. This is because any other
+ * The Migrate Drupal UI can only be used by user 1. This is because any other
  * user might have different permissions on the source and target site.
  *
  * This class is designed to be used with '_custom_access' route requirement.
