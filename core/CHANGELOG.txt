@@ -1,4 +1,4 @@
-Drupal 8.1.0, xxxx-xx-xx (development version)
+Drupal 8.1.0, 2016-04-20
 ------------------------
 - Removed Composer-managed vendor from the git repository:
     * Drupal.org packager adds dependencies to zip and tar package. This can be
@@ -7,6 +7,43 @@ Drupal 8.1.0, xxxx-xx-xx (development version)
       install to get dependencies.
     * See https://www.drupal.org/documentation/install/download#git
       for instructions.
+- Added vendor libraries:
+    * Added Symfony Polyfill Iconv 1.1.0.
+    * Added paragonie/random_compat 1.4.1.
+- Updated vendor libraries:
+    * Updated to Symfony 2.8.4.
+    * Updated to CKEditor 4.5.8.
+    * Updated to Modernizr 3.3.1.
+- Added modules:
+    * Added the Migrate Drupal UI module (experimental) to provide a UI for
+      migrating content and configuration from Drupal 6 and Drupal 7.
+    * Added the BigPipe module (experimental) to improve perceived performance.
+- Improved authoring features:
+    * Enabled browsers' (native) spell checker in CKEditor.
+    * Added language toolbar button in CKEditor for identifying the language of
+      text parts.
+- Improved site administration experience:
+    * Improved admin/help page to be more flexible and list tours on it.
+- Improved site building features:
+    * Added a "Rendered entity" field handler in Views.
+- Improved distribution building features:
+    * Added support for distributions to specify an installation language.
+- Improved developer APIs:
+    * Added local ID and revision fields to HAL web service output.
+    * Added support for image toolkits to be defined with plugin derivatives,
+      reducing the code needed to extend them.
+    * Simplified Migrate API by replacing migration configuration entities with
+      migration plugins.
+    * Added support for entity types to specify translatable plural labels.
+    * Added a revision log interface and trait for revisionable entity types.
+    * Added key field definitions to ContentEntityBase, reducing code from
+      child classes.
+    * Added generic route providers for add-page and add-form entity routes,
+      reducing the code needed to define an entity type.
+- Testing improvements:
+    * Added support for automated JavaScript testing.
+    * Added verbose output for BrowserTestBase.
+    * Improved reporting of PHPUnit results.
 
 Drupal 8.0.0, 2015-11-19
 ------------------------
