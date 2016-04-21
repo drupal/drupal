@@ -11,7 +11,7 @@ Drupal 8.1.0, 2016-04-20
     * Added Symfony Polyfill Iconv 1.1.0.
     * Added paragonie/random_compat 1.4.1.
 - Updated vendor libraries:
-    * Updated to Symfony 2.8.4.
+    * Updated to the last 2.x minor version of Symfony: 2.8 (2.8.4).
     * Updated to CKEditor 4.5.8.
     * Updated to Modernizr 3.3.1.
 - Added modules:
@@ -34,12 +34,13 @@ Drupal 8.1.0, 2016-04-20
       reducing the code needed to extend them.
     * Simplified Migrate API by replacing migration configuration entities with
       migration plugins.
-    * Added support for entity types to specify translatable plural labels.
-    * Added a revision log interface and trait for revisionable entity types.
-    * Added key field definitions to ContentEntityBase, reducing code from
-      child classes.
-    * Added generic route providers for add-page and add-form entity routes,
-      reducing the code needed to define an entity type.
+    * Various improvements for defining entity types:
+      * Added support for entity types to specify translatable plural labels.
+      * Added a revision log interface and trait for revisionable entity types.
+      * Added key field definitions to ContentEntityBase, reducing code from
+        child classes.
+      * Added generic route providers for add-page and add-form entity routes,
+        reducing the code needed to define an entity type.
 - Testing improvements:
     * Added support for automated JavaScript testing.
     * Added verbose output for BrowserTestBase.
