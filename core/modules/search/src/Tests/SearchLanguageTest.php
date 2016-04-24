@@ -117,10 +117,10 @@ class SearchLanguageTest extends SearchTestBase {
     // Check for Spanish results.
     $this->assertLink('Second node this is the Spanish title', 0, 'Second node Spanish title found in search results');
     $this->assertLink('Third node es', 0, 'Third node Spanish found in search results');
-    // Ensure that results doesn't contain other language nodes.
-    $this->assertNoLink('First node en', 'Search results does not contain first English node');
-    $this->assertNoLink('Second node en', 'Search results does not contain second English node');
-    $this->assertNoLink('Third node en', 'Search results does not contain third English node');
+    // Ensure that results don't contain other language nodes.
+    $this->assertNoLink('First node en', 'Search results do not contain first English node');
+    $this->assertNoLink('Second node en', 'Search results do not contain second English node');
+    $this->assertNoLink('Third node en', 'Search results do not contain third English node');
 
     // Change the default language and delete English.
     $path = 'admin/config/regional/language';
