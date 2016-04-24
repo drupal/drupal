@@ -140,10 +140,8 @@
             "Drupal\\Component\\": "lib/Drupal/Component",
             "Drupal\\Driver\\": "../drivers/lib/Drupal/Driver"
         },
-        "files": [
-            "lib/Drupal.php"
-        ],
         "classmap": [
+            "lib/Drupal.php",
             "lib/Drupal/Component/Utility/Timer.php",
             "lib/Drupal/Component/Utility/Unicode.php",
             "lib/Drupal/Core/Database/Database.php",
