@@ -56,7 +56,7 @@
   }
 }
 .field--type-image img,
-.field--name-field-user-picture img {
+.field--name-user-picture img {
   margin: 0 0 1em;
 }
 .field--type-image a {
