@@ -919,6 +919,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         // Log fatal errors to the test site directory.
         ini_set('log_errors', 1);
         ini_set('error_log', DRUPAL_ROOT . '/sites/simpletest/' . substr($test_prefix, 10) . '/error.log');
+
+        // Ensure that a rewritten settings.php is used if opcache is on.
+        ini_set('opcache.validate_timestamps', 'on');
+        ini_set('opcache.revalidate_freq', 0);
       }
       else {
         // Ensure that no other code defines this.
