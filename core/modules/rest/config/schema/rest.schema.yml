@@ -1,0 +1,47 @@
+# Schema for the configuration files of the REST module.
+
+rest.settings:
+  type: config_object
+  label: 'REST settings'
+  mapping:
+    resources:
+      type: sequence
+      label: 'Resources'
+      sequence:
+        type: rest_resource
+        label: 'Resource'
+    link_domain:
+      type: string
+      label: 'Domain of the relation'
+
+rest_resource:
+  type: mapping
+  mapping:
+    GET:
+      type: rest_request
+      label: 'GET method settings'
+    POST:
+      type: rest_request
+      label: 'POST method settings'
+    PATCH:
+      type: rest_request
+      label: 'PATCH method settings'
+    DELETE:
+      type: rest_request
+      label: 'DELETE method settings'
+
+rest_request:
+  type: mapping
+  mapping:
+    supported_formats:
+      type: sequence
+      label: 'Supported format'
+      sequence:
+        type: string
+        label: 'Format'
+    supported_auth:
+      type: sequence
+      label: 'Supported authentication'
+      sequence:
+        type: string
+        label: 'Authentication'

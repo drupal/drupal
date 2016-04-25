@@ -1,0 +1,8 @@
+name: 'System incompatible core version dependencies test'
+type: module
+description: 'Support module for testing system dependencies.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - system_incompatible_core_version_test

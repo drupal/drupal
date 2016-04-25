@@ -1,7 +1,0 @@
-<?php
-
-/**
- * @file
- * Helper module for serialization tests. This file is empty, because all
- * implementation is in autoloaded classes.
- */

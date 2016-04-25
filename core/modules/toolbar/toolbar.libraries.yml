@@ -1,0 +1,54 @@
+toolbar:
+  version: VERSION
+  js:
+    # Core.
+    js/toolbar.js: {}
+    # Models.
+    js/models/MenuModel.js: {}
+    js/models/ToolbarModel.js: {}
+    # Views.
+    js/views/BodyVisualView.js: {}
+    js/views/MenuVisualView.js: {}
+    js/views/ToolbarAuralView.js: {}
+    js/views/ToolbarVisualView.js: {}
+  css:
+    component:
+      css/toolbar.module.css: {}
+    theme:
+      css/toolbar.theme.css: {}
+      css/toolbar.icons.theme.css: {}
+  dependencies:
+    - core/modernizr
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax
+    - core/drupal.announce
+    - core/backbone
+    - core/matchmedia
+    - core/matchmedia.addListener
+    - core/jquery.once
+    - core/drupal.displace
+    - toolbar/toolbar.menu
+
+toolbar.menu:
+  version: VERSION
+  js:
+    js/toolbar.menu.js: {}
+  css:
+    state:
+      css/toolbar.menu.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+
+toolbar.escapeAdmin:
+  version: VERSION
+  js:
+    js/escapeAdmin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once

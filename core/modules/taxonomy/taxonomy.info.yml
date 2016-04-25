@@ -1,0 +1,10 @@
+name: Taxonomy
+type: module
+description: 'Enables the categorization of content.'
+package: Core
+version: VERSION
+core: 8.x
+dependencies:
+  - node
+  - text
+configure: entity.taxonomy_vocabulary.collection

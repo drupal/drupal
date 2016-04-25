@@ -1,0 +1,4 @@
+threshold:
+  requirements_warning: 172800
+  requirements_error: 1209600
+

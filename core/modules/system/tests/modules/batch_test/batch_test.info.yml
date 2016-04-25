@@ -1,0 +1,6 @@
+name: 'Batch API test'
+type: module
+description: 'Support module for Batch API tests.'
+package: Testing
+version: VERSION
+core: 8.x

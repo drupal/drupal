@@ -1,0 +1,34 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the content of an administrative block.
+ *
+ * Available variables:
+ * - content: A list containing information about the block. Each element
+ *   of the array represents an administrative menu item, and must at least
+ *   contain the keys 'title', 'link_path', and 'localized_options', which are
+ *   passed to l(). A 'description' key may also be provided.
+ * - attributes: HTML attributes to be added to the element.
+ * - compact: Boolean indicating whether compact mode is turned on or not.
+ *
+ * @see template_preprocess_admin_block_content()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'list-group',
+    compact ? 'compact',
+  ]
+%}
+{% if content %}
+  <dl{{ attributes.addClass(classes) }}>
+    {% for item in content %}
+      <dt class="list-group__link">{{ item.link }}</dt>
+      {% if item.description %}
+        <dd class="list-group__description">{{ item.description }}</dd>
+      {% endif %}
+    {% endfor %}
+  </dl>
+{% endif %}

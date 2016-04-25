@@ -1,0 +1,7 @@
+id: de
+label: German
+direction: 'ltr'
+weight: 0
+locked: false
+status: true
+langcode: en

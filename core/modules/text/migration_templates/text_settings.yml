@@ -1,0 +1,14 @@
+id: text_settings
+label: Drupal teaser length configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - teaser_length
+process:
+  default_summary_length: teaser_length
+destination:
+  plugin: config
+  config_name: text.settings

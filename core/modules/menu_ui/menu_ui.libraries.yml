@@ -1,0 +1,22 @@
+drupal.menu_ui:
+  version: VERSION
+  js:
+    menu_ui.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.form
+
+drupal.menu_ui.admin:
+  version: VERSION
+  js:
+    menu_ui.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+drupal.menu_ui.adminforms:
+  version: VERSION
+  css:
+    theme:
+      css/menu_ui.admin.css: {}

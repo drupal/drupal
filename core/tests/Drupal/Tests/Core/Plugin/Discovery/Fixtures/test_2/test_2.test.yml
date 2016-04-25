@@ -1,0 +1,5 @@
+test_2_a:
+  name: test
+  provider: another_provider_2
+test_2_b:
+  name: test

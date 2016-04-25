@@ -1,0 +1,5 @@
+services:
+  display_variant_test.page_display_variant_subscriber:
+    class: Drupal\display_variant_test\EventSubscriber\TestPageDisplayVariantSubscriber
+    tags:
+      - { name: 'event_subscriber', priority: 1000 }

@@ -1,6 +1,0 @@
-name = Breakpoint theme test
-description = Test breakpoints provided by themes
-package = Other
-core = 8.x
-hidden = TRUE
-dependencies[] = breakpoint

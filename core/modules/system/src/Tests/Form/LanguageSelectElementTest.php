@@ -1,0 +1,116 @@
+<?php
+
+namespace Drupal\system\Tests\Form;
+
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\simpletest\WebTestBase;
+
+/**
+ * Tests that the language select form element prints and submits the right
+ * options.
+ *
+ * @group Form
+ */
+class LanguageSelectElementTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test', 'language');
+
+  /**
+   * Tests that the options printed by the language select element are correct.
+   */
+  function testLanguageSelectElementOptions() {
+    // Add some languages.
+    ConfigurableLanguage::create(array(
+      'id' => 'aaa',
+      'label' => $this->randomMachineName(),
+    ))->save();
+
+    ConfigurableLanguage::create(array(
+      'id' => 'bbb',
+      'label' => $this->randomMachineName(),
+    ))->save();
+
+    \Drupal::languageManager()->reset();
+
+    $this->drupalGet('form-test/language_select');
+    // Check that the language fields were rendered on the page.
+    $ids = array(
+        'edit-languages-all' => LanguageInterface::STATE_ALL,
+        'edit-languages-configurable' => LanguageInterface::STATE_CONFIGURABLE,
+        'edit-languages-locked' => LanguageInterface::STATE_LOCKED,
+        'edit-languages-config-and-locked' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED
+    );
+    foreach ($ids as $id => $flags) {
+      $this->assertField($id, format_string('The @id field was found on the page.', array('@id' => $id)));
+      $options = array();
+      /* @var $language_manager \Drupal\Core\Language\LanguageManagerInterface */
+      $language_manager = $this->container->get('language_manager');
+      foreach ($language_manager->getLanguages($flags) as $langcode => $language) {
+        $options[$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->getName())) : $language->getName();
+      }
+      $this->_testLanguageSelectElementOptions($id, $options);
+    }
+
+    // Test that the #options were not altered by #languages.
+    $this->assertField('edit-language-custom-options', format_string('The @id field was found on the page.', array('@id' => 'edit-language-custom-options')));
+    $this->_testLanguageSelectElementOptions('edit-language-custom-options', array('opt1' => 'First option', 'opt2' => 'Second option', 'opt3' => 'Third option'));
+  }
+
+  /**
+   * Tests the case when the language select elements should not be printed.
+   *
+   * This happens when the language module is disabled.
+   */
+  function testHiddenLanguageSelectElement() {
+    // Disable the language module, so that the language select field will not
+    // be rendered.
+    $this->container->get('module_installer')->uninstall(array('language'));
+    $this->drupalGet('form-test/language_select');
+    // Check that the language fields were rendered on the page.
+    $ids = array('edit-languages-all', 'edit-languages-configurable', 'edit-languages-locked', 'edit-languages-config-and-locked');
+    foreach ($ids as $id) {
+      $this->assertNoField($id, format_string('The @id field was not found on the page.', array('@id' => $id)));
+    }
+
+    // Check that the submitted values were the default values of the language
+    // field elements.
+    $edit = array();
+    $this->drupalPostForm(NULL, $edit, t('Submit'));
+    $values = Json::decode($this->getRawContent());
+    $this->assertEqual($values['languages_all'], 'xx');
+    $this->assertEqual($values['languages_configurable'], 'en');
+    $this->assertEqual($values['languages_locked'], LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    $this->assertEqual($values['languages_config_and_locked'], 'dummy_value');
+    $this->assertEqual($values['language_custom_options'], 'opt2');
+  }
+
+  /**
+   * Helper function to check the options of a language select form element.
+   *
+   * @param string $id
+   *   The id of the language select element to check.
+   *
+   * @param array $options
+   *   An array with options to compare with.
+   */
+  protected function _testLanguageSelectElementOptions($id, $options) {
+    // Check that the options in the language field are exactly the same,
+    // including the order, as the languages sent as a parameter.
+    $elements = $this->xpath("//select[@id='" . $id . "']");
+    $count = 0;
+    foreach ($elements[0]->option as $option) {
+      $count++;
+      $option_title = current($options);
+      $this->assertEqual((string) $option, $option_title);
+      next($options);
+    }
+    $this->assertEqual($count, count($options), format_string('The number of languages and the number of options shown by the language element are the same: @languages languages, @number options', array('@languages' => count($options), '@number' => $count)));
+  }
+}

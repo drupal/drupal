@@ -1,0 +1,30 @@
+id: d7_comment_entity_form_display_subject
+label: Comment subject form display configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_comment_type
+  constants:
+    entity_type: comment
+    field_name: subject
+    form_mode: default
+    options:
+      type: string_textfield
+      weight: 10
+process:
+  entity_type: 'constants/entity_type'
+  field_name: 'constants/field_name'
+  form_mode: 'constants/form_mode'
+  options: 'constants/options'
+  hidden:
+    plugin: static_map
+    source: subject
+    map:
+      0: true
+      1: false
+  bundle: bundle
+destination:
+  plugin: component_entity_form_display
+migration_dependencies:
+  required:
+    - d7_comment_type

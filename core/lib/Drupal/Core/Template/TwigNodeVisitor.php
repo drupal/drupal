@@ -1,84 +1,53 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Template\TwigNodeVisitor.
- */
-
 namespace Drupal\Core\Template;
 
 /**
  * Provides a Twig_NodeVisitor to change the generated parse-tree.
  *
- * This is used to ensure that everything that is printed is wrapped via
- * twig_render() function so that we can write for example just {{ content }}
- * in templates instead of having to write {{ render(content) }}.
+ * This is used to ensure that everything printed is wrapped via the
+ * TwigExtension->renderVar() function in order to just write {{ content }}
+ * in templates instead of having to write {{ render_var(content) }}.
  *
  * @see twig_render
  */
-class TwigNodeVisitor implements \Twig_NodeVisitorInterface {
+class TwigNodeVisitor extends \Twig_BaseNodeVisitor {
 
   /**
-   * TRUE when this node is a function getting arguments by reference.
-   *
-   * For example: 'hide' or 'render' are such functions.
-   *
-   * @var bool
+   * {@inheritdoc}
    */
-  protected $isReference = FALSE;
-
-  /**
-   * Implements Twig_NodeVisitorInterface::enterNode().
-   */
-  function enterNode(\Twig_NodeInterface $node, \Twig_Environment $env) {
-   if ($node instanceof \Twig_Node_Expression_Function) {
-      $name = $node->getAttribute('name');
-      $func = $env->getFunction($name);
-
-      // Optimization: Do not support nested functions.
-      if ($this->isReference && $func instanceof \Twig_Function_Function) {
-        $this->isReference = FALSE;
-      }
-      if ($func instanceof TwigReferenceFunction) {
-        // We need to create a TwigReference
-        $this->isReference = TRUE;
-      }
-    }
-    if ($node instanceof \Twig_Node_Print) {
-       // Our injected render needs arguments passed by reference -- in case of render array
-      $this->isReference = TRUE;
-    }
-
+  protected function doEnterNode(\Twig_Node $node, \Twig_Environment $env) {
     return $node;
   }
 
   /**
-   * Implements Twig_NodeVisitorInterface::leaveNode().
-   *
-   * We use this to inject a call to render -> twig_render()
-   * before anything is printed.
-   *
-   * @see twig_render
+   * {@inheritdoc}
    */
-  function leaveNode(\Twig_NodeInterface $node, \Twig_Environment $env) {
+  protected function doLeaveNode(\Twig_Node $node, \Twig_Environment $env) {
+    // We use this to inject a call to render_var -> TwigExtension->renderVar()
+    // before anything is printed.
     if ($node instanceof \Twig_Node_Print) {
-      $this->isReference = FALSE;
-
+      if (!empty($this->skipRenderVarFunction)) {
+        // No need to add the callback, we have escape active already.
+        unset($this->skipRenderVarFunction);
+        return $node;
+      }
       $class = get_class($node);
+      $line = $node->getLine();
       return new $class(
-        new \Twig_Node_Expression_Function('render', new \Twig_Node(array($node->getNode('expr'))), $node->getLine()),
-        $node->getLine()
+        new \Twig_Node_Expression_Function('render_var', new \Twig_Node(array($node->getNode('expr'))), $line),
+        $line
       );
     }
+    // Change the 'escape' filter to our own 'drupal_escape' filter.
+    elseif ($node instanceof \Twig_Node_Expression_Filter) {
+      $name = $node->getNode('filter')->getAttribute('value');
+      if ('escape' == $name || 'e' == $name) {
+        // Use our own escape filter that is SafeMarkup aware.
+        $node->getNode('filter')->setAttribute('value', 'drupal_escape');
 
-    if ($this->isReference) {
-      if ($node instanceof \Twig_Node_Expression_Name) {
-        $name = $node->getAttribute('name');
-        return new TwigNodeExpressionNameReference($name, $node->getLine());
-      }
-      elseif ($node instanceof \Twig_Function_Function) {
-        // Do something!
-        $this->isReference = FALSE;
+        // Store that we have a filter active already that knows how to deal with render arrays.
+        $this->skipRenderVarFunction = TRUE;
       }
     }
 
@@ -86,10 +55,11 @@ class TwigNodeVisitor implements \Twig_NodeVisitorInterface {
   }
 
   /**
-   * Implements Twig_NodeVisitorInterface::getPriority().
+   * {@inheritdoc}
    */
-  function getPriority() {
-    // We want to run before other NodeVisitors like Escape or Optimizer
-    return -1;
+  public function getPriority() {
+    // Just above the Optimizer, which is the normal last one.
+    return 256;
   }
+
 }

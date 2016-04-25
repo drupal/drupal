@@ -1,0 +1,10 @@
+name: Aggregator
+type: module
+description: 'Aggregates syndicated content (RSS, RDF, and Atom feeds) from external sources.'
+package: Core
+version: VERSION
+core: 8.x
+configure: aggregator.admin_settings
+dependencies:
+  - file
+  - options

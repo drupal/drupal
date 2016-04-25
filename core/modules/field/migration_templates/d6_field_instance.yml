@@ -1,0 +1,61 @@
+id: d6_field_instance
+label: Field instance configuration
+migration_tags:
+  - Drupal 6
+class: Drupal\migrate_drupal\Plugin\migrate\CckMigration
+cck_plugin_method: processFieldInstance
+source:
+  plugin: d6_field_instance
+  constants:
+    entity_type: node
+
+process:
+  # We skip field types that don't exist because they weren't migrated by the
+  # field migration.
+  field_type_exists:
+    -
+      plugin: migration
+      migration: d6_field
+      source:
+        - field_name
+    -
+      plugin: extract
+      index:
+        - 1
+    -
+      plugin: skip_on_empty
+      method: row
+  entity_type: 'constants/entity_type'
+  field_name: field_name
+  bundle:
+    -
+      plugin: migration
+      migration: d6_node_type
+      source: type_name
+    -
+      plugin: skip_on_empty
+      method: row
+  label: label
+  description: description
+  required: required
+  status: active
+  settings:
+    plugin: d6_field_field_settings
+    source:
+      - widget_type
+      - widget_settings
+      - global_settings
+
+  default_value_callback: ''
+  default_value:
+    plugin: d6_field_instance_defaults
+    source:
+      - widget_type
+      - widget_settings
+
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d6_node_type
+    - d6_field

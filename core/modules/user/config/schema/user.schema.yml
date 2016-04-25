@@ -1,0 +1,194 @@
+# Schema for the configuration files of the User module.
+
+user.settings:
+  type: config_object
+  label: 'User settings'
+  mapping:
+    anonymous:
+      type: label
+      label: 'Name'
+    verify_mail:
+      type: boolean
+      label: 'Require email verification when a visitor creates an account'
+    notify:
+      type: mapping
+      label: 'Notify user'
+      mapping:
+        cancel_confirm:
+          type: boolean
+          label: 'Account cancellation confirmation'
+        password_reset:
+          type: boolean
+          label: 'Notify user when password reset'
+        status_activated:
+          type: boolean
+          label: 'Notify user when account is activated'
+        status_blocked:
+          type: boolean
+          label: 'Account blocked'
+        status_canceled:
+          type: boolean
+          label: 'Account canceled'
+        register_admin_created:
+          type: boolean
+          label: 'Welcome (new user created by administrator)'
+        register_no_approval_required:
+          type: boolean
+          label: 'Welcome (no approval required)'
+        register_pending_approval:
+          type: boolean
+          label: 'Welcome (awaiting approval)'
+    register:
+      type: string
+      label: 'Who can register accounts?'
+    cancel_method:
+      type: string
+      label: 'When cancelling a user account'
+    password_reset_timeout:
+      type: integer
+      label: 'Password reset timeout'
+    password_strength:
+      type: boolean
+      label: 'Enable password strength indicator'
+
+user.mail:
+ type: config_object
+ label: 'Email settings'
+ mapping:
+  cancel_confirm:
+    type: mail
+    label: 'Account cancellation confirmation'
+  password_reset:
+    type: mail
+    label: 'Password recovery'
+  register_admin_created:
+    type: mail
+    label: 'Account created by administrator'
+  register_no_approval_required:
+    type: mail
+    label: 'Registration confirmation (No approval required)'
+  register_pending_approval:
+    type: mail
+    label: 'Registration confirmation (Pending approval)'
+  register_pending_approval_admin:
+    type: mail
+    label: 'Admin (user awaiting approval)'
+  status_activated:
+    type: mail
+    label: 'Account activation'
+  status_blocked:
+    type: mail
+    label: 'Account blocked'
+  status_canceled:
+    type: mail
+    label: 'Account cancelled'
+
+user.flood:
+  type: config_object
+  label: 'User flood settings'
+  mapping:
+    uid_only:
+      type: boolean
+      label: 'UID only identifier'
+    ip_limit:
+      type: integer
+      label: 'IP limit'
+    ip_window:
+      type: integer
+      label: 'IP window'
+    user_limit:
+      type: integer
+      label: 'User limit'
+    user_window:
+      type: integer
+      label: 'User window'
+
+user.role.*:
+  type: config_entity
+  label: 'User role settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    weight:
+      type: integer
+      label: 'User role weight'
+    is_admin:
+      type: boolean
+      label: 'User is admin'
+    permissions:
+      type: sequence
+      label: 'Permissions'
+      sequence:
+        type: string
+        label: 'Permission'
+
+action.configuration.user_add_role_action:
+  type: mapping
+  label: 'Configuration for the add role action'
+  mapping:
+    rid:
+      type: string
+      label: 'The ID of the role to add'
+
+action.configuration.user_block_user_action:
+  type: action_configuration_default
+  label: 'Block the selected users configuration'
+
+action.configuration.user_cancel_user_action:
+  type: action_configuration_default
+  label: 'Cancel the selected user accounts configuration'
+
+action.configuration.user_remove_role_action:
+  type: mapping
+  label: 'Configuration for the remove role action'
+  mapping:
+    rid:
+      type: string
+      label: 'The ID of the role to remove'
+
+action.configuration.user_unblock_user_action:
+  type: action_configuration_default
+  label: 'Unblock the selected users configuration'
+
+search.plugin.user_search:
+  type: sequence
+  label: 'User search'
+
+condition.plugin.user_role:
+  type: condition.plugin
+  mapping:
+    roles:
+      type: sequence
+      sequence:
+        type: string
+
+entity_reference_selection.default:user:
+  type: entity_reference_selection
+  mapping:
+    filter:
+      type: mapping
+      label: 'Filter settings'
+      mapping:
+        type:
+          type: string
+          label: 'Filter by'
+        role:
+          type: sequence
+          label: 'Restrict to the selected roles'
+          sequence:
+            type: string
+            label: 'Role'
+    include_anonymous:
+      type: boolean
+      label: 'Include the anonymous user in the matched entities.'
+
+field.formatter.settings.user_name:
+  type: mapping
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: 'Link to the user'

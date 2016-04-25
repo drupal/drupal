@@ -1,0 +1,78 @@
+{#
+/**
+ * @file
+ * Default theme implementation for views to display rows in a grid.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapping element.
+ * - title: The title of this group of rows.
+ * - view: The view object.
+ * - rows: The rendered view results.
+ * - options: The view plugin style options.
+ *   - row_class_default: A flag indicating whether default classes should be
+ *     used on rows.
+ *   - col_class_default: A flag indicating whether default classes should be
+ *     used on columns.
+ * - items: A list of grid items. Each item contains a list of rows or columns.
+ *   The order in what comes first (row or column) depends on which alignment
+ *   type is chosen (horizontal or vertical).
+ *   - attributes: HTML attributes for each row or column.
+ *   - content: A list of columns or rows. Each row or column contains:
+ *     - attributes: HTML attributes for each row or column.
+ *     - content: The row or column contents.
+ *
+ * @see template_preprocess_views_view_grid()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'views-view-grid',
+    options.alignment,
+    'cols-' ~ options.columns,
+    'clearfix',
+  ]
+%}
+{% if options.row_class_default %}
+  {%
+    set row_classes = [
+      'views-row',
+      options.alignment == 'horizontal' ? 'clearfix',
+    ]
+  %}
+{% endif %}
+{% if options.col_class_default %}
+  {%
+    set col_classes = [
+      'views-col',
+      options.alignment == 'vertical' ? 'clearfix',
+    ]
+  %}
+{% endif %}
+{% if title %}
+  <h3>{{ title }}</h3>
+{% endif %}
+<div{{ attributes.addClass(classes) }}>
+  {% if options.alignment == 'horizontal' %}
+    {% for row in items %}
+      <div{{ row.attributes.addClass(row_classes, options.row_class_default ? 'row-' ~ loop.index) }}>
+        {% for column in row.content %}
+          <div{{ column.attributes.addClass(col_classes, options.col_class_default ? 'col-' ~ loop.index) }}>
+            {{ column.content }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  {% else %}
+    {% for column in items %}
+      <div{{ column.attributes.addClass(col_classes, options.col_class_default ? 'col-' ~ loop.index) }}>
+        {% for row in column.content %}
+          <div{{ row.attributes.addClass(row_classes, options.row_class_default ? 'row-' ~ loop.index) }}>
+            {{ row.content }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>

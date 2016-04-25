@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the update_test_with_7x module.
+ */
+
+/**
+ * Dummy update_test_with_7x update 7200.
+ */
+function update_test_with_7x_update_7200() {
+}
+
+/**
+ * Dummy update_test_with_7x update 7201.
+ */
+function update_test_with_7x_update_7201() {
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function update_test_with_7x_update_last_removed() {
+  return 7110;
+}

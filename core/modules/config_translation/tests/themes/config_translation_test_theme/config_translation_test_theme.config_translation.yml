@@ -1,0 +1,6 @@
+# Attach to performance settings for testing. The base route does not matter.
+system.performance_settings:
+  title: 'Theme translation test'
+  base_route_name: system.performance_settings
+  names:
+    - system.site

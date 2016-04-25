@@ -2,102 +2,310 @@
 
 /**
  * @file
- * Test module for the entity API providing an entity type for testing.
+ * Test module for the entity API providing several entity types for testing.
  */
 
-use Drupal\entity_test\Plugin\Core\Entity\EntityTest;
-
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Url;
 
 /**
- * Implements hook_entity_info_alter().
+ * Filter that limits test entity list to revisable ones.
  */
-function entity_test_entity_info_alter(&$info) {
-  // Optionally specify a translation handler for testing translations.
-  if (state()->get('entity_test.translation')) {
-    $info['entity_test']['translation']['entity_test'] = TRUE;
-  }
-  // Optionally unset the access controller to test the fallback.
-  if (state()->get('entity_test.default_access_controller')) {
-    unset($info['entity_test']['access_controller_class']);
-  }
-}
+const ENTITY_TEST_TYPES_REVISABLE = 1;
 
 /**
- * Implements hook_permission().
+ * Filter that limits test entity list to multilingual ones.
  */
-function entity_test_permission() {
-  $permissions = array(
-    'administer entity_test content' => array(
-      'title' => t('Administer entity_test content'),
-      'description' => t('Manage entity_test content'),
-    ),
-    'view test entity' => array(
-      'title' => t('View test entities'),
-    ),
-    'view test entity translations' => array(
-      'title' => t('View translations of test entities'),
-    ),
-  );
-  return $permissions;
-}
+const ENTITY_TEST_TYPES_MULTILINGUAL = 2;
 
 /**
- * Implements hook_menu().
+ * Filter that limits test entity list to routeable ones.
  */
-function entity_test_menu() {
-  $items = array();
-
-  $items['entity-test/add'] = array(
-    'title' => 'Add an entity_test',
-    'page callback' => 'entity_test_add',
-    'access arguments' => array('administer entity_test content'),
-    'type' => MENU_NORMAL_ITEM,
-  );
-
-  $items['entity-test/manage/%entity_test'] = array(
-    'title' => 'Edit test entity',
-    'page callback' => 'entity_test_edit',
-    'page arguments' => array(2),
-    'access arguments' => array('administer entity_test content'),
-    'type' => MENU_NORMAL_ITEM,
-  );
-
-  $items['entity-test/manage/%entity_test/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
-  return $items;
-}
+const ENTITY_TEST_TYPES_ROUTING = 3;
 
 /**
- * Menu callback: displays the 'Add new entity_test' form.
+ * Returns a list of test entity types.
+ *
+ * The returned entity types are one for each available entity storage type:
+ * - The plain entity_test type supports neither revisions nor multilingual
+ *   properties.
+ * - The entity_test_mul type supports multilingual properties.
+ * - The entity_test_rev type supports revisions.
+ * - The entity_test_mulrev type supports both revisions and multilingual
+ *   properties.
+ *
+ * @param int $filter
+ *   Either ENTITY_TEST_TYPES_REVISABLE to only return revisable entity types or
+ *   ENTITY_TEST_TYPES_MULTILINGUAL to only return multilingual ones. Defaults
+ *   to NULL, which returns all.
  *
  * @return array
- *   The processed form for a new entity_test.
- *
- * @see entity_test_menu()
+ *   List with entity_types.
  */
-function entity_test_add() {
-  drupal_set_title(t('Create an entity_test'));
-  $entity = entity_create('entity_test', array());
-  return entity_get_form($entity);
+function entity_test_entity_types($filter = NULL) {
+  $types = array();
+  if ($filter === NULL || $filter === ENTITY_TEST_TYPES_ROUTING) {
+    $types[] = 'entity_test';
+  }
+  if ($filter != ENTITY_TEST_TYPES_REVISABLE) {
+    $types[] = 'entity_test_mul';
+    $types[] = 'entity_test_mul_langcode_key';
+    $types[] = 'entity_test_mul_changed';
+  }
+  if ($filter != ENTITY_TEST_TYPES_MULTILINGUAL) {
+    $types[] = 'entity_test_rev';
+  }
+  if ($filter === ENTITY_TEST_TYPES_ROUTING) {
+    $types[] = 'entity_test_base_field_display';
+    $types[] = 'entity_test_string_id';
+    $types[] = 'entity_test_no_id';
+  }
+  $types[] = 'entity_test_mulrev';
+  $types[] = 'entity_test_mulrev_changed';
+
+  return array_combine($types, $types);
 }
 
 /**
- * Menu callback: displays the 'Edit existing entity_test' form.
- *
- * @param array $entity
- *   The entity to be edited.
- *
- * @return array
- *   The processed form for the edited entity_test.
- *
- * @see entity_test_menu()
+ * Implements hook_entity_type_alter().
  */
-function entity_test_edit(EntityTest $entity) {
-  drupal_set_title($entity->label(), PASS_THROUGH);
-  return entity_get_form($entity);
+function entity_test_entity_type_alter(array &$entity_types) {
+  $state = \Drupal::state();
+
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  foreach (entity_test_entity_types() as $entity_type) {
+    // Optionally specify a translation handler for testing translations.
+    if ($state->get('entity_test.translation')) {
+      $translation = $entity_types[$entity_type]->get('translation');
+      $translation[$entity_type] = TRUE;
+      $entity_types[$entity_type]->set('translation', $translation);
+    }
+  }
+
+  // Allow entity_test_update tests to override the entity type definition.
+  $entity_types['entity_test_update'] = $state->get('entity_test_update.entity_type', $entity_types['entity_test_update']);
+
+  // Enable the entity_test_new only when needed.
+  if (!$state->get('entity_test_new')) {
+    unset($entity_types['entity_test_new']);
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function entity_test_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
+
+  if ($entity_type->id() == 'entity_test_mulrev' && \Drupal::state()->get('entity_test.field_test_item')) {
+    $fields['field_test_item'] = BaseFieldDefinition::create('field_test')
+      ->setLabel(t('Field test'))
+      ->setDescription(t('A field test.'))
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
+  }
+
+  return $fields;
+}
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function entity_test_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
+  $state = \Drupal::state();
+  if ($entity_type->id() == 'entity_test_mulrev' && ($names = $state->get('entity_test.field_definitions.translatable'))) {
+    foreach ($names as $name => $value) {
+      $fields[$name]->setTranslatable($value);
+    }
+  }
+  if ($entity_type->id() == 'node' && $state->get('entity_test.node_remove_status_field')) {
+    unset($fields['status']);
+  }
+  if ($entity_type->id() == 'entity_test' && $state->get('entity_test.remove_name_field')) {
+    unset($fields['name']);
+  }
+  // In 8001 we are assuming that a new definition with multiple cardinality has
+  // been deployed.
+  // @todo Remove this if we end up using state definitions at runtime. See
+  //    https://www.drupal.org/node/2554235.
+  if ($entity_type->id() == 'entity_test' && $state->get('entity_test.db_updates.entity_definition_updates') == 8001) {
+    $fields['user_id']->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+  }
+}
+
+/**
+ * Implements hook_entity_field_storage_info().
+ */
+function entity_test_entity_field_storage_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'entity_test_update') {
+    return \Drupal::state()->get('entity_test_update.additional_field_storage_definitions', array());
+  }
+}
+
+/**
+ * Creates a new bundle for entity_test entities.
+ *
+ * @param string $bundle
+ *   The machine-readable name of the bundle.
+ * @param string $text
+ *   (optional) The human-readable name of the bundle. If none is provided, the
+ *   machine name will be used.
+ * @param string $entity_type
+ *   (optional) The entity type for which the bundle is created. Defaults to
+ *   'entity_test'.
+ */
+function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity_test') {
+  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
+  $bundles += array($bundle => array('label' => $text ? $text : $bundle));
+  \Drupal::state()->set($entity_type . '.bundles', $bundles);
+
+  \Drupal::entityManager()->onBundleCreate($bundle, $entity_type);
+}
+
+/**
+ * Deletes a bundle for entity_test entities.
+ *
+ * @param string $bundle
+ *   The machine-readable name of the bundle to delete.
+ * @param string $entity_type
+ *   (optional) The entity type for which the bundle is deleted. Defaults to
+ *   'entity_test'.
+ */
+function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
+  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
+  unset($bundles[$bundle]);
+  \Drupal::state()->set($entity_type . '.bundles', $bundles);
+
+  \Drupal::entityManager()->onBundleDelete($bundle, $entity_type);
+}
+
+/**
+ * Implements hook_entity_bundle_info().
+ */
+function entity_test_entity_bundle_info() {
+  $bundles = array();
+  $entity_types = \Drupal::entityManager()->getDefinitions();
+  foreach ($entity_types as $entity_type_id => $entity_type) {
+    if ($entity_type->getProvider() == 'entity_test' && $entity_type_id != 'entity_test_with_bundle') {
+      $bundles[$entity_type_id] = \Drupal::state()->get($entity_type_id . '.bundles') ?: array($entity_type_id => array('label' => 'Entity Test Bundle'));
+    }
+  }
+  return $bundles;
+}
+
+/**
+ * Implements hook_entity_view_mode_info_alter().
+ */
+function entity_test_entity_view_mode_info_alter(&$view_modes) {
+  $entity_info = \Drupal::entityManager()->getDefinitions();
+  foreach ($entity_info as $entity_type => $info) {
+    if ($entity_info[$entity_type]->getProvider() == 'entity_test' && !isset($view_modes[$entity_type])) {
+      $view_modes[$entity_type] = array(
+        'full' => array(
+          'label' => t('Full object'),
+          'status' => TRUE,
+          'cache' => TRUE,
+        ),
+        'teaser' => array(
+          'label' => t('Teaser'),
+          'status' => TRUE,
+          'cache' => TRUE,
+        ),
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_form_mode_info_alter().
+ */
+function entity_test_entity_form_mode_info_alter(&$form_modes) {
+  $entity_info = \Drupal::entityManager()->getDefinitions();
+  foreach ($entity_info as $entity_type => $info) {
+    if ($entity_info[$entity_type]->getProvider() == 'entity_test') {
+      $form_modes[$entity_type] = array(
+        'compact' => array(
+          'label' => t('Compact version'),
+          'status' => TRUE,
+        ),
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function entity_test_entity_extra_field_info() {
+  $extra['entity_test']['bundle_with_extra_fields'] = array(
+    'display' => array(
+      // Note: those extra fields do not currently display anything, they are
+      // just used in \Drupal\Tests\field_ui\Kernel\EntityDisplayTest to test
+      // the behavior of entity display objects.
+      'display_extra_field' => array(
+        'label' => t('Display extra field'),
+        'description' => t('An extra field on the display side.'),
+        'weight' => 5,
+        'visible' => TRUE,
+      ),
+      'display_extra_field_hidden' => array(
+        'label' => t('Display extra field (hidden)'),
+        'description' => t('An extra field on the display side, hidden by default.'),
+        'visible' => FALSE,
+      ),
+    )
+  );
+
+  return $extra;
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function entity_test_form_entity_test_form_alter(&$form) {
+  switch (\Drupal::state()->get('entity_test.form.validate.test')) {
+    case 'form-level':
+      $form['#validate'][] = 'entity_test_form_entity_test_form_validate';
+      $form['#validate'][] = 'entity_test_form_entity_test_form_validate_check';
+      break;
+
+    case 'button-level':
+      $form['actions']['submit']['#validate'][] = 'entity_test_form_entity_test_form_validate';
+  }
+}
+
+/**
+ * Validation handler for the entity_test entity form.
+ */
+function entity_test_form_entity_test_form_validate(array &$form, FormStateInterface $form_state) {
+  $form['#entity_test_form_validate'] = TRUE;
+}
+
+/**
+ * Validation handler for the entity_test entity form.
+ */
+function entity_test_form_entity_test_form_validate_check(array &$form, FormStateInterface $form_state) {
+  if (!empty($form['#entity_test_form_validate'])) {
+    \Drupal::state()->set('entity_test.form.validate.result', TRUE);
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function entity_test_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $langcode = $form_state->getFormObject()->getFormLangcode($form_state);
+  \Drupal::state()->set('entity_test.form_langcode', $langcode);
 }
 
 /**
@@ -108,42 +316,405 @@ function entity_test_edit(EntityTest $entity) {
  * @param bool $reset
  *   A boolean indicating that the internal cache should be reset.
  *
- * @return Drupal\entity_test\Plugin\Core\Entity\EntityTest
- *   The loaded entity object, or FALSE if the entity cannot be loaded.
+ * @return \Drupal\entity_test\Entity\EntityTest
+ *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
 function entity_test_load($id, $reset = FALSE) {
   return entity_load('entity_test', $id, $reset);
 }
 
 /**
- * Loads multiple test entities based on certain conditions.
+ * Loads a test entity.
  *
- * @param array $ids
- *   (optional) An array of entity IDs. If omitted, all entities are loaded.
+ * @param int $id
+ *   A test entity ID.
  * @param bool $reset
  *   A boolean indicating that the internal cache should be reset.
  *
- * @return array
- *   An array of test entity objects, indexed by ID.
+ * @return \Drupal\entity_test\Entity\EntityTestRev
+ *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
-function entity_test_load_multiple(array $ids = NULL, $reset = FALSE) {
-  return entity_load_multiple('entity_test', $ids, $reset);
+function entity_test_rev_load($id, $reset = FALSE) {
+  return entity_load('entity_test_rev', $id, $reset);
 }
 
 /**
- * Deletes multiple test entities.
+ * Loads a test entity.
  *
- * @param $ids
- *   An array of test entity IDs.
+ * @param int $id
+ *   A test entity ID.
+ * @param bool $reset
+ *   A boolean indicating that the internal cache should be reset.
+ *
+ * @return \Drupal\entity_test\Entity\EntityTestMul
+ *   The loaded entity object, or FALSE if the entity cannot be loaded.
  */
-function entity_test_delete_multiple(array $ids) {
-  entity_delete_multiple('entity_test', $ids);
+function entity_test_mul_load($id, $reset = FALSE) {
+  return entity_load('entity_test_mul', $id, $reset);
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Loads a test entity.
+ *
+ * @param int $id
+ *   A test entity ID.
+ * @param bool $reset
+ *   A boolean indicating that the internal cache should be reset.
+ *
+ * @return \Drupal\entity_test\Entity\EntityTestMulRev
+ *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
-function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
-  $langcode = $form_state['controller']->getFormLangcode($form_state);
-  variable_set('entity_form_langcode', $langcode);
+function entity_test_mulrev_load($id, $reset = FALSE) {
+  return entity_load('entity_test_mulrev', $id, $reset);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for 'entity_test'.
+ */
+function entity_test_entity_test_insert($entity) {
+  if ($entity->name->value == 'fail_insert') {
+    throw new Exception("Test exception rollback.");
+  }
+}
+
+/**
+ * Implements hook_entity_field_access().
+ *
+ * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
+ */
+function entity_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($field_definition->getName() == 'field_test_text') {
+    if ($items) {
+      if ($items->value == 'no access value') {
+        return AccessResult::forbidden()->addCacheableDependency($items->getEntity());
+      }
+      elseif ($items->value == 'custom cache tag value') {
+        return AccessResult::allowed()->addCacheableDependency($items->getEntity())->addCacheTags(['entity_test_access:field_test_text']);
+      }
+      elseif ($operation == 'edit' && $items->value == 'no edit access value') {
+        return AccessResult::forbidden()->addCacheableDependency($items->getEntity());
+      }
+    }
+  }
+  if ($field = \Drupal::state()->get('views_field_access_test-field')) {
+    if ($field_definition->getName() === $field) {
+      $result = AccessResult::allowedIfHasPermission($account, 'view test entity field');
+      // For test purposes we want to actively deny access.
+      if ($result->isNeutral()) {
+        $result = AccessResult::forbidden();
+      }
+      return $result;
+    }
+  }
+
+  // No opinion.
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_entity_field_access_alter().
+ *
+ * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
+ */
+function entity_test_entity_field_access_alter(array &$grants, array $context) {
+  if ($context['field_definition']->getName() == 'field_test_text' && $context['items']->value == 'access alter value') {
+    $grants[':default'] = AccessResult::forbidden()->inheritCacheability($grants[':default'])->addCacheableDependency($context['items']->getEntity());
+  }
+}
+
+/**
+ * Implements hook_entity_form_display_alter().
+ */
+function entity_test_entity_form_display_alter(EntityFormDisplay $form_display, $context) {
+  // Make the field_test_text field 42 characters for entity_test_mul.
+  if ($context['entity_type'] == 'entity_test') {
+    if ($component_options = $form_display->getComponent('field_test_text')) {
+      $component_options['settings']['size'] = 42;
+      $form_display->setComponent('field_test_text', $component_options);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function entity_test_entity_presave(EntityInterface $entity) {
+  if (isset($GLOBALS['entity_test_throw_exception'])) {
+    throw new Exception('Entity presave exception', 1);
+  }
+
+  if ($entity->getEntityType()->id() == 'entity_view_display') {
+    $entity->setThirdPartySetting('entity_test', 'foo', 'bar');
+  }
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function entity_test_entity_predelete(EntityInterface $entity) {
+  if (isset($GLOBALS['entity_test_throw_exception'])) {
+    throw new Exception('Entity predelete exception', 2);
+  }
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function entity_test_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  $valid_entity_type_ids = [
+    'user_role',
+    'block',
+  ];
+  if (in_array($entity->getEntityTypeId(), $valid_entity_type_ids)) {
+    if (\Drupal::service('router.route_provider')->getRouteByName("entity.{$entity->getEntityTypeId()}.test_operation")) {
+      $operations['test_operation'] = [
+        'title' => format_string('Test Operation: @label', ['@label' => $entity->label()]),
+        'url' => Url::fromRoute("entity.{$entity->getEntityTypeId()}.test_operation", [$entity->getEntityTypeId() => $entity->id()]),
+        'weight' => 50,
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_translation_create().
+ */
+function entity_test_entity_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_translation_create', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_entity_translation_insert().
+ */
+function entity_test_entity_translation_insert(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_translation_insert', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_entity_translation_delete().
+ */
+function entity_test_entity_translation_delete(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_create() for 'entity_test_mul'.
+ */
+function entity_test_entity_test_mul_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_translation_create', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_insert() for 'entity_test_mul'.
+ */
+function entity_test_entity_test_mul_translation_insert(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_translation_insert', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_delete() for 'entity_test_mul'.
+ */
+function entity_test_entity_test_mul_translation_delete(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_create() for 'entity_test_mul_changed'.
+ */
+function entity_test_entity_test_mul_changed_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_changed_translation_create', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_insert() for 'entity_test_mul_changed'.
+ */
+function entity_test_entity_test_mul_changed_translation_insert(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_changed_translation_insert', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_delete().
+ */
+function entity_test_entity_test_mul_changed_translation_delete(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_changed_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_create().
+ */
+function entity_test_entity_test_mulrev_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mulrev_translation_create', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_insert().
+ */
+function entity_test_entity_test_mulrev_translation_insert(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mulrev_translation_insert', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_delete() for 'entity_test_mulrev'.
+ */
+function entity_test_entity_test_mulrev_translation_delete(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mulrev_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_create() for 'entity_test_mulrev_changed'.
+ */
+function entity_test_entity_test_mulrev_changed_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mulrev_changed_translation_create', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_insert() for 'entity_test_mulrev'.
+ */
+function entity_test_entity_test_mulrev_changed_translation_insert(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mulrev_changed_translation_insert', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_delete().
+ */
+function entity_test_entity_test_mulrev_changed_translation_delete(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mulrev_changed_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_create() for 'entity_test_mul_langcode_key'.
+ */
+function entity_test_entity_test_mul_langcode_key_translation_create(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_langcode_key_translation_create', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_insert() for 'entity_test_mul_langcode_key'.
+ */
+function entity_test_entity_test_mul_langcode_key_translation_insert(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_langcode_key_translation_insert', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_delete() for 'entity_test_mul_langcode_key'.
+ */
+function entity_test_entity_test_mul_langcode_key_translation_delete(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_langcode_key_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Field default value callback.
+ *
+ * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+ *   The entity being created.
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
+ *   The field definition.
+ *
+ * @return array
+ *   An array of default values, in the same format as the $default_value
+ *   property.
+ *
+ * @see \Drupal\field\Entity\FieldConfig::$default_value
+ */
+function entity_test_field_default_value(FieldableEntityInterface $entity, FieldDefinitionInterface $definition) {
+  // Include the field name and entity language in the generated values to check
+  // that they are correctly passed.
+  $string = $definition->getName() . '_' . $entity->language()->getId();
+  // Return a "default value" with multiple items.
+  return array(
+    array(
+      'shape' => "shape:0:$string",
+      'color' => "color:0:$string",
+    ),
+    array(
+      'shape' => "shape:1:$string",
+      'color' => "color:1:$string",
+    ),
+  );
+}
+
+/**
+ * Helper function to be used to record hook invocations.
+ *
+ * @param string $hook
+ *   The hook name.
+ * @param mixed $data
+ *   Arbitrary data associated with the hook invocation.
+ */
+function _entity_test_record_hooks($hook, $data) {
+  $state = \Drupal::state();
+  $key = 'entity_test.hooks';
+  $hooks = $state->get($key);
+  $hooks[$hook] = $data;
+  $state->set($key, $hooks);
+}
+
+/**
+ * Implements hook_entity_prepare_view().
+ */
+function entity_test_entity_prepare_view($entity_type, array $entities, array $displays) {
+  // Add a dummy field item attribute on field_test_text if it exists.
+  if ($entity_type == 'entity_test') {
+    foreach ($entities as $entity) {
+      if ($entity->hasField('field_test_text') && $displays[$entity->bundle()]->getComponent('field_test_text')) {
+        foreach ($entity->get('field_test_text') as $item) {
+          $item->_attributes += array('data-field-item-attr' => 'foobar');
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function entity_test_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  // Only apply to the 'entity_test' entities.
+  if ($entity->getEntityType()->getProvider() != 'entity_test') {
+    return AccessResult::neutral();
+  }
+  \Drupal::state()->set('entity_test_entity_access', TRUE);
+
+  // Attempt to allow access to entities with the title forbid_access,
+  // this will be overridden by
+  // \Drupal\entity_test\EntityTestAccessControlHandler::checkAccess().
+  if ($entity->label() == 'forbid_access') {
+    return AccessResult::allowed();
+  }
+
+  // Uncacheable because the access result depends on a State key-value pair and
+  // might therefore change at any time.
+  $condition = \Drupal::state()->get("entity_test_entity_access.{$operation}." . $entity->id(), FALSE);
+  return AccessResult::allowedIf($condition)->setCacheMaxAge(0);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for 'entity_test'.
+ */
+function entity_test_entity_test_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  \Drupal::state()->set('entity_test_entity_test_access', TRUE);
+
+  // No opinion.
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_entity_create_access().
+ */
+function entity_test_entity_create_access(AccountInterface $account, $context, $entity_bundle) {
+  \Drupal::state()->set('entity_test_entity_create_access', TRUE);
+  \Drupal::state()->set('entity_test_entity_create_access_context', $context);
+
+  // No opinion.
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create_access() for 'entity_test'.
+ */
+function entity_test_entity_test_create_access(AccountInterface $account, $context, $entity_bundle) {
+  \Drupal::state()->set('entity_test_entity_test_create_access', TRUE);
+
+  // No opinion.
+  return AccessResult::neutral();
 }

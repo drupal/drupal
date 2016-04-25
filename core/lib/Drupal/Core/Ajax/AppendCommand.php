@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Ajax\AppendCommand.
- */
-
 namespace Drupal\Core\Ajax;
-
-use Drupal\Core\Ajax\InsertCommand;
 
 /**
  * An AJAX command for calling the jQuery append() method.
@@ -16,10 +9,12 @@ use Drupal\Core\Ajax\InsertCommand;
  * method to append the given HTML content to the inside of each element matched
  * by the given selector.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
  * @see http://docs.jquery.com/Manipulation/append#content
+ *
+ * @ingroup ajax
  */
 class AppendCommand extends InsertCommand {
 
@@ -32,7 +27,7 @@ class AppendCommand extends InsertCommand {
       'command' => 'insert',
       'method' => 'append',
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }

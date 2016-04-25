@@ -1,0 +1,67 @@
+entity.config_test.collection:
+  path: '/admin/structure/config_test'
+  defaults:
+    _entity_list: 'config_test'
+    _title: 'Test configuration'
+  requirements:
+    _permission: 'administer site configuration'
+
+config_test.entity_add:
+  path: '/admin/structure/config_test/add'
+  defaults:
+    _entity_form: 'config_test'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.config_test.edit_form:
+  path: '/admin/structure/config_test/manage/{config_test}'
+  defaults:
+    _entity_form: config_test
+    _title_callback: '\Drupal\config_test\ConfigTestController::editTitle'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.config_test.edit_form_config_test_no_status:
+  path: '/admin/structure/config_test/manage/{config_test_no_status}'
+  defaults:
+    _entity_form: config_test_no_status
+    _title_callback: '\Drupal\config_test\ConfigTestController::editTitle'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.config_test.enable:
+  path: '/admin/structure/config_test/manage/{config_test}/enable'
+  defaults:
+    _controller: '\Drupal\config_test\ConfigTestController::enable'
+    entity_type: 'config_test'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.config_test.disable:
+  path: '/admin/structure/config_test/manage/{config_test}/disable'
+  defaults:
+    _controller: '\Drupal\config_test\ConfigTestController::disable'
+    entity_type: 'config_test'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.config_test.delete_form:
+  path: '/admin/structure/config_test/manage/{config_test}/delete'
+  defaults:
+    _entity_form: 'config_test.delete'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.config_test.delete_form_config_test_no_status:
+  path: '/admin/structure/config_test/manage/{config_test_no_status}/delete'
+  defaults:
+    _entity_form: 'config_test_no_status.delete'
+  requirements:
+    _permission: 'administer site configuration'
+
+config_test.schema_listener:
+  path: '/config_test/schema_listener'
+  defaults:
+    _controller: '\Drupal\config_test\SchemaListenerController::test'
+  requirements:
+    _permission: 'administer site configuration'

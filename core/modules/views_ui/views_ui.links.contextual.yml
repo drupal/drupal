@@ -1,0 +1,9 @@
+entity.view.edit_form:
+  title: 'Edit view'
+  route_name: entity.view.edit_form
+  group: entity.view.edit_form
+
+entity.view.preview_form:
+  title: 'Preview view'
+  route_name: entity.view.preview_form
+  group: entity.view.preview_form

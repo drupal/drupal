@@ -5,35 +5,44 @@
  * A dummy module to test API interaction with the Toolbar module.
  */
 
+use Drupal\Core\Url;
+
 /**
- * Um
+ * Implements hook_toolbar().
  */
 function toolbar_test_toolbar() {
-  $tray_items = array(
-    l('link 1', '<front>'),
-    l('link 2', '<front>'),
-    l('link 3', '<front>'),
-  );
-  $items['testing'] = array(
+
+    $items['testing'] = array(
+    '#type' => 'toolbar_item',
     'tab' => array(
-      'title' => t('Test tab'),
-      'href' => '',
-      'html' => FALSE,
-      'attributes' => array(
-        'title' => t('Test tab'),
+      '#type' => 'link',
+      '#title' => t('Test tab'),
+      '#url' => Url::fromRoute('<front>'),
+      '#options' => array(
+        'attributes' => array(
+          'id' => 'toolbar-tab-testing',
+          'title' => t('Test tab'),
+        ),
       ),
     ),
     'tray' => array(
       '#heading' => t('Test tray'),
+      '#wrapper_attributes' => array(
+        'id' => 'toolbar-tray-testing',
+      ),
       'content' => array(
         '#theme' => 'item_list',
-        '#items' => $tray_items,
+        '#items' => array(
+          \Drupal::l(t('link 1'), new Url('<front>', [], array('attributes' => array('title' => 'Test link 1 title')))),
+          \Drupal::l(t('link 2'), new Url('<front>', [], array('attributes' => array('title' => 'Test link 2 title')))),
+          \Drupal::l(t('link 3'), new Url('<front>', [], array('attributes' => array('title' => 'Test link 3 title')))),
+        ),
         '#attributes' => array(
-          'class' => array('menu'),
+          'class' => array('toolbar-menu'),
         ),
       ),
     ),
-    'weight' => 50,
+    '#weight' => 50,
   );
 
   return $items;

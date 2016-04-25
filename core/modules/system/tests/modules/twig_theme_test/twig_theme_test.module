@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function twig_theme_test_theme($existing, $type, $theme, $path) {
+  $items['twig_theme_test_filter'] = array(
+    'variables' => array('quote' => array(), 'attributes' => array()),
+    'template' => 'twig_theme_test.filter',
+  );
+  $items['twig_theme_test_php_variables'] = array(
+    'template' => 'twig_theme_test.php_variables',
+  );
+  $items['twig_theme_test_trans'] = array(
+    'variables' => array(),
+    'template' => 'twig_theme_test.trans',
+  );
+  $items['twig_theme_test_placeholder_outside_trans'] = array(
+    'variables' => array('var' => ''),
+    'template' => 'twig_theme_test.placeholder_outside_trans',
+  );
+  $items['twig_namespace_test'] = array(
+    'variables' => array(),
+    'template' => 'twig_namespace_test',
+  );
+  $items['twig_registry_loader_test'] = array(
+    'variables' => array(),
+  );
+  $items['twig_registry_loader_test_include'] = array(
+    'variables' => array(),
+  );
+  $items['twig_registry_loader_test_extend'] = array(
+    'variables' => array(),
+  );
+  $items['twig_raw_test'] = array(
+    'variables' => array('script' => ''),
+  );
+  $items['twig_autoescape_test'] = array(
+    'variables' => array('script' => ''),
+  );
+  $items['twig_theme_test_url_generator'] = array(
+    'variables' => array(),
+    'template' => 'twig_theme_test.url_generator',
+  );
+  $items['twig_theme_test_link_generator'] = array(
+    'variables' => [
+      'test_url' => NULL,
+      'test_url_attribute' => NULL,
+      'attributes' => [],
+    ],
+    'template' => 'twig_theme_test.link_generator',
+  );
+  $items['twig_theme_test_url_to_string'] = array(
+    'variables' => array('test_url' => NULL),
+    'template' => 'twig_theme_test.url_to_string',
+  );
+  $items['twig_theme_test_file_url'] = array(
+    'variables' => array(),
+    'template' => 'twig_theme_test.file_url',
+  );
+  $items['twig_theme_test_attach_library'] = array(
+    'variables' => array(),
+    'template' => 'twig_theme_test.attach_library',
+  );
+  $items['twig_theme_test_renderable'] = array(
+    'variables' => array(
+      'renderable' => NULL,
+    ),
+    'template' => 'twig_theme_test.renderable',
+  );
+  return $items;
+}
+
+/*
+ * Helper function to test PHP variables in the Twig engine.
+ */
+function _test_theme_twig_php_values() {
+  // Prefix each variable with "twig_" so that Twig doesn't get confused
+  // between a variable and a primitive. Arrays are not tested since they should
+  // be a Drupal render array.
+  return array(
+    'twig_null' => array(
+      'value' => NULL,
+      'expected' => '',
+    ),
+    'twig_bool_false' => array(
+      'value' => FALSE,
+      'expected' => '',
+    ),
+    'twig_bool_true' => array(
+      'value' => TRUE,
+      'expected' => '1',
+    ),
+    'twig_int' => array(
+      'value' => 1,
+      'expected' => '1',
+    ),
+    'twig_int_0' => array(
+      'value' => 0,
+      'expected' => '0',
+    ),
+    'twig_float' => array(
+      'value' => 122.34343,
+      'expected' => '122.34343',
+    ),
+    'twig_string' => array(
+      'value' => 'Hello world!',
+      'expected' => 'Hello world!',
+    ),
+  );
+}

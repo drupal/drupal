@@ -1,0 +1,6 @@
+name: 'Twig Loader Test'
+type: module
+description: 'Support module for testing adding Twig loaders.'
+package: Testing
+version: VERSION
+core: 8.x

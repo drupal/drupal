@@ -1,0 +1,69 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_node_bulk_form
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: null
+    display_options:
+      style:
+        type: table
+      row:
+        type: fields
+      fields:
+        node_bulk_form:
+          id: node_bulk_form
+          table: node
+          field: node_bulk_form
+          plugin_id: node_bulk_form
+          entity_type: node
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          plugin_id: field
+          entity_type: node
+          entity_field: title
+      sorts:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          order: ASC
+          plugin_id: standard
+          entity_type: node
+          entity_field: nid
+        langcode:
+          id: langcode
+          table: node_field_data
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: node
+          entity_field: langcode
+          plugin_id: standard
+      display_extenders: {  }
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: null
+    display_options:
+      path: test-node-bulk-form

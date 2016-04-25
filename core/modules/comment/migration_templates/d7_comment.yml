@@ -1,0 +1,35 @@
+id: d7_comment
+label: Comments
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_comment
+  constants:
+    entity_type: node
+process:
+  cid: cid
+  pid:
+    plugin: migration
+    migration: d7_comment
+    source: pid
+  entity_id: nid
+  entity_type: 'constants/entity_type'
+  comment_type: comment_type
+  field_name: comment_type
+  subject: subject
+  uid: uid
+  name: name
+  mail: mail
+  homepage: homepage
+  hostname: hostname
+  created: created
+  changed: changed
+  status: status
+  thread: thread
+  comment_body: comment_body
+destination:
+  plugin: entity:comment
+migration_dependencies:
+  required:
+    - d7_node
+    - d7_comment_type

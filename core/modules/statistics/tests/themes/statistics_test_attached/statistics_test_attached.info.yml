@@ -1,0 +1,5 @@
+name: 'Statistics test attached theme'
+type: theme
+description: 'Theme for testing attached library'
+version: VERSION
+core: 8.x

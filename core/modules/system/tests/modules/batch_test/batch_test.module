@@ -5,357 +5,15 @@
  * Helper module for the Batch API tests.
  */
 
-/**
- * Implements hook_menu().
- */
-function batch_test_menu() {
-  $items = array();
-
-  $items['batch-test'] = array(
-    'title' => 'Batch test',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('batch_test_simple_form'),
-    'access callback' => TRUE,
-  );
-  // Simple form: one submit handler, setting a batch.
-  $items['batch-test/simple'] = array(
-    'title' => 'Simple',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => 0,
-  );
-  // Multistep form: two steps, each setting a batch.
-  $items['batch-test/multistep'] = array(
-    'title' => 'Multistep',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('batch_test_multistep_form'),
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
-  );
-  // Chained form: four submit handlers, several of which set a batch.
-  $items['batch-test/chained'] = array(
-    'title' => 'Chained',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('batch_test_chained_form'),
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
-  );
-  // Programmatic form: the page submits the 'Chained' form through
-  // drupal_form_submit().
-  $items['batch-test/programmatic'] = array(
-    'title' => 'Programmatic',
-    'page callback' => 'batch_test_programmatic',
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3,
-  );
-  // No form: fire a batch simply by accessing a page.
-  $items['batch-test/no-form'] = array(
-    'title' => 'Simple page',
-    'page callback' => 'batch_test_no_form',
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 4,
-  );
-  // No form: fire a batch; return > 100% complete
-  $items['batch-test/large-percentage'] = array(
-    'title' => 'Simple page with batch over 100% complete',
-    'page callback' => 'batch_test_large_percentage',
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 5,
-  );
-  // Tests programmatic form submission within a batch operation.
-  $items['batch-test/nested-programmatic'] = array(
-    'title' => 'Nested programmatic',
-    'page callback' => 'batch_test_nested_drupal_form_submit',
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 6,
-  );
-  // Landing page to test redirects.
-  $items['batch-test/redirect'] = array(
-    'title' => 'Redirect',
-    'page callback' => 'batch_test_redirect_page',
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 7,
-  );
-  // This item lives under 'admin' so that the page uses the admin theme.
-  $items['admin/batch-test/test-theme'] = array(
-    'page callback' => 'batch_test_theme_batch',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
+use Drupal\Core\Form\FormState;
 
 /**
- * Form constructor for a batch selection form.
- *
- * @see batch_test_simple_form_submit()
- */
-function batch_test_simple_form() {
-  $form['batch'] = array(
-    '#type' => 'select',
-    '#title' => 'Choose batch',
-    '#options' => array(
-      'batch_0' => 'batch 0',
-      'batch_1' => 'batch 1',
-      'batch_2' => 'batch 2',
-      'batch_3' => 'batch 3',
-      'batch_4' => 'batch 4',
-    ),
-  );
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Submit',
-  );
-
-  return $form;
-}
-
-/**
- * Form submission handler for batch_test_simple_form().
- *
- * @see batch_test_simple_form()
- */
-function batch_test_simple_form_submit($form, &$form_state) {
-  batch_test_stack(NULL, TRUE);
-
-  $function = '_batch_test_' . $form_state['values']['batch'];
-  batch_set($function());
-
-  $form_state['redirect'] = 'batch-test/redirect';
-}
-
-
-/**
- * Form constructor for a multistep form.
- *
- * @see batch_test_multistep_form_submit()
- */
-function batch_test_multistep_form($form, &$form_state) {
-  if (empty($form_state['storage']['step'])) {
-    $form_state['storage']['step'] = 1;
-  }
-
-  $form['step_display'] = array(
-    '#markup' => 'step ' . $form_state['storage']['step'] . '<br/>',
-  );
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Submit',
-  );
-
-  return $form;
-}
-
-/**
- * Form submission handler for batch_test_multistep_form().
- *
- * @see batch_test_multistep_form()
- */
-function batch_test_multistep_form_submit($form, &$form_state) {
-  batch_test_stack(NULL, TRUE);
-
-  switch ($form_state['storage']['step']) {
-    case 1:
-      batch_set(_batch_test_batch_1());
-      break;
-    case 2:
-      batch_set(_batch_test_batch_2());
-      break;
-  }
-
-  if ($form_state['storage']['step'] < 2) {
-    $form_state['storage']['step']++;
-    $form_state['rebuild'] = TRUE;
-  }
-
-  // This will only be effective on the last step.
-  $form_state['redirect'] = 'batch-test/redirect';
-}
-
-/**
- * Form constructor for a form with chained submit callbacks.
- *
- * @see batch_test_chained_form_submit_1()
- * @see batch_test_chained_form_submit_3()
- * @see batch_test_chained_form_submit_3()
- * @see batch_test_chained_form_submit_4()
- */
-function batch_test_chained_form() {
-  // This value is used to test that $form_state persists through batched
-  // submit handlers.
-  $form['value'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Value',
-    '#default_value' => 1,
-  );
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Submit',
-  );
-  $form['#submit'] = array(
-    'batch_test_chained_form_submit_1',
-    'batch_test_chained_form_submit_2',
-    'batch_test_chained_form_submit_3',
-    'batch_test_chained_form_submit_4',
-  );
-
-  return $form;
-}
-
-/**
- * Form submission handler #1 for batch_test_chained_form().
- *
- * @see batch_test_chained_form()
- */
-function batch_test_chained_form_submit_1($form, &$form_state) {
-  batch_test_stack(NULL, TRUE);
-
-  batch_test_stack('submit handler 1');
-  batch_test_stack('value = ' . $form_state['values']['value']);
-
-  $form_state['values']['value']++;
-  batch_set(_batch_test_batch_1());
-
-  // This redirect should not be taken into account.
-  $form_state['redirect'] = 'should/be/discarded';
-}
-
-/**
- * Form submission handler #2 for batch_test_chained_form().
- *
- * @see batch_test_chained_form()
- */
-function batch_test_chained_form_submit_2($form, &$form_state) {
-  batch_test_stack('submit handler 2');
-  batch_test_stack('value = ' . $form_state['values']['value']);
-
-  $form_state['values']['value']++;
-  batch_set(_batch_test_batch_2());
-
-  // This redirect should not be taken into account.
-  $form_state['redirect'] = 'should/be/discarded';
-}
-
-/**
- * Form submission handler #3 for batch_test_chained_form().
- *
- * @see batch_test_chained_form()
- */
-function batch_test_chained_form_submit_3($form, &$form_state) {
-  batch_test_stack('submit handler 3');
-  batch_test_stack('value = ' . $form_state['values']['value']);
-
-  $form_state['values']['value']++;
-
-  // This redirect should not be taken into account.
-  $form_state['redirect'] = 'should/be/discarded';
-}
-
-/**
- * Form submission handler #4 for batch_test_chained_form().
- *
- * @see batch_test_chained_form()
- */
-function batch_test_chained_form_submit_4($form, &$form_state) {
-  batch_test_stack('submit handler 4');
-  batch_test_stack('value = ' . $form_state['values']['value']);
-
-  $form_state['values']['value']++;
-  batch_set(_batch_test_batch_3());
-
-  // This is the redirect that should prevail.
-  $form_state['redirect'] = 'batch-test/redirect';
-}
-
-/**
- * Menu callback: Submits the 'Chained' form programmatically.
- */
-function batch_test_programmatic($value = 1) {
-  $form_state = array(
-    'values' => array('value' => $value)
-  );
-  drupal_form_submit('batch_test_chained_form', $form_state);
-  return 'Got out of a programmatic batched form.';
-}
-
-/**
- * Menu callback: Submits a form within a batch programmatically.
- */
-function batch_test_nested_drupal_form_submit($value = 1) {
-  // Set the batch and process it.
-  $batch['operations'] = array(
-    array('_batch_test_nested_drupal_form_submit_callback', array($value)),
-  );
-  batch_set($batch);
-  batch_process('batch-test/redirect');
-}
-
-/**
- * Batch operation: Submits form_test_mock_form() using drupal_form_submit().
+ * Batch operation: Submits form_test_mock_form().
  */
 function _batch_test_nested_drupal_form_submit_callback($value) {
-  $state['values']['test_value'] = $value;
-  drupal_form_submit('batch_test_mock_form', $state);
-}
-
-/**
- * Form constructor for a simple form with a textfield and submit button.
- *
- * @see batch_test_mock_form_submit()
- */
-function batch_test_mock_form($form, $form_state) {
-  $form['test_value'] = array(
-    '#type' => 'textfield',
-  );
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Submit'),
-  );
-
-  return $form;
-}
-
-/**
- * Form submission handler for batch_test_mock_form().
- *
- * @see batch_test_mock_form()
- */
-function batch_test_mock_form_submit($form, &$form_state) {
-  batch_test_stack('mock form submitted with value = ' . $form_state['values']['test_value']);
-}
-
-/**
- * Menu callback: Fires a batch process without a form submission.
- */
-function batch_test_no_form() {
-  batch_test_stack(NULL, TRUE);
-
-  batch_set(_batch_test_batch_1());
-  batch_process('batch-test/redirect');
-}
-
-/**
- * Menu callback: Fires a batch process without a form submission.
- */
-function batch_test_large_percentage() {
-  batch_test_stack(NULL, TRUE);
-
-  batch_set(_batch_test_batch_5());
-  batch_process('batch-test/redirect');
-}
-
-/**
- * Menu callback: Redirects successfuly.
- */
-function batch_test_redirect_page() {
-  return 'Redirection successful.';
+  $form_state = (new FormState())
+    ->setValue('test_value', $value);
+  \Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestMockForm', $form_state);
 }
 
 /**
@@ -496,21 +154,9 @@ function _batch_test_batch_5() {
 }
 
 /**
- * Menu callback: Runs a batch for testing theme used on the progress page.
- */
-function batch_test_theme_batch() {
-  batch_test_stack(NULL, TRUE);
-  $batch = array(
-    'operations' => array(
-      array('_batch_test_theme_callback', array()),
-    ),
-  );
-  batch_set($batch);
-  batch_process('batch-test/redirect');
-}
-
-/**
- * Tests the progress page theme by performing a batch callback.
+ * Implements callback_batch_operation().
+ *
+ * Tests the progress page theme.
  */
 function _batch_test_theme_callback() {
   // Because drupalGet() steps through the full progressive batch before
@@ -518,8 +164,23 @@ function _batch_test_theme_callback() {
   // theme is being used on the batch processing page by viewing that page
   // directly. Instead, we save the theme being used in a variable here, so
   // that it can be loaded and inspected in the thread running the test.
-  global $theme;
+  $theme = \Drupal::theme()->getActiveTheme()->getName();
   batch_test_stack($theme);
+}
+
+/**
+ * Tests the title on the progress page by performing a batch callback.
+ */
+function _batch_test_title_callback() {
+  // Because drupalGet() steps through the full progressive batch before
+  // returning control to the test function, we cannot test that the correct
+  // title is being used on the batch processing page by viewing that page
+  // directly. Instead, we save the title being used in a variable here, so
+  // that it can be loaded and inspected in the thread running the test.
+  $request = \Drupal::request();
+  $route_match = \Drupal::routeMatch();
+  $title = \Drupal::service('title_resolver')->getTitle($request, $route_match->getRouteObject());
+  batch_test_stack($title);
 }
 
 /**
@@ -527,12 +188,12 @@ function _batch_test_theme_callback() {
  */
 function batch_test_stack($data = NULL, $reset = FALSE) {
   if ($reset) {
-    state()->delete('batch_test.stack');
+    \Drupal::state()->delete('batch_test.stack');
   }
   if (!isset($data)) {
-    return state()->get('batch_test.stack');
+    return \Drupal::state()->get('batch_test.stack');
   }
-  $stack = state()->get('batch_test.stack');
+  $stack = \Drupal::state()->get('batch_test.stack');
   $stack[] = $data;
-  state()->set('batch_test.stack', $stack);
+  \Drupal::state()->set('batch_test.stack', $stack);
 }

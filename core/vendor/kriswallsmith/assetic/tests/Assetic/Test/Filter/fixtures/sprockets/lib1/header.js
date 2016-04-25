@@ -1,3 +1,0 @@
-/* header.js */
-
-//= provide "assets"

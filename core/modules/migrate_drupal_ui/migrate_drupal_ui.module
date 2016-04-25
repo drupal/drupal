@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Alert administrators before starting the import process.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function migrate_drupal_ui_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.migrate_drupal_ui':
+      $output = '<p>' . t('The Migrate Drupal UI module provides a one-click upgrade from an earlier version of Drupal. For details, see the <a href=":migrate">online documentation for the Migrate Drupal UI module</a> in the handbook on upgrading from previous versions.', [':migrate' => 'https://www.drupal.org/upgrade/migrate']) . '</p>';
+      return $output;
+  }
+}

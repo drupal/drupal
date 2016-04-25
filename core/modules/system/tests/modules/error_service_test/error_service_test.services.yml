@@ -1,0 +1,14 @@
+services:
+  http_middleware.monkeys:
+    class: Drupal\error_service_test\MonkeysInTheControlRoom
+    arguments: ['@settings']
+    tags:
+      - { name: http_middleware, priority: 400 }
+  # Set up a service with a missing class dependency.
+  broken_class_with_missing_dependency:
+    class: Drupal\error_service_test\LonelyMonkeyClass
+  logger.broken:
+    class: Drupal\error_service_test\Logger\TestLog
+    tags:
+      - { name: logger }
+      - { name: backend_overridable }

@@ -1,0 +1,56 @@
+langcode: en
+status: false
+dependencies: {  }
+id: test_view_storage
+label: 'Storage Test View'
+module: views
+description: 'Storage Test View for testing.'
+tag: test
+base_table: views_test_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: standard
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+  block_1:
+    id: block_1
+    display_title: Block
+    display_plugin: block
+    position: 2
+    display_options:
+      query:
+        type: views_query
+        options: {  }
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      query:
+        type: views_query
+        options: {  }
+      path: test_view_storage

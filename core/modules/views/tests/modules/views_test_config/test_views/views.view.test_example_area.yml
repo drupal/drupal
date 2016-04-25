@@ -1,0 +1,39 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_example_area
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      header:
+        test_example:
+          field: test_example
+          id: test_example
+          table: views
+          plugin_id: test_example
+      footer:
+        test_example:
+          field: test_example
+          id: test_example
+          table: views
+          plugin_id: test_example
+      empty:
+        test_example:
+          field: test_example
+          id: test_example
+          table: views
+          plugin_id: test_example
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

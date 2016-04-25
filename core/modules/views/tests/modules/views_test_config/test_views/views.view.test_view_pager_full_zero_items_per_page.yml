@@ -1,0 +1,54 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_view_pager_full_zero_items_per_page
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        title:
+          alter:
+            alter_text: false
+            ellipsis: true
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: true
+          empty_zero: false
+          field: title
+          hide_empty: false
+          id: title
+          table: node_field_data
+          plugin_id: field
+          entity_type: node
+          entity_field: title
+      pager:
+        options:
+          id: 0
+          items_per_page: 0
+          offset: 0
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

@@ -1,14 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\FileTransfer\Local.
- */
-
 namespace Drupal\Core\FileTransfer;
-
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
 
 /**
  * Defines the local connection class for copying files as the httpd user.
@@ -16,21 +8,21 @@ use RecursiveDirectoryIterator;
 class Local extends FileTransfer implements ChmodInterface {
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::connect().
+   * {@inheritdoc}
    */
-  function connect() {
+  public function connect() {
     // No-op
   }
 
   /**
-   * Overrides Drupal\Core\FileTransfer\FileTransfer::factory().
+   * {@inheritdoc}
    */
   static function factory($jail, $settings) {
     return new Local($jail);
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::copyFileJailed().
+   * {@inheritdoc}
    */
   protected function copyFileJailed($source, $destination) {
     if (@!copy($source, $destination)) {
@@ -39,7 +31,7 @@ class Local extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::createDirectoryJailed().
+   * {@inheritdoc}
    */
   protected function createDirectoryJailed($directory) {
     if (!is_dir($directory) && @!mkdir($directory, 0777, TRUE)) {
@@ -48,14 +40,14 @@ class Local extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::removeDirectoryJailed().
+   * {@inheritdoc}
    */
   protected function removeDirectoryJailed($directory) {
     if (!is_dir($directory)) {
       // Programmer error assertion, not something we expect users to see.
       throw new FileTransferException('removeDirectoryJailed() called with a path (%directory) that is not a directory.', NULL, array('%directory' => $directory));
     }
-    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $filename => $file) {
+    foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $filename => $file) {
       if ($file->isDir()) {
         if (@!drupal_rmdir($filename)) {
           throw new FileTransferException('Cannot remove directory %directory.', NULL, array('%directory' => $filename));
@@ -73,7 +65,7 @@ class Local extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::removeFileJailed().
+   * {@inheritdoc}
    */
   protected function removeFileJailed($file) {
     if (@!drupal_unlink($file)) {
@@ -82,25 +74,25 @@ class Local extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::isDirectory().
+   * {@inheritdoc}
    */
   public function isDirectory($path) {
     return is_dir($path);
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::isFile().
+   * {@inheritdoc}
    */
   public function isFile($path) {
     return is_file($path);
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\ChmodInterface::chmodJailed().
+   * {@inheritdoc}
    */
   public function chmodJailed($path, $mode, $recursive) {
     if ($recursive && is_dir($path)) {
-      foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
+      foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
         if (@!chmod($filename, $mode)) {
           throw new FileTransferException('Cannot chmod %path.', NULL, array('%path' => $filename));
         }

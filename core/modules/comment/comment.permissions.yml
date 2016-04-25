@@ -1,0 +1,13 @@
+administer comments:
+  title: 'Administer comments and comment settings'
+administer comment types:
+  title: 'Administer comment types and settings'
+  restrict access: true
+access comments:
+  title: 'View comments'
+post comments:
+  title: 'Post comments'
+skip comment approval:
+  title: 'Skip comment approval'
+edit own comments:
+  title: 'Edit own comments'

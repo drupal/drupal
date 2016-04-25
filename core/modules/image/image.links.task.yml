@@ -1,0 +1,9 @@
+entity.image_style.edit_form:
+  title: 'Edit'
+  route_name: entity.image_style.edit_form
+  base_route: entity.image_style.edit_form
+
+entity.image_style.collection:
+  title: List
+  route_name: entity.image_style.collection
+  base_route: entity.image_style.collection

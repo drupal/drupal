@@ -1,0 +1,69 @@
+/**
+ * @file
+ * Visual styles for Bartik's node component.
+ */
+
+.node__content {
+  font-size: 1.071em;
+  margin-top: 10px;
+}
+
+/* View mode teaser styles. */
+.node--view-mode-teaser {
+  border-bottom: 1px solid #d3d7d9;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+}
+.node--view-mode-teaser h2 {
+  margin-top: 0;
+  padding-top: 0.5em;
+}
+.node--view-mode-teaser h2 a {
+  color: #181818;
+}
+.node--view-mode-teaser.node--sticky {
+  background: #f9f9f9;
+  background: rgba(0, 0, 0, 0.024);
+  border: 1px solid #d3d7d9;
+  padding: 0 15px 15px;
+}
+.node--view-mode-teaser .node__content {
+  clear: none;
+  font-size: 1em;
+  line-height: 1.6;
+}
+
+/* Node metadata styles. */
+.node__meta {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.857em;
+  color: #68696b;
+  margin-bottom: -5px;
+}
+.node__meta .field--name-field-user-picture img {
+  float: left; /* LTR */
+  margin: 1px 20px 0 0; /* LTR */
+}
+[dir="rtl"] .node__meta .field--name-field-user-picture img {
+  float: right;
+  margin-left: 20px;
+  margin-right: 0;
+}
+
+/* Node links styles. */
+.node__links {
+  text-align: right; /* LTR */
+  font-size: 0.93em;
+}
+[dir="rtl"] .node__links {
+  text-align: left;
+}
+
+/* Unpublished node styles. */
+.node--unpublished {
+  padding: 20px 15px 0;
+}
+.node--unpublished .comment-text .comment-arrow {
+  border-left: 1px solid #fff4f4;
+  border-right: 1px solid #fff4f4;
+}

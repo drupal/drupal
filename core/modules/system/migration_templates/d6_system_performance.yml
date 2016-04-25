@@ -1,0 +1,20 @@
+id: d6_system_performance
+label: Performance configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: variable
+  variables:
+    - preprocess_css
+    - preprocess_js
+    - cache_lifetime
+    - cache
+    - page_compression
+process:
+  'css/preprocess': preprocess_css
+  'js/preprocess': preprocess_js
+  'cache/page/max_age': cache_lifetime
+  'response/gzip': page_compression
+destination:
+  plugin: config
+  config_name: system.performance

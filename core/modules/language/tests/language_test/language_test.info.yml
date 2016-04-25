@@ -1,0 +1,6 @@
+name: 'Language test'
+type: module
+description: 'Support module for the language layer tests.'
+core: 8.x
+package: Testing
+version: VERSION

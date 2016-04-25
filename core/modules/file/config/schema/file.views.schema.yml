@@ -1,0 +1,42 @@
+# Schema for the views plugins of the File module.
+
+
+views.argument.file_fid:
+  type: views.argument.numeric
+  label: 'File ID'
+
+views.field.file_extension:
+  type: views_field
+  label: 'File extension'
+  mapping:
+    extension_detect_tar:
+      type: boolean
+      label: 'Detect if tar is part of the extension'
+
+views.field.file:
+  type: views_field
+  label: 'File'
+  mapping:
+    link_to_file:
+      type: boolean
+      label: 'Link this field to download the file'
+
+views.field.file_filemime:
+  type: views.field.file
+  label: 'File MIME'
+  mapping:
+    filemime_image:
+      type: boolean
+      label: 'Display an icon representing the file type, instead of the MIME text (such as "image/jpeg")'
+
+views.field.file_uri:
+  type: views.field.file
+  label: 'File URI'
+  mapping:
+    file_download_path:
+      type: boolean
+      label: 'Display download path instead of file storage URI'
+
+views.filter.file_status:
+  type: views.filter.in_operator
+  label: 'File status'

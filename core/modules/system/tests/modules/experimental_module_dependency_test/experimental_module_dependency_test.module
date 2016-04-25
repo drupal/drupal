@@ -1,0 +1,6 @@
+<?php
+
+/**
+ * @file
+ * Tests dependencies on an experimental module.
+ */

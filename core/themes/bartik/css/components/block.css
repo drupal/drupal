@@ -1,0 +1,9 @@
+/**
+ * @file
+ * Visual styles for Bartik's blocks.
+ */
+
+/* Block has it's own content wrapper. */
+.block .content {
+  margin-top: 10px;
+}

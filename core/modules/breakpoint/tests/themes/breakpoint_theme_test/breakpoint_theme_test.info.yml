@@ -1,0 +1,6 @@
+name: 'Breakpoint test theme'
+type: theme
+description: 'Test theme for breakpoint.'
+version: VERSION
+core: 8.x
+base theme: bartik

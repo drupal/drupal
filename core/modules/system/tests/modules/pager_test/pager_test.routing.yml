@@ -1,0 +1,7 @@
+pager_test.query_parameters:
+  path: '/pager-test/query-parameters'
+  defaults:
+    _title: 'Pager using query parameters for testing'
+    _controller: '\Drupal\pager_test\Controller\PagerTestController::queryParameters'
+  requirements:
+    _access: 'TRUE'

@@ -1,0 +1,16 @@
+{
+  "name": "drupal/core-httpFoundation",
+  "description": "HttpFoundation.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.5.9",
+    "symfony/http-foundation": "2.7.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\HttpFoundation\\": ""
+    }
+  }
+}

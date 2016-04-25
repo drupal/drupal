@@ -1,0 +1,9 @@
+name: 'Views UI'
+type: module
+description: 'Administrative interface for Views.'
+package: Core
+version: VERSION
+core: 8.x
+configure: entity.view.collection
+dependencies:
+  - views

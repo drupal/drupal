@@ -1,0 +1,20 @@
+
+ul, select {
+  font: 1em/160% Verdana, sans-serif;
+  color: #494949;
+}
+.ui-icon{background-image: url(images/icon.png);}
+
+/* Test data URI images with different quote styles. */
+.data .double-quote {
+  /* http://stackoverflow.com/a/13139830/11023 */
+  background-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+}
+
+.data .single-quote {
+  background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDACAWGBwYFCAcGhwkIiAmMFA0MCwsMGJGSjpQdGZ6eHJmcG6AkLicgIiuim5woNqirr7EztDOfJri8uDI8LjKzsb/2wBDASIkJDAqMF40NF7GhHCExsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsb/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AKAAH//Z');
+}
+
+.data .no-quote {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAEAQAAAAAo/mtHAAAAIElEQVQIHWMRnWHwcRNLN8NZ7QYWwT8PlBlYsgqVBRsAankIMw5MtnoAAAAASUVORK5CYII=);
+}

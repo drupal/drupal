@@ -44,7 +44,7 @@ All arguments are long options.
               i.e. if URI is set to http://default/bar/foo.php
               and bar/foo.php exists, this script will be executed without
               bootstrapping Drupal. To execute Drupal's update.php, specify
-              http://default/core/update.php as the URI.
+              http://default/update.php as the URI.
 
 
 To run this script without --root argument invoke it from the root directory

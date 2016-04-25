@@ -1,0 +1,13 @@
+global-styling:
+  version: VERSION
+  css:
+    base:
+      kitten.css: {}
+
+collapse:
+  version: VERSION
+  js:
+    js/collapse.js: { }
+  css:
+    base:
+      css/collapse.css: { }

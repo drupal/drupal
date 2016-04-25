@@ -5,146 +5,14 @@
  * Helper module for the Common tests.
  */
 
-/**
- * Implements hook_menu().
- */
-function common_test_menu() {
-  $items['common-test/drupal_goto'] = array(
-    'title' => 'Drupal Goto',
-    'page callback' => 'common_test_drupal_goto_land',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['common-test/drupal_goto/alt'] = array(
-    'title' => 'Drupal Goto',
-    'page callback' => 'common_test_drupal_goto_land_alt',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['common-test/drupal_goto/fail'] = array(
-    'title' => 'Drupal Goto',
-    'page callback' => 'common_test_drupal_goto_land_fail',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['common-test/drupal_goto/redirect'] = array(
-    'title' => 'Drupal Goto',
-    'page callback' => 'common_test_drupal_goto_redirect',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['common-test/drupal_goto/redirect_advanced'] = array(
-    'title' => 'Drupal Goto',
-    'page callback' => 'common_test_drupal_goto_redirect_advanced',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['common-test/drupal_goto/redirect_fail'] = array(
-    'title' => 'Drupal Goto Failure',
-    'page callback' => 'drupal_goto',
-    'page arguments' => array('common-test/drupal_goto/fail'),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['common-test/destination'] = array(
-    'title' => 'Drupal Get Destination',
-    'page callback' => 'common_test_destination',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['common-test/query-string'] = array(
-    'title' => 'Test querystring',
-    'page callback' => 'common_test_js_and_css_querystring',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['common-test/drupal-render-invalid-keys'] = array(
-    'title' => 'Drupal Render',
-    'page callback' => 'common_test_drupal_render_invalid_keys',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['common-test/l-active-class'] = array(
-    'title' => 'Test l() adding of active class',
-    'page callback' => 'common_test_l_active_class',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  return $items;
-}
+use \Drupal\Core\Asset\AttachedAssetsInterface;
 
 /**
- * Redirects using drupal_goto().
+ * Applies #printed to an element to help test #pre_render.
  */
-function common_test_drupal_goto_redirect() {
-  drupal_goto('common-test/drupal_goto');
-}
-
-/**
- * Redirects using drupal_goto().
- */
-function common_test_drupal_goto_redirect_advanced() {
-  drupal_goto('common-test/drupal_goto', array('query' => array('foo' => '123')), 301);
-}
-
-/**
- * Page callback: Provides a landing page for drupal_goto().
- *
- * @see common_test_menu()
- */
-function common_test_drupal_goto_land() {
-  print "drupal_goto";
-}
-
-/**
- * Page callback: Provides a landing page for drupal_goto().
- *
- * @see common_test_menu()
- */
-function common_test_drupal_goto_land_alt() {
-  print "drupal_goto_alt";
-}
-
-/**
- * Page callback: Provides a failure landing page for drupal_goto().
- *
- * @see common_test_menu()
- */
-function common_test_drupal_goto_land_fail() {
-  print "drupal_goto_fail";
-}
-
-/**
- * Implements hook_drupal_goto_alter().
- */
-function common_test_drupal_goto_alter(&$path, &$options, &$http_response_code) {
-  if ($path == 'common-test/drupal_goto/fail') {
-    $path = 'common-test/drupal_goto/redirect';
-  }
-}
-
-/**
- * Prints a destination query parameter.
- */
-function common_test_destination() {
-  $destination = drupal_get_destination();
-  print "The destination: " . check_plain($destination['destination']);
-}
-
-/**
- * Renders an element with an invalid render array key.
- */
-function common_test_drupal_render_invalid_keys() {
-  define('SIMPLETEST_COLLECT_ERRORS', FALSE);
-
-  // Keys that begin with # may contain a value of any type, otherwise they must
-  // contain arrays.
-  $key = 'child';
-  $value = 'This should be an array.';
-  $element = array(
-    $key => $value,
-  );
-  return drupal_render($element);
+function common_test_drupal_render_printing_pre_render($elements) {
+  $elements['#printed'] = TRUE;
+  return $elements;
 }
 
 /**
@@ -215,7 +83,8 @@ function bartik_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
 /**
  * Implements hook_TYPE_alter() on behalf of block module.
  *
- * This is for verifying that drupal_alter(array(TYPE1, TYPE2), ...) allows
+ * This is to verify that
+ * \Drupal::moduleHandler()->alter(array(TYPE1, TYPE2), ...) allows
  * hook_module_implements_alter() to affect the order in which module
  * implementations are executed.
  */
@@ -229,10 +98,11 @@ function block_drupal_alter_foo_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
  * @see block_drupal_alter_foo_alter()
  */
 function common_test_module_implements_alter(&$implementations, $hook) {
-  // For drupal_alter(array('drupal_alter', 'drupal_alter_foo'), ...), make the
-  // block module implementations run after all the other modules. Note that
-  // when drupal_alter() is called with an array of types, the first type is
-  // considered primary and controls the module order.
+  // For
+  // \Drupal::moduleHandler()->alter(array('drupal_alter', 'drupal_alter_foo'), ...),
+  // make the block module implementations run after all the other modules. Note
+  // that when \Drupal::moduleHandler->alter() is called with an array of types,
+  // the first type is considered primary and controls the module order.
   if ($hook == 'drupal_alter_alter' && isset($implementations['block'])) {
     $group = $implementations['block'];
     unset($implementations['block']);
@@ -248,6 +118,13 @@ function common_test_theme() {
     'common_test_foo' => array(
       'variables' => array('foo' => 'foo', 'bar' => 'bar'),
     ),
+    'common_test_render_element' => array(
+      'render element' => 'foo',
+    ),
+    'common_test_empty' => array(
+      'variables' => array('foo' => 'foo'),
+      'function' => 'theme_common_test_empty',
+    ),
   );
 }
 
@@ -259,50 +136,71 @@ function theme_common_test_foo($variables) {
 }
 
 /**
- * Implements hook_library_info_alter().
+ * Always returns an empty string.
  */
-function common_test_library_info_alter(&$libraries, $module) {
-  if ($module == 'system' && isset($libraries['jquery.farbtastic'])) {
-    // Change the title of Farbtastic to "Farbtastic: Altered Library".
-    $libraries['jquery.farbtastic']['title'] = 'Farbtastic: Altered Library';
-    // Make Farbtastic depend on jQuery Form to test library dependencies.
-    $libraries['jquery.farbtastic']['dependencies'][] = array('system', 'jquery.form');
-  }
+function theme_common_test_empty($variables) {
+  return '';
 }
 
 /**
- * Implements hook_library_info().
+ * Implements MODULE_preprocess().
  *
- * Adds Farbtastic in a different version.
+ * @see RenderTest::testDrupalRenderThemePreprocessAttached()
  */
-function common_test_library_info() {
-  $libraries['jquery.farbtastic'] = array(
-    'title' => 'Custom Farbtastic Library',
-    'website' => 'http://code.google.com/p/farbtastic/',
-    'version' => '5.3',
-    'js' => array(
-      'core/misc/farbtastic/farbtastic.js' => array(),
-    ),
-    'css' => array(
-      'core/misc/farbtastic/farbtastic.css' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-    ),
-  );
+function common_test_preprocess(&$variables, $hook) {
+  if (!\Drupal::state()->get('theme_preprocess_attached_test', FALSE)) {
+    return;
+  }
+  $variables['#attached']['library'][] = 'test/generic_preprocess';
+}
+
+/**
+ * Implements MODULE_preprocess_HOOK().
+ *
+ * @see RenderTest::testDrupalRenderThemePreprocessAttached()
+ */
+function common_test_preprocess_common_test_render_element(&$variables) {
+  if (!\Drupal::state()->get('theme_preprocess_attached_test', FALSE)) {
+    return;
+  }
+  $variables['#attached']['library'][] = 'test/specific_preprocess';
+}
+
+/**
+ * Implements hook_library_info_build().
+ */
+function common_test_library_info_build() {
+  $libraries = [];
+  if (\Drupal::state()->get('common_test.library_info_build_test')) {
+    $libraries['dynamic_library'] = [
+      'version' => '1.0',
+      'css' => [
+        'base' => [
+          'common_test.css' => [],
+        ],
+      ],
+    ];
+  }
   return $libraries;
 }
 
 /**
- * Adds a JavaScript file and a CSS file with a query string appended.
+ * Implements hook_library_info_alter().
  */
-function common_test_js_and_css_querystring() {
-   drupal_add_library('system', 'drupalSettings');
-   drupal_add_js(drupal_get_path('module', 'node') . '/node.js');
-   drupal_add_css(drupal_get_path('module', 'node') . '/node.admin.css');
-   // A relative URI may have a query string.
-   drupal_add_css('/' . drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&arg2=value2');
-   return '';
+function common_test_library_info_alter(&$libraries, $module) {
+  if ($module == 'core' && isset($libraries['jquery.farbtastic'])) {
+    // Change the version of Farbtastic to 0.0.
+    $libraries['jquery.farbtastic']['version'] = '0.0';
+    // Make Farbtastic depend on jQuery Form to test library dependencies.
+    $libraries['jquery.farbtastic']['dependencies'][] = 'core/jquery.form';
+  }
+
+  // Alter the dynamically registered library definition.
+  if ($module == 'common_test' && isset($libraries['dynamic_library'])) {
+    $libraries['dynamic_library']['dependencies'] = [
+      'core/jquery',
+    ];
+  }
 }
 
 /**
@@ -319,24 +217,64 @@ function common_test_cron() {
 }
 
 /**
- * Page callback: Displays links to the current page, one with a query string.
+ * Implements hook_page_attachments().
+ *
+ * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
  */
-function common_test_l_active_class() {
-  return array(
-    'no_query' => array(
-      '#type' => 'link',
-      '#title' => t('Link with no query string'),
-      '#href' => current_path(),
-    ),
-    'with_query' => array(
-      '#type' => 'link',
-      '#title' => t('Link with a query string'),
-      '#href' => current_path(),
-      '#options' => array(
-        'query' => array(
-          'foo' => 'bar',
-        ),
-      ),
-    ),
-  );
+function common_test_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'core/foo';
+  $page['#attached']['library'][] = 'core/bar';
+  $page['#cache']['tags'] = ['example'];
+  $page['#cache']['contexts'] = ['user.permissions'];
+
+  if (\Drupal::state()->get('common_test.hook_page_attachments.descendant_attached', FALSE)) {
+    $page['content']['#attached']['library'][] = 'core/jquery';
+  }
+
+  if (\Drupal::state()->get('common_test.hook_page_attachments.render_array', FALSE)) {
+    $page['something'] = [
+      '#markup' => 'test',
+    ];
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ *
+ * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
+ */
+function common_test_page_attachments_alter(array &$page) {
+  // Remove a library that was added in common_test_page_attachments(), to test
+  // that this hook can do what it claims to do.
+  if (isset($page['#attached']['library']) && ($index = array_search('core/bar', $page['#attached']['library'])) && $index !== FALSE) {
+    unset($page['#attached']['library'][$index]);
+  }
+  $page['#attached']['library'][] = 'core/baz';
+  $page['#cache']['tags'] = ['example'];
+  $page['#cache']['contexts'] = ['user.permissions'];
+
+  if (\Drupal::state()->get('common_test.hook_page_attachments_alter.descendant_attached', FALSE)) {
+    $page['content']['#attached']['library'][] = 'core/jquery';
+  }
+
+  if (\Drupal::state()->get('common_test.hook_page_attachments_alter.render_array', FALSE)) {
+    $page['something'] = [
+      '#markup' => 'test',
+    ];
+  }
+}
+
+/**
+ * Implements hook_js_settings_alter().
+ *
+ * @see \Drupal\system\Tests\Common\JavaScriptTest::testHeaderSetting()
+ */
+function common_test_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
+  // Modify an existing setting.
+  if (array_key_exists('pluralDelimiter', $settings)) {
+    $settings['pluralDelimiter'] = '☃';
+  }
+
+  // Add a setting.
+  $settings['foo'] = 'bar';
 }

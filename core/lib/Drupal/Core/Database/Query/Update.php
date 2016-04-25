@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Database\Query\Update
- */
-
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
@@ -12,8 +7,12 @@ use Drupal\Core\Database\Connection;
 
 /**
  * General class for an abstracted UPDATE operation.
+ *
+ * @ingroup database
  */
 class Update extends Query implements ConditionInterface {
+
+  use QueryConditionTrait;
 
   /**
    * The table to update.
@@ -37,15 +36,6 @@ class Update extends Query implements ConditionInterface {
   protected $arguments = array();
 
   /**
-   * The condition object for this query.
-   *
-   * Condition handling is handled via composition.
-   *
-   * @var Drupal\Core\Database\Query\Condition
-   */
-  protected $condition;
-
-  /**
    * Array of fields to update to an expression in case of a duplicate record.
    *
    * This variable is a nested array in the following format:
@@ -63,7 +53,7 @@ class Update extends Query implements ConditionInterface {
   /**
    * Constructs an Update query object.
    *
-   * @param Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection $connection
    *   A Connection object.
    * @param string $table
    *   Name of the table to associate with this query.
@@ -79,89 +69,13 @@ class Update extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::condition().
-   */
-  public function condition($field, $value = NULL, $operator = NULL) {
-    $this->condition->condition($field, $value, $operator);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::isNull().
-   */
-  public function isNull($field) {
-    $this->condition->isNull($field);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::isNotNull().
-   */
-  public function isNotNull($field) {
-    $this->condition->isNotNull($field);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::exists().
-   */
-  public function exists(SelectInterface $select) {
-    $this->condition->exists($select);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::notExists().
-   */
-  public function notExists(SelectInterface $select) {
-    $this->condition->notExists($select);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::conditions().
-   */
-  public function &conditions() {
-    return $this->condition->conditions();
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::arguments().
-   */
-  public function arguments() {
-    return $this->condition->arguments();
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::where().
-   */
-  public function where($snippet, $args = array()) {
-    $this->condition->where($snippet, $args);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::compile().
-   */
-  public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
-    return $this->condition->compile($connection, $queryPlaceholder);
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::compiled().
-   */
-  public function compiled() {
-    return $this->condition->compiled();
-  }
-
-  /**
    * Adds a set of field->value pairs to be updated.
    *
    * @param $fields
    *   An associative array of fields to write into the database. The array keys
    *   are the field names and the values are the values to which to set them.
    *
-   * @return Drupal\Core\Database\Query\Update
+   * @return \Drupal\Core\Database\Query\Update
    *   The called object.
    */
   public function fields(array $fields) {
@@ -184,7 +98,7 @@ class Update extends Query implements ConditionInterface {
    *   If specified, this is an array of key/value pairs for named placeholders
    *   corresponding to the expression.
    *
-   * @return Drupal\Core\Database\Query\Update
+   * @return \Drupal\Core\Database\Query\Update
    *   The called object.
    */
   public function expression($field, $expression, array $arguments = NULL) {
@@ -200,10 +114,10 @@ class Update extends Query implements ConditionInterface {
    * Executes the UPDATE query.
    *
    * @return
-   *   The number of rows affected by the update.
+   *   The number of rows matched by the update query. This includes rows that
+   *   actually didn't have to be updated because the values didn't change.
    */
   public function execute() {
-
     // Expressions take priority over literal fields, so we process those first
     // and remove any literal fields that conflict.
     $fields = $this->fields;
@@ -222,7 +136,7 @@ class Update extends Query implements ConditionInterface {
     // Because we filter $fields the same way here and in __toString(), the
     // placeholders will all match up properly.
     $max_placeholder = 0;
-    foreach ($fields as $field => $value) {
+    foreach ($fields as $value) {
       $update_values[':db_update_placeholder_' . ($max_placeholder++)] = $value;
     }
 
@@ -254,13 +168,13 @@ class Update extends Query implements ConditionInterface {
         $data['expression']->compile($this->connection, $this);
         $data['expression'] = ' (' . $data['expression'] . ')';
       }
-      $update_fields[] = $field . '=' . $data['expression'];
+      $update_fields[] = $this->connection->escapeField($field) . '=' . $data['expression'];
       unset($fields[$field]);
     }
 
     $max_placeholder = 0;
     foreach ($fields as $field => $value) {
-      $update_fields[] = $field . '=:db_update_placeholder_' . ($max_placeholder++);
+      $update_fields[] = $this->connection->escapeField($field) . '=:db_update_placeholder_' . ($max_placeholder++);
     }
 
     $query = $comments . 'UPDATE {' . $this->connection->escapeTable($this->table) . '} SET ' . implode(', ', $update_fields);

@@ -1,0 +1,357 @@
+# Schema for the configuration files of the System module.
+
+system.site:
+  type: config_object
+  label: 'Site information'
+  mapping:
+    uuid:
+      type: string
+      label: 'Site UUID'
+    name:
+      type: label
+      label: 'Site name'
+    mail:
+      type: email
+      label: 'Email address'
+    slogan:
+      type: label
+      label: 'Slogan'
+    page:
+      type: mapping
+      label: 'Pages'
+      mapping:
+        403:
+          type: path
+          label: 'Default 403 (access denied) page'
+        404:
+          type: path
+          label: 'Default 404 (not found) page'
+        front:
+          type: path
+          label: 'Default front page'
+    admin_compact_mode:
+      type: boolean
+      label: 'Compact mode'
+    weight_select_max:
+      type: integer
+      label: 'Weight element maximum value'
+    default_langcode:
+      type: string
+      label: 'Site default language code'
+    mail_notification:
+      type: string
+      label: 'Notification email address'
+
+system.maintenance:
+  type: config_object
+  label: 'Maintenance mode'
+  mapping:
+    message:
+      type: text
+      label: 'Message to display when in maintenance mode'
+
+system.authorize:
+  type: config_object
+  label: 'Authorize settings'
+  mapping:
+    filetransfer_default:
+      type: string
+      label: 'Default file transfer protocol'
+
+system.cron:
+  type: config_object
+  label: 'Cron settings'
+  mapping:
+    threshold:
+      type: mapping
+      label: 'Thresholds'
+      mapping:
+        requirements_warning:
+          type: integer
+          label: 'Requirements warning period'
+        requirements_error:
+          type: integer
+          label: 'Requirements error period'
+
+system.date:
+  type: config_object
+  label: 'Date settings'
+  mapping:
+    first_day:
+      type: integer
+      label: 'First day of week'
+    country:
+      type: mapping
+      label: 'Country'
+      mapping:
+        default:
+          type: string
+          label: 'Default country'
+    timezone:
+      type: mapping
+      label: 'Time zone settings'
+      mapping:
+        default:
+          type: string
+          label: 'Default time zone'
+        user:
+          type: mapping
+          label: 'User'
+          mapping:
+            configurable:
+              type: boolean
+              label: 'Users may set their own time zone'
+            default:
+              type: integer
+              label: 'Time zone for new users'
+            warn:
+              type: boolean
+              label: 'Remind users at login if their time zone is not set'
+
+system.diff:
+  type: config_object
+  label: 'Diff settings'
+  mapping:
+    context:
+      type: mapping
+      label: 'Context'
+      mapping:
+        lines_leading:
+          type: integer
+          label: 'Number of leading lines in a diff'
+        lines_trailing:
+          type: integer
+          label: 'Number of trailing lines in a diff'
+
+system.logging:
+  type: config_object
+  label: 'Logging settings'
+  mapping:
+    error_level:
+      type: string
+      label: 'Error messages to display'
+
+system.performance:
+  type: config_object
+  label: 'Performance settings'
+  mapping:
+    cache:
+      type: mapping
+      label: 'Caching'
+      mapping:
+        page:
+          type: mapping
+          label: 'Page caching'
+          mapping:
+            max_age:
+              type: integer
+              label: 'Max age'
+    css:
+      type: mapping
+      label: 'CSS performance settings'
+      mapping:
+        preprocess:
+          type: boolean
+          label: 'Aggregate CSS files'
+        gzip:
+          type: boolean
+          label: 'Compress CSS files'
+    fast_404:
+      type: mapping
+      label: 'Fast 404 settings'
+      mapping:
+        enabled:
+          type: boolean
+          label: 'Fast 404 enabled'
+        paths:
+          type: string
+          label: 'Regular expression to match'
+        exclude_paths:
+          type: string
+          label: 'Regular expression to not match'
+        html:
+          type: string
+          label: 'Fast 404 page html'
+    js:
+      type: mapping
+      label: 'JavaScript performance settings'
+      mapping:
+        preprocess:
+          type: boolean
+          label: 'JavaScript preprocess'
+        gzip:
+          type: boolean
+          label: 'Compress JavaScript files.'
+    response:
+      type: mapping
+      label: 'Response performance settings'
+      mapping:
+        gzip:
+          type: boolean
+          label: 'Compress cached pages'
+    stale_file_threshold:
+      type: integer
+      label: 'Stale file threshold'
+
+system.rss:
+  type: config_object
+  label: 'Feed settings'
+  mapping:
+    channel:
+      type: mapping
+      label: 'Feed channel'
+      mapping:
+        description:
+          type: text
+          label: 'Feed description'
+    items:
+      type: mapping
+      label: 'Feed items'
+      mapping:
+        limit:
+          type: integer
+          label: 'Feed item limit'
+        view_mode:
+          type: string
+          label: 'Feed content'
+
+system.theme:
+  type: config_object
+  label: 'Theme settings'
+  mapping:
+    admin:
+      type: string
+      label: 'Administration theme'
+    default:
+      type: string
+      label: 'Default theme'
+
+system.menu.*:
+  type: config_entity
+  label: 'Menu'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: label
+      label: 'Menu description'
+    locked:
+      type: boolean
+      label: ''
+
+system.action.*:
+  type: config_entity
+  label: 'System action'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    type:
+      type: string
+      label: 'Type'
+    plugin:
+      type: string
+      label: 'Plugin'
+    configuration:
+      type: action.configuration.[%parent.plugin]
+
+system.file:
+  type: config_object
+  label: 'File system'
+  mapping:
+    allow_insecure_uploads:
+      type: boolean
+      label: 'Allow insecure uploads'
+    default_scheme:
+      type: string
+      label: 'Default download method'
+    path:
+      type: mapping
+      label: 'Path settings'
+      mapping:
+        temporary:
+          type: string
+          label: 'Temporary directory'
+    temporary_maximum_age:
+      type: integer
+      label: 'Maximum age for temporary files'
+
+system.image:
+  type: config_object
+  label: 'Image settings'
+  mapping:
+    toolkit:
+      type: string
+      label: 'Toolkit'
+
+system.image.gd:
+  type: config_object
+  label: 'Image settings'
+  mapping:
+    jpeg_quality:
+      type: integer
+      label: 'JPEG quality'
+
+system.mail:
+  type: config_object
+  label: 'Mail system'
+  mapping:
+    interface:
+      type: sequence
+      label: 'Interfaces'
+      sequence:
+        type: string
+        label: 'Interface'
+
+system.theme.global:
+  type: theme_settings
+  label: 'Theme global settings'
+
+block.settings.system_branding_block:
+  type: block_settings
+  label: 'Branding block'
+  mapping:
+    use_site_logo:
+      type: boolean
+      label: 'Use site logo'
+    use_site_name:
+      type: boolean
+      label: 'Use site name'
+    use_site_slogan:
+      type: boolean
+      label: 'Use site slogan'
+
+block.settings.system_menu_block:*:
+  type: block_settings
+  label: 'Menu block'
+  mapping:
+    level:
+      type: integer
+      label: 'Starting level'
+    depth:
+      type: integer
+      label: 'Maximum number of levels'
+
+block.settings.local_tasks_block:
+  type: block_settings
+  label: 'Tabs block'
+  mapping:
+    primary:
+      type: boolean
+      label: 'Whether primary tabs are shown'
+    secondary:
+      type: boolean
+      label: 'Whether secondary tabs are shown'
+
+condition.plugin.request_path:
+  type: condition.plugin
+  mapping:
+    pages:
+      type: string

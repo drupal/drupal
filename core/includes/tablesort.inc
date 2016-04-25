@@ -1,19 +1,20 @@
 <?php
 
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\SelectExtender;
-use Drupal\Core\Database\Query\SelectInterface;
-
 /**
  * @file
  * Functions to aid in the creation of sortable tables.
  *
- * All tables created with a call to theme('table') have the option of having
- * column headers that the user can click on to sort the table by that column.
+ * All tables created when rendering a '#type' => 'table' have the option of
+ * having column headers that the user can click on to sort the table by that
+ * column.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Url;
+use Drupal\Component\Utility\UrlHelper;
+
 /**
- * Initialize the table sort context.
+ * Initializes the table sort context.
  */
 function tablesort_init($header) {
   $ts = tablesort_get_order($header);
@@ -23,96 +24,78 @@ function tablesort_init($header) {
 }
 
 /**
- * Format a column header.
+ * Formats a column header.
  *
  * If the cell in question is the column header for the current sort criterion,
  * it gets special formatting. All possible sort criteria become links.
  *
- * @param $cell
- *   The cell to format.
- * @param $header
- *   An array of column headers in the format described in theme_table().
- * @param $ts
+ * @param string $cell_content
+ *   The cell content to format. Passed by reference.
+ * @param array $cell_attributes
+ *   The cell attributes. Passed by reference.
+ * @param array $header
+ *   An array of column headers in the format described in '#type' => 'table'.
+ * @param array $ts
  *   The current table sort context as returned from tablesort_init().
- * @return
- *   A properly formatted cell, ready for _theme_table_cell().
  */
-function tablesort_header($cell, $header, $ts) {
+function tablesort_header(&$cell_content, array &$cell_attributes, array $header, array $ts) {
   // Special formatting for the currently sorted column header.
-  if (is_array($cell) && isset($cell['field'])) {
-    $title = t('sort by @s', array('@s' => $cell['data']));
-    if ($cell['data'] == $ts['name']) {
+  if (isset($cell_attributes['field'])) {
+    $title = t('sort by @s', array('@s' => $cell_content));
+    if ($cell_content == $ts['name']) {
       // aria-sort is a WAI-ARIA property that indicates if items in a table
       // or grid are sorted in ascending or descending order. See
       // http://www.w3.org/TR/wai-aria/states_and_properties#aria-sort
-      $cell['aria-sort'] = ($ts['sort'] == 'asc') ? 'ascending' : 'descending';
+      $cell_attributes['aria-sort'] = ($ts['sort'] == 'asc') ? 'ascending' : 'descending';
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
-      $cell['class'][] = 'active';
-      $image = theme('tablesort_indicator', array('style' => $ts['sort']));
+      $cell_attributes['class'][] = 'is-active';
+      $tablesort_indicator = array(
+        '#theme' => 'tablesort_indicator',
+        '#style' => $ts['sort'],
+      );
+      $image = drupal_render($tablesort_indicator);
     }
     else {
       // If the user clicks a different header, we want to sort ascending initially.
       $ts['sort'] = 'asc';
       $image = '';
     }
-    $cell['data'] = l($cell['data'] . $image, current_path(), array('attributes' => array('title' => $title), 'query' => array_merge($ts['query'], array('sort' => $ts['sort'], 'order' => $cell['data'])), 'html' => TRUE));
+    $cell_content = \Drupal::l(SafeMarkup::format('@cell_content@image', array('@cell_content' => $cell_content, '@image' => $image)), new Url('<current>', [], [
+      'attributes' => array('title' => $title),
+      'query' => array_merge($ts['query'], array(
+        'sort' => $ts['sort'],
+        'order' => $cell_content,
+      )),
+    ]));
 
-    unset($cell['field'], $cell['sort']);
+    unset($cell_attributes['field'], $cell_attributes['sort']);
   }
-  return $cell;
 }
 
 /**
- * Format a table cell.
- *
- * Adds a class attribute to all cells in the currently active column.
- *
- * @param $cell
- *   The cell to format.
- * @param $header
- *   An array of column headers in the format described in theme_table().
- * @param $ts
- *   The current table sort context as returned from tablesort_init().
- * @param $i
- *   The index of the cell's table column.
- * @return
- *   A properly formatted cell, ready for _theme_table_cell().
- */
-function tablesort_cell($cell, $header, $ts, $i) {
-  if (isset($header[$i]['data']) && $header[$i]['data'] == $ts['name'] && !empty($header[$i]['field'])) {
-    if (is_array($cell)) {
-      $cell['class'][] = 'active';
-    }
-    else {
-      $cell = array('data' => $cell, 'class' => array('active'));
-    }
-  }
-  return $cell;
-}
-
-/**
- * Compose a URL query parameter array for table sorting links.
+ * Composes a URL query parameter array for table sorting links.
  *
  * @return
  *   A URL query parameter array that consists of all components of the current
  *   page request except for those pertaining to table sorting.
  */
 function tablesort_get_query_parameters() {
-  return drupal_get_query_parameters($_GET, array('sort', 'order'));
+  return UrlHelper::filterQueryParameters(\Drupal::request()->query->all(), array('sort', 'order'));
 }
 
 /**
- * Determine the current sort criterion.
+ * Determines the current sort criterion.
  *
  * @param $headers
- *   An array of column headers in the format described in theme_table().
+ *   An array of column headers in the format described in '#type' => 'table'.
+ *
  * @return
  *   An associative array describing the criterion, containing the keys:
  *   - "name": The localized title of the table column.
  *   - "sql": The name of the database field to sort on.
  */
 function tablesort_get_order($headers) {
-  $order = isset($_GET['order']) ? $_GET['order'] : '';
+  $order = \Drupal::request()->query->get('order', '');
   foreach ($headers as $header) {
     if (is_array($header)) {
       if (isset($header['data']) && $order == $header['data']) {
@@ -138,16 +121,18 @@ function tablesort_get_order($headers) {
 }
 
 /**
- * Determine the current sort direction.
+ * Determines the current sort direction.
  *
  * @param $headers
- *   An array of column headers in the format described in theme_table().
+ *   An array of column headers in the format described in '#type' => 'table'.
+ *
  * @return
  *   The current sort direction ("asc" or "desc").
  */
 function tablesort_get_sort($headers) {
-  if (isset($_GET['sort'])) {
-    return (strtolower($_GET['sort']) == 'desc') ? 'desc' : 'asc';
+  $query = \Drupal::request()->query;
+  if ($query->has('sort')) {
+    return (strtolower($query->get('sort')) == 'desc') ? 'desc' : 'asc';
   }
   // The user has not specified a sort. Use the default for the currently sorted
   // header if specified; otherwise use "asc".

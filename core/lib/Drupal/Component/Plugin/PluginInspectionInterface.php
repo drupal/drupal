@@ -1,21 +1,19 @@
 <?php
-/**
- * @file
- * Definition of Drupal\Component\Plugin\PluginInspectionInterface.
- */
 
 namespace Drupal\Component\Plugin;
 
 /**
  * Plugin interface for providing some metadata inspection.
  *
- * This interface provides some simple tools for code recieving a plugin to
+ * This interface provides some simple tools for code receiving a plugin to
  * interact with the plugin system.
+ *
+ * @ingroup plugin_api
  */
 interface PluginInspectionInterface {
 
   /**
-   * Returns the plugin_id of the plugin instance.
+   * Gets the plugin_id of the plugin instance.
    *
    * @return string
    *   The plugin_id of the plugin instance.
@@ -23,11 +21,12 @@ interface PluginInspectionInterface {
   public function getPluginId();
 
   /**
-   * Returns the definition of the plugin implementation.
+   * Gets the definition of the plugin implementation.
    *
    * @return array
    *   The plugin definition, as returned by the discovery object used by the
    *   plugin manager.
    */
-  public function getDefinition();
+  public function getPluginDefinition();
+
 }

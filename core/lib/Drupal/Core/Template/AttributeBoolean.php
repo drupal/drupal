@@ -1,11 +1,8 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Template\AttributeBoolean.
- */
-
 namespace Drupal\Core\Template;
+
+use Drupal\Component\Utility\Html;
 
 /**
  * A class that defines a type of boolean HTML attribute.
@@ -16,21 +13,21 @@ namespace Drupal\Core\Template;
  *
  * To set a boolean attribute on the Attribute class, set it to TRUE.
  * @code
- *  $attributes = new Attribute(array());
+ *  $attributes = new Attribute();
  *  $attributes['disabled'] = TRUE;
- *  echo '<select ' . $attributes . '/>';
+ *  echo '<select' . $attributes . '/>';
  *  // produces <select disabled>;
  *  $attributes['disabled'] = FALSE;
- *  echo '<select ' . $attributes . '/>';
+ *  echo '<select' . $attributes . '/>';
  *  // produces <select>;
  * @endcode
  *
- * @see Drupal\Core\Template\Attribute
+ * @see \Drupal\Core\Template\Attribute
  */
 class AttributeBoolean extends AttributeValueBase {
 
   /**
-   * Overrides AttributeValueBase::render().
+   * {@inheritdoc}
    */
   public function render() {
     return $this->__toString();
@@ -40,8 +37,7 @@ class AttributeBoolean extends AttributeValueBase {
    * Implements the magic __toString() method.
    */
   public function __toString() {
-    $this->printed = TRUE;
-    return $this->value === FALSE ? '' : check_plain($this->name);
+    return $this->value === FALSE ? '' : Html::escape($this->name);
   }
 
 }

@@ -1,0 +1,31 @@
+id: d6_upload_field_instance
+label: Upload field instance configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_upload_instance
+  constants:
+    entity_type: node
+    name: upload
+    settings:
+      description_field: 1
+process:
+  entity_type: 'constants/entity_type'
+  bundle:
+    -
+      plugin: migration
+      migration: d6_node_type
+      source: node_type
+    -
+      plugin: skip_on_empty
+      method: row
+  field_name: 'constants/name'
+  settings: 'constants/settings'
+  'settings/file_extensions': file_extensions
+  'settings/max_filesize': max_filesize
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d6_upload_field
+    - d6_node_type

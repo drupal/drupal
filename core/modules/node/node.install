@@ -5,140 +5,41 @@
  * Install, update and uninstall functions for the node module.
  */
 
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_requirements().
+ */
+function node_requirements($phase) {
+  $requirements = array();
+  if ($phase === 'runtime') {
+    // Only show rebuild button if there are either 0, or 2 or more, rows
+    // in the {node_access} table, or if there are modules that
+    // implement hook_node_grants().
+    $grant_count = \Drupal::entityManager()->getAccessControlHandler('node')->countGrants();
+    if ($grant_count != 1 || count(\Drupal::moduleHandler()->getImplementations('node_grants')) > 0) {
+      $value = \Drupal::translation()->formatPlural($grant_count, 'One permission in use', '@count permissions in use', array('@count' => $grant_count));
+    }
+    else {
+      $value = t('Disabled');
+    }
+
+    $requirements['node_access'] = array(
+      'title' => t('Node Access Permissions'),
+      'value' => $value,
+      'description' => t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to content and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed, content will automatically use the new permissions. <a href=":rebuild">Rebuild permissions</a>', array(
+        ':rebuild' => \Drupal::url('node.configure_rebuild_confirm'),
+      )),
+    );
+  }
+  return $requirements;
+}
+
 /**
  * Implements hook_schema().
  */
 function node_schema() {
-  $schema['node'] = array(
-    'description' => 'The base table for nodes.',
-    'fields' => array(
-      'nid' => array(
-        'description' => 'The primary identifier for a node.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'uuid' => array(
-        'description' => 'Unique Key: Universally unique identifier for this entity.',
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-      ),
-      // Defaults to NULL in order to avoid a brief period of potential
-      // deadlocks on the index.
-      'vid' => array(
-        'description' => 'The current {node_revision}.vid version identifier.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-        'default' => NULL,
-      ),
-      'type' => array(
-        'description' => 'The {node_type}.type of this node.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'langcode' => array(
-        'description' => 'The {language}.langcode of this node.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'title' => array(
-        'description' => 'The title of this node, always treated as non-markup plain text.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'uid' => array(
-        'description' => 'The {users}.uid that owns this node; initially, this is the user that created it.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'status' => array(
-        'description' => 'Boolean indicating whether the node is published (visible to non-administrators).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 1,
-      ),
-      'created' => array(
-        'description' => 'The Unix timestamp when the node was created.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'changed' => array(
-        'description' => 'The Unix timestamp when the node was most recently saved.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'comment' => array(
-        'description' => 'Whether comments are allowed on this node: 0 = no, 1 = closed (read only), 2 = open (read/write).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'promote' => array(
-        'description' => 'Boolean indicating whether the node should be displayed on the front page.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'sticky' => array(
-        'description' => 'Boolean indicating whether the node should be displayed at the top of lists in which it appears.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'tnid' => array(
-        'description' => 'The translation set id for this node, which equals the node id of the source post in each set.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'translate' => array(
-        'description' => 'A boolean indicating whether this translation page needs to be updated.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'node_changed'        => array('changed'),
-      'node_created'        => array('created'),
-      'node_frontpage'      => array('promote', 'status', 'sticky', 'created'),
-      'node_status_type'    => array('status', 'type', 'nid'),
-      'node_title_type'     => array('title', array('type', 4)),
-      'node_type'           => array(array('type', 4)),
-      'uid'                 => array('uid'),
-      'tnid'                => array('tnid'),
-      'translate'           => array('translate'),
-    ),
-    'unique keys' => array(
-      'vid' => array('vid'),
-      'uuid' => array('uuid'),
-    ),
-    'foreign keys' => array(
-      'node_revision' => array(
-        'table' => 'node_revision',
-        'columns' => array('vid' => 'vid'),
-      ),
-      'node_author' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-    'primary key' => array('nid'),
-  );
-
   $schema['node_access'] = array(
     'description' => 'Identifies which realm/grant pairs a user must possess in order to view, update, or delete specific nodes.',
     'fields' => array(
@@ -149,6 +50,20 @@ function node_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this node.',
+        'type' => 'varchar_ascii',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'fallback' => array(
+        'description' => 'Boolean indicating whether this record should be used as a fallback if a language condition is not provided.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ),
       'gid' => array(
         'description' => "The grant ID a user must possess in the specified realm to gain this row's privileges on the node.",
         'type' => 'int',
@@ -158,7 +73,7 @@ function node_schema() {
       ),
       'realm' => array(
         'description' => 'The realm in which the user must possess the grant ID. Each node access node can define one or more realms.',
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
@@ -188,221 +103,12 @@ function node_schema() {
         'size' => 'tiny',
       ),
     ),
-    'primary key' => array('nid', 'gid', 'realm'),
+    'primary key' => array('nid', 'gid', 'realm', 'langcode'),
     'foreign keys' => array(
       'affected_node' => array(
         'table' => 'node',
         'columns' => array('nid' => 'nid'),
       ),
-     ),
-  );
-
-  $schema['node_revision'] = array(
-    'description' => 'Stores information about each saved version of a {node}.',
-    'fields' => array(
-      'nid' => array(
-        'description' => 'The {node} this version belongs to.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'vid' => array(
-        'description' => 'The primary identifier for this version.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'uid' => array(
-        'description' => 'The {users}.uid that created this version.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'title' => array(
-        'description' => 'The title of this version.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'log' => array(
-        'description' => 'The log entry explaining the changes in this version.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'big',
-      ),
-      'timestamp' => array(
-        'description' => 'A Unix timestamp indicating when this version was created.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'status' => array(
-        'description' => 'Boolean indicating whether the node (at the time of this revision) is published (visible to non-administrators).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 1,
-      ),
-      'comment' => array(
-        'description' => 'Whether comments are allowed on this node (at the time of this revision): 0 = no, 1 = closed (read only), 2 = open (read/write).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'promote' => array(
-        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed on the front page.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'sticky' => array(
-        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed at the top of lists in which it appears.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'nid' => array('nid'),
-      'uid' => array('uid'),
-    ),
-    'primary key' => array('vid'),
-    'foreign keys' => array(
-      'versioned_node' => array(
-        'table' => 'node',
-        'columns' => array('nid' => 'nid'),
-      ),
-      'version_author' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-  );
-
-  $schema['node_type'] = array(
-    'description' => 'Stores information about all defined {node} types.',
-    'fields' => array(
-      'type' => array(
-        'description' => 'The machine-readable name of this type.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-      ),
-      'name' => array(
-        'description' => 'The human-readable name of this type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'translatable' => TRUE,
-      ),
-      'base' => array(
-        'description' => 'The base string used to construct callbacks corresponding to this node type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'module' => array(
-        'description' => 'The module defining this node type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'description' => array(
-        'description' => 'A brief description of this type.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'medium',
-        'translatable' => TRUE,
-      ),
-      'help' => array(
-        'description' => 'Help information shown to the user when creating a {node} of this type.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'medium',
-        'translatable' => TRUE,
-      ),
-      'has_title' => array(
-        'description' => 'Boolean indicating whether this type uses the {node}.title field.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'size' => 'tiny',
-      ),
-      'title_label' => array(
-        'description' => 'The label displayed for the title field on the edit form.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'translatable' => TRUE,
-      ),
-      'custom' => array(
-        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'modified' => array(
-        'description' => 'A boolean indicating whether this type has been modified by an administrator; currently not used in any way.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'locked' => array(
-        'description' => 'A boolean indicating whether the administrator can change the machine name of this type.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'disabled' => array(
-        'description' => 'A boolean indicating whether the node type is disabled.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny'
-      ),
-      'orig_type' => array(
-        'description' => 'The original machine-readable name of this node type. This may be different from the current type name if the locked field is 0.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-    ),
-    'primary key' => array('type'),
-  );
-
-  $schema['block_node_type'] = array(
-    'description' => 'Sets up display criteria for blocks based on content types',
-    'fields' => array(
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'description' => "The block's origin module, from {block}.module.",
-      ),
-      'delta' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'description' => "The block's unique delta within module, from {block}.delta.",
-      ),
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'description' => "The machine-readable name of this type from {node_type}.type.",
-      ),
-    ),
-    'primary key' => array('module', 'delta', 'type'),
-    'indexes' => array(
-      'type' => array('type'),
     ),
   );
 
@@ -413,6 +119,18 @@ function node_schema() {
  * Implements hook_install().
  */
 function node_install() {
+  // Enable default permissions for system roles.
+  // IMPORTANT: Modules SHOULD NOT automatically grant any user role access
+  // permissions in hook_install().
+  // However, the 'access content' permission is a very special case, since
+  // there is hardly a point in installing the Node module without granting
+  // these permissions. Doing so also allows tests to continue to operate as
+  // expected without first having to manually grant these default permissions.
+  if (\Drupal::moduleHandler()->moduleExists('user')) {
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access content'));
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access content'));
+  }
+
   // Populate the node access table.
   db_insert('node_access')
     ->fields(array(
@@ -428,312 +146,75 @@ function node_install() {
 
 /**
  * Implements hook_uninstall().
- *
- * @see node_ranking()
- * @see _node_rankings()
  */
 function node_uninstall() {
-  // Delete node type variables.
-  $types = db_query('SELECT type FROM {node_type}')->fetchCol();
-  foreach ($types as $type) {
-    db_delete('variable')
-      ->condition(db_or()
-        ->condition('name', 'node_preview_' . $type)
-        ->condition('name', 'node_options_' . $type)
-        ->condition('name', 'node_submitted_' . $type)
-        ->condition('name', 'node_permissions_' . $type)
-        ->condition('name', 'node_type_language_translation_enabled_' . $type)
-      )
-      ->execute();
-    config('language.settings')->clear('node. ' . $type . '.language.default_configuration')->save();
-  }
-
-  // Delete node search ranking variables.
-  variable_del('node_rank_relevance');
-  variable_del('node_rank_sticky');
-  variable_del('node_rank_promote');
-  variable_del('node_rank_recent');
-
   // Delete remaining general module variables.
-  state()->delete('node.node_access_needs_rebuild');
-  variable_del('node_admin_theme');
-  variable_del('node_recent_block_count');
-
-  // Delete any stored state.
-  state()->delete('node.cron_last');
+  \Drupal::state()->delete('node.node_access_needs_rebuild');
 }
 
 /**
- * Fetches node types directly from the database.
- *
- * @ingroup update_api
- */
-function _update_7000_node_get_types() {
-  $node_types = db_query('SELECT * FROM {node_type}')->fetchAllAssoc('type', PDO::FETCH_OBJ);
-
-  // Create default settings for orphaned nodes.
-  $all_types = db_query('SELECT DISTINCT type FROM {node}')->fetchCol();
-  $extra_types = array_diff($all_types, array_keys($node_types));
-
-  foreach ($extra_types as $type) {
-    $type_object = new stdClass();
-    $type_object->type = $type;
-    // In Drupal 6, whether you have a body field or not is a flag in the node
-    // type table. If it's enabled, nodes may or may not have an empty string
-    // for the bodies. As we can't detect what this setting should be in
-    // Drupal 7 without access to the Drupal 6 node type settings, we assume
-    // the default, which is to enable the body field.
-    $type_object->has_body = 1;
-    $type_object->body_label = 'Body';
-    $node_types[$type_object->type] = $type_object;
-  }
-  return $node_types;
-}
-
-/**
- * @addtogroup updates-7.x-to-8.x
- * @{
- */
-
-/**
- * Rename node type language variable names.
- *
- * @see http://drupal.org/node/540294
- *
- * @ingroup config_upgrade
+ * Add 'revision_translation_affected' field to 'node' entities.
  */
 function node_update_8001() {
-  $types = db_query('SELECT type FROM {node_type}')->fetchCol();
-  foreach ($types as $type) {
-    $node_type_language = update_variable_get('language_content_type_' . $type);
-    if (isset($node_type_language)) {
-      update_variable_set('node_type_language_' . $type, $node_type_language);
-    }
-    update_variable_del('language_content_type_' . $type);
-  }
+  // Install the definition that this field had in
+  // \Drupal\node\Entity\Node::baseFieldDefinitions()
+  // at the time that this update function was written. If/when code is
+  // deployed that changes that definition, the corresponding module must
+  // implement an update function that invokes
+  // \Drupal::entityDefinitionUpdateManager()->updateFieldStorageDefinition()
+  // with the new definition.
+  $storage_definition = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Revision translation affected'))
+      ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+      ->setReadOnly(TRUE)
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('revision_translation_affected', 'node', 'node', $storage_definition);
 }
 
 /**
- * Rename node.language field to node.langcode.
+ * Remove obsolete indexes from the node schema.
  */
 function node_update_8002() {
-  $spec = array(
-    'description' => 'The {language}.langcode of this node.',
-    'type' => 'varchar',
-    'length' => 12,
-    'not null' => TRUE,
-    'default' => '',
-  );
-  db_change_field('node', 'language', 'langcode', $spec);
+  // The "node__default_langcode" and "node_field__langcode" indexes were
+  // removed from \Drupal\node\NodeStorageSchema in
+  // https://www.drupal.org/node/2261669, but this update function wasn't
+  // added until https://www.drupal.org/node/2542748. Regenerate the related
+  // schemas to ensure they match the currently expected status.
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  // Regenerate entity type indexes, this should drop "node__default_langcode".
+  $manager->updateEntityType($manager->getEntityType('node'));
+  // Regenerate "langcode" indexes, this should drop "node_field__langcode".
+  $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition('langcode', 'node'));
 }
 
 /**
- * Rename node type language variable names.
+ * Promote 'status' and 'uid' fields to entity keys.
  */
 function node_update_8003() {
-  $types = db_query('SELECT type FROM {node_type}')->fetchCol();
-  foreach ($types as $type) {
-    update_variable_set('node_type_language_default_' . $type, LANGUAGE_NOT_SPECIFIED);
-    $node_type_language = update_variable_get('node_type_language_' . $type, 0);
-    if ($node_type_language == 0) {
-      update_variable_set('node_type_language_hidden_' . $type, TRUE);
-    }
-    if ($node_type_language == 2) {
-      // Translation was enabled, so enable it again and
-      // unhide the language selector. Because if language is
-      // LANGUAGE_NOT_SPECIFIED and the selector hidden, translation
-      // cannot be enabled.
-      update_variable_set('node_type_language_hidden_' . $type, FALSE);
-      update_variable_set('node_type_language_translation_enabled_' . $type, TRUE);
-    }
-    update_variable_del('node_type_language_' . $type);
+  // The 'status' and 'uid' fields were added to the 'entity_keys' annotation
+  // of \Drupal\node\Entity\Node in https://www.drupal.org/node/2498919, but
+  // this update function wasn't added until
+  // https://www.drupal.org/node/2542748.
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $manager->getEntityType('node');
+  $entity_keys = $entity_type->getKeys();
+  $entity_keys['status'] = 'status';
+  $entity_keys['uid'] = 'uid';
+  $entity_type->set('entity_keys', $entity_keys);
+  $manager->updateEntityType($entity_type);
+
+  // @todo The above should be enough, since that is the only definition that
+  //   changed. But \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema varies
+  //   field schema by whether a field is an entity key, so invoke
+  //   EntityDefinitionUpdateManagerInterface::updateFieldStorageDefinition()
+  //   with an unmodified field storage definition to trigger the necessary
+  //   changes. SqlContentEntityStorageSchema::onEntityTypeUpdate() should be
+  //   fixed to automatically handle this.
+  //   See https://www.drupal.org/node/2554245.
+  foreach (array('status', 'uid') as $field_name) {
+    $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition($field_name, 'node'));
   }
 }
-
-/**
- * Create a UUID column for nodes.
- */
-function node_update_8004() {
-  $spec = array(
-    'description' => 'Unique Key: Universally unique identifier for this entity.',
-    'type' => 'varchar',
-    'length' => 128,
-    'not null' => FALSE,
-  );
-  $keys = array(
-    'unique keys' => array(
-      'uuid' => array('uuid'),
-    ),
-  );
-  // Account for sites having the contributed UUID module installed.
-  if (db_field_exists('node', 'uuid')) {
-    db_change_field('node', 'uuid', 'uuid', $spec, $keys);
-  }
-  else {
-    db_add_field('node', 'uuid', $spec, $keys);
-  }
-}
-
-/**
- * Make *id fields unsigned.
- */
-function node_update_8005() {
-  db_drop_index('node', 'uid');
-  db_change_field('node', 'uid', 'uid',
-    array(
-      'description' => 'The {users}.uid that owns this node; initially, this is the user that created it.',
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    array('indexes' => array(
-      'uid' => array('uid'),
-    ))
-  );
-
-  db_drop_index('node_revision', 'uid');
-  db_change_field('node_revision', 'uid', 'uid',
-    array(
-      'description' => 'The {users}.uid that created this version.',
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    array('indexes' => array(
-      'uid' => array('uid'),
-    ))
-  );
-
-  db_drop_primary_key('history');
-  db_drop_index('history', 'nid');
-  db_change_field('history', 'uid', 'uid',
-    array(
-      'description' => 'The {users}.uid that read the {node} nid.',
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-      'default' => 0,
-    )
-  );
-  db_change_field('history', 'nid', 'nid',
-    array(
-      'description' => 'The {node}.nid that was read.',
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    array('primary key' => array('uid', 'nid'), 'indexes' => array(
-      'nid' => array('nid'),
-    ))
-  );
-}
-
-/**
- * Generate a UUID for all nodes.
- */
-function node_update_8006(&$sandbox) {
-  if (!isset($sandbox['progress'])) {
-    $sandbox['progress'] = 0;
-    $sandbox['last'] = 0;
-    $sandbox['max'] = db_query('SELECT COUNT(nid) FROM {node} WHERE uuid IS NULL')->fetchField();
-  }
-
-  $nids = db_query_range('SELECT nid FROM {node} WHERE nid > :nid AND uuid IS NULL ORDER BY nid ASC', 0, 10, array(':nid' => $sandbox['last']))->fetchCol();
-  update_add_uuids($sandbox, 'node', 'nid', $nids);
-
-  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
-}
-
-/**
- * Move the language default values to config.
- */
-function node_update_8007() {
-  $types = db_query('SELECT type FROM {node_type}')->fetchCol();
-  foreach ($types as $type) {
-    $language_default = update_variable_get('node_type_language_default_' . $type, NULL);
-    $language_hidden = update_variable_get('node_type_language_hidden_' . $type, NULL);
-    if (isset($language_default) || isset($language_hidden)) {
-      $values = array('langcode' => $language_default, 'language_hidden' => $language_hidden);
-      config('language.settings')->set('node.' . $type . '.language.default_configuration', $values)->save();
-    }
-  }
-}
-
-/**
- * Rename default menu names.
- */
-function node_update_8008() {
-  // System menu's new block deltas are prefixed with 'menu-'.
-  $map = array(
-    'navigation' => 'menu-tools',
-    'management' => 'menu-admin',
-    'user-menu' => 'menu-account',
-    'main-menu' => 'menu-main',
-  );
-  foreach ($map as $old => $new) {
-    db_update('block_node_type')
-      ->condition('module', 'system')
-      ->condition('delta', $old)
-      ->fields(array('delta' => $new))
-      ->execute();
-  }
-}
-
-/**
- * Coverts default_nodes_main variable to config.
- *
- * @ingroup config_upgrade
- */
-function node_update_8009() {
-  update_variables_to_config('node.settings', array('default_nodes_main' => 'items_per_page'));
-}
-
-/**
- * Moves node_access_needs_rebuild from variable to state.
- *
- * @ingroup config_upgrade
- */
-function node_update_8010() {
-  update_variables_to_state(array('node_access_needs_rebuild' => 'node.node_access_needs_rebuild'));
-}
-
-/**
- * Moves node cron last run time from variable to state.
- *
- * @ingroup config_upgrade
- */
-function node_update_8011() {
-  update_variables_to_state(array('node_cron_last' =>'node.cron_last'));
-}
-
-/**
- * Enable History module.
- */
-function node_update_8012() {
-  // Enable the history module without re-installing the schema.
-  update_module_enable(array('history'));
-}
-
-
-/**
- * Renames global revision permissions to use the word 'all'.
- */
-function node_update_8013() {
-  $actions = array('view', 'delete', 'revert');
-
-  foreach ($actions as $action) {
-    db_update('role_permission')
-      ->fields(array('permission' => $action . ' all revisions'))
-      ->condition('permission', $action . ' revisions')
-      ->condition('module', 'node')
-      ->execute();
-  }
-}
-
-/**
- * @} End of "addtogroup updates-7.x-to-8.x"
- * The next series of updates should start at 9000.
- */

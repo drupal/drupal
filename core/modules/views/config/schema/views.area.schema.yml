@@ -1,0 +1,80 @@
+# Schema for the views area plugins.
+
+views.area.*:
+  type: views_area
+  label: 'Default area'
+
+views.area.entity:
+  type: views_area
+  label: 'Entity'
+  mapping:
+    target:
+      type: string
+      label: 'The target entity'
+    view_mode:
+      type: string
+      label: 'View mode'
+    tokenize:
+      type: boolean
+      label: 'Should replacement tokens be used from the first row'
+    bypass_access:
+      type: boolean
+      label: 'Bypass access checks'
+
+views.area.text:
+  type: views_area
+  label: 'Text'
+  mapping:
+    content:
+      type: text_format
+      label: 'The formatted text of the area'
+    tokenize:
+      type: boolean
+      label: 'Should replacement tokens be used from the first row'
+
+views.area.text_custom:
+  type: views_area
+  label: 'Text custom'
+  mapping:
+    content:
+      type: text
+      label: 'The shown text of the area'
+    tokenize:
+      type: boolean
+      label: 'Should replacement tokens be used from the first row'
+
+views.area.result:
+  type: views_area
+  label: 'Result'
+  mapping:
+    content:
+      type: text
+      label: 'The shown text of the result summary area'
+
+views.area.title:
+  type: views_area
+  label: 'Title'
+  mapping:
+    title:
+      type: label
+      label: 'The title which will be overridden for the page'
+
+views.area.view:
+  type: views_area
+  label: 'View'
+  mapping:
+    view_to_insert:
+      type: string
+      label: 'View to insert'
+    inherit_arguments:
+      type: boolean
+      label: 'Inherit contextual filters'
+
+views.area.http_status_code:
+  type: views_area
+  label: 'HTTP status code'
+  mapping:
+    status_code:
+      type: integer
+      label: 'HTTP status code'
+

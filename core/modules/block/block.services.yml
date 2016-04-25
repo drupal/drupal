@@ -1,0 +1,12 @@
+services:
+  theme.negotiator.block.admin_demo:
+    class: Drupal\block\Theme\AdminDemoNegotiator
+    tags:
+      - { name: theme_negotiator, priority: 1000 }
+  block.page_display_variant_subscriber:
+    class: Drupal\block\EventSubscriber\BlockPageDisplayVariantSubscriber
+    tags:
+      - { name: event_subscriber }
+  block.repository:
+    class: Drupal\block\BlockRepository
+    arguments: ['@entity.manager', '@theme.manager', '@context.handler']

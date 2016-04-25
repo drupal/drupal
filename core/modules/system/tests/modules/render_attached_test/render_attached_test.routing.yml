@@ -1,0 +1,27 @@
+render_attached.teapot:
+  path: '/render_attached_test/teapot'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\RenderAttachedTestController::teapotHeaderStatus'
+  requirements:
+    _access: 'TRUE'
+
+render_attached.header:
+  path: '/render_attached_test/header'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\RenderAttachedTestController::header'
+  requirements:
+    _access: 'TRUE'
+
+render_attached.head:
+  path: '/render_attached_test/head'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\RenderAttachedTestController::head'
+  requirements:
+    _access: 'TRUE'
+
+render_attached.feed_single:
+  path: '/render_attached_test/feed'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\RenderAttachedTestController::feed'
+  requirements:
+    _access: 'TRUE'

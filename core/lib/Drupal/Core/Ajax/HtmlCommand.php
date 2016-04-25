@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Ajax\HtmlCommand.
- */
-
 namespace Drupal\Core\Ajax;
-
-use Drupal\Core\Ajax\InsertCommand;
 
 /**
  * AJAX command for calling the jQuery html() method.
@@ -16,10 +9,12 @@ use Drupal\Core\Ajax\InsertCommand;
  * to set the HTML content of each element matched by the given selector while
  * leaving the outer tags intact.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
  * @see http://docs.jquery.com/Attributes/html#val
+ *
+ * @ingroup ajax
  */
 class HtmlCommand extends InsertCommand {
 
@@ -32,7 +27,7 @@ class HtmlCommand extends InsertCommand {
       'command' => 'insert',
       'method' => 'html',
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }

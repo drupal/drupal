@@ -7,40 +7,43 @@ CONTENTS OF THIS FILE
  * Installation profiles
  * Appearance
  * Developing for Drupal
+ * More information
 
 ABOUT DRUPAL
 ------------
 
 Drupal is an open source content management platform supporting a variety of
 websites ranging from personal weblogs to large community-driven websites. For
-more information, see the Drupal website at http://drupal.org/, and join the
-Drupal community at http://drupal.org/community.
+more information, see the Drupal website at https://www.drupal.org, and join
+the Drupal community at https://www.drupal.org/community.
 
 Legal information about Drupal:
  * Know your rights when using Drupal:
    See LICENSE.txt in the "core" directory.
  * Learn about the Drupal trademark and logo policy:
-   http://drupal.com/trademark
+   https://www.drupal.com/trademark
 
 CONFIGURATION AND FEATURES
 --------------------------
 
 Drupal core (what you get when you download and extract a drupal-x.y.tar.gz or
-drupal-x.y.zip file from http://drupal.org/project/drupal) has what you need to
-get started with your website. It includes several modules (extensions that add
-functionality) for common website features, such as managing content, user
-accounts, image uploading, and search. Core comes with many options that allow
-site-specific configuration. In addition to the core modules, there are
+drupal-x.y.zip file from https://www.drupal.org/project/drupal) has what you
+need to get started with your website. It includes several modules (extensions
+that add functionality) for common website features, such as managing content,
+user accounts, image uploading, and search. Core comes with many options that
+allow site-specific configuration. In addition to the core modules, there are
 thousands of contributed modules (for functionality not included with Drupal
 core) available for download.
 
 More about configuration:
- * Install, upgrade, and maintain Drupal:
-   See INSTALL.txt and UPGRADE.txt in the "core" directory.
+ * Install, update, and maintain Drupal:
+   See INSTALL.txt and UPDATE.txt in the "core" directory.
  * Learn about how to use Drupal to create your site:
-   http://drupal.org/documentation
+   https://www.drupal.org/documentation
+ * Follow best practices:
+   https://www.drupal.org/best-practices
  * Download contributed modules to /modules to extend Drupal's functionality:
-   http://drupal.org/project/modules
+   https://www.drupal.org/project/modules
  * See also: "Developing for Drupal" for writing your own modules, below.
 
 
@@ -64,12 +67,12 @@ the required extensions separately; place the downloaded profile in the
 /profiles directory before you start the installation process.
 
 More about installation profiles and distributions:
-* Read about the difference between installation profiles and distributions:
-  http://drupal.org/node/1089736
-* Download contributed installation profiles and distributions:
-  http://drupal.org/project/distributions
-* Develop your own installation profile or distribution:
-  http://drupal.org/developing/distributions
+ * Read about the difference between installation profiles and distributions:
+   https://www.drupal.org/node/1089736
+ * Download contributed installation profiles and distributions:
+   https://www.drupal.org/project/distributions
+ * Develop your own installation profile or distribution:
+   https://www.drupal.org/developing/distributions
 
 
 APPEARANCE
@@ -82,9 +85,9 @@ custom theme.
 
 More about themes:
  * Download contributed themes to /themes to modify Drupal's appearance:
-   http://drupal.org/project/themes
+   https://www.drupal.org/project/themes
  * Develop your own theme:
-   http://drupal.org/documentation/theme
+   https://www.drupal.org/documentation/theme
 
 DEVELOPING FOR DRUPAL
 ---------------------
@@ -105,12 +108,32 @@ when nothing existing comes close to what you need.
 
 More about developing:
  * Search for existing contributed modules:
-   http://drupal.org/project/modules
+   https://www.drupal.org/project/modules
  * Contribute a patch:
-   http://drupal.org/patch/submit
+   https://www.drupal.org/patch/submit
  * Develop your own module:
-   http://drupal.org/developing/modules
- * Follow best practices:
-   http://drupal.org/best-practices
+   https://www.drupal.org/developing/modules
+ * Follow programming best practices:
+   https://www.drupal.org/developing/best-practices
  * Refer to the API documentation:
-   http://api.drupal.org/api/drupal/8
+   https://api.drupal.org/api/drupal/8
+ * Learn from documented Drupal API examples:
+   https://www.drupal.org/project/examples
+
+MORE INFORMATION
+----------------
+
+ * See the Drupal.org online documentation:
+   https://www.drupal.org/documentation
+
+ * For a list of security announcements, see the "Security advisories" page at
+   https://www.drupal.org/security (available as an RSS feed). This page also
+   describes how to subscribe to these announcements via email.
+
+ * For information about the Drupal security process, or to find out how to
+   report a potential security issue to the Drupal security team, see the
+   "Security team" page at https://www.drupal.org/security-team
+
+ * For information about the wide range of available support options, visit
+   https://www.drupal.org and click on Community and Support in the top or
+   bottom navigation.

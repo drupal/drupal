@@ -1,0 +1,6 @@
+name: 'Quick Edit test'
+type: module
+description: 'Support module for the Quick Edit module tests.'
+core: 8.x
+package: Testing
+version: VERSION

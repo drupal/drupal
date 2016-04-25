@@ -1,0 +1,16 @@
+id: taxonomy_settings
+label: Taxonomy configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - taxonomy_override_selector
+    - taxonomy_terms_per_page_admin
+process:
+  override_selector: taxonomy_override_selector
+  terms_per_page_admin: taxonomy_terms_per_page_admin
+destination:
+  plugin: config
+  config_name: taxonomy.settings

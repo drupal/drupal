@@ -1,0 +1,822 @@
+# Basic data types for views.
+
+views_display:
+  type: mapping
+  label: 'Display options'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Status'
+    title:
+      type: text
+      label: 'Display title'
+    format:
+      type: string
+      label: 'Format'
+    fields:
+      type: sequence
+      label: 'Fields'
+      sequence:
+        type: views.field.[plugin_id]
+    pager:
+      type: mapping
+      label: 'Pager'
+      mapping:
+        type:
+          type: string
+          label: 'Pager type'
+        options:
+          type: views.pager.[%parent.type]
+    exposed_form:
+      type: mapping
+      label: 'Exposed form'
+      mapping:
+        type:
+          type: string
+          label: 'Exposed form type'
+        options:
+          label: 'Options'
+          type: views.exposed_form.[%parent.type]
+    access:
+      type: mapping
+      label: 'Access'
+      mapping:
+        type:
+          type: string
+          label: 'Access type'
+        options:
+          type: views.access.[%parent.type]
+    cache:
+      type: views.cache.[type]
+    empty:
+      type: sequence
+      label: 'No results behavior'
+      sequence:
+        type: views.area.[plugin_id]
+    sorts:
+      type: sequence
+      label: 'Sorts'
+      sequence:
+        type: views.sort.[plugin_id]
+    arguments:
+      type: sequence
+      label: 'Arguments'
+      sequence:
+        type: views.argument.[plugin_id]
+    filters:
+      type: sequence
+      label: 'Filters'
+      sequence:
+        type: views.filter.[plugin_id]
+    filter_groups:
+      type: mapping
+      label: 'Groups'
+      mapping:
+        operator:
+          type: string
+          label: 'Operator'
+        groups:
+          type: sequence
+          label: 'Groups'
+          sequence:
+            type: string
+            label: 'Operator'
+    style:
+      type: mapping
+      label: 'Format'
+      mapping:
+        type:
+          type: string
+          label: 'Type'
+        options:
+          type: views.style.[%parent.type]
+    row:
+      type: mapping
+      label: 'Row'
+      mapping:
+        type:
+          type: string
+          label: 'Row type'
+        options:
+          type: views.row.[%parent.type]
+    query:
+      type: mapping
+      label: 'Query'
+      mapping:
+        type:
+          type: string
+          label: 'Query type'
+        options:
+          type: views.query.[%parent.type]
+    defaults:
+      type: mapping
+      label: 'Defaults'
+      mapping:
+        empty:
+          type: boolean
+          label: 'Empty'
+        access:
+          type: boolean
+          label: 'Access restrictions'
+        cache:
+          type: boolean
+          label: 'Caching'
+        query:
+          type: boolean
+          label: 'Query options'
+        title:
+          type: boolean
+          label: 'Title'
+        css_class:
+          type: boolean
+          label: 'CSS class'
+        display_description:
+          type: boolean
+          label: 'Administrative description'
+        use_ajax:
+          type: boolean
+          label: 'Use AJAX'
+        hide_attachment_summary:
+          type: boolean
+          label: 'Hide attachments when displaying a contextual filter summary'
+        show_admin_links:
+          type: boolean
+          label: 'Show contextual links'
+        pager:
+          type: boolean
+          label: 'Use pager'
+        use_more:
+          type: boolean
+          label: 'Create more link'
+        use_more_always:
+          type: boolean
+          label: 'Display ''more'' link only if there is more content'
+        use_more_text:
+          type: boolean
+          label: 'The text to display for the more link.'
+        exposed_form:
+          type: boolean
+          label: 'Exposed form style'
+        link_display:
+          type: boolean
+          label: 'Link display'
+        link_url:
+          type: boolean
+          label: 'Link URL'
+        group_by:
+          type: boolean
+          label: 'Aggregate'
+        style:
+          type: boolean
+          label: 'Style'
+        row:
+          type: boolean
+          label: 'Row'
+        relationships:
+          type: boolean
+          label: 'Relationships'
+        fields:
+          type: boolean
+          label: 'Fields'
+        sorts:
+          type: boolean
+          label: 'Sorts'
+        arguments:
+          type: boolean
+          label: 'Arguments'
+        filters:
+          type: boolean
+          label: 'Filters'
+        filter_groups:
+          type: boolean
+          label: 'Filter groups'
+        header:
+          type: boolean
+          label: 'Header'
+        footer:
+          type: boolean
+          label: 'Footer'
+    relationships:
+      type: sequence
+      label: 'Relationships'
+      sequence:
+        type: views.relationship.[plugin_id]
+    css_class:
+      type: string
+      label: 'CSS class'
+    use_ajax:
+      type: boolean
+      label: 'Use AJAX'
+    group_by:
+      type: boolean
+      label: 'Aggregate'
+    display_description:
+      type: label
+      label: 'Administrative description'
+    show_admin_links:
+      type: boolean
+      label: 'Show contextual links'
+    use_more:
+      type: boolean
+      label: 'Create more link'
+    use_more_always:
+      type: boolean
+      label: 'Display ''more'' link only if there is more content'
+    use_more_text:
+      type: label
+      label: 'The text to display for the more link.'
+    link_display:
+      type: string
+      label: 'Link display'
+    link_url:
+      type: string
+      label: 'Link URL'
+    header:
+      type: sequence
+      label: 'Header'
+      sequence:
+        type: views.area.[plugin_id]
+    footer:
+      type: sequence
+      label: 'Footer'
+      sequence:
+        type: views.area.[plugin_id]
+    display_comment:
+      type: label
+      label: 'Display comment'
+    hide_attachment_summary:
+      type: boolean
+      label: 'Hide attachments in summary'
+    rendering_language:
+      type: string
+      label: 'Entity language'
+    exposed_block:
+      type: boolean
+      label: 'Put the exposed form in a block'
+    display_extenders:
+      type: sequence
+      label: 'Display extenders'
+      sequence:
+        type: views.display_extender.[%key]
+
+views_sort:
+  type: views_handler
+  label: 'Sort criteria'
+  mapping:
+    order:
+      type: string
+      label: 'Sort order'
+    expose:
+      type: views.sort_expose.[%parent.plugin_id]
+    exposed:
+      type: boolean
+      label: 'Expose this sort to visitors, to allow them to change it'
+    plugin_id:
+      type: string
+      label: 'Plugin ID'
+
+views_sort_expose:
+  type: mapping
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+
+views_area:
+  type: views_handler
+  label: 'Area'
+  mapping:
+    label:
+      type: label
+      label: 'A string to identify the area instance in the admin UI.'
+    empty:
+      type: boolean
+      label: 'Should the area be displayed on empty results.'
+    plugin_id:
+      type: string
+      label: 'Plugin ID'
+
+views_handler:
+  type: mapping
+  mapping:
+    id:
+      type: string
+      label: 'A unique ID per handler type'
+    table:
+      type: string
+      label: 'The views_data table for this handler'
+    field:
+      type: string
+      label: 'The views_data field for this handler'
+    relationship:
+      type: string
+      label: 'The ID of the relationship instance used by this handler'
+    group_type:
+      type: string
+      label: 'A sql aggregation type'
+    admin_label:
+      type: label
+      label: 'A string to identify the handler instance in the admin UI.'
+    entity_type:
+      type: string
+      label: 'The entity type'
+    entity_field:
+      type: string
+      label: 'The corresponding entity field'
+    plugin_id:
+      type: string
+      label: 'The plugin ID'
+
+views_argument:
+  type: views_handler
+  label: 'Argument'
+  mapping:
+    default_action:
+      type: string
+      label: 'When the filter value is NOT available'
+    exception:
+      type: mapping
+      label: 'Exception value'
+      mapping:
+        value:
+          type: string
+          label: 'Value'
+        title_enable:
+          type: boolean
+          label: 'Override title'
+        title:
+          type: label
+          label: 'Title'
+    title_enable:
+      type: boolean
+      label: 'Override title'
+    title:
+      type: label
+      label: 'Overridden title'
+    default_argument_type:
+      type: string
+      label: 'Type'
+    default_argument_options:
+      type: views.argument_default.[%parent.default_argument_type]
+      label: 'Default argument options'
+    default_argument_skip_url:
+      type: boolean
+      label: 'Skip default argument for view URL'
+    summary_options:
+      type: views.style.[%parent.summary.format]
+      label: 'Summary options'
+    summary:
+      type: mapping
+      label: 'Display a summary'
+      mapping:
+        sort_order:
+          type: string
+          label: 'Sort order'
+        number_of_records:
+          type: integer
+          label: 'Sort by'
+        format:
+          type: string
+          label: 'Format'
+    specify_validation:
+      type: boolean
+      label: 'Specify validation criteria'
+    validate:
+      type: mapping
+      label: 'Validation settings'
+      mapping:
+        type:
+          type: string
+          label: 'Validator'
+        fail:
+          type: string
+          label: 'Action to take if filter value does not validate'
+    validate_options:
+      type: views.argument_validator.[%parent.validate.type]
+      label: 'Validate options'
+    glossary:
+      type: boolean
+      label: 'Glossary mode'
+    limit:
+      type: integer
+      label: 'Character limit'
+    case:
+      type: string
+      label: 'Case'
+    path_case:
+      type: string
+      label: 'Case in path'
+    transform_dash:
+      type: boolean
+      label: 'Transform spaces to dashes in URL'
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    plugin_id:
+      type: string
+      label: 'Plugin ID'
+
+views_exposed_form:
+  type: mapping
+  mapping:
+    submit_button:
+      type: label
+      label: 'Submit button text'
+    reset_button:
+      type: boolean
+      label: 'Include reset button'
+    reset_button_label:
+      type: label
+      label: 'Reset button label'
+    exposed_sorts_label:
+      type: label
+      label: 'Exposed sorts label'
+    expose_sort_order:
+      type: boolean
+      label: 'Expose sort order'
+    sort_asc_label:
+      type: label
+      label: 'Ascending'
+    sort_desc_label:
+      type: label
+      label: 'Descending'
+
+views_field:
+  type: views_handler
+  mapping:
+    label:
+      type: label
+      label: 'Create a label'
+    exclude:
+      type: boolean
+      label: 'Exclude from display'
+    alter:
+      type: mapping
+      label: 'Rewrite results'
+      mapping:
+        alter_text:
+          type: boolean
+          label: 'Override the output of this field with custom text'
+        text:
+          type: text
+          label: 'Text'
+        make_link:
+          type: boolean
+          label: 'Output this field as a custom link'
+        path:
+          type: string
+          label: 'Link path'
+        absolute:
+          type: boolean
+          label: 'Use absolute path'
+        external:
+          type: boolean
+          label: 'External server URL'
+        replace_spaces:
+          type: boolean
+          label: 'Replace spaces with dashes'
+        path_case:
+          type: string
+          label: 'Transform the case'
+        trim_whitespace:
+          type: boolean
+          label: 'Remove whitespace'
+        alt:
+          type: label
+          label: 'Title text'
+        rel:
+          type: string
+          label: 'Rel Text'
+        link_class:
+          type: string
+          label: 'Link class'
+        prefix:
+          type: label
+          label: 'Prefix text'
+        suffix:
+          type: label
+          label: 'Suffix text'
+        target:
+          type: string
+          label: 'Target'
+        nl2br:
+          type: boolean
+          label: 'Convert newlines to HTML <br> tags'
+        max_length:
+          type: integer
+          label: 'Maximum number of characters'
+        word_boundary:
+          type: boolean
+          label: 'Trim only on a word boundary'
+        ellipsis:
+          type: boolean
+          label: 'Add "…" at the end of trimmed text'
+        more_link:
+          type: boolean
+          label: 'Add a read-more link if output is trimmed'
+        more_link_text:
+          type: label
+          label: 'More link label'
+        more_link_path:
+          type: string
+          label: 'More link path'
+        strip_tags:
+          type: boolean
+          label: 'Strip HTML tags'
+        trim:
+          type: boolean
+          label: 'Trim this field to a maximum number of characters'
+        preserve_tags:
+          type: string
+          label: 'Preserve certain tags'
+        html:
+          type: boolean
+          label: 'Field can contain HTML'
+    element_type:
+      type: string
+      label: 'HTML element'
+    element_class:
+      type: string
+      label: 'CSS class'
+    element_label_type:
+      type: string
+      label: 'Label HTML element'
+    element_label_class:
+      type: string
+      label: 'CSS class'
+    element_label_colon:
+      type: boolean
+      label: 'Place a colon after the label'
+    element_wrapper_type:
+      type: string
+      label: 'Wrapper HTML element'
+    element_wrapper_class:
+      type: string
+      label: 'CSS class'
+    element_default_classes:
+      type: boolean
+      label: 'Add default classes'
+    empty:
+      type: string
+      label: 'No results text'
+    hide_empty:
+      type: boolean
+      label: 'Hide if empty'
+    empty_zero:
+      type: boolean
+      label: 'Count the number 0 as empty'
+    hide_alter_empty:
+      type: boolean
+      label: 'Hide rewriting if empty'
+    destination:
+      type: boolean
+      label: 'Append a destination query string to operation links.'
+    plugin_id:
+      type: string
+      label: 'Plugin ID'
+
+views_pager:
+  type: mapping
+  label: 'Pager'
+  mapping:
+    offset:
+      type: integer
+      label: 'Offset'
+    items_per_page:
+      type: integer
+      label: 'Items per page'
+
+views_pager_sql:
+  type: views_pager
+  label: 'SQL pager'
+  mapping:
+    items_per_page:
+      type: integer
+      label: 'Items per page'
+    total_pages:
+      type: integer
+      label: 'Number of pages'
+    id:
+      type: integer
+      label: 'Pager ID'
+    tags:
+      type: mapping
+      label: 'Pager link labels'
+      mapping:
+        next:
+          type: label
+          label: 'Next page link text'
+        previous:
+          type: label
+          label: 'Previous page link text'
+        quantity:
+          type: integer
+          label: 'Number of pager links visible'
+    expose:
+      type: mapping
+      label: 'Exposed options'
+      mapping:
+        items_per_page:
+          type: boolean
+          label: 'Items per page'
+        items_per_page_label:
+          type: label
+          label: 'Items per page label'
+        items_per_page_options:
+          type: string
+          label: 'Exposed items per page options'
+        items_per_page_options_all:
+          type: boolean
+          label: 'Include all items option'
+        items_per_page_options_all_label:
+          type: label
+          label: 'All items label'
+        offset:
+          type: boolean
+          label: 'Expose Offset'
+        offset_label:
+          type: label
+          label: 'Offset label'
+
+views_style:
+  type: mapping
+  mapping:
+    grouping:
+      type: sequence
+      label: 'Grouping field number %i'
+      sequence:
+        type: mapping
+        label: 'Field'
+        mapping:
+          field:
+            type: string
+            label: 'Field'
+          rendered:
+            type: boolean
+            label: 'Use rendered output to group rows'
+          rendered_strip:
+            type: boolean
+            label: 'Remove tags from rendered output'
+    row_class:
+      type: string
+      label: 'Row class'
+    default_row_class:
+      type: boolean
+      label: 'Add views row classes'
+    uses_fields:
+      type: boolean
+      label: 'Force using fields'
+
+views_filter:
+  type: views_handler
+  mapping:
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: views.filter_value.[%parent.plugin_id]
+      label: 'Value'
+    group:
+      type: integer
+      label: 'Group'
+    exposed:
+      type: boolean
+      label: 'Expose this filter to visitors, to allow them to change it'
+    expose:
+      type: mapping
+      label: 'Expose'
+      mapping:
+        operator_id:
+          type: string
+          label: 'Operator identifier'
+        label:
+          type: label
+          label: 'Label'
+        description:
+          type: label
+          label: 'Description'
+        use_operator:
+          type: boolean
+          label: 'Expose operator'
+        operator:
+          type: string
+          label: 'Operator'
+        identifier:
+          type: string
+          label: 'Filter identifier'
+        required:
+          type: boolean
+          label: 'Required'
+        remember:
+          type: boolean
+          label: 'Remember the last selection'
+        multiple:
+          type: boolean
+          label: 'Allow multiple selections'
+        remember_roles:
+          type: sequence
+          label: 'User roles'
+          sequence:
+            type: string
+            label: 'Role'
+    is_grouped:
+      type: boolean
+      label: 'Grouped filters'
+    group_info:
+      type: mapping
+      label: 'Group'
+      mapping:
+        label:
+          type: label
+          label: 'Label'
+        description:
+          type: label
+          label: 'Description'
+        identifier:
+          type: string
+          label: 'Identifier'
+        optional:
+          type: boolean
+          label: 'Optional'
+        widget:
+          type: string
+          label: 'Widget type'
+        multiple:
+          type: boolean
+          label: 'Allow multiple selections'
+        remember:
+          type: boolean
+          label: 'Remember'
+        default_group:
+          type: string
+          label: 'Default'
+        default_group_multiple:
+          type: sequence
+          label: 'Defaults'
+          sequence:
+            type: integer
+            label: 'Default'
+        group_items:
+          type: sequence
+          label: 'Group items'
+          sequence:
+            type: views.filter.group_item.[%parent.%parent.%parent.plugin_id]
+            label: 'Group item'
+    plugin_id:
+      type: string
+      label: 'Plugin ID'
+
+views_filter_group_item:
+  type: mapping
+  label: 'Group item'
+  mapping:
+    title:
+      type: label
+      label: 'Label'
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: label
+      label: 'Value'
+
+views_relationship:
+  type: views_handler
+  mapping:
+    admin_label:
+      type: string
+      label: 'Administrative title'
+    required:
+      type: boolean
+      label: 'Require this relationship'
+
+views_query:
+  type: mapping
+  label: 'Query options'
+
+views_row:
+  type: mapping
+  label: 'Row options'
+  mapping:
+    relationship:
+      type: string
+      label: 'Relationship'
+
+views_entity_row:
+  type: views_row
+  mapping:
+    view_mode:
+      type: string
+      label: 'View mode'
+
+views_cache:
+  type: mapping
+  label: 'Cache configuration'
+  mapping:
+    type:
+      type: string
+      label: 'Cache type'
+
+views_display_extender:
+  type: mapping
+  label: 'Display extender settings'

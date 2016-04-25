@@ -10,6 +10,9 @@ This is just a <a href="http://www.test.com">www.test.com</a>. paragraph with <a
 <a href="http://www.test.com">www.test.com</a>
 <a href="mailto:person@test.com">person@test.com</a>
 <code>www.test.com</code>
+<a href="http://test.com/?search=test">http://test.com/?search=test</a>
+<a href="http://test.com/?search=Test">http://test.com/?search=Test</a>
+<a href="http://test.com/?search=tesT">http://test.com/?search=tesT</a>
 
 What about tags that don't exist <x>like x say <a href="http://www.test.com">www.test.com</a></x>? And what about tag <pooh>beginning <a href="http://www.test.com">www.test.com</a> with p?</pooh>
 

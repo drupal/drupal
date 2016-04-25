@@ -1,0 +1,7 @@
+id: other_module_test
+label: 'Other module test'
+weight: 0
+style: ''
+status: true
+langcode: en
+protected_property: Default

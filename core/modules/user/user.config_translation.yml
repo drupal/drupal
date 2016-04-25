@@ -1,0 +1,6 @@
+entity.user.admin_form:
+  title: 'Account settings'
+  base_route_name: entity.user.admin_form
+  names:
+    - user.settings
+    - user.mail

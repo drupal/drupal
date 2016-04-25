@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Provides migration from other Drupal sites.
+ */
+
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\migrate\Exception\RequirementsException;
+use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateMessage;
+use Drupal\migrate\Plugin\RequirementsInterface;
+
+/**
+ * Implements hook_help().
+ */
+function migrate_drupal_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.migrate_drupal':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Migrate Drupal module provides a framework based on the <a href=":migrate">Migrate module</a> to facilitate migration from a Drupal (6, 7, or 8) site to your website. It does not provide a user interface. For more information, see the <a href=":migrate_drupal">online documentation for the Migrate Drupal module</a>.', array(':migrate' => \Drupal::url('help.page', array('name' => 'migrate')), ':migrate_drupal' => 'https://www.drupal.org/documentation/modules/migrate_drupal')) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_migration_plugins_alter().
+ */
+function migrate_drupal_migration_plugins_alter(&$definitions) {
+  // This is why the deriver can't do this: the 'd6_taxonomy_vocabulary'
+  // definition is not available to the deriver as it is running inside
+  // getDefinitions().
+  if (isset($definitions['d6_taxonomy_vocabulary'])) {
+    $vocabulary_migration_definition = [
+      'source' => [
+        'ignore_map' => TRUE,
+        'plugin' => 'd6_taxonomy_vocabulary',
+      ],
+      'destination' => [
+        'plugin' => 'null',
+      ],
+    ];
+    $vocabulary_migration = \Drupal::service('plugin.manager.migration')->createStubMigration($vocabulary_migration_definition);
+
+    try {
+      $source_plugin = $vocabulary_migration->getSourcePlugin();
+      if ($source_plugin instanceof RequirementsInterface) {
+        $source_plugin->checkRequirements();
+      }
+      $executable = new MigrateExecutable($vocabulary_migration, new MigrateMessage());
+      $process = ['vid' => $definitions['d6_taxonomy_vocabulary']['process']['vid']];
+      foreach ($source_plugin as $row) {
+        $executable->processRow($row, $process);
+        $source_vid = $row->getSourceProperty('vid');
+        $plugin_ids = ['d6_term_node:' . $source_vid, 'd6_term_node_revision:' . $source_vid];
+        foreach ($plugin_ids as $plugin_id) {
+          if (isset($definitions[$plugin_id])) {
+            $definitions[$plugin_id]['process'][$row->getDestinationProperty('vid')] = 'tid';
+          }
+        }
+      }
+    }
+    catch (RequirementsException $e) {
+      // This code currently runs whenever the definitions are being loaded and
+      // if you have a Drupal 7 source site then the requirements will not be
+      // met for the d6_taxonomy_vocabulary migration.
+    }
+    catch (DatabaseExceptionWrapper $e) {
+      // When the definitions are loaded it is possible the tables will not
+      // exist.
+    }
+
+  }
+}

@@ -1,0 +1,8 @@
+name: 'Views Test Formatter'
+type: module
+description: 'Provides test field formatters.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - views

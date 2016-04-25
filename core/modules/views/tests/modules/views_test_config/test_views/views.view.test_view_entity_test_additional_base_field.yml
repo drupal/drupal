@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_view_entity_test_additional_base_field
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: entity_test_update
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        id:
+          alter:
+            alter_text: false
+            ellipsis: true
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: true
+          empty_zero: false
+          field: id
+          hide_empty: false
+          id: id
+          table: entity_test_update
+          entity_type: entity_test_update
+          entity_field: id
+          plugin_id: field
+        new_base_field:
+          alter:
+            alter_text: false
+            ellipsis: true
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: true
+          empty_zero: false
+          field: new_base_field
+          hide_empty: false
+          id: new_base_field
+          table: entity_test_update
+          plugin_id: field
+          entity_type: entity_test_update
+          entity_field: new_base_field
+      pager:
+        type: some
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

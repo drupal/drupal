@@ -1,0 +1,26 @@
+/* --------------- Secondary Menu ------------ */
+
+.region-secondary-menu .menu {
+  text-align: right; /* LTR */
+  font-size: 0.929em;
+  margin: 0 10px;
+  padding: 0;
+}
+[dir="rtl"] .region-secondary-menu .menu {
+  text-align: left;
+  margin-right: 10px; /* required to win over specificity of [dir="rtl"] ul.menu */
+  margin-left: 10px;
+}
+.region-secondary-menu .menu-item {
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+.region-secondary-menu .menu a {
+  display: inline-block;
+  padding:  0.8em;
+}
+.region-secondary-menu .menu a:hover,
+.region-secondary-menu .menu a:focus {
+  text-decoration: underline;
+}

@@ -1,0 +1,15 @@
+name: 'Theme test subtheme'
+type: theme
+description: 'Test theme which uses test_basetheme as the base theme.'
+version: VERSION
+core: 8.x
+base theme: test_basetheme
+libraries:
+  - test_subtheme/global-styling
+stylesheets-remove:
+  - '@theme_test/css/sub-remove.css'
+  - '@test_basetheme/base-add.sub-remove.css'
+
+libraries-extend:
+  classy/base:
+    - test_subtheme/global-styling

@@ -1,0 +1,5 @@
+drupal.dblog:
+  version: VERSION
+  css:
+    component:
+      css/dblog.module.css: {}

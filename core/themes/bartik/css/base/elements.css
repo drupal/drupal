@@ -1,0 +1,151 @@
+/**
+ * @file
+ * Overall specifications for Bartik.
+ */
+
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  line-height: 1.5;
+  word-wrap: break-word;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 87.5%;
+}
+a,
+a.link {
+  text-decoration: none;
+  border-bottom: 1px dotted;
+}
+a:hover,
+a:active,
+a:focus,
+.link:hover,
+.link:active,
+.link:focus {
+  text-decoration: none;
+  border-bottom-style: solid;
+}
+.link {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+h1 a,
+h2 a {
+  border-bottom: none;
+}
+
+/**
+ * Reusable heading classes are included to help modules change the styling of
+ * headings on a page without affecting accessibility.
+ */
+h1,
+.heading-a {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
+  font-size: 1.357em;
+  color: #000;
+}
+h2,
+.heading-b {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
+  font-size: 1.143em;
+}
+h3,
+.heading-c {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
+  font-size: 1.092em;
+}
+h4,
+.heading-d {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
+  font-size: 1.05em;
+}
+h5,
+.heading-e {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
+  font-size: 0.889em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+h6,
+.heading-f {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
+  font-size: 0.67em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+p {
+  margin: 0 0 1.2em;
+}
+del {
+  text-decoration: line-through;
+}
+
+blockquote {
+  background: #f7f7f7;
+  border-left: 1px solid #bbb; /* LTR */
+  font-style: italic;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+}
+[dir="rtl"] blockquote {
+  border-left: none;
+  border-right: 1px solid #bbb;
+}
+blockquote:before {
+  color: #bbb;
+  content: "\201C";
+  font-size: 3em;
+  line-height: 0.1em;
+  margin-right: 0.2em; /* LTR */
+  vertical-align: -0.4em;
+}
+[dir="rtl"] blockquote:before {
+  content: "\201D";
+  margin-left: 0.2em;
+  margin-right: 0;
+}
+blockquote:after {
+  color: #bbb;
+  content: "\201D";
+  font-size: 3em;
+  line-height: 0.1em;
+  vertical-align: -0.45em;
+}
+[dir="rtl"] blockquote:after {
+  content: "\201C";
+}
+blockquote > p:first-child {
+  display: inline;
+}
+.feed-icon {
+  display: block;
+  margin: 25px 0 0 0;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+ul, ol {
+  margin: 0;
+  padding: 0 0 0.25em 1em; /* LTR */
+}
+[dir="rtl"] ul,
+[dir="rtl"] ol {
+  padding: 0 1em 0.25em 0;
+}
+ol ol,
+ul ul {
+  margin: 0;
+  padding: 0 0 0.25em 1em; /* LTR */
+}
+[dir="rtl"] ol ol,
+[dir="rtl"] ul ul {
+  padding: 0 1em 0.25em 0;
+}

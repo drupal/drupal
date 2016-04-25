@@ -1,0 +1,109 @@
+/**
+ * Presentational styles for Drupal dialogs.
+ */
+
+.ui-dialog {
+  background: transparent;
+  border: 0;
+  position: absolute;
+  z-index: 1260;
+  padding: 0;
+}
+@media all and (max-width: 48em) { /* 768px */
+  .ui-dialog {
+    min-width: 92%;
+    max-width: 92%;
+  }
+}
+.ui-dialog .ui-dialog-titlebar {
+  background: #6b6b6b;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 15px 49px 15px 15px; /* LTR */
+}
+[dir="rtl"] .ui-dialog .ui-dialog-titlebar {
+  padding-left: 49px;
+  padding-right: 15px;
+}
+.ui-dialog .ui-dialog-title {
+  font-size: 1.231em;
+  font-weight: 600;
+  margin: 0;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+  border: 0;
+  background: none;
+  right: 20px; /* LTR */
+  top: 20px;
+  margin: 0;
+  height: 16px;
+  width: 16px;
+  position: absolute;
+}
+[dir="rtl"] .ui-dialog .ui-dialog-titlebar-close {
+  right: auto;
+  left: 20px;
+}
+.ui-dialog .ui-icon.ui-icon-closethick {
+  background: url(../../../../misc/icons/ffffff/ex.svg) 0 0 no-repeat;
+  margin-top: -12px;
+}
+.ui-dialog .ui-widget-content.ui-dialog-content {
+  background: #ffffff;
+  overflow: auto;
+  padding: 1em;
+}
+.views-ui-dialog .ui-widget-content.ui-dialog-content {
+  padding: 0;
+}
+.ui-dialog .ui-widget-content.ui-dialog-buttonpane {
+  background: #f5f5f2;
+  /*border-top: 1px solid #bfbfbf;*/
+  margin: 0;
+  padding: 15px 20px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  margin: 0;
+  padding: 0;
+  float: none;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {
+  padding: 0;
+}
+.ui-dialog .ui-dialog-content {
+  position: static;
+}
+
+/* Form action buttons are moved in dialogs. Remove empty space. */
+.ui-dialog .ui-dialog-content .form-actions {
+  padding: 0;
+  margin: 0;
+}
+.ui-dialog .ajax-progress-throbber {
+  /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
+  left: 49%; /* LTR */
+  position: fixed;
+  top: 48.5%;
+  z-index: 1000;
+  background-color: #232323;
+  background-image: url(../../../../misc/loading-small.gif);
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-radius: 7px;
+  height: 24px;
+  opacity: 0.9;
+  padding: 4px;
+  width: 24px;
+}
+[dir="rtl"] .ui-dialog .ajax-progress-throbber {
+  left: auto;
+  right: 49%;
+}
+.ui-dialog .ajax-progress-throbber .throbber,
+.ui-dialog .ajax-progress-throbber .message {
+  display: none;
+}

@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.forums
+  module:
+    - text
+id: taxonomy_term.forums.default
+targetEntityType: taxonomy_term
+bundle: forums
+mode: default
+content:
+  description:
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    label: above
+hidden:
+  forum_container: true

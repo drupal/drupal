@@ -1,0 +1,95 @@
+entity.field_storage_config.collection:
+  path: '/admin/reports/fields'
+  defaults:
+    _entity_list: 'field_storage_config'
+    _title: 'Field list'
+  requirements:
+    _permission: 'administer content types'
+
+field_ui.display_mode:
+  path: '/admin/structure/display-modes'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Display modes'
+  requirements:
+    _permission: 'administer display modes'
+
+entity.entity_view_mode.collection:
+  path: '/admin/structure/display-modes/view'
+  defaults:
+    _entity_list: 'entity_view_mode'
+    _title: 'View modes'
+  requirements:
+    _permission: 'administer display modes'
+
+field_ui.entity_view_mode_add:
+  path: '/admin/structure/display-modes/view/add'
+  defaults:
+    _controller: '\Drupal\field_ui\Controller\EntityDisplayModeController::viewModeTypeSelection'
+    _title: 'Choose view mode entity type'
+  requirements:
+    _permission: 'administer display modes'
+
+entity.entity_view_mode.add_form:
+  path: '/admin/structure/display-modes/view/add/{entity_type_id}'
+  defaults:
+    _entity_form: 'entity_view_mode.add'
+    _title: 'Add view mode'
+  requirements:
+    _permission: 'administer display modes'
+
+entity.entity_view_mode.edit_form:
+  path: '/admin/structure/display-modes/view/manage/{entity_view_mode}'
+  defaults:
+    _entity_form: 'entity_view_mode.edit'
+    _title: 'Edit view mode'
+  requirements:
+    _entity_access: 'entity_view_mode.update'
+
+entity.entity_view_mode.delete_form:
+  path: '/admin/structure/display-modes/view/manage/{entity_view_mode}/delete'
+  defaults:
+    _entity_form: 'entity_view_mode.delete'
+    _title: 'Delete view mode'
+  requirements:
+    _entity_access: 'entity_view_mode.delete'
+
+entity.entity_form_mode.collection:
+  path: '/admin/structure/display-modes/form'
+  defaults:
+    _entity_list: 'entity_form_mode'
+    _title: 'Form modes'
+  requirements:
+    _permission: 'administer display modes'
+
+field_ui.entity_form_mode_add:
+  path: '/admin/structure/display-modes/form/add'
+  defaults:
+    _controller: '\Drupal\field_ui\Controller\EntityDisplayModeController::formModeTypeSelection'
+    _title: 'Choose form mode entity type'
+  requirements:
+    _permission: 'administer display modes'
+
+entity.entity_form_mode.add_form:
+  path: '/admin/structure/display-modes/form/add/{entity_type_id}'
+  defaults:
+    _entity_form: 'entity_form_mode.add'
+    _title: 'Add form mode'
+  requirements:
+    _permission: 'administer display modes'
+
+entity.entity_form_mode.edit_form:
+  path: '/admin/structure/display-modes/form/manage/{entity_form_mode}'
+  defaults:
+    _entity_form: 'entity_form_mode.edit'
+    _title: 'Edit form mode'
+  requirements:
+    _entity_access: 'entity_form_mode.update'
+
+entity.entity_form_mode.delete_form:
+  path: '/admin/structure/display-modes/form/manage/{entity_form_mode}/delete'
+  defaults:
+    _entity_form: 'entity_form_mode.delete'
+    _title: 'Delete form mode'
+  requirements:
+    _entity_access: 'entity_form_mode.delete'

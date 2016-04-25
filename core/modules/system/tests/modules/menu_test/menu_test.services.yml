@@ -1,0 +1,10 @@
+services:
+  theme.negotiator.test_theme:
+    class: Drupal\menu_test\Theme\TestThemeNegotiator
+    tags:
+      - { name: theme_negotiator }
+
+  access_check.menu_test_session:
+    class: Drupal\menu_test\Access\AccessCheck
+    tags:
+      - { name: access_check, applies_to: _menu_test_session_access }

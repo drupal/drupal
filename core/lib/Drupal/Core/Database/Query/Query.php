@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Database\Query\Query
- */
-
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
@@ -21,7 +16,7 @@ abstract class Query implements PlaceholderInterface {
   /**
    * The connection object on which to run this query.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 
@@ -66,7 +61,7 @@ abstract class Query implements PlaceholderInterface {
   /**
    * Constructs a Query object.
    *
-   * @param Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection $connection
    *   Database connection object.
    * @param array $options
    *   Array of query options.
@@ -106,6 +101,9 @@ abstract class Query implements PlaceholderInterface {
 
   /**
    * Runs the query against the database.
+   *
+   * @return \Drupal\Core\Database\StatementInterface|null
+   *   A prepared statement, or NULL if the query is not valid.
    */
   abstract protected function execute();
 
@@ -115,7 +113,7 @@ abstract class Query implements PlaceholderInterface {
    * The toString operation is how we compile a query object to a prepared
    * statement.
    *
-   * @return
+   * @return string
    *   A prepared statement query string for this object.
    */
   abstract public function __toString();
@@ -131,7 +129,7 @@ abstract class Query implements PlaceholderInterface {
    * Gets the next placeholder value for this query object.
    *
    * @return int
-   *   Next placeholder value.
+   *   The next placeholder value.
    */
   public function nextPlaceholder() {
     return $this->nextPlaceholder++;
@@ -151,8 +149,7 @@ abstract class Query implements PlaceholderInterface {
    * @param $comment
    *   The comment string to be inserted into the query.
    *
-   * @return Drupal\Core\Database\Query\Query
-   *   The called object.
+   * @return $this
    */
   public function comment($comment) {
     $this->comments[] = $comment;
@@ -171,10 +168,11 @@ abstract class Query implements PlaceholderInterface {
    * $comments =& $query->getComments();
    * @endcode
    *
-   * @return
+   * @return array
    *   A reference to the comments array structure.
    */
   public function &getComments() {
     return $this->comments;
   }
+
 }

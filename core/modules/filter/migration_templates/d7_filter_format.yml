@@ -1,0 +1,29 @@
+id: d7_filter_format
+label: Filter format configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_filter_format
+process:
+  format: format
+  name: name
+  cache: cache
+  filters:
+    plugin: iterator
+    source: filters
+    key: '@id'
+    process:
+      id:
+        plugin: static_map
+        bypass: true
+        source: name
+        map:
+          php_code: filter_null
+      settings:
+        plugin: filter_settings
+        source: settings
+      status:
+        plugin: default_value
+        default_value: true
+destination:
+  plugin: entity:filter_format

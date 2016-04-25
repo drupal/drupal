@@ -1,0 +1,10 @@
+name: 'Action bulk form test'
+type: module
+description: 'Support module for action bulk form testing.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - action
+  - views
+  - node

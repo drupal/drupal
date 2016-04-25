@@ -1,0 +1,162 @@
+# Schema for the views plugins of the Taxonomy module.
+
+views.argument.taxonomy_index_tid:
+  type: views.argument.many_to_one
+  label: 'Taxonomy term ID'
+
+views.argument.taxonomy_index_tid_depth:
+  type: views_argument
+  label: 'Taxonomy term ID'
+  mapping:
+    depth:
+      type: integer
+      label: 'Depth'
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    use_taxonomy_term_path:
+      type: boolean
+      label: 'Use taxonomy term path'
+
+views.argument.taxonomy_index_tid_depth_modifier:
+  type: views_argument
+  label: 'Taxonomy depth modifier'
+
+views.argument.taxonomy:
+  type: views_argument
+  label: 'Taxonomy'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    not:
+      type: boolean
+      label: 'Exclude'
+
+views.argument.vocabulary_vid:
+  type: views_argument
+  label: 'Vocabulary'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    not:
+      type: boolean
+      label: 'Exclude'
+
+
+views.argument_validator.entity:taxonomy_term:
+  type: views.argument_validator_entity
+  label: 'Taxonomy term'
+
+views.argument_validator.taxonomy_term_name:
+  type: views.argument_validator_entity
+  label: 'Taxonomy term'
+  mapping:
+    vids:
+      type: sequence
+      label: 'Vocabularies'
+      sequence:
+        type: string
+        label: 'Vocabulary'
+    transform:
+      type: boolean
+      label: 'Transform dashes in URL to spaces in term name filter values'
+
+views.argument_default.taxonomy_tid:
+  type: mapping
+  label: 'Taxonomy term ID from URL'
+  mapping:
+    term_page:
+      type: string
+      label: 'Load default filter from term page'
+    node:
+      type: boolean
+      label: 'Load default filter from node page, that''s good for related taxonomy blocks'
+    limit:
+      type: boolean
+      label: 'Limit terms by vocabulary'
+    vids:
+      type: sequence
+      label: 'Vocabularies'
+      sequence:
+        type: string
+        label: 'Vocabulary'
+    anyall:
+      type: string
+      label: 'Multiple-value handling'
+
+views.field.term_name:
+  type: views.field.field
+  mapping:
+    convert_spaces:
+      type: boolean
+      label: 'Convert spaces in term names to hyphens'
+
+views.field.taxonomy_index_tid:
+  type: views_field
+  label: 'Taxonomy language'
+  mapping:
+    type:
+      type: string
+      label: 'Display type'
+    separator:
+      type: string
+      label: 'Separator'
+    link_to_taxonomy:
+      type: boolean
+      label: 'Link this field to its term page'
+    limit:
+      type: boolean
+      label: 'Limit terms by vocabulary'
+    vids:
+      type: sequence
+      label: 'Vocabularies'
+      sequence:
+        type: string
+        label: 'Vocabulary'
+
+views.filter.taxonomy_index_tid:
+  type: views.filter.many_to_one
+  label: 'Taxonomy term ID'
+  mapping:
+    vid:
+      type: string
+      label: 'Vocabulary'
+    type:
+      type: string
+      label: 'Selection type'
+    hierarchy:
+      type: boolean
+      label: 'Show hierarchy in dropdown'
+    limit:
+      type: boolean
+      label: 'Limit to vocabulary'
+    error_message:
+      type: boolean
+      label: 'Display error message'
+    value:
+      type: sequence
+      label: 'Values'
+      sequence:
+        type: integer
+        label: 'Value'
+
+views.filter.taxonomy_index_tid_depth:
+  type: views.filter.taxonomy_index_tid
+  label: 'Taxonomy term ID with depth'
+  mapping:
+    depth:
+      type: integer
+      label: 'Depth'
+
+views.relationship.node_term_data:
+  type: views_relationship
+  label: 'Taxonomy term'
+  mapping:
+    vids:
+      type: sequence
+      label: 'Vocabularies'
+      sequence:
+        type: string
+        label: 'Vocabulary'

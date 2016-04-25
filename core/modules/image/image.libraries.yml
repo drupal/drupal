@@ -1,0 +1,5 @@
+admin:
+  version: VERSION
+  css:
+    theme:
+      css/image.admin.css: {}

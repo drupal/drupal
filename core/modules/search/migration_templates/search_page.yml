@@ -1,0 +1,26 @@
+id: search_page
+label: Search page configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - node_rank_comments
+    - node_rank_promote
+    - node_rank_recent
+    - node_rank_relevance
+    - node_rank_sticky
+    - node_rank_views
+  constants:
+    id: node_search
+    path: node
+    plugin: node_search
+process:
+  id: 'constants/id'
+  path: 'constants/path'
+  plugin: 'constants/plugin'
+  'configuration/rankings':
+    plugin: search_configuration_rankings
+destination:
+  plugin: entity:search_page

@@ -1,0 +1,13 @@
+id: menu
+label: Menus
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: menu
+process:
+  id: menu_name
+  label: title
+  description: description
+destination:
+  plugin: entity:menu

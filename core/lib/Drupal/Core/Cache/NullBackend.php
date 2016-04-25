@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Cache\NullBackend.
- */
-
 namespace Drupal\Core\Cache;
 
 /**
@@ -17,6 +12,8 @@ namespace Drupal\Core\Cache;
  * operations would have a negative impact on performance.
  *
  * This also can be used for testing purposes.
+ *
+ * @ingroup cache
  */
 class NullBackend implements CacheBackendInterface {
 
@@ -29,78 +26,66 @@ class NullBackend implements CacheBackendInterface {
   public function __construct($bin) {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::get().
+   * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE) {
     return FALSE;
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::getMultiple().
+   * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
     return array();
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::set().
+   * {@inheritdoc}
    */
-  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {}
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
+   * {@inheritdoc}
+   */
+  public function setMultiple(array $items = array()) {}
+
+  /**
+   * {@inheritdoc}
    */
   public function delete($cid) {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
+   * {@inheritdoc}
    */
   public function deleteMultiple(array $cids) {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteAll().
+   * {@inheritdoc}
    */
   public function deleteAll() {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteExpired().
-   */
-  public function deleteExpired() {}
-
-  /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteTags().
-   */
-  public function deleteTags(array $tags) {}
-
-  /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidate().
+   * {@inheritdoc}
    */
   public function invalidate($cid) {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple().
+   * {@inheritdoc}
    */
   public function invalidateMultiple(array $cids) {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
-   */
-  public function invalidateTags(array $tags) {}
-
-  /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
+   * {@inheritdoc}
    */
   public function invalidateAll() {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::garbageCollection().
+   * {@inheritdoc}
    */
   public function garbageCollection() {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::isEmpty().
+   * {@inheritdoc}
    */
-  public function isEmpty() {
-    return TRUE;
-  }
+  public function removeBin() {}
 }

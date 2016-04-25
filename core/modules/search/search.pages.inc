@@ -2,121 +2,49 @@
 
 /**
  * @file
- * User page callbacks for the search module.
+ * User page callbacks for the Search module.
  */
+
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Menu callback; presents the search form and/or search results.
- *
- * @param $module
- *   Search module to use for the search.
- * @param $keys
- *   Keywords to use for the search.
+ * Implements hook_theme_suggestions_HOOK().
  */
-function search_view($module = NULL, $keys = '') {
-  $info = FALSE;
-  $redirect = FALSE;
-  $keys = trim($keys);
-  // Also try to pull search keywords out of the $_REQUEST variable to
-  // support old GET format of searches for existing links.
-  if (!$keys && !empty($_REQUEST['keys'])) {
-    $keys = trim($_REQUEST['keys']);
-  }
-
-  if (!empty($module)) {
-    $active_module_info = search_get_info();
-    if (isset($active_module_info[$module])) {
-      $info = $active_module_info[$module];
-    }
-  }
-
-  if (empty($info)) {
-    // No path or invalid path: find the default module. Note that if there
-    // are no enabled search modules, this function should never be called,
-    // since hook_menu() would not have defined any search paths.
-    $info = search_get_default_module_info();
-    // Redirect from bare /search or an invalid path to the default search path.
-    $path = 'search/' . $info['path'];
-    if ($keys) {
-      $path .= '/' . $keys;
-    }
-    drupal_goto($path);
-  }
-
-  // Default results output is an empty string.
-  $results = array('#markup' => '');
-  // Process the search form. Note that if there is $_POST data,
-  // search_form_submit() will cause a redirect to search/[module path]/[keys],
-  // which will get us back to this page callback. In other words, the search
-  // form submits with POST but redirects to GET. This way we can keep
-  // the search query URL clean as a whistle.
-  if (empty($_POST['form_id']) || $_POST['form_id'] != 'search_form') {
-    $conditions =  NULL;
-    if (isset($info['conditions_callback'])) {
-      // Build an optional array of more search conditions.
-      $conditions = call_user_func($info['conditions_callback'], $keys);
-    }
-    // Only search if there are keywords or non-empty conditions.
-    if ($keys || !empty($conditions)) {
-      // Log the search keys.
-      watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $info['path'] . '/' . $keys));
-
-      // Collect the search results.
-      $results = search_data($keys, $info['module'], $conditions);
-    }
-  }
-  // The form may be altered based on whether the search was run.
-  $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $info['module']);
-  $build['search_results'] = $results;
-
-  return $build;
+function search_theme_suggestions_search_result(array $variables) {
+  return array('search_result__' . $variables['plugin_id']);
 }
 
 /**
- * Process variables for search-results.tpl.php.
+ * Prepares variables for individual search result templates.
  *
- * The $variables array contains the following arguments:
- * - $results: Search results array.
- * - $module: Module the search results came from (module implementing
- *   hook_search_info()).
+ * Default template: search-result.html.twig
  *
- * @see search-results.tpl.php
- */
-function template_preprocess_search_results(&$variables) {
-  $variables['search_results'] = '';
-  if (!empty($variables['module'])) {
-    $variables['module'] = check_plain($variables['module']);
-  }
-  foreach ($variables['results'] as $result) {
-    $variables['search_results'] .= theme('search_result', array('result' => $result, 'module' => $variables['module']));
-  }
-  $variables['pager'] = theme('pager', array('tags' => NULL));
-  $variables['theme_hook_suggestions'][] = 'search_results__' . $variables['module'];
-}
-
-/**
- * Process variables for search-result.tpl.php.
- *
- * The $variables array contains the following arguments:
- * - $result
- * - $module
- *
- * @see search-result.tpl.php
+ * @param array $variables
+ *   An array with the following elements:
+ *   - result: Individual search result.
+ *   - plugin_id: Plugin the search results came from.
+ *   - title_prefix: Additional output populated by modules, intended to be
+ *     displayed in front of the main title tag that appears in the template.
+ *   - title_suffix: Additional output populated by modules, intended to be
+ *     displayed after the main title tag that appears in the template.
+ *   - title_attributes: HTML attributes for the title.
+ *   - content_attributes: HTML attributes for the content.
  */
 function template_preprocess_search_result(&$variables) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   $result = $variables['result'];
-  $variables['url'] = check_url($result['link']);
-  $variables['title'] = check_plain($result['title']);
-  if (isset($result['language']) && $result['language'] != $language_interface->langcode && $result['language'] != LANGUAGE_NOT_SPECIFIED) {
+  $variables['url'] = UrlHelper::stripDangerousProtocols($result['link']);
+  $variables['title'] = $result['title'];
+  if (isset($result['language']) && $result['language'] != $language_interface->getId() && $result['language'] != LanguageInterface::LANGCODE_NOT_SPECIFIED) {
     $variables['title_attributes']['lang'] = $result['language'];
     $variables['content_attributes']['lang'] = $result['language'];
   }
 
   $info = array();
-  if (!empty($result['module'])) {
-    $info['module'] = check_plain($result['module']);
+  if (!empty($result['plugin_id'])) {
+    $info['plugin_id'] = $result['plugin_id'];
   }
   if (!empty($result['user'])) {
     $info['user'] = $result['user'];
@@ -131,29 +59,10 @@ function template_preprocess_search_result(&$variables) {
   $variables['snippet'] = isset($result['snippet']) ? $result['snippet'] : '';
   // Provide separated and grouped meta information..
   $variables['info_split'] = $info;
-  $variables['info'] = implode(' - ', $info);
-  $variables['theme_hook_suggestions'][] = 'search_result__' . $variables['module'];
+  $variables['info'] = array(
+    '#type' => 'inline_template',
+    '#template' => '{{ info|safe_join(" - ") }}',
+    '#context' => array('info' => $info),
+  );
 }
 
-/**
- * As the search form collates keys from other modules hooked in via
- * hook_form_alter, the validation takes place in _submit.
- * search_form_validate() is used solely to set the 'processed_keys' form
- * value for the basic search form.
- */
-function search_form_validate($form, &$form_state) {
-  form_set_value($form['basic']['processed_keys'], trim($form_state['values']['keys']), $form_state);
-}
-
-/**
- * Process a search form submission.
- */
-function search_form_submit($form, &$form_state) {
-  $keys = $form_state['values']['processed_keys'];
-  if ($keys == '') {
-    form_set_error('keys', t('Please enter some keywords.'));
-    // Fall through to the form redirect.
-  }
-
-  $form_state['redirect'] = $form_state['action'] . '/' . $keys;
-}

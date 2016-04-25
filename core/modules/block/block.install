@@ -2,384 +2,127 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the block module.
+ * Contains install and update functions for Block.
  */
 
-/**
- * Implements hook_schema().
- */
-function block_schema() {
-  $schema['block'] = array(
-    'description' => 'Stores block settings, such as region and visibility settings.',
-    'fields' => array(
-      'bid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique block ID.',
-      ),
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => "The module from which the block originates; for example, 'user' for the Who's Online block, and 'block' for any custom blocks.",
-      ),
-      'delta' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '0',
-        'description' => 'Unique ID for block within a module.',
-      ),
-      'theme' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The theme under which the block settings apply.',
-      ),
-      'status' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Block enabled status. (1 = enabled, 0 = disabled)',
-      ),
-      'weight' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Block weight within region.',
-      ),
-      'region' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Theme region within which the block is set.',
-      ),
-      'custom' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Flag to indicate how users may control visibility of the block. (0 = Users cannot control, 1 = On by default, but can be hidden, 2 = Hidden by default, but can be shown)',
-      ),
-      'visibility' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Flag to indicate how to show blocks on pages. (0 = Show on all pages except listed pages, 1 = Show only on listed pages, 2 = Use custom PHP code to determine visibility)',
-      ),
-      'pages' => array(
-        'type' => 'text',
-        'not null' => TRUE,
-        'description' => 'Contents of the "Pages" block; contains either a list of paths on which to include/exclude the block or PHP code, depending on "visibility" setting.',
-      ),
-      'title' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
-        'translatable' => TRUE,
-      ),
-      'cache' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 1,
-        'size' => 'tiny',
-        'description' => 'Binary flag to indicate block cache mode. (-2: Custom cache, -1: Do not cache, 1: Cache per role, 2: Cache per user, 4: Cache per page, 8: Block cache global) See DRUPAL_CACHE_* constants in ../includes/common.inc for more detailed information.',
-      ),
-    ),
-    'primary key' => array('bid'),
-    'unique keys' => array(
-      'tmd' => array('theme', 'module', 'delta'),
-    ),
-    'indexes' => array(
-      'list' => array('theme', 'status', 'region', 'weight', 'module'),
-    ),
-  );
-
-  $schema['block_role'] = array(
-    'description' => 'Sets up access permissions for blocks based on user roles',
-    'fields' => array(
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'description' => "The block's origin module, from {block}.module.",
-      ),
-      'delta' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'description' => "The block's unique delta within module, from {block}.delta.",
-      ),
-      'rid' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'description' => "The user's role ID from {users_roles}.rid.",
-      ),
-    ),
-    'primary key' => array('module', 'delta', 'rid'),
-    'indexes' => array(
-      'rid' => array('rid'),
-    ),
-    'foreign keys' => array(
-      'role' => array(
-        'table' => 'role',
-        'columns' => array('rid' => 'rid'),
-      ),
-    ),
-  );
-
-  $schema['block_custom'] = array(
-    'description' => 'Stores contents of custom-made blocks.',
-    'fields' => array(
-      'bid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => "The block's {block}.bid.",
-      ),
-      'body' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-        'description' => 'Block contents.',
-        'translatable' => TRUE,
-      ),
-      'info' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Block description.',
-      ),
-      'format' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-        'description' => 'The {filter_format}.format of the block body.',
-      ),
-    ),
-    'unique keys' => array(
-      'info' => array('info'),
-    ),
-    'primary key' => array('bid'),
-  );
-
-  $schema['block_language'] = array(
-    'description' => 'Sets up display criteria for blocks based on langcode',
-    'fields' => array(
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'description' => "The block's origin module, from {block}.module.",
-      ),
-      'delta' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'description' => "The block's unique delta within module, from {block}.delta.",
-      ),
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'description' => "Language type name. Applied to filter the block by that type.",
-      ),
-      'langcode' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'description' => "The machine-readable name of this language from {language}.langcode.",
-      ),
-    ),
-    'primary key' => array('module', 'delta', 'type', 'langcode'),
-  );
-
-  $schema['cache_block'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_block']['description'] = 'Cache table for the Block module to store already built blocks, identified by module, delta, and various contexts which may change the block, such as theme, locale, and caching mode defined for the block.';
-
-  return $schema;
-}
+use Drupal\Core\Cache\Cache;
 
 /**
  * Implements hook_install().
  */
 function block_install() {
-
-  // Block should go first so that other modules can alter its output
-  // during hook_page_alter(). Almost everything on the page is a block,
-  // so before block module runs, there will not be much to alter.
-  module_set_weight('block', -5);
+  // Because the Block module upon installation unconditionally overrides all
+  // HTML output by selecting a different page display variant, we must
+  // invalidate all cached HTML output.
+  Cache::invalidateTags(['rendered']);
 }
 
 /**
- * @addtogroup updates-7.x-to-8.x
+ * @addtogroup updates-8.0.0-beta
  * @{
  */
 
 /**
- * Implements hook_update_dependencies().
- */
-function block_update_dependencies() {
-  // Convert role IDs after User module converted {role}.
-  $dependencies['block'][8002] = array(
-    'user' => 8002,
-  );
-  // Migrate users.data after User module prepared the tables.
-  $dependencies['block'][8005] = array(
-    'user' => 8011,
-  );
-  return $dependencies;
-}
-
-/**
- * Block cache is always enabled in 8.x.
- *
- * @ingroup config_upgrade
- */
-function block_update_8000() {
-  update_variable_del('block_cache');
-}
-
-/**
- * Creates table {block_language} for language visibility settings per block.
+ * Update block visibility context mapping.
  */
 function block_update_8001() {
-  $schema = array(
-    'description' => 'Sets up display criteria for blocks based on langcode.',
-    'fields' => array(
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'description' => "The block's origin module, from {block}.module.",
-      ),
-      'delta' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'description' => "The block's unique delta within module, from {block}.delta.",
-      ),
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'description' => "Language type name. Applied to filter the block by that type.",
-      ),
-      'langcode' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'description' => "The machine-readable name of this language from {language}.langcode.",
-      ),
-    ),
-    'primary key' => array('module', 'delta', 'type', 'langcode'),
-  );
-  db_create_table('block_language', $schema);
+  // This update function updates blocks for the change from
+  // https://www.drupal.org/node/2354889.
+
+  // Core visibility context plugins are updated automatically; blocks with
+  // unknown plugins are disabled and their previous visibility settings are
+  // saved in key value storage; see change record
+  // https://www.drupal.org/node/2527840 for more explanation.
+
+  // These are all the contexts that Drupal core provides.
+  $context_service_id_map = [
+    'node.node' => '@node.node_route_context:node',
+    'user.current_user' => '@user.current_user_context:current_user',
+  ];
+
+  foreach (array_keys(\Drupal::languageManager()->getDefinedLanguageTypesInfo()) as $language_type_id) {
+    $context_service_id_map['language.' . $language_type_id] = '@language.current_language_context:' . $language_type_id;
+  }
+
+  // Contributed modules should leverage hook_update_dependencies() in order to
+  // be executed after block_update_8001(). The blocks are then disabled if the
+  // contexts are still missing via
+  // block_post_update_disable_blocks_with_missing_contexts().
+  $config_factory = \Drupal::configFactory();
+  $backup_values = $update_backup = [];
+
+  foreach ($config_factory->listAll('block.block.') as $block_config_name) {
+    $block = $config_factory->getEditable($block_config_name);
+    if ($visibility = $block->get('visibility')) {
+      foreach ($visibility as $condition_plugin_id => &$condition) {
+        foreach ($condition['context_mapping'] as $key => $context) {
+          if (!isset($context_service_id_map[$context])) {
+            // Remove the visibility condition for unknown context mapping
+            // entries, so the update process itself runs through and users can
+            // fix their block placements manually OR alternatively contributed
+            // modules can run their own update functions to update mappings
+            // that they provide.
+            $backup_values[$context][] = $condition_plugin_id;
+            unset($visibility[$condition_plugin_id]);
+            continue;
+          }
+          // Replace the context ID based on the defined mapping.
+          $condition['context_mapping'][$key] = $context_service_id_map[$context];
+        }
+      }
+      $block->set('visibility', $visibility);
+
+      if ($backup_values) {
+        // We not only store the missing context mappings but also the previous
+        // block status, in order to allow contributed and custom modules to do
+        // their own updates.
+        $update_backup[$block->get('id')] = [
+          'missing_context_ids' => $backup_values,
+          'status' => $block->get('status')
+        ];
+      }
+    }
+
+    // Mark the resulting configuration as trusted data. This avoids issues with
+    // future schema changes.
+    $block->save(TRUE);
+  }
+
+  if ($update_backup) {
+    \Drupal::keyValue('update_backup')->set('block_update_8001', $update_backup);
+  }
+
+  return t('Block context IDs updated.');
 }
 
 /**
- * Replace serial role IDs with machine name strings.
- *
- * @see user_update_8002()
+ * Placeholder for the previous 8002 update.
  */
 function block_update_8002() {
-  // Change serial rid column into string.
-  $column = array(
-    'type' => 'varchar',
-    'length' => 64,
-    'not null' => TRUE,
-    'description' => "The user's role ID from {users_roles}.rid.",
-  );
-  db_change_field('block_role', 'rid', 'rid', $column);
-
-  // Rename the built-in serial role IDs into the hardcoded machine names.
-  db_update('block_role')
-    ->fields(array('rid' => DRUPAL_ANONYMOUS_RID))
-    ->condition('rid', 1)
-    ->execute();
-  db_update('block_role')
-    ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
-    ->condition('rid', 2)
-    ->execute();
+  \Drupal::state()->set('block_update_8002_placeholder', TRUE);
 }
 
 /**
- * Increase {block}.title length to 255 characters.
+ * Remove 'cache' setting.
  */
 function block_update_8003() {
-  db_change_field('block', 'title', 'title', array(
-    'type' => 'varchar',
-    'length' => 255,
-    'not null' => TRUE,
-    'default' => '',
-    'description' => 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
-    'translatable' => TRUE,
-    )
-  );
-}
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('block.block.') as $block_config_name) {
+    $block = $config_factory->getEditable($block_config_name);
 
-/**
- * Rename default menu names.
- */
-function block_update_8004() {
-  // System menu's new block deltas are prefixed with 'menu-'.
-  $map = array(
-    'navigation' => 'menu-tools',
-    'management' => 'menu-admin',
-    'user-menu' => 'menu-account',
-    'main-menu' => 'menu-main',
-  );
-  foreach ($map as $old => $new) {
-    db_update('block')
-      ->condition('module', 'system')
-      ->condition('delta', $old)
-      ->fields(array('delta' => $new))
-      ->execute();
-    db_update('block_language')
-      ->condition('module', 'system')
-      ->condition('delta', $old)
-      ->fields(array('delta' => $new))
-      ->execute();
-    db_update('block_role')
-      ->condition('module', 'system')
-      ->condition('delta', $old)
-      ->fields(array('delta' => $new))
-      ->execute();
+    // Remove the 'cache' setting.
+    $settings = $block->get('settings');
+    unset($settings['cache']);
+    $block->set('settings', $settings);
+
+    // Mark the resulting configuration as trusted data. This avoids issues with
+    // future schema changes.
+    $block->save(TRUE);
   }
+
+  return t('Block settings updated.');
 }
 
 /**
- * Migrate {users}.data into {users_data}.
- */
-function block_update_8005() {
-  $query = db_select('_d7_users_data', 'ud');
-  $query->addField('ud', 'uid');
-  $query->addExpression("'block'", 'module');
-  $query->addExpression("'block'", 'name');
-  // Take over the extracted and serialized value in {_d7_users_data} as-is.
-  $query->addField('ud', 'value');
-  $query->addExpression('1', 'serialized');
-  $query->condition('name', 'block');
-
-  db_insert('users_data')
-    ->from($query)
-    ->execute();
-
-  db_delete('_d7_users_data')
-    ->condition('name', 'block')
-    ->execute();
-}
-
-/**
- * @} End of "addtogroup updates-7.x-to-8.x".
- * The next series of updates should start at 9000.
+ * @} End of "addtogroup updates-8.0.0-beta".
  */

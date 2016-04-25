@@ -1,0 +1,5 @@
+# Schema for the views plugins of the Field module.
+
+views.relationship.entity_reverse:
+  type: views_relationship
+  label: 'Reverse entity reference'

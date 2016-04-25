@@ -1,0 +1,26 @@
+id: d7_shortcut
+label: Shortcut links
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_shortcut
+  constants:
+    uri_scheme: 'internal:/'
+process:
+  shortcut_set:
+     plugin: migration
+     migration: d7_shortcut_set
+     source: menu_name
+  title: link_title
+  weight: weight
+  link:
+    plugin: concat
+    source:
+      - 'constants/uri_scheme'
+      - link_path
+destination:
+  plugin: entity:shortcut
+migration_dependencies:
+  required:
+    - d7_shortcut_set
+    - menu_links

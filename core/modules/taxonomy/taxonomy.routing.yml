@@ -1,0 +1,87 @@
+entity.taxonomy_vocabulary.collection:
+  path: '/admin/structure/taxonomy'
+  defaults:
+    _entity_list: 'taxonomy_vocabulary'
+    _title: 'Taxonomy'
+  requirements:
+    _permission: 'administer taxonomy'
+
+entity.taxonomy_term.add_form:
+  path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/add'
+  defaults:
+    _controller: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
+    _title: 'Add term'
+  requirements:
+    _entity_create_access: 'taxonomy_term:{taxonomy_vocabulary}'
+
+entity.taxonomy_term.edit_form:
+  path: '/taxonomy/term/{taxonomy_term}/edit'
+  defaults:
+    _entity_form: 'taxonomy_term.default'
+    _title: 'Edit term'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_access: 'taxonomy_term.update'
+    taxonomy_term: \d+
+
+entity.taxonomy_term.delete_form:
+  path: '/taxonomy/term/{taxonomy_term}/delete'
+  defaults:
+    _entity_form: 'taxonomy_term.delete'
+    _title: 'Delete term'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_access: 'taxonomy_term.delete'
+    taxonomy_term: \d+
+
+entity.taxonomy_vocabulary.add_form:
+  path: '/admin/structure/taxonomy/add'
+  defaults:
+    _entity_form: 'taxonomy_vocabulary'
+    _title: 'Add vocabulary'
+  requirements:
+    _entity_create_access: 'taxonomy_vocabulary'
+
+entity.taxonomy_vocabulary.edit_form:
+  path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}'
+  defaults:
+    _entity_form: 'taxonomy_vocabulary.default'
+    _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::vocabularyTitle'
+  requirements:
+    _entity_access: 'taxonomy_vocabulary.update'
+
+entity.taxonomy_vocabulary.delete_form:
+  path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete'
+  defaults:
+    _entity_form: 'taxonomy_vocabulary.delete'
+    _title: 'Delete vocabulary'
+  requirements:
+    _entity_access: 'taxonomy_vocabulary.delete'
+
+entity.taxonomy_vocabulary.reset_form:
+  path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset'
+  defaults:
+    _entity_form: 'taxonomy_vocabulary.reset'
+    _title: 'Reset'
+  requirements:
+    _permission: 'administer taxonomy'
+
+entity.taxonomy_vocabulary.overview_form:
+  path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview'
+  defaults:
+    _form: 'Drupal\taxonomy\Form\OverviewTerms'
+    _title_callback: 'Drupal\taxonomy\Controller\TaxonomyController::vocabularyTitle'
+  requirements:
+    _entity_access: 'taxonomy_vocabulary.view'
+
+entity.taxonomy_term.canonical:
+  path: '/taxonomy/term/{taxonomy_term}'
+  defaults:
+    _entity_view: 'taxonomy_term.full'
+    _title: 'Taxonomy term'
+    _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'
+  requirements:
+    _entity_access: 'taxonomy_term.view'
+    taxonomy_term: \d+

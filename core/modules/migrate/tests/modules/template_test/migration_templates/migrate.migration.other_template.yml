@@ -1,0 +1,10 @@
+id: other_template
+label: Template with a different tag
+migration_tags:
+  - Different Template Test
+source:
+  plugin: empty
+process:
+  src: raboof
+destination:
+  plugin: entity:user

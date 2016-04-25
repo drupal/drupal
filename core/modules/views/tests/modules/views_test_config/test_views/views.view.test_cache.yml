@@ -1,0 +1,76 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_cache
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      fields:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          relationship: none
+        name:
+          id: name
+          table: views_test_data
+          field: name
+          relationship: none
+        age:
+          id: age
+          table: views_test_data
+          field: age
+          relationship: none
+      defaults:
+        fields: false
+        sorts: false
+      sorts:
+        id:
+          order: ASC
+          id: id
+          table: views_test_data
+          field: id
+          relationship: none
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_options:
+      defaults:
+        pager: false
+      pager:
+        type: full
+        options:
+          items_per_page: 2
+
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_options:
+      defaults:
+        filters: false
+        cache: false
+      cache:
+        type: time
+        options:
+          results_lifespan: 3600
+          output_lifespan: 3600
+      filters:
+        test_cache_context:
+          id: test_cache_context
+          table: views_test_data
+          field: test_cache_context
+          relationship: none
+    cache_metadata:
+      contexts:
+        - views_test_cache_context

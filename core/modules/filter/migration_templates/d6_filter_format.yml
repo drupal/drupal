@@ -1,0 +1,45 @@
+id: d6_filter_format
+label: Filter format configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_filter_format
+process:
+  format:
+    -
+      plugin: machine_name
+      source: name
+    -
+      plugin: dedupe_entity
+      entity_type: filter_format
+      field: format
+      length: 32
+  name: name
+  cache: cache
+  filters:
+    plugin: iterator
+    source: filters
+    key: '@id'
+    process:
+      id:
+        plugin: static_map
+        default_value: filter_null
+        source:
+          - module
+          - delta
+        map:
+          filter:
+            - filter_html
+            - filter_autop
+            - filter_url
+            - filter_htmlcorrector
+            - filter_html_escape
+      settings:
+        plugin: filter_settings
+        source: settings
+      status:
+        plugin: default_value
+        default_value: true
+destination:
+  plugin: entity:filter_format
+  no_stub: true

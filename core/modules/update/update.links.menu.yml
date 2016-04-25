@@ -1,0 +1,6 @@
+update.status:
+  title: 'Available updates'
+  description: 'Get a status report about available updates for your installed modules and themes.'
+  route_name: update.status
+  parent: system.admin_reports
+  weight: -50

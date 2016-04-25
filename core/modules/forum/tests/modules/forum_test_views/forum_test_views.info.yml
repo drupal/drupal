@@ -1,0 +1,9 @@
+name: 'Forum test views'
+type: module
+description: 'Provides default views for views forum tests.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - forum
+  - views

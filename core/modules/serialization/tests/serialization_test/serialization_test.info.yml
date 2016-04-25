@@ -1,0 +1,6 @@
+name: Serialization test module
+type: module
+description: "Support module for serialization tests."
+package: Testing
+version: VERSION
+core: 8.x

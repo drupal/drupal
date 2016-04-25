@@ -1,0 +1,73 @@
+image.style_add:
+  path: '/admin/config/media/image-styles/add'
+  defaults:
+    _entity_form: image_style.add
+    _title: 'Add image style'
+  requirements:
+    _permission: 'administer image styles'
+
+entity.image_style.edit_form:
+  path: '/admin/config/media/image-styles/manage/{image_style}'
+  defaults:
+    _entity_form: image_style.edit
+    _title: 'Edit style'
+  requirements:
+    _permission: 'administer image styles'
+
+entity.image_style.delete_form:
+  path: '/admin/config/media/image-styles/manage/{image_style}/delete'
+  defaults:
+    _entity_form: 'image_style.delete'
+    _title: 'Delete'
+  requirements:
+    _permission: 'administer image styles'
+
+entity.image_style.flush_form:
+  path: '/admin/config/media/image-styles/manage/{image_style}/flush'
+  defaults:
+    _entity_form: 'image_style.flush'
+    _title: 'Flush'
+  requirements:
+    _permission: 'administer image styles'
+
+image.effect_delete:
+  path: '/admin/config/media/image-styles/manage/{image_style}/effects/{image_effect}/delete'
+  defaults:
+    _form: '\Drupal\image\Form\ImageEffectDeleteForm'
+    _title: 'Delete image effect'
+  requirements:
+    _permission: 'administer image styles'
+
+entity.image_style.collection:
+  path: '/admin/config/media/image-styles'
+  defaults:
+    _entity_list: 'image_style'
+    _title: 'Image styles'
+  requirements:
+    _permission: 'administer image styles'
+
+image.style_private:
+  path: '/system/files/styles/{image_style}/{scheme}'
+  defaults:
+    _controller:  '\Drupal\image\Controller\ImageStyleDownloadController::deliver'
+  requirements:
+    _access: 'TRUE'
+
+image.effect_add_form:
+  path: '/admin/config/media/image-styles/manage/{image_style}/add/{image_effect}'
+  defaults:
+    _form: '\Drupal\image\Form\ImageEffectAddForm'
+    _title: 'Add image effect'
+  requirements:
+    _permission: 'administer image styles'
+
+image.effect_edit_form:
+  path: '/admin/config/media/image-styles/manage/{image_style}/effects/{image_effect}'
+  defaults:
+    _form: '\Drupal\image\Form\ImageEffectEditForm'
+    _title: 'Edit image effect'
+  requirements:
+    _permission: 'administer image styles'
+
+route_callbacks:
+  - '\Drupal\image\Routing\ImageStyleRoutes::routes'

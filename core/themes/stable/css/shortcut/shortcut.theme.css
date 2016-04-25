@@ -1,0 +1,62 @@
+/**
+ * @file
+ * Styling for the shortcut module.
+ */
+
+/**
+ * Toolbar.
+ */
+.toolbar .toolbar-tray-vertical .edit-shortcuts {
+  text-align: right; /* LTR */
+  padding: 1em;
+}
+[dir="rtl"] .toolbar .toolbar-tray-vertical .edit-shortcuts {
+  text-align: left;
+}
+.toolbar .toolbar-tray-horizontal .edit-shortcuts {
+  float: right; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-horizontal .edit-shortcuts {
+  float: left;
+}
+
+/**
+ * Add/remove links.
+ */
+.shortcut-action {
+  display: inline-block;
+  margin-left: 0.3em; /* LTR */
+}
+[dir="rtl"] .shortcut-action {
+  margin-left: 0;
+  margin-right: 0.3em;
+}
+.shortcut-action__message {
+  background: #000000;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  padding: 0 5px;
+  color: #ffffff;
+  display: inline-block;
+  margin-left: 0.3em; /* LTR */
+  opacity: 0;
+  -ms-transform: translateY(-12px);
+  -webkit-transform: translateY(-12px);
+  transform: translateY(-12px);
+  -webkit-transition: all 200ms ease-out;
+  transition: all 200ms ease-out;
+  -ms-backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+[dir="rtl"] .shortcut-action__message {
+  margin-left: 0;
+  margin-right: 0.3em;
+}
+.shortcut-action:hover .shortcut-action__message,
+.shortcut-action:focus .shortcut-action__message {
+  opacity: 1;
+  -ms-transform: translateY(-2px);
+  -webkit-transform: translateY(-2px);
+  transform: translateY(-2px);
+}

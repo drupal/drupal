@@ -1,0 +1,6 @@
+name: 'Test search entity langcode'
+type: module
+description: 'Support module for search module testing.'
+package: Testing
+version: VERSION
+core: 8.x

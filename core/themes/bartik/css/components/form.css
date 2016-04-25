@@ -1,0 +1,282 @@
+/**
+ * @file
+ * Visual styles for Bartik's forms.
+ */
+
+/* Password field. */
+.password-field {
+  margin: 0;
+}
+
+/* Form elements. */
+form {
+  margin: 0;
+  padding: 0;
+}
+fieldset {
+  margin: 1em 0;
+}
+details,
+fieldset,
+.filter-wrapper {
+  border-radius: 4px;
+}
+.filter-wrapper {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.filter-help a {
+  font-size: 0.857em;
+}
+.filter-wrapper .form-item label {
+  margin-right: 10px; /* LTR */
+}
+[dir="rtl"] .filter-wrapper .form-item label {
+  margin-left: 10px;
+  margin-right: 0;
+}
+summary {
+  background: #dbdbdb;
+  color: #3b3b3b;
+  text-shadow: 0 1px 0 #fff;
+}
+details summary a {
+  color: #3b3b3b;
+}
+details summary a:hover,
+details summary a:active,
+details summary a:focus {
+  color: #000;
+}
+details .details-description {
+  font-style: italic;
+}
+label {
+  display: table;
+  font-weight: bold;
+}
+label[for] {
+  cursor: pointer;
+}
+input,
+textarea,
+select {
+  font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
+}
+input {
+  margin: 2px 0;
+  padding: 4px;
+  /* Keep form elements from overflowing their containers. */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+input,
+textarea {
+  font-size: 0.929em;
+}
+
+/**
+ * Make the font slightly bigger in mobile
+ * @todo: check the correct font-size
+ */
+@media screen and (max-width: 60em) { /* 920px */
+  input,
+  textarea {
+    font-size: 16px;
+  }
+}
+textarea {
+  line-height: 1.5;
+}
+textarea.form-textarea,
+select.form-select {
+  padding: 4px;
+}
+input.form-text,
+input.form-tel,
+input.form-email,
+input.form-url,
+input.form-search,
+input.form-file,
+input.form-number,
+input.form-color,
+textarea.form-textarea,
+select.form-select {
+  border: 1px solid #ccc;
+  color: #3b3b3b;
+}
+input.form-submit:hover,
+input.form-submit:focus {
+  background: #dedede;
+}
+.password-suggestions ul li {
+  margin-left: 1.2em; /* LTR */
+}
+[dir="rtl"] .password-suggestions ul li {
+  margin-right: 1.2em;
+  margin-left: 0;
+}
+.form-item label {
+  font-size: 0.929em;
+}
+.form-type-radio label,
+.form-type-checkbox label {
+  margin-left: 4px; /* LTR */
+}
+[dir="rtl"] .form-type-radio label,
+[dir="rtl"] .form-type-checkbox label {
+  margin-right: 4px;
+  margin-left: 0;
+}
+.form-type-radio .description,
+.form-type-checkbox .description {
+  margin-left: 2px; /* LTR */
+}
+[dir="rtl"] .form-type-radio .description,
+[dir="rtl"] .form-type-checkbox .description {
+  margin-right: 2px;
+  margin-left: 0;
+}
+.form-actions {
+  padding-top: 10px;
+}
+
+/* Node Form */
+#edit-body {
+  margin-bottom: 2em;
+}
+.node-form label,
+.node-form .description {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.node-form .form-wrapper {
+  margin-bottom: 2em;
+}
+
+/* Contact Form */
+.contact-form #edit-name {
+  width: 75%;
+  border-radius: 4px;
+}
+.contact-form #edit-mail {
+  width: 75%;
+  border-radius: 4px;
+}
+.contact-form #edit-subject {
+  width: 75%;
+  border-radius: 4px;
+}
+.contact-form #edit-message {
+  width: 76.3%;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+/* Disabled form elements */
+.form-disabled input,
+.form-disabled select,
+.form-disabled textarea {
+  background: #ededed;
+  border-color: #bbb;
+  color: #717171;
+}
+.form-disabled label {
+  color: #717171;
+}
+
+/* Comment form */
+.comment-form label {
+  float: left; /* LTR */
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.929em;
+  width: 120px;
+}
+[dir="rtl"] .comment-form label {
+  float: right;
+}
+.comment-form input,
+.comment-form .form-select {
+  margin: 0;
+  border-radius: 4px;
+}
+.comment-form .form-type-textarea label {
+  float: none;
+}
+.comment-form .form-item,
+.comment-form .form-radios,
+.comment-form .form-type-checkbox,
+.comment-form .form-select {
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.comment-form .form-type-checkbox,
+.comment-form .form-radios {
+  margin-left: 120px; /* LTR */
+}
+[dir="rtl"] .comment-form .form-type-checkbox,
+[dir="rtl"] .comment-form .form-radios,
+[dir="rtl"] .comment-form .form-item .description {
+  margin-left: 0;
+  margin-right: 120px;
+}
+.comment-form .form-type-checkbox label,
+.comment-form .form-radios label {
+  float: none;
+  margin-top: 0;
+}
+.comment-form input.form-file {
+  width: auto;
+}
+.layout-no-sidebars .comment-form .form-text {
+  width: 800px;
+}
+.layout-one-sidebar .comment-form .form-text {
+  width: 500px;
+}
+.layout-two-sidebars .comment-form .form-text {
+  width: 320px;
+}
+.comment-form .form-item .description {
+  font-size: 0.786em;
+  line-height: 1.2;
+  margin-left: 120px; /* LTR */
+}
+.comment-form .form-textarea {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.comment-form details.filter-wrapper .details-wrapper,
+.comment-form .text-format-wrapper .form-item {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.filter-wrapper label {
+  width: auto;
+  float: none;
+}
+.filter-wrapper .form-select {
+  min-width: 120px;
+}
+.comment-form details.filter-wrapper .tips {
+  font-size: 0.786em;
+}
+#comment-body-add-more-wrapper .form-type-textarea label {
+  margin-bottom: 0.4em;
+}
+#edit-actions input {
+  margin-right: 0.6em; /* LTR */
+}
+[dir="rtl"] #edit-actions input {
+  margin-left: 0.6em;
+  margin-right: 0;
+}
+
+/* Form error styles. */
+.form-item textarea.error + .cke {
+  border: 2px solid red;
+}
+
+/* Form error message styles. */
+.form-item--error-message {
+  color: #e32700;
+}

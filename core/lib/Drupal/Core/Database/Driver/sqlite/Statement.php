@@ -1,30 +1,23 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Database\Driver\sqlite\Statement
- */
-
 namespace Drupal\Core\Database\Driver\sqlite;
 
 use Drupal\Core\Database\StatementPrefetch;
 use Drupal\Core\Database\StatementInterface;
 
-use Iterator;
-use PDOException;
-
 /**
- * Specific SQLite implementation of DatabaseConnection.
+ * SQLite implementation of \Drupal\Core\Database\Statement.
  *
- * See DatabaseConnection_sqlite::PDOPrepare() for reasons why we must prefetch
- * the data instead of using PDOStatement.
- *
- * @see DatabaseConnection_sqlite::PDOPrepare()
+ * The PDO SQLite driver only closes SELECT statements when the PDOStatement
+ * destructor is called and SQLite does not allow data change (INSERT,
+ * UPDATE etc) on a table which has open SELECT statements. This is a
+ * user-space mock of PDOStatement that buffers all the data and doesn't
+ * have those limitations.
  */
-class Statement extends StatementPrefetch implements Iterator, StatementInterface {
+class Statement extends StatementPrefetch implements StatementInterface {
 
   /**
-   * SQLite specific implementation of getStatement().
+   * {@inheritdoc}
    *
    * The PDO SQLite layer doesn't replace numeric placeholders in queries
    * correctly, and this makes numeric expressions (such as COUNT(*) >= :count)
@@ -86,14 +79,17 @@ class Statement extends StatementPrefetch implements Iterator, StatementInterfac
       }
     }
 
-    return $this->dbh->PDOPrepare($query);
+    return $this->pdoConnection->prepare($query);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute($args = array(), $options = array()) {
     try {
       $return = parent::execute($args, $options);
     }
-    catch (PDOException $e) {
+    catch (\PDOException $e) {
       if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 17) {
         // The schema has changed. SQLite specifies that we must resend the query.
         $return = parent::execute($args, $options);

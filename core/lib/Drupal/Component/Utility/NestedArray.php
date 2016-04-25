@@ -1,14 +1,11 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\Component\Utility\NestedArray.
- */
-
 namespace Drupal\Component\Utility;
 
 /**
  * Provides helpers to perform operations on nested arrays and array keys of variable depth.
+ *
+ * @ingroup utility
  */
 class NestedArray {
 
@@ -32,15 +29,15 @@ class NestedArray {
    * $value = NestedArray::getValue($form, $parents);
    * @endcode
    *
-   * The return value will be NULL, regardless of whether the actual value is
-   * NULL or whether the requested key does not exist. If it is required to know
-   * whether the nested array key actually exists, pass a third argument that is
-   * altered by reference:
+   * A return value of NULL is ambiguous, and can mean either that the requested
+   * key does not exist, or that the actual value is NULL. If it is required to
+   * know whether the nested array key actually exists, pass a third argument
+   * that is altered by reference:
    * @code
    * $key_exists = NULL;
    * $value = NestedArray::getValue($form, $parents, $key_exists);
    * if ($key_exists) {
-   *   // ... do something with $value ...
+   *   // Do something with $value.
    * }
    * @endcode
    *
@@ -289,10 +286,6 @@ class NestedArray {
    * @param array ...
    *   Arrays to merge.
    *
-   * @param bool $preserve_integer_keys
-   *   (optional) If given, integer keys will be preserved and merged instead of
-   *   appended.
-   *
    * @return array
    *   The merged array.
    *
@@ -317,6 +310,15 @@ class NestedArray {
    * - call_user_func_array('NestedArray::mergeDeep', $arrays_to_merge);
    * - NestedArray::mergeDeepArray($arrays_to_merge);
    *
+   * @param array $arrays
+   *   An arrays of arrays to merge.
+   * @param bool $preserve_integer_keys
+   *   (optional) If given, integer keys will be preserved and merged instead of
+   *   appended. Defaults to FALSE.
+   *
+   * @return array
+   *   The merged array.
+   *
    * @see NestedArray::mergeDeep()
    */
   public static function mergeDeepArray(array $arrays, $preserve_integer_keys = FALSE) {
@@ -340,6 +342,28 @@ class NestedArray {
       }
     }
     return $result;
+  }
+
+  /**
+   * Filters a nested array recursively.
+   *
+   * @param array $array
+   *   The filtered nested array.
+   * @param callable|NULL $callable
+   *   The callable to apply for filtering.
+   *
+   * @return array
+   *   The filtered array.
+   */
+  public static function filter(array $array, callable $callable = NULL) {
+    $array = is_callable($callable) ? array_filter($array, $callable) : array_filter($array);
+    foreach ($array as &$element) {
+      if (is_array($element)) {
+        $element = static::filter($element, $callable);
+      }
+    }
+
+    return $array;
   }
 
 }

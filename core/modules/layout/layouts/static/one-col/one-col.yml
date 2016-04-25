@@ -1,7 +1,0 @@
-title: One column
-category: Columns: 1
-template: one-col
-regions:
-  content:
-    label: Middle column
-    type: content

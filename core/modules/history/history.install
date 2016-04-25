@@ -5,6 +5,8 @@
  * Installation functions for History module.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_schema().
  */
@@ -21,6 +23,7 @@ function history_schema() {
       'nid' => array(
         'description' => 'The {node}.nid that was read.',
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -39,3 +42,59 @@ function history_schema() {
 
   return $schema;
 }
+
+/**
+ * @defgroup updates-8.0.x-to-8.1.x Updates from 8.0.x to 8.1.x
+ * @{
+ * Update functions from 8.0.x to 8.1.x.
+ */
+
+/**
+ * Change {history}.nid to an unsigned int in order to match {node}.nid.
+ */
+function history_update_8101() {
+  $schema = Database::getConnection()->schema();
+  $schema->dropPrimaryKey('history');
+  $schema->dropIndex('history', 'nid');
+  $schema->changeField('history', 'nid', 'nid', array(
+    'description' => 'The {node}.nid that was read.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ));
+  $schema->addPrimaryKey('history', array('uid', 'nid'));
+  $spec = array(
+    'description' => 'A record of which {users} have read which {node}s.',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'The {users}.uid that read the {node} nid.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => 'The {node}.nid that was read.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'description' => 'The Unix timestamp at which the read occurred.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uid', 'nid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+    ),
+  );
+  $schema->addIndex('history', 'nid', array('nid'), $spec);
+}
+
+/**
+ * @} End of "defgroup updates-8.0.x-to-8.1.x".
+ */

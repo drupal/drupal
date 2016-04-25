@@ -1,0 +1,9 @@
+name: 'Views Entity Test'
+type: module
+description: 'Provides base fields for views tests of entity_test entity type.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - views
+  - entity_test

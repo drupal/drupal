@@ -1,7 +1,0 @@
-name = Locale
-description = Provides user interface translation to languages other than English.
-package = Core
-version = VERSION
-core = 8.x
-dependencies[] = language
-dependencies[] = file

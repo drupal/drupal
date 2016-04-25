@@ -1,0 +1,10 @@
+name: 'Text Editor'
+type: module
+description: 'Provides a means to associate text formats with text editor libraries such as WYSIWYGs or toolbars.'
+package: Core
+version: VERSION
+core: 8.x
+dependencies:
+  - filter
+  - file
+configure: filter.admin_overview

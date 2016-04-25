@@ -1,0 +1,40 @@
+path.delete:
+  path: '/admin/config/search/path/delete/{pid}'
+  defaults:
+    _form: '\Drupal\path\Form\DeleteForm'
+    _title: 'Delete alias'
+  requirements:
+    _permission: 'administer url aliases'
+
+path.admin_overview:
+  path: '/admin/config/search/path'
+  defaults:
+    _title: 'URL aliases'
+    _controller: '\Drupal\path\Controller\PathController::adminOverview'
+    keys: NULL
+  requirements:
+    _permission: 'administer url aliases'
+
+path.admin_overview_filter:
+  path: '/admin/config/search/path/filter'
+  defaults:
+    _title: 'URL aliases'
+    _controller: '\Drupal\path\Controller\PathController::adminOverview'
+  requirements:
+    _permission: 'administer url aliases'
+
+path.admin_add:
+  path: '/admin/config/search/path/add'
+  defaults:
+    _title: 'Add alias'
+    _form: '\Drupal\path\Form\AddForm'
+  requirements:
+    _permission: 'administer url aliases'
+
+path.admin_edit:
+  path: '/admin/config/search/path/edit/{pid}'
+  defaults:
+    _title: 'Edit alias'
+    _form: '\Drupal\path\Form\EditForm'
+  requirements:
+    _permission: 'administer url aliases'

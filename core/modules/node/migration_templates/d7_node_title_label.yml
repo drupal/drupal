@@ -1,0 +1,19 @@
+id: d7_node_title_label
+label: Node title label
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_node_type
+  constants:
+    entity_type: node
+    field_name: title
+process:
+  entity_type: 'constants/entity_type'
+  bundle: type
+  field_name: 'constants/field_name'
+  label: title_label
+destination:
+  plugin: entity:base_field_override
+migration_dependencies:
+  required:
+    - d7_node_type

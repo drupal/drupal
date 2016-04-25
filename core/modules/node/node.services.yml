@@ -1,0 +1,52 @@
+services:
+  node.route_subscriber:
+    class: Drupal\node\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  node.grant_storage:
+    class: Drupal\node\NodeGrantDatabaseStorage
+    arguments: ['@database', '@module_handler', '@language_manager']
+    tags:
+      - { name: backend_overridable }
+  access_check.node.revision:
+    class: Drupal\node\Access\NodeRevisionAccessCheck
+    arguments: ['@entity.manager']
+    tags:
+      - { name: access_check, applies_to: _access_node_revision }
+  access_check.node.add:
+    class: Drupal\node\Access\NodeAddAccessCheck
+    arguments: ['@entity.manager']
+    tags:
+      - { name: access_check, applies_to: _node_add_access }
+  access_check.node.preview:
+    class: Drupal\node\Access\NodePreviewAccessCheck
+    arguments: ['@entity.manager']
+    tags:
+      - { name: access_check, applies_to: _node_preview_access }
+  node.admin_path.route_subscriber:
+    class: Drupal\node\EventSubscriber\NodeAdminRouteSubscriber
+    arguments: ['@config.factory']
+    tags:
+      - { name: event_subscriber }
+  node_preview:
+    class: Drupal\node\ParamConverter\NodePreviewConverter
+    arguments: ['@user.private_tempstore']
+    tags:
+      - { name: paramconverter }
+    lazy: true
+  node.page_cache_response_policy.deny_node_preview:
+    class: Drupal\node\PageCache\DenyNodePreview
+    arguments: ['@current_route_match']
+    public: false
+    tags:
+      - { name: page_cache_response_policy }
+  cache_context.user.node_grants:
+    class: Drupal\node\Cache\NodeAccessGrantsCacheContext
+    arguments: ['@current_user']
+    tags:
+      - { name: cache.context }
+  node.node_route_context:
+    class: Drupal\node\ContextProvider\NodeRouteContext
+    arguments: ['@current_route_match']
+    tags:
+      - { name: 'context_provider' }

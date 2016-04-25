@@ -1,0 +1,13 @@
+name: Forum
+type: module
+description: 'Provides discussion forums.'
+dependencies:
+  - node
+  - history
+  - taxonomy
+  - comment
+  - options
+package: Core
+version: VERSION
+core: 8.x
+configure: forum.overview

@@ -1,0 +1,8 @@
+id: third_party
+label: Default
+weight: 0
+protected_property: Default
+third_party_settings:
+  config_schema_test:
+    integer: 1
+    string: 'string'

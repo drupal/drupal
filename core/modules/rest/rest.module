@@ -5,68 +5,25 @@
  * RESTful web services module.
  */
 
-/**
- * Implements hook_menu().
- *
- * @todo for now we use this hook for our admin page until
- * http://drupal.org/node/1801570 is sorted out.
- */
-function rest_menu() {
-  $items['admin/config/services/rest'] = array(
-    'title' => 'RESTful web services',
-    'description' => 'Configure resources and entities that are exposed as web API.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('rest_admin_form'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'rest.admin.inc',
-  );
-  return $items;
-}
-
-/**
- * Implements hook_permission().
- */
-function rest_permission() {
-  $permissions = array();
-  if (drupal_container()->has('plugin.manager.rest')) {
-    $manager = drupal_container()->get('plugin.manager.rest');
-    $resources = config('rest')->get('resources');
-    if ($resources && $enabled = array_intersect_key($manager->getDefinitions(), $resources)) {
-      foreach ($enabled as $key => $resource) {
-        $plugin = $manager->getInstance(array('id' => $key));
-        $permissions = array_merge($permissions, $plugin->permissions());
-      }
-    }
-  }
-  return $permissions;
-}
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function rest_help($path, $arg) {
-  switch ($path) {
-    // Main module help for the REST module
-    case 'admin/help#rest':
+function rest_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.rest':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The REST module provides a framework for exposing Drupal\'s data structures as RESTful web services. It can be used to read and write resources remotely, such as entity types like nodes or users. For more information, see the online handbook entry for the <a href="@rest">RESTful web services module</a>.', array('@rest' => 'http://drupal.org/documentation/modules/rest')) . '</p>';
+      $output .= '<p>' . t('The RESTful Web Services module provides a framework for exposing REST resources on your site. It provides support for content entities (see the <a href=":field">Field module help page</a> for more information about entities) such as content, users, taxonomy terms, etc.; REST support for content items of the Node module is enabled by default, and support for other types of content entities can be enabled. Other modules may add support for other types of REST resources. For more information, see the <a href=":rest">online documentation for the RESTful Web Services module</a>.', array(':rest' => 'https://www.drupal.org/documentation/modules/rest', ':field' => (\Drupal::moduleHandler()->moduleExists('field')) ? \Drupal::url('help.page', array('name' => 'field')) : '#')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Exposing resources') . '</dt>';
-      $output .= '<dd>' . t('Visit the <a href="@admin-rest">configuration page</a> to display a list of available resources and to enable them individually.', array('@admin-rest' => url('admin/config/services/rest'))) . '</dd>';
-      $output .= '</dl>';
-      $output .= '<dl>';
-      $output .= '<dt>' . t('Granting permissions') . '</dt>';
-      $output .= '<dd>' . t('The <a href="@permission-rest">permissions page</a> allows you to determine what user roles may access a web service operation.', array('@permission-rest' => url('admin/people/permissions', array('fragment' => 'module-rest')))) . '</dd>';
+      $output .= '<dt>' . t('Installing supporting modules') . '</dt>';
+      $output .= '<dd>' . t('In order to use REST on a web site, you need to install modules that provide serialization and authentication services. You can use the Core module <a href=":hal">HAL</a> for serialization and <a href=":basic_auth">HTTP Basic Authentication</a> for authentication, or install a contributed or custom module.', array(':hal' => (\Drupal::moduleHandler()->moduleExists('hal')) ? \Drupal::url('help.page', array('name' => 'hal')) : '#', ':basic_auth' => (\Drupal::moduleHandler()->moduleExists('basic_auth')) ? \Drupal::url('help.page', array('name' => 'basic_auth')) : '#')) . '</dd>';
+      $output .= '<dt>' . t('Enabling REST support for an entity type') . '</dt>';
+      $output .= '<dd>' . t('REST support for content items of the Node module is enabled by default, and support for other types of content entities can be enabled. To enable support, you can use a <a href=":config">process based on configuration editing</a> or the contributed <a href=":restui">Rest UI module</a>.', array(':config' => 'https://www.drupal.org/documentation/modules/rest', ':restui' => 'https://www.drupal.org/project/restui')) . '</dd>';
+      $output .= '<dd>' . t('You will also need to grant anonymous users permission to perform each of the REST operations you want to be available, and set up authentication properly to authorize web requests.') . '</dd>';
       $output .= '</dl>';
       return $output;
-
-    case 'admin/config/services/rest':
-      global $base_url;
-      return '<p>' . t('This page allows you to expose resources as RESTful web API. That enables external third parties to interact with your Drupal installation via a machine readable interface. All entity types are available for such operations while contributed modules can provide more.') . '</p>' .
-        '<p>' . t('Example: when enabled, the node resource is avialable at the path <code>/entity/node/{id}</code> and a HTTP DELETE request can be used to delete a node. Testing on the command line with cURL (deletes node 5, make sure to replace the node ID accordingly):') . '</p>' .
-        '<p><code>curl --include --request DELETE --cookie ' . session_name() . '=' . session_id() . ' ' . $base_url . base_path() . 'entity/node/5</code>' .
-        '<p>' . t('Note: Session information of the current user is shown here, make sure that you have the <a href="@permissions">permission to use the web API</a> to delete nodes.', array('@permissions' => url('admin/people/permissions', array('fragment' => 'module-rest')))) . '</p>';
   }
 }

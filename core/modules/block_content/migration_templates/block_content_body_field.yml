@@ -1,0 +1,32 @@
+id: block_content_body_field
+label: Block content body field configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: embedded_data
+  data_rows:
+    -
+      entity_type: block_content
+      bundle: basic
+      field_name: body
+      label: Body
+      display_summary: false
+  ids:
+    entity_type:
+      type: string
+    bundle:
+      type: string
+    field_name:
+      type: string
+process:
+  entity_type: entity_type
+  bundle: bundle
+  field_name: field_name
+  label: label
+  'settings/display_summary': display_summary
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - block_content_type

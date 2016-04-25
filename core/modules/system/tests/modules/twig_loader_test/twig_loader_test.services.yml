@@ -1,0 +1,5 @@
+services:
+  twig_loader_test.twig.test_loader:
+    class: Drupal\twig_loader_test\Loader\TestLoader
+    tags:
+      - { name: twig.loader }

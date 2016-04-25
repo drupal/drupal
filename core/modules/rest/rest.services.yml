@@ -1,0 +1,32 @@
+services:
+  plugin.manager.rest:
+    class: Drupal\rest\Plugin\Type\ResourcePluginManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  cache.rest:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [rest]
+  access_check.rest.csrf:
+    class: Drupal\rest\Access\CSRFAccessCheck
+    arguments: ['@session_configuration']
+    tags:
+      - { name: access_check }
+  rest.link_manager:
+    class: Drupal\rest\LinkManager\LinkManager
+    arguments: ['@rest.link_manager.type', '@rest.link_manager.relation']
+  rest.link_manager.type:
+    class: Drupal\rest\LinkManager\TypeLinkManager
+    arguments: ['@cache.default', '@module_handler', '@config.factory', '@request_stack']
+  rest.link_manager.relation:
+    class: Drupal\rest\LinkManager\RelationLinkManager
+    arguments: ['@cache.default', '@entity.manager', '@module_handler', '@config.factory', '@request_stack']
+  rest.resource_routes:
+    class: Drupal\rest\Routing\ResourceRoutes
+    arguments: ['@plugin.manager.rest', '@config.factory', '@logger.channel.rest']
+    tags:
+      - { name: 'event_subscriber' }
+  logger.channel.rest:
+    parent: logger.channel_base
+    arguments: ['rest']

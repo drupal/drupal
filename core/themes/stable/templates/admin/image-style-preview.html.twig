@@ -1,0 +1,55 @@
+{#
+/**
+ * @file
+ * Theme override to display a preview of an image style.
+ *
+ * Available variables:
+ * - style_id: The ID of the image style.
+ * - style_name: The name of the image style.
+ * - cache_bypass: A timestamp token used to avoid browser caching of images.
+ * - original: An associative array containing:
+ *   - url: The URL of the original image.
+ *   - width: The width in pixels of the original image.
+ *   - height: The height in pixels of the original image.
+ *   - rendered: The render array for the original image.
+ * - derivative: An associative array containing:
+ *   - url: The URL of the derivative image.
+ *   - width: The width in pixels of the derivative image.
+ *   - height: The height in pixels of the derivative image.
+ *   - rendered:  The rendered derivative image.
+ * - preview: An associative array containing:
+ *   - original: An associative array containing:
+ *     - width: The width in pixels of the original image in the preview.
+ *     - height: The height in pixels of the original image in the preview.
+ *   - derivative: An associative array containing:
+ *     - width: The width in pixels of the derivative image in the preview.
+ *     - height: The height in pixels of the derivative image in the preview.
+ *
+ * @see template_preprocess_image_style_preview()
+ */
+#}
+<div class="image-style-preview preview clearfix">
+  {# Preview of the original image. #}
+  <div class="preview-image-wrapper">
+      {{ 'original'|t }} (<a href="{{ original.url }}">{{ 'view actual size'|t }}</a>)
+      <div class="preview-image original-image" style="width: {{ preview.original.width }}px; height: {{ preview.original.height }}px;">
+        <a href="{{ original.url }}">
+          {{ original.rendered }}
+        </a>
+      <div class="height" style="height: {{ preview.original.height }}px"><span>{{ original.height }}px</span></div>
+      <div class="width" style="width: {{ preview.original.width }}px"><span>{{ original.width }}px</span></div>
+    </div>
+  </div>
+
+  {# Derivative of the image style. #}
+  <div class="preview-image-wrapper">
+    {{ style_name }} (<a href="{{ derivative.url }}?{{ cache_bypass }}">{{ 'view actual size'|t }}</a>)
+    <div class="preview-image modified-image" style="width: {{ preview.derivative.width }}px; height: {{ preview.derivative.height }}px;">
+      <a href="{{ derivative.url }}?{{ cache_bypass }}">
+        {{ derivative.rendered }}
+      </a>
+      <div class="height" style="height: {{ preview.derivative.height }}px"><span>{{ derivative.height }}px</span></div>
+      <div class="width" style="width: {{ preview.derivative.width }}px"><span>{{ derivative.width }}px</span></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+services:
+  access_check.contact_personal:
+    class: Drupal\contact\Access\ContactPageAccess
+    tags:
+      - { name: access_check, applies_to: _access_contact_personal_tab }
+    arguments: ['@config.factory', '@user.data']
+  contact.mail_handler:
+    class: Drupal\contact\MailHandler
+    arguments: ['@plugin.manager.mail', '@language_manager', '@logger.channel.contact', '@string_translation', '@entity.manager']
+  logger.channel.contact:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory: logger.factory:get
+    arguments: ['contact']

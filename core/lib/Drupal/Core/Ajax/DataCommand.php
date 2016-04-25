@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Ajax\DataCommand.
- */
-
 namespace Drupal\Core\Ajax;
-
-use Drupal\Core\Ajax\CommandInterface;
 
 /**
  * An AJAX command for implementing jQuery's data() method.
@@ -15,8 +8,10 @@ use Drupal\Core\Ajax\CommandInterface;
  * This instructs the client to attach the name=value pair of data to the
  * selector via jQuery's data cache.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.data() defined
+ * This command is implemented by Drupal.AjaxCommands.prototype.data() defined
  * in misc/ajax.js.
+ *
+ * @ingroup ajax
  */
 class DataCommand implements CommandInterface {
 
@@ -38,7 +33,7 @@ class DataCommand implements CommandInterface {
   protected $name;
 
   /**
-   * The value of the data to be atached to elements matched by the selector.
+   * The value of the data to be attached to elements matched by the selector.
    *
    * The data is not limited to strings; it can be any format.
    *

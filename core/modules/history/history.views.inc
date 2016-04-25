@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Provide views data and handlers for history.module.
- *
- * @ingroup views_module_handlers
+ * Provide views data for history.module.
  */
 
 /**
@@ -21,7 +19,7 @@ function history_views_data() {
   // Explain how this table joins to others.
   $data['history']['table']['join'] = array(
      // Directly links to node table.
-    'node' => array(
+    'node_field_data' => array(
       'table' => 'history',
       'left_field' => 'nid',
       'field' => 'nid',
@@ -34,12 +32,12 @@ function history_views_data() {
   $data['history']['timestamp'] = array(
     'title' => t('Has new content'),
     'field' => array(
-      'id' => 'node_history_user_timestamp',
+      'id' => 'history_user_timestamp',
       'help' => t('Show a marker if the content is new or updated.'),
     ),
     'filter' => array(
       'help' => t('Show only content that is new or updated.'),
-      'id' => 'node_history_user_timestamp',
+      'id' => 'history_user_timestamp',
     ),
   );
 

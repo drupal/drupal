@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a marker for new or updated content.
+ *
+ * Available variables:
+ * - status: Number representing the marker status to display. Use the constants
+ *   below for comparison:
+ *   - MARK_NEW
+ *   - MARK_UPDATED
+ *   - MARK_READ
+ *
+ * @ingroup themeable
+ */
+#}
+{% if logged_in %}
+  {% if status is constant('MARK_NEW') %}
+    {{ 'New'|t }}
+  {% elseif status is constant('MARK_UPDATED') %}
+    {{ 'Updated'|t }}
+  {% endif %}
+{% endif %}

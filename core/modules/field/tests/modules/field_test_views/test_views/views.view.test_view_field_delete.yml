@@ -1,0 +1,52 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+  config:
+    - field.storage.node.field_test
+id: test_view_field_delete
+label: test_view_field_delete
+module: views
+description: ''
+tag: default
+base_table: node
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      fields:
+        nid:
+          field: nid
+          id: nid
+          table: node
+          plugin_id: field
+          entity_type: node
+          entity_field: nid
+        field_test:
+          id: field_test
+          table: node__field_test
+          field: field_test
+          plugin_id: field
+          entity_type: node
+          entity_field: field_test
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      query:
+        type: views_query
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

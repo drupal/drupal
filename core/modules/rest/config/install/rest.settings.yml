@@ -1,0 +1,50 @@
+# Enable all methods on nodes.
+# You must install Hal and Basic_auth modules for this to work. Also, if you are
+# going to use Basic_auth in a production environment then you should consider
+# setting up SSL.
+# There are alternatives to Basic_auth in contrib such as OAuth module.
+resources:
+  entity:node:
+    GET:
+      supported_formats:
+        - hal_json
+      supported_auth:
+        - basic_auth
+    POST:
+      supported_formats:
+        - hal_json
+      supported_auth:
+        - basic_auth
+    PATCH:
+      supported_formats:
+        - hal_json
+      supported_auth:
+        - basic_auth
+    DELETE:
+      supported_formats:
+        - hal_json
+      supported_auth:
+        - basic_auth
+
+# Multiple formats and multiple authentication providers can be defined for a
+# resource:
+#
+# resources:
+#   entity:node:
+#     GET:
+#       supported_formats:
+#         - json
+#         - hal_json
+#         - xml
+#       supported_auth:
+#         - cookie
+#         - basic_auth
+#
+# hal_json is the only format supported for POST and PATCH methods.
+#
+# The full documentation is located at
+# https://www.drupal.org/documentation/modules/rest.
+
+# Set the domain for REST type and relation links.
+# If left blank, the site's domain will be used.
+link_domain: ~

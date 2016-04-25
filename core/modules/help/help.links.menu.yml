@@ -1,0 +1,6 @@
+help.main:
+  title: Help
+  description: 'Reference for usage, configuration, and modules.'
+  route_name: help.main
+  weight: 9
+  parent: system.admin

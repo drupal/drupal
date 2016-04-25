@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Ajax\InvokeCommand.
- */
-
 namespace Drupal\Core\Ajax;
-
-use Drupal\Core\Ajax\CommandInterface;
 
 /**
  * AJAX command for invoking an arbitrary jQuery method.
@@ -17,8 +10,10 @@ use Drupal\Core\Ajax\CommandInterface;
  * selector. Intended for simple jQuery commands, such as attr(), addClass(),
  * removeClass(), toggleClass(), etc.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.invoke()
+ * This command is implemented by Drupal.AjaxCommands.prototype.invoke()
  * defined in misc/ajax.js.
+ *
+ * @ingroup ajax
  */
 class InvokeCommand implements CommandInterface {
 

@@ -1,0 +1,6 @@
+path.admin_overview:
+  title: 'URL aliases'
+  description: 'Add custom URLs to existing paths.'
+  route_name: path.admin_overview
+  parent: system.admin_config_search
+  weight: -5

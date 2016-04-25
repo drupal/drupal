@@ -1,0 +1,260 @@
+/**
+ * @file toolbar.module.css
+ *
+ *
+ * Aggressive resets so we can achieve a consistent look in hostile CSS
+ * environments.
+ */
+#toolbar-administration,
+#toolbar-administration * {
+  box-sizing: border-box;
+}
+#toolbar-administration {
+  font-size: small;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+@media print {
+  #toolbar-administration {
+    display: none;
+  }
+}
+
+/**
+ * Very specific overrides for Drupal system CSS.
+ */
+.toolbar li,
+.toolbar .item-list,
+.toolbar .item-list li,
+.toolbar .menu-item,
+.toolbar .menu-item--expanded {
+  list-style-type: none;
+  list-style-image: none;
+}
+.toolbar .menu-item {
+  padding-top: 0;
+}
+.toolbar .toolbar-bar .toolbar-tab,
+.toolbar .menu-item {
+  display: block;
+}
+.toolbar .toolbar-bar .toolbar-tab.hidden {
+  display: none;
+}
+.toolbar a {
+  display: block;
+  line-height: 1;
+}
+
+/**
+ * Administration menu.
+ */
+.toolbar .toolbar-bar,
+.toolbar .toolbar-tray {
+  position: relative;
+  z-index: 1250;
+}
+/* Position the admin toolbar absolutely when the configured standard breakpoint
+ * is active. The toolbar container, that contains the bar and the trays, is
+ * position absolutely so that it scrolls with the page. Otherwise, on smaller
+ * screens, the components of the admin toolbar are positioned statically. */
+body.toolbar-fixed .toolbar-oriented,
+.toolbar-oriented .toolbar-bar,
+.toolbar-oriented .toolbar-tray {
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+/* Layer the bar just above the trays and above contextual link triggers. */
+.toolbar-oriented .toolbar-bar {
+  z-index: 502;
+}
+/* Position the admin toolbar fixed when the configured standard breakpoint is
+ * active. */
+body.toolbar-fixed .toolbar-oriented .toolbar-bar {
+  position: fixed;
+}
+/* When the configured narrow breakpoint is active, the toolbar is sized to wrap
+ * around the trays in order to provide a context for scrolling tray content
+ * that is taller than the viewport. */
+body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
+  bottom: 0;
+  width: 240px;
+  width: 15rem;
+}
+/* Present the admin toolbar tabs horizontally as a default on user agents that
+ * do not understand media queries or on user agents where JavaScript is
+ * disabled. */
+.toolbar .toolbar-bar .toolbar-tab,
+.toolbar .toolbar-tray-horizontal li {
+  float: left; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
+[dir="rtl"] .toolbar .toolbar-tray-horizontal li {
+  float: right;
+}
+/* Present the admin toolbar tabs vertically by default on user agents that
+ * that understand media queries. This will be the small screen default. */
+@media only screen {
+  .toolbar .toolbar-bar .toolbar-tab,
+  .toolbar .toolbar-tray-horizontal li {
+    float: none; /* LTR */
+  }
+  [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
+  [dir="rtl"] .toolbar .toolbar-tray-horizontal li {
+    float: none;
+  }
+}
+/* This min-width media query is meant to provide basic horizontal layout to
+ * the main menu tabs when JavaScript is disabled on user agents that understand
+ * media queries. */
+@media (min-width:16.5em) {
+  .toolbar .toolbar-bar .toolbar-tab,
+  .toolbar .toolbar-tray-horizontal li {
+    float: left; /* LTR */
+  }
+  [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
+  [dir="rtl"] .toolbar .toolbar-tray-horizontal li {
+    float: right;
+  }
+}
+/* Present the admin toolbar tabs horizontally when the configured narrow
+ * breakpoint is active. */
+.toolbar-oriented .toolbar-bar .toolbar-tab,
+.toolbar-oriented .toolbar-tray-horizontal li {
+  float: left; /* LTR */
+}
+[dir="rtl"] .toolbar-oriented .toolbar-bar .toolbar-tab,
+[dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal li {
+  float: right;
+}
+
+/**
+ * Toolbar tray.
+ */
+.toolbar .toolbar-tray {
+  display: none;
+  z-index: 501;
+}
+.toolbar-oriented .toolbar-tray-vertical {
+  left: -100%; /* LTR */
+  position: absolute;
+  width: 240px;
+  width: 15rem;
+}
+[dir="rtl"] .toolbar-oriented .toolbar-tray-vertical {
+  left: auto;
+  right: -100%;
+}
+.toolbar .toolbar-tray-vertical > .toolbar-lining {
+  min-height: 100%;
+}
+.toolbar .toolbar-tray-vertical > .toolbar-lining:before {
+  width: 100%;
+}
+.toolbar-oriented .toolbar-tray-vertical > .toolbar-lining:before {
+  bottom: 0;
+  content: '';
+  display: block;
+  left: 0; /* LTR */
+  position: fixed;
+  top: 0;
+  width: 240px;
+  width: 14rem;
+  z-index: -1;
+}
+[dir="rtl"] .toolbar .toolbar-tray-vertical > .toolbar-lining:before {
+  left: auto;
+  right: 0;
+}
+/* Layer the links just above the toolbar-tray. */
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon{
+  position: relative;
+  z-index: 502;
+}
+/* Hide secondary menus when the tray is horizontal. */
+.toolbar-oriented .toolbar-tray-horizontal .menu-item ul {
+  display: none;
+}
+/* When the configured standard breakpoint is active and the tray is in a
+ * horizontal position, the tray is fixed to the top of the viewport and does
+ * not scroll with the page contents. */
+body.toolbar-fixed .toolbar .toolbar-tray-horizontal {
+  position: fixed;
+}
+/* When the configured standard breakpoint is active and the tray is in a
+ * vertical position, the tray does not scroll with the page. The contents of
+ * the tray scroll within the confines of the viewport. */
+.toolbar .toolbar-tray-vertical.is-active,
+body.toolbar-fixed .toolbar .toolbar-tray-vertical {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: fixed;
+}
+.toolbar .toolbar-tray.is-active {
+  display: block;
+}
+/* Bring the tray into the viewport. By default it is just off-screen. */
+.toolbar-oriented .toolbar-tray-vertical.is-active {
+  left: 0; /* LTR */
+}
+[dir="rtl"] .toolbar-oriented .toolbar-tray-vertical.is-active {
+  left: auto;
+  right: 0;
+}
+/* When the configured standard breakpoint is active, the tray appears to push
+ * the page content away from the edge of the viewport. */
+body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+  margin-left: 240px; /* LTR */
+  margin-left: 15rem; /* LTR */
+}
+@media print {
+  body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+    margin-left: 0;
+  }
+}
+[dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+  margin-left: auto;
+  margin-left: auto;
+  margin-right: 240px;
+  margin-right: 15rem;
+}
+@media print {
+  [dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+    margin-right: 0;
+  }
+}
+/**
+ * ToolBar tray orientation toggle.
+ */
+/* Hide the orientation toggle when the configured narrow breakpoint is not
+ * active. */
+.toolbar .toolbar-tray .toolbar-toggle-orientation {
+  display: none;
+}
+/* Show the orientation toggle when the configured narrow breakpoint is
+ * active. */
+.toolbar-oriented .toolbar-tray .toolbar-toggle-orientation {
+  display: block;
+}
+.toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
+  bottom: 0;
+  position: absolute;
+  right: 0; /* LTR */
+  top: auto;
+}
+[dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
+  left: 0;
+  right: auto;
+}
+.toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
+  float: right; /* LTR */
+  width: 100%;
+}
+[dir="rtl"] .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
+  float: left;
+}

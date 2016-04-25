@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Help Page Test module to test the help page.
+ */
+
+use \Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function help_page_test_help($route_name, RouteMatchInterface $route_match) {
+
+  switch ($route_name) {
+    case 'help.page.help_page_test':
+      // Make the help text conform to core standards. See
+      // \Drupal\system\Tests\Module\InstallUninstallTest::assertHelp().
+      return t('Read the <a href=":url">online documentation for the Help Page Test module</a>.', [':url' => 'http://www.example.com']);
+    case 'help_page_test.has_help':
+      return t('I have help!');
+  }
+
+  // Ensure that hook_help() can return an empty string and not cause the block
+  // to display.
+  return '';
+}

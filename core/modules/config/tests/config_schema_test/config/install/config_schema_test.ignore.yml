@@ -1,0 +1,9 @@
+label: 'Label string'
+irrelevant: 123
+indescribable:
+  abc: 789
+  def:
+   - 456
+   - 'abc'
+  xyz: 13.4
+weight: 27

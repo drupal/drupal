@@ -1,0 +1,17 @@
+# Schema for the configuration files of the Editor test module.
+
+editor.settings.unicorn:
+  type: mapping
+  label: 'Unicorn settings'
+  mapping:
+    ponies_too:
+      type: boolean
+      label: 'Ponies too'
+
+editor.settings.trex:
+  type: mapping
+  label: 'T-Rex settings'
+  mapping:
+    stumpy_arms:
+      type: boolean
+      label: 'Stumpy arms'

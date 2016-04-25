@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Provides hook implementations for testing purposes.
+ */
+
+/**
+ * Implements hook_ENTITY_TYPE_create.
+ */
+function config_install_dependency_test_config_test_create(\Drupal\Core\Entity\EntityInterface $entity) {
+  // Add an enforced dependency on this module so that we can test if this is
+  // possible during module installation.
+  $entity->setEnforcedDependencies(['module' => ['config_install_dependency_test']]);
+}

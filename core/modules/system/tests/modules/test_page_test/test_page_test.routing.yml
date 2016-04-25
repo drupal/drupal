@@ -1,0 +1,60 @@
+test_page_test.test_page:
+  path: '/test-page'
+  defaults:
+    _title: 'Test front page'
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.render_title:
+  path: '/test-render-title'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::renderTitle'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.static_title:
+  path: '/test-page-static-title'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::staticTitle'
+    _title: 'Static title'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.cached_controller:
+  path: '/test-page-cached-controller'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::controllerWithCache'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.dynamic_title:
+  path: '/test-page-dynamic-title'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::staticTitle'
+    _title_callback: 'Drupal\test_page_test\Controller\Test::dynamicTitle'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.admin_render_title:
+  path: '/admin/test-render-title'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::renderTitle'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.http_response_exception:
+  path: '/test-http-response-exception/{code}'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::httpResponseException'
+    code: 200
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.error:
+  path: '/test-error'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::error'
+    code: 200
+  requirements:
+    _access: 'TRUE'

@@ -1,0 +1,9 @@
+name: Text
+type: module
+description: 'Defines simple text field types.'
+package: Field types
+version: VERSION
+core: 8.x
+dependencies:
+  - field
+  - filter

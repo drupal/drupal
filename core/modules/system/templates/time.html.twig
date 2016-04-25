@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a date / time element.
+ *
+ * Available variables
+ * - timestamp: (optional) A UNIX timestamp for the datetime attribute. If the
+ *   datetime cannot be represented as a UNIX timestamp, use a valid datetime
+ *   attribute value in attributes.datetime.
+ * - text: (optional) The content to display within the <time> element.
+ *   Defaults to a human-readable representation of the timestamp value or the
+ *   datetime attribute value using format_date().
+ * - attributes: (optional) HTML attributes to apply to the <time> element.
+ *   A datetime attribute in 'attributes' overrides the 'timestamp'. To
+ *   create a valid datetime attribute value from a UNIX timestamp, use
+ *   format_date() with one of the predefined 'html_*' formats.
+ *
+ * @see template_preprocess_time()
+ * @see http://www.w3.org/TR/html5-author/the-time-element.html#attr-time-datetime
+ */
+#}
+<time{{ attributes }}>{{ text }}</time>

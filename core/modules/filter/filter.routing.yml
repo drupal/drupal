@@ -1,0 +1,47 @@
+filter.tips_all:
+  path: '/filter/tips'
+  defaults:
+    _controller: '\Drupal\filter\Controller\FilterController::filterTips'
+    _title: 'Compose tips'
+  requirements:
+    _access: 'TRUE'
+
+filter.tips:
+  path: '/filter/tips/{filter_format}'
+  defaults:
+    _controller: '\Drupal\filter\Controller\FilterController::filterTips'
+    _title: 'Compose tips'
+  requirements:
+    _entity_access: 'filter_format.use'
+
+filter.admin_overview:
+  path: '/admin/config/content/formats'
+  defaults:
+    _entity_list: 'filter_format'
+    _title: 'Text formats and editors'
+  requirements:
+    _permission: 'administer filters'
+
+filter.format_add:
+  path: '/admin/config/content/formats/add'
+  defaults:
+    _entity_form: filter_format.add
+    _title: 'Add text format'
+  requirements:
+    _entity_create_access: 'filter_format'
+
+entity.filter_format.edit_form:
+  path: '/admin/config/content/formats/manage/{filter_format}'
+  defaults:
+    _entity_form: filter_format.edit
+    _title_callback: '\Drupal\filter\Controller\FilterController::getLabel'
+  requirements:
+    _entity_access: 'filter_format.update'
+
+entity.filter_format.disable:
+  path: '/admin/config/content/formats/manage/{filter_format}/disable'
+  defaults:
+    _entity_form: 'filter_format.disable'
+    _title: 'Disable text format'
+  requirements:
+    _entity_access: 'filter_format.disable'

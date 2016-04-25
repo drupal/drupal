@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Queue\BatchMemory.
- */
-
 namespace Drupal\Core\Queue;
 
 /**
@@ -15,13 +10,15 @@ namespace Drupal\Core\Queue;
  * - Ensures FIFO ordering.
  * - Allows an item to be repeatedly claimed until it is actually deleted (no
  *   notion of lease time or 'expire' date), to allow multipass operations.
+ *
+ * @ingroup queue
  */
 class BatchMemory extends Memory {
 
   /**
-   * Overrides Drupal\Core\Queue\Memory::claimItem().
+   * Overrides \Drupal\Core\Queue\Memory::claimItem().
    *
-   * Unlike Drupal\Core\Queue\Memory::claimItem(), this method provides a
+   * Unlike \Drupal\Core\Queue\Memory::claimItem(), this method provides a
    * default lease time of 0 (no expiration) instead of 30. This allows the item
    * to be claimed repeatedly until it is deleted.
    */
@@ -37,7 +34,7 @@ class BatchMemory extends Memory {
    * Retrieves all remaining items in the queue.
    *
    * This is specific to Batch API and is not part of the
-   * Drupal\Core\Queue\QueueInterface.
+   * \Drupal\Core\Queue\QueueInterface.
    *
    * @return array
    *   An array of queue items.

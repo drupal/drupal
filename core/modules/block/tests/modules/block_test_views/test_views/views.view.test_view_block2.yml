@@ -1,0 +1,57 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_view_block2
+label: test_view_block2
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: id
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: null
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: tag
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: some
+        options:
+          items_per_page: 5
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        name:
+          id: name
+          table: views_test_data
+          field: name
+      title: test_view_block2
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: Block
+    position: null
+  block_2:
+    display_plugin: block
+    id: block_2
+    display_title: Block
+    position: null
+  block_3:
+    display_plugin: block
+    id: block_3
+    display_title: Block
+    position: null

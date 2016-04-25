@@ -1,0 +1,8 @@
+name: Link
+type: module
+description: 'Provides a simple link field type.'
+core: 8.x
+package: Field types
+version: VERSION
+dependencies:
+  - field

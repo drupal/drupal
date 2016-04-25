@@ -1,0 +1,13 @@
+aggregator.admin_overview:
+  title: 'Feed aggregator'
+  description: 'Add feeds or import OPMLs to gather external content and configure how often they are updated.'
+  route_name: aggregator.admin_overview
+  parent: system.admin_config_services
+  weight: 10
+aggregator.page_last:
+  title: 'Feed aggregator'
+  weight: 5
+  route_name: aggregator.page_last
+aggregator.feed_add:
+  title: 'Add feed'
+  route_name: aggregator.feed_add

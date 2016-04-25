@@ -1,0 +1,30 @@
+drupal.locale.admin:
+  version: VERSION
+  js:
+    locale.admin.js: {}
+  css:
+    component:
+      css/locale.admin.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.form
+    - core/jquery.once
+
+drupal.locale.datepicker:
+  version: VERSION
+  js:
+    locale.datepicker.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+translations:
+  # No sensible version can be specified, since the translations may change at
+  # any time.
+  js:
+    # This file does not actually exist; it's a placeholder file that will be
+    # overriden by locale_js_alter(), to use the file that contains the actual
+    # translations, for the language used in the current request.
+    locale.translation.js: {}

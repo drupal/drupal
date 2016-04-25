@@ -1,0 +1,17 @@
+entity.taxonomy_term.edit_form:
+  title: Edit
+  group: taxonomy_term
+  route_name: entity.taxonomy_term.edit_form
+  weight: 10
+
+entity.taxonomy_term.delete_form:
+  title: Delete
+  group: taxonomy_term
+  route_name: entity.taxonomy_term.delete_form
+  weight: 20
+
+entity.taxonomy_vocabulary.delete_form:
+  title: Delete
+  group: taxonomy_vocabulary
+  route_name: entity.taxonomy_vocabulary.delete_form
+  weight: 20

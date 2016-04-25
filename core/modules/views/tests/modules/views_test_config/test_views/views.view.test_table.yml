@@ -1,0 +1,142 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_table
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      fields:
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+        job:
+          field: job
+          id: job
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+        job_1:
+          field: job
+          id: job_1
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          summary: summary-text
+          columns:
+            age: age
+            id: id
+            name: name
+            job: job
+            job_1: job_1
+          info:
+            age:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            id:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            job:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            job_1:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: true
+              responsive: ''
+          default: id
+          empty_table: true
+          caption: caption-text
+          description: description-text
+      row:
+        type: fields
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          empty: true
+          content: 'custom text'
+          tokenize: false
+          plugin_id: text_custom
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test-table
+    display_plugin: page
+    display_title: 'Page display'
+    id: page_1
+    position: 1

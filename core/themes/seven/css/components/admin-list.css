@@ -1,0 +1,46 @@
+/**
+ * Admin lists.
+ */
+ul.admin-list {
+  margin: 0;
+  padding: 0;
+}
+.admin-list li {
+  position: relative;
+  border-top: 1px solid #bfbfbf;
+  margin: 0;
+  list-style-type: none;
+  list-style-image: none;
+  padding: 0;
+}
+.admin-list.compact li {
+  border: none;
+}
+.admin-list li a {
+  background: url(../../../../misc/icons/bebebe/chevron-disc-right.svg) no-repeat 1px 16px; /* LTR */
+  display: block;
+  padding: 14px 15px 14px 25px; /* LTR */
+  min-height: 0;
+}
+[dir="rtl"] .admin-list li a {
+  background: url(../../../../misc/icons/bebebe/chevron-disc-left.svg) no-repeat right 16px;
+  padding-right: 25px;
+  padding-left: 15px;
+}
+.admin-list.compact li a {
+  background-image:  none;
+  padding: 2px 0;
+}
+.admin-list li a:hover,
+.admin-list li a:focus,
+.admin-list li a:active {
+  text-decoration: none;
+}
+.admin-list li a .label {
+  font-size: 1.0769em;
+}
+.admin-list li a:hover .label,
+.admin-list li a:focus .label,
+.admin-list li a:active .label {
+  text-decoration: underline;
+}

@@ -1,0 +1,59 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_field_argument_tokens
+label: null
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: id
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      query:
+        type: views_query
+      fields:
+        name:
+          id: name
+          table: views_test_data
+          field: name
+          plugin_id: string
+        name_1:
+          id: name_1
+          table: views_test_data
+          field: name
+          plugin_id: string
+        name_2:
+          id: name_2
+          table: views_test_data
+          field: name
+          plugin_id: string
+        job:
+          id: job
+          table: views_test_data
+          field: job
+          plugin_id: string
+      arguments:
+        'null':
+          id: 'null'
+          table: views
+          field: 'null'
+          plugin_id: 'null'
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Defaults
+    id: default
+    position: 0

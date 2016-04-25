@@ -1,11 +1,9 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\StreamWrapper\PrivateStream.
- */
-
 namespace Drupal\Core\StreamWrapper;
+
+use Drupal\Core\Routing\UrlGeneratorTrait;
+use Drupal\Core\Site\Settings;
 
 /**
  * Drupal private (private://) stream wrapper class.
@@ -15,21 +13,56 @@ namespace Drupal\Core\StreamWrapper;
  */
 class PrivateStream extends LocalStream {
 
+  use UrlGeneratorTrait;
+
   /**
-   * Implements Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath()
+   * {@inheritdoc}
    */
-  public function getDirectoryPath() {
-    return variable_get('file_private_path', '');
+  public static function getType() {
+    return StreamWrapperInterface::LOCAL_NORMAL;
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::getExternalUrl().
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return t('Private files');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return t('Private local files served by Drupal.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDirectoryPath() {
+    return static::basePath();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExternalUrl() {
+    $path = str_replace('\\', '/', $this->getTarget());
+    return $this->url('system.private_file_download', ['filepath' => $path], ['absolute' => TRUE]);
+  }
+
+  /**
+   * Returns the base path for private://.
+   *
+   * Note that this static method is used by \Drupal\system\Form\FileSystemForm
+   * so you should alter that form or substitute a different form if you change
+   * the class providing the stream_wrapper.private service.
    *
    * @return string
-   *   Returns the HTML URI of a private file.
+   *   The base path for private://.
    */
-  function getExternalUrl() {
-    $path = str_replace('\\', '/', $this->getTarget());
-    return url('system/files/' . $path, array('absolute' => TRUE));
+  public static function basePath() {
+    return Settings::get('file_private_path');
   }
+
 }

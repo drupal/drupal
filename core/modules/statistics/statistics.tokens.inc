@@ -5,6 +5,8 @@
  * Builds placeholder replacement tokens for node visitor statistics.
  */
 
+use Drupal\Core\Render\BubbleableMetadata;
+
 /**
  * Implements hook_token_info().
  */
@@ -31,8 +33,9 @@ function statistics_token_info() {
 /**
  * Implements hook_tokens().
  */
-function statistics_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  $url_options = array('absolute' => TRUE);
+function statistics_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  $token_service = \Drupal::token();
+
   $replacements = array();
 
   if ($type == 'node' & !empty($data['node'])) {
@@ -40,22 +43,22 @@ function statistics_tokens($type, $tokens, array $data = array(), array $options
 
     foreach ($tokens as $name => $original) {
       if ($name == 'total-count') {
-        $statistics = statistics_get($node->nid);
+        $statistics = statistics_get($node->id());
         $replacements[$original] = $statistics['totalcount'];
       }
       elseif ($name == 'day-count') {
-        $statistics = statistics_get($node->nid);
+        $statistics = statistics_get($node->id());
         $replacements[$original] = $statistics['daycount'];
       }
       elseif ($name == 'last-view') {
-        $statistics = statistics_get($node->nid);
+        $statistics = statistics_get($node->id());
         $replacements[$original] = format_date($statistics['timestamp']);
       }
     }
 
-    if ($created_tokens = token_find_with_prefix($tokens, 'last-view')) {
-      $statistics = statistics_get($node->nid);
-      $replacements += token_generate('date', $created_tokens, array('date' => $statistics['timestamp']), $options);
+    if ($created_tokens = $token_service->findWithPrefix($tokens, 'last-view')) {
+      $statistics = statistics_get($node->id());
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $statistics['timestamp']), $options, $bubbleable_metadata);
     }
   }
 

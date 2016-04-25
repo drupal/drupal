@@ -1,0 +1,6 @@
+name: 'Theme test'
+type: module
+description: 'Support module for theme system testing.'
+package: Testing
+version: VERSION
+core: 8.x

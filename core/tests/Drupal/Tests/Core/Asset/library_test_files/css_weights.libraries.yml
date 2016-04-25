@@ -1,0 +1,22 @@
+example:
+  css:
+    theme:
+      css/theme__no_weight.css: {}
+      css/theme__weight.css:
+        weight: 29
+    base:
+      css/base__no_weight.css: {}
+      css/base__weight.css:
+        weight: 97
+    layout:
+      css/layout__no_weight.css: {}
+      css/layout__weight.css:
+        weight: 92
+    component:
+      css/component__no_weight.css: {}
+      css/component__weight.css:
+        weight: 45
+    state:
+      css/state__no_weight.css: {}
+      css/state__weight.css:
+        weight: 8

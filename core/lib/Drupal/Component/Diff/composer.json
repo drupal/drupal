@@ -1,0 +1,16 @@
+{
+  "name": "drupal/core-diff",
+  "description": "Diff.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.5.9",
+    "drupal/utility": "~8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Diff\\": ""
+    }
+  }
+}

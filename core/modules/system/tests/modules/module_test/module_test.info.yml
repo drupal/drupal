@@ -1,0 +1,6 @@
+name: 'Module test'
+type: module
+description: 'Support module for module system testing.'
+package: Testing
+version: VERSION
+core: 8.x

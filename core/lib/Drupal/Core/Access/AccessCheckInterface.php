@@ -1,19 +1,14 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\Core\Access\AccessCheckInterface.
- */
-
 namespace Drupal\Core\Access;
 
 use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 
 /**
  * An access check service determines access rules for particular routes.
  */
-interface AccessCheckInterface {
+interface AccessCheckInterface extends RoutingAccessInterface {
 
   /**
    * Declares whether the access check applies to a specific route or not.
@@ -21,23 +16,9 @@ interface AccessCheckInterface {
    * @param \Symfony\Component\Routing\Route $route
    *   The route to consider attaching to.
    *
-   * @return bool
-   *   TRUE if the check applies to the passed route, FALSE otherwise.
+   * @return array
+   *   An array of route requirement keys this access checker applies to.
    */
   public function applies(Route $route);
 
-  /**
-   * Checks for access to route.
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route to check against.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return mixed
-   *   TRUE if access is allowed.
-   *   FALSE if not.
-   *   NULL if no opinion.
-   */
-  public function access(Route $route, Request $request);
 }

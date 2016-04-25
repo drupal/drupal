@@ -1,0 +1,7 @@
+field.formatter.settings.field_plugins_test_text_formatter:
+  type: field.formatter.settings.text_trimmed
+  label: 'Test text formatter display format settings'
+
+field.widget.settings.field_plugins_test_text_widget:
+  type: field.widget.settings.text_textfield
+  label: 'Test text field widget settings'

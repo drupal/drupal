@@ -1,0 +1,264 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+    - node
+    - user
+id: comments_recent
+label: 'Recent comments'
+module: views
+description: 'Recent comments.'
+tag: default
+base_table: comment_field_data
+base_field: cid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access comments'
+      cache:
+        type: tag
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: some
+        options:
+          items_per_page: 10
+          offset: 0
+      style:
+        type: html_list
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          type: ul
+          wrapper_class: item-list
+          class: ''
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline:
+            subject: subject
+            changed: changed
+          separator: ' '
+          hide_empty: false
+      relationships:
+        node:
+          field: node
+          id: node
+          table: comment_field_data
+          required: true
+          plugin_id: standard
+      fields:
+        subject:
+          id: subject
+          table: comment_field_data
+          field: subject
+          relationship: none
+          type: string
+          settings:
+            link_to_entity: true
+          plugin_id: field
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: false
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          entity_type: comment
+          entity_field: subject
+        changed:
+          id: changed
+          table: comment_field_data
+          field: changed
+          relationship: none
+          plugin_id: field
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          type: timestamp_ago
+          settings:
+            future_format: '@interval hence'
+            past_format: '@interval ago'
+            granularity: 2
+          entity_type: comment
+          entity_field: changed
+      filters:
+        status:
+          value: true
+          table: comment_field_data
+          field: status
+          id: status
+          plugin_id: boolean
+          expose:
+            operator: ''
+          group: 1
+          entity_type: comment
+          entity_field: status
+        status_node:
+          value: true
+          table: node_field_data
+          field: status
+          relationship: node
+          id: status_node
+          plugin_id: boolean
+          expose:
+            operator: ''
+          group: 1
+          entity_type: node
+          entity_field: status
+      sorts:
+        created:
+          id: created
+          table: comment_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: date
+          entity_type: comment
+          entity_field: created
+        cid:
+          id: cid
+          table: comment_field_data
+          field: cid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          plugin_id: field
+          entity_type: comment
+          entity_field: cid
+      title: 'Recent comments'
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          empty: true
+          content: 'No comments available.'
+          tokenize: false
+          plugin_id: text_custom
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - user.permissions
+      max-age: -1
+      tags: {  }
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: Block
+    position: 1
+    display_options:
+      block_description: 'Recent comments'
+      block_category: 'Lists (Views)'
+      allow:
+        items_per_page: true
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - user.permissions
+      max-age: -1
+      tags: {  }

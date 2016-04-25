@@ -1,24 +1,15 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Routing\RouteCompiler.
- */
-
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\Routing\RouteCompilerInterface;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCompiler as SymfonyRouteCompiler;
 
 /**
  * Compiler to generate derived information from a Route necessary for matching.
  */
-class RouteCompiler implements RouteCompilerInterface {
-
-  /**
-   * The maximum number of path elements for a route pattern;
-   */
-  const MAX_PARTS = 9;
+class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterface {
 
   /**
    * Utility constant to use for regular expressions against the path.
@@ -28,150 +19,43 @@ class RouteCompiler implements RouteCompilerInterface {
   /**
    * Compiles the current route instance.
    *
+   * Because so much of the parent class is private, we need to call the parent
+   * class's compile() method and then dissect its return value to build our
+   * new compiled object.  If upstream gets refactored so we can subclass more
+   * easily then this may not be necessary.
+   *
    * @param \Symfony\Component\Routing\Route $route
    *   A Route instance.
    *
    * @return \Drupal\Core\Routing\CompiledRoute
    *   A CompiledRoute instance.
    */
-  public function compile(Route $route) {
+  public static function compile(Route $route) {
 
-    $stripped_path = $this->getPathWithoutDefaults($route);
+    $symfony_compiled = parent::compile($route);
 
-    $fit = $this->getFit($stripped_path);
+    // The Drupal-specific compiled information.
+    $stripped_path = static::getPathWithoutDefaults($route);
+    $fit = static::getFit($stripped_path);
+    $pattern_outline = static::getPatternOutline($stripped_path);
+    // We count the number of parts including any optional trailing parts. This
+    // allows the RouteProvider to filter candidate routes more efficiently.
+    $num_parts = count(explode('/', trim($route->getPath(), '/')));
 
-    $pattern_outline = $this->getPatternOutline($stripped_path);
-
-    $num_parts = count(explode('/', trim($pattern_outline, '/')));
-
-    $regex = $this->getRegex($route, $route->getPattern());
-
-    return new CompiledRoute($route, $fit, $pattern_outline, $num_parts, $regex);
-  }
-
-  /**
-   * Generates a regular expression that will match this pattern.
-   *
-   * This regex can be used in preg_match() to extract values inside {}.
-   *
-   * This algorithm was lifted directly from Symfony's RouteCompiler class.
-   * It is not factored out nicely there, so we cannot simply subclass it.
-   * @todo Refactor Symfony's RouteCompiler so that it's useful to subclass.
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route object.
-   * @param string $pattern
-   *   The pattern for which we want a matching regex.
-   *
-   * @return string
-   *   A regular expression that will match a path against this route.
-   *
-   * @throws \LogicException
-   */
-  public function getRegex(Route $route, $pattern) {
-    $len = strlen($pattern);
-    $tokens = array();
-    $variables = array();
-    $pos = 0;
-    preg_match_all('#.\{(\w+)\}#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
-    foreach ($matches as $match) {
-      if ($text = substr($pattern, $pos, $match[0][1] - $pos)) {
-        $tokens[] = array('text', $text);
-      }
-
-      $pos = $match[0][1] + strlen($match[0][0]);
-      $var = $match[1][0];
-
-      if ($req = $route->getRequirement($var)) {
-        $regexp = $req;
-      }
-      else {
-        // Use the character preceding the variable as a separator
-        $separators = array($match[0][0][0]);
-
-        if ($pos !== $len) {
-          // Use the character following the variable as the separator when available
-          $separators[] = $pattern[$pos];
-        }
-        $regexp = sprintf('[^%s]+', preg_quote(implode('', array_unique($separators)), self::REGEX_DELIMITER));
-      }
-
-      $tokens[] = array('variable', $match[0][0][0], $regexp, $var);
-
-      if (in_array($var, $variables)) {
-        throw new \LogicException(sprintf('Route pattern "%s" cannot reference variable name "%s" more than once.', $route->getPattern(), $var));
-      }
-
-      $variables[] = $var;
-    }
-
-    if ($pos < $len) {
-      $tokens[] = array('text', substr($pattern, $pos));
-    }
-
-    // find the first optional token
-    $first_optional = INF;
-    for ($i = count($tokens) - 1; $i >= 0; $i--) {
-        $token = $tokens[$i];
-        if ('variable' === $token[0] && $route->hasDefault($token[3])) {
-            $first_optional = $i;
-        } else {
-            break;
-        }
-    }
-
-    // compute the matching regexp
-    $regexp = '';
-    for ($i = 0, $nbToken = count($tokens); $i < $nbToken; $i++) {
-        $regexp .= $this->computeRegexp($tokens, $i, $first_optional);
-    }
-
-    return self::REGEX_DELIMITER.'^'.$regexp.'$'.self::REGEX_DELIMITER.'s';
-  }
-
-  /**
-   * Computes the regexp used to match a specific token. It can be static text or a subpattern.
-   *
-   * @param array $tokens
-   *   The route tokens
-   * @param integer $index
-   *   The index of the current token
-   * @param integer $first_optional
-   *   The index of the first optional token
-   *
-   * @return string
-   *   The regexp pattern for a single token
-   */
-  private function computeRegexp(array $tokens, $index, $first_optional) {
-    $token = $tokens[$index];
-    if ('text' === $token[0]) {
-      // Text tokens
-      return preg_quote($token[1], self::REGEX_DELIMITER);
-    }
-    else {
-      // Variable tokens
-      if (0 === $index && 0 === $first_optional) {
-        // When the only token is an optional variable token, the separator is
-        // required.
-        return sprintf('%s(?<%s>%s)?', preg_quote($token[1], self::REGEX_DELIMITER), $token[3], $token[2]);
-      }
-      else {
-        $regexp = sprintf('%s(?<%s>%s)', preg_quote($token[1], self::REGEX_DELIMITER), $token[3], $token[2]);
-        if ($index >= $first_optional) {
-          // Enclose each optional token in a subpattern to make it optional.
-          // "?:" means it is non-capturing, i.e. the portion of the subject
-          // string that matched the optional subpattern is not passed back.
-          $regexp = "(?:$regexp";
-          $nbTokens = count($tokens);
-          if ($nbTokens - 1 == $index) {
-            // Close the optional subpatterns.
-            $regexp .= str_repeat(")?", $nbTokens - $first_optional - (0 === $first_optional ? 1 : 0));
-          }
-        }
-
-        return $regexp;
-      }
-    }
+    return new CompiledRoute(
+      $fit,
+      $pattern_outline,
+      $num_parts,
+      // These are the Symfony compiled parts.
+      $symfony_compiled->getStaticPrefix(),
+      $symfony_compiled->getRegex(),
+      $symfony_compiled->getTokens(),
+      $symfony_compiled->getPathVariables(),
+      $symfony_compiled->getHostRegex(),
+      $symfony_compiled->getHostTokens(),
+      $symfony_compiled->getHostVariables(),
+      $symfony_compiled->getVariables()
+      );
   }
 
   /**
@@ -186,7 +70,7 @@ class RouteCompiler implements RouteCompilerInterface {
    * @return string
    *   The path pattern outline.
    */
-  public function getPatternOutline($path) {
+  public static function getPatternOutline($path) {
     return preg_replace('#\{\w+\}#', '%', $path);
   }
 
@@ -199,13 +83,16 @@ class RouteCompiler implements RouteCompilerInterface {
    * @return int
    *   The fitness of the path, as an integer.
    */
-  public function getFit($path) {
-    $parts = explode('/', trim($path, '/'), static::MAX_PARTS);
+  public static function getFit($path) {
+    $parts = explode('/', trim($path, '/'));
     $number_parts = count($parts);
     // We store the highest index of parts here to save some work in the fit
     // calculation loop.
     $slashes = $number_parts - 1;
-
+    // The fit value is a binary number which has 1 at every fixed path
+    // position and 0 where there is a wildcard. We keep track of all such
+    // patterns that exist so that we can minimize the number of path
+    // patterns we need to check in the RouteProvider.
     $fit = 0;
     foreach ($parts as $k => $part) {
       if (strpos($part, '{') === FALSE) {
@@ -231,8 +118,8 @@ class RouteCompiler implements RouteCompilerInterface {
    * @return string
    *   The path string, stripped of placeholders that have default values.
    */
-  protected function getPathWithoutDefaults(Route $route) {
-    $path = $route->getPattern();
+  public static function getPathWithoutDefaults(Route $route) {
+    $path = $route->getPath();
     $defaults = $route->getDefaults();
 
     // Remove placeholders with default values from the outline, so that they

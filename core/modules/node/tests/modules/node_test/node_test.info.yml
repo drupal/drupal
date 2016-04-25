@@ -1,0 +1,6 @@
+name: 'Node module tests'
+type: module
+description: 'Support module for node related testing.'
+package: Testing
+version: VERSION
+core: 8.x

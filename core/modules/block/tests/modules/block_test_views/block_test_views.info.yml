@@ -1,0 +1,9 @@
+name: 'Block test views'
+type: module
+description: 'Provides a view and block to test block displays in views.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - block
+  - views

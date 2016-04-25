@@ -1,0 +1,156 @@
+<?php
+
+/**
+ * @file
+ * Theme to help test the Twig engine.
+ */
+
+/**
+ * Implements THEME_preprocess_twig_theme_test_php_variables().
+ */
+function test_theme_preprocess_twig_theme_test_php_variables(&$variables) {
+  $variables['php_values'] = _test_theme_twig_php_values();
+}
+
+/**
+ * Tests a theme overriding a suggestion of a base theme hook.
+ */
+function test_theme_theme_test__suggestion($variables) {
+  return 'Theme hook implementor=test_theme_theme_test__suggestion(). Foo=' . $variables['foo'];
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function test_theme_element_info_alter(&$info) {
+  // Decrease the default size of textfields.
+  if (isset($info['textfield']['#size'])) {
+    $info['textfield']['#size'] = 40;
+  }
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function test_theme_library_info_alter(&$libraries, $extension) {
+  if ($extension === 'test_theme') {
+    $libraries['kitten']['js']['kittens.js'] = [];
+  }
+}
+
+/**
+ * Tests a theme implementing an alter hook.
+ *
+ * The confusing function name here is due to this being an implementation of
+ * the alter hook invoked when the 'theme_test' module calls
+ * \Drupal::moduleHandler->alter('theme_test_alter').
+ */
+function test_theme_theme_test_alter_alter(&$data) {
+  $data = 'test_theme_theme_test_alter_alter was invoked';
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function test_theme_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  drupal_set_message(__FUNCTION__ . '() executed.');
+  // Theme alter hooks run after module alter hooks, so add this theme
+  // suggestion to the beginning of the array so that the suggestion added by
+  // the theme_suggestions_test module can be picked up when that module is
+  // enabled.
+  if ($hook == 'theme_test_general_suggestions') {
+    array_unshift($suggestions, 'theme_test_general_suggestions__' . 'theme_override');
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function test_theme_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
+  drupal_set_message(__FUNCTION__ . '() executed.');
+  // Theme alter hooks run after module alter hooks, so add this theme
+  // suggestion to the beginning of the array so that the suggestion added by
+  // the theme_suggestions_test module can be picked up when that module is
+  // enabled.
+  array_unshift($suggestions, 'theme_test_suggestions__' . 'theme_override');
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function test_theme_theme_suggestions_theme_test_function_suggestions_alter(array &$suggestions, array $variables) {
+  // Theme alter hooks run after module alter hooks, so add this theme
+  // suggestion to the beginning of the array so that the suggestion added by
+  // the theme_suggestions_test module can be picked up when that module is
+  // enabled.
+  array_unshift($suggestions, 'theme_test_function_suggestions__' . 'theme_override');
+}
+
+/**
+ * Returns HTML for a theme function suggestion test.
+ *
+ * Implements the theme_test_function_suggestions__theme_override suggestion.
+ */
+function test_theme_theme_test_function_suggestions__theme_override($variables) {
+  return 'Theme function overridden based on new theme suggestion provided by the test_theme theme.';
+}
+
+/**
+ * Returns HTML for a theme function suggestion test.
+ *
+ * Implements the theme_test_function_suggestions__module_override suggestion.
+ */
+function test_theme_theme_test_function_suggestions__module_override($variables) {
+  return 'Theme function overridden based on new theme suggestion provided by a module.';
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function test_theme_theme_registry_alter(&$registry) {
+  $registry['theme_test_template_test']['variables']['additional'] = 'value';
+}
+
+/**
+ * Tests a theme overriding a suggestion of a base theme hook.
+ */
+function test_theme_theme_test_preprocess_suggestions__kitten__meerkat($variables) {
+  return 'Theme hook implementor=test_theme_theme_test__suggestion(). Foo=' . $variables['foo'];
+}
+
+/**
+ * Tests a theme overriding a default hook with a suggestion.
+ *
+ * Implements hook_preprocess_HOOK().
+ */
+function test_theme_preprocess_theme_test_preprocess_suggestions(&$variables) {
+  $variables['foo'] = 'Theme hook implementor=test_theme_preprocess_theme_test_preprocess_suggestions().';
+}
+
+/**
+ * Tests a theme overriding a default hook with a suggestion.
+ */
+function test_theme_preprocess_theme_test_preprocess_suggestions__suggestion(&$variables) {
+  $variables['foo'] = 'Suggestion';
+}
+
+/**
+ * Tests a theme overriding a default hook with a suggestion.
+ */
+function test_theme_preprocess_theme_test_preprocess_suggestions__kitten(&$variables) {
+  $variables['foo'] = 'Kitten';
+}
+
+/**
+ * Tests a theme overriding a default hook with a suggestion.
+ */
+function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__flamingo(&$variables) {
+  $variables['bar'] = 'Flamingo';
+}
+
+/**
+ * Tests a preprocess function with suggestions.
+ */
+function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__meerkat__tarsier__moose(&$variables) {
+  $variables['bar'] = 'Moose';
+}

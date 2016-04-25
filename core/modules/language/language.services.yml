@@ -1,0 +1,26 @@
+services:
+  plugin.manager.language_negotiation_method:
+    class: Drupal\language\LanguageNegotiationMethodManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  language_negotiator:
+    class: Drupal\language\LanguageNegotiator
+    arguments: ['@language_manager', '@plugin.manager.language_negotiation_method', '@config.factory', '@settings', '@request_stack']
+    calls:
+      - [initLanguageManager]
+  language.config_subscriber:
+    class: Drupal\language\EventSubscriber\ConfigSubscriber
+    arguments: ['@language_manager', '@language.default', '@config.factory', '@language_negotiator']
+    tags:
+      - { name: event_subscriber }
+  language.config_factory_override:
+    class: Drupal\language\Config\LanguageConfigFactoryOverride
+    arguments: ['@config.storage', '@event_dispatcher', '@config.typed']
+    tags:
+      - { name: config.factory.override, priority: -254 }
+      - { name: event_subscriber }
+  language_converter:
+    class: Drupal\language\LanguageConverter
+    arguments: ['@language_manager']
+    tags:
+      - { name: paramconverter }
+    lazy: true

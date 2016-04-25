@@ -1,0 +1,8 @@
+unicorn:
+  version: VERSION
+  js:
+    unicorn.js: {}
+trex:
+  version: VERSION
+  js:
+    trex.js: {}

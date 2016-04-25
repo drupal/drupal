@@ -5,10 +5,6 @@
  * Schema API handling functions.
  */
 
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Database\Database;
-use Drupal\Core\Utility\SchemaCache;
-
 /**
  * @addtogroup schemaapi
  * @{
@@ -20,123 +16,25 @@ use Drupal\Core\Utility\SchemaCache;
 const SCHEMA_UNINSTALLED = -1;
 
 /**
- * Indicates that a module has been installed.
- */
-const SCHEMA_INSTALLED = 0;
-
-/**
- * Gets the schema definition of a table, or the whole database schema.
- *
- * The returned schema will include any modifications made by any
- * module that implements hook_schema_alter().
- *
- * @param string $table
- *   The name of the table. If not given, the schema of all tables is returned.
- * @param bool $rebuild
- *   If TRUE, the schema will be rebuilt instead of retrieved from the cache.
- */
-function drupal_get_schema($table = NULL, $rebuild = FALSE) {
-  static $schema;
-
-  if ($rebuild || !isset($table)) {
-    $schema = drupal_get_complete_schema($rebuild);
-  }
-  elseif (!isset($schema)) {
-    $schema = new SchemaCache();
-  }
-
-  if (!isset($table)) {
-    return $schema;
-  }
-  if (isset($schema[$table])) {
-    return $schema[$table];
-  }
-  else {
-    return FALSE;
-  }
-}
-
-/**
- * Gets the whole database schema.
- *
- * The returned schema will include any modifications made by any
- * module that implements hook_schema_alter().
- *
- * @param bool $rebuild
- *   If TRUE, the schema will be rebuilt instead of retrieved from the cache.
- */
-function drupal_get_complete_schema($rebuild = FALSE) {
-  static $schema;
-
-  if (!isset($schema) || $rebuild) {
-    // Try to load the schema from cache.
-    if (!$rebuild && $cached = cache()->get('schema')) {
-      $schema = $cached->data;
-    }
-    // Otherwise, rebuild the schema cache.
-    else {
-      $schema = array();
-      // Load the .install files to get hook_schema.
-      // On some databases this function may be called before bootstrap has
-      // been completed, so we force the functions we need to load just in case.
-      if (function_exists('module_load_all_includes')) {
-        // This function can be called very early in the bootstrap process, so
-        // we force the system_list() static cache to be refreshed to ensure
-        // that it contains the complete list of modules before we go on to call
-        // module_load_all_includes().
-        system_list_reset();
-        module_load_all_includes('install');
-      }
-
-      require_once DRUPAL_ROOT . '/core/includes/common.inc';
-      // Invoke hook_schema for all modules.
-      foreach (module_implements('schema') as $module) {
-        // Cast the result of hook_schema() to an array, as a NULL return value
-        // would cause array_merge() to set the $schema variable to NULL as well.
-        // That would break modules which use $schema further down the line.
-        $current = (array) module_invoke($module, 'schema');
-        // Set 'module' and 'name' keys for each table, and remove descriptions,
-        // as they needlessly slow down cache()->get() for every single request.
-        _drupal_schema_initialize($current, $module);
-        $schema = array_merge($schema, $current);
-      }
-      drupal_alter('schema', $schema);
-
-      if ($rebuild) {
-        cache()->deleteTags(array('schema' => TRUE));
-      }
-      // If the schema is empty, avoid saving it: some database engines require
-      // the schema to perform queries, and this could lead to infinite loops.
-      if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
-        cache()->set('schema', $schema, CacheBackendInterface::CACHE_PERMANENT, array('schema' => TRUE));
-      }
-    }
-  }
-
-  return $schema;
-}
-
-/**
  * Returns an array of available schema versions for a module.
  *
  * @param string $module
  *   A module name.
  *
  * @return array|bool
- *   If the module has updates, an array of available updates sorted by version.
- *   Otherwise, FALSE.
+ *   If the module has updates, an array of available updates sorted by
+ *   version. Otherwise, FALSE.
  */
 function drupal_get_schema_versions($module) {
   $updates = &drupal_static(__FUNCTION__, NULL);
   if (!isset($updates[$module])) {
     $updates = array();
-
-    foreach (module_list() as $loaded_module) {
+    foreach (\Drupal::moduleHandler()->getModuleList() as $loaded_module => $filename) {
       $updates[$loaded_module] = array();
     }
 
     // Prepare regular expression to match all possible defined hook_update_N().
-    $regexp = '/^(?P<module>.+)_update_(?P<version>\d+)$/';
+    $regexp = '/^(?<module>.+)_update_(?<version>\d+)$/';
     $functions = get_defined_functions();
     // Narrow this down to functions ending with an integer, since all
     // hook_update_N() functions end this way, and there are other
@@ -183,7 +81,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
   }
 
   if (!$versions) {
-    if (!$versions = drupal_container()->get('keyvalue')->get('system.schema')->getAll()) {
+    if (!$versions = \Drupal::keyValue('system.schema')->getAll()) {
       $versions = array();
     }
   }
@@ -205,7 +103,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
  *   The new schema version.
  */
 function drupal_set_installed_schema_version($module, $version) {
-  drupal_container()->get('keyvalue')->get('system.schema')->set($module, $version);
+  \Drupal::keyValue('system.schema')->set($module, $version);
   // Reset the static cache of module schema versions.
   drupal_get_installed_schema_version(NULL, TRUE);
 }
@@ -213,15 +111,11 @@ function drupal_set_installed_schema_version($module, $version) {
 /**
  * Creates all tables defined in a module's hook_schema().
  *
- * Note: This function does not pass the module's schema through
- * hook_schema_alter(). The module's tables will be created exactly as the
- * module defines them.
- *
  * @param string $module
  *   The module for which the tables will be created.
  */
 function drupal_install_schema($module) {
-  $schema = drupal_get_schema_unprocessed($module);
+  $schema = drupal_get_module_schema($module);
   _drupal_schema_initialize($schema, $module, FALSE);
 
   foreach ($schema as $name => $table) {
@@ -232,20 +126,11 @@ function drupal_install_schema($module) {
 /**
  * Removes all tables defined in a module's hook_schema().
  *
- * Note: This function does not pass the module's schema through
- * hook_schema_alter(). The module's tables will be created exactly as the
- * module defines them.
- *
  * @param string $module
  *   The module for which the tables will be removed.
- *
- * @return array
- *   An array of arrays with the following key/value pairs:
- *    - success: a boolean indicating whether the query succeeded.
- *    - query: the SQL query(s) executed, passed through check_plain().
  */
 function drupal_uninstall_schema($module) {
-  $schema = drupal_get_schema_unprocessed($module);
+  $schema = drupal_get_module_schema($module);
   _drupal_schema_initialize($schema, $module, FALSE);
 
   foreach ($schema as $table) {
@@ -256,22 +141,11 @@ function drupal_uninstall_schema($module) {
 }
 
 /**
- * Returns the unprocessed and unaltered version of a module's schema.
- *
- * Use this function only if you explicitly need the original
- * specification of a schema, as it was defined in a module's
- * hook_schema(). No additional default values will be set,
- * hook_schema_alter() is not invoked and these unprocessed
- * definitions won't be cached.
+ * Returns a module's schema.
  *
  * This function can be used to retrieve a schema specification in
  * hook_schema(), so it allows you to derive your tables from existing
  * specifications.
- *
- * It is also used by drupal_install_schema() and
- * drupal_uninstall_schema() to ensure that a module's tables are
- * created exactly as specified without any changes introduced by a
- * module that implements hook_schema_alter().
  *
  * @param string $module
  *   The module to which the table belongs.
@@ -279,10 +153,10 @@ function drupal_uninstall_schema($module) {
  *   The name of the table. If not given, the module's complete schema
  *   is returned.
  */
-function drupal_get_schema_unprocessed($module, $table = NULL) {
+function drupal_get_module_schema($module, $table = NULL) {
   // Load the .install file to get hook_schema.
   module_load_install($module);
-  $schema = module_invoke($module, 'schema');
+  $schema = \Drupal::moduleHandler()->invoke($module, 'schema');
 
   if (isset($table)) {
     if (isset($schema[$table])) {
@@ -328,205 +202,34 @@ function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRU
 }
 
 /**
- * Retrieves a list of fields from a table schema.
+ * Typecasts values to proper datatypes.
  *
- * The returned list is suitable for use in an SQL query.
+ * MySQL PDO silently casts, e.g. FALSE and '' to 0, when inserting the value
+ * into an integer column, but PostgreSQL PDO does not. Look up the schema
+ * information and use that to correctly typecast the value.
  *
- * @param string $table
- *   The name of the table from which to retrieve fields.
- * @param string $prefix
- *   An optional prefix to to all fields.
+ * @param array $info
+ *   An array describing the schema field info.
+ * @param mixed $value
+ *   The value to be converted.
  *
- * @return array
- *   An array of fields.
+ * @return mixed
+ *   The converted value.
  */
-function drupal_schema_fields_sql($table, $prefix = NULL) {
-  $schema = drupal_get_schema($table);
-  $fields = array_keys($schema['fields']);
-  if ($prefix) {
-    $columns = array();
-    foreach ($fields as $field) {
-      $columns[] = "$prefix.$field";
+function drupal_schema_get_field_value(array $info, $value) {
+  // Preserve legal NULL values.
+  if (isset($value) || !empty($info['not null'])) {
+    if ($info['type'] == 'int' || $info['type'] == 'serial') {
+      $value = (int) $value;
     }
-    return $columns;
-  }
-  else {
-    return $fields;
-  }
-}
-
-/**
- * Saves (inserts or updates) a record to the database based upon the schema.
- *
- * Do not use drupal_write_record() within hook_update_N() functions, since the
- * database schema cannot be relied upon when a user is running a series of
- * updates. Instead, use db_insert() or db_update() to save the record.
- *
- * @param string $table
- *   The name of the table; this must be defined by a hook_schema()
- *   implementation.
- * @param object|array $record
- *   An object or array representing the record to write, passed in by
- *   reference. If inserting a new record, values not provided in $record will
- *   be populated in $record and in the database with the default values from
- *   the schema, as well as a single serial (auto-increment) field (if present).
- *   If updating an existing record, only provided values are updated in the
- *   database, and $record is not modified.
- * @param array $primary_keys
- *   To indicate that this is a new record to be inserted, omit this argument.
- *   If this is an update, this argument specifies the primary keys' field
- *   names. If there is only 1 field in the key, you may pass in a string; if
- *   there are multiple fields in the key, pass in an array.
- *
- * @return bool|int
- *   If the record insert or update failed, returns FALSE. If it succeeded,
- *   returns SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
- */
-function drupal_write_record($table, &$record, $primary_keys = array()) {
-  // Standardize $primary_keys to an array.
-  if (is_string($primary_keys)) {
-    $primary_keys = array($primary_keys);
-  }
-
-  $schema = drupal_get_schema($table);
-  if (empty($schema)) {
-    return FALSE;
-  }
-
-  $object = (object) $record;
-  $fields = array();
-  $default_fields = array();
-
-  // Go through the schema to determine fields to write.
-  foreach ($schema['fields'] as $field => $info) {
-    if ($info['type'] == 'serial') {
-      // Skip serial types if we are updating.
-      if (!empty($primary_keys)) {
-        continue;
-      }
-      // Track serial field so we can helpfully populate them after the query.
-      // NOTE: Each table should come with one serial field only.
-      $serial = $field;
+    elseif ($info['type'] == 'float') {
+      $value = (float) $value;
     }
-
-    // Skip field if it is in $primary_keys as it is unnecessary to update a
-    // field to the value it is already set to.
-    if (in_array($field, $primary_keys)) {
-      continue;
-    }
-
-    // Skip fields that are not provided, default values are already known
-    // by the database. property_exists() allows to explicitly set a value to
-    // NULL.
-    if (!property_exists($object, $field)) {
-      $default_fields[] = $field;
-      continue;
-    }
-    // However, if $object is an entity class instance, then class properties
-    // always exist, as they cannot be unset. Therefore, if $field is a serial
-    // type and the value is NULL, skip it.
-    // @see http://php.net/manual/en/function.property-exists.php
-    if ($info['type'] == 'serial' && !isset($object->$field)) {
-      $default_fields[] = $field;
-      continue;
-    }
-
-    // Build array of fields to update or insert.
-    if (empty($info['serialize'])) {
-      $fields[$field] = $object->$field;
-    }
-    else {
-      $fields[$field] = serialize($object->$field);
-    }
-
-    // Type cast to proper datatype, except when the value is NULL and the
-    // column allows this.
-    //
-    // MySQL PDO silently casts e.g. FALSE and '' to 0 when inserting the value
-    // into an integer column, but PostgreSQL PDO does not. Also type cast NULL
-    // when the column does not allow this.
-    if (isset($object->$field) || !empty($info['not null'])) {
-      if ($info['type'] == 'int' || $info['type'] == 'serial') {
-        $fields[$field] = (int) $fields[$field];
-      }
-      elseif ($info['type'] == 'float') {
-        $fields[$field] = (float) $fields[$field];
-      }
-      else {
-        $fields[$field] = (string) $fields[$field];
-      }
+    elseif (!is_array($value)) {
+      $value = (string) $value;
     }
   }
-
-  // Build the SQL.
-  if (empty($primary_keys)) {
-    // We are doing an insert.
-    $options = array('return' => Database::RETURN_INSERT_ID);
-    if (isset($serial) && isset($fields[$serial])) {
-      // If the serial column has been explicitly set with an ID, then we don't
-      // require the database to return the last insert id.
-      if ($fields[$serial]) {
-        $options['return'] = Database::RETURN_AFFECTED;
-      }
-      // If a serial column does exist with no value (i.e. 0) then remove it as
-      // the database will insert the correct value for us.
-      else {
-        unset($fields[$serial]);
-      }
-    }
-    // Create an INSERT query. useDefaults() is necessary for the SQL to be
-    // valid when $fields is empty.
-    $query = db_insert($table, $options)
-      ->fields($fields)
-      ->useDefaults($default_fields);
-
-    $return = SAVED_NEW;
-  }
-  else {
-    // Create an UPDATE query.
-    $query = db_update($table)->fields($fields);
-    foreach ($primary_keys as $key) {
-      $query->condition($key, $object->$key);
-    }
-    $return = SAVED_UPDATED;
-  }
-
-  // Execute the SQL.
-  if ($query_return = $query->execute()) {
-    if (isset($serial)) {
-      // If the database was not told to return the last insert id, it will be
-      // because we already know it.
-      if (isset($options) && $options['return'] != Database::RETURN_INSERT_ID) {
-        $object->$serial = $fields[$serial];
-      }
-      else {
-        $object->$serial = $query_return;
-      }
-    }
-  }
-  // If we have a single-field primary key but got no insert ID, the
-  // query failed. Note that we explicitly check for FALSE, because
-  // a valid update query which doesn't change any values will return
-  // zero (0) affected rows.
-  elseif ($query_return === FALSE && count($primary_keys) == 1) {
-    $return = FALSE;
-  }
-
-  // If we are inserting, populate empty fields with default values.
-  if (empty($primary_keys)) {
-    foreach ($schema['fields'] as $field => $info) {
-      if (isset($info['default']) && !property_exists($object, $field)) {
-        $object->$field = $info['default'];
-      }
-    }
-  }
-
-  // If we began with an array, convert back.
-  if (is_array($record)) {
-    $record = (array) $object;
-  }
-
-  return $return;
+  return $value;
 }
 
 /**

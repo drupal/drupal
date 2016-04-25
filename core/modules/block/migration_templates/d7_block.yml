@@ -1,0 +1,100 @@
+id: d7_block
+label: Blocks
+migration_tags:
+  - Drupal 7
+source:
+  plugin: block
+process:
+  # Block status is not a thing in Drupal 8, so this is how we skip over
+  # disabled blocks.
+  status:
+    plugin: skip_on_empty
+    method: row
+    source: status
+  id:
+    -
+      plugin: concat
+      source:
+        - theme
+        - module
+        - delta
+      delimiter: _
+  plugin:
+    -
+      plugin: static_map
+      bypass: true
+      source:
+        - module
+        - delta
+      map:
+        book:
+          navigation: book_navigation
+        comment:
+          recent: views_block:comments_recent-block_1
+        forum:
+          active: forum_active_block
+          new: forum_new_block
+        # locale:
+        #  0: language_block
+        node:
+          syndicate: node_syndicate_block
+        search:
+          form: search_form_block
+        statistics:
+          popular: statistics_popular_block
+        system:
+          main: system_main_block
+          'powered-by': system_powered_by_block
+        user:
+          login: user_login_block
+          # 1: system_menu_block:tools
+          new: views_block:who_s_new-block_1
+          online: views_block:who_s_online-who_s_online_block
+    -
+      plugin: block_plugin_id
+    -
+      plugin: skip_on_empty
+      method: row
+  theme:
+    plugin: block_theme
+    source:
+      - theme
+      - default_theme
+      - admin_theme
+  region:
+    plugin: block_region
+    source:
+      - region
+      - theme
+      - '@theme'
+    region_map:
+      left: sidebar_first
+      right: sidebar_second
+      sidebar_first: sidebar_first
+      sidebar_second: sidebar_second
+      help: help
+      header: header
+      footer: footer
+  weight: weight
+  settings:
+    plugin: block_settings
+    source:
+      - '@plugin'
+      - delta
+      - settings
+      - title
+  visibility:
+    plugin: block_visibility
+    source:
+      - visibility
+      - pages
+      - roles
+    # If the block uses PHP visibility, don't migrate it unless the PHP module
+    # is enabled.
+    skip_php: true
+destination:
+  plugin: entity:block
+migration_dependencies:
+  optional:
+    - d7_custom_block
+    - d7_user_role

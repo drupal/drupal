@@ -1,0 +1,9 @@
+name: Image
+type: module
+description: 'Defines an image field type and provides image manipulation tools.'
+package: Field types
+version: VERSION
+core: 8.x
+dependencies:
+  - file
+configure: entity.image_style.collection

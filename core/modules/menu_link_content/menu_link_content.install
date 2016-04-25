@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the menu_link_content module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function menu_link_content_install() {
+  // Add a higher weight so that menu_link_content_path_update() is called after
+  // system_path_update() clears the path alias cache.
+  // @todo remove this when the cache clearing is moved to path module or if
+  //   caching is removed for path aliases due to
+  //   https://www.drupal.org/node/1965074
+  module_set_weight('menu_link_content', 1);
+}

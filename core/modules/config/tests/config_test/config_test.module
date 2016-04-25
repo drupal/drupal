@@ -5,189 +5,9 @@
  * Provides Config module hook implementations for testing purposes.
  */
 
-use Drupal\config_test\Plugin\Core\Entity\ConfigTest;
+use Drupal\config_test\Entity\ConfigTest;
 
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
-
-/**
- * Implements hook_config_import_create().
- */
-function config_test_config_import_create($name, $new_config, $old_config) {
-  if (strpos($name, 'config_test.dynamic.') !== 0) {
-    return FALSE;
-  }
-  // Set a global value we can check in test code.
-  $GLOBALS['hook_config_import'] = __FUNCTION__;
-
-  $config_test = entity_create('config_test', $new_config->get());
-  $config_test->save();
-  return TRUE;
-}
-
-/**
- * Implements hook_config_import_change().
- */
-function config_test_config_import_change($name, $new_config, $old_config) {
-  if (strpos($name, 'config_test.dynamic.') !== 0) {
-    return FALSE;
-  }
-  // Set a global value we can check in test code.
-  $GLOBALS['hook_config_import'] = __FUNCTION__;
-
-  // @todo Make this less ugly.
-  list(, , $id) = explode('.', $name);
-  $config_test = entity_load('config_test', $id);
-
-  // Store the original config, and iterate through each property to store it.
-  $config_test->original = clone $config_test;
-  foreach ($old_config->get() as $property => $value) {
-    $config_test->original->$property = $value;
-  }
-
-  // Iterate through each property of the new config, copying it to the test
-  // object.
-  foreach ($new_config->get() as $property => $value) {
-    $config_test->$property = $value;
-  }
-
-  $config_test->save();
-  return TRUE;
-}
-
-/**
- * Implements hook_config_import_delete().
- */
-function config_test_config_import_delete($name, $new_config, $old_config) {
-  if (strpos($name, 'config_test.dynamic.') !== 0) {
-    return FALSE;
-  }
-  // Set a global value we can check in test code.
-  $GLOBALS['hook_config_import'] = __FUNCTION__;
-
-  // @todo Make this less ugly.
-  list(, , $id) = explode('.', $name);
-  $config_test = entity_load('config_test', $id);
-  $config_test->delete();
-  return TRUE;
-}
-
-/**
- * Entity URI callback.
- *
- * @param Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test
- *   A ConfigTest entity.
- */
-function config_test_uri(ConfigTest $config_test) {
-  return array(
-    'path' => 'admin/structure/config_test/manage/' . $config_test->id(),
-  );
-}
-
-/**
- * Implements hook_menu().
- */
-function config_test_menu() {
-  $items['admin/structure/config_test'] = array(
-    'title' => 'Test configuration',
-    'page callback' => 'config_test_list_page',
-    'access callback' => TRUE,
-  );
-  $items['admin/structure/config_test/add'] = array(
-    'title' => 'Add test configuration',
-    'page callback' => 'config_test_add_page',
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_ACTION,
-  );
-  $items['admin/structure/config_test/manage/%config_test'] = array(
-    'title' => 'Edit test configuration',
-    'page callback' => 'config_test_edit_page',
-    'page arguments' => array(4),
-    'access callback' => TRUE,
-  );
-  $items['admin/structure/config_test/manage/%config_test/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-  );
-  $items['admin/structure/config_test/manage/%config_test/delete'] = array(
-    'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('config_test_delete_form', 4),
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
-  );
-  return $items;
-}
-
-/**
- * Loads a ConfigTest object.
- *
- * @param string $id
- *   The ID of the ConfigTest object to load.
- */
-function config_test_load($id) {
-  return entity_load('config_test', $id);
-}
-
-/**
- * Page callback; Lists available ConfigTest objects.
- */
-function config_test_list_page() {
-  $controller = entity_list_controller('config_test');
-  return $controller->render();
-}
-
-/**
- * Page callback: Presents the ConfigTest creation form.
- *
- * @return array
- *   A form array as expected by drupal_render().
- */
-function config_test_add_page() {
-  $entity = entity_create('config_test', array());
-  return entity_get_form($entity);
-}
-
-/**
- * Page callback: Presents the ConfigTest edit form.
- *
- * @param Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test
- *   The ConfigTest object to edit.
- *
- * @return array
- *   A form array as expected by drupal_render().
- */
-function config_test_edit_page(ConfigTest $config_test) {
-  drupal_set_title(format_string('Edit %label', array('%label' => $config_test->label())), PASS_THROUGH);
-  return entity_get_form($config_test);
-}
-
-/**
- * Form constructor to delete a ConfigTest object.
- *
- * @param Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test
- *   The ConfigTest object to delete.
- */
-function config_test_delete_form($form, &$form_state, ConfigTest $config_test) {
-  $form_state['config_test'] = $config_test;
-
-  $form['id'] = array('#type' => 'value', '#value' => $config_test->id());
-  return confirm_form($form,
-    format_string('Are you sure you want to delete %label', array('%label' => $config_test->label())),
-    'admin/structure/config_test',
-    NULL,
-    'Delete'
-  );
-}
-
-/**
- * Form submission handler for config_test_delete_form().
- */
-function config_test_delete_form_submit($form, &$form_state) {
-  $form_state['config_test']->delete();
-  drupal_set_message(format_string('%label configuration has been deleted.', array('%label' => $form_state['config_test']->label())));
-  $form_state['redirect'] = 'admin/structure/config_test';
-}
 
 /**
  * Implements hook_cache_flush().
@@ -195,6 +15,39 @@ function config_test_delete_form_submit($form, &$form_state) {
 function config_test_cache_flush() {
   // Set a global value we can check in test code.
   $GLOBALS['hook_cache_flush'] = __FUNCTION__;
+}
 
-  return array();
+/**
+ * Implements hook_ENTITY_TYPE_create() for 'config_test'.
+ */
+function config_test_config_test_create(ConfigTest $config_test) {
+  if (\Drupal::state()->get('config_test.prepopulate')) {
+    $config_test->set('foo', 'baz');
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function config_test_entity_type_alter(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  // The 'translatable' entity key is not supposed to change over time. In this
+  // case we can safely do it because we set it once and we do not change it for
+  // all the duration of the test session.
+  $entity_types['config_test']->set('translatable', \Drupal::service('state')->get('config_test.translatable'));
+
+  // Create a clone of config_test that does not have a status.
+  $entity_types['config_test_no_status'] = clone $entity_types['config_test'];
+  $config_test_no_status = &$entity_types['config_test_no_status'];
+  $config_test_no_status->setLinkTemplate('edit-form', '/admin/structure/config_test/manage/{config_test_no_status}');
+  $config_test_no_status->setLinkTemplate('delete-form', '/admin/structure/config_test/manage/{config_test_no_status}/delete');
+
+  $keys = $config_test_no_status->getKeys();
+  unset($keys['status']);
+  $config_test_no_status->set('id', 'config_test_no_status');
+  $config_test_no_status->set('entity_keys', $keys);
+  $config_test_no_status->set('config_prefix', 'no_status');
+  if (\Drupal::service('state')->get('config_test.lookup_keys', FALSE)) {
+    $entity_types['config_test']->set('lookup_keys', ['uuid', 'style']);
+  }
 }

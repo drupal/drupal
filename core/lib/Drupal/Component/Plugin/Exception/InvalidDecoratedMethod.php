@@ -1,12 +1,7 @@
 <?php
-/**
-* @file
-* Definition of Drupal\Core\Plugin\Exception\InvalidDecoratedMethod.
-*/
 
 namespace Drupal\Component\Plugin\Exception;
 
-use Drupal\Component\Plugin\Exception\ExceptionInterface;
 use \BadMethodCallException;
 
 /**

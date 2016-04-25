@@ -1,15 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Component\Gettext\PoMemoryWriter.
- */
-
 namespace Drupal\Component\Gettext;
-
-use Drupal\Component\Gettext\PoWriterInterface;
-use Drupal\Component\Gettext\PoHeader;
-use Drupal\Component\Gettext\PoItem;
 
 /**
  * Defines a Gettext PO memory writer, to be used by the installer.
@@ -31,7 +22,7 @@ class PoMemoryWriter implements PoWriterInterface {
   }
 
   /**
-   * Implements Drupal\Component\Gettext\PoWriterInterface::writeItem().
+   * {@inheritdoc}
    */
   public function writeItem(PoItem $item) {
     if (is_array($item->getSource())) {
@@ -43,7 +34,7 @@ class PoMemoryWriter implements PoWriterInterface {
   }
 
   /**
-   * Implements Drupal\Component\Gettext\PoWriterInterface::writeItems().
+   * {@inheritdoc}
    */
   public function writeItems(PoReaderInterface $reader, $count = -1) {
     $forever = $count == -1;

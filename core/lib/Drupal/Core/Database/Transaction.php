@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Database\Transaction
- */
-
 namespace Drupal\Core\Database;
 
 /**
@@ -31,14 +26,14 @@ class Transaction {
   /**
    * The connection object for this transaction.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 
   /**
    * A boolean value to indicate whether this transaction has been rolled back.
    *
-   * @var Boolean
+   * @var bool
    */
   protected $rolledBack = FALSE;
 
@@ -91,7 +86,7 @@ class Transaction {
    * transaction has been rolled back or the log messages will be rolled back
    * too.
    *
-   * @see Drupal\Core\Database\Connection::rollback()
+   * @see \Drupal\Core\Database\Connection::rollback()
    * @see watchdog_exception()
    */
   public function rollback() {

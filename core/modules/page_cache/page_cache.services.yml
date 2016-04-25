@@ -1,0 +1,6 @@
+services:
+  http_middleware.page_cache:
+    class: Drupal\page_cache\StackMiddleware\PageCache
+    arguments: ['@cache.render', '@page_cache_request_policy', '@page_cache_response_policy']
+    tags:
+      - { name: http_middleware, priority: 200, responder: true }

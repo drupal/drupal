@@ -1,0 +1,5 @@
+# Schema for the configuration files of the Stark theme.
+
+stark.settings:
+  type: theme_settings
+  label: 'Stark settings'

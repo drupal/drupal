@@ -1,5 +1,0 @@
-name = Theme test with invalid theme engine
-description = Test theme which has a non-existent theme engine.
-core = 8.x
-hidden = TRUE
-engine = not_real_engine

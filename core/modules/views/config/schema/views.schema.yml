@@ -1,0 +1,153 @@
+# Schema for the configuration files of the Views module.
+
+views.settings:
+  type: config_object
+  label: 'Views settings'
+  mapping:
+    display_extenders:
+      type: sequence
+      label: 'Display extenders'
+      sequence:
+        type: string
+        label: 'Display extender'
+    skip_cache:
+      type: boolean
+      label: 'Disable views data caching'
+    sql_signature:
+      type: boolean
+      label: 'Add Views signature to all SQL queries'
+    ui:
+      type: mapping
+      label: 'UI settings'
+      mapping:
+        show:
+          type: mapping
+          label: 'Live preview settings'
+          mapping:
+            additional_queries:
+              type: boolean
+              label: 'Show other queries run during render during live preview'
+            advanced_column:
+              type: boolean
+              label: 'Always show advanced display settings'
+            master_display:
+              type: boolean
+              label: 'Always show the master (default) display'
+            performance_statistics:
+              type: boolean
+              label: 'Show performance statistics'
+            preview_information:
+              type: boolean
+              label: 'Show information and statistics about the view during live preview'
+            sql_query:
+              type: mapping
+              label: 'Query settings'
+              mapping:
+                enabled:
+                  type: boolean
+                  label: 'Show the SQL query'
+                where:
+                  type: string
+                  label: 'Show SQL query'
+            display_embed:
+              type: boolean
+              label: 'Allow embedded displays'
+        always_live_preview:
+          type: boolean
+          label: 'Automatically update preview on changes'
+        exposed_filter_any_label:
+          type: string
+          label: 'Label for "Any" value on non-required single-select exposed filters'
+    field_rewrite_elements:
+      type: sequence
+      label: 'Field rewrite elements'
+      sequence:
+        type: string
+        label: 'Element'
+
+views.view.*:
+  type: config_entity
+  label: 'View'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    module:
+      type: string
+      label: 'Module'
+    description:
+      type: text
+      label: 'Administrative description'
+    tag:
+      type: string
+      label: 'Tag'
+    base_table:
+      type: string
+      label: 'Base table'
+    base_field:
+      type: string
+      label: 'Base field'
+    core:
+      type: string
+      label: 'Drupal version'
+    display:
+      type: sequence
+      label: 'Displays'
+      sequence:
+        type: mapping
+        label: 'Display settings'
+        mapping:
+          id:
+            type: string
+            label: 'Machine name'
+          display_title:
+            type: text
+            label: 'Title'
+          display_plugin:
+            type: string
+            label: 'Display plugin'
+          position:
+            type: integer
+            label: 'Position'
+          display_options:
+            type: views.display.[%parent.display_plugin]
+          cache_metadata:
+            type: mapping
+            label: 'Cache metadata'
+            mapping:
+              max-age:
+                type: integer
+                label: 'Cache maximum age'
+              contexts:
+                type: sequence
+                label: 'Cache contexts'
+                sequence:
+                  type: string
+              tags:
+                type: sequence
+                label: 'Cache tags'
+                sequence:
+                  type: string
+              # Deprecated.
+              cacheable:
+                type: boolean
+                label: 'Cacheable'
+views_block:
+  type: block_settings
+  label: 'View block'
+  mapping:
+    views_label:
+      type: label
+      lable: 'Title'
+    items_per_page:
+      type: string
+      label: 'Items per block'
+
+block.settings.views_block:*:
+  type: views_block
+
+block.settings.views_exposed_filter_block:*:
+  type: views_block

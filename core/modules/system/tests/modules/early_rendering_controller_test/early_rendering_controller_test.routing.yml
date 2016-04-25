@@ -1,0 +1,111 @@
+# Controller returning a render array.
+early_rendering_controller_test.render_array:
+  path: '/early-rendering-controller-test/render-array'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::renderArray'
+  requirements:
+    _access: 'TRUE'
+early_rendering_controller_test.render_array.early:
+  path: '/early-rendering-controller-test/render-array/early'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::renderArrayEarly'
+  requirements:
+    _access: 'TRUE'
+
+# Controller returning an AjaxResponse.
+early_rendering_controller_test.ajax_response:
+  path: '/early-rendering-controller-test/ajax-response'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::ajaxResponse'
+  requirements:
+    _access: 'TRUE'
+early_rendering_controller_test.ajax_response.early:
+  path: '/early-rendering-controller-test/ajax-response/early'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::ajaxResponseEarly'
+  requirements:
+    _access: 'TRUE'
+
+# Controller returning a basic Response object.
+early_rendering_controller_test.response:
+  path: '/early-rendering-controller-test/response'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::response'
+  requirements:
+    _access: 'TRUE'
+early_rendering_controller_test.response.early:
+  path: '/early-rendering-controller-test/response/early'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::responseEarly'
+  requirements:
+    _access: 'TRUE'
+
+# Controller returning a Response object with attachments.
+early_rendering_controller_test.response-with-attachments:
+  path: '/early-rendering-controller-test/response-with-attachments'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::responseWithAttachments'
+  requirements:
+    _access: 'TRUE'
+early_rendering_controller_test.response-with-attachments.early:
+  path: '/early-rendering-controller-test/response-with-attachments/early'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::responseWithAttachmentsEarly'
+  requirements:
+    _access: 'TRUE'
+
+# Controller returning a cacheable Response object.
+early_rendering_controller_test.cacheable-response:
+  path: '/early-rendering-controller-test/cacheable-response'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::cacheableResponse'
+  requirements:
+    _access: 'TRUE'
+early_rendering_controller_test.cacheable-response.early:
+  path: '/early-rendering-controller-test/cacheable-response/early'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::cacheableResponseEarly'
+  requirements:
+    _access: 'TRUE'
+
+# Controller returning a basic domain object.
+early_rendering_controller_test.domain-object:
+  path: '/early-rendering-controller-test/domain-object'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::domainObject'
+  requirements:
+    _access: 'TRUE'
+early_rendering_controller_test.domain-object.early:
+  path: '/early-rendering-controller-test/domain-object/early'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::domainObjectEarly'
+  requirements:
+    _access: 'TRUE'
+
+# Controller returning a domain object with attachments.
+early_rendering_controller_test.domain-object-with-attachments:
+  path: '/early-rendering-controller-test/domain-object-with-attachments'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::domainObjectWithAttachments'
+  requirements:
+    _access: 'TRUE'
+early_rendering_controller_test.domain-object-with-attachments.early:
+  path: '/early-rendering-controller-test/domain-object-with-attachments/early'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::domainObjectWithAttachmentsEarly'
+  requirements:
+    _access: 'TRUE'
+
+# Controller returning a cacheable domain object.
+early_rendering_controller_test.cacheable-domain-object:
+  path: '/early-rendering-controller-test/cacheable-domain-object'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::cacheableDomainObject'
+  requirements:
+    _access: 'TRUE'
+early_rendering_controller_test.cacheable-domain-object.early:
+  path: '/early-rendering-controller-test/cacheable-domain-object/early'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::cacheableDomainObjectEarly'
+  requirements:
+    _access: 'TRUE'

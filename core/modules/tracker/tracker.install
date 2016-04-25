@@ -9,16 +9,16 @@
  * Implements hook_uninstall().
  */
 function tracker_uninstall() {
-  variable_del('tracker_index_nid');
+  \Drupal::state()->delete('tracker.index_nid');
 }
 
 /**
- * Implements hook_enable().
+ * Implements hook_install().
  */
-function tracker_enable() {
+function tracker_install() {
   $max_nid = db_query('SELECT MAX(nid) FROM {node}')->fetchField();
   if ($max_nid != 0) {
-    variable_set('tracker_index_nid', $max_nid);
+    \Drupal::state()->set('tracker.index_nid', $max_nid);
     // To avoid timing out while attempting to do a complete indexing, we
     // simply call our cron job to remove stale records and begin the process.
     tracker_cron();
@@ -116,42 +116,3 @@ function tracker_schema() {
 
   return $schema;
 }
-
-/**
- * @addtogroup updates-7.x-to-8.x
- * @{
- */
-
-/**
- * Moves tracker settings from variable to config.
- */
-function tracker_update_8000() {
-  update_variables_to_config('tracker.settings', array(
-    'tracker_batch_size' => 'cron_index_limit',
-  ));
-}
-
-/**
- * Make *id fields unsigned.
- */
-function tracker_update_8001() {
-  db_drop_primary_key('tracker_user');
-  db_drop_index('tracker_user', 'tracker');
-  db_change_field('tracker_user', 'uid', 'uid',
-    array(
-      'description' => 'The {users}.uid of the node author or commenter.',
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    array('primary key' => array('nid', 'uid'), 'indexes' => array(
-      'tracker' => array('uid', 'published', 'changed'),
-    ))
-  );
-}
-
-/**
- * @} End of "addtogroup updates-7.x-to-8.x".
- * The next series of updates should start at 9000.
- */

@@ -1,0 +1,131 @@
+id: d6_field
+label: Field configuration
+migration_tags:
+  - Drupal 6
+class: Drupal\migrate_drupal\Plugin\migrate\CckMigration
+cck_plugin_method: processField
+source:
+  plugin: d6_field
+  constants:
+    entity_type: node
+    langcode: en
+process:
+  entity_type: 'constants/entity_type'
+  status: active
+  langcode: 'constants/langcode'
+  field_name: field_name
+  type:
+    -
+      plugin: field_type
+      source:
+        - type
+        - widget_type
+      map:
+        number_integer:
+          number: integer
+          optionwidgets_select: list_integer
+          optionwidgets_buttons: list_integer
+          optionwidgets_onoff: boolean
+        number_decimal:
+          number: decimal
+          optionwidgets_select: list_float
+          optionwidgets_buttons: list_float
+          optionwidgets_onoff: boolean
+        number_float:
+          number: float
+          optionwidgets_select: list_float
+          optionwidgets_buttons: list_float
+          optionwidgets_onoff: boolean
+        email:
+          email_textfield: email
+        filefield:
+          imagefield_widget: image
+          filefield_widget: file
+        date:
+          date_select: datetime
+        datestamp:
+          date_select: datetime
+        datetime:
+          date_select: datetime
+        fr_phone:
+          phone_textfield: telephone
+        be_phone:
+          phone_textfield: telephone
+        it_phone:
+          phone_textfield: telephone
+        el_phone:
+          phone_textfield: telephone
+        ch_phone:
+          phone_textfield: telephone
+        ca_phone:
+          phone_textfield: telephone
+        cr_phone:
+          phone_textfield: telephone
+        pa_phone:
+          phone_textfield: telephone
+        gb_phone:
+          phone_textfield: telephone
+        ru_phone:
+          phone_textfield: telephone
+        ua_phone:
+          phone_textfield: telephone
+        es_phone:
+          phone_textfield: telephone
+        au_phone:
+          phone_textfield: telephone
+        cs_phone:
+          phone_textfield: telephone
+        hu_phone:
+          phone_textfield: telephone
+        pl_phone:
+          phone_textfield: telephone
+        nl_phone:
+          phone_textfield: telephone
+        se_phone:
+          phone_textfield: telephone
+        za_phone:
+          phone_textfield: telephone
+        il_phone:
+          phone_textfield: telephone
+        nz_phone:
+          phone_textfield: telephone
+        br_phone:
+          phone_textfield: telephone
+        cl_phone:
+          phone_textfield: telephone
+        cn_phone:
+          phone_textfield: telephone
+        hk_phone:
+          phone_textfield: telephone
+        mo_phone:
+          phone_textfield: telephone
+        ph_phone:
+          phone_textfield: telephone
+        sg_phone:
+          phone_textfield: telephone
+        jo_phone:
+          phone_textfield: telephone
+        eg_phone:
+          phone_textfield: telephone
+        pk_phone:
+          phone_textfield: telephone
+        int_phone:
+          phone_textfield: telephone
+    -
+      plugin: skip_on_empty
+      method: row
+  cardinality:
+    plugin: static_map
+    bypass: true
+    source: multiple
+    map:
+      0: 1
+      1: -1
+  settings:
+    plugin: field_settings
+    source:
+      - '@type'
+      - global_settings
+
+destination:
+  plugin: md_entity:field_storage_config

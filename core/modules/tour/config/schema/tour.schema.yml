@@ -1,0 +1,61 @@
+# Schema for the configuration files of the Tour module.
+
+tour.tour.*:
+  type: config_entity
+  label: 'Tour settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    module:
+      type: string
+      label: 'Providing module'
+    routes:
+      type: sequence
+      label: 'Route settings'
+      sequence:
+        type: route
+        label: 'Route'
+    tips:
+      type: sequence
+      label: 'Tips'
+      sequence:
+        type: tour.tip.[plugin]
+        label: 'Tour tip'
+
+tour.tip:
+  type: mapping
+  label: 'Tour tip'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    plugin:
+      type: string
+      label: 'Plugin'
+    label:
+      type: label
+      label: 'Label'
+    weight:
+      type: integer
+      label: 'Weight'
+    location:
+      type: string
+      label: 'Location'
+    attributes:
+      type: sequence
+      label: 'Attributes'
+      sequence:
+        type: string
+        label: 'Attribute'
+
+tour.tip.text:
+  type: tour.tip
+  label: 'Textual tour tip'
+  mapping:
+    body:
+      type: text
+      label: 'Body'

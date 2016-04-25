@@ -1,13 +1,10 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Updater\Updater.
- */
-
 namespace Drupal\Core\Updater;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\FileTransfer\FileTransferException;
+use Drupal\Core\FileTransfer\FileTransfer;
 
 /**
  * Defines the base class for Updaters used in Drupal.
@@ -22,13 +19,25 @@ class Updater {
   public $source;
 
   /**
+   * The root directory under which new projects will be copied.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Constructs a new updater.
    *
    * @param string $source
    *   Directory to install from.
+   * @param string $root
+   *   The root directory under which the project will be copied to if it's a
+   *   new project. Usually this is the app root (the directory in which the
+   *   Drupal site is installed).
    */
-  public function __construct($source) {
+  public function __construct($source, $root) {
     $this->source = $source;
+    $this->root = $root;
     $this->name = self::getProjectName($source);
     $this->title = self::getProjectTitle($source);
   }
@@ -41,20 +50,24 @@ class Updater {
    *
    * @param string $source
    *   Directory of a Drupal project.
+   * @param string $root
+   *   The root directory under which the project will be copied to if it's a
+   *   new project. Usually this is the app root (the directory in which the
+   *   Drupal site is installed).
    *
-   * @return Drupal\Core\Updater\Updater
+   * @return \Drupal\Core\Updater\Updater
    *   A new Drupal\Core\Updater\Updater object.
    *
-   * @throws Drupal\Core\Updater\UpdaterException
+   * @throws \Drupal\Core\Updater\UpdaterException
    */
-  public static function factory($source) {
+  public static function factory($source, $root) {
     if (is_dir($source)) {
       $updater = self::getUpdaterFromDirectory($source);
     }
     else {
       throw new UpdaterException(t('Unable to determine the type of the source directory.'));
     }
-    return new $updater($source);
+    return new $updater($source, $root);
   }
 
   /**
@@ -66,7 +79,7 @@ class Updater {
    * @return string
    *   The class name which can work with this project type.
    *
-   * @throws Drupal\Core\Updater\UpdaterException
+   * @throws \Drupal\Core\Updater\UpdaterException
    */
   public static function getUpdaterFromDirectory($directory) {
     // Gets a list of possible implementing classes.
@@ -94,12 +107,12 @@ class Updater {
    *   Path to the info file.
    */
   public static function findInfoFile($directory) {
-    $info_files = file_scan_directory($directory, '/.*\.info$/');
+    $info_files = file_scan_directory($directory, '/.*\.info.yml$/');
     if (!$info_files) {
       return FALSE;
     }
     foreach ($info_files as $info_file) {
-      if (drupal_substr($info_file->filename, 0, -5) == drupal_basename($directory)) {
+      if (Unicode::substr($info_file->filename, 0, -9) == drupal_basename($directory)) {
         // Info file Has the same name as the directory, return it.
         return $info_file->uri;
       }
@@ -107,6 +120,28 @@ class Updater {
     // Otherwise, return the first one.
     $info_file = array_shift($info_files);
     return $info_file->uri;
+  }
+
+  /**
+   * Get Extension information from directory.
+   *
+   * @param string $directory
+   *   Directory to search in.
+   *
+   * @return array
+   *   Extension info.
+   *
+   * @throws \Drupal\Core\Updater\UpdaterException
+   *   If the info parser does not provide any info.
+   */
+  protected static function getExtensionInfo($directory) {
+    $info_file = static::findInfoFile($directory);
+    $info = \Drupal::service('info_parser')->parse($info_file);
+    if (empty($info)) {
+      throw new UpdaterException(t('Unable to parse info file: %info_file.', ['%info_file' => $info_file]));
+    }
+
+    return $info;
   }
 
   /**
@@ -133,16 +168,13 @@ class Updater {
    * @return string
    *   The title of the project.
    *
-   * @throws Drupal\Core\Updater\UpdaterException
+   * @throws \Drupal\Core\Updater\UpdaterException
    */
   public static function getProjectTitle($directory) {
     $info_file = self::findInfoFile($directory);
-    $info = drupal_parse_info_file($info_file);
+    $info = \Drupal::service('info_parser')->parse($info_file);
     if (empty($info)) {
       throw new UpdaterException(t('Unable to parse info file: %info_file.', array('%info_file' => $info_file)));
-    }
-    if (empty($info['name'])) {
-      throw new UpdaterException(t("The info file (%info_file) does not define a 'name' attribute.", array('%info_file' => $info_file)));
     }
     return $info['name'];
   }
@@ -168,7 +200,7 @@ class Updater {
   /**
    * Updates a Drupal project and returns a list of next actions.
    *
-   * @param Drupal\Core\FileTransfer\FileTransferInterface $filetransfer
+   * @param \Drupal\Core\FileTransfer\FileTransfer $filetransfer
    *   Object that is a child of FileTransfer. Used for moving files
    *   to the server.
    * @param array $overrides
@@ -177,8 +209,8 @@ class Updater {
    * @return array
    *   An array of links which the user may need to complete the update
    *
-   * @throws Drupal\Core\Updater\UpdaterException
-   * @throws Drupal\Core\Updater\UpdaterFileTransferException
+   * @throws \Drupal\Core\Updater\UpdaterException
+   * @throws \Drupal\Core\Updater\UpdaterFileTransferException
    */
   public function update(&$filetransfer, $overrides = array()) {
     try {
@@ -187,7 +219,7 @@ class Updater {
 
       // Take a Backup.
       if ($args['make_backup']) {
-        $this->makeBackup($args['install_dir'], $args['backup_dir']);
+        $this->makeBackup($filetransfer, $args['install_dir'], $args['backup_dir']);
       }
 
       if (!$this->name) {
@@ -198,9 +230,6 @@ class Updater {
       // Make sure the installation parent directory exists and is writable.
       $this->prepareInstallDirectory($filetransfer, $args['install_dir']);
 
-      // Note: If the project is installed in the top-level, it will not be
-      // deleted. It will be installed in sites/default as that will override
-      // the top-level reference and not break other sites which are using it.
       if (is_dir($args['install_dir'] . '/' . $this->name)) {
         // Remove the existing installed file.
         $filetransfer->removeDirectory($args['install_dir'] . '/' . $this->name);
@@ -220,14 +249,14 @@ class Updater {
       return $this->postUpdateTasks();
     }
     catch (FileTransferException $e) {
-      throw new UpdaterFileTransferException(t('File Transfer failed, reason: !reason', array('!reason' => strtr($e->getMessage(), $e->arguments))));
+      throw new UpdaterFileTransferException(t('File Transfer failed, reason: @reason', array('@reason' => strtr($e->getMessage(), $e->arguments))));
     }
   }
 
   /**
    * Installs a Drupal project, returns a list of next actions.
    *
-   * @param Drupal\Core\FileTransfer\FileTransferInterface $filetransfer
+   * @param \Drupal\Core\FileTransfer\FileTransfer $filetransfer
    *   Object that is a child of FileTransfer.
    * @param array $overrides
    *   An array of settings to override defaults; see self::getInstallArgs().
@@ -235,7 +264,7 @@ class Updater {
    * @return array
    *   An array of links which the user may need to complete the install.
    *
-   * @throws Drupal\Core\Updater\UpdaterFileTransferException
+   * @throws \Drupal\Core\Updater\UpdaterFileTransferException
    */
   public function install(&$filetransfer, $overrides = array()) {
     try {
@@ -258,19 +287,19 @@ class Updater {
       return $this->postInstallTasks();
     }
     catch (FileTransferException $e) {
-      throw new UpdaterFileTransferException(t('File Transfer failed, reason: !reason', array('!reason' => strtr($e->getMessage(), $e->arguments))));
+      throw new UpdaterFileTransferException(t('File Transfer failed, reason: @reason', array('@reason' => strtr($e->getMessage(), $e->arguments))));
     }
   }
 
   /**
    * Makes sure the installation parent directory exists and is writable.
    *
-   * @param Drupal\Core\FileTransfer\FileTransferInterface $filetransfer
+   * @param \Drupal\Core\FileTransfer\FileTransfer $filetransfer
    *   Object which is a child of FileTransfer.
    * @param string $directory
    *   The installation directory to prepare.
    *
-   * @throws Drupal\Core\Updater\UpdaterException
+   * @throws \Drupal\Core\Updater\UpdaterException
    */
   public function prepareInstallDirectory(&$filetransfer, $directory) {
     // Make the parent dir writable if need be and create the dir.
@@ -310,7 +339,7 @@ class Updater {
   /**
    * Ensures that a given directory is world readable.
    *
-   * @param Drupal\Core\FileTransfer\FileTransferInterface $filetransfer
+   * @param \Drupal\Core\FileTransfer\FileTransfer $filetransfer
    *   Object which is a child of FileTransfer.
    * @param string $path
    *   The file path to make world readable.
@@ -328,16 +357,23 @@ class Updater {
   /**
    * Performs a backup.
    *
-   * @todo Not implemented.
+   * @param \Drupal\Core\FileTransfer\FileTransfer $filetransfer
+   *   Object which is a child of FileTransfer.
+   * @param string $from
+   *   The file path to copy from.
+   * @param string $to
+   *   The file path to copy to.
+   *
+   * @todo Not implemented: https://www.drupal.org/node/2474355
    */
-  public function makeBackup(&$filetransfer, $from, $to) {
+  public function makeBackup(FileTransfer $filetransfer, $from, $to) {
   }
 
   /**
    * Returns the full path to a directory where backups should be written.
    */
   public function getBackupDir() {
-    return file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath();
+    return \Drupal::service('stream_wrapper_manager')->getViaScheme('temporary')->getDirectoryPath();
   }
 
   /**

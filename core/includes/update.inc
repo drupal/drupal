@@ -9,45 +9,30 @@
  */
 
 use Drupal\Component\Graph\Graph;
-use Drupal\Core\Config\FileStorage;
-use Drupal\Core\Config\ConfigException;
-use Drupal\Component\Uuid\Uuid;
-use Drupal\Component\Utility\NestedArray;
-
-/**
- * Minimum schema version of Drupal 7 required for upgrade to Drupal 8.
- *
- * Upgrades from Drupal 7 to Drupal 8 require that Drupal 7 be running
- * the most recent version, or the upgrade could fail. We can't easily
- * check the Drupal 7 version once the update process has begun, so instead
- * we check the schema version of system.module.
- */
-const REQUIRED_D7_SCHEMA_VERSION = '7069';
+use Drupal\Core\Utility\Error;
 
 /**
  * Disables any extensions that are incompatible with the current core version.
  */
 function update_fix_compatibility() {
+  $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+  $save = FALSE;
   foreach (array('module', 'theme') as $type) {
-    $config = config("system.$type");
-    $save = FALSE;
-    foreach ($config->get('enabled') as $name => $weight) {
+    foreach ($extension_config->get($type) as $name => $weight) {
       if (update_check_incompatibility($name, $type)) {
-        $config->clear("enabled.$name");
+        $extension_config->clear("$type.$name");
         $save = TRUE;
       }
     }
-    if ($save) {
-      if ($type == 'module') {
-        $config->set('enabled', module_config_sort($config->get('enabled')));
-      }
-      $config->save();
-    }
+  }
+  if ($save) {
+    $extension_config->set('module', module_config_sort($extension_config->get('module')));
+    $extension_config->save();
   }
 }
 
 /**
- * Helper function to test compatibility of a module or theme.
+ * Tests the compatibility of a module or theme.
  */
 function update_check_incompatibility($name, $type = 'module') {
   static $themes, $modules;
@@ -57,7 +42,7 @@ function update_check_incompatibility($name, $type = 'module') {
     // We need to do a full rebuild here to make sure the database reflects any
     // code changes that were made in the filesystem before the update script
     // was initiated.
-    $themes = system_rebuild_theme_data();
+    $themes = \Drupal::service('theme_handler')->rebuildThemeData();
     $modules = system_rebuild_module_data();
   }
 
@@ -69,7 +54,7 @@ function update_check_incompatibility($name, $type = 'module') {
   }
   if (!isset($file)
       || !isset($file->info['core'])
-      || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY
+      || $file->info['core'] != \Drupal::CORE_COMPATIBILITY
       || version_compare(phpversion(), $file->info['php']) < 0) {
     return TRUE;
   }
@@ -77,478 +62,66 @@ function update_check_incompatibility($name, $type = 'module') {
 }
 
 /**
- * Performs extra steps required to bootstrap when using a Drupal 7 database.
+ * Returns whether the minimum schema requirement has been satisfied.
  *
- * Users who still have a Drupal 7 database (and are in the process of
- * updating to Drupal 8) need extra help before a full bootstrap can be
- * achieved. This function does the necessary preliminary work that allows
- * the bootstrap to be successful.
- *
- * No access check has been performed when this function is called, so no
- * irreversible changes to the database are made here.
+ * @return array
+ *  A requirements info array.
  */
-function update_prepare_d8_bootstrap() {
-  include_once DRUPAL_ROOT . '/core/includes/install.inc';
-  include_once DRUPAL_ROOT . '/core/includes/schema.inc';
-  // Bootstrap to configuration.
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+function update_system_schema_requirements() {
+  $requirements = array();
 
-  // Check whether settings.php needs to be rewritten.
-  $settings_exist = !empty($GLOBALS['config_directories']);
+  $system_schema = drupal_get_installed_schema_version('system');
 
-  // If any of the required settings needs to be written, then settings.php
-  // needs to be writable.
-  if (!$settings_exist) {
-    $settings_file = conf_path() . '/settings.php';
-    $writable = drupal_verify_install_file($settings_file, FILE_EXIST | FILE_READABLE | FILE_WRITABLE);
-    $requirements['settings file']['title'] = 'Settings file';
-    if ($writable) {
-      $requirements['settings file'] += array(
-        'value' => 'settings.php is writable.',
-      );
-    }
-    else {
-      $requirements['settings file'] += array(
-        'value' => 'settings.php is not writable.',
-        'severity' => REQUIREMENT_ERROR,
-        'description' => 'Drupal requires write permissions to <em>' . $settings_file . '</em> during the update process. If you are unsure how to grant file permissions, consult the <a href="http://drupal.org/server-permissions">online handbook</a>.',
-      );
-    }
-    update_extra_requirements($requirements);
-  }
-
-  if (!$settings_exist || !is_dir(config_get_config_directory('active')) || !is_dir(config_get_config_directory('staging'))) {
-    // @todo Race-condition: drupal_install_config_directories() calls into
-    //   install_ensure_config_directory(), which calls into
-    //   file_prepare_directory(), whichs calls into file_get_stream_wrappers(),
-    //   which attempts to invoke hooks with a non-existing module/hook system.
-
-    include_once DRUPAL_ROOT . '/core/includes/module.inc';
-    include_once DRUPAL_ROOT . '/core/includes/cache.inc';
-    $module_list['system']['filename'] = 'core/modules/system/system.module';
-    module_list(NULL, $module_list);
-    require_once DRUPAL_ROOT . '/' . $module_list['system']['filename'];
-    // Ensure the configuration directories exist and are writable, or create
-    // them. If the directories have not been specified in settings.php and
-    // created manually already, and either directory cannot be created by the
-    // web server, an exception will be thrown, halting the update.
-    drupal_install_config_directories();
-  }
-
-  // Bootstrap the database.
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
-
-  // If the site has not updated to Drupal 8 yet, check to make sure that it is
-  // running an up-to-date version of Drupal 7 before proceeding. Note this has
-  // to happen AFTER the database bootstraps because of
-  // drupal_get_installed_schema_version().
-  try {
-    $system_schema = drupal_get_installed_schema_version('system');
-  }
-  catch (\Exception $e) {
-    $system_schema = db_query('SELECT schema_version FROM {system} WHERE name = :system', array(':system' => 'system'))->fetchField();
-  }
-  if ($system_schema < 8000) {
-    $has_required_schema = $system_schema >= REQUIRED_D7_SCHEMA_VERSION;
-    $requirements = array(
-      'drupal 7 version' => array(
-        'title' => 'Drupal 7 version',
-        'value' => $has_required_schema ? 'You are running a current version of Drupal 7.' : 'You are not running a current version of Drupal 7',
-        'severity' => $has_required_schema ? NULL : REQUIREMENT_ERROR,
-        'description' => $has_required_schema ? '' : 'Please update your Drupal 7 installation to the most recent version before attempting to upgrade to Drupal 8',
-      ),
+  $requirements['minimum schema']['title'] = 'Minimum schema version';
+  if ($system_schema >= \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
+    $requirements['minimum schema'] += array(
+      'value' => 'The installed schema version meets the minimum.',
+      'description' => 'Schema version: ' . $system_schema,
     );
-    update_extra_requirements($requirements);
-
-    // @todo update.php stages seem to be completely screwed up; the initial
-    //   requirements check is not supposed to change the system. All of the
-    //   following code seems to have been mistakenly/unknowingly added here and
-    //   does not belong into update_prepare_d8_bootstrap().
-    if ($has_required_schema) {
-      if (!db_table_exists('key_value')) {
-        $specs = array(
-          'description' => 'Generic key-value storage table. See state() for an example.',
-          'fields' => array(
-            'collection' => array(
-              'description' => 'A named collection of key and value pairs.',
-              'type' => 'varchar',
-              'length' => 128,
-              'not null' => TRUE,
-              'default' => '',
-            ),
-            'name' => array(
-              'description' => 'The key of the key-value pair. As KEY is a SQL reserved keyword, name was chosen instead.',
-              'type' => 'varchar',
-              'length' => 128,
-              'not null' => TRUE,
-              'default' => '',
-            ),
-            'value' => array(
-              'description' => 'The value.',
-              'type' => 'blob',
-              'not null' => TRUE,
-              'size' => 'big',
-              'translatable' => TRUE,
-            ),
-          ),
-          'primary key' => array('collection', 'name'),
-        );
-        db_create_table('key_value', $specs);
-      }
-      // Bootstrap variables so we can update theme while preparing the update
-      // process.
-      drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
-
-      // Update the 'language_default' system variable, if configured.
-      // Required to run before drupal_install_config_directories(), since that
-      // triggers a call into system_stream_wrappers(), which calls t(), which
-      // calls into language_default().
-      $language_default = variable_get('language_default');
-      if (!empty($language_default) && (isset($language_default->langcode) || isset($language_default->language))) {
-        if (!isset($language_default->langcode)) {
-          $language_default->langcode = $language_default->language;
-        }
-        unset($language_default->language);
-        // In D8, the 'language_default' is not anymore an object, but an array,
-        // so make sure that the new value that is saved into this variable is an
-        // array.
-        variable_set('language_default', (array) $language_default);
-      }
-
-      $module_config = config('system.module');
-      $disabled_modules = config('system.module.disabled');
-      $theme_config = config('system.theme');
-      $disabled_themes = config('system.theme.disabled');
-      $schema_store = drupal_container()->get('keyvalue')->get('system.schema');
-
-      // Load system.module, because update_prepare_d8_bootstrap() is called in
-      // the initial minimal update.php bootstrap that performs the core
-      // requirements check.
-      require_once DRUPAL_ROOT . '/core/modules/system/system.module';
-
-      // Make sure that the bootstrap cache is cleared as that might contain
-      // incompatible data structures.
-      cache('bootstrap')->deleteAll();
-
-      // Retrieve all installed extensions from the {system} table.
-      // Uninstalled extensions are ignored and not converted.
-      $result = db_query('SELECT name, status, weight, schema_version, type FROM {system} WHERE type = :theme OR (type = :module AND schema_version <> :schema_uninstalled)', array(
-        ':theme' => 'theme',
-        ':module' => 'module',
-        ':schema_uninstalled' => SCHEMA_UNINSTALLED,
-      ));
-
-      // Populate a fixed module list (again, why did it get lost?) to avoid
-      // errors due to the drupal_alter() in _system_rebuild_module_data().
-      $module_list['system']['filename'] = 'core/modules/system/system.module';
-      module_list(NULL, $module_list);
-      $module_data = _system_rebuild_module_data();
-
-      // Migrate each extension into configuration, varying by the extension's
-      // status, and record its schema version.
-      foreach ($result as $record) {
-        if ($record->type == 'module') {
-          if ($record->status && isset($module_data[$record->name])) {
-            $module_config->set('enabled.' . $record->name, $record->weight);
-          }
-          else {
-            $disabled_modules->set($record->name, $record->weight);
-          }
-        }
-        elseif ($record->type == 'theme') {
-          if ($record->status) {
-            $theme_config->set('enabled.' . $record->name, 0);
-          }
-          else {
-            $disabled_themes->set($record->name, 0);
-          }
-        }
-        $schema_store->set($record->name, $record->schema_version);
-      }
-      $module_config->set('enabled', module_config_sort($module_config->get('enabled')))->save();
-      $disabled_modules->save();
-      $theme_config->save();
-      $disabled_themes->save();
-
-      // Update the dynamic include paths that might be used before running the
-      // proper update functions.
-      update_prepare_stored_includes();
-      // Update the environment for the language bootstrap if needed.
-      update_prepare_d8_language();
-      // Prime the classloader.
-      system_list('module_enabled');
-
-      // Change language column to langcode in url_alias.
-      if (db_table_exists('url_alias') && db_field_exists('url_alias', 'language')) {
-        db_drop_index('url_alias', 'alias_language_pid');
-        db_drop_index('url_alias', 'source_language_pid');
-        $langcode_spec = array(
-          'description' => "The language code this alias is for; if 'und', the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.",
-          'type' => 'varchar',
-          'length' => 12,
-          'not null' => TRUE,
-          'default' => '',
-        );
-        $langcode_indexes = array('indexes' =>
-          array(
-            'alias_langcode_pid' => array('alias', 'langcode', 'pid'),
-            'source_langcode_pid' => array('source', 'langcode', 'pid'),
-          ),
-        );
-        db_change_field('url_alias', 'language', 'langcode', $langcode_spec, $langcode_indexes);
-      }
-    }
   }
+  else {
+    $requirements['minimum schema'] += array(
+      'value' => 'The installed schema version does not meet the minimum.',
+      'severity' => REQUIREMENT_ERROR,
+      'description' => 'Your system schema version is ' . $system_schema . '. Updating directly from a schema version prior to 8000 is not supported. You must <a href="https://www.drupal.org/node/2179269">migrate your site to Drupal 8</a> first.',
+    );
+  }
+
+  return $requirements;
 }
 
 /**
- * Fix stored include paths to match the "/core" migration.
+ * Checks update requirements and reports errors and (optionally) warnings.
  */
-function update_prepare_stored_includes() {
-  // Update language negotiation settings.
-  foreach (language_types_get_all() as $language_type) {
-    $negotiation = variable_get("language_negotiation_$language_type", array());
-    foreach ($negotiation as $method_id => &$method) {
-      if (isset($method['file']) && $method['file'] == 'includes/locale.inc') {
-        $method['file'] = 'core/modules/language/language.negotiation.inc';
-      }
-    }
-    variable_set("language_negotiation_$language_type", $negotiation);
-  }
+function update_check_requirements() {
+  // Check requirements of all loaded modules.
+  $requirements = \Drupal::moduleHandler()->invokeAll('requirements', array('update'));
+  $requirements += update_system_schema_requirements();
+  return $requirements;
 }
 
 /**
- * Prepare Drupal 8 language changes for the bootstrap if needed.
- */
-function update_prepare_d8_language() {
-  if (db_table_exists('languages')) {
-    $languages = db_select('languages', 'l')
-      ->fields('l')
-      ->execute();
-    $plurals = array();
-    $javascript = array();
-    $prefixes = array();
-    $domains = array();
-    foreach ($languages as $language) {
-      $plurals[$language->language] = array(
-        'plurals' => $language->plurals,
-        'formula' => $language->formula,
-      );
-      $javascript[$language->language] = $language->javascript;
-      $prefixes[$language->language] = $language->prefix;
-      $domains[$language->language] = $language->domain;
-    }
-    variable_set('locale_translation_plurals', $plurals);
-    variable_set('locale_translation_javascript', $javascript);
-    variable_set('locale_language_negotiation_url_prefixes', $prefixes);
-    variable_set('locale_language_negotiation_url_domains', $domains);
-
-    // Drop now unneeded columns.
-    db_drop_field('languages', 'plurals');
-    db_drop_field('languages', 'formula');
-    db_drop_field('languages', 'javascript');
-    db_drop_field('languages', 'prefix');
-    db_drop_field('languages', 'domain');
-    db_drop_field('languages', 'native');
-    db_drop_field('languages', 'enabled');
-
-    // Update language count.
-    variable_set('language_count', db_query('SELECT COUNT(language) FROM {languages}')->fetchField());
-
-    // Rename the languages table to language.
-    db_rename_table('languages', 'language');
-
-    // Install/enable the language module. We need to use the update specific
-    // version of this function to ensure schema conflicts don't happen due to
-    // our updated data.
-    $modules = array('language');
-    update_module_enable($modules);
-
-    // Rename language column to langcode and set it again as the primary key.
-    if (db_field_exists('language', 'language')) {
-      db_drop_primary_key('language');
-      $langcode_spec = array(
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => "Language code, e.g. 'de' or 'en-US'.",
-      );
-      db_change_field('language', 'language', 'langcode', $langcode_spec, array('primary key' => array('langcode')));
-    }
-
-    // Adds the locked column and saves the special languages.
-    if (!db_field_exists('language', 'locked')) {
-      $locked_spec = array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'A boolean indicating whether the administrator can edit or delete the language.',
-      );
-      db_add_field('language', 'locked', $locked_spec);
-
-      $max_language_weight = db_query('SELECT MAX(weight) FROM {language}')->fetchField();
-      $languages = language_default_locked_languages($max_language_weight);
-      foreach ($languages as $language) {
-        db_insert('language')
-          ->fields(array(
-            'langcode' => $language->langcode,
-            'name' => $language->name,
-            'weight' => $language->weight,
-            // These languages are locked, default to enabled.
-            'locked' => 1,
-          ))
-          ->execute();
-      }
-    }
-
-    // Update the 'language_default' system variable with the langcode change.
-    $language_default = variable_get('language_default');
-    if (!empty($language_default)) {
-      if (isset($language_default->language)) {
-        $language_default->langcode = $language_default->language;
-        unset($language_default->language);
-      }
-      unset($language_default->enabled);
-      // In D8, the 'language_default' is not anymore an object, but an array,
-      // so make sure that the new value that is saved into this variable is an
-      // array.
-      variable_set('language_default', (array) $language_default);
-    }
-
-    // Add column to track customized string status to locales_target.
-    // When updating in a non-English language, the locale translation system is
-    // triggered, which attempts to query string translations already.
-    if (db_table_exists('locales_target') && !db_field_exists('locales_target', 'customized')) {
-      $spec = array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0, // LOCALE_NOT_CUSTOMIZED
-        'description' => 'Boolean indicating whether the translation is custom to this site.',
-      );
-      db_add_field('locales_target', 'customized', $spec);
-    }
-    // Add locales_location table to track string locations.
-    // When updating in a non-English language, this table is used for
-    // refreshing JavaScript translations.
-    if (db_table_exists('locales_source') && !db_table_exists('locales_location')) {
-      $table = array(
-        'description' => 'Location information for source strings.',
-        'fields' => array(
-          'lid' => array(
-            'type' => 'serial',
-            'not null' => TRUE,
-            'description' => 'Unique identifier of this location.',
-          ),
-          'sid' => array(
-            'type' => 'int',
-            'not null' => TRUE,
-            'description' => 'Unique identifier of this string.',
-          ),
-          'type' => array(
-            'type' => 'varchar',
-            'length' => 50,
-            'not null' => TRUE,
-            'default' => '',
-            'description' => 'The location type (file, config, path, etc).',
-          ),
-          'name' => array(
-            'type' => 'varchar',
-            'length' => 255,
-            'not null' => TRUE,
-            'default' => '',
-            'description' => 'Type dependent location information (file name, path, etc).',
-          ),
-          'version' => array(
-            'type' => 'varchar',
-            'length' => 20,
-            'not null' => TRUE,
-            'default' => 'none',
-            'description' => 'Version of Drupal where the location was found.',
-          ),
-        ),
-        'primary key' => array('lid'),
-        'foreign keys' => array(
-          'locales_source' => array(
-            'table' => 'locales_source',
-            'columns' => array('sid' => 'lid'),
-          ),
-        ),
-        'indexes' => array(
-          'string_id' => array('sid'),
-          'string_type' => array('sid', 'type'),
-        ),
-      );
-
-      db_create_table('locales_location', $table);
-    }
-  }
-}
-
-/**
- * Perform Drupal 7.x to 8.x updates that are required for update.php
- * to function properly.
+ * Forces a module to a given schema version.
  *
- * This function runs when update.php is run the first time for 8.x,
- * even before updates are selected or performed. It is important
- * that if updates are not ultimately performed that no changes are
- * made which make it impossible to continue using the prior version.
+ * This function is rarely necessary.
+ *
+ * @param string $module
+ *   Name of the module.
+ * @param string $schema_version
+ *   The schema version the module should be set to.
  */
-function update_fix_d8_requirements() {
-  global $conf;
-
-  if (drupal_get_installed_schema_version('system') < 8000 && !update_variable_get('update_d8_requirements', FALSE)) {
-
-    // Make sure that file.module is enabled as it is required for the user
-    // picture upgrade path.
-    update_module_enable(array('file'));
-
-    update_variable_set('update_d8_requirements', TRUE);
-  }
+function update_set_schema($module, $schema_version) {
+  \Drupal::keyValue('system.schema')->set($module, $schema_version);
+  // system_list_reset() is in module.inc but that would only be available
+  // once the variable bootstrap is done.
+  require_once __DIR__ . '/module.inc';
+  system_list_reset();
 }
 
 /**
- * Helper function to install a new module in Drupal 8 via hook_update_N().
- */
-function update_module_enable(array $modules) {
-  $schema_store = drupal_container()->get('keyvalue')->get('system.schema');
-  foreach ($modules as $module) {
-    // Check for initial schema and install it. The schema version of a newly
-    // installed module is always 0. Using 8000 here would be inconsistent
-    // since $module_update_8000() may involve a schema change, and we want
-    // to install the schema as it was before any updates were added.
-    $function = $module . '_schema_0';
-    if (function_exists($function)) {
-      $schema = $function();
-      foreach ($schema as $table => $spec) {
-        db_create_table($table, $spec);
-      }
-    }
-    // Enable the module with a weight of 0.
-    $module_config = config('system.module');
-    $module_config
-      ->set("enabled.$module", 0)
-      ->set('enabled', module_config_sort($module_config->get('enabled')))
-      ->save();
-    // Ensure the module is not contained in disabled modules.
-    config('system.module.disabled')
-      ->clear($module)
-      ->save();
-    // Change the schema version from SCHEMA_UNINSTALLED to 0, so any module
-    // updates since the module's inception are executed in a core upgrade.
-    $schema_store->set($module, 0);
-
-    // system_list_reset() is in module.inc but that would only be available
-    // once the variable bootstrap is done.
-    require_once DRUPAL_ROOT . '/core/includes/module.inc';
-    system_list_reset();
-    //  @todo: figure out what to do about hook_install() and hook_enable().
-  }
-}
-
-/**
- * Perform one update and store the results for display on finished page.
+ * Implements callback_batch_operation().
+ *
+ * Performs one update and stores the results for display on the results page.
  *
  * If an update function completes successfully, it should return a message
  * as a string indicating success, for example:
@@ -608,13 +181,13 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     // @TODO We may want to do different error handling for different
     // exception types, but for now we'll just log the exception and
     // return the message for printing.
+    // @see https://www.drupal.org/node/2564311
     catch (Exception $e) {
       watchdog_exception('update', $e);
 
-      require_once DRUPAL_ROOT . '/core/includes/errors.inc';
-      $variables = _drupal_decode_exception($e);
-      // The exception message is run through check_plain() by _drupal_decode_exception().
-      $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
+      $variables = Error::decodeException($e);
+      unset($variables['backtrace']);
+      $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: @message in %function (line %line of %file).', $variables));
     }
   }
 
@@ -641,124 +214,72 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     drupal_set_installed_schema_version($module, $number);
   }
 
-  $context['message'] = 'Updating ' . check_plain($module) . ' module';
+  $context['message'] = t('Updating @module', ['@module' => $module]);
 }
 
 /**
- * Start the database update batch process.
+ * Executes a single hook_post_update_NAME().
  *
- * @param $start
- *   An array whose keys contain the names of modules to be updated during the
- *   current batch process, and whose values contain the number of the first
- *   requested update for that module. The actual updates that are run (and the
- *   order they are run in) will depend on the results of passing this data
- *   through the update dependency system.
- * @param $redirect
- *   Path to redirect to when the batch has finished processing.
- * @param $url
- *   URL of the batch processing page (should only be used for separate
- *   scripts like update.php).
- * @param $batch
- *   Optional parameters to pass into the batch API.
- * @param $redirect_callback
- *   (optional) Specify a function to be called to redirect to the progressive
- *   processing page.
- *
- * @see update_resolve_dependencies()
+ * @param string $function
+ *   The function name, that should be executed.
+ * @param array $context
+ *   The batch context array.
  */
-function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $redirect_callback = 'drupal_goto') {
-  // During the update, bring the site offline so that schema changes do not
-  // affect visiting users.
-  $maintenance_mode = config('system.maintenance')->get('enabled');
-  if (isset($maintenance_mode)) {
-    $_SESSION['maintenance_mode'] = $maintenance_mode;
-  }
-  if (empty($_SESSION['maintenance_mode'])) {
-    $GLOBALS['conf']['system.maintenance']['enabled'] = TRUE;
-    // @todo This is borderline state, not config. Or a global system
-    //   "maintenance lock".
-    if (db_table_exists('config')) {
-      config('system.maintenance')->set('enabled', TRUE)->save();
-    }
+function update_invoke_post_update($function, &$context) {
+  $ret = [];
+
+  // If this update was aborted in a previous step, or has a dependency that was
+  // aborted in a previous step, go no further.
+  if (!empty($context['results']['#abort'])) {
+    return;
   }
 
-  // Resolve any update dependencies to determine the actual updates that will
-  // be run and the order they will be run in.
-  $updates = update_resolve_dependencies($start);
+  list($module, $name) = explode('_post_update_', $function, 2);
+  module_load_include('php', $module, $module . '.post_update');
+  if (function_exists($function)) {
+    try {
+      $ret['results']['query'] = $function($context['sandbox']);
+      $ret['results']['success'] = TRUE;
 
-  // Store the dependencies for each update function in an array which the
-  // batch API can pass in to the batch operation each time it is called. (We
-  // do not store the entire update dependency array here because it is
-  // potentially very large.)
-  $dependency_map = array();
-  foreach ($updates as $function => $update) {
-    $dependency_map[$function] = !empty($update['reverse_paths']) ? array_keys($update['reverse_paths']) : array();
-  }
-
-  $operations = array();
-  foreach ($updates as $update) {
-    if ($update['allowed']) {
-      // Set the installed version of each module so updates will start at the
-      // correct place. (The updates are already sorted, so we can simply base
-      // this on the first one we come across in the above foreach loop.)
-      if (isset($start[$update['module']])) {
-        drupal_set_installed_schema_version($update['module'], $update['number'] - 1);
-        unset($start[$update['module']]);
+      if (!isset($context['sandbox']['#finished']) || (isset($context['sandbox']['#finished']) && $context['sandbox']['#finished'] >= 1)) {
+        \Drupal::service('update.post_update_registry')->registerInvokedUpdates([$function]);
       }
-      // Add this update function to the batch.
-      $function = $update['module'] . '_update_' . $update['number'];
-      $operations[] = array('update_do_one', array($update['module'], $update['number'], $dependency_map[$function]));
+    }
+    // @TODO We may want to do different error handling for different exception
+    // types, but for now we'll just log the exception and return the message
+    // for printing.
+    // @see https://www.drupal.org/node/2564311
+    catch (Exception $e) {
+      watchdog_exception('update', $e);
+
+      $variables = Error::decodeException($e);
+      unset($variables['backtrace']);
+      $ret['#abort'] = [
+        'success' => FALSE,
+        'query' => t('%type: @message in %function (line %line of %file).', $variables),
+      ];
     }
   }
-  $batch['operations'] = $operations;
-  $batch += array(
-    'title' => 'Updating',
-    'init_message' => 'Starting updates',
-    'error_message' => 'An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.',
-    'finished' => 'update_finished',
-    'file' => 'core/includes/update.inc',
-  );
-  batch_set($batch);
-  batch_process($redirect, $url, $redirect_callback);
-}
 
-/**
- * Finish the update process and store results for eventual display.
- *
- * After the updates run, all caches are flushed. The update results are
- * stored into the session (for example, to be displayed on the update results
- * page in update.php). Additionally, if the site was off-line, now that the
- * update process is completed, the site is set back online.
- *
- * @param $success
- *   Indicate that the batch API tasks were all completed successfully.
- * @param $results
- *   An array of all the results that were updated in update_do_one().
- * @param $operations
- *   A list of all the operations that had not been completed by the batch API.
- *
- * @see update_batch()
- */
-function update_finished($success, $results, $operations) {
-  // Clear the caches in case the data has been updated.
-  drupal_flush_all_caches();
-
-  $_SESSION['update_results'] = $results;
-  $_SESSION['update_success'] = $success;
-  $_SESSION['updates_remaining'] = $operations;
-
-  // Now that the update is done, we can put the site back online if it was
-  // previously in maintenance mode.
-  if (isset($_SESSION['maintenance_mode'])) {
-    $GLOBALS['conf']['system.maintenance']['enabled'] = FALSE;
-    // At this point, the configuration system should exist.
-    config('system.maintenance')->set('enabled', FALSE)->save();
-    unset($_SESSION['maintenance_mode']);
+  if (isset($context['sandbox']['#finished'])) {
+    $context['finished'] = $context['sandbox']['#finished'];
+    unset($context['sandbox']['#finished']);
   }
+  if (!isset($context['results'][$module][$name])) {
+    $context['results'][$module][$name] = array();
+  }
+  $context['results'][$module][$name] = array_merge($context['results'][$module][$name], $ret);
+
+  if (!empty($ret['#abort'])) {
+    // Record this function in the list of updates that were aborted.
+    $context['results']['#abort'][] = $function;
+  }
+
+  $context['message'] = t('Post updating @module', ['@module' => $module]);
 }
 
 /**
- * Return a list of all the pending database updates.
+ * Returns a list of all the pending database updates.
  *
  * @return
  *   An associative array keyed by module name which contains all information
@@ -785,19 +306,29 @@ function update_get_update_list() {
     if ($schema_version == SCHEMA_UNINSTALLED || update_check_incompatibility($module)) {
       continue;
     }
+    // Display a requirements error if the user somehow has a schema version
+    // from the previous Drupal major version.
+    if ($schema_version < \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
+      $ret[$module]['warning'] = '<em>' . $module . '</em> module cannot be updated. Its schema version is ' . $schema_version . ', which is from an earlier major release of Drupal. You will need to <a href="https://www.drupal.org/node/2127611">migrate the data for this module</a> instead.';
+      continue;
+    }
     // Otherwise, get the list of updates defined by this module.
     $updates = drupal_get_schema_versions($module);
     if ($updates !== FALSE) {
-      // module_invoke returns NULL for nonexisting hooks, so if no updates
-      // are removed, it will == 0.
-      $last_removed = module_invoke($module, 'update_last_removed');
+      // \Drupal::moduleHandler()->invoke() returns NULL for non-existing hooks,
+      // so if no updates are removed, it will == 0.
+      $last_removed = \Drupal::moduleHandler()->invoke($module, 'update_last_removed');
       if ($schema_version < $last_removed) {
-        $ret[$module]['warning'] = '<em>' . $module . '</em> module can not be updated. Its schema version is ' . $schema_version . '. Updates up to and including ' . $last_removed . ' have been removed in this release. In order to update <em>' . $module . '</em> module, you will first <a href="http://drupal.org/upgrade">need to upgrade</a> to the last version in which these updates were available.';
+        $ret[$module]['warning'] = '<em>' . $module . '</em> module cannot be updated. Its schema version is ' . $schema_version . '. Updates up to and including ' . $last_removed . ' have been removed in this release. In order to update <em>' . $module . '</em> module, you will first <a href="https://www.drupal.org/upgrade">need to upgrade</a> to the last version in which these updates were available.';
         continue;
       }
 
-      $updates = drupal_map_assoc($updates);
+      $updates = array_combine($updates, $updates);
       foreach (array_keys($updates) as $update) {
+        if ($update == \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
+          $ret[$module]['warning'] = '<em>' . $module . '</em> module cannot be updated. It contains an update numbered as ' . \Drupal::CORE_MINIMUM_SCHEMA_VERSION . ' which is reserved for the earliest installation of a module in Drupal ' .  \Drupal::CORE_COMPATIBILITY . ', before any updates. In order to update <em>' . $module . '</em> module, you will need to install a version of the module with valid updates.';
+          continue 2;
+        }
         if ($update > $schema_version) {
           // The description for an update comes from its Doxygen.
           $func = new ReflectionFunction($module . '_update_' . $update);
@@ -848,8 +379,8 @@ function update_get_update_list() {
  *   containing all the keys provided by the
  *   Drupal\Component\Graph\Graph::searchAndSort() algorithm, which encode
  *   detailed information about the dependency chain for this update function
- *   (for example: 'paths', 'reverse_paths', 'weight', and 'component'), as well
- *   as the following additional keys:
+ *   (for example: 'paths', 'reverse_paths', 'weight', and 'component'), as
+ *   well as the following additional keys:
  *   - 'allowed': A boolean which is TRUE when the update function's
  *     dependencies are met, and FALSE otherwise. Calling functions should
  *     inspect this value before running the update.
@@ -859,7 +390,7 @@ function update_get_update_list() {
  *   - 'module': The name of the module that this update function belongs to.
  *   - 'number': The number of this update function within that module.
  *
- * @see Drupal\Component\Graph\Graph::searchAndSort()
+ * @see \Drupal\Component\Graph\Graph::searchAndSort()
  */
 function update_resolve_dependencies($starting_updates) {
   // Obtain a dependency graph for the requested update functions.
@@ -869,7 +400,7 @@ function update_resolve_dependencies($starting_updates) {
   // Perform the depth-first search and sort on the results.
   $graph_object = new Graph($graph);
   $graph = $graph_object->searchAndSort();
-  uasort($graph, 'drupal_sort_weight');
+  uasort($graph, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
 
   foreach ($graph as $function => &$data) {
     $module = $data['module'];
@@ -946,10 +477,10 @@ function update_get_update_function_list($starting_updates) {
  * requirement that the first update function needs to run before the second.
  * For example, consider this graph:
  *
- * system_update_8000 ---> system_update_8001 ---> system_update_8002
+ * system_update_8001 ---> system_update_8002 ---> system_update_8003
  *
- * Visually, this indicates that system_update_8000() must run before
- * system_update_8001(), which in turn must run before system_update_8002().
+ * Visually, this indicates that system_update_8001() must run before
+ * system_update_8002(), which in turn must run before system_update_8003().
  *
  * The function takes into account standard dependencies within each module, as
  * shown above (i.e., the fact that each module's updates must run in numerical
@@ -975,7 +506,7 @@ function update_get_update_function_list($starting_updates) {
  *   - 'module': The name of the module that this update function belongs to.
  *   - 'number': The number of this update function within that module.
  *
- * @see Drupal\Component\Graph\Graph::searchAndSort()
+ * @see \Drupal\Component\Graph\Graph::searchAndSort()
  * @see update_resolve_dependencies()
  */
 function update_build_dependency_graph($update_functions) {
@@ -1054,28 +585,34 @@ function update_already_performed($module, $number) {
 }
 
 /**
- * Invoke hook_update_dependencies() in all installed modules.
+ * Invokes hook_update_dependencies() in all installed modules.
  *
- * This function is similar to module_invoke_all(), with the main difference
- * that it does not require that a module be enabled to invoke its hook, only
- * that it be installed. This allows the update system to properly perform
- * updates even on modules that are currently disabled.
+ * This function is similar to \Drupal::moduleHandler()->invokeAll(), with the
+ * main difference that it does not require that a module be enabled to invoke
+ * its hook, only that it be installed. This allows the update system to
+ * properly perform updates even on modules that are currently disabled.
  *
  * @return
  *   An array of return values obtained by merging the results of the
  *   hook_update_dependencies() implementations in all installed modules.
  *
- * @see module_invoke_all()
+ * @see \Drupal::moduleHandler()->invokeAll()
  * @see hook_update_dependencies()
  */
 function update_retrieve_dependencies() {
   $return = array();
   // Get a list of installed modules, arranged so that we invoke their hooks in
-  // the same order that module_invoke_all() does.
-  foreach (config('system.module')->get('enabled') as $module => $weight) {
+  // the same order that \Drupal::moduleHandler()->invokeAll() does.
+  foreach (\Drupal::keyValue('system.schema')->getAll() as $module => $schema) {
+    if ($schema == SCHEMA_UNINSTALLED) {
+      // Nothing to upgrade.
+      continue;
+    }
     $function = $module . '_update_dependencies';
+    // Ensure install file is loaded.
+    module_load_install($module);
     if (function_exists($function)) {
-      $result = $function();
+      $updated_dependencies = $function();
       // Each implementation of hook_update_dependencies() returns a
       // multidimensional, associative array containing some keys that
       // represent module names (which are strings) and other keys that
@@ -1084,9 +621,9 @@ function update_retrieve_dependencies() {
       // treats strings and integers differently. Therefore, we have to
       // explicitly loop through the expected array structure here and perform
       // the merge manually.
-      if (isset($result) && is_array($result)) {
-        foreach ($result as $module => $module_data) {
-          foreach ($module_data as $update => $update_data) {
+      if (isset($updated_dependencies) && is_array($updated_dependencies)) {
+        foreach ($updated_dependencies as $module_name => $module_data) {
+          foreach ($module_data as $update_version => $update_data) {
             foreach ($update_data as $module_dependency => $update_dependency) {
               // If there are redundant dependencies declared for the same
               // update function (so that it is declared to depend on more than
@@ -1096,19 +633,19 @@ function update_retrieve_dependencies() {
               // implementation of hook_update_dependencies() required this
               // ordering:
               //
-              // system_update_8001 ---> user_update_8000
+              // system_update_8002 ---> user_update_8001
               //
               // but another module's implementation of the hook required this
               // one:
               //
-              // system_update_8002 ---> user_update_8000
+              // system_update_8003 ---> user_update_8001
               //
-              // we record the second one, since system_update_8001() is always
-              // guaranteed to run before system_update_8002() anyway (within
+              // we record the second one, since system_update_8002() is always
+              // guaranteed to run before system_update_8003() anyway (within
               // an individual module, updates are always run in numerical
               // order).
-              if (!isset($return[$module][$update][$module_dependency]) || $update_dependency > $return[$module][$update][$module_dependency]) {
-                $return[$module][$update][$module_dependency] = $update_dependency;
+              if (!isset($return[$module_name][$update_version][$module_dependency]) || $update_dependency > $return[$module_name][$update_version][$module_dependency]) {
+                $return[$module_name][$update_version][$module_dependency] = $update_dependency;
               }
             }
           }
@@ -1121,191 +658,107 @@ function update_retrieve_dependencies() {
 }
 
 /**
- * Gets the value of a variable from the database during 7.x-8.x upgrades.
+ * Replace permissions during update.
  *
- * Use this during the 7.x-8.x upgrade path instead of variable_get().
+ * This function can replace one permission to several or even delete an old
+ * one.
  *
- * @param string $name
- *   The name of the variable.
- * @param mixed $default
- *   The default value of the variable.
- *
- * @return mixed
- *   The value of the variable in the database unserialized, or NULL if not set.
- *
- * @see update_variable_set()
- * @see update_variable_del()
- * @ingroup config_upgrade
+ * @param array $replace
+ *   An associative array. The keys are the old permissions the values are lists
+ *   of new permissions. If the list is an empty array, the old permission is
+ *   removed.
  */
-function update_variable_get($name, $default = NULL) {
-  $result = db_query('SELECT value FROM {variable} WHERE name = :name', array(':name' => $name))->fetchField();
-  if ($result !== FALSE) {
-    return unserialize($result);
+function update_replace_permissions($replace) {
+  $prefix = 'user.role.';
+  $cut = strlen($prefix);
+  $role_names = \Drupal::service('config.storage')->listAll($prefix);
+  foreach ($role_names as $role_name) {
+    $rid = substr($role_name, $cut);
+    $config = \Drupal::config("user.role.$rid");
+    $permissions = $config->get('permissions') ?: array();
+    foreach ($replace as $old_permission => $new_permissions) {
+      if (($index = array_search($old_permission, $permissions)) !== FALSE) {
+        unset($permissions[$index]);
+        $permissions = array_unique(array_merge($permissions, $new_permissions));
+      }
+    }
+    $config
+      ->set('permissions', $permissions)
+      ->save();
   }
-  return $default;
 }
 
 /**
- * Sets a persistent variable during the 7.x-8.x upgrade path.
+ * Returns a list of languages set up on the site during upgrades.
  *
- * Use this during the 7.x-8.x upgrade path instead of variable_set().
+ * @param $flags
+ *   (optional) Specifies the state of the languages that have to be returned.
+ *   It can be: LanguageInterface::STATE_CONFIGURABLE,
+ *   LanguageInterface::STATE_LOCKED, or LanguageInterface::STATE_ALL.
  *
- * @param string $name
- *   The name of the variable to set.
- * @param mixed $value
- *   The value to set. This can be any PHP data type; these functions take care
- *   of serialization as necessary.
- *
- * @see update_variable_get()
- * @see update_variable_del()
- * @ingroup config_upgrade
+ * @return \Drupal\Core\Language\LanguageInterface[]
+ *   An associative array of languages, keyed by the language code, ordered by
+ *   weight ascending and name ascending.
  */
-function update_variable_set($name, $value) {
-  db_merge('variable')
-    ->key(array(
-      'name' => $name,
-    ))
-    ->fields(array(
-      'value' => serialize($value),
-    ))
-    ->execute();
-}
+function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
 
-/**
- * Delete a variable from the database during the 7.x-8.x upgrade path.
- *
- * Use this during the 7.x-8.x upgrade path instead of variable_del().
- *
- * @param string $name
- *   The name of the variable to delete.
- *
- * @see update_variable_get()
- * @see update_variable_set()
- * @ingroup config_upgrade
- */
-function update_variable_del($name) {
-  db_delete('variable')
-    ->condition('name', $name)
-    ->execute();
-}
+  $languages = &drupal_static(__FUNCTION__);
 
-/**
- * Updates config with values set on Drupal 7.x
- *
- * Provide a generalised method to migrate variables from Drupal 7 to Drupal 8's
- * configuration management system.
- *
- * @param string $config_name
- *   The configuration object name to retrieve.
- * @param array $variable_map
- *   An associative array that maps old variables names to new configuration
- *   object keys; e.g.:
- *   @code
- *     array('old_variable' => 'new_config.sub_key')
- *   @endcode
- *   This would migrate the value contained in variable name 'old_variable' into
- *   the data key 'new_config.sub_key' of the configuration object $config_name.
- */
-function update_variables_to_config($config_name, array $variable_map) {
-  // Build the new configuration object.
-  // This potentially loads an existing configuration object, in case another
-  // update function migrated configuration values into $config_name already.
-  $config = config($config_name);
-  $original_data = $config->get();
+  // Initialize master language list.
+  if (!isset($languages)) {
+    // Initialize local language list cache.
+   $languages = array();
 
-  // Extract the module namespace/owner from the configuration object name.
-  $module = strtok($config_name, '.');
+    // Fill in master language list based on current configuration.
+    $default = \Drupal::languageManager()->getDefaultLanguage();
+    if (\Drupal::languageManager()->isMultilingual() || \Drupal::moduleHandler()->moduleExists('language')) {
+      // Use language module configuration if available. We can not use
+      // entity_load_multiple() because this breaks during updates.
+      $language_entities = \Drupal::configFactory()->listAll('language.entity.');
 
-  // Load and set default configuration values.
-  $file = new FileStorage(drupal_get_path('module', $module) . '/config');
-  if (!$file->exists($config_name)) {
-    throw new ConfigException("Default configuration file $config_name for $module extension not found but is required to exist.");
-  }
-  $default_data = $file->read($config_name);
-
-  // Apply the default values.
-  $config->setData($default_data);
-
-  // Merge any possibly existing original data into default values.
-  // Only relevant when being called repetitively on the same config object.
-  if (!empty($original_data)) {
-    $config->merge($original_data);
-  }
-
-  // Fetch existing variables.
-  $variables = db_query('SELECT name, value FROM {variable} WHERE name IN (:variables)', array(':variables' => array_keys($variable_map)))->fetchAllKeyed();
-
-  // Set configuration values according to the provided variable mapping.
-  foreach ($variable_map as $variable_name => $config_key) {
-    // This function migrates variables regardless of their value, including
-    // NULL values. Any possibly required customizations need to be performed
-    // manually, either via variable_set() before calling this function or via
-    // config() after calling this function.
-    if (isset($variables[$variable_name])) {
-      $value = unserialize($variables[$variable_name]);
-      $config->set($config_key, $value);
+      // Initialize default property so callers have an easy reference and can
+      // save the same object without data loss.
+      foreach ($language_entities as $langcode_config_name) {
+        $langcode = substr($langcode_config_name, strlen('language.entity.'));
+        $info = \Drupal::config($langcode_config_name)->get();
+        $languages[$langcode] = new Language(array(
+          'default' => ($info['id'] == $default->getId()),
+          'name' => $info['label'],
+          'id' => $info['id'],
+          'direction' => $info['direction'],
+          'locked' => $info['locked'],
+          'weight' => $info['weight'],
+        ));
+      }
+      Language::sort($languages);
+    }
+    else {
+      // No language module, so use the default language only.
+      $languages = array($default->getId() => $default);
+      // Add the special languages, they will be filtered later if needed.
+      $languages += \Drupal::languageManager()->getDefaultLockedLanguages($default->getWeight());
     }
   }
 
-  // Save the configuration object.
-  $config->save();
+  // Filter the full list of languages based on the value of the $all flag. By
+  // default we remove the locked languages, but the caller may request for
+  // those languages to be added as well.
+  $filtered_languages = array();
 
-  // Delete the migrated variables.
-  db_delete('variable')->condition('name', array_keys($variable_map), 'IN')->execute();
-}
+  // Add the site's default language if flagged as allowed value.
+  if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
+    $default = \Drupal::languageManager()->getDefaultLanguage();
+    // Rename the default language.
+    $default->setName(t("Site's default language (@lang_name)", array('@lang_name' => $default->getName())));
+    $filtered_languages[LanguageInterface::LANGCODE_SITE_DEFAULT] = $default;
+  }
 
-/**
- * Updates 7.x variables to state records.
- *
- * Provides a generalized method to migrate variables from 7.x to 8.x's
- * state() system.
- *
- * @param array $variable_map
- *   An associative array that maps old variables names to new state record
- *   names; e.g.:
- *   @code
- *     array('old_variable' => 'extension.new_name')
- *   @endcode
- *   This would migrate the value contained in variable name 'old_variable' into
- *   the state item 'extension.new_name'.
- *   Non-existing variables and variables with NULL values are omitted.
- */
-function update_variables_to_state(array $variable_map) {
-  foreach ($variable_map as $variable_name => $state_name) {
-    if (NULL !== $value = update_variable_get($variable_name)) {
-      state()->set($state_name, $value);
+  foreach ($languages as $langcode => $language) {
+    if (($language->isLocked() && !($flags & LanguageInterface::STATE_LOCKED)) || (!$language->isLocked() && !($flags & LanguageInterface::STATE_CONFIGURABLE))) {
+      continue;
     }
+    $filtered_languages[$langcode] = $language;
   }
 
-  // Delete the migrated variables.
-  db_delete('variable')
-    ->condition('name', array_keys($variable_map))
-    ->execute();
-}
-
-/**
- * Helper function to update entities with uuid.
- *
- * @param array $sandbox
- *   A sandbox where conversion happens.
- * @param string $table
- *   A table whose data should be updated.
- * @param string $primary_key
- *   A $table primary key column.
- * @param array $values
- *   A $primary_key values of rows to be updated.
- */
-function update_add_uuids(&$sandbox, $table, $primary_key, $values) {
-  $uuid = new Uuid();
-  foreach ($values as $value) {
-    db_update($table)
-      ->fields(array(
-        'uuid' => $uuid->generate(),
-      ))
-      ->condition($primary_key, $value)
-      ->isNull('uuid')
-      ->execute();
-    $sandbox['progress']++;
-    $sandbox['last'] = $value;
-  }
+  return $filtered_languages;
 }

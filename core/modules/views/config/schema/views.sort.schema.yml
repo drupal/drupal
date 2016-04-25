@@ -1,0 +1,51 @@
+# Schema for the views sort plugins.
+
+views.sort.*:
+  type: views_sort
+  label: 'Default sort'
+
+views.sort.boolean:
+  type: views_sort
+  label: 'Boolean sort'
+
+views.sort.date:
+  type: views_sort
+  label: 'Date sort'
+  mapping:
+    granularity:
+      type: string
+      label: 'Granularity'
+
+views.sort.broken:
+  type: views_sort
+  label: 'Broken'
+
+views.sort.random:
+  type: views_sort
+  label: 'Random'
+
+views.sort.standard:
+  type: views_sort
+  label: 'Standard'
+
+# Schema for the views sort expose.
+
+views.sort_expose.*:
+  type: views_sort_expose
+  label: 'Fallback sort expose settings'
+
+views.sort_expose.boolean:
+  type: views_sort_expose
+  label: 'Boolean sort expose settings'
+
+views.sort_expose.date:
+  type: views_sort_expose
+  label: 'Date sort expose settings'
+
+views.sort_expose.standard:
+  type: views_sort_expose
+  label: 'Standard sort expose settings'
+
+views.sort_expose.random:
+  type: views.sort_expose.standard
+  label: 'Random sort expose settings'

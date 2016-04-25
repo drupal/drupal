@@ -1,0 +1,11 @@
+extend_one:
+  css:
+    theme:
+      css/extend_1.css: { }
+  js:
+    js/extend_1.js: { }
+
+extend_two:
+  css:
+    theme:
+      css/extend_2.css: { }

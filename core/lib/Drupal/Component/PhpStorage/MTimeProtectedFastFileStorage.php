@@ -1,12 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage.
- */
 namespace Drupal\Component\PhpStorage;
-
-use DirectoryIterator;
 
 /**
  * Stores PHP code in files with securely hashed names.
@@ -40,8 +34,6 @@ use DirectoryIterator;
  */
 class MTimeProtectedFastFileStorage extends FileStorage {
 
-  const HTACCESS="SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nDeny from all\nOptions None\nOptions +FollowSymLinks";
-
   /**
    * The secret used in the HMAC.
    *
@@ -52,7 +44,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
   /**
    * Constructs this MTimeProtectedFastFileStorage object.
    *
-   * @param $configuration
+   * @param array $configuration
    *   An associated array, containing at least these keys (the rest are
    *   ignored):
    *   - directory: The directory where the files should be stored.
@@ -66,109 +58,51 @@ class MTimeProtectedFastFileStorage extends FileStorage {
   }
 
   /**
-   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::save().
+   * {@inheritdoc}
    */
   public function save($name, $data) {
-    $this->ensureDirectory();
+    $this->ensureDirectory($this->directory);
 
     // Write the file out to a temporary location. Prepend with a '.' to keep it
     // hidden from listings and web servers.
-    $temporary_path = $this->directory . '/.' . str_replace('/', '#', $name);
-    if (!@file_put_contents($temporary_path, $data)) {
+    $temporary_path = $this->tempnam($this->directory, '.');
+    if (!$temporary_path || !@file_put_contents($temporary_path, $data)) {
       return FALSE;
     }
-    chmod($temporary_path, 0400);
+    // The file will not be chmod() in the future so this is the final
+    // permission.
+    chmod($temporary_path, 0444);
 
-    // Prepare a directory dedicated for just this file. Ensure it has a current
-    // mtime so that when the file (hashed on that mtime) is moved into it, the
-    // mtime remains the same (unless the clock ticks to the next second during
-    // the rename, in which case we'll try again).
+    // Determine the exact modification time of the file.
+    $mtime = $this->getUncachedMTime($temporary_path);
+
+    // Move the temporary file into the proper directory. Note that POSIX
+    // compliant systems as well as modern Windows perform the rename operation
+    // atomically, i.e. there is no point at which another process attempting to
+    // access the new path will find it missing.
     $directory = $this->getContainingDirectoryFullPath($name);
-    if (file_exists($directory)) {
-      $this->cleanDirectory($directory);
-      touch($directory);
-    }
-    else {
-      mkdir($directory);
+    $this->ensureDirectory($directory);
+    $full_path = $this->getFullPath($name, $directory, $mtime);
+    $result = rename($temporary_path, $full_path);
+
+    // Finally reset the modification time of the directory to match the one of
+    // the newly created file. In order to prevent the creation of a file if the
+    // directory does not exist, ensure that the path terminates with a
+    // directory separator.
+    //
+    // Recall that when subsequently loading the file, the hash is calculated
+    // based on the file name, the containing mtime, and a the secret string.
+    // Hence updating the mtime here is comparable to pointing a symbolic link
+    // at a new target, i.e., the newly created file.
+    if ($result) {
+      $result &= touch($directory . '/', $mtime);
     }
 
-    // Move the file to its final place. The mtime of a directory is the time of
-    // the last file create or delete in the directory. So the moving will
-    // update the directory mtime. However, this update will very likely not
-    // show up, because it has a coarse, one second granularity and typical
-    // moves takes significantly less than that. In the unlucky case the clock
-    // ticks during the move, we need to keep trying until the mtime we hashed
-    // on and the updated mtime match.
-    $previous_mtime = 0;
-    $i = 0;
-    while (($mtime = $this->getUncachedMTime($directory)) && ($mtime != $previous_mtime)) {
-      $previous_mtime = $mtime;
-      chmod($directory, 0700);
-      // Reset the file back in the temporary location if this is not the first
-      // iteration.
-      if ($i > 0) {
-        rename($full_path, $temporary_path);
-        // Make sure to not loop infinitely on a hopelessly slow filesystem.
-        if ($i > 10) {
-          unlink($temporary_path);
-          return FALSE;
-        }
-      }
-      $full_path = $this->getFullPath($name, $directory, $mtime);
-      rename($temporary_path, $full_path);
-
-      // Leave the directory neither readable nor writable. Since the file
-      // itself is not writable (set to 0400 at the beginning of this function),
-      // there's no way to tamper with it without access to change permissions.
-      chmod($directory, 0100);
-      $i++;
-    }
-    return TRUE;
+    return (bool) $result;
   }
 
   /**
-   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::delete().
-   */
-  public function delete($name) {
-    $directory = dirname($this->getFullPath($name));
-    if (file_exists($directory)) {
-      $this->cleanDirectory($directory);
-      return rmdir($directory);
-    }
-    return FALSE;
-  }
-
-  /**
-   * Ensures the root directory exists and has correct permissions.
-   */
-  protected function ensureDirectory() {
-    if (!file_exists($this->directory)) {
-      mkdir($this->directory, 0700, TRUE);
-    }
-    chmod($this->directory, 0700);
-    $htaccess_path =  $this->directory . '/.htaccess';
-    if (!file_exists($htaccess_path) && file_put_contents($htaccess_path, self::HTACCESS)) {
-      @chmod($htaccess_path, 0444);
-    }
-  }
-
-  /**
-   * Removes everything in a directory, leaving it empty.
-   *
-   * @param $directory
-   *   The directory to be emptied out.
-   */
-  protected function cleanDirectory($directory) {
-    chmod($directory, 0700);
-    foreach (new DirectoryIterator($directory) as $fileinfo) {
-      if (!$fileinfo->isDot()) {
-        unlink($fileinfo->getPathName());
-      }
-    }
-  }
-
-  /**
-   * Returns the full path where the file is or should be stored.
+   * Gets the full path where the file is or should be stored.
    *
    * This function creates a file path that includes a unique containing
    * directory for the file and a file name that is a hash of the virtual file
@@ -185,10 +119,11 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    * @param int $directory_mtime
    *   (optional) The mtime of $directory. Can be passed to avoid an extra
    *   filesystem call when the mtime of the directory is already known.
+   *
    * @return string
-   *    The full path where the file is or should be stored.
+   *   The full path where the file is or should be stored.
    */
-  protected function getFullPath($name, &$directory = NULL, &$directory_mtime = NULL) {
+  public function getFullPath($name, &$directory = NULL, &$directory_mtime = NULL) {
     if (!isset($directory)) {
       $directory = $this->getContainingDirectoryFullPath($name);
     }
@@ -199,9 +134,74 @@ class MTimeProtectedFastFileStorage extends FileStorage {
   }
 
   /**
-   * Returns the full path of the containing directory where the file is or should be stored.
+   * {@inheritdoc}
+   */
+  public function delete($name) {
+    $path = $this->getContainingDirectoryFullPath($name);
+    if (file_exists($path)) {
+      return $this->unlink($path);
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function garbageCollection() {
+    $flags = \FilesystemIterator::CURRENT_AS_FILEINFO;
+    $flags += \FilesystemIterator::SKIP_DOTS;
+
+    foreach ($this->listAll() as $name) {
+      $directory = $this->getContainingDirectoryFullPath($name);
+      try {
+        $dir_iterator = new \FilesystemIterator($directory, $flags);
+      }
+      catch (\UnexpectedValueException $e) {
+        // FilesystemIterator throws an UnexpectedValueException if the
+        // specified path is not a directory, or if it is not accessible.
+        continue;
+      }
+
+      $directory_unlink = TRUE;
+      $directory_mtime = filemtime($directory);
+      foreach ($dir_iterator as $fileinfo) {
+        if ($directory_mtime > $fileinfo->getMTime()) {
+          // Ensure the folder is writable.
+          @chmod($directory, 0777);
+          @unlink($fileinfo->getPathName());
+        }
+        else {
+          // The directory still contains valid files.
+          $directory_unlink = FALSE;
+        }
+      }
+
+      if ($directory_unlink) {
+        $this->unlink($name);
+      }
+    }
+  }
+
+  /**
+   * Gets the full path of the containing directory where the file is or should
+   * be stored.
+   *
+   * @param string $name
+   *   The virtual file name. Can be a relative path.
+   *
+   * @return string
+   *   The full path of the containing directory where the file is or should be
+   *   stored.
    */
   protected function getContainingDirectoryFullPath($name) {
+    // Remove the .php file extension from the directory name.
+    // Within a single directory, a subdirectory cannot have the same name as a
+    // file. Thus, when switching between MTimeProtectedFastFileStorage and
+    // FileStorage, the subdirectory or the file cannot be created in case the
+    // other file type exists already.
+    if (substr($name, -4) === '.php') {
+      $name = substr($name, 0, -4);
+    }
     return $this->directory . '/' . str_replace('/', '#', $name);
   }
 
@@ -212,4 +212,22 @@ class MTimeProtectedFastFileStorage extends FileStorage {
     clearstatcache(TRUE, $directory);
     return filemtime($directory);
   }
+
+  /**
+   * A brute force tempnam implementation supporting streams.
+   *
+   * @param $directory
+   *   The directory where the temporary filename will be created.
+   * @param $prefix
+   *   The prefix of the generated temporary filename.
+   * @return string
+   *   Returns the new temporary filename (with path), or FALSE on failure.
+   */
+  protected function tempnam($directory, $prefix) {
+    do {
+      $path = $directory . '/' . $prefix . substr(str_shuffle(hash('sha256', microtime())), 0, 10);
+    } while (file_exists($path));
+    return $path;
+  }
+
 }

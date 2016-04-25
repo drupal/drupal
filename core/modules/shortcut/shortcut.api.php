@@ -26,14 +26,16 @@
  *
  * @param $account
  *   The user account whose default shortcut set is being requested.
- * @return
+ * @return string
  *   The name of the shortcut set that this module recommends for that user, if
  *   there is one.
  */
 function hook_shortcut_default_set($account) {
   // Use a special set of default shortcuts for administrators only.
-  if (in_array(config('user.settings')->get('admin_role'), $account->roles)) {
-    return variable_get('mymodule_shortcut_admin_default_set');
+  $roles = \Drupal::entityManager()->getStorage('user_role')->loadByProperties(['is_admin' => TRUE]);
+  $user_admin_roles = array_intersect(array_keys($roles), $account->getRoles());
+  if ($user_admin_roles) {
+    return 'admin-shortcuts';
   }
 }
 

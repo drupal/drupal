@@ -1,4 +1,0 @@
-name = Layout test theme
-description = Theme for testing the layout system
-core = 8.x
-hidden = TRUE

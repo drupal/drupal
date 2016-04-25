@@ -1,0 +1,13 @@
+/**
+ * @file
+ * Styles for Bartik's image buttons.
+ */
+
+.image-button.is-disabled:hover,
+.image-button.is-disabled:active,
+.image-button.is-disabled:focus,
+.image-button.is-disabled {
+  background: transparent;
+  opacity: 0.5;
+  cursor: default;
+}

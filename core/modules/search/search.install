@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the search module.
+ * Install, update, and uninstall functions for the Search module.
  */
 
 /**
@@ -20,14 +20,15 @@ function search_schema() {
         'description' => 'Search item ID, e.g. node ID for nodes.',
       ),
       'langcode' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => '12',
         'not null' => TRUE,
         'description' => 'The {languages}.langcode of the item variant.',
+        'default' => '',
       ),
       'type' => array(
-        'type' => 'varchar',
-        'length' => 16,
+        'type' => 'varchar_ascii',
+        'length' => 64,
         'not null' => TRUE,
         'description' => 'Type of item, e.g. node.',
       ),
@@ -66,14 +67,15 @@ function search_schema() {
         'description' => 'The {search_dataset}.sid of the searchable item to which the word belongs.',
       ),
       'langcode' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => '12',
         'not null' => TRUE,
         'description' => 'The {languages}.langcode of the item variant.',
+        'default' => '',
       ),
       'type' => array(
-        'type' => 'varchar',
-        'length' => 16,
+        'type' => 'varchar_ascii',
+        'length' => 64,
         'not null' => TRUE,
         'description' => 'The {search_dataset}.type of the searchable item to which the word belongs.',
       ),
@@ -118,59 +120,37 @@ function search_schema() {
     'primary key' => array('word'),
   );
 
-  $schema['search_node_links'] = array(
-    'description' => 'Stores items (like nodes) that link to other nodes, used to improve search scores for nodes that are frequently linked to.',
-    'fields' => array(
-      'sid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {search_dataset}.sid of the searchable item containing the link to the node.',
-      ),
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 16,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The {search_dataset}.type of the searchable item containing the link to the node.',
-      ),
-      'nid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {node}.nid that this item links to.',
-      ),
-      'caption' => array(
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => FALSE,
-        'description' => 'The text used to link to the {node}.nid.',
-      ),
-    ),
-    'primary key' => array('sid', 'type', 'nid'),
-    'indexes' => array(
-      'nid' => array('nid'),
-    ),
-  );
-
   return $schema;
 }
 
 /**
- * Update search module to use the configuration system.
+ * Implements hook_requirements().
  *
- * @ingroup config_upgrade
+ * For the Status Report, return information about search index status.
  */
-function search_update_8000() {
-  update_variables_to_config('search.settings', array(
-   'minimum_word_size' => 'index.minimum_word_size',
-   'overlap_cjk' => 'index.overlap_cjk',
-   'search_cron_limit' => 'index.cron_limit',
-   'search_tag_weights' => 'index.tag_weights',
-   'search_active_modules' => 'active_modules',
-   'search_and_or_limit' => 'and_or_limit',
-   'search_default_module' => 'default_module',
-  ));
+function search_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    $remaining = 0;
+    $total = 0;
+    $search_page_repository = \Drupal::service('search.search_page_repository');
+    foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
+      $status = $entity->getPlugin()->indexStatus();
+      $remaining += $status['remaining'];
+      $total += $status['total'];
+    }
+
+    $done = $total - $remaining;
+    // Use floor() to calculate the percentage, so if it is not quite 100%, it
+    // will show as 99%, to indicate "almost done".
+    $percent = ($total > 0 ? floor(100 * $done / $total) : 100);
+    $requirements['search_status'] = array(
+      'title' => t('Search index progress'),
+      'value' => t('@percent% (@remaining remaining)', array('@percent' => $percent, '@remaining' => $remaining)),
+      'severity' => REQUIREMENT_INFO,
+    );
+  }
+
+  return $requirements;
 }

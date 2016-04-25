@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>Update test new module</title>
+<short_name>update_test_new_module</short_name>
+<dc:creator>Drupal</dc:creator>
+<api_version>8.x</api_version>
+<recommended_major>1</recommended_major>
+<supported_majors>1</supported_majors>
+<default_major>1</default_major>
+<project_status>published</project_status>
+<link>http://example.com/project/update_test_new_module</link>
+  <terms>
+   <term><name>Projects</name><value>Modules</value></term>
+  </terms>
+<releases>
+ <release>
+  <name>update_test_new_module 8.x-1.1</name>
+  <version>8.x-1.1</version>
+  <tag>DRUPAL-8--1-1</tag>
+  <version_major>1</version_major>
+  <version_patch>1</version_patch>
+  <status>published</status>
+  <release_link>http://example.com/update_test_new_module-8-x-1-1-release</release_link>
+  <download_link>core/modules/update/tests/update_test_new_module/8.x-1.1/update_test_new_module.tar.gz</download_link>
+  <date>1300424521</date>
+  <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
+  <filesize>1073741824</filesize>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+  </terms>
+ </release>
+</releases>
+</project>

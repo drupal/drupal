@@ -1,0 +1,7 @@
+example_external:
+  version: v3.14
+  js:
+    http://example.com/example_external.js: { type: external }
+  css:
+    theme:
+      http://example.com/css/example_external.css: { type: external }

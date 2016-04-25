@@ -1,0 +1,28 @@
+/**
+ * @file
+ * Visual styles for Bartik's search results.
+ */
+
+.search-results {
+  padding: 0;
+  list-style-position: inside;
+}
+.search-results li {
+  border-bottom: 1px solid #d3d7d9;
+  padding-bottom: 0.4285em;
+  margin-bottom: 0.5em;
+}
+.search-results li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 1em;
+}
+.search-result__title {
+  font-weight: bold;
+}
+.search-result__snippet-info {
+  padding-left: 0; /* LTR */
+}
+[dir="rtl"] .search-result__snippet-info {
+  padding-right: 0;
+}

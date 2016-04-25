@@ -1,0 +1,28 @@
+entity.field_storage_config.collection:
+  title: Entities
+  route_name: entity.field_storage_config.collection
+  base_route: entity.field_storage_config.collection
+
+field_ui.fields:
+  class: \Drupal\Core\Menu\LocalTaskDefault
+  deriver: \Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask
+
+entity.entity_view_mode.edit_form:
+  title: 'Edit'
+  route_name: entity.entity_view_mode.edit_form
+  base_route: entity.entity_view_mode.edit_form
+
+entity.entity_form_mode.edit_form:
+  title: 'Edit'
+  route_name: entity.entity_form_mode.edit_form
+  base_route: entity.entity_form_mode.edit_form
+
+entity.entity_view_mode.collection:
+  title: List
+  route_name: entity.entity_view_mode.collection
+  base_route: entity.entity_view_mode.collection
+
+entity.entity_form_mode.collection:
+  title: List
+  route_name: entity.entity_form_mode.collection
+  base_route: entity.entity_form_mode.collection

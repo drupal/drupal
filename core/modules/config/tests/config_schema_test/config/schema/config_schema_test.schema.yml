@@ -1,0 +1,272 @@
+# Schema for the configuration files of the Configuration Schema Test module.
+
+config_schema_test.someschema:
+  type: config_object
+  label: 'Schema test data'
+  mapping:
+    testitem:
+      label: 'Test item'
+    testlist:
+      label: 'Test list'
+
+config_schema_test.someschema.with_parents:
+  label: 'Schema test data with parenting'
+  type: config_object
+  mapping:
+    one_level:
+      label: 'Parenting one level up'
+      type: mapping
+      mapping:
+        target_key:
+          label: 'Key used in parent relation'
+          type: string
+        testitem:
+          type: config_schema_test.someschema.with_parents.[%parent.target_key]
+    two_levels:
+      label: 'Parenting two levels up'
+      type: mapping
+      mapping:
+        target_key:
+          label: 'Key used in parent relation'
+          type: string
+        wrapper:
+          label: 'Wrapper'
+          type: mapping
+          mapping:
+            testitem:
+              type: config_schema_test.someschema.with_parents.[%parent.%parent.target_key]
+    three_levels:
+      label: 'Parenting three levels up'
+      type: mapping
+      mapping:
+        target_key:
+          label: 'Key used in parent relation'
+          type: string
+        wrapper_1:
+          label: 'Wrapper 1'
+          type: mapping
+          mapping:
+            wrapper_2:
+              label: 'Wrapper 2'
+              type: mapping
+              mapping:
+                testitem:
+                  type: config_schema_test.someschema.with_parents.[%parent.%parent.%parent.target_key]
+
+config_schema_test.someschema.with_parents.key_1:
+  label: 'Test item nested one level'
+  type: string
+config_schema_test.someschema.with_parents.key_2:
+  label: 'Test item nested two levels'
+  type: string
+config_schema_test.someschema.with_parents.key_3:
+  label: 'Test item nested three levels'
+  type: string
+
+config_schema_test.someschema.somemodule.*.*:
+  type: config_object
+  label: 'Schema multiple filesystem marker test'
+  mapping:
+    testid:
+      type: string
+      label: 'ID'
+    testdescription:
+      type: text
+      label: 'Description'
+
+config_schema_test.wildcard_fallback.*:
+  type: config_object
+  label: 'Schema wildcard fallback test'
+  mapping:
+    testid:
+      type: string
+      label: 'ID'
+    testdescription:
+      type: text
+      label: 'Description'
+
+config_schema_test.schema_data_types:
+  type: config_object
+  label: 'Config test schema'
+  mapping:
+    config_schema_test_integer:
+      type: config_schema_test_integer
+    config_schema_test_integer_empty_string:
+      type: config_schema_test_integer
+    integer:
+      type: integer
+    null_integer:
+      type: integer
+    float:
+      type: float
+    null_float:
+      type: float
+    string:
+      type: string
+    null_string:
+      type: string
+    empty_string:
+      type: string
+    boolean:
+      type: boolean
+    no_type:
+      label: 'No label'
+    mapping:
+      type: mapping
+      mapping:
+        string:
+          type: string
+    sequence:
+      type: sequence
+      sequence:
+        type: boolean
+    sequence_bc:
+      type: sequence
+      sequence:
+        - type: boolean
+
+config_schema_test_integer:
+  type: integer
+  label: 'Config test integer'
+
+config_schema_test.ignore:
+  type: config_object
+  label: 'Ignore test'
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+    irrelevant:
+      type: ignore
+      label: 'Irrelevant'
+    indescribable:
+      type: ignore
+      label: 'Indescribable'
+    weight:
+      type: integer
+      label: 'Weight'
+
+config_schema_test.plugin_types:
+  type: config_object
+  mapping:
+    tests:
+      type: sequence
+      sequence:
+        type: test.plugin_types.[plugin_id]
+    test_with_parents:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          plugin_id:
+            type: string
+          settings:
+            type: test_with_parents.plugin_types.[%parent.plugin_id]
+
+test.plugin_types:
+  type: mapping
+  mapping:
+    plugin_id:
+      type: string
+
+test.plugin_types.boolean:
+  type: mapping
+  mapping:
+    plugin_id:
+      type: string
+    value:
+      type: boolean
+
+test.plugin_types.boolean:*:
+  type: test.plugin_types.boolean
+
+test_with_parents.plugin_types.boolean:
+  type: mapping
+  mapping:
+    value:
+      type: boolean
+
+test_with_parents.plugin_types.boolean:*:
+  type: test_with_parents.plugin_types.boolean
+
+test.plugin_types.*:
+  type: mapping
+  mapping:
+    plugin_id:
+      type: string
+    value:
+      type: string
+
+test_with_parents.plugin_types.*:
+  type: mapping
+  mapping:
+    value:
+      type: string
+
+config_schema_test.hook:
+  type: string
+
+config_test.dynamic.*.third_party.config_schema_test:
+  type: mapping
+  mapping:
+    integer:
+      type: integer
+    string:
+      type: string
+
+wrapping.config_schema_test.plugin_types:
+  type: config_object
+  mapping:
+    tests:
+      type: sequence
+      sequence:
+        - type: wrapping.test.plugin_types.[plugin_id]
+
+wrapping.test.plugin_types.*:
+  type: test.plugin_types.[plugin_id]
+  mapping:
+    wrapper_value:
+      type: string
+
+test.plugin_types.wrapper:*:
+  type: test.plugin_types
+  mapping:
+    internal_value:
+      type: string
+
+wrapping.config_schema_test.double_brackets:
+  type: config_object
+  mapping:
+    tests:
+      type: sequence
+      sequence:
+        - type: wrapping.test.double_brackets.[another_key]
+
+wrapping.test.double_brackets.*:
+  type: test.double_brackets.[foo].[bar]
+  mapping:
+    wrapper_value:
+      type: string
+
+test.double_brackets.cat.dog:
+  type: test.double_brackets
+  mapping:
+    another_key:
+      type: string
+    foo:
+      type: string
+    bar:
+      type: string
+
+test.double_brackets.turtle.horse:
+  type: test.double_brackets
+  mapping:
+    another_key:
+      type: integer
+    foo:
+      type: string
+    bar:
+      type: string
+
+test.double_brackets.*:
+  type: mapping

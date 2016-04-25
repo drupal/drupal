@@ -1,0 +1,10 @@
+user_admin_create:
+  route_name: user.admin_create
+  title: 'Add user'
+  appears_on:
+    - entity.user.collection
+user.role_add:
+  route_name: user.role_add
+  title: 'Add role'
+  appears_on:
+    - entity.user_role.collection

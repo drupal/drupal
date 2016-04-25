@@ -1,0 +1,5 @@
+allow_insecure_uploads: false
+default_scheme: 'public'
+path:
+  temporary: ''
+temporary_maximum_age: 21600

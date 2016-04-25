@@ -1,0 +1,11 @@
+locale.translate_page:
+  title: 'User interface translation'
+  description: 'Configure the import of translation files, and add or customize interface translations.'
+  route_name: locale.translate_page
+  parent: system.admin_config_regional
+  weight: 15
+locale.translate_status:
+  title: 'Available translation updates'
+  route_name: locale.translate_status
+  description: 'Get a status report about available interface translations for your installed modules and themes.'
+  parent: system.admin_reports

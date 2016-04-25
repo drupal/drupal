@@ -1,0 +1,7 @@
+form_test.object:
+  type: config_object
+  label: 'Test form'
+  mapping:
+    bananas:
+      type: string
+      label: 'Bananas'

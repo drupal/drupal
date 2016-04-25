@@ -1,0 +1,6 @@
+name: 'Common Test'
+type: module
+description: 'Support module for Common tests.'
+package: Testing
+version: VERSION
+core: 8.x

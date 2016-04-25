@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Provides tests for tour module
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for tour.
+ */
+function tour_test_tour_load($entities) {
+  if (isset($entities['tour-entity-create-test-en'])) {
+    $entities['tour-entity-create-test-en']->loaded = 'Load hooks work';
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for tour.
+ */
+function tour_test_tour_presave($entity) {
+  if ($entity->id() == 'tour-entity-create-test-en') {
+    $entity->set('label', $entity->label() . ' alter');
+  }
+}
+
+/**
+ * Implements hook_tour_tips_alter().
+ */
+function tour_test_tour_tips_alter(array &$tour_tips, EntityInterface $entity) {
+  foreach ($tour_tips as $tour_tip) {
+    if ($tour_tip->get('id') == 'tour-code-test-1') {
+      $tour_tip->set('body', 'Altered by hook_tour_tips_alter');
+    }
+  }
+}

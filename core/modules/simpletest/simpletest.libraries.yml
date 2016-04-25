@@ -1,0 +1,14 @@
+drupal.simpletest:
+  version: VERSION
+  js:
+    simpletest.js: {}
+  css:
+    component:
+      css/simpletest.module.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/drupal.tableselect
+    - core/drupal.debounce

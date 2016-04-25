@@ -1,0 +1,28 @@
+id: d7_contact_settings
+label: Contact configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: contact_settings
+  variables:
+    - contact_default_status
+    - contact_threshold_limit
+process:
+  user_default_enabled: contact_default_status
+  'flood/limit': contact_threshold_limit
+  default_form:
+    plugin: migration
+    migration: contact_category
+    source: default_category
+destination:
+  plugin: config
+  config_name: contact.settings
+migration_dependencies:
+  required:
+    - contact_category
+dependencies:
+  config:
+    - migrate.migration.contact_category
+  module:
+    - contact
+    - migrate_drupal

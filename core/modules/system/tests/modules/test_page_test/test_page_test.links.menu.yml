@@ -1,0 +1,8 @@
+test_page_test.test_page:
+  route_name: test_page_test.test_page
+  title: 'Test front page link'
+  weight: 0
+test_page_test.front_page:
+  title: 'Home'
+  route_name: '<front>'
+  menu_name: main

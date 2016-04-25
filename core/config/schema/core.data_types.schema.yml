@@ -1,0 +1,803 @@
+# Base types provided by Drupal core.
+
+# Read https://www.drupal.org/node/1905070 for more details about configuration
+# schema, types and type resolution.
+
+# Undefined type used by the system to assign to elements at any level where
+# configuration schema is not defined. Using explicitly has the same effect as
+# not defining schema, so there is no point in doing that.
+undefined:
+  label: 'Undefined'
+  class: '\Drupal\Core\Config\Schema\Undefined'
+
+# Explicit type to use when no data typing is possible. Instead of using this
+# type, we strongly suggest you use configuration structures that can be
+# described with other structural elements of schema, and describe your schema
+# with those elements.
+ignore:
+  label: 'Ignore'
+  class: '\Drupal\Core\Config\Schema\Ignore'
+
+# Basic scalar data types from typed data.
+boolean:
+  label: 'Boolean'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\BooleanData'
+email:
+  label: 'Email'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\Email'
+integer:
+  label: 'Integer'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\IntegerData'
+float:
+  label: 'Float'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\FloatData'
+string:
+  label: 'String'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\StringData'
+uri:
+  label: 'Uri'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\Uri'
+
+# Container data types for lists with known and unknown keys.
+mapping:
+  label: Mapping
+  class: '\Drupal\Core\Config\Schema\Mapping'
+  definition_class: '\Drupal\Core\TypedData\MapDataDefinition'
+sequence:
+  label: Sequence
+  class: '\Drupal\Core\Config\Schema\Sequence'
+  definition_class: '\Drupal\Core\TypedData\ListDataDefinition'
+
+# Simple extended data types:
+
+# Human readable string that must be plain text and editable with a text field.
+label:
+  type: string
+  label: 'Label'
+  translatable: true
+
+# String containing plural variants, separated by EXT.
+plural_label:
+  type: label
+  label: 'Plural variants'
+
+# Internal Drupal path
+path:
+  type: string
+  label: 'Path'
+
+# Human readable string that can contain multiple lines of text or HTML.
+text:
+  type: string
+  label: 'Text'
+  translatable: true
+
+# PHP Date format string that is translatable.
+date_format:
+  type: string
+  label: 'Date format'
+  translatable: true
+  translation context: 'PHP date format'
+
+# HTML color value.
+color_hex:
+  type: string
+  label: 'Color'
+
+# Complex extended data types:
+
+# Root of a configuration object.
+
+_core_config_info:
+  type: mapping
+  mapping:
+    default_config_hash:
+      type: string
+      label: 'Default configuration hash'
+
+config_object:
+  type: mapping
+  mapping:
+    langcode:
+      type: string
+      label: 'Language code'
+    _core:
+      type: _core_config_info
+
+# Mail text with subject and body parts.
+mail:
+  type: mapping
+  label: 'Mail'
+  mapping:
+    subject:
+      type: label
+      label: 'Subject'
+    body:
+      type: text
+      label: 'Body'
+
+# Filter with module and status.
+filter:
+  type: mapping
+  label: 'Filter'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    provider:
+      type: string
+      label: 'Provider'
+    status:
+      type: boolean
+      label: 'Status'
+    weight:
+      type: integer
+      label: 'Weight'
+    settings:
+      type: filter_settings.[%parent.id]
+
+# System action configuration base.
+action_configuration_default:
+  type: sequence
+  label: 'Action configuration'
+  sequence:
+    type: string
+
+theme_settings:
+  type: config_object
+  mapping:
+    favicon:
+      type: mapping
+      label: 'Shortcut icon settings'
+      mapping:
+        mimetype:
+          type: string
+          label: 'MIME type'
+        path:
+          type: string
+          label: 'Path'
+        url:
+          type: string
+          label: 'URL'
+        use_default:
+          type: boolean
+          label: 'Use the default shortcut icon supplied by the theme'
+    features:
+      type: mapping
+      label: 'Optional features'
+      mapping:
+        comment_user_picture:
+          type: boolean
+          label: 'User pictures in comments'
+        comment_user_verification:
+          type: boolean
+          label: 'User verification status in comments'
+        favicon:
+          type: boolean
+          label: 'Shortcut icon'
+        logo:
+          type: boolean
+          label: 'Logo'
+        name:
+          type: boolean
+          label: 'Site name'
+        node_user_picture:
+          type: boolean
+          label: 'User pictures in posts'
+        slogan:
+          type: boolean
+          label: 'Site slogan'
+    logo:
+      type: mapping
+      label: 'Logo settings'
+      mapping:
+        path:
+          type: string
+          label: 'Logo path'
+        url:
+          type: uri
+          label: 'URL'
+        use_default:
+          type: boolean
+          label: 'Use default'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        type: theme_settings.third_party.[%key]
+
+views_field_bulk_form:
+  type: views_field
+  label: 'Bulk operation'
+  mapping:
+    action_title:
+      type: label
+      label: 'Action title'
+    include_exclude:
+      type: string
+      label: 'Available actions'
+    selected_actions:
+      type: sequence
+      label: 'Available actions'
+      sequence:
+        type: string
+        label: 'Action'
+
+# Array of routes with route_name and route_params keys.
+route:
+  type: mapping
+  label: 'Route'
+  mapping:
+    route_name:
+      type: string
+      label: 'Route Name'
+    route_params:
+      type: sequence
+      label: 'Route Params'
+      sequence:
+        type: string
+        label: 'Param'
+
+# Config dependencies.
+config_dependencies_base:
+  type: mapping
+  mapping:
+    config:
+      type: sequence
+      label: 'Configuration entity dependencies'
+      sequence:
+        type: string
+    content:
+      type: sequence
+      label: 'Content entity dependencies'
+      sequence:
+        type: string
+    module:
+      type: sequence
+      label: 'Module dependencies'
+      sequence:
+        type: string
+    theme:
+      type: sequence
+      label: 'Theme dependencies'
+      sequence:
+        type: string
+
+config_dependencies:
+  type: config_dependencies_base
+  label: 'Configuration dependencies'
+  mapping:
+    enforced:
+      type: config_dependencies_base
+      label: 'Enforced configuration dependencies'
+
+config_entity:
+  type: mapping
+  mapping:
+    uuid:
+      type: string
+      label: 'UUID'
+    langcode:
+      type: string
+      label: 'Language code'
+    status:
+      type: boolean
+      label: 'Status'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        type: '[%parent.%parent.%type].third_party.[%key]'
+    _core:
+      type: _core_config_info
+
+block_settings:
+  type: mapping
+  label: 'Block settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Description'
+    label_display:
+      type: string
+      label: 'Display title'
+    status:
+      type: boolean
+      label: 'Status'
+    info:
+      type: label
+      label: 'Admin info'
+    view_mode:
+      type: string
+      label: 'View mode'
+    provider:
+      type: string
+      label: 'Provider'
+    context_mapping:
+      type: sequence
+      label: 'Context assignments'
+      sequence:
+        type: string
+
+condition.plugin:
+  type: mapping
+  label: 'Condition'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    negate:
+      type: boolean
+      label: 'Negate'
+    uuid:
+      type: string
+      label: 'UUID'
+    context_mapping:
+      type: sequence
+      label: 'Context assignments'
+      sequence:
+        type: string
+
+display_variant.plugin:
+  type: mapping
+  label: 'Display variant'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    weight:
+      type: integer
+      label: 'Weight'
+    uuid:
+      type: string
+      label: 'UUID'
+
+base_entity_reference_field_settings:
+  type: mapping
+  mapping:
+    target_type:
+      type: string
+      label: 'Type of item to reference'
+
+field_config_base:
+  type: config_entity
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    field_name:
+      type: string
+      label: 'Field name'
+    entity_type:
+      type: string
+      label: 'Entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: text
+      label: 'Help text'
+    required:
+      type: boolean
+      label: 'Required field'
+    translatable:
+      type: boolean
+      label: 'Translatable'
+    default_value:
+      type: sequence
+      label: 'Default values'
+      sequence:
+        type: field.value.[%parent.%parent.field_type]
+        label: 'Default value'
+    default_value_callback:
+      type: string
+      label: 'Default value callback'
+    settings:
+      type: field.field_settings.[%parent.field_type]
+    field_type:
+      type: string
+      label: 'Field type'
+
+core.base_field_override.*.*.*:
+  type: field_config_base
+  label: 'Base field bundle override'
+
+core.date_format.*:
+  type: config_entity
+  label: 'Date format'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    locked:
+      type: boolean
+      label: 'Locked'
+    pattern:
+      type: core_date_format_pattern.[%parent.locked]
+      label: 'PHP date format'
+
+# Unlocked date formats should use the translatable type.
+core_date_format_pattern.0:
+  type: date_format
+  label: 'Date format'
+
+# Locked date formats are just used to transport the value.
+core_date_format_pattern.1:
+  type: string
+  label: 'Date format'
+
+# Generic field settings schemas.
+
+field.storage_settings.*:
+  type: mapping
+  label: 'Settings'
+
+field.field_settings.*:
+  type: mapping
+  label: 'Settings'
+
+field.value.*:
+  type: mapping
+  label: 'Default value'
+
+# Schema for the configuration of the String field type.
+
+field.storage_settings.string:
+  type: mapping
+  label: 'String settings'
+  mapping:
+    max_length:
+      type: integer
+      label: 'Maximum length'
+    case_sensitive:
+      type: boolean
+      label: 'Case sensitive'
+    is_ascii:
+      type: boolean
+      label: 'Contains US ASCII characters only'
+
+field.field_settings.string:
+  type: mapping
+  label: 'String settings'
+
+field.value.string:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: string
+      label: 'Value'
+
+# Schema for the configuration of the  String (long) field type.
+
+field.storage_settings.string_long:
+  type: mapping
+  label: 'String (long) settings'
+  mapping:
+    case_sensitive:
+      type: boolean
+      label: 'Case sensitive'
+
+field.field_settings.string_long:
+  type: mapping
+  label: 'String (long) settings'
+
+field.value.string_long:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: text
+      label: 'Value'
+
+# Schema for the configuration of the URI field type.
+
+field.storage_settings.uri:
+  type: field.storage_settings.string
+  label: 'URI settings'
+  mapping:
+    max_length:
+      type: integer
+      label: 'Maximum length'
+    case_sensitive:
+      type: boolean
+      label: 'Case sensitive'
+
+field.field_settings.uri:
+  type: mapping
+  label: 'URI settings'
+
+field.value.uri:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: string
+      label: 'Value'
+
+# Schema for the configuration of the Created field type.
+
+field.storage_settings.created:
+  type: mapping
+  label: 'Created timestamp settings'
+
+field.field_settings.created:
+  type: mapping
+  label: 'Created timestamp settings'
+
+field.value.created:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: integer
+      label: 'Value'
+
+# Schema for the configuration of the Changed field type.
+
+field.storage_settings.changed:
+  type: mapping
+  label: 'Changed timestamp settings'
+
+field.field_settings.changed:
+  type: mapping
+  label: 'Changed timestamp settings'
+
+field.value.changed:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: integer
+      label: 'Value'
+
+# Schema for the configuration of the Entity reference field type.
+
+field.storage_settings.entity_reference:
+  type: mapping
+  label: 'Entity reference field storage settings'
+  mapping:
+    target_type:
+      type: string
+      label: 'Type of item to reference'
+
+field.field_settings.entity_reference:
+  type: mapping
+  label: 'Entity reference field settings'
+  mapping:
+    handler:
+      type: string
+      label: 'Reference method'
+    handler_settings:
+      type: entity_reference_selection.[%parent.handler]
+      label: 'Entity reference selection plugin settings'
+
+field.value.entity_reference:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    target_id:
+      type: string
+      label: 'Value'
+    target_uuid:
+      type: string
+      label: 'Target UUID'
+
+# Schema for the configuration of the Boolean field type.
+
+field.field_settings.boolean:
+  label: 'Boolean settings'
+  type: mapping
+  mapping:
+    on_label:
+      type: label
+      label: 'On label'
+    off_label:
+      type: label
+      label: 'Off label'
+
+field.value.boolean:
+  type: mapping
+  mapping:
+    value:
+      type: integer
+      label: 'Value'
+
+# Schema for the configuration of the Email field type.
+
+field.storage_settings.email:
+  type: mapping
+  label: 'Email settings'
+
+field.field_settings.email:
+  type: mapping
+  label: 'Email settings'
+  sequence:
+    type: string
+    label: 'Setting'
+
+field.value.email:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: email
+      label: 'Value'
+
+# Schema for the configuration of the Integer field type.
+
+field.storage_settings.integer:
+  type: mapping
+  label: 'Integer settings'
+  mapping:
+    unsigned:
+      type: boolean
+      label: 'Unsigned'
+    size:
+      type: string
+      label: 'Database storage size'
+
+field.field_settings.integer:
+  type: mapping
+  label: 'Integer'
+  mapping:
+    min:
+      type: integer
+      label: 'Minimum'
+    max:
+      type: integer
+      label: 'Maximum'
+    prefix:
+      type: label
+      label: 'Prefix'
+    suffix:
+      type: label
+      label: 'Suffix'
+
+field.value.integer:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: integer
+      label: 'Value'
+
+# Schema for the configuration of the Decimal field type.
+
+field.storage_settings.decimal:
+  type: mapping
+  label: 'Decimal settings'
+  mapping:
+    precision:
+      type: integer
+      label: 'Precision'
+    scale:
+      type: integer
+      label: 'Scale'
+
+field.field_settings.decimal:
+  type: mapping
+  label: 'Decimal settings'
+  mapping:
+    min:
+      type: float
+      label: 'Minimum'
+    max:
+      type: float
+      label: 'Maximum'
+    prefix:
+      type: label
+      label: 'Prefix'
+    suffix:
+      type: label
+      label: 'Suffix'
+
+field.value.decimal:
+   type: mapping
+   label: 'Default value'
+   mapping:
+     value:
+       type: float
+       label: 'Value'
+
+# Schema for the configuration of the Float field type.
+
+field.storage_settings.float:
+  type: mapping
+  label: 'Float settings'
+
+field.field_settings.float:
+  type: mapping
+  label: 'Float settings'
+  mapping:
+    min:
+      type: float
+      label: 'Minimum'
+    max:
+      type: float
+      label: 'Maximum'
+    prefix:
+      type: label
+      label: 'Prefix'
+    suffix:
+      type: label
+      label: 'Suffix'
+
+field.value.float:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: float
+      label: 'Value'
+
+# Text with a text format.
+text_format:
+  type: mapping
+  label: 'Text with text format'
+  # We declare the entire mapping of text and text format as translatable. This
+  # causes the entire mapping to be saved to the language overrides of the
+  # configuration. Storing only the (to be formatted) text could result in
+  # security problems in case the text format of the source text is changed.
+  translatable: true
+  mapping:
+    value:
+      type: text
+      label: 'Text'
+      # Mark the actual text as translatable (in addition to the entire mapping
+      # being marked as translatable) so that shipped configuration with
+      # formatted text can participate in the string translation system.
+      translatable: true
+    format:
+      type: string
+      label: 'Text format'
+      # The text format should not be translated as part of the string
+      # translation system, so this is not marked as translatable.
+
+# Schema for the configuration of the Entity reference selection plugins.
+
+entity_reference_selection:
+  type: mapping
+  label: 'Entity reference selection plugin configuration'
+  mapping:
+    target_bundles:
+      type: sequence
+      label: 'types'
+      nullable: true
+      sequence:
+        type: string
+        label: 'Type'
+    sort:
+      type: mapping
+      label: 'Sort settings'
+      mapping:
+        field:
+          type: string
+          label: 'Sort by'
+        direction:
+          type: string
+          label: 'Sort direction'
+    auto_create:
+      type: boolean
+      label: 'Create referenced entities if they don''t already exist'
+    auto_create_bundle:
+      type: string
+      label: 'Bundle assigned to the auto-created entities.'
+
+entity_reference_selection.*:
+  type: entity_reference_selection

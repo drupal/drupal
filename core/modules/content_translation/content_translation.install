@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for Content Translation module.
+ */
+
+use \Drupal\Core\Url;
+
+/**
+ * Implements hook_install().
+ */
+function content_translation_install() {
+  // Assign a fairly low weight to ensure our implementation of
+  // hook_module_implements_alter() is run among the last ones.
+  module_set_weight('content_translation', 10);
+
+  // Translation works when at least two languages are added.
+  if (count(\Drupal::languageManager()->getLanguages()) < 2) {
+    $t_args = [
+      ':language_url' => Url::fromRoute('entity.configurable_language.collection')->toString()
+    ];
+    $message = t('This site has only a single language enabled. <a href=":language_url">Add at least one more language</a> in order to translate content.', $t_args);
+    drupal_set_message($message, 'warning');
+  }
+  // Point the user to the content translation settings.
+  $t_args = [
+    ':settings_url' => Url::fromRoute('language.content_settings_page')->toString()
+  ];
+  $message = t('<a href=":settings_url">Enable translation</a> for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em>, or any other element you wish to translate.', $t_args);
+  drupal_set_message($message, 'warning');
+}
+
+/**
+ * @addtogroup updates-8.0.0-rc
+ * @{
+ */
+
+/**
+ * Rebuild the routes as the content translation routes have now new names.
+ */
+function content_translation_update_8001() {
+  \Drupal::service('router.builder')->rebuild();
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.0-rc".
+ */
+
+/**
+ * @addtogroup updates-8.0.x
+ * @{
+ */
+
+/**
+ * Clear field type plugin caches to fix image field translatability.
+ */
+function content_translation_update_8002() {
+  \Drupal::service('plugin.manager.field.field_type')->clearCachedDefinitions();
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.x".
+ */

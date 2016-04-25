@@ -1,0 +1,34 @@
+drupal.user:
+  version: VERSION
+  js:
+    user.js: {}
+  css:
+    component:
+      css/user.module.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+
+drupal.user.admin:
+  version: VERSION
+  css:
+    theme:
+      css/user.admin.css: {}
+
+drupal.user.permissions:
+  version: VERSION
+  js:
+    user.permissions.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+    - user/drupal.user.admin
+
+drupal.user.icons:
+  version: VERSION
+  css:
+    theme:
+      css/user.icons.admin.css: {}

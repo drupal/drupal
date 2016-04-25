@@ -1,0 +1,6 @@
+services:
+  breakpoint.manager:
+    class: Drupal\breakpoint\BreakpointManager
+    arguments: ['@module_handler', '@theme_handler', '@cache.discovery', '@string_translation']
+    tags:
+      - { name: plugin_manager_cache_clear }

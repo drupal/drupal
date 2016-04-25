@@ -18,22 +18,24 @@ body {
 #sidebar-second,
 .navigation,
 #toolbar,
-#footer-wrapper,
+.site-footer,
 .tabs,
-.add-or-remove-shortcuts {
+.shortcut-action {
   display: none;
 }
-.one-sidebar #content,
-.two-sidebars #content {
+.one-sidebar .main-content,
+.two-sidebars .main-content {
   width: 100%;
 }
-#triptych-wrapper {
+.featured-bottom {
   width: 960px;
   margin: 0;
   padding: 0;
   border: none;
 }
-#triptych-first, #triptych-middle, #triptych-last {
+.featured-bottom-first,
+.featured-bottom-second,
+.featured-bottom-third {
   width: 250px;
 }
 

@@ -1,0 +1,36 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_field_classes
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      fields:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          plugin_id: numeric
+      style:
+        type: html_list
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test_field_classes
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0

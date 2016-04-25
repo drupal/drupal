@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\Core\KeyValueStore\MemoryStorage.
- */
-
 namespace Drupal\Core\KeyValueStore;
 
 /**
@@ -20,35 +15,42 @@ class MemoryStorage extends StorageBase {
   protected $data = array();
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::get().
+   * {@inheritdoc}
    */
-  public function get($key) {
-    return array_key_exists($key, $this->data) ? $this->data[$key] : NULL;
+  public function has($key) {
+    return array_key_exists($key, $this->data);
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getMultiple().
+   * {@inheritdoc}
+   */
+  public function get($key, $default = NULL) {
+    return array_key_exists($key, $this->data) ? $this->data[$key] : $default;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getMultiple(array $keys) {
     return array_intersect_key($this->data, array_flip($keys));
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getAll().
+   * {@inheritdoc}
    */
   public function getAll() {
     return $this->data;
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::set().
+   * {@inheritdoc}
    */
   public function set($key, $value) {
     $this->data[$key] = $value;
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setIfNotExists().
+   * {@inheritdoc}
    */
   public function setIfNotExists($key, $value) {
     if (!isset($this->data[$key])) {
@@ -59,21 +61,29 @@ class MemoryStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setMultiple().
+   * {@inheritdoc}
    */
   public function setMultiple(array $data) {
     $this->data = $data + $this->data;
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::delete().
+   * {@inheritdoc}
+   */
+  public function rename($key, $new_key) {
+    $this->data[$new_key] = $this->data[$key];
+    unset($this->data[$key]);
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function delete($key) {
     unset($this->data[$key]);
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::deleteMultiple().
+   * {@inheritdoc}
    */
   public function deleteMultiple(array $keys) {
     foreach ($keys as $key) {
@@ -81,4 +91,10 @@ class MemoryStorage extends StorageBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteAll() {
+    $this->data = array();
+  }
 }

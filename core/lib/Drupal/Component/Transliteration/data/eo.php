@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Esperanto transliteration data for the PHPTransliteration class.
+ * Esperanto transliteration data for the PhpTransliteration class.
  */
 
 $overrides['eo'] = array(

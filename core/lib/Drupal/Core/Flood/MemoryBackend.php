@@ -1,11 +1,8 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Flood\MemoryBackend.
- */
-
 namespace Drupal\Core\Flood;
+
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines the memory flood backend. This is used for testing.
@@ -13,41 +10,58 @@ namespace Drupal\Core\Flood;
 class MemoryBackend implements FloodInterface {
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * An array holding flood events, keyed by event name and identifier.
    */
   protected $events = array();
 
   /**
-   * Implements Drupal\Core\Flood\FloodInterface::register().
+   * Construct the MemoryBackend.
+   *
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack used to retrieve the current request.
+   */
+  public function __construct(RequestStack $request_stack) {
+    $this->requestStack = $request_stack;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function register($name, $window = 3600, $identifier = NULL) {
     if (!isset($identifier)) {
-      $identifier = ip_address();
+      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
     // We can't use REQUEST_TIME here, because that would not guarantee
     // uniqueness.
-    $time = microtime(true);
+    $time = microtime(TRUE);
     $this->events[$name][$identifier][$time + $window] = $time;
   }
 
   /**
-   * Implements Drupal\Core\Flood\FloodInterface::clear().
+   * {@inheritdoc}
    */
   public function clear($name, $identifier = NULL) {
     if (!isset($identifier)) {
-      $identifier = ip_address();
+      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
     unset($this->events[$name][$identifier]);
   }
 
   /**
-   * Implements Drupal\Core\Flood\FloodInterface::isAllowed().
+   * {@inheritdoc}
    */
   public function isAllowed($name, $threshold, $window = 3600, $identifier = NULL) {
     if (!isset($identifier)) {
-      $identifier = ip_address();
+      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
-    $limit = microtime(true) - $window;
+    $limit = microtime(TRUE) - $window;
     $number = count(array_filter($this->events[$name][$identifier], function ($timestamp) use ($limit) {
       return $timestamp > $limit;
     }));
@@ -55,7 +69,7 @@ class MemoryBackend implements FloodInterface {
   }
 
   /**
-   * Implements Drupal\Core\Flood\FloodInterface::garbageCollection().
+   * {@inheritdoc}
    */
   public function garbageCollection() {
     foreach ($this->events as $name => $identifiers) {
@@ -64,7 +78,7 @@ class MemoryBackend implements FloodInterface {
         $this->events[$name][$identifier] = array_filter($timestamps, function () use (&$timestamps) {
           $expiration = key($timestamps);
           next($timestamps);
-          return $expiration > microtime(true);
+          return $expiration > microtime(TRUE);
         });
       }
     }

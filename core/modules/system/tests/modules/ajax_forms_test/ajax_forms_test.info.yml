@@ -1,0 +1,6 @@
+name: 'AJAX form test mock module'
+type: module
+description: 'Test for AJAX form calls.'
+core: 8.x
+package: Testing
+version: VERSION

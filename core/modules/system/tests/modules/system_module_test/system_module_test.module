@@ -6,12 +6,15 @@
  */
 
 /**
- * Implements hook_html_head_alter().
+ * Implements hook_page_attachments_alter().
  */
-function system_module_test_html_head_alter(&$head_elements) {
+function system_module_test_page_attachments_alter(&$page) {
   // Remove the HTML5 mobile meta-tags.
-  unset($head_elements['MobileOptimized']);
-  unset($head_elements['HandheldFriendly']);
-  unset($head_elements['viewport']);
-  unset($head_elements['cleartype']);
+  $meta_tags_to_remove = ['MobileOptimized', 'HandheldFriendly', 'viewport', 'cleartype'];
+  foreach ($page['#attached']['html_head'] as $index => $parts) {
+    if (in_array($parts[1], $meta_tags_to_remove)) {
+      unset($page['#attached']['html_head'][$index]);
+    }
+  }
+
 }

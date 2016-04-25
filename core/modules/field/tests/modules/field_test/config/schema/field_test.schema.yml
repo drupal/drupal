@@ -1,0 +1,139 @@
+field.formatter.settings.field_test_default:
+  type: mapping
+  label: 'Field test default display format settings'
+  mapping:
+    test_formatter_setting:
+      type: string
+      label: 'Test setting'
+
+field.formatter.settings.field_test_multiple:
+  type: mapping
+  label: 'Multiple field test display format settings'
+  mapping:
+    test_formatter_setting_multiple:
+      type: string
+      label: 'Test setting'
+    alter:
+      type: boolean
+      label: 'Test altering'
+
+field.formatter.settings.field_empty_setting:
+  type: mapping
+  label: 'Empty setting field display format settings'
+  mapping:
+    field_empty_setting:
+      type: string
+      label: 'Test setting'
+
+field.formatter.settings.field_test_with_prepare_view:
+  type: mapping
+  label: 'Field prepare step display format settings'
+  mapping:
+    test_formatter_setting_additional:
+      type: string
+      label: 'Test setting'
+
+field.widget.settings.test_field_widget:
+  type: mapping
+  label: 'Test field widget settings'
+  mapping:
+    test_widget_setting:
+      type: string
+      label: 'Test setting'
+    role:
+      type: string
+      label: 'A referenced role'
+    role2:
+      type: string
+      label: 'A 2nd referenced role'
+
+field.widget.settings.test_field_widget_multiple:
+  type: mapping
+  label: 'Test multiple field widget settings'
+  mapping:
+    test_widget_setting_multiple:
+      type: string
+      label: 'Test setting'
+
+field.widget.third_party.color:
+  type: mapping
+  label: 'Field test entity display color module third party settings'
+  mapping:
+    foo:
+      type: string
+      label: 'Foo setting'
+
+field.storage_settings.test_field:
+  type: mapping
+  label: 'Test field storage settings'
+  mapping:
+    test_field_storage_setting:
+      type: string
+      label: 'Test field storage setting'
+    changeable:
+      type: string
+      label: 'A changeable field storage setting'
+    unchangeable:
+      type: string
+      label: 'An unchangeable field storage setting'
+    config_data_from_storage_setting:
+      type: boolean
+      label: 'Test FieldItemInterface::storageSettingsToConfigData()'
+    translatable_storage_setting:
+      type: label
+      label: 'Translatable storage setting'
+
+field.storage_settings.test_field_with_dependencies:
+  type: field.storage_settings.test_field
+  label: 'Test field with dependencies storage settings'
+
+field.storage_settings.hidden_test_field:
+  type: field.storage_settings.test_field
+  label: 'Hidden test field storage settings'
+
+field.storage_settings.test_field_with_preconfigured_options:
+  type: field.storage_settings.test_field
+  label: 'Test field with preconfigured options storage settings'
+
+field.field_settings.test_field:
+  type: mapping
+  label: 'Test field field settings'
+  mapping:
+    test_field_setting:
+      type: string
+      label: 'Test field setting'
+    config_data_from_field_setting:
+      type: boolean
+      label: 'Test FieldItemInterface::fieldSettingsToConfigData()'
+    translatable_field_setting:
+      type: label
+      label: 'Translatable field setting'
+
+field.field_settings.test_field_with_dependencies:
+  type: field.field_settings.test_field
+  label: 'Test field with dependencies field settings'
+
+field.field_settings.hidden_test_field:
+  type: field.field_settings.test_field
+  label: 'Hidden test field field settings'
+
+field.field_settings.test_field_with_preconfigured_options:
+  type: field.field_settings.test_field
+  label: 'Test field with preconfigured settings'
+
+field.value.test_field:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: label
+      label: 'Value'
+
+
+field.formatter.third_party.field_test:
+  type: mapping
+  label: 'Field test entity display third party setting'
+  mapping:
+    foo:
+      type: string
+      label: 'Test setting'

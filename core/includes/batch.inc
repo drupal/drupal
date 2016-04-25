@@ -14,87 +14,74 @@
  * @see batch_get()
  */
 
-use \Symfony\Component\HttpFoundation\JsonResponse;
-
-/**
- * Loads a batch from the database.
- *
- * @param $id
- *   The ID of the batch to load. When a progressive batch is being processed,
- *   the relevant ID is found in $_REQUEST['id'].
- *
- * @return
- *   An array representing the batch, or FALSE if no batch was found.
- */
-function batch_load($id) {
-  $batch = db_query("SELECT batch FROM {batch} WHERE bid = :bid AND token = :token", array(
-    ':bid' => $id,
-    ':token' => drupal_get_token($id),
-  ))->fetchField();
-  if ($batch) {
-    return unserialize($batch);
-  }
-  return FALSE;
-}
+use Drupal\Component\Utility\Timer;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Batch\Percentage;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Renders the batch processing page based on the current state of the batch.
  *
+ * @param \Symfony\Component\HttpFoundation\Request $request
+ *   The current request object.
+ *
  * @see _batch_shutdown()
  */
-function _batch_page() {
+function _batch_page(Request $request) {
   $batch = &batch_get();
 
-  if (!isset($_REQUEST['id'])) {
+  if (!($request_id = $request->get('id'))) {
     return FALSE;
   }
 
   // Retrieve the current state of the batch.
   if (!$batch) {
-    $batch = batch_load($_REQUEST['id']);
+    $batch = \Drupal::service('batch.storage')->load($request_id);
     if (!$batch) {
       drupal_set_message(t('No active batch.'), 'error');
-      drupal_goto();
+      return new RedirectResponse(\Drupal::url('<front>', [], ['absolute' => TRUE]));
     }
   }
 
   // Register database update for the end of processing.
   drupal_register_shutdown_function('_batch_shutdown');
 
-  // Add batch-specific CSS.
+  $build = array();
+
+  // Add batch-specific libraries.
   foreach ($batch['sets'] as $batch_set) {
-    if (isset($batch_set['css'])) {
-      foreach ($batch_set['css'] as $css) {
-        drupal_add_css($css);
+    if (isset($batch_set['library'])) {
+      foreach ($batch_set['library'] as $library) {
+        $build['#attached']['library'][] = $library;
       }
     }
   }
 
-  $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
-  $output = NULL;
+  $op = $request->get('op', '');
   switch ($op) {
     case 'start':
+    case 'do_nojs':
       // Display the full progress page on startup and on each additional
       // non-JavaScript iteration.
-      $output = _batch_progress_page();
+      $current_set = _batch_current_set();
+      $build['#title'] = $current_set['title'];
+      $build['content'] = _batch_progress_page();
       break;
 
     case 'do':
       // JavaScript-based progress page callback.
-      $output = _batch_do();
-      break;
-
-    case 'do_nojs':
-      // Non-JavaScript-based progress page.
-      $output = _batch_progress_page();
-      break;
+      return _batch_do();
 
     case 'finished':
-      $output = _batch_finished();
-      break;
+      // _batch_finished() returns a RedirectResponse.
+      return _batch_finished();
   }
 
-  return $output;
+  return $build;
 }
 
 /**
@@ -105,9 +92,9 @@ function _batch_page() {
  */
 function _batch_do() {
   // Perform actual processing.
-  list($percentage, $message) = _batch_process();
+  list($percentage, $message, $label) = _batch_process();
 
-  return new JsonResponse(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
+  return new JsonResponse(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message, 'label' => $label));
 }
 
 /**
@@ -119,7 +106,6 @@ function _batch_progress_page() {
   $batch = &batch_get();
 
   $current_set = _batch_current_set();
-  drupal_set_title($current_set['title'], PASS_THROUGH);
 
   $new_op = 'do_nojs';
 
@@ -127,6 +113,7 @@ function _batch_progress_page() {
     // This is the first page so we return some output immediately.
     $percentage       = 0;
     $message          = $current_set['init_message'];
+    $label            = '';
     $batch['running'] = TRUE;
   }
   else {
@@ -137,17 +124,24 @@ function _batch_progress_page() {
     // the error message.
     ob_start();
     $fallback = $current_set['error_message'] . '<br />' . $batch['error_message'];
-    $fallback = theme('maintenance_page', array('content' => $fallback, 'show_messages' => FALSE));
 
     // We strip the end of the page using a marker in the template, so any
     // additional HTML output by PHP shows up inside the page rather than below
     // it. While this causes invalid HTML, the same would be true if we didn't,
     // as content is not allowed to appear after </html> anyway.
+    $bare_html_page_renderer = \Drupal::service('bare_html_page_renderer');
+    $response = $bare_html_page_renderer->renderBarePage(['#markup' => $fallback], $current_set['title'], 'maintenance_page', array(
+      '#show_messages' => FALSE,
+    ));
+
+    // Just use the content of the response.
+    $fallback = $response->getContent();
+
     list($fallback) = explode('<!--partial-->', $fallback);
     print $fallback;
 
     // Perform actual processing.
-    list($percentage, $message) = _batch_process($batch);
+    list($percentage, $message, $label) = _batch_process($batch);
     if ($percentage == 100) {
       $new_op = 'finished';
     }
@@ -158,34 +152,47 @@ function _batch_progress_page() {
 
   // Merge required query parameters for batch processing into those provided by
   // batch_set() or hook_batch_alter().
-  $batch['url_options']['query']['id'] = $batch['id'];
-  $batch['url_options']['query']['op'] = $new_op;
+  $query_options = $batch['url']->getOption('query');
+  $query_options['id'] = $batch['id'];
+  $query_options['op'] = $new_op;
+  $batch['url']->setOption('query', $query_options);
 
-  $url = url($batch['url'], $batch['url_options']);
-  $element = array(
-    // Redirect through a 'Refresh' meta tag if JavaScript is disabled.
-    '#prefix' => '<noscript>',
-    '#suffix' => '</noscript>',
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'http-equiv' => 'Refresh',
-      'content' => '0; URL=' . $url,
+  $url = $batch['url']->toString(TRUE)->getGeneratedUrl();
+
+  $build = array(
+    '#theme' => 'progress_bar',
+    '#percent' => $percentage,
+    '#message' => array('#markup' => $message),
+    '#label' => $label,
+    '#attached' => array(
+      'html_head' => array(
+        array(
+          array(
+            // Redirect through a 'Refresh' meta tag if JavaScript is disabled.
+            '#tag' => 'meta',
+            '#noscript' => TRUE,
+            '#attributes' => array(
+              'http-equiv' => 'Refresh',
+              'content' => '0; URL=' . $url,
+            ),
+          ),
+          'batch_progress_meta_refresh',
+        ),
+      ),
+      // Adds JavaScript code and settings for clients where JavaScript is enabled.
+      'drupalSettings' => [
+        'batch' => [
+          'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],
+          'initMessage' => $current_set['init_message'],
+          'uri' => $url,
+        ],
+      ],
+      'library' => array(
+        'core/drupal.batch',
+      ),
     ),
   );
-  drupal_add_html_head($element, 'batch_progress_meta_refresh');
-
-  // Adds JavaScript code and settings for clients where JavaScript is enabled.
-  $js_setting = array(
-    'batch' => array(
-      'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],
-      'initMessage' => $current_set['init_message'],
-      'uri' => $url,
-    ),
-  );
-  drupal_add_js($js_setting, 'setting');
-  drupal_add_library('system', 'drupal.batch');
-
-  return theme('progress_bar', array('percent' => $percentage, 'message' => $message));
+  return $build;
 }
 
 /**
@@ -196,7 +203,7 @@ function _batch_progress_page() {
  * exceeded. It will continue with the next operation of the same batch set in
  * the next request.
  *
- * @return
+ * @return array
  *   An array containing a completion value (in percent) and a status message.
  */
 function _batch_process() {
@@ -206,11 +213,11 @@ function _batch_process() {
   $set_changed = TRUE;
 
   // If this batch was marked for progressive execution (e.g. forms submitted by
-  // drupal_form_submit()), initialize a timer to determine whether we need to
-  // proceed with the same batch phase when a processing time of 1 second has
-  // been exceeded.
+  // \Drupal::formBuilder()->submitForm(), initialize a timer to determine
+  // whether we need to proceed with the same batch phase when a processing time
+  // of 1 second has been exceeded.
   if ($batch['progressive']) {
-    timer_start('batch_processing');
+    Timer::start('batch_processing');
   }
 
   if (empty($current_set['start'])) {
@@ -224,16 +231,16 @@ function _batch_process() {
     // request, we check if it requires an additional file for functions
     // definitions.
     if ($set_changed && isset($current_set['file']) && is_file($current_set['file'])) {
-      include_once DRUPAL_ROOT . '/' . $current_set['file'];
+      include_once \Drupal::root() . '/' . $current_set['file'];
     }
 
-    $task_message = '';
+    $task_message = $label = '';
     // Assume a single pass operation and set the completion level to 1 by
     // default.
     $finished = 1;
 
     if ($item = $queue->claimItem()) {
-      list($function, $args) = $item->data;
+      list($callback, $args) = $item->data;
 
       // Build the 'context' array and execute the function call.
       $batch_context = array(
@@ -242,7 +249,7 @@ function _batch_process() {
         'finished' => &$finished,
         'message'  => &$task_message,
       );
-      call_user_func_array($function, array_merge($args, array(&$batch_context)));
+      call_user_func_array($callback, array_merge($args, array(&$batch_context)));
 
       if ($finished >= 1) {
         // Make sure this step is not counted twice when computing $current.
@@ -258,8 +265,8 @@ function _batch_process() {
     // through the remaining sets, marking them 'successfully processed'
     // along the way, until we find a set that contains operations.
     // _batch_next_set() executes form submit handlers stored in 'control'
-    // sets (see form_execute_handlers()), which can in turn add new sets to
-    // the batch.
+    // sets (see \Drupal::service('form_submitter')), which can in turn add new
+    // sets to the batch.
     $set_changed = FALSE;
     $old_set = $current_set;
     while (empty($current_set['count']) && ($current_set['success'] = TRUE) && _batch_next_set()) {
@@ -273,7 +280,7 @@ function _batch_process() {
     $queue = _batch_queue($current_set);
 
     // If we are in progressive mode, break processing after 1 second.
-    if ($batch['progressive'] && timer_read('batch_processing') > 1000) {
+    if ($batch['progressive'] && Timer::read('batch_processing') > 1000) {
       // Record elapsed wall clock time.
       $current_set['elapsed'] = round((microtime(TRUE) - $current_set['start']) * 1000, 2);
       break;
@@ -310,19 +317,16 @@ function _batch_process() {
       '@total'      => $total,
       '@current'    => floor($current),
       '@percentage' => $percentage,
-      '@elapsed'    => format_interval($elapsed / 1000),
+      '@elapsed'    => \Drupal::service('date.formatter')->formatInterval($elapsed / 1000),
       // If possible, estimate remaining processing time.
-      '@estimate'   => ($current > 0) ? format_interval(($elapsed * ($total - $current) / $current) / 1000) : '-',
+      '@estimate'   => ($current > 0) ? \Drupal::service('date.formatter')->formatInterval(($elapsed * ($total - $current) / $current) / 1000) : '-',
     );
     $message = strtr($progress_message, $values);
-    if (!empty($message)) {
-      $message .= '<br />';
-    }
     if (!empty($task_message)) {
-      $message .= $task_message;
+      $label = $task_message;
     }
 
-    return array($percentage, $message);
+    return array($percentage, $message, $label);
   }
   else {
     // If we are not in progressive mode, the entire batch has been processed.
@@ -333,15 +337,15 @@ function _batch_process() {
 /**
  * Formats the percent completion for a batch set.
  *
- * @param $total
+ * @param int $total
  *   The total number of operations.
- * @param $current
+ * @param int|float $current
  *   The number of the current operation. This may be a floating point number
  *   rather than an integer in the case of a multi-step operation that is not
  *   yet complete; in that case, the fractional part of $current represents the
  *   fraction of the operation that has been completed.
  *
- * @return
+ * @return string
  *   The properly formatted percentage, as a string. We output percentages
  *   using the correct number of decimal places so that we never print "100%"
  *   until we are finished, but we also never print more decimal places than
@@ -350,27 +354,7 @@ function _batch_process() {
  * @see _batch_process()
  */
 function _batch_api_percentage($total, $current) {
-  if (!$total || $total == $current) {
-    // If $total doesn't evaluate as true or is equal to the current set, then
-    // we're finished, and we can return "100".
-    $percentage = "100";
-  }
-  else {
-    // We add a new digit at 200, 2000, etc. (since, for example, 199/200
-    // would round up to 100% if we didn't).
-    $decimal_places = max(0, floor(log10($total / 2.0)) - 1);
-    do {
-      // Calculate the percentage to the specified number of decimal places.
-      $percentage = sprintf('%01.' . $decimal_places . 'f', round($current / $total * 100, $decimal_places));
-      // When $current is an integer, the above calculation will always be
-      // correct. However, if $current is a floating point number (in the case
-      // of a multi-step batch operation that is not yet complete), $percentage
-      // may be erroneously rounded up to 100%. To prevent that, we add one
-      // more decimal place and try again.
-      $decimal_places++;
-    } while ($percentage == '100');
-  }
-  return $percentage;
+  return Percentage::format($total, $current);
 }
 
 /**
@@ -388,18 +372,20 @@ function &_batch_current_set() {
  * process and execute its form submit handler (if defined), which may add
  * further sets to this batch.
  *
- * @return
- *   TRUE if a subsequent set was found in the batch.
+ * @return true|null
+ *   TRUE if a subsequent set was found in the batch; no value will be returned
+ *   if no subsequent set was found.
  */
 function _batch_next_set() {
   $batch = &batch_get();
   if (isset($batch['sets'][$batch['current_set'] + 1])) {
     $batch['current_set']++;
     $current_set = &_batch_current_set();
-    if (isset($current_set['form_submit']) && ($function = $current_set['form_submit']) && function_exists($function)) {
+    if (isset($current_set['form_submit']) && ($callback = $current_set['form_submit']) && is_callable($callback)) {
       // We use our stored copies of $form and $form_state to account for
       // possible alterations by previous form submit handlers.
-      $function($batch['form_state']['complete_form'], $batch['form_state']);
+      $complete_form = &$batch['form_state']->getCompleteForm();
+      call_user_func_array($callback, array(&$complete_form, &$batch['form_state']));
     }
     return TRUE;
   }
@@ -413,27 +399,32 @@ function _batch_next_set() {
  */
 function _batch_finished() {
   $batch = &batch_get();
+  $batch_finished_redirect = NULL;
 
   // Execute the 'finished' callbacks for each batch set, if defined.
   foreach ($batch['sets'] as $batch_set) {
     if (isset($batch_set['finished'])) {
       // Check if the set requires an additional file for function definitions.
       if (isset($batch_set['file']) && is_file($batch_set['file'])) {
-        include_once DRUPAL_ROOT . '/' . $batch_set['file'];
+        include_once \Drupal::root() . '/' . $batch_set['file'];
       }
-      if (function_exists($batch_set['finished'])) {
+      if (is_callable($batch_set['finished'])) {
         $queue = _batch_queue($batch_set);
         $operations = $queue->getAllItems();
-        $batch_set['finished']($batch_set['success'], $batch_set['results'], $operations, format_interval($batch_set['elapsed'] / 1000));
+        $batch_set_result = call_user_func_array($batch_set['finished'], array($batch_set['success'], $batch_set['results'], $operations, \Drupal::service('date.formatter')->formatInterval($batch_set['elapsed'] / 1000)));
+        // If a batch 'finished' callback requested a redirect after the batch
+        // is complete, save that for later use. If more than one batch set
+        // returned a redirect, the last one is used.
+        if ($batch_set_result instanceof RedirectResponse) {
+          $batch_finished_redirect = $batch_set_result;
+        }
       }
     }
   }
 
   // Clean up the batch table and unset the static $batch variable.
   if ($batch['progressive']) {
-    db_delete('batch')
-      ->condition('bid', $batch['id'])
-      ->execute();
+    \Drupal::service('batch.storage')->delete($batch['id']);
     foreach ($batch['sets'] as $batch_set) {
       if ($queue = _batch_queue($batch_set)) {
         $queue->deleteQueue();
@@ -454,31 +445,63 @@ function _batch_finished() {
   if ($_batch['progressive']) {
     // Revert the 'destination' that was saved in batch_process().
     if (isset($_batch['destination'])) {
-      $_GET['destination'] = $_batch['destination'];
+      \Drupal::request()->query->set('destination', $_batch['destination']);
     }
 
-    // Determine the target path to redirect to.
-    if (!isset($_batch['form_state']['redirect'])) {
-      if (isset($_batch['redirect'])) {
-        $_batch['form_state']['redirect'] = $_batch['redirect'];
+    // Determine the target path to redirect to. If a batch 'finished' callback
+    // returned a redirect response object, use that. Otherwise, fall back on
+    // the form redirection.
+    if (isset($batch_finished_redirect)) {
+      return $batch_finished_redirect;
+    }
+    elseif (!isset($_batch['form_state'])) {
+      $_batch['form_state'] = new FormState();
+    }
+    if ($_batch['form_state']->getRedirect() === NULL) {
+      $redirect = $_batch['batch_redirect'] ?: $_batch['source_url'];
+      // Any path with a scheme does not correspond to a route.
+      if (!$redirect instanceof Url) {
+        $options = UrlHelper::parse($redirect);
+        if (parse_url($options['path'], PHP_URL_SCHEME)) {
+          $redirect = Url::fromUri($options['path'], $options);
+        }
+        else {
+          $redirect = \Drupal::pathValidator()->getUrlIfValid($options['path']);
+          if (!$redirect) {
+            // Stay on the same page if the redirect was invalid.
+            $redirect = Url::fromRoute('<current>');
+          }
+          $redirect->setOptions($options);
+        }
       }
-      else {
-        $_batch['form_state']['redirect'] = $_batch['source_url'];
-      }
+      $_batch['form_state']->setRedirectUrl($redirect);
     }
 
-    // Use drupal_redirect_form() to handle the redirection logic.
-    drupal_redirect_form($_batch['form_state']);
+    // Use \Drupal\Core\Form\FormSubmitterInterface::redirectForm() to handle
+    // the redirection logic.
+    $redirect = \Drupal::service('form_submitter')->redirectForm($_batch['form_state']);
+    if (is_object($redirect)) {
+      return $redirect;
+    }
 
     // If no redirection happened, redirect to the originating page. In case the
     // form needs to be rebuilt, save the final $form_state for
-    // drupal_build_form().
-    if (!empty($_batch['form_state']['rebuild'])) {
+    // \Drupal\Core\Form\FormBuilderInterface::buildForm().
+    if ($_batch['form_state']->isRebuilding()) {
       $_SESSION['batch_form_state'] = $_batch['form_state'];
     }
-    $function = $_batch['redirect_callback'];
-    if (function_exists($function)) {
-      $function($_batch['source_url'], array('query' => array('op' => 'finish', 'id' => $_batch['id'])));
+    $callback = $_batch['redirect_callback'];
+    /** @var \Drupal\Core\Url $source_url */
+    $source_url = $_batch['source_url'];
+    if (is_callable($callback)) {
+      $callback($_batch['source_url'], array('query' => array('op' => 'finish', 'id' => $_batch['id'])));
+    }
+    elseif ($callback === NULL) {
+      // Default to RedirectResponse objects when nothing specified.
+      $url = $source_url
+        ->setAbsolute()
+        ->setOption('query', ['op' => 'finish', 'id' => $_batch['id']]);
+      return new RedirectResponse($url->toString());
     }
   }
 }
@@ -491,9 +514,6 @@ function _batch_finished() {
  */
 function _batch_shutdown() {
   if ($batch = batch_get()) {
-    db_update('batch')
-      ->fields(array('batch' => serialize($batch)))
-      ->condition('bid', $batch['id'])
-      ->execute();
+    \Drupal::service('batch.storage')->update($batch);
   }
 }

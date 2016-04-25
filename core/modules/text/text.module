@@ -1,0 +1,159 @@
+<?php
+
+/**
+ * @file
+ * Defines simple text field types.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function text_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.text':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Text module allows you to create short and long text fields with optional summaries. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":text_documentation">online documentation for the Text module</a>.', array(':field' => \Drupal::url('help.page', array('name' => 'field')), ':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? \Drupal::url('help.page', array('name' => 'field_ui')) :'#', ':text_documentation' => 'https://www.drupal.org/documentation/modules/text')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Managing and displaying text fields') . '</dt>';
+      $output .= '<dd>' . t('The <em>settings</em> and <em>display</em> of the text field can be configured separately. See the <a href=":field_ui">Field UI help</a> for more information on how to manage fields and their display.', array(':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? \Drupal::url('help.page', array('name' => 'field_ui')) : '#')) . '</dd>';
+      $output .= '<dt>' . t('Creating short text fields') . '</dt>';
+      $output .= '<dd>' . t('If you choose <em>Text (plain)</em> or <em>Text (formatted)</em> as the field type on the <em>Manage fields</em> page, then a field with a single row is displayed. You can change the maximum text length in the <em>Field settings</em> when you set up the field.') . '</dd>';
+      $output .= '<dt>' . t('Creating long text fields') . '</dt>';
+      $output .= '<dd>' . t('If you choose <em>Text (plain, long)</em>, <em>Text (formatted, long)</em>, or <em>Text (formatted, long, with summary)</em> on the <em>Manage fields</em> page, then users can insert text of unlimited length. On the <em>Manage form display</em> page, you can set the number of rows that are displayed to users.') . '</dd>';
+      $output .= '<dt>' . t('Trimming the text length') . '</dt>';
+      $output .= '<dd>' . t('On the <em>Manage display</em> page you can choose to display a trimmed version of the text, and if so, where to cut off the text.') . '</dd>';
+      $output .= '<dt>' . t('Displaying summaries instead of trimmed text') . '</dt>';
+      $output .= '<dd>' . t('As an alternative to using a trimmed version of the text, you can enter a separate summary by choosing the <em>Text (formatted, long, with summary)</em> field type on the <em>Manage fields</em> page. Even when <em>Summary input</em> is enabled, and summaries are provided, you can display <em>trimmed</em> text nonetheless by choosing the appropriate format on the <em>Manage display</em> page.') . '</dd>';
+      $output .= '<dt>' . t('Using text formats and editors') . '</dt>';
+      $output .= '<dd>' . t('If you choose <em>Text (plain)</em> or <em>Text (plain, long)</em> you restrict the input to <em>Plain text</em> only. If you choose <em>Text (formatted)</em>, <em>Text (formatted, long)</em>, or <em>Text (formatted, long with summary)</em> you allow users to write formatted text. Which options are available to individual users depends on the settings on the <a href=":formats">Text formats and editors page</a>.', array(':formats' => \Drupal::url('filter.admin_overview'))) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Generates a trimmed, formatted version of a text field value.
+ *
+ * If the end of the summary is not indicated using the <!--break--> delimiter
+ * then we generate the summary automatically, trying to end it at a sensible
+ * place such as the end of a paragraph, a line break, or the end of a sentence
+ * (in that order of preference).
+ *
+ * @param $text
+ *   The content for which a summary will be generated.
+ * @param $format
+ *   The format of the content. If the line break filter is present then we
+ *   treat newlines embedded in $text as line breaks. If the htmlcorrector
+ *   filter is present, it will be run on the generated summary (if different
+ *   from the incoming $text).
+ * @param $size
+ *   The desired character length of the summary. If omitted, the default value
+ *   will be used. Ignored if the special delimiter is present in $text.
+ *
+ * @return
+ *   The generated summary.
+ */
+function text_summary($text, $format = NULL, $size = NULL) {
+
+  if (!isset($size)) {
+    $size = \Drupal::config('text.settings')->get('default_summary_length');
+  }
+
+  // Find where the delimiter is in the body
+  $delimiter = strpos($text, '<!--break-->');
+
+  // If the size is zero, and there is no delimiter, the entire body is the summary.
+  if ($size == 0 && $delimiter === FALSE) {
+    return $text;
+  }
+
+  // If a valid delimiter has been specified, use it to chop off the summary.
+  if ($delimiter !== FALSE) {
+    return substr($text, 0, $delimiter);
+  }
+
+  // Retrieve the filters of the specified text format, if any.
+  if (isset($format)) {
+    $filters = entity_load('filter_format', $format)->filters();
+    // If the specified format does not exist, return nothing. $text is already
+    // filtered text, but the remainder of this function will not be able to
+    // ensure a sane and secure summary.
+    if (!$filters) {
+      return '';
+    }
+  }
+
+  // If we have a short body, the entire body is the summary.
+  if (Unicode::strlen($text) <= $size) {
+    return $text;
+  }
+
+  // If the delimiter has not been specified, try to split at paragraph or
+  // sentence boundaries.
+
+  // The summary may not be longer than maximum length specified. Initial slice.
+  $summary = Unicode::truncate($text, $size);
+
+  // Store the actual length of the UTF8 string -- which might not be the same
+  // as $size.
+  $max_rpos = strlen($summary);
+
+  // How much to cut off the end of the summary so that it doesn't end in the
+  // middle of a paragraph, sentence, or word.
+  // Initialize it to maximum in order to find the minimum.
+  $min_rpos = $max_rpos;
+
+  // Store the reverse of the summary. We use strpos on the reversed needle and
+  // haystack for speed and convenience.
+  $reversed = strrev($summary);
+
+  // Build an array of arrays of break points grouped by preference.
+  $break_points = array();
+
+  // A paragraph near the end of sliced summary is most preferable.
+  $break_points[] = array('</p>' => 0);
+
+  // If no complete paragraph then treat line breaks as paragraphs.
+  $line_breaks = array('<br />' => 6, '<br>' => 4);
+  // Newline only indicates a line break if line break converter
+  // filter is present.
+  if (isset($format) && $filters->has('filter_autop') && $filters->get('filter_autop')->status) {
+    $line_breaks["\n"] = 1;
+  }
+  $break_points[] = $line_breaks;
+
+  // If the first paragraph is too long, split at the end of a sentence.
+  $break_points[] = array('. ' => 1, '! ' => 1, '? ' => 1, '。' => 0, '؟ ' => 1);
+
+  // Iterate over the groups of break points until a break point is found.
+  foreach ($break_points as $points) {
+    // Look for each break point, starting at the end of the summary.
+    foreach ($points as $point => $offset) {
+      // The summary is already reversed, but the break point isn't.
+      $rpos = strpos($reversed, strrev($point));
+      if ($rpos !== FALSE) {
+        $min_rpos = min($rpos + $offset, $min_rpos);
+      }
+    }
+
+    // If a break point was found in this group, slice and stop searching.
+    if ($min_rpos !== $max_rpos) {
+      // Don't slice with length 0. Length must be <0 to slice from RHS.
+      $summary = ($min_rpos === 0) ? $summary : substr($summary, 0, 0 - $min_rpos);
+      break;
+    }
+  }
+
+  // If the htmlcorrector filter is present, apply it to the generated summary.
+  if (isset($format) && $filters->has('filter_htmlcorrector') && $filters->get('filter_htmlcorrector')->status) {
+    $summary = Html::normalize($summary);
+  }
+
+  return $summary;
+}

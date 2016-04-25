@@ -5,124 +5,56 @@
  * Install, update, and uninstall functions for the Forum module.
  */
 
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\taxonomy\Entity\Term;
+
 /**
  * Implements hook_install().
  */
 function forum_install() {
   // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.
   module_set_weight('forum', 1);
-  // Forum topics are published by default, but do not have any other default
-  // options set (for example, they are not promoted to the front page).
-  // @todo Convert to default module configuration, once Node module's content
-  //   types are converted.
-  variable_set('node_options_forum', array('status'));
-}
+  // Do not allow to delete the forum's node type machine name.
+  $locked = \Drupal::state()->get('node.type.locked');
+  $locked['forum'] = 'forum';
+  \Drupal::state()->set('node.type.locked', $locked);
 
-/**
- * Implements hook_enable().
- */
-function forum_enable() {
-  // If we enable forum at the same time as taxonomy we need to call
-  // field_associate_fields() as otherwise the field won't be enabled until
-  // hook modules_enabled is called which takes place after hook_enable events.
-  field_associate_fields('taxonomy');
-
-  // Create the forum vocabulary if it does not exist.
-  // @todo Change Forum module so forum.settings can contain the vocabulary's
-  //   machine name.
-  $config = config('forum.settings');
-  // If the module was disabled only, the current config may contain a valid
-  // vocabulary ID already.
-  $vocabulary = taxonomy_vocabulary_load($config->get('vocabulary'));
-  if (!$vocabulary) {
-    // If the module was installed and uninstalled previously, the vocabulary
-    // with machine name 'forums' might still exist.
-    $vocabulary = taxonomy_vocabulary_machine_name_load('forums');
-    if (!$vocabulary) {
-      // Otherwise, installing from scratch; create the vocabulary.
-      $vocabulary = entity_create('taxonomy_vocabulary', array(
-        'name' => t('Forums'),
-        'machine_name' => 'forums',
-        'langcode' => language_default()->langcode,
-        'description' => t('Forum navigation vocabulary'),
-        'hierarchy' => 1,
-        'module' => 'forum',
-        'weight' => -10,
-      ));
-      taxonomy_vocabulary_save($vocabulary);
-    }
-    $config->set('vocabulary', $vocabulary->vid)->save();
-  }
-
-  // Create the 'taxonomy_forums' field if it doesn't already exist.
-  if (!field_info_field('taxonomy_forums')) {
-    $field = array(
-      'field_name' => 'taxonomy_forums',
-      'type' => 'taxonomy_term_reference',
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $vocabulary->machine_name,
-            'parent' => 0,
-          ),
-        ),
-      ),
-    );
-    field_create_field($field);
-
+  if (!\Drupal::service('config.installer')->isSyncing()) {
     // Create a default forum so forum posts can be created.
-    $term = entity_create('taxonomy_term', array(
+    $term = Term::create(array(
       'name' => t('General discussion'),
-      'langcode' => language_default()->langcode,
       'description' => '',
       'parent' => array(0),
-      'vid' => $vocabulary->vid,
+      'vid' => 'forums',
+      'forum_container' => 0,
     ));
-    taxonomy_term_save($term);
-
-    // Create the instance on the bundle.
-    $instance = array(
-      'field_name' => 'taxonomy_forums',
-      'entity_type' => 'node',
-      'label' => $vocabulary->name,
-      'bundle' => 'forum',
-      'required' => TRUE,
-      'widget' => array(
-        'type' => 'options_select',
-      ),
-      'display' => array(
-        'default' => array(
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 10,
-        ),
-        'teaser' => array(
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 10,
-        ),
-      ),
-    );
-    field_create_instance($instance);
+    $term->save();
   }
-
-  // Ensure the forum node type is available.
-  node_types_rebuild();
-  $types = node_type_get_types();
-  node_add_body_field($types['forum']);
 }
 
 /**
  * Implements hook_uninstall().
  */
 function forum_uninstall() {
-  // Load the dependent Taxonomy module, in case it has been disabled.
-  drupal_load('module', 'taxonomy');
+  if ($field_storage = FieldStorageConfig::loadByName('node', 'taxonomy_forums')) {
+    $field_storage->delete();
+  }
 
-  variable_del('node_options_forum');
+  if ($field_storage = FieldStorageConfig::loadByName('node', 'comment_forum')) {
+    $field_storage->delete();
+  }
 
-  field_delete_field('taxonomy_forums');
-  // Purge field data now to allow taxonomy module to be uninstalled
+  if ($field_storage = FieldStorageConfig::loadByName('taxonomy_term', 'forum_container')) {
+    $field_storage->delete();
+  }
+
+  // Purge field data now to allow taxonomy and options module to be uninstalled
   // if this is the only field remaining.
   field_purge_batch(10);
+  // Allow to delete a forum's node type.
+  $locked = \Drupal::state()->get('node.type.locked');
+  unset($locked['forum']);
+  \Drupal::state()->set('node.type.locked', $locked);
 }
 
 /**
@@ -181,7 +113,7 @@ function forum_schema() {
         'default' => 0,
       ),
       'title' => array(
-        'description' => 'The title of this node, always treated as non-markup plain text.',
+        'description' => 'The node title.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -206,7 +138,7 @@ function forum_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default'=> 0,
+        'default' => 0,
       ),
       'last_comment_timestamp' => array(
         'type' => 'int',
@@ -241,30 +173,5 @@ function forum_schema() {
     ),
   );
 
-
   return $schema;
-}
-
-/**
- * Implements hook_update_last_removed().
- */
-function forum_update_last_removed() {
-  return 7003;
-}
-
-/**
- * Moves forum settings from variable to config.
- *
- * @ingroup config_upgrade
- */
-function forum_update_8000() {
-  update_variables_to_config('forum.settings', array(
-    'forum_hot_topic' => 'topics.hot_threshold',
-    'forum_per_page' => 'topics.page_limit',
-    'forum_order' => 'topics.order',
-    'forum_nav_vocabulary' => 'vocabulary',
-    'forum_containers' => 'containers',
-    'forum_block_num_active' => 'block.active.limit',
-    'forum_block_num_new' => 'block.new.limit',
-  ));
 }

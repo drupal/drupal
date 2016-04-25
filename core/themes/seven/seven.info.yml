@@ -1,0 +1,59 @@
+# This theme is marked as @internal. It is intended to evolve and change over
+# minor releases.
+# Change record https://www.drupal.org/node/2582945.
+# As the UI of Drupal improves between minor versions, the mark up and assets
+# in the Seven theme will change. The Seven theme is not backwards
+# compatible. If you wish to modify the output or assets of Seven you can:
+# 1. Copy the whole of Seven and rename it as your own admin theme. You
+# will need to manually manage your own updates if you want to stay up to
+# date with Seven's bug fixes and feature support.
+#
+# 2. Sub-theme Seven. This is only recommended if you want to make minor
+# tweaks and understand that Seven could break your modifications as it
+# changes.
+name: Seven
+type: theme
+base theme: classy
+description: 'The default administration theme for Drupal 8 was designed with clean lines, simple blocks, and sans-serif font to emphasize the tools and tasks at hand.'
+alt text: 'Default administration theme for Drupal 8 with simple blocks and clean lines.'
+package: Core
+version: VERSION
+core: 8.x
+libraries:
+ - seven/global-styling
+libraries-override:
+  core/drupal.vertical-tabs:
+    css:
+      component:
+        misc/vertical-tabs.css: false
+  core/jquery.ui:
+    css:
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
+  core/jquery.ui.dialog:
+    css:
+      component:
+        assets/vendor/jquery.ui/themes/base/dialog.css: false
+  classy/dialog:
+    seven/seven.drupal.dialog
+libraries-extend:
+  core/drupal.vertical-tabs:
+    - seven/vertical-tabs
+  core/jquery.ui:
+    - seven/seven.jquery.ui
+  tour/tour-styling:
+    - seven/tour-styling
+quickedit_stylesheets:
+  - css/components/quickedit.css
+regions:
+  header: 'Header'
+  pre_content: 'Pre-content'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  sidebar_first: 'First sidebar'
+regions_hidden:
+  - sidebar_first

@@ -1,0 +1,7 @@
+test_subtheme.settings:
+  type: theme_settings
+  label: 'Test sub theme settings'
+  mapping:
+    override:
+      type: string
+      label: 'Whether the setting has been overridden'

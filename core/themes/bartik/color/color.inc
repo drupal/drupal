@@ -2,11 +2,8 @@
 
 /**
  * @file
- * Lists avalable colors and color schemes for the Bartik theme.
+ * Lists available colors and color schemes for the Bartik theme.
  */
-
-// Put the logo path into JavaScript for the live preview.
-drupal_add_js(array('color' => array('logo' => theme_get_setting('logo', 'bartik'))), 'setting');
 
 $info = array(
   // Available colors and color labels used in theme.
@@ -26,8 +23,8 @@ $info = array(
     'default' => array(
       'title' => t('Blue Lagoon (default)'),
       'colors' => array(
-        'top' => '#0779bf',
-        'bottom' => '#48a9e4',
+        'top' => '#055a8e',
+        'bottom' => '#1d84c3',
         'bg' => '#ffffff',
         'sidebar' => '#f6f6f2',
         'sidebarborders' => '#f9f9f9',
@@ -41,13 +38,13 @@ $info = array(
       'title' => t('Firehouse'),
       'colors' => array(
         'top' => '#cd2d2d',
-        'bottom' => '#cf3535',
+        'bottom' => '#d64e4e',
         'bg' => '#ffffff',
         'sidebar' => '#f1f4f0',
         'sidebarborders' => '#ededed',
         'footer' => '#1f1d1c',
         'titleslogan' => '#fffeff',
-        'text' => '#3b3b3b',
+        'text' => '#888888',
         'link' => '#d6121f',
       ),
     ),
@@ -59,7 +56,7 @@ $info = array(
         'bg' => '#ffffff',
         'sidebar' => '#ffffff',
         'sidebarborders' => '#cccccc',
-        'footer' => '#24272c',
+        'footer' => '#016b83',
         'titleslogan' => '#000000',
         'text' => '#4a4a4a',
         'link' => '#019dbf',
@@ -102,7 +99,7 @@ $info = array(
 
   // Files to copy.
   'copy' => array(
-    'logo.png',
+    'logo.svg',
   ),
 
   // Gradient definitions.
@@ -117,21 +114,17 @@ $info = array(
     ),
   ),
 
-  // Color areas to fill (x, y, width, height).
-  'fill' => array(),
-
-  // Coordinates of all the theme slices (x, y, width, height)
-  // with their filename as used in the stylesheet.
-  'slices' => array(),
-
-  // Reference color used for blending. Matches the base.png's colors.
-  'blend_target' => '#ffffff',
-
   // Preview files.
-  'preview_css' => 'color/preview.css',
-  'preview_js' => 'color/preview.js',
+  'preview_library' => 'bartik/color.preview',
   'preview_html' => 'color/preview.html',
 
-  // Base file for image generation.
-  'base_image' => 'color/base.png',
+  // Attachments.
+  '#attached' => [
+    'drupalSettings' => [
+      'color' => [
+        // Put the logo path into JavaScript for the live preview.
+        'logo' => theme_get_setting('logo.url', 'bartik'),
+      ],
+    ],
+  ],
 );

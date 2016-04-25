@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\FileTransfer\ChmodInterface.
- */
-
 namespace Drupal\Core\FileTransfer;
 
 /**
@@ -24,5 +19,6 @@ interface ChmodInterface {
    *
    * @see http://php.net/chmod
    */
-  function chmodJailed($path, $mode, $recursive);
+  public function chmodJailed($path, $mode, $recursive);
+
 }

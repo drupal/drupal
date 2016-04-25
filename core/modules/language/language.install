@@ -2,118 +2,12 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the language module.
+ * Update functions for Language module.
  */
 
 /**
- * Implements hook_install().
- *
- * Enable URL language negotiation by default in order to have a basic working
- * system on multilingual sites without needing any preliminary configuration.
+ * Rebuild the container as services changed.
  */
-function language_install() {
-  // Add the default language at first so that language_list() returns this in
-  // language_special_languages().
-  $default_language = language_save(language_default());
-  $languages = language_default_locked_languages($default_language->weight);
-  foreach ($languages as $language) {
-    language_save($language);
-  }
-
-  // Enable URL language detection for each configurable language type.
-  require_once DRUPAL_ROOT . '/core/includes/language.inc';
-  foreach (language_types_get_configurable(FALSE) as $type) {
-    language_negotiation_set($type, array(LANGUAGE_NEGOTIATION_URL => 0));
-  }
-}
-
-/**
- * Implements hook_uninstall().
- */
-function language_uninstall() {
-  // Clear variables.
-  variable_del('language_default');
-  variable_del('language_count');
-
-  // Clear variables.
-  variable_del('language_types');
-  variable_del('language_content_type_default');
-  variable_del('language_content_type_negotiation');
-
-  foreach (language_types_get_all() as $type) {
-    variable_del("language_negotiation_$type");
-    variable_del("language_negotiation_methods_weight_$type");
-  }
-
-  // Re-initialize the language system so successive calls to t() and other
-  // functions will not expect languages to be present.
-  drupal_language_initialize();
-}
-
-/**
- * Implements hook_schema().
- */
-function language_schema() {
-  $schema['language'] = array(
-    'description' => 'List of all available languages in the system.',
-    'fields' => array(
-      'langcode' => array(
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => "Language code, e.g. 'de' or 'en-US'.",
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Language name.',
-      ),
-      'direction' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Direction of language (Left-to-Right = 0, Right-to-Left = 1).',
-      ),
-      'weight' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Weight, used in lists of languages.',
-      ),
-      'locked' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'A boolean indicating whether the administrator can edit or delete the language.',
-      ),
-    ),
-    'primary key' => array('langcode'),
-    'indexes' => array(
-      'list' => array('weight', 'name'),
-    ),
-  );
-  return $schema;
-}
-
-/**
- * Implements hook_enable().
- */
-function language_enable() {
-  // Update the language count, if the module was disabled before, the
-  // language_count variable was forced to 1.
-  language_update_count();
-}
-
-/**
- * Implements hook_disable().
- */
-function language_disable() {
-  // Force the language_count variable to be 1, so that the when checking if the
-  // site is multilingual (for example in language_multilingual()), the result
-  // will be FALSE, because the language module is disabled.
-  variable_set('language_count', 1);
+function language_update_8001() {
+  \Drupal::service('kernel')->invalidateContainer();
 }

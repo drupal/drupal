@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Contains a failing update hook for testing the update system.
+ */
+
+use Drupal\Core\Utility\UpdateException;
+
+/**
+ * This update will fail.
+ */
+function update_test_failing_update_8001() {
+  throw new UpdateException('This update hook is failing.');
+}
+
+/**
+ * A further update.
+ */
+function update_test_failing_update_8002() {
+  // This hook won't ever run.
+}

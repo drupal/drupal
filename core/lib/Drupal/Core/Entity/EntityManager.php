@@ -1,304 +1,513 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Core\Entity\EntityManager.
- */
-
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Component\Plugin\Discovery\ProcessDecorator;
-use Drupal\Core\Plugin\Discovery\AlterDecorator;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
-use Drupal\Core\Plugin\Discovery\InfoHookDecorator;
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
- * Manages entity type plugin definitions.
+ * Provides a wrapper around many other services relating to entities.
  *
- * Each entity type definition array is set in the entity type plugin's
- * annotation and altered by hook_entity_info_alter(). The definition includes
- * the following keys:
- * - module: The name of the module providing the type.
- * - class: The name of the entity type class. Defaults to
- *   Drupal\Core\Entity\Entity.
- * - base_table: The name of the entity type's base table. Used by
- *   Drupal\Core\Entity\DatabaseStorageController.
- * - controller_class: The name of the class that is used to load the objects.
- *   The class must implement
- *   Drupal\Core\Entity\EntityStorageControllerInterface. Defaults to
- *   Drupal\Core\Entity\DatabaseStorageController.
- * - fieldable: (optional) Boolean indicating whether fields can be attached
- *   to entities of this type. Defaults to FALSE.
- * - field_cache: (optional) Boolean indicating whether the Field API's
- *   Field API's persistent cache of field data should be used. The persistent
- *   cache should usually only be disabled if a higher level persistent cache
- *   is available for the entity type. Defaults to TRUE.
- * - form_controller_class: (optional) An associative array where the keys
- *   are the names of the different form operations (such as 'create',
- *   'edit', or 'delete') and the values are the names of the controller
- *   classes for those operations. The name of the operation is passed also
- *   to the form controller's constructor, so that one class can be used for
- *   multiple entity forms when the forms are similar. Defaults to
- *   Drupal\Core\Entity\EntityFormController.
- * - label: The human-readable name of the type.
- * - label_callback: (optional) A function taking an entity and optional
- *   langcode argument, and returning the label of the entity. If langcode is
- *   omitted, the entity's default language is used.
- *   The entity label is the main string associated with an entity; for
- *   example, the title of a node or the subject of a comment. If there is an
- *   entity object property that defines the label, use the 'label' element
- *   of the 'entity_keys' return value component to provide this information
- *   (see below). If more complex logic is needed to determine the label of
- *   an entity, you can instead specify a callback function here, which will
- *   be called to determine the entity label. See also the
- *   Drupal\Core\Entity\Entity::label() method, which implements this logic.
- * - list_controller_class: (optional) The name of the class that provides
- *   listings of the entities. The class must implement
- *   Drupal\Core\Entity\EntityListControllerInterface. Defaults to
- *   Drupal\Core\Entity\EntityListController.
- * - render_controller_class: The name of the class that is used to render the
- *   entities. Defaults to Drupal\Core\Entity\EntityRenderController.
- * - access_controller_class: The name of the class that is used for access
- *   checks. The class must implement
- *   Drupal\Core\Entity\EntityAccessControllerInterface. Defaults to
- *   Drupal\Core\Entity\EntityAccessController.
- * - translation_controller_class: (optional) The name of the translation
- *   controller class that should be used to handle the translation process.
- *   See Drupal\translation_entity\EntityTranslationControllerInterface for more
- *   information.
- * - static_cache: (optional) Boolean indicating whether entities should be
- *   statically cached during a page request. Used by
- *   Drupal\Core\Entity\DatabaseStorageController. Defaults to TRUE.
- * - translation: (optional) An associative array of modules registered as
- *   field translation handlers. Array keys are the module names, and array
- *   values can be any data structure the module uses to provide field
- *   translation. If the value is empty, the module will not be used as a
- *   translation handler.
- * - entity_keys: An array describing how the Field API can extract certain
- *   information from objects of this entity type. Elements:
- *   - id: The name of the property that contains the primary ID of the
- *     entity. Every entity object passed to the Field API must have this
- *     property and its value must be numeric.
- *   - revision: (optional) The name of the property that contains the
- *     revision ID of the entity. The Field API assumes that all revision IDs
- *     are unique across all entities of a type. This entry can be omitted if
- *     the entities of this type are not versionable.
- *   - bundle: (optional) The name of the property that contains the bundle
- *     name for the entity. The bundle name defines which set of fields are
- *     attached to the entity (e.g. what nodes call "content type"). This
- *     entry can be omitted if this entity type exposes a single bundle (such
- *     that all entities have the same collection of fields). The name of
- *     this single bundle will be the same as the entity type.
- *   - label: The name of the property that contains the entity label. For
- *     example, if the entity's label is located in $entity->subject, then
- *     'subject' should be specified here. If complex logic is required to
- *     build the label, a 'label_callback' should be defined instead (see
- *     the 'label_callback' section above for details).
- *   - uuid (optional): The name of the property that contains the universally
- *     unique identifier of the entity, which is used to distinctly identify
- *     an entity across different systems.
- * - bundle_keys: An array describing how the Field API can extract the
- *   information it needs from the bundle objects for this type (e.g
- *   Vocabulary objects for terms; not applicable for nodes). This entry can
- *   be omitted if this type's bundles do not exist as standalone objects.
- *   Elements:
- *   - bundle: The name of the property that contains the name of the bundle
- *     object.
- * - bundles: An array describing all bundles for this object type. Keys are
- *   bundle machine names, as found in the objects' 'bundle' property
- *   (defined in the 'entity_keys' entry for the entity type in the
- *   EntityManager). Elements:
- *   - label: The human-readable name of the bundle.
- *   - uri_callback: The same as the 'uri_callback' key defined for the entity
- *     type in the EntityManager, but for the bundle only. When determining
- *     the URI of an entity, if a 'uri_callback' is defined for both the
- *     entity type and the bundle, the one for the bundle is used.
- *   - admin: An array of information that allows Field UI pages to attach
- *     themselves to the existing administration pages for the bundle.
- *     Elements:
- *     - path: the path of the bundle's main administration page, as defined
- *       in hook_menu(). If the path includes a placeholder for the bundle,
- *       the 'bundle argument', 'bundle helper' and 'real path' keys below
- *       are required.
- *     - bundle argument: The position of the placeholder in 'path', if any.
- *     - real path: The actual path (no placeholder) of the bundle's main
- *       administration page. This will be used to generate links.
- *     - access callback: As in hook_menu(). 'user_access' will be assumed if
- *       no value is provided.
- *     - access arguments: As in hook_menu().
- * - view_modes: An array describing the view modes for the entity type. View
- *   modes let entities be displayed differently depending on the context.
- *   For instance, a node can be displayed differently on its own page
- *   ('full' mode), on the home page or taxonomy listings ('teaser' mode), or
- *   in an RSS feed ('rss' mode). Modules taking part in the display of the
- *   entity (notably the Field API) can adjust their behavior depending on
- *   the requested view mode. An additional 'default' view mode is available
- *   for all entity types. This view mode is not intended for actual entity
- *   display, but holds default display settings. For each available view
- *   mode, administrators can configure whether it should use its own set of
- *   field display settings, or just replicate the settings of the 'default'
- *   view mode, thus reducing the amount of display configurations to keep
- *   track of. Keys of the array are view mode names. Each view mode is
- *   described by an array with the following key/value pairs:
- *   - label: The human-readable name of the view mode.
- *   - custom_settings: A boolean specifying whether the view mode should by
- *     default use its own custom field display settings. If FALSE, entities
- *     displayed in this view mode will reuse the 'default' display settings
- *     by default (e.g. right after the module exposing the view mode is
- *     enabled), but administrators can later use the Field UI to apply custom
- *     display settings specific to the view mode.
- * - menu_base_path: (optional) The base menu router path to which the entity
- *   administration user interface responds. It can be used to generate UI
- *   links and to attach additional router items to the entity UI in a generic
- *   fashion.
- * - menu_view_path: (optional) The menu router path to be used to view the
- *   entity.
- * - menu_edit_path: (optional) The menu router path to be used to edit the
- *   entity.
- * - menu_path_wildcard: (optional) A string identifying the menu loader in the
- *   router path.
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  *
- * The defaults for the plugin definition are provided in
- * \Drupal\Core\Entity\EntityManager::defaults.
- *
- * @see \Drupal\Core\Entity\Entity
- * @see entity_get_info()
- * @see hook_entity_info_alter()
+ * @todo Enforce the deprecation of each method once
+ *   https://www.drupal.org/node/2578361 is in.
  */
-class EntityManager extends PluginManagerBase {
+class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
+
+  use ContainerAwareTrait;
 
   /**
-   * The cache bin used for entity plugin definitions.
+   * {@inheritdoc}
    *
-   * @var string
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    */
-  protected $cacheBin = 'cache';
+  public function clearCachedDefinitions() {
+    $this->container->get('entity_type.manager')->clearCachedDefinitions();
 
-  /**
-   * The cache key used for entity plugin definitions.
-   *
-   * @var string
-   */
-  protected $cacheKey = 'entity_info';
-
-  /**
-   * The cache expiration for entity plugin definitions.
-   *
-   * @var int
-   */
-  protected $cacheExpire = CacheBackendInterface::CACHE_PERMANENT;
-
-  /**
-   * The cache tags used for entity plugin definitions.
-   *
-   * @var array
-   */
-  protected $cacheTags = array('entity_info' => TRUE);
-
-  /**
-   * The default values for optional keys of the entity plugin definition.
-   *
-   * @var array
-   */
-  protected $defaults = array(
-    'class' => 'Drupal\Core\Entity\Entity',
-    'controller_class' => 'Drupal\Core\Entity\DatabaseStorageController',
-    'entity_keys' => array(
-      'revision' => '',
-      'bundle' => '',
-    ),
-    'fieldable' => FALSE,
-    'field_cache' => TRUE,
-    'form_controller_class' => array(
-      'default' => 'Drupal\Core\Entity\EntityFormController',
-    ),
-    'list_controller_class' => 'Drupal\Core\Entity\EntityListController',
-    'render_controller_class' => 'Drupal\Core\Entity\EntityRenderController',
-    'access_controller_class' => 'Drupal\Core\Entity\EntityAccessController',
-    'static_cache' => TRUE,
-    'translation' => array(),
-    'bundles' => array(),
-    'view_modes' => array(),
-  );
-
-  /**
-   * Constructs a new Entity plugin manager.
-   */
-  public function __construct() {
-    // Allow the plugin definition to be altered by hook_entity_info_alter().
-    $this->discovery = new AnnotatedClassDiscovery('Core', 'Entity');
-    $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
-    $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
-    // @todo Run process before altering, see http://drupal.org/node/1848964.
-    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
-    $this->factory = new DefaultFactory($this);
-
-    // Entity type plugins includes translated strings, so each language is
-    // cached separately.
-    $this->cacheKey .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+    // @todo None of these are plugin managers, and they should not co-opt
+    //   this method for managing its caches. Remove in
+    //   https://www.drupal.org/node/2549143.
+    $this->container->get('entity_type.bundle.info')->clearCachedBundles();
+    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+    $this->container->get('entity_type.repository')->clearCachedDefinitions();
   }
 
   /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase::getDefinition().
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    */
-  public function getDefinition($plugin_id) {
-    $definitions = $this->getDefinitions();
-    return isset($definitions[$plugin_id]) ? $definitions[$plugin_id] : NULL;
+  public function getDefinition($entity_type_id, $exception_on_invalid = TRUE) {
+    return $this->container->get('entity_type.manager')->getDefinition($entity_type_id, $exception_on_invalid);
   }
 
   /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase::getDefinitions().
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function hasHandler($entity_type, $handler_type) {
+    return $this->container->get('entity_type.manager')->hasHandler($entity_type, $handler_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getStorage($entity_type) {
+    return $this->container->get('entity_type.manager')->getStorage($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getListBuilder($entity_type) {
+    return $this->container->get('entity_type.manager')->getListBuilder($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getFormObject($entity_type, $operation) {
+    return $this->container->get('entity_type.manager')->getFormObject($entity_type, $operation);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getRouteProviders($entity_type) {
+    return $this->container->get('entity_type.manager')->getRouteProviders($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getViewBuilder($entity_type) {
+    return $this->container->get('entity_type.manager')->getViewBuilder($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getAccessControlHandler($entity_type) {
+    return $this->container->get('entity_type.manager')->getAccessControlHandler($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getHandler($entity_type, $handler_type) {
+    return $this->container->get('entity_type.manager')->getHandler($entity_type, $handler_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function createHandlerInstance($class, EntityTypeInterface $definition = null) {
+    return $this->container->get('entity_type.manager')->createHandlerInstance($class, $definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getBaseFieldDefinitions($entity_type_id) {
+    return $this->container->get('entity_field.manager')->getBaseFieldDefinitions($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getFieldDefinitions($entity_type_id, $bundle) {
+    return $this->container->get('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getFieldStorageDefinitions($entity_type_id) {
+    return $this->container->get('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function setFieldMap(array $field_map) {
+    return $this->container->get('entity_field.manager')->setFieldMap($field_map);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getFieldMap() {
+    return $this->container->get('entity_field.manager')->getFieldMap();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getFieldMapByFieldType($field_type) {
+    return $this->container->get('entity_field.manager')->getFieldMapByFieldType($field_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function onFieldDefinitionCreate(FieldDefinitionInterface $field_definition) {
+    $this->container->get('field_definition.listener')->onFieldDefinitionCreate($field_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function onFieldDefinitionUpdate(FieldDefinitionInterface $field_definition, FieldDefinitionInterface $original) {
+    $this->container->get('field_definition.listener')->onFieldDefinitionUpdate($field_definition, $original);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function onFieldDefinitionDelete(FieldDefinitionInterface $field_definition) {
+    $this->container->get('field_definition.listener')->onFieldDefinitionDelete($field_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function clearCachedFieldDefinitions() {
+    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function clearCachedBundles() {
+    $this->container->get('entity_type.bundle.info')->clearCachedBundles();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getBundleInfo($entity_type) {
+    return $this->container->get('entity_type.bundle.info')->getBundleInfo($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getAllBundleInfo() {
+    return $this->container->get('entity_type.bundle.info')->getAllBundleInfo();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExtraFields($entity_type_id, $bundle) {
+    return $this->container->get('entity_field.manager')->getExtraFields($entity_type_id, $bundle);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getEntityTypeLabels($group = FALSE) {
+    return $this->container->get('entity_type.repository')->getEntityTypeLabels($group);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = array()) {
+    return $this->container->get('entity.repository')->getTranslationFromContext($entity, $langcode, $context);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getAllViewModes() {
+    return $this->container->get('entity_display.repository')->getAllViewModes();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getViewModes($entity_type_id) {
+    return $this->container->get('entity_display.repository')->getViewModes($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getAllFormModes() {
+    return $this->container->get('entity_display.repository')->getAllFormModes();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getFormModes($entity_type_id) {
+    return $this->container->get('entity_display.repository')->getFormModes($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getViewModeOptions($entity_type_id) {
+    return $this->container->get('entity_display.repository')->getViewModeOptions($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getFormModeOptions($entity_type_id) {
+    return $this->container->get('entity_display.repository')->getFormModeOptions($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getViewModeOptionsByBundle($entity_type_id, $bundle) {
+    return $this->container->get('entity_display.repository')->getViewModeOptionsByBundle($entity_type_id, $bundle);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getFormModeOptionsByBundle($entity_type_id, $bundle) {
+    return $this->container->get('entity_display.repository')->getFormModeOptionsByBundle($entity_type_id, $bundle);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function clearDisplayModeInfo() {
+    $this->container->get('entity_display.repository')->clearDisplayModeInfo();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function loadEntityByUuid($entity_type_id, $uuid) {
+    return $this->container->get('entity.repository')->loadEntityByUuid($entity_type_id, $uuid);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function loadEntityByConfigTarget($entity_type_id, $target) {
+    return $this->container->get('entity.repository')->loadEntityByConfigTarget($entity_type_id, $target);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getEntityTypeFromClass($class_name) {
+    return $this->container->get('entity_type.repository')->getEntityTypeFromClass($class_name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
+    $this->container->get('entity_type.listener')->onEntityTypeCreate($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    $this->container->get('entity_type.listener')->onEntityTypeUpdate($entity_type, $original);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
+    $this->container->get('entity_type.listener')->onEntityTypeDelete($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition) {
+    $this->container->get('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function onFieldStorageDefinitionUpdate(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
+    $this->container->get('field_storage_definition.listener')->onFieldStorageDefinitionUpdate($storage_definition, $original);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition) {
+    $this->container->get('field_storage_definition.listener')->onFieldStorageDefinitionDelete($storage_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function onBundleCreate($bundle, $entity_type_id) {
+    $this->container->get('entity_bundle.listener')->onBundleCreate($bundle, $entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function onBundleDelete($bundle, $entity_type_id) {
+    $this->container->get('entity_bundle.listener')->onBundleDelete($bundle, $entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getLastInstalledDefinition($entity_type_id) {
+    return $this->container->get('entity.last_installed_schema.repository')->getLastInstalledDefinition($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function useCaches($use_caches = FALSE) {
+    $this->container->get('entity_type.manager')->useCaches($use_caches);
+
+    // @todo EntityFieldManager is not a plugin manager, and should not co-opt
+    //   this method for managing its caches.
+    $this->container->get('entity_field.manager')->useCaches($use_caches);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getLastInstalledFieldStorageDefinitions($entity_type_id) {
+    return $this->container->get('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    */
   public function getDefinitions() {
-    // Because \Drupal\Core\Plugin\Discovery\CacheDecorator runs before
-    // definitions are processed and does not support cache tags, we perform our
-    // own caching.
-    if ($cache = cache($this->cacheBin)->get($this->cacheKey)) {
-      return $cache->data;
-    }
-    else {
-      // @todo Remove array_filter() once http://drupal.org/node/1780396 is
-      //   resolved.
-      $definitions = array_filter(parent::getDefinitions());
-      cache($this->cacheBin)->set($this->cacheKey, $definitions, $this->cacheExpire, $this->cacheTags);
-      return $definitions;
-    }
+    return $this->container->get('entity_type.manager')->getDefinitions();
   }
 
   /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase::processDefinition().
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    */
-  public function processDefinition(&$definition, $plugin_id) {
-    parent::processDefinition($definition, $plugin_id);
+  public function hasDefinition($plugin_id) {
+    return $this->container->get('entity_type.manager')->hasDefinition($plugin_id);
+  }
 
-    // @todo Remove this check once http://drupal.org/node/1780396 is resolved.
-    if (!module_exists($definition['module'])) {
-      $definition = NULL;
-      return;
-    }
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function createInstance($plugin_id, array $configuration = []) {
+    return $this->container->get('entity_type.manager')->createInstance($plugin_id, $configuration);
+  }
 
-    foreach ($definition['view_modes'] as $view_mode => $view_mode_info) {
-      $definition['view_modes'][$view_mode] += array(
-        'custom_settings' => FALSE,
-      );
-    }
-
-    // If no bundle key is provided, assume a single bundle, named after
-    // the entity type.
-    if (empty($definition['entity_keys']['bundle']) && empty($definition['bundles'])) {
-      $definition['bundles'] = array($plugin_id => array('label' => $definition['label']));
-    }
-    // Prepare entity schema fields SQL info for
-    // Drupal\Core\Entity\DatabaseStorageControllerInterface::buildQuery().
-    if (isset($definition['base_table'])) {
-      $definition['schema_fields_sql']['base_table'] = drupal_schema_fields_sql($definition['base_table']);
-      if (isset($definition['revision_table'])) {
-        $definition['schema_fields_sql']['revision_table'] = drupal_schema_fields_sql($definition['revision_table']);
-      }
-    }
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   */
+  public function getInstance(array $options) {
+    return $this->container->get('entity_type.manager')->getInstance($options);
   }
 
 }

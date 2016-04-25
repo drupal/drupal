@@ -1,0 +1,14 @@
+id: menu_settings
+label: Menu UI configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - menu_override_parent_selector
+process:
+  override_parent_selector: menu_override_parent_selector
+destination:
+  plugin: config
+  config_name: menu_ui.settings

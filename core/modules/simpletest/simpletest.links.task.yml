@@ -1,0 +1,9 @@
+simpletest.test_form:
+  title: List
+  route_name: simpletest.test_form
+  base_route: simpletest.test_form
+simpletest.settings:
+  title: Settings
+  route_name: simpletest.settings
+  base_route: simpletest.test_form
+  weight: 100

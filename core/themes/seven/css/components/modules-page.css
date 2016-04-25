@@ -1,0 +1,47 @@
+/* Modules page */
+.system-modules fieldset {
+  border: 0;
+  border-top: 1px solid #ccc;
+}
+.system-modules details {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.system-modules summary {
+  border-bottom: 1px solid #ccc;
+}
+.system-modules [open] summary {
+  border-bottom: none;
+}
+.system-modules .details-wrapper {
+  padding: 0 0 0.5em 0;
+}
+.system-modules .fieldset-wrapper {
+  padding: 0;
+}
+.system-modules table,
+.locale-translation-status-form table {
+  border: 0;
+}
+.system-modules tr.even,
+.system-modules tr.odd,
+.locale-translation-status-form tr.even,
+.locale-translation-status-form tr.odd {
+  background: #f3f4ee;
+  border: 0;
+  border-bottom: 10px solid #fff;
+}
+.system-modules tr td:last-child,
+.locale-translation-status-form tr td:last-child {
+  border: 0;
+}
+.system-modules table th,
+.locale-translation-status-form table th {
+  border: 0;
+  border-bottom: 10px solid #fff;
+}
+.system-modules .sticky-header th,
+.locale-translation-status-form .sticky-header th {
+  border: 0;
+}

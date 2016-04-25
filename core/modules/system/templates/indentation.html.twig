@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a set of indentation divs.
+ *
+ * These <div> tags are used for drag and drop tables.
+ *
+ * Available variables:
+ * - size: Optional. The number of indentations to create.
+ *
+ * @ingroup themeable
+ */
+#}
+{% for i in 1..size if size > 0 %}<div class="js-indentation indentation">&nbsp;</div>{% endfor %}

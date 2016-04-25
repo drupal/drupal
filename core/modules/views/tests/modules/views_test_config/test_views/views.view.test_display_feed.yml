@@ -1,0 +1,236 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.storage.node.body
+  module:
+    - node
+    - text
+    - user
+id: test_display_feed
+label: test_display_feed
+module: views
+description: ''
+tag: default
+base_table: node_field_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        title:
+          alter:
+            absolute: false
+            alter_text: false
+            ellipsis: false
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: false
+          empty_zero: false
+          field: title
+          hide_empty: false
+          id: title
+          label: ''
+          table: node_field_data
+          plugin_id: field
+          entity_type: node
+          entity_field: title
+        body:
+          id: body
+          table: node__body
+          field: body
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+      filters:
+        status:
+          expose:
+            operator: '0'
+          field: status
+          group: 1
+          id: status
+          table: node_field_data
+          value: true
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+      pager:
+        options:
+          items_per_page: 10
+        type: full
+      query:
+        type: views_query
+      row:
+        options:
+          view_mode: teaser
+        type: 'entity:node'
+      sorts:
+        created:
+          field: created
+          id: created
+          order: DESC
+          table: node_field_data
+          plugin_id: date
+          entity_type: node
+          entity_field: created
+      style:
+        type: default
+      title: test_display_feed
+      display_extenders: {  }
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      max-age: -1
+      tags:
+        - 'config:field.storage.node.body'
+  feed_1:
+    display_options:
+      displays: {  }
+      pager:
+        type: some
+      path: test-feed-display.xml
+      row:
+        type: node_rss
+      style:
+        type: rss
+      sitename_title: true
+      display_extenders: {  }
+    display_plugin: feed
+    display_title: Feed
+    id: feed_1
+    position: 0
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+        - user.permissions
+      max-age: -1
+      tags:
+        - 'config:field.storage.node.body'
+  feed_2:
+    display_options:
+      displays: {  }
+      pager:
+        type: some
+      path: test-feed-display-fields.xml
+      row:
+        type: rss_fields
+        options:
+          title_field: title
+          link_field: title
+          description_field: body
+          creator_field: title
+          date_field: title
+          guid_field_options:
+            guid_field: title
+            guid_field_is_permalink: true
+      style:
+        type: rss
+      sitename_title: true
+      display_description: ''
+      display_extenders: {  }
+    display_plugin: feed
+    display_title: 'Feed with Fields'
+    id: feed_2
+    position: 0
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+        - user.permissions
+      max-age: -1
+      tags:
+        - 'config:field.storage.node.body'
+  page:
+    display_options:
+      path: test-feed-display
+      display_extenders: {  }
+    display_plugin: page
+    display_title: '<em>Page</em>'
+    id: page
+    position: 0
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      max-age: -1
+      tags:
+        - 'config:field.storage.node.body'

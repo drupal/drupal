@@ -1,0 +1,133 @@
+# Schema for the views filter plugins.
+
+views.filter.*:
+  type: views_filter
+  label: 'Default filter'
+
+views.filter.boolean:
+  type: views_filter
+  label: 'Boolean'
+
+views_filter_boolean_string:
+  type: views_filter
+  label: 'Boolean string'
+
+views.filter.broken:
+  type: views_filter
+  label: 'Broken'
+
+views.filter.bundle:
+  type: views.filter.in_operator
+  label: 'Bundle'
+
+views.filter.combine:
+  type: views.filter.string
+  label: 'Combine'
+  mapping:
+    fields:
+      type: sequence
+      label: 'Fields'
+      sequence:
+        type: string
+        label: 'Field'
+
+views.filter_value.date:
+  type: views.filter_value.numeric
+  label: 'Date'
+  mapping:
+    type:
+      type: string
+      label: 'Type'
+
+views.filter_value.groupby_numeric:
+  type: views.filter_value.numeric
+  label: 'Group by numeric'
+
+views.filter.in_operator:
+  type: views_filter
+  label: 'IN operator'
+  mapping:
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: sequence
+      label: 'Values'
+      sequence:
+        type: string
+        label: 'Value'
+    expose:
+      type: mapping
+      label: 'Expose'
+      mapping:
+        reduce:
+          type: boolean
+          label: 'Reduce'
+
+views.filter.string:
+  type: views_filter
+  label: 'String'
+  mapping:
+    expose:
+      type: mapping
+      label: 'Exposed'
+      mapping:
+        required:
+          type: boolean
+          label: 'Required'
+    value:
+      type: string
+      label: 'Value'
+
+views.filter_value.numeric:
+  type: mapping
+  label: 'Numeric'
+  mapping:
+    min:
+      type: string
+      label: 'Min'
+    max:
+      type: string
+      label: 'And max'
+    value:
+      type: string
+      label: 'Value'
+
+views.filter_value.equality:
+  type: views.filter_value.numeric
+  label: 'Equality'
+
+views.filter.many_to_one:
+  type: views.filter.in_operator
+  label: 'Many to one'
+  mapping:
+    reduce_duplicates:
+      type: boolean
+      label: 'Reduce duplicate'
+
+views.filter.standard:
+  type: views_filter
+  label: 'Standard'
+
+views.filter.group_item.*:
+  type: views_filter_group_item
+  label: 'Default'
+
+views.filter.group_item.numeric:
+  type: views_filter_group_item
+  label: 'Group items'
+  mapping:
+    value:
+      type: views.filter_value.numeric
+
+# Schema for the views filter value.
+
+views.filter_value.boolean:
+  type: boolean
+
+views.filter_value.combine:
+  type: string
+
+views.filter.language:
+  type: views.filter.in_operator
+  label: 'Language'

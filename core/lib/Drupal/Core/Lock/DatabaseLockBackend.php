@@ -1,21 +1,45 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Lock\DatabaseLockBackend.
- */
-
 namespace Drupal\Core\Lock;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
+use Drupal\Core\Database\SchemaObjectExistsException;
 
 /**
  * Defines the database lock backend. This is the default backend in Drupal.
+ *
+ * @ingroup lock
  */
 class DatabaseLockBackend extends LockBackendAbstract {
 
   /**
-   * Implements Drupal\Core\Lock\LockBackedInterface::acquire().
+   * The database table name.
+   */
+  const TABLE_NAME = 'semaphore';
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * Constructs a new DatabaseLockBackend.
+   *
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
+   */
+  public function __construct(Connection $database) {
+    // __destruct() is causing problems with garbage collections, register a
+    // shutdown function instead.
+    drupal_register_shutdown_function(array($this, 'releaseAll'));
+    $this->database = $database;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function acquire($name, $timeout = 30.0) {
     // Insure that the timeout is at least 1 ms.
@@ -23,7 +47,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
     $expire = microtime(TRUE) + $timeout;
     if (isset($this->locks[$name])) {
       // Try to extend the expiration of a lock we already acquired.
-      $success = (bool) db_update('semaphore')
+      $success = (bool) $this->database->update('semaphore')
         ->fields(array('expire' => $expire))
         ->condition('name', $name)
         ->condition('value', $this->getLockId())
@@ -41,7 +65,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
       // We always want to do this code at least once.
       do {
         try {
-          db_insert('semaphore')
+          $this->database->insert('semaphore')
             ->fields(array(
               'name' => $name,
               'value' => $this->getLockId(),
@@ -61,6 +85,16 @@ class DatabaseLockBackend extends LockBackendAbstract {
           // the offending row from the database table in case it has expired.
           $retry = $retry ? FALSE : $this->lockMayBeAvailable($name);
         }
+        catch (\Exception $e) {
+          // Create the semaphore table if it does not exist and retry.
+          if ($this->ensureTableExists()) {
+            // Retry only once.
+            $retry = !$retry;
+          }
+          else {
+            throw $e;
+          }
+        }
         // We only retry in case the first attempt failed, but we then broke
         // an expired lock.
       } while ($retry);
@@ -69,10 +103,17 @@ class DatabaseLockBackend extends LockBackendAbstract {
   }
 
   /**
-   * Implements Drupal\Core\Lock\LockBackedInterface::lockMayBeAvailable().
+   * {@inheritdoc}
    */
   public function lockMayBeAvailable($name) {
-    $lock = db_query('SELECT expire, value FROM {semaphore} WHERE name = :name', array(':name' => $name))->fetchAssoc();
+    try {
+      $lock = $this->database->query('SELECT expire, value FROM {semaphore} WHERE name = :name', array(':name' => $name))->fetchAssoc();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+      // If the table does not exist yet then the lock may be available.
+      $lock = FALSE;
+    }
     if (!$lock) {
       return TRUE;
     }
@@ -82,7 +123,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
       // We check two conditions to prevent a race condition where another
       // request acquired the lock and set a new expire time. We add a small
       // number to $expire to avoid errors with float to string conversion.
-      return (bool) db_delete('semaphore')
+      return (bool) $this->database->delete('semaphore')
         ->condition('name', $name)
         ->condition('value', $lock['value'])
         ->condition('expire', 0.0001 + $expire, '<=')
@@ -92,26 +133,110 @@ class DatabaseLockBackend extends LockBackendAbstract {
   }
 
   /**
-   * Implements Drupal\Core\Lock\LockBackedInterface::release().
+   * {@inheritdoc}
    */
   public function release($name) {
     unset($this->locks[$name]);
-    db_delete('semaphore')
-      ->condition('name', $name)
-      ->condition('value', $this->getLockId())
-      ->execute();
+    try {
+      $this->database->delete('semaphore')
+        ->condition('name', $name)
+        ->condition('value', $this->getLockId())
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
   }
 
   /**
-   * Implements Drupal\Core\Lock\LockBackedInterface::releaseAll().
+   * {@inheritdoc}
    */
   public function releaseAll($lock_id = NULL) {
-    $this->locks = array();
-    if (empty($lock_id)) {
-      $lock_id = $this->getLockId();
+    // Only attempt to release locks if any were acquired.
+    if (!empty($this->locks)) {
+      $this->locks = array();
+      if (empty($lock_id)) {
+        $lock_id = $this->getLockId();
+      }
+      $this->database->delete('semaphore')
+        ->condition('value', $lock_id)
+        ->execute();
     }
-    db_delete('semaphore')
-      ->condition('value', $lock_id)
-      ->execute();
   }
+
+  /**
+   * Check if the semaphore table exists and create it if not.
+   */
+  protected function ensureTableExists() {
+    try {
+      $database_schema = $this->database->schema();
+      if (!$database_schema->tableExists(static::TABLE_NAME)) {
+        $schema_definition = $this->schemaDefinition();
+        $database_schema->createTable(static::TABLE_NAME, $schema_definition);
+        return TRUE;
+      }
+    }
+    // If another process has already created the semaphore table, attempting to
+    // recreate it will throw an exception. In this case just catch the
+    // exception and do nothing.
+    catch (SchemaObjectExistsException $e) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Act on an exception when semaphore might be stale.
+   *
+   * If the table does not yet exist, that's fine, but if the table exists and
+   * yet the query failed, then the semaphore is stale and the exception needs
+   * to propagate.
+   *
+   * @param $e
+   *   The exception.
+   *
+   * @throws \Exception
+   */
+  protected function catchException(\Exception $e) {
+    if ($this->database->schema()->tableExists(static::TABLE_NAME)) {
+      throw $e;
+    }
+  }
+
+  /**
+   * Defines the schema for the semaphore table.
+   */
+  public function schemaDefinition() {
+    return [
+      'description' => 'Table for holding semaphores, locks, flags, etc. that cannot be stored as state since they must not be cached.',
+      'fields' => [
+        'name' => [
+          'description' => 'Primary Key: Unique name.',
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => ''
+        ],
+        'value' => [
+          'description' => 'A value for the semaphore.',
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => ''
+        ],
+        'expire' => [
+          'description' => 'A Unix timestamp with microseconds indicating when the semaphore should expire.',
+          'type' => 'float',
+          'size' => 'big',
+          'not null' => TRUE
+        ],
+      ],
+      'indexes' => [
+        'value' => ['value'],
+        'expire' => ['expire'],
+      ],
+      'primary key' => ['name'],
+    ];
+  }
+
 }

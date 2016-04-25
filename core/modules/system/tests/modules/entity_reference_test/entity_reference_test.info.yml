@@ -1,0 +1,11 @@
+name: "Entity Reference Test"
+type: module
+description: "Support module for the Entity Reference tests."
+core: 8.x
+package: Testing
+version: VERSION
+dependencies:
+  - node
+  - user
+  - views
+  - entity_test

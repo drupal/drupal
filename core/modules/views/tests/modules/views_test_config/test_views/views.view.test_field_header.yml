@@ -1,0 +1,71 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_field_header
+label: null
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      fields:
+        name:
+          id: name
+          table: views_test_data
+          field: name
+          plugin_id: string
+          element_label_type: h2
+      style:
+        type: table
+      display_extenders: {  }
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+    cache_metadata:
+      max-age: 0
+      contexts:
+        - 'languages:language_interface'
+        - url.query_args
+      tags: {  }
+  page_1:
+    display_options:
+      path: test_field_header
+      display_extenders: {  }
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 1
+    cache_metadata:
+      max-age: 0
+      contexts:
+        - 'languages:language_interface'
+        - url.query_args
+      tags: {  }
+  page_2:
+    display_options:
+      path: test_field_header_xss
+      defaults:
+        fields: false
+      fields:
+        name:
+          id: name
+          table: views_test_data
+          field: name
+          plugin_id: string
+          element_label_type: 'script>alert("XSS")</script'
+      display_extenders: {  }
+    display_plugin: page
+    display_title: 'Page 2'
+    id: page_2
+    position: 2
+    cache_metadata:
+      max-age: 0
+      contexts:
+        - 'languages:language_interface'
+        - url.query_args
+      tags: {  }

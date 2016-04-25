@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Database\Query\PlaceholderInterface
- */
-
 namespace Drupal\Core\Database\Query;
 
 /**

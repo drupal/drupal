@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - dblog
+id: test_dblog
+label: test_dblog
+module: views
+description: ''
+tag: ''
+base_table: watchdog
+base_field: wid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: null
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        wid:
+          id: wid
+          table: watchdog
+          field: wid
+          plugin_id: numeric
+        message:
+          id: message
+          table: watchdog
+          field: message
+          plugin_id: dblog_message
+        link:
+          id: link
+          table: watchdog
+          field: link
+          plugin_id: dblog_operations
+      filters: {  }
+      sorts:
+        wid:
+          id: wid
+          table: watchdog
+          field: wid
+          order: ASC
+          plugin_id: standard
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: null
+    display_options:
+      path: test-dblog

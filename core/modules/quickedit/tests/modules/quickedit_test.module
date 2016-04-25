@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the Quick Edit tests.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_quickedit_render_field().
+ */
+function quickedit_test_quickedit_render_field(EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
+  $entity = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode);
+  return array(
+    '#prefix' => '<div class="quickedit-test-wrapper">',
+    'field' => $entity->get($field_name)->view($view_mode_id),
+    '#suffix' => '</div>',
+  );
+}
+

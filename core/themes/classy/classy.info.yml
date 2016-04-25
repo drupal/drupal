@@ -1,0 +1,23 @@
+name: Classy
+type: theme
+description: 'A base theme with sensible default CSS classes added. Learn how to use Classy as a base theme in the <a href="https://www.drupal.org/theme-guide/8">Drupal 8 Theming Guide</a>.'
+package: Core
+version: VERSION
+core: 8.x
+hidden: true
+
+libraries:
+  - classy/base
+  - core/normalize
+
+libraries-extend:
+  user/drupal.user:
+    - classy/user
+  core/drupal.dropbutton:
+    - classy/dropbutton
+  core/drupal.dialog:
+    - classy/dialog
+  file/drupal.file:
+    - classy/file
+  core/drupal.progress:
+    - classy/progress

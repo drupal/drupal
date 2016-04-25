@@ -1,0 +1,31 @@
+id: d6_vocabulary_entity_form_display
+label: Vocabulary form display configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_taxonomy_vocabulary_per_type
+  constants:
+    entity_type: node
+    form_mode: default
+    options:
+      weight: 20
+process:
+  entity_type: 'constants/entity_type'
+  form_mode: 'constants/form_mode'
+  options/type:
+    plugin: static_map
+    source: tags
+    map:
+      0: options_select
+      1: entity_reference_autocomplete_tags
+  options/weight: 'constants/options/weight'
+  bundle: type
+  field_name:
+    plugin: migration
+    migration: d6_taxonomy_vocabulary
+    source: vid
+destination:
+  plugin: component_entity_form_display
+migration_dependencies:
+  required:
+    - d6_vocabulary_field_instance

@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_entity_row
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: taxonomy_term_field_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      pager:
+        options:
+          offset: 0
+        type: none
+      row:
+        type: 'entity:taxonomy_term'
+        options:
+          relationship: none
+          view_mode: full
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

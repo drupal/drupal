@@ -1,0 +1,8 @@
+name: 'Taxonomy CRUD tests'
+type: module
+description: 'Provides 3rd party settings for vocabulary.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - taxonomy

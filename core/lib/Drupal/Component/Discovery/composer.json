@@ -1,0 +1,17 @@
+{
+  "name": "drupal/core-discovery",
+  "description": "Discovery.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.5.9",
+    "drupal/core-filecache": "~8.1",
+    "drupal/core-serialization": "~8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Discovery\\": ""
+    }
+  }
+}

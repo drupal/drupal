@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Ajax\PrependCommand.
- */
-
 namespace Drupal\Core\Ajax;
-
-use Drupal\Core\Ajax\InsertCommand;
 
 /**
  * AJAX command for calling the jQuery insert() method.
@@ -16,10 +9,12 @@ use Drupal\Core\Ajax\InsertCommand;
  * method to prepend the given HTML content to the inside each element matched
  * by the given selector.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
  * @see http://docs.jquery.com/Manipulation/prepend#content
+ *
+ * @ingroup ajax
  */
 class PrependCommand extends InsertCommand {
 
@@ -32,7 +27,7 @@ class PrependCommand extends InsertCommand {
       'command' => 'insert',
       'method' => 'prepend',
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }

@@ -1,0 +1,6 @@
+services:
+  early_translation_test.authentication.early_translation_test:
+    class: Drupal\early_translation_test\Auth
+    arguments: ['@entity.manager']
+    tags:
+      - { name: authentication_provider, provider_id: 'early_translation_test', priority: 100 }

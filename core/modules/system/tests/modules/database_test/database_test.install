@@ -24,7 +24,7 @@ function database_test_schema() {
       ),
       'name' => array(
         'description' => "A person's name",
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
@@ -75,7 +75,38 @@ function database_test_schema() {
       ),
       'job' => array(
         'description' => "The person's job",
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('job'),
+    'indexes' => array(
+      'ages' => array('age'),
+    ),
+  );
+
+  $schema['test_people_copy'] = array(
+    'description' => 'A duplicate version of the test_people table, used for additional tests.',
+    'fields' => array(
+      'name' => array(
+        'description' => "A person's name",
         'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'age' => array(
+        'description' => "The person's age",
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'job' => array(
+        'description' => "The person's job",
+        'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
@@ -166,7 +197,7 @@ function database_test_schema() {
       ),
       'name' => array(
         'description' => "A person's name.",
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => FALSE,
         'default' => '',
@@ -197,7 +228,7 @@ function database_test_schema() {
       ),
       'name' => array(
         'description' => "A person's name.",
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => FALSE,
         'default' => '',
@@ -213,6 +244,53 @@ function database_test_schema() {
       'name' => array('name')
     ),
   );
+
+  $schema['test_composite_primary'] = array(
+    'description' => 'Basic test table with a composite primary key',
+    'fields' => array(
+      'name' => array(
+        'description' => "A person's name",
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+        'binary' => TRUE,
+      ),
+      'age' => array(
+        'description' => "The person's age",
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'job' => array(
+        'description' => "The person's job",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'Undefined',
+      ),
+    ),
+    'primary key' => array('name', 'age'),
+  );
+
+  $schema['test_special_columns'] = array(
+    'description' => 'A simple test table with special column names.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'Simple unique ID.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'offset' => array(
+        'description' => 'A column with preserved name.',
+        'type' => 'text',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  $schema['TEST_UPPERCASE'] = $schema['test'];
 
   return $schema;
 }

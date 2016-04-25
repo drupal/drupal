@@ -1,102 +1,130 @@
-(function ($) {
-
-"use strict";
-
 /**
- * Add the cool table collapsing on the testing overview page.
+ * @file
+ * Simpletest behaviors.
  */
-Drupal.behaviors.simpleTestMenuCollapse = {
-  attach: function (context, settings) {
-    var timeout = null;
-    // Adds expand-collapse functionality.
-    $('div.simpletest-image').once('simpletest-image', function () {
-      var $this = $(this);
-      var direction = settings.simpleTest[this.id].imageDirection;
-      $this.html(settings.simpleTest.images[direction]);
 
-      // Adds group toggling functionality to arrow images.
-      $this.click(function () {
-        var trs = $this.closest('tbody').children('.' + settings.simpleTest[this.id].testClass);
-        var direction = settings.simpleTest[this.id].imageDirection;
-        var row = direction ? trs.length - 1 : 0;
+(function ($, Drupal, drupalSettings) {
 
-        // If clicked in the middle of expanding a group, stop so we can switch directions.
-        if (timeout) {
-          clearTimeout(timeout);
-        }
+  'use strict';
 
-        // Function to toggle an individual row according to the current direction.
-        // We set a timeout of 20 ms until the next row will be shown/hidden to
-        // create a sliding effect.
-        function rowToggle() {
-          if (direction) {
-            if (row >= 0) {
-              $(trs[row]).hide();
-              row--;
-              timeout = setTimeout(rowToggle, 20);
-            }
-          }
-          else {
-            if (row < trs.length) {
-              $(trs[row]).removeClass('js-hide').show();
-              row++;
-              timeout = setTimeout(rowToggle, 20);
-            }
-          }
-        }
-
-        // Kick-off the toggling upon a new click.
-        rowToggle();
-
-        // Toggle the arrow image next to the test group title.
-        $this.html(settings.simpleTest.images[(direction ? 0 : 1)]);
-        settings.simpleTest[this.id].imageDirection = !direction;
-
+  /**
+   * Collapses table rows followed by group rows on the test listing page.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attach collapse behavior on the test listing page.
+   */
+  Drupal.behaviors.simpleTestGroupCollapse = {
+    attach: function (context) {
+      $(context).find('.simpletest-group').once('simpletest-group-collapse').each(function () {
+        var $group = $(this);
+        var $image = $group.find('.simpletest-image');
+        $image
+          .html(drupalSettings.simpleTest.images[0])
+          .on('click', function () {
+            var $tests = $group.nextUntil('.simpletest-group');
+            var expand = !$group.hasClass('expanded');
+            $group.toggleClass('expanded', expand);
+            $tests.toggleClass('js-hide', !expand);
+            $image.html(drupalSettings.simpleTest.images[+expand]);
+          });
       });
-    });
-  }
-};
+    }
+  };
 
-/**
- * Select/deselect all the inner checkboxes when the outer checkboxes are
- * selected/deselected.
- */
-Drupal.behaviors.simpleTestSelectAll = {
-  attach: function (context, settings) {
-    $('td.simpletest-select-all').once('simpletest-select-all', function () {
-      var testCheckboxes = settings.simpleTest['simpletest-test-group-' + $(this).attr('id')].testNames;
-      var groupCheckbox = $('<input type="checkbox" class="form-checkbox" id="' + $(this).attr('id') + '-select-all" />');
+  /**
+   * Toggles test checkboxes to match the group checkbox.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior for selecting all tests in a group.
+   */
+  Drupal.behaviors.simpleTestSelectAll = {
+    attach: function (context) {
+      $(context).find('.simpletest-group').once('simpletest-group-select-all').each(function () {
+        var $group = $(this);
+        var $cell = $group.find('.simpletest-group-select-all');
+        var $groupCheckbox = $('<input type="checkbox" id="' + $cell.attr('id') + '-group-select-all" class="form-checkbox" />');
+        var $testCheckboxes = $group.nextUntil('.simpletest-group').find('input[type=checkbox]');
+        $cell.append($groupCheckbox);
 
-      // Each time a single-test checkbox is checked or unchecked, make sure
-      // that the associated group checkbox gets the right state too.
-      function updateGroupCheckbox() {
-        var checkedTests = 0;
-        for (var i = 0; i < testCheckboxes.length; i++) {
-          if ($('#' + testCheckboxes[i]).prop('checked')) {
-            checkedTests++;
-          }
+        // Toggle the test checkboxes when the group checkbox is toggled.
+        $groupCheckbox.on('change', function () {
+          var checked = $(this).prop('checked');
+          $testCheckboxes.prop('checked', checked);
+        });
+
+        // Update the group checkbox when a test checkbox is toggled.
+        function updateGroupCheckbox() {
+          var allChecked = true;
+          $testCheckboxes.each(function () {
+            if (!$(this).prop('checked')) {
+              allChecked = false;
+              return false;
+            }
+          });
+          $groupCheckbox.prop('checked', allChecked);
         }
-        $(groupCheckbox).prop('checked', (checkedTests === testCheckboxes.length));
+
+        $testCheckboxes.on('change', updateGroupCheckbox);
+      });
+    }
+  };
+
+  /**
+   * Filters the test list table by a text input search string.
+   *
+   * Text search input: input.table-filter-text
+   * Target table:      input.table-filter-text[data-table]
+   * Source text:       .table-filter-text-source
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the filter behavior to the text input element.
+   */
+  Drupal.behaviors.simpletestTableFilterByText = {
+    attach: function (context) {
+      var $input = $('input.table-filter-text').once('table-filter-text');
+      var $table = $($input.attr('data-table'));
+      var $rows;
+      var searched = false;
+
+      function filterTestList(e) {
+        var query = $(e.target).val().toLowerCase();
+
+        function showTestRow(index, row) {
+          var $row = $(row);
+          var $sources = $row.find('.table-filter-text-source');
+          var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
+          $row.closest('tr').toggle(textMatch);
+        }
+
+        // Filter if the length of the query is at least 3 characters.
+        if (query.length >= 3) {
+          // Indicate that a search has been performed, and hide the
+          // "select all" checkbox.
+          searched = true;
+          $('#simpletest-form-table thead th.select-all input').hide();
+
+          $rows.each(showTestRow);
+        }
+        // Restore to the original state if any searching has occurred.
+        else if (searched) {
+          searched = false;
+          $('#simpletest-form-table thead th.select-all input').show();
+          // Restore all rows to their original display state.
+          $rows.css('display', '');
+        }
       }
 
-      // Have the single-test checkboxes follow the group checkbox.
-      groupCheckbox.change(function () {
-        var checked = $(this).prop('checked');
-        for (var i = 0; i < testCheckboxes.length; i++) {
-          $('#' + testCheckboxes[i]).prop('checked', checked);
-        }
-      });
-
-      // Have the group checkbox follow the single-test checkboxes.
-      for (var i = 0; i < testCheckboxes.length; i++) {
-        $('#' + testCheckboxes[i]).change(updateGroupCheckbox);
+      if ($table.length) {
+        $rows = $table.find('tbody tr');
+        $input.trigger('focus').on('keyup', Drupal.debounce(filterTestList, 200));
       }
+    }
+  };
 
-      // Initialize status for the group checkbox correctly.
-      updateGroupCheckbox();
-      $(this).append(groupCheckbox);
-    });
-  }
-};
-
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

@@ -1,57 +1,52 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\Core\Path\AliasManagerInterface.
- */
-
 namespace Drupal\Core\Path;
 
+/**
+ * Find an alias for a path and vice versa.
+ *
+ * @see \Drupal\Core\Path\AliasStorageInterface
+ */
 interface AliasManagerInterface {
 
   /**
-   * Given a path alias, return the internal path it represents.
+   * Given the alias, return the path it represents.
    *
-   * @param $path
-   *   A Drupal path alias.
-   * @param $path_language
+   * @param string $alias
+   *   An alias.
+   * @param string $langcode
    *   An optional language code to look up the path in.
    *
-   * @return
-   *   The internal path represented by the alias, or the original alias if no
-   *   internal path was found.
+   * @return string
+   *   The path represented by alias, or the alias if no path was found.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the path does not start with a slash.
    */
-  public function getSystemPath($path, $path_language = NULL);
+  public function getPathByAlias($alias, $langcode = NULL);
 
   /**
-   * Given an internal Drupal path, return the alias set by the administrator.
+   * Given a path, return the alias.
    *
-   * @param $path
-   *   An internal Drupal path.
-   *
-   * @param $path_language
+   * @param string $path
+   *   A path.
+   * @param string $langcode
    *   An optional language code to look up the path in.
    *
-   * @return
-   *   An aliased path if one was found, or the original path if no alias was
-   *   found.
+   * @return string
+   *   An alias that represents the path, or path if no alias was found.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the path does not start with a slash.
    */
-  public function getPathAlias($path, $path_language = NULL);
+  public function getAliasByPath($path, $langcode = NULL);
 
   /**
-   * Returns an array of system paths that have been looked up.
+   * Clear internal caches in alias manager.
    *
-   * @return array
-   *   An array of all system paths that have been looked up during the current
-   *   request.
+   * @param $source
+   *   Source path of the alias that is being inserted/updated. Can be omitted
+   *   if entire cache needs to be flushed.
    */
-  public function getPathLookups();
-
-  /**
-   * Preload a set of paths for bulk alias lookups.
-   *
-   * @param $path_list
-   *   An array of system paths.
-   */
-  public function preloadPathLookups(array $path_list);
+  public function cacheClear($source = NULL);
 }

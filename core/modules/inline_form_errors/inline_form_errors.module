@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * Enables inline form errors.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function inline_form_errors_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.inline_form_errors':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Inline Form Errors module provides an experimental approach to form errors, placing the error messages next to the elements themselves. For more information, see the <a href=":inline_form_error">online documentation for the Inline Form Errors module</a>.', [':inline_form_error' => 'https://www.drupal.org/documentation/modules/inline_form_error']) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for form element templates.
+ */
+function inline_form_errors_preprocess_form_element(&$variables) {
+  _inline_form_errors_set_errors($variables);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for details element templates.
+ */
+function inline_form_errors_preprocess_details(&$variables) {
+  _inline_form_errors_set_errors($variables);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for fieldset element templates.
+ */
+function inline_form_errors_preprocess_fieldset(&$variables) {
+  _inline_form_errors_set_errors($variables);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for datetime form wrapper templates.
+ */
+function inline_form_errors_preprocess_datetime_wrapper(&$variables) {
+  _inline_form_errors_set_errors($variables);
+}
+
+/**
+ * Populates form errors in the template.
+ */
+function _inline_form_errors_set_errors(&$variables) {
+  $element = $variables['element'];
+  if (!empty($element['#errors']) && empty($element['#error_no_message'])) {
+    $variables['errors'] = $element['#errors'];
+  }
+}

@@ -25,7 +25,7 @@ function dblog_schema() {
         'description' => 'The {users}.uid of the user who triggered the event.',
       ),
       'type' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
@@ -52,10 +52,8 @@ function dblog_schema() {
         'description' => 'The severity level of the event; ranges from 0 (Emergency) to 7 (Debug)',
       ),
       'link' => array(
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
         'not null' => FALSE,
-        'default' => '',
         'description' => 'Link to view the result of the event.',
       ),
       'location'  => array(
@@ -69,7 +67,7 @@ function dblog_schema() {
         'description' => 'URL of referring page.',
       ),
       'hostname' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
@@ -92,41 +90,3 @@ function dblog_schema() {
 
   return $schema;
 }
-
-/**
- * @addtogroup updates-7.x-to-8.x
- * @{
- */
-
-/**
- * Update settings to the new configuration system.
- */
-function dblog_update_8000() {
-  update_variables_to_config('dblog.settings', array(
-    'dblog_row_limit' => 'row_limit',
-  ));
-}
-
-/**
- * Make *id fields unsigned.
- */
-function dblog_update_8001() {
-  db_drop_index('watchdog', 'uid');
-  db_change_field('watchdog', 'uid', 'uid',
-    array(
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-      'default' => 0,
-      'description' => 'The {users}.uid of the user who triggered the event.',
-    ),
-    array('indexes' => array(
-      'uid' => array('uid'),
-    ))
-  );
-}
-
-/**
- * @} End of "addtogroup updates-7.x-to-8.x".
- * The next series of updates should start at 9000.
- */

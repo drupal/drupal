@@ -1,0 +1,88 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_redirect_view
+label: test_redirect_view
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: null
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: tag
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+        options:
+          items_per_page: 10
+      style:
+        type: default
+      row:
+        type: 'entity:node'
+        options:
+          view_mode: teaser
+      fields:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          label: ''
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          plugin_id: field
+          entity_type: node
+          entity_field: title
+      filters:
+        status:
+          value: true
+          table: node_field_data
+          field: status
+          id: status
+          expose:
+            operator: '0'
+          group: 1
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+      sorts:
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          order: DESC
+          plugin_id: date
+          entity_type: node
+          entity_field: created
+      title: test_redirect_view
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: null
+    display_options:
+      path: test-redirect-view

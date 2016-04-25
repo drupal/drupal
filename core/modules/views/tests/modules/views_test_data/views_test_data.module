@@ -1,0 +1,131 @@
+<?php
+
+/**
+ * @file
+ * Helper module for Views tests.
+ */
+
+/**
+ * Access callback for the generic handler test.
+ *
+ * @return bool
+ *   Returns views_test_data.tests->handler_access_callback config. so the user
+ *   has access to the handler.
+ *
+ * @see \Drupal\views\Tests\Handler\HandlerTest
+ */
+function views_test_data_handler_test_access_callback() {
+  return \Drupal::config('views_test_data.tests')->get('handler_access_callback');
+}
+
+/**
+ * Access callback with an argument for the generic handler test.
+ *
+ * @param bool $argument
+ *   A parameter to test that an argument got passed.
+ *
+ * @return bool
+ *   Returns views_test_data.tests->handler_access_callback_argument, so the
+ *   use has access to the handler.
+ *
+ * @see \Drupal\views\Tests\Handler\HandlerTest
+ */
+function views_test_data_handler_test_access_callback_argument($argument = FALSE) {
+  // Check the argument to be sure that access arguments are passed into the
+  // callback.
+  if ($argument) {
+    return \Drupal::config('views_test_data.tests')->get('handler_access_callback_argument');
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for views table templates.
+ */
+function views_test_data_preprocess_views_view_table(&$variables) {
+  if ($variables['view']->storage->id() == 'test_view_render') {
+    $views_render_test = \Drupal::state()->get('views_render.test');
+    $views_render_test++;
+    \Drupal::state()->set('views_render.test', $views_render_test);
+  }
+}
+
+/**
+ * Prepares variables for the mapping row style test templates.
+ *
+ * Default template: views-view-mapping-test.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - rows: A list of view rows.
+ *   - options: Various view options, including the row style mapping.
+ *   - view: The view object.
+ */
+function template_preprocess_views_view_mapping_test(&$variables) {
+  $variables['element'] = array();
+
+  foreach ($variables['rows'] as $delta => $row) {
+    $fields = array();
+    foreach ($variables['options']['mapping'] as $type => $field_names) {
+      if (!is_array($field_names)) {
+        $field_names = array($field_names);
+      }
+      foreach ($field_names as $field_name) {
+        if ($value = $variables['view']->style_plugin->getField($delta, $field_name)) {
+          $fields[$type . '-' . $field_name] = $type . ':' . $value;
+        }
+      }
+    }
+
+    // If there are no fields in this row, skip to the next one.
+    if (empty($fields)) {
+      continue;
+    }
+
+    // Build a container for the row.
+    $variables['element'][$delta] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'views-row-mapping-test',
+        ),
+      ),
+    );
+
+    // Add each field to the row.
+    foreach ($fields as $key => $render) {
+      $variables['element'][$delta][$key] = array(
+        '#children' => $render,
+        '#type' => 'container',
+        '#attributes' => array(
+          'class' => array(
+            $key,
+          ),
+        ),
+      );
+    }
+  }
+}
+
+/**
+ * Test pre_render function.
+ *
+ * @param array $element
+ *   A render array
+ *
+ * @return array
+ *   The changed render array.
+ */
+function views_test_data_test_pre_render_function($element) {
+  $element['#markup'] = 'views_test_data_test_pre_render_function executed';
+  return $element;
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function views_test_data_form_views_form_test_form_multiple_default_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  drupal_set_message(t('Test base form ID with Views forms and arguments.'));
+}

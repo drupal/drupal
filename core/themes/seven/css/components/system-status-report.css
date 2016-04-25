@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Seven styles for the System Status Report.
+ */
+
+.system-status-report__entry {
+  border-top: 1px solid #ccc;
+  border-bottom: inherit;
+}
+.system-status-report__entry:first-child {
+  border-top: 1px solid #bebfb9;
+}
+.system-status-report__entry:last-child {
+  border-bottom: 1px solid #bebfb9;
+}

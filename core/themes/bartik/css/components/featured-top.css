@@ -1,0 +1,25 @@
+/**
+ * @file
+ * Visual styles for Bartik's featured top.
+ */
+
+.featured-top {
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4;
+  padding: 20px 10px 45px;
+  margin: 0;
+  background: #f0f0f0;
+  background: rgba(30, 50, 10, 0.08);
+  border-bottom: 1px solid #e7e7e7;
+  text-shadow: 1px 1px #fff;
+}
+.featured-top h2 {
+  font-size: 1.2em;
+  line-height: 1;
+}
+.featured-top p {
+  margin: 0;
+  padding: 0;
+}

@@ -1,0 +1,7 @@
+config_events_test.test:
+  type: config_object
+  label: 'Configuration events test'
+  mapping:
+    key:
+      type: string
+      label: 'Value'

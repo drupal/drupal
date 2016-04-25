@@ -1,0 +1,9 @@
+name: Statistics
+type: module
+description: 'Logs content statistics for your site.'
+package: Core
+version: VERSION
+core: 8.x
+configure: statistics.settings
+dependencies:
+  - node

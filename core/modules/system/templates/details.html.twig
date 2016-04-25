@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a details element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the details element.
+ * - errors: (optional) Any errors for this details element, may not be set.
+ * - title: (optional) The title of the element, may not be set.
+ * - description: (optional) The description of the element, may not be set.
+ * - children: (optional) The children of the element, may not be set.
+ * - value: (optional) The value of the element, may not be set.
+ *
+ * @see template_preprocess_details()
+ *
+ * @ingroup themeable
+ */
+#}
+<details{{ attributes }}>
+  {%- if title -%}
+    <summary{{ summary_attributes }}>{{ title }}</summary>
+  {%- endif -%}
+
+  {% if errors %}
+    <div>
+      {{ errors }}
+    </div>
+  {% endif %}
+
+  {{ description }}
+  {{ children }}
+  {{ value }}
+</details>

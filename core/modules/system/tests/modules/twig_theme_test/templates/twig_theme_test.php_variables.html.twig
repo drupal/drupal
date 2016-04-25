@@ -1,0 +1,6 @@
+{# Output for Twig Theme PHP variables test. #}
+<ul>
+{% for key, php_value in php_values %}
+  <li>{{ key }}: {{ php_value.value }}</li>
+{% endfor %}
+</ul>

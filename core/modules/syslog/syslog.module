@@ -5,35 +5,23 @@
  * Redirects logging messages to syslog.
  */
 
-if (defined('LOG_LOCAL0')) {
-  /**
-   * Sets the proper logging facility.
-   *
-   * Note that LOG_LOCAL0 through LOG_LOCAL7 are not available on Windows, so we
-   * check for availability. If LOG_LOCAL0 is defined by the PHP environment, we
-   * set that as the default; if not, we use LOG_USER.
-   *
-   * @see http://php.net/manual/function.syslog.php
-   */
-  define('DEFAULT_SYSLOG_FACILITY', LOG_LOCAL0);
-}
-else {
-  define('DEFAULT_SYSLOG_FACILITY', LOG_USER);
-}
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function syslog_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#syslog':
+function syslog_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.syslog':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t("The Syslog module logs events by sending messages to the logging facility of your web server's operating system. Syslog is an operating system administrative logging tool that provides valuable information for use in system management and security auditing. Most suited to medium and large sites, Syslog provides filtering tools that allow messages to be routed by type and severity. For more information, see the online handbook entry for <a href='@syslog'>Syslog module</a> and PHP's <a href='@php_openlog'>openlog</a> and <a href='@php_syslog'>syslog</a> functions.", array('@syslog' => 'http://drupal.org/documentation/modules/syslog', '@php_openlog' => 'http://www.php.net/manual/function.openlog.php', '@php_syslog' => 'http://www.php.net/manual/function.syslog.php')) . '</p>';
+      $output .= '<p>' . t('The Syslog module logs events by sending messages to the logging facility of your web server\'s operating system. Syslog is an operating system administrative logging tool that provides valuable information for use in system management and security auditing. Most suited to medium and large sites, Syslog provides filtering tools that allow messages to be routed by type and severity. For more information, see the <a href=":syslog">online documentation for the Syslog module</a>, as well as PHP\'s documentation pages for the <a href="http://php.net/manual/function.openlog.php">openlog</a> and <a href="http://php.net/manual/function.syslog.php">syslog</a> functions.', array(':syslog' => 'https://www.drupal.org/documentation/modules/syslog')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Logging for UNIX, Linux, and Mac OS X') . '</dt>';
-      $output .= '<dd>' . t('On UNIX, Linux, and Mac OS X, the file <em>/etc/syslog.conf</em> defines the routing configuration. Messages can be flagged with the codes <code>LOG_LOCAL0</code> through <code>LOG_LOCAL7</code>. For information on Syslog facilities, severity levels, and how to set up <em>syslog.conf</em>, see the <em>syslog.conf</em> manual page on your command line.') . '</dd>';
+      $output .= '<dd>' . t('On UNIX, Linux, and Mac OS X, you will find the configuration in the file <em>/etc/syslog.conf</em>, or in <em>/etc/rsyslog.conf</em> or in the directory <em>/etc/rsyslog.d</em>. These files define the routing configuration. Messages can be flagged with the codes <code>LOG_LOCAL0</code> through <code>LOG_LOCAL7</code>. For information on Syslog facilities, severity levels, and how to set up <em>syslog.conf</em> or <em>rsyslog.conf</em>, see the <em>syslog.conf</em> or <em>rsyslog.conf</em> manual page on your command line.') . '</dd>';
       $output .= '<dt>' . t('Logging for Microsoft Windows') . '</dt>';
       $output .= '<dd>' . t('On Microsoft Windows, messages are always sent to the Event Log using the code <code>LOG_USER</code>.') . '</dd>';
       $output .= '</dl>';
@@ -44,9 +32,9 @@ function syslog_help($path, $arg) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
-  $config = config('syslog.settings');
-  $help = module_exists('help') ? ' ' . l(t('More information'), 'admin/help/syslog') . '.' : NULL;
+function syslog_form_system_logging_settings_alter(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::configFactory()->getEditable('syslog.settings');
+  $help = \Drupal::moduleHandler()->moduleExists('help') ? ' ' . \Drupal::l(t('More information'), new Url('help.page', ['name' => 'syslog'])) . '.' : NULL;
   $form['syslog_identity'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Syslog identity'),
@@ -77,11 +65,11 @@ function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
  *
  * @see syslog_form_system_logging_settings_alter()
  */
-function syslog_logging_settings_submit($form, &$form_state) {
-  config('syslog.settings')
-    ->set('identity', $form_state['values']['syslog_identity'])
-    ->set('facility', $form_state['values']['syslog_facility'])
-    ->set('format', $form_state['values']['syslog_format'])
+function syslog_logging_settings_submit($form, FormStateInterface $form_state) {
+  \Drupal::configFactory()->getEditable('syslog.settings')
+    ->set('identity', $form_state->getValue('syslog_identity'))
+    ->set('facility', $form_state->getValue('syslog_facility'))
+    ->set('format', $form_state->getValue('syslog_format'))
     ->save();
 }
 
@@ -102,37 +90,4 @@ function syslog_facility_list() {
     LOG_LOCAL6 => 'LOG_LOCAL6',
     LOG_LOCAL7 => 'LOG_LOCAL7',
   );
-}
-
-/**
- * Implements hook_watchdog().
- */
-function syslog_watchdog(array $log_entry) {
-  global $base_url;
-
-  $log_init = &drupal_static(__FUNCTION__, FALSE);
-  $config = config('syslog.settings');
-
-  if (!$log_init) {
-    $log_init = TRUE;
-    $facility = $config->get('facility');
-    if ($facility === '') {
-      $facility = defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER;
-    }
-    openlog($config->get('identity'), LOG_NDELAY, $facility);
-  }
-
-  $message = strtr($config->get('format'), array(
-    '!base_url'    => $base_url,
-    '!timestamp'   => $log_entry['timestamp'],
-    '!type'        => $log_entry['type'],
-    '!ip'          => $log_entry['ip'],
-    '!request_uri' => $log_entry['request_uri'],
-    '!referer'     => $log_entry['referer'],
-    '!uid'         => $log_entry['uid'],
-    '!link'        => strip_tags($log_entry['link']),
-    '!message'     => strip_tags(!isset($log_entry['variables']) ? $log_entry['message'] : strtr($log_entry['message'], $log_entry['variables'])),
-  ));
-
-  syslog($log_entry['severity'], $message);
 }

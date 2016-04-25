@@ -5,7 +5,10 @@
  * Builds placeholder replacement tokens for node-related data.
  */
 
-
+use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_token_info().
@@ -26,13 +29,8 @@ function node_token_info() {
     'name' => t("Revision ID"),
     'description' => t("The unique ID of the node's latest revision."),
   );
-  $node['tnid'] = array(
-    'name' => t("Translation set ID"),
-    'description' => t("The unique ID of the original-language version of this node, if one exists."),
-  );
   $node['type'] = array(
     'name' => t("Content type"),
-    'description' => t("The type of the node."),
   );
   $node['type-name'] = array(
     'name' => t("Content type name"),
@@ -40,7 +38,6 @@ function node_token_info() {
   );
   $node['title'] = array(
     'name' => t("Title"),
-    'description' => t("The title of the node."),
   );
   $node['body'] = array(
     'name' => t("Body"),
@@ -66,7 +63,6 @@ function node_token_info() {
   // Chained tokens for nodes.
   $node['created'] = array(
     'name' => t("Date created"),
-    'description' => t("The date the node was posted."),
     'type' => 'date',
   );
   $node['changed'] = array(
@@ -76,7 +72,6 @@ function node_token_info() {
   );
   $node['author'] = array(
     'name' => t("Author"),
-    'description' => t("The author of the node."),
     'type' => 'user',
   );
 
@@ -89,113 +84,126 @@ function node_token_info() {
 /**
  * Implements hook_tokens().
  */
-function node_tokens($type, $tokens, array $data = array(), array $options = array()) {
+function node_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  $token_service = \Drupal::token();
+
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {
-    $url_options['language'] = language_load($options['langcode']);
+    $url_options['language'] = \Drupal::languageManager()->getLanguage($options['langcode']);
     $langcode = $options['langcode'];
   }
   else {
-    $langcode = NULL;
+    $langcode = LanguageInterface::LANGCODE_DEFAULT;
   }
-  $sanitize = !empty($options['sanitize']);
-
   $replacements = array();
 
   if ($type == 'node' && !empty($data['node'])) {
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $data['node'];
 
     foreach ($tokens as $name => $original) {
       switch ($name) {
         // Simple key values on the node.
         case 'nid':
-          $replacements[$original] = $node->nid;
+          $replacements[$original] = $node->id();
           break;
 
         case 'vid':
-          $replacements[$original] = $node->vid;
-          break;
-
-        case 'tnid':
-          $replacements[$original] = $node->tnid;
+          $replacements[$original] = $node->getRevisionId();
           break;
 
         case 'type':
-          $replacements[$original] = $sanitize ? check_plain($node->type) : $node->type;
+          $replacements[$original] = $node->getType();
           break;
 
         case 'type-name':
           $type_name = node_get_type_label($node);
-          $replacements[$original] = $sanitize ? check_plain($type_name) : $type_name;
+          $replacements[$original] = $type_name;
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? check_plain($node->title) : $node->title;
+          $replacements[$original] = $node->getTitle();
           break;
 
         case 'body':
         case 'summary':
-          if ($items = field_get_items('node', $node, 'body', $langcode)) {
-            $instance = field_info_instance('node', 'body', $node->type);
-            $field_langcode = field_language('node', $node, 'body', $langcode);
-
+          $translation = \Drupal::entityManager()->getTranslationFromContext($node, $langcode, array('operation' => 'node_tokens'));
+          if ($translation->hasField('body') && ($items = $translation->get('body')) && !$items->isEmpty()) {
+            $item = $items[0];
             // If the summary was requested and is not empty, use it.
-            if ($name == 'summary' && !empty($items[0]['summary'])) {
-              $output = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'summary') : $items[0]['summary'];
+            if ($name == 'summary' && !empty($item->summary)) {
+              $output = $item->summary_processed;
             }
             // Attempt to provide a suitable version of the 'body' field.
             else {
-              $output = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'value') : $items[0]['value'];
+              $output = $item->processed;
               // A summary was requested.
               if ($name == 'summary') {
                 // Generate an optionally trimmed summary of the body field.
-                $output = text_summary($output, $instance['settings']['text_processing'] ? $items[0]['format'] : NULL, $instance['display']['teaser']['settings']['trim_length']);
+
+                // Get the 'trim_length' size used for the 'teaser' mode, if
+                // present, or use the default trim_length size.
+                $display_options = entity_get_display('node', $node->getType(), 'teaser')->getComponent('body');
+                if (isset($display_options['settings']['trim_length'])) {
+                  $length = $display_options['settings']['trim_length'];
+                }
+                else {
+                  $settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings('text_summary_or_trimmed');
+                  $length = $settings['trim_length'];
+                }
+
+                $output = text_summary($output, $item->format, $length);
               }
             }
+            // "processed" returns a \Drupal\Component\Render\MarkupInterface
+            // via check_markup().
             $replacements[$original] = $output;
           }
           break;
 
         case 'langcode':
-          $replacements[$original] = $sanitize ? check_plain($node->langcode) : $node->langcode;
+          $replacements[$original] = $node->language()->getId();
           break;
 
         case 'url':
-          $replacements[$original] = url('node/' . $node->nid, $url_options);
+          $replacements[$original] = $node->url('canonical', $url_options);
           break;
 
         case 'edit-url':
-          $replacements[$original] = url('node/' . $node->nid . '/edit', $url_options);
+          $replacements[$original] = $node->url('edit-form', $url_options);
           break;
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $account = user_load($node->uid);
-          $name = user_format_name($account);
-          $replacements[$original] = $sanitize ? check_plain($name) : $name;
+          $account = $node->getOwner() ? $node->getOwner() : User::load(0);
+          $bubbleable_metadata->addCacheableDependency($account);
+          $replacements[$original] = $account->label();
           break;
 
         case 'created':
-          $replacements[$original] = format_date($node->created, 'medium', '', NULL, $langcode);
+          $date_format = DateFormat::load('medium');
+          $bubbleable_metadata->addCacheableDependency($date_format);
+          $replacements[$original] = format_date($node->getCreatedTime(), 'medium', '', NULL, $langcode);
           break;
 
         case 'changed':
-          $replacements[$original] = format_date($node->changed, 'medium', '', NULL, $langcode);
+          $date_format = DateFormat::load('medium');
+          $bubbleable_metadata->addCacheableDependency($date_format);
+          $replacements[$original] = format_date($node->getChangedTime(), 'medium', '', NULL, $langcode);
           break;
       }
     }
 
-    if ($author_tokens = token_find_with_prefix($tokens, 'author')) {
-      $author = user_load($node->uid);
-      $replacements += token_generate('user', $author_tokens, array('user' => $author), $options);
+    if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $node->getOwner()), $options, $bubbleable_metadata);
     }
 
-    if ($created_tokens = token_find_with_prefix($tokens, 'created')) {
-      $replacements += token_generate('date', $created_tokens, array('date' => $node->created), $options);
+    if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $node->getCreatedTime()), $options, $bubbleable_metadata);
     }
 
-    if ($changed_tokens = token_find_with_prefix($tokens, 'changed')) {
-      $replacements += token_generate('date', $changed_tokens, array('date' => $node->changed), $options);
+    if ($changed_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
+      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $node->getChangedTime()), $options, $bubbleable_metadata);
     }
   }
 

@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_simple_argument
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+        arguments: false
+      fields:
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+      arguments:
+        age:
+          default_action: ignore
+          title: ''
+          default_argument_type: fixed
+          validate:
+            type: none
+            fail: 'not found'
+          break_phrase: false
+          not: false
+          id: age
+          table: views_test_data
+          field: age
+          relationship: none
+          plugin_id: numeric
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

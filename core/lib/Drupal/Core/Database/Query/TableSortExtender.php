@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Database\Query\TableSortExtender.
- */
-
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
@@ -34,10 +29,10 @@ class TableSortExtender extends SelectExtender {
    * @param array $header
    *   Table header array.
    *
-   * @return SelectQueryInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object.
    *
-   * @see theme_table()
+   * @see table.html.twig
    */
   public function orderByHeader(array $header) {
     $this->header = $header;
@@ -46,10 +41,9 @@ class TableSortExtender extends SelectExtender {
       // Based on code from db_escape_table(), but this can also contain a dot.
       $field = preg_replace('/[^A-Za-z0-9_.]+/', '', $ts['sql']);
 
-      // Sort order can only be ASC or DESC.
-      $sort = drupal_strtoupper($ts['sort']);
-      $sort = in_array($sort, array('ASC', 'DESC')) ? $sort : '';
-      $this->orderBy($field, $sort);
+      // orderBy() will ensure that only ASC/DESC values are accepted, so we
+      // don't need to sanitize that here.
+      $this->orderBy($field, $ts['sort']);
     }
     return $this;
   }

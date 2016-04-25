@@ -1,0 +1,10 @@
+name: User
+type: module
+description: 'Manages the user registration and login system.'
+package: Core
+version: VERSION
+core: 8.x
+required: true
+configure: user.admin_index
+dependencies:
+  - system

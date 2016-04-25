@@ -13,115 +13,11 @@
  * test helper functions
  */
 
-require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.entity.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.field.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.storage.inc';
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Form\FormStateInterface;
 
-/**
- * Implements hook_permission().
- */
-function field_test_permission() {
-  $perms = array(
-    'access field_test content' => array(
-      'title' => t('Access field_test content'),
-      'description' => t('View published field_test content.'),
-    ),
-    'view test_view_field content' => array(
-      'title' => t('View test field content'),
-      'description' => t('View published test_view_field content.'),
-    ),
-    'administer field_test content' => array(
-      'title' => t('Administer field_test content'),
-      'description' => t('Manage field_test content'),
-    ),
-  );
-  return $perms;
-}
-
-/**
- * Implements hook_menu().
- */
-function field_test_menu() {
-  $items = array();
-  $bundles = field_info_bundles('test_entity');
-
-  foreach ($bundles as $bundle_name => $bundle_info) {
-    $items['test-entity/add/' . $bundle_name] = array(
-      'title' => t('Add %bundle test_entity', array('%bundle' => $bundle_info['label'])),
-      'page callback' => 'field_test_entity_add',
-      'page arguments' => array(2),
-      'access arguments' => array('administer field_test content'),
-      'type' => MENU_NORMAL_ITEM,
-    );
-  }
-  $items['test-entity/manage/%field_test_entity_test/edit'] = array(
-    'title' => 'Edit test entity',
-    'page callback' => 'field_test_entity_edit',
-    'page arguments' => array(2),
-    'access arguments' => array('administer field_test content'),
-    'type' => MENU_NORMAL_ITEM,
-  );
-
-  $items['test-entity/nested/%field_test_entity_test/%field_test_entity_test'] = array(
-    'title' => 'Nested entity form',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('field_test_entity_nested_form', 2, 3),
-    'access arguments' => array('administer field_test content'),
-    'type' => MENU_NORMAL_ITEM,
-  );
-
-  return $items;
-}
-
-/**
- * Generic op to test _field_invoke behavior.
- *
- * This simulates a field operation callback to be invoked by _field_invoke().
- */
-function field_test_field_test_op($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  return array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items))));
-}
-
-/**
- * Generic op to test _field_invoke_multiple behavior.
- *
- * This simulates a multiple field operation callback to be invoked by
- * _field_invoke_multiple().
- */
-function field_test_field_test_op_multiple($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  $result = array();
-  foreach ($entities as $id => $entity) {
-    // Entities, instances and items are assumed to be consistently grouped by
-    // language. To verify this we try to access all the passed data structures
-    // by entity id. If they are grouped correctly, one entity, one instance and
-    // one array of items should be available for each entity id.
-    $field_name = $instances[$id]['field_name'];
-    $result[$id] = array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field_name, $langcode, $items[$id]))));
-  }
-  return $result;
-}
-
-/**
- * Implements hook_field_available_languages_alter().
- */
-function field_test_field_available_languages_alter(&$langcodes, $context) {
-  if (state()->get('field_test.field_available_languages_alter')) {
-    // Add an unavailable language code.
-    $langcodes[] = 'xx';
-    // Remove an available language code.
-    $index = array_search('en', $langcodes);
-    unset($langcodes[$index]);
-  }
-}
-
-/**
- * Implements hook_field_language_alter().
- */
-function field_test_field_language_alter(&$display_langcode, $context) {
-  if (state()->get('field_test.language_fallback') ?: TRUE) {
-    field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
-  }
-}
+require_once __DIR__ . '/field_test.entity.inc';
+require_once __DIR__ . '/field_test.field.inc';
 
 /**
  * Store and retrieve keyed data for later verification by unit tests.
@@ -146,14 +42,14 @@ function field_test_field_language_alter(&$display_langcode, $context) {
  *   field_test_memorize();
  *
  *   // call some Field API functions that invoke field_test hooks
- *   $field = field_create_field(...);
+ *   FieldStorageConfig::create($field_definition)->save();
  *
  *   // retrieve and reset the memorized hook call data
  *   $mem = field_test_memorize();
  *
- *   // make sure hook_field_create_field() is invoked correctly
- *   assertEqual(count($mem['field_test_field_create_field']), 1);
- *   assertEqual($mem['field_test_field_create_field'][0], array($field));
+ *   // make sure hook_field_storage_config_create() is invoked correctly
+ *   assertEqual(count($mem['field_test_field_storage_config_create']), 1);
+ *   assertEqual($mem['field_test_field_storage_config_create'][0], array($field));
  * @endcode
  *
  * @param $key
@@ -178,74 +74,43 @@ function field_test_memorize($key = NULL, $value = NULL) {
 }
 
 /**
- * Memorize calls to hook_field_create_field().
+ * Memorize calls to field_test_field_storage_config_create().
  */
-function field_test_field_create_field($field) {
+function field_test_field_storage_config_create(FieldStorageConfigInterface $field_storage) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }
 
 /**
- * Entity label callback.
- *
- * @param $entity_type
- *   The entity type.
- * @param $entity
- *   The entity object.
- * @param $langcocde
- *   (optional) The langcode.
- *
- * @return
- *   The label of the entity prefixed with "label callback".
+ * Implements hook_entity_display_build_alter().
  */
-function field_test_entity_label_callback($entity_type, $entity, $langcode = NULL) {
-  return 'label callback ' . $entity->ftlabel;
-}
-
-/**
- * Implements hook_field_attach_view_alter().
- */
-function field_test_field_attach_view_alter(&$output, $context) {
-  if (!empty($context['display']['settings']['alter'])) {
-    $output['test_field'][] = array('#markup' => 'field_test_field_attach_view_alter');
+function field_test_entity_display_build_alter(&$output, $context) {
+  $display_options = $context['display']->getComponent('test_field');
+  if (isset($display_options['settings']['alter'])) {
+    $output['test_field'][] = array('#markup' => 'field_test_entity_display_build_alter');
   }
-}
 
-/**
- * Implements hook_field_widget_properties_alter().
- */
-function field_test_field_widget_properties_alter(&$widget, $context) {
-  // Make the alter_test_text field 42 characters for nodes and comments.
-  if (in_array($context['entity_type'], array('node', 'comment')) && ($context['field']['field_name'] == 'alter_test_text')) {
-    $widget['settings']['size'] = 42;
-  }
-}
-
-/**
- * Implements hook_field_widget_properties_ENTITY_TYPE_alter().
- */
-function field_test_field_widget_properties_user_alter(&$widget, $context) {
-  // Always use buttons for the alter_test_options field on user forms.
-  if ($context['field']['field_name'] == 'alter_test_options') {
-    $widget['type'] = 'options_buttons';
+  if (isset($output['test_field'])) {
+    $output['test_field'][] = array('#markup' => 'entity language is ' . $context['entity']->language()->getId());
   }
 }
 
 /**
  * Implements hook_field_widget_form_alter().
  */
-function field_test_field_widget_form_alter(&$element, &$form_state, $context) {
-  switch ($context['field']['field_name']) {
+function field_test_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  $field_definition = $context['items']->getFieldDefinition();
+  switch ($field_definition->getName()) {
     case 'alter_test_text':
-      drupal_set_message('Field size: ' . $context['instance']->getWidget()->getSetting('size'));
+      drupal_set_message('Field size: ' . $context['widget']->getSetting('size'));
       break;
 
     case 'alter_test_options':
-      drupal_set_message('Widget type: ' . $context['instance']->getWidget()->getPluginId());
+      drupal_set_message('Widget type: ' . $context['widget']->getPluginId());
       break;
   }
   // Set a message if this is for the form displayed to set default value for
-  // the field instance.
+  // the field.
   if ($context['default']) {
     drupal_set_message('From hook_field_widget_form_alter(): Default form is true.');
   }
@@ -254,19 +119,19 @@ function field_test_field_widget_form_alter(&$element, &$form_state, $context) {
 /**
  * Implements hook_query_TAG_alter() for tag 'efq_table_prefixing_test'.
  *
- * @see Drupal\system\Tests\Entity\EntityFieldQueryTest::testTablePrefixing()
+ * @see \Drupal\system\Tests\Entity\EntityFieldQueryTest::testTablePrefixing()
  */
 function field_test_query_efq_table_prefixing_test_alter(&$query) {
   // Add an additional join onto the entity base table. This will cause an
   // exception if the EFQ does not properly prefix the base table.
-  $query->join('test_entity','te2','%alias.ftid = test_entity.ftid');
+  $query->join('entity_test', 'et2', '%alias.id = entity_test.id');
 }
 
 
 /**
  * Implements hook_query_TAG_alter() for tag 'efq_metadata_test'.
  *
- * @see Drupal\system\Tests\Entity\EntityQueryTest::testMetaData()
+ * @see \Drupal\system\Tests\Entity\EntityQueryTest::testMetaData()
  */
 function field_test_query_efq_metadata_test_alter(&$query) {
   global $efq_test_metadata;
@@ -274,27 +139,31 @@ function field_test_query_efq_metadata_test_alter(&$query) {
 }
 
 /**
- * Implements hook_field_formatter_settings_form_alter().
+ * Implements hook_entity_extra_field_info_alter().
  */
-function field_test_field_formatter_settings_form_alter(&$element, &$form_state, $context) {
-  $element['field_test_formatter_settings_form_alter'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Formatter settings form alter'),
-    '#default_value' => $context['formatter']->getSetting('field_test_formatter_settings_form_alter'),
-  );
-}
-
-/**
- * Implements hook_field_formatter_settings_summary_alter().
- */
-function field_test_field_formatter_settings_summary_alter(&$summary, $context) {
-  $summary .= '<br />field_test_field_formatter_settings_summary_alter';
-}
-
-/**
- * Implements hook_field_extra_fields_alter().
- */
-function field_test_field_extra_fields_alter(&$info) {
+function field_test_entity_extra_field_info_alter(&$info) {
   // Remove all extra fields from the 'no_fields' content type;
   unset($info['node']['no_fields']);
+}
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function field_test_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle) {
+  if (($field_name = \Drupal::state()->get('field_test_set_constraint', FALSE)) && $entity_type->id() == 'entity_test' && $bundle == 'entity_test' && !empty($fields[$field_name])) {
+    $fields[$field_name]->setPropertyConstraints('value', [
+      'Range' => [
+        'min' => 0,
+        'max' => 32,
+      ],
+    ]);
+  }
+  if (($field_name = \Drupal::state()->get('field_test_add_constraint', FALSE)) && $entity_type->id() == 'entity_test' && $bundle == 'entity_test' && !empty($fields[$field_name])) {
+    $fields[$field_name]->addPropertyConstraints('value', [
+      'Range' => [
+        'min' => 0,
+        'max' => 32,
+      ],
+    ]);
+  }
 }

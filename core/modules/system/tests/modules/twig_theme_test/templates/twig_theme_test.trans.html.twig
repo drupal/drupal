@@ -1,0 +1,98 @@
+{# Test trans tag with string argument. #}
+<div>
+  {% trans 'Hello sun.' %}
+</div>
+
+{# Test trans tag with string argument and context #}
+<div>
+  {% trans 'Hello sun.' with {'context': 'Lolspeak'} %}
+</div>
+
+{# Test trans filter. #}
+<div>
+  {{ 'Hello Earth.'|trans }}
+</div>
+
+{# Test trans tag with text content. #}
+<div>
+  {% trans %}
+    Hello moon.
+  {% endtrans %}
+</div>
+
+{# Test trans/plural tag where count = 1. #}
+<div>
+  {% set count = 1 %}
+  {% trans %}
+    Hello star.
+  {% plural count %}
+    Hello {{ count }} stars.
+  {% endtrans %}
+</div>
+
+{# Test trans/plural tag where count = 2. #}
+<div>
+  {% set count = 2 %}
+  {% trans %}
+    Hello star.
+  {% plural count %}
+    Hello {{ count }} stars.
+  {% endtrans %}
+</div>
+
+{# Test trans tag with different filters applied to tokens. #}
+{% set string = '&"<>' %}
+<div>
+  {% trans %}
+    Escaped: {{ string }}
+  {% endtrans %}
+</div>
+<div>
+  {% trans %}
+    Placeholder: {{ string|placeholder }}
+  {% endtrans %}
+</div>
+
+{# Test trans tag with complex tokens. #}
+{% set token = {'name': 'complex token', 'numbers': '12345', 'bad_text': '&"<>' } %}
+{% set count = token|length %}
+<div>
+  {% trans %}
+    This {{ token.name }} has a length of: {{ count }}. It contains: {{ token.numbers|placeholder }} and {{ token.bad_text }}.
+  {% endtrans %}
+</div>
+
+{# Test trans tag but with a context only msgid. #}
+<div>
+  {% trans %}
+    I have context.
+  {% endtrans %}
+</div>
+
+{# Test trans tag with context. #}
+<div>
+  {% trans with {'context': 'Lolspeak'} %}
+    I have context.
+  {% endtrans %}
+</div>
+
+{# Test trans tag with a specified language. #}
+<div>
+  {% trans with {'langcode': 'zz'} %}
+    Hello new text.
+  {% endtrans %}
+</div>
+
+{# Test trans tag with context and a specified language. #}
+<div>
+  {% trans with {'context': 'Lolspeak', 'langcode': 'zz'} %}
+    Hello new text.
+  {% endtrans %}
+</div>
+
+{# Tests that https://www.drupal.org/node/2489024 doesn't happen without twig debug. #}
+<div>
+  {% trans %}
+    Number I never remember: ' . print(pi()) . '
+  {% endtrans %}
+</div>

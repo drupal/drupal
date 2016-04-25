@@ -1,0 +1,34 @@
+config.sync:
+  route_name: config.sync
+  base_route: config.sync
+  title: 'Synchronize'
+
+config.import:
+  route_name: config.import_full
+  title: 'Import'
+  base_route: config.sync
+
+config.export:
+  route_name: config.export_full
+  title: 'Export'
+  base_route: config.sync
+
+config.export_full:
+  route_name: config.export_full
+  title: Full archive
+  parent_id: config.export
+
+config.import_full:
+  route_name: config.import_full
+  title: Full archive
+  parent_id: config.import
+
+config.export_single:
+  route_name: config.export_single
+  title: Single item
+  parent_id: config.export
+
+config.import_single:
+  route_name: config.import_single
+  title: Single item
+  parent_id: config.import

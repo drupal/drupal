@@ -1,0 +1,24 @@
+id: d7_custom_block
+label: Custom blocks
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_block_custom
+  constants:
+    type: basic
+process:
+  id: bid
+  type: 'constants/type'
+  info: info
+  'body/format':
+    plugin: migration
+    migration: d7_filter_format
+    source: format
+  'body/value': body
+destination:
+  plugin: entity:block_content
+  no_stub: true
+migration_dependencies:
+  required:
+    - d7_filter_format
+    - block_content_body_field

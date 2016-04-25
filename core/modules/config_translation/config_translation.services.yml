@@ -1,0 +1,27 @@
+services:
+  config_translation.route_subscriber:
+    class: Drupal\config_translation\Routing\RouteSubscriber
+    arguments: ['@plugin.manager.config_translation.mapper']
+    tags:
+      - { name: event_subscriber }
+
+  config_translation.access.overview:
+    class: Drupal\config_translation\Access\ConfigTranslationOverviewAccess
+    arguments: ['@plugin.manager.config_translation.mapper', '@language_manager']
+    tags:
+      - { name: access_check, applies_to: _config_translation_overview_access }
+
+  config_translation.access.form:
+    class: Drupal\config_translation\Access\ConfigTranslationFormAccess
+    arguments: ['@plugin.manager.config_translation.mapper', '@language_manager']
+    tags:
+      - { name: access_check, applies_to: _config_translation_form_access }
+
+  plugin.manager.config_translation.mapper:
+    class: Drupal\config_translation\ConfigMapperManager
+    arguments:
+      - '@cache.default'
+      - '@language_manager'
+      - '@module_handler'
+      - '@config.typed'
+      - '@theme_handler'

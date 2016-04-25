@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Support module for user hooks testing.
+ */
+
+use Drupal\Component\Utility\SafeMarkup;
+
+/**
+ * Implements hook_user_format_name_alter().
+ */
+function user_hooks_test_user_format_name_alter(&$name, $account) {
+  if (\Drupal::state()->get('user_hooks_test_user_format_name_alter', FALSE)) {
+    if (\Drupal::state()->get('user_hooks_test_user_format_name_alter_safe', FALSE)) {
+      $name = SafeMarkup::format('<em>@uid</em>', array('@uid' => $account->id()));
+    }
+    else {
+      $name = '<em>' . $account->id() . '</em>';
+    }
+  }
+}

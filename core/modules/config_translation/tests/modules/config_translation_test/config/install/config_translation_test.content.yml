@@ -1,0 +1,10 @@
+id: test
+label: 'Test'
+langcode: en
+content:
+  value: "<p><strong>Hello World</strong></p>"
+  format: plain_text
+animals:
+  - kitten
+  - llama
+  - elephant

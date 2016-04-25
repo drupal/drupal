@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * @file
+ * Allows administrators to create custom menu links.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\system\MenuInterface;
+
+/**
+ * Implements hook_help().
+ */
+function menu_link_content_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.menu_link_content':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Custom Menu Links module allows users to create menu links. These links can be translated if multiple languages are used for the site.');
+      if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
+        $output .= ' ' . t('It is required by the Menu UI module, which provides an interface for managing menus and menu links. For more information, see the <a href=":menu-help">Menu UI module help page</a> and the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>.', array(':menu-help' => \Drupal::url('help.page', array('name' => 'menu_ui')), ':drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link'));
+      }
+      else {
+        $output .= ' ' . t('For more information, see the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>. If you enable the Menu UI module, it provides an interface for managing menus and menu links.', array(':drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link'));
+      }
+      $output .= '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_menu_delete().
+ */
+function menu_link_content_menu_delete(MenuInterface $menu) {
+  $storage = \Drupal::entityManager()->getStorage('menu_link_content');
+  $menu_links = $storage->loadByProperties(array('menu_name' => $menu->id()));
+  $storage->delete($menu_links);
+}
+
+/**
+ * Implements hook_path_insert().
+ */
+function menu_link_content_path_insert($path) {
+  _menu_link_content_update_path_alias($path['alias']);
+}
+
+/**
+ * Helper function to update plugin definition using internal scheme.
+ *
+ * @param string $path
+ *   The path alias.
+ *
+ */
+function _menu_link_content_update_path_alias($path) {
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $entities */
+  $entities = \Drupal::entityManager()
+    ->getStorage('menu_link_content')
+    ->loadByProperties(['link.uri' => 'internal:' . $path]);
+  foreach ($entities as $menu_link) {
+    $menu_link_manager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
+  }
+}
+
+/**
+ * Implements hook_path_update().
+ */
+function menu_link_content_path_update($path) {
+  if ($path['alias'] != $path['original']['alias']) {
+    _menu_link_content_update_path_alias($path['alias']);
+    _menu_link_content_update_path_alias($path['original']['alias']);
+  }
+  elseif ($path['source'] != $path['original']['source']) {
+    _menu_link_content_update_path_alias($path['alias']);
+  }
+}
+
+/**
+ * Implements hook_path_delete().
+ */
+function menu_link_content_path_delete($path) {
+  _menu_link_content_update_path_alias($path['alias']);
+}

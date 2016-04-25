@@ -1,0 +1,23 @@
+{
+  "name": "drupal/core-dependency-injection",
+  "description": "Dependency Injection container optimized for Drupal's needs.",
+  "keywords": ["drupal", "dependency injection"],
+  "type": "library",
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/drupal",
+    "irc": "irc://irc.freenode.net/drupal-contribute",
+    "source": "https://www.drupal.org/project/drupal/git-instructions"
+  },
+  "require": {
+    "php": ">=5.5.9",
+    "symfony/dependency-injection": "2.7.*",
+    "symfony/expression-language": "2.7.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\DependencyInjection\\": ""
+    }
+  }
+}

@@ -6,59 +6,9 @@
  */
 
 /**
- * Implements hook_install().
- */
-function shortcut_install() {
-  $t = get_t();
-  // Create an initial default shortcut set.
-  $shortcut_set = new stdClass();
-  $shortcut_set->title = $t('Default');
-  $shortcut_set->links = array();
-  shortcut_set_save($shortcut_set);
-}
-
-/**
- * Implements hook_uninstall().
- */
-function shortcut_uninstall() {
-  drupal_load('module', 'shortcut');
-  // Delete the menu links associated with each shortcut set.
-  foreach (shortcut_sets() as $shortcut_set) {
-    menu_delete_links($shortcut_set->set_name);
-  }
-}
-
-/**
  * Implements hook_schema().
  */
 function shortcut_schema() {
-  $schema['shortcut_set'] = array(
-    'description' => 'Stores information about sets of shortcuts links.',
-    'fields' => array(
-      'set_name' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => "Primary Key: The {menu_links}.menu_name under which the set's links are stored.",
-      ),
-      'title' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The title of the set.',
-      ),
-    ),
-    'primary key' => array('set_name'),
-    'foreign keys' => array(
-      'menu_name' => array(
-        'table' => 'menu_links',
-        'columns' => array('set_name' => 'menu_name'),
-      ),
-    ),
-  );
-
   $schema['shortcut_set_users'] = array(
     'description' => 'Maps users to shortcut sets.',
     'fields' => array(
@@ -70,7 +20,7 @@ function shortcut_schema() {
         'description' => 'The {users}.uid for this set.',
       ),
       'set_name' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
@@ -94,4 +44,26 @@ function shortcut_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function shortcut_install() {
+  // Theme settings are not configuration entities and cannot depend on modules
+  // so to set a module-specific setting, we need to set it with logic.
+  if (\Drupal::service('theme_handler')->themeExists('seven')) {
+    \Drupal::configFactory()->getEditable('seven.settings')->set('third_party_settings.shortcut.module_link', TRUE)->save(TRUE);
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function shortcut_uninstall() {
+  // Theme settings are not configuration entities and cannot depend on modules
+  // so to unset a module-specific setting, we need to unset it with logic.
+  if (\Drupal::service('theme_handler')->themeExists('seven')) {
+    \Drupal::configFactory()->getEditable('seven.settings')->clear('third_party_settings.shortcut')->save(TRUE);
+  }
 }

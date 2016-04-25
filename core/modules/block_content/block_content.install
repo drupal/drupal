@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the block_content module.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Add 'revision_translation_affected' field to 'block_content' entities.
+ */
+function block_content_update_8001() {
+  // Install the definition that this field had in
+  // \Drupal\block_content\Entity\BlockContent::baseFieldDefinitions()
+  // at the time that this update function was written. If/when code is
+  // deployed that changes that definition, the corresponding module must
+  // implement an update function that invokes
+  // \Drupal::entityDefinitionUpdateManager()->updateFieldStorageDefinition()
+  // with the new definition.
+  $storage_definition = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Revision translation affected'))
+    ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+    ->setReadOnly(TRUE)
+    ->setRevisionable(TRUE)
+    ->setTranslatable(TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('revision_translation_affected', 'block_content', 'block_content', $storage_definition);
+}
+
+/**
+ * Generalizes the d6_block_content_type and d6_block_content_body_field
+ * migrations.
+ */
+function block_content_update_8002() {
+  // Removed in issue #2569605. The Migrate and Migrate Drupal modules are
+  // marked experimental and do not need to support the update path until they
+  // are stable.
+  // @see https://www.drupal.org/node/2569469
+}

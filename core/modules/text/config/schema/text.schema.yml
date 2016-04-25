@@ -1,0 +1,133 @@
+# Schema for the configuration files of the text module.
+
+text.settings:
+  type: config_object
+  label: 'Text settings'
+  mapping:
+    default_summary_length:
+      type: integer
+      label: 'Default summary length'
+
+field.storage_settings.text:
+  type: mapping
+  label: 'Text (formatted) settings'
+  mapping:
+    max_length:
+      type: integer
+      label: 'Maximum length'
+
+field.field_settings.text:
+  type: mapping
+  label: 'Text (formatted) settings'
+
+field.value.text:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: label
+      label: 'Value'
+    format:
+      type: string
+      label: 'Text format'
+
+field.storage_settings.text_long:
+  label: 'Text (formatted, long) settings'
+  type: mapping
+
+field.field_settings.text_long:
+  label: 'Text (formatted, long) settings'
+  type: mapping
+
+field.value.text_long:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: text
+      label: 'Value'
+    format:
+      type: string
+      label: 'Text format'
+
+field.storage_settings.text_with_summary:
+  label: 'Text (formatted, long, with summary) settings'
+  type: mapping
+
+field.field_settings.text_with_summary:
+  type: mapping
+  label: 'Text (formatted, long, with summary) settings'
+  mapping:
+    display_summary:
+      type: boolean
+      label: 'Summary input'
+
+field.value.text_with_summary:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: text
+      label: 'Body'
+    summary:
+      type: string
+      label: 'Summary'
+    format:
+      type: string
+      label: 'Text format'
+
+field.formatter.settings.text_default:
+  type: mapping
+  label: 'Formatted text default display format settings'
+
+field.formatter.settings.text_summary_or_trimmed:
+  type: mapping
+  label: 'Summary or trimmed formatted text display format settings'
+  mapping:
+    trim_length:
+      type: integer
+      label: 'Trim length'
+
+field.formatter.settings.text_trimmed:
+  type: mapping
+  label: 'Trimmed text display format settings'
+  mapping:
+    trim_length:
+      type: integer
+      label: 'Trim length'
+
+field.widget.settings.text_textarea:
+  type: mapping
+  label: 'Text area (multiple rows) display format settings'
+  mapping:
+    rows:
+      type: integer
+      label: 'Rows'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.widget.settings.text_textarea_with_summary:
+  type: mapping
+  label: 'Text area with a summary display format settings'
+  mapping:
+    rows:
+      type: integer
+      label: 'Rows'
+    summary_rows:
+      type: integer
+      label: 'Number of summary rows'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.widget.settings.text_textfield:
+  type: mapping
+  label: 'Text field display format settings'
+  mapping:
+    size:
+      type: integer
+      label: 'Size of textfield'
+    placeholder:
+      type: label
+      label: 'Placeholder'

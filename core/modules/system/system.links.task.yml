@@ -1,0 +1,70 @@
+system.rss_feeds_settings_tab:
+  route_name: system.rss_feeds_settings
+  title: Settings
+  base_route: system.rss_feeds_settings
+
+system.site_maintenance_mode_tab:
+  route_name: system.site_maintenance_mode
+  title: Settings
+  base_route: system.site_maintenance_mode
+
+system.site_information_settings_tab:
+  route_name: system.site_information_settings
+  title: Settings
+  base_route: system.site_information_settings
+
+system.themes_page:
+  route_name: system.themes_page
+  title: 'List'
+  base_route: system.themes_page
+system.theme_settings:
+  route_name: system.theme_settings
+  title: 'Settings'
+  base_route: system.themes_page
+  weight: 100
+
+system.theme_settings_global:
+  route_name: system.theme_settings
+  title: 'Global settings'
+  parent_id: system.theme_settings
+  weight: -100
+system.theme_settings_theme:
+  route_name: system.theme_settings_theme
+  title: 'Theme name'
+  parent_id: system.theme_settings
+  deriver: Drupal\system\Plugin\Derivative\ThemeLocalTask
+
+system.modules_list:
+  route_name: system.modules_list
+  base_route: system.modules_list
+  title: 'List'
+system.modules_uninstall:
+  route_name: system.modules_uninstall
+  base_route: system.modules_list
+  title: 'Uninstall'
+  weight: 20
+
+system.admin:
+  route_name: system.admin
+  base_route: system.admin
+  title: 'Tasks'
+  weight: -20
+system.admin_index:
+  route_name: system.admin_index
+  base_route: system.admin
+  title: 'Index'
+  weight: -18
+
+entity.date_format.collection:
+  route_name: entity.date_format.collection
+  base_route: entity.date_format.collection
+  title: 'List'
+entity.date_format.edit_form:
+  title: 'Edit'
+  route_name: entity.date_format.edit_form
+  base_route: entity.date_format.edit_form
+
+system.admin_content:
+  title: Content
+  route_name: system.admin_content
+  base_route: system.admin_content

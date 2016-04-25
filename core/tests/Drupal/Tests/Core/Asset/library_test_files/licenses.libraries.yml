@@ -1,0 +1,72 @@
+# No license information: should default to GPL 2.0 or later..
+no-license-info:
+  version: 1.0
+  js:
+    no-license-info.js: {}
+  css:
+    base:
+      no-license-info.css: {}
+
+# A library with all assets licensed under the GPL-compatible GPL 2 license.
+gpl2:
+  version: 1.0
+  license:
+    name: gpl2
+    url: https://url-to-gpl2-license
+    gpl-compatible: true
+  js:
+    gpl2.js: {}
+  css:
+    base:
+      gpl2.css: {}
+
+# A library with all assets licensed under the GPL-compatible MIT license.
+mit:
+  version: 1.0
+  license:
+    name: MIT
+    url: https://url-to-mit-license
+    gpl-compatible: true
+  js:
+    mit.js: {}
+  css:
+    base:
+      mit.css: {}
+
+# A library with all assets licensed under the GPL-compatible Public Domain.
+public-domain:
+  version: 1.0
+  license:
+    name: Public Domain
+    url: https://url-to-public-domain-license
+    gpl-compatible: true
+  js:
+    public-domain.js: {}
+  css:
+    base:
+      public-domain.css: {}
+
+# A library with all assets licensed under the GPL-incompatible Apache license.
+apache:
+  version: 1.0
+  license:
+    name: apache
+    url: https://url-to-apache-license
+    gpl-compatible: false
+  js:
+    apache.js: {}
+  css:
+    base:
+      apache.css: {}
+
+# A library with all assets licensed under the GPL-incompatible copyright.
+copyright:
+  version: 1.0
+  license:
+    name: © Some company
+    gpl-compatible: false
+  js:
+    copyright.js: {}
+  css:
+    base:
+      copyright.css: {}

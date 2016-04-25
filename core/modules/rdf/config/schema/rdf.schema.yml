@@ -1,0 +1,25 @@
+# Schema for the configuration files of the RDF module.
+
+rdf.mapping.*.*:
+  type: config_entity
+  label: 'RDF mapping'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    types:
+      type: sequence
+      label: 'Types'
+      sequence:
+        type: string
+    fieldMappings:
+      type: sequence
+      label: 'Field mappings'
+      sequence:
+        type: rdf_field_mapping

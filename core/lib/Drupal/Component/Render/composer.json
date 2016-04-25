@@ -1,0 +1,16 @@
+{
+  "name": "drupal/core-render",
+  "description": "Renders placeholder variables for HTML and plain-text display.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.5.9",
+    "drupal/core-utility": "~8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Render\\": ""
+    }
+  }
+}

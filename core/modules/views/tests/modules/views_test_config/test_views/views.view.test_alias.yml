@@ -1,0 +1,96 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_alias
+label: test_alias
+module: views
+description: ''
+tag: default
+base_table: users_field_data
+base_field: nid
+core: 8.0-dev
+display:
+  default:
+    display_options:
+      access:
+        options:
+          perm: 'access user profiles'
+        type: perm
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        name:
+          alter:
+            absolute: false
+            alter_text: false
+            ellipsis: false
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: false
+          empty_zero: false
+          field: name
+          hide_empty: false
+          id: name
+          label: ''
+          table: users_field_data
+          plugin_id: field
+          type: user_name
+          entity_type: user
+          entity_field: name
+      filters:
+        uid_raw:
+          admin_label: ''
+          expose:
+            description: ''
+            identifier: ''
+            label: ''
+            multiple: false
+            operator: ''
+            operator_id: '0'
+            remember: false
+            remember_roles:
+              authenticated: authenticated
+            required: false
+            use_operator: false
+          exposed: false
+          field: uid_raw
+          group: 1
+          group_info:
+            default_group: All
+            default_group_multiple: {  }
+            description: ''
+            group_items: {  }
+            identifier: ''
+            label: ''
+            multiple: false
+            optional: true
+            remember: false
+            widget: select
+          group_type: group
+          id: uid_raw
+          is_grouped: false
+          operator: '>'
+          relationship: none
+          table: users_field_data
+          value:
+            max: ''
+            min: ''
+            value: '1'
+          plugin_id: numeric
+          entity_type: user
+      pager:
+        type: full
+      query:
+        type: views_query
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

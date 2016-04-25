@@ -1,0 +1,4 @@
+entity.menu.edit_form:
+  title: 'Edit menu'
+  route_name: 'entity.menu.edit_form'
+  group: menu

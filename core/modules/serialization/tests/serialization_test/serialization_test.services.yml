@@ -1,0 +1,9 @@
+services:
+  serializer.normalizer.serialization_test:
+    class: Drupal\serialization_test\SerializationTestNormalizer
+    tags:
+      - { name: normalizer }
+  serializer.encoder.serialization_test:
+    class: Drupal\serialization_test\SerializationTestEncoder
+    tags:
+      - { name: encoder, format: serialization_test}

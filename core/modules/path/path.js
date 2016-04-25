@@ -2,20 +2,28 @@
  * @file
  * Attaches behaviors for the Path module.
  */
-(function ($) {
+(function ($, Drupal) {
 
-"use strict";
+  'use strict';
 
-Drupal.behaviors.pathDetailsSummaries = {
-  attach: function (context) {
-    $(context).find('.path-form').drupalSetSummary(function (context) {
-      var path = $('.form-item-path-alias input').val();
+  /**
+   * Behaviors for settings summaries on path edit forms.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches summary behavior on path edit forms.
+   */
+  Drupal.behaviors.pathDetailsSummaries = {
+    attach: function (context) {
+      $(context).find('.path-form').drupalSetSummary(function (context) {
+        var path = $('.js-form-item-path-0-alias input').val();
 
-      return path ?
-        Drupal.t('Alias: @alias', { '@alias': path }) :
-        Drupal.t('No alias');
-    });
-  }
-};
+        return path ?
+          Drupal.t('Alias: @alias', {'@alias': path}) :
+          Drupal.t('No alias');
+      });
+    }
+  };
 
-})(jQuery);
+})(jQuery, Drupal);

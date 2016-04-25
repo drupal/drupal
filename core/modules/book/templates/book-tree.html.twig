@@ -1,0 +1,49 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a book tree.
+ *
+ * Returns HTML for a wrapper for a book sub-tree.
+ *
+ * Available variables:
+ * - items: A nested list of book items. Each book item contains:
+ *   - attributes: HTML attributes for the book item.
+ *   - below: The book item child items.
+ *   - title: The book link title.
+ *   - url: The book link URL, instance of \Drupal\Core\Url.
+ *   - is_expanded: TRUE if the link has visible children within the current
+ *     book tree.
+ *   - is_collapsed: TRUE if the link has children within the current book tree
+ *     that are not currently visible.
+ *   - in_active_trail: TRUE if the link is in the active trail.
+ *
+ * @ingroup themeable
+ */
+#}
+{% import _self as book_tree %}
+
+{#
+  We call a macro which calls itself to render the full tree.
+  @see http://twig.sensiolabs.org/doc/tags/macro.html
+#}
+{{ book_tree.book_links(items, attributes, 0) }}
+
+{% macro book_links(items, attributes, menu_level) %}
+  {% import _self as book_tree %}
+  {% if items %}
+    {% if menu_level == 0 %}
+      <ul{{ attributes }}>
+    {% else %}
+      <ul>
+    {% endif %}
+    {% for item in items %}
+      <li{{ item.attributes }}>
+        {{ link(item.title, item.url) }}
+        {% if item.below %}
+          {{ book_tree.book_links(item.below, attributes, menu_level + 1) }}
+        {% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

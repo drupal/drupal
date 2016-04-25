@@ -1,0 +1,10 @@
+test_basetheme.settings:
+  type: theme_settings
+  label: 'Test base theme settings'
+  mapping:
+    base:
+      type: string
+      label: 'Base theme setting'
+    override:
+      type: string
+      label: 'Whether the setting has been overridden'

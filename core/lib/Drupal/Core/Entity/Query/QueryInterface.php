@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Entity\QueryInterface.
- */
-
 namespace Drupal\Core\Entity\Query;
 
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -14,40 +9,47 @@ use Drupal\Core\Database\Query\AlterableInterface;
  *
  * Never instantiate classes implementing this interface directly. Always use
  * the QueryFactory class.
+ *
+ * @ingroup database
  */
 interface QueryInterface extends AlterableInterface {
 
   /**
-   * Gets the entity type for this query.
+   * Gets the ID of the entity type for this query.
    *
    * @return string
    */
-  public function getEntityType();
+  public function getEntityTypeId();
 
   /**
    * Add a condition to the query or a condition group.
    *
-   * @param $field
-   *   Name of the field being queried.
-   *   Some examples:
-   *   - nid
-   *   - tags.value
-   *   - tags this is the same as tags.value as .value is the default.
-   *
    * For example, to find all entities containing both the Turkish 'merhaba'
    * and the Polish 'siema' within a 'greetings' text field:
    * @code
-   *   $entity_ids = entity_query($entity_type)
+   *   $entity_ids = \Drupal::entityQuery($entity_type)
    *     ->condition('greetings', 'merhaba', '=', 'tr');
    *     ->condition('greetings.value', 'siema', '=', 'pl');
    *     ->execute();
    *   $entity_ids = $query->execute();
    * @endcode
    *
+   * @param $field
+   *   Name of the field being queried. It must contain a field name,
+   *   optionally followed by a column name. The column can be "entity" for
+   *   reference fields and that can be followed similarly by a field name
+   *   and so on. Some examples:
+   *   - nid
+   *   - tags.value
+   *   - tags
+   *   - uid.entity.name
+   *   "tags" "is the same as "tags.value" as value is the default column.
+   *   If two or more conditions have the same field names they apply to the
+   *   same delta within that field.
    * @param $value
-   *   The value for $field. In most cases, this is a scalar. For more complex
-   *   options, it is an array. The meaning of each element in the array is
-   *   dependent on $operator.
+   *   The value for $field. In most cases, this is a scalar and it's treated as
+   *   case-insensitive. For more complex operators, it is an array. The meaning
+   *   of each element in the array is dependent on $operator.
    * @param $operator
    *   Possible values:
    *   - '=', '<>', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS',
@@ -58,16 +60,21 @@ interface QueryInterface extends AlterableInterface {
    *   - 'BETWEEN': This operator expects $value to be an array of two literals
    *     of the same type as the column.
    * @param $langcode
-   *   Language code (optional).
+   *   Language code (optional). If omitted, any translation satisfies the
+   *   condition. However, if two or more conditions omit the langcode within
+   *   one condition group then they are presumed to apply to the same
+   *   translation. If within one condition group one condition has a langcode
+   *   and another does not they are not presumed to apply to the same
+   *   translation.
    *
    * @return \Drupal\Core\Entity\Query\QueryInterface
-   * @see Drupal\Core\Entity\Query\andConditionGroup
-   * @see Drupal\Core\Entity\Query\orConditionGroup
+   * @see \Drupal\Core\Entity\Query\andConditionGroup
+   * @see \Drupal\Core\Entity\Query\orConditionGroup
    */
   public function condition($field, $value = NULL, $operator = NULL, $langcode = NULL);
 
   /**
-   * Queries for the existence of a field.
+   * Queries for a non-empty value on a field.
    *
    * @param $field
    *   Name of a field.
@@ -78,7 +85,7 @@ interface QueryInterface extends AlterableInterface {
   public function exists($field, $langcode = NULL);
 
   /**
-   * Queries for the nonexistence of a field.
+   * Queries for an empty field.
    *
    * @param $field.
    *   Name of a field.
@@ -136,10 +143,11 @@ interface QueryInterface extends AlterableInterface {
    * Enables sortable tables for this query.
    *
    * @param $headers
-   *   An array of headers of the same struucture as described in
-   *   theme_table(). Use a 'specifier' in place of a 'field' to specify what
-   *   to sort on. This can be an entity or a field as described in
-   *   condition().
+   *   An array of headers of the same structure as described in
+   *   template_preprocess_table(). Use a 'specifier' in place of a 'field' to
+   *   specify what to sort on. This can be an entity or a field as described
+   *   in condition().
+   *
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The called object.
    */
@@ -152,22 +160,6 @@ interface QueryInterface extends AlterableInterface {
   public function accessCheck($access_check = TRUE);
 
   /**
-   * Queries the current or every revision.
-   *
-   * Note that this only affects field conditions. Property conditions always
-   * apply to the current revision.
-   * @TODO: Once revision tables have been cleaned up, revisit this.
-   *
-   * @param $age
-   *   - FIELD_LOAD_CURRENT (default): Query the most recent revisions only,
-   *   - FIELD_LOAD_REVISION: Query all revisions.
-   *
-   * @return \Drupal\Core\Entity\Query\QueryInterface
-   *   The called object.
-   */
-  public function age($age = FIELD_LOAD_CURRENT);
-
-  /**
    * Execute the query.
    *
    * @return int|array
@@ -178,27 +170,13 @@ interface QueryInterface extends AlterableInterface {
   public function execute();
 
   /**
-   * Creates an object holding a group of conditions.
-   *
-   * See andConditionGroup() and orConditionGroup() for more.
-   *
-   * @param $conjunction
-   *   - AND (default): this is the equivalent of andConditionGroup().
-   *   - OR: this is the equivalent of andConditionGroup().
-   *
-   * return ConditionInterface
-   *   An object holding a group of conditions.
-   */
-  public function conditionGroupFactory($conjunction = 'AND');
-
-  /**
    * Creates a new group of conditions ANDed together.
    *
    * For example, consider a drawing entity type with a 'figures' multi-value
    * field containing 'shape' and 'color' columns. To find all drawings
    * containing both a red triangle and a blue circle:
    * @code
-   *   $query = entity_query('drawing');
+   *   $query = \Drupal::entityQuery('drawing');
    *   $group = $query->andConditionGroup()
    *     ->condition('figures.color', 'red')
    *     ->condition('figures.shape', 'triangle');
@@ -221,7 +199,7 @@ interface QueryInterface extends AlterableInterface {
    * containing 'building_type' and 'color' columns.  To find all green and
    * red bikesheds:
    * @code
-   *   $query = entity_query('map');
+   *   $query = \Drupal::entityQuery('map');
    *   $group = $query->orConditionGroup()
    *     ->condition('attributes.color', 'red')
    *     ->condition('attributes.color', 'green');
@@ -241,5 +219,19 @@ interface QueryInterface extends AlterableInterface {
    * @return \Drupal\Core\Entity\Query\ConditionInterface
    */
   public function orConditionGroup();
+
+  /**
+   * Queries the current revision.
+   *
+   * @return $this
+   */
+  public function currentRevision();
+
+  /**
+   * Queries all the revisions.
+   *
+   * @return $this
+   */
+  public function allRevisions();
 
 }

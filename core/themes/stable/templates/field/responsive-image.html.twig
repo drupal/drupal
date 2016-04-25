@@ -1,0 +1,34 @@
+{#
+/**
+ * @file
+ * Theme override of a responsive image.
+ *
+ * Available variables:
+ * - sources: The attributes of the <source> tags for this <picture> tag.
+ * - img_element: The controlling image, with the fallback image in srcset.
+ * - output_image_tag: Whether or not to output an <img> tag instead of a
+ *   <picture> tag.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_responsive_image()
+ */
+#}
+{% if output_image_tag %}
+  {{ img_element }}
+{% else %}
+  <picture>
+    {% if sources %}
+      {#
+      Internet Explorer 9 doesn't recognise source elements that are wrapped in
+      picture tags. See http://scottjehl.github.io/picturefill/#ie9
+      #}
+      <!--[if IE 9]><video style="display: none;"><![endif]-->
+      {% for source_attributes in sources %}
+        <source{{ source_attributes }}/>
+      {% endfor %}
+      <!--[if IE 9]></video><![endif]-->
+    {% endif %}
+    {# The controlling image, with the fallback image in srcset. #}
+    {{ img_element }}
+  </picture>
+{% endif %}

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Database\DatabaseException
- */
-
 namespace Drupal\Core\Database;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Entity\QueryException.
- */
-
 namespace Drupal\Core\Entity\Query;
 
 /**

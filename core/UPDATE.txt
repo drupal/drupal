@@ -1,0 +1,144 @@
+INTRODUCTION
+------------
+This document describes how to update your Drupal site between 8.x.x minor and
+patch versions; for example, from 8.1.2 to 8.1.3, or from 8.3.5 to 8.4.0.
+
+To upgrade from a previous major version (for example, Drupal 6 or 7), the
+process involves importing site configuration and content from your old site
+into a new Drupal 8 site. The tools and process are currently experimental,
+rather than being fully supported, so be sure to test in a development
+environment. You will need to use the core Migrate Drupal UI module which
+provides a user interface for the Migrate and Migrate Drupal modules included
+in core. See https://www.drupal.org/upgrade/migrate for details, and
+https://www.drupal.org/node/2167633 for known issues.
+
+First steps and definitions:
+
+  * If you are upgrading to Drupal version x.y.z, then x is known as the major
+    version number, y is known as the minor version number, and z is known as
+    the patch version number. The download file will be named
+    drupal-x.y.z.tar.gz (or drupal-x.y.z.zip). Previous Drupal versions used
+    only x.y (MAJOR.MINOR) to designate their versions.
+
+  * All directories mentioned in this document are relative to the directory of
+    your Drupal installation.
+
+  * Make a full backup of all files, directories, and your database(s) before
+    starting, and save it outside your Drupal installation directory.
+    Instructions may be found at
+    https://www.drupal.org/upgrade/backing-up-the-db
+
+  * It is wise to try an update or upgrade on a test copy of your site before
+    applying it to your live site. Even minor updates can cause your site's
+    behavior to change.
+
+  * Each new release of Drupal has release notes, which explain the changes made
+    since the previous version and any special instructions needed to update or
+    upgrade to the new version. You can find a link to the release notes for the
+    version you are upgrading or updating to on the Drupal project page
+    (https://www.drupal.org/project/drupal).
+
+UPDATE PROBLEMS
+----------------
+If you encounter errors during this process,
+
+  * Note any error messages you see.
+
+  * Restore your site to its previous state, using the file and database backups
+    you created before you started the update process. Do not attempt to do
+    further updates on a site that had update problems.
+
+  * Consult one of the support options listed on https://www.drupal.org/support
+
+More in-depth information on updating and upgrading can be found at
+https://www.drupal.org/upgrade
+
+MINOR AND PATCH VERSION UPDATES
+-------------------------------
+To update from one 8.x.x version of Drupal to any later 8.x.x version, after
+following the instructions in the INTRODUCTION section at the top of this file:
+
+1. Log in as a user with the permission "Administer software updates".
+
+2. Go to Administration > Configuration > Development > Maintenance mode.
+   Enable the "Put site into maintenance mode" checkbox and save the
+   configuration.
+
+3. Remove the 'core' and 'vendor' directories. Also remove all of the files
+   in the top-level directory, except any that you added manually.
+
+   If you made modifications to files like .htaccess, composer.json, or
+   robots.txt you will need to re-apply them from your backup, after the new
+   files are in place.
+
+   Sometimes an update includes changes to default.settings.php (this will be
+   noted in the release notes). If that's the case, follow these steps:
+
+   - Locate your settings.php file in the /sites/* directory. (Typically
+     sites/default.)
+
+   - Make a backup copy of your settings.php file, with a different file name.
+
+   - Make a copy of the new default.settings.php file, and name the copy
+     settings.php (overwriting your previous settings.php file).
+
+   - Copy the custom and site-specific entries from the backup you made into the
+     new settings.php file. You will definitely need the lines giving the
+     database information, and you will also want to copy in any other
+     customizations you have added.
+
+   You can find the release notes for your version at
+   https://www.drupal.org/project/drupal. At bottom of the project page under
+   "Downloads" use the link for your version of Drupal to view the release
+   notes. If your version is not listed, use the 'View all releases' link. From
+   this page you can scroll down or use the filter to find your version and its
+   release notes.
+
+4. Download the latest Drupal 8.x.x release from https://www.drupal.org to a
+   directory outside of your web root. Extract the archive and copy the files
+   into your Drupal directory.
+
+   On a typical Unix/Linux command line, use the following commands to download
+   and extract:
+
+     wget https://www.drupal.org/files/projects/drupal-x.y.z.tar.gz
+     tar -zxvf drupal-x.y.z.tar.gz
+
+   This creates a new directory drupal-x.y.z/ containing all Drupal files and
+   directories. Copy the files into your Drupal installation directory:
+
+     cp -R drupal-x.y.z/* drupal-x.y.z/.htaccess /path/to/your/installation
+
+   If you do not have command line access to your server, download the archive
+   from https://www.drupal.org using your web browser, extract it, and then use
+   an FTP client to upload the files to your web root.
+
+5. Re-apply any modifications to files such as .htaccess, composer.json, or
+   robots.txt.
+
+6. Run update.php by visiting http://www.example.com/update.php (replace
+   www.example.com with your domain name). This will update the core database
+   tables.
+
+   If you are unable to access update.php do the following:
+
+   - Open settings.php with a text editor.
+
+   - Find the line that says:
+     $settings['update_free_access'] = FALSE;
+
+   - Change it into:
+     $settings['update_free_access'] = TRUE;
+
+   - Once the update is done, $settings['update_free_access'] must be reverted
+     to FALSE.
+
+7. Go to Administration > Reports > Status report. Verify that everything is
+   working as expected.
+
+8. Ensure that $settings['update_free_access'] is FALSE in settings.php.
+
+9. Go to Administration > Configuration > Development > Maintenance mode.
+   Disable the "Put site into maintenance mode" checkbox and save the
+   configuration.
+

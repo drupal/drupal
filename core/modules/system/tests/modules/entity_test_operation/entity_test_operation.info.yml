@@ -1,0 +1,6 @@
+name: 'Entity Operation Test'
+type: module
+description: 'Provides a test operation to entities.'
+package: Testing
+version: VERSION
+core: 8.x

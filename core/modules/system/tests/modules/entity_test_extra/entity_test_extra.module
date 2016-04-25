@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Test module for the entity API providing several extra fields for testing.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function entity_test_extra_entity_base_field_info(EntityTypeInterface $entity_type) {
+  return \Drupal::state()->get($entity_type->id() . '.additional_base_field_definitions', array());
+}
+
+/**
+ * Implements hook_entity_field_storage_info().
+ */
+function entity_test_extra_entity_field_storage_info(EntityTypeInterface $entity_type) {
+  return \Drupal::state()->get($entity_type->id() . '.additional_field_storage_definitions', array());
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function entity_test_extra_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  return \Drupal::state()->get($entity_type->id() . '.' . $bundle . '.additional_bundle_field_definitions', array());
+}

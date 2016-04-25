@@ -1,0 +1,6 @@
+name: 'Router test'
+type: module
+description: 'Support module for routing testing. In a directory that does not match the module name to test that use case.'
+package: Testing
+version: VERSION
+core: 8.x

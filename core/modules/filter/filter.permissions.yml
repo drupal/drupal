@@ -1,0 +1,7 @@
+administer filters:
+  title: 'Administer text formats and filters'
+  description: 'Define how text is handled by combining filters into text formats.'
+  restrict access: true
+
+permission_callbacks:
+  - Drupal\filter\FilterPermissions::permissions

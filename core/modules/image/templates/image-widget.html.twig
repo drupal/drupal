@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Default theme implementation for an image field widget.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - data: Render elements of the image widget.
+ *
+ * @see template_preprocess_image_widget()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes }}>
+  {{ data.preview }}
+  {# Render widget data without the image preview that was output already. #}
+  {{ data|without('preview') }}
+</div>

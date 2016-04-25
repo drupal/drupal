@@ -1,0 +1,12 @@
+one_level:
+  target_key: key_1
+  testitem: 'text for entry_1'
+two_levels:
+  target_key: key_2
+  wrapper:
+    testitem: 'text for entry_2'
+three_levels:
+  target_key: key_3
+  wrapper_1:
+    wrapper_2:
+      testitem: 'text for entry_3'

@@ -1,0 +1,8 @@
+drupal.block_content:
+  version: VERSION
+  js:
+    js/block_content.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.form

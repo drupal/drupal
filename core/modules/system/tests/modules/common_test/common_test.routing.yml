@@ -1,0 +1,22 @@
+common_test.l_active_class:
+  path: '/common-test/type-link-active-class'
+  defaults:
+    _title: 'Test active link class'
+    _controller: '\Drupal\common_test\Controller\CommonTestController::typeLinkActiveClass'
+  requirements:
+    _access: 'TRUE'
+
+common_test.destination:
+  path: '/common-test/destination'
+  defaults:
+    _controller: '\Drupal\common_test\Controller\CommonTestController::destination'
+  requirements:
+    _access: 'TRUE'
+
+common_test.js_and_css_querystring:
+  path: '/common-test/query-string'
+  defaults:
+    _title: 'Test querystring'
+    _controller: '\Drupal\common_test\Controller\CommonTestController::jsAndCssQuerystring'
+  requirements:
+    _access: 'TRUE'

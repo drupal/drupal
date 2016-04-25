@@ -1,0 +1,61 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_group_by_in_filters
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: ''
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        name:
+          alter:
+            alter_text: false
+            ellipsis: true
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: true
+          empty_zero: false
+          field: name
+          hide_empty: false
+          id: name
+          table: entity_test
+          plugin_id: standard
+          entity_type: entity_test
+          entity_field: name
+      filters:
+        id:
+          field: id
+          group_type: count
+          id: id
+          operator: '>'
+          table: entity_test
+          value:
+            value: '3'
+          plugin_id: numeric
+          entity_type: entity_test
+          entity_field: id
+      group_by: true
+      pager:
+        type: some
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

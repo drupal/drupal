@@ -1,0 +1,8 @@
+name: CKEditor
+type: module
+description: "WYSIWYG editing for rich text fields using CKEditor."
+package: Core
+core: 8.x
+version: VERSION
+dependencies:
+  - editor

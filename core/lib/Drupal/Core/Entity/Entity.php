@@ -1,39 +1,36 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Entity\Entity.
- */
-
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
+use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Language\Language;
-use IteratorAggregate;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 
 /**
  * Defines a base entity class.
- *
- * Default implementation of EntityInterface.
- *
- * This class can be used as-is by simple entity types. Entity types requiring
- * special handling can extend the class.
  */
-class Entity implements IteratorAggregate, EntityInterface {
+abstract class Entity implements EntityInterface {
 
-  /**
-   * The language code of the entity's default language.
-   *
-   * @var string
-   */
-  public $langcode = LANGUAGE_NOT_SPECIFIED;
+  use RefinableCacheableDependencyTrait;
+
+  use DependencySerializationTrait {
+    __sleep as traitSleep;
+  }
 
   /**
    * The entity type.
    *
    * @var string
    */
-  protected $entityType;
+  protected $entityTypeId;
 
   /**
    * Boolean indicating whether the entity should be forced to be new.
@@ -43,18 +40,11 @@ class Entity implements IteratorAggregate, EntityInterface {
   protected $enforceIsNew;
 
   /**
-   * Boolean indicating whether a new revision should be created on save.
+   * A typed data object wrapping this entity.
    *
-   * @var bool
+   * @var \Drupal\Core\TypedData\ComplexDataInterface
    */
-  protected $newRevision = FALSE;
-
-  /**
-   * Indicates whether this is the default revision.
-   *
-   * @var bool
-   */
-  protected $isDefaultRevision = TRUE;
+  protected $typedData;
 
   /**
    * Constructs an Entity object.
@@ -66,7 +56,7 @@ class Entity implements IteratorAggregate, EntityInterface {
    *   The type of the entity to create.
    */
   public function __construct(array $values, $entity_type) {
-    $this->entityType = $entity_type;
+    $this->entityTypeId = $entity_type;
     // Set initial values.
     foreach ($values as $key => $value) {
       $this->$key = $value;
@@ -74,301 +64,564 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements EntityInterface::id().
+   * Gets the entity manager.
+   *
+   * @return \Drupal\Core\Entity\EntityManagerInterface
+   *
+   * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+   *   Use \Drupal::entityTypeManager() instead in most cases. If the needed
+   *   method is not on \Drupal\Core\Entity\EntityTypeManagerInterface, see the
+   *   deprecated \Drupal\Core\Entity\EntityManager to find the
+   *   correct interface or service.
+   */
+  protected function entityManager() {
+    return \Drupal::entityManager();
+  }
+
+  /**
+   * Gets the entity type manager.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected function entityTypeManager() {
+    return \Drupal::entityTypeManager();
+  }
+
+  /**
+   * Gets the language manager.
+   *
+   * @return \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected function languageManager() {
+    return \Drupal::languageManager();
+  }
+
+  /**
+   * Gets the UUID generator.
+   *
+   * @return \Drupal\Component\Uuid\UuidInterface
+   */
+  protected function uuidGenerator() {
+    return \Drupal::service('uuid');
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function id() {
     return isset($this->id) ? $this->id : NULL;
   }
 
   /**
-   * Implements EntityInterface::uuid().
+   * {@inheritdoc}
    */
   public function uuid() {
     return isset($this->uuid) ? $this->uuid : NULL;
   }
 
   /**
-   * Implements EntityInterface::isNew().
+   * {@inheritdoc}
    */
   public function isNew() {
     return !empty($this->enforceIsNew) || !$this->id();
   }
 
   /**
-   * Implements EntityInterface::isNewRevision().
-   */
-  public function isNewRevision() {
-    $info = $this->entityInfo();
-    return $this->newRevision || (!empty($info['entity_keys']['revision']) && !$this->getRevisionId());
-  }
-
-  /**
-   * Implements EntityInterface::enforceIsNew().
+   * {@inheritdoc}
    */
   public function enforceIsNew($value = TRUE) {
     $this->enforceIsNew = $value;
+
+    return $this;
   }
 
   /**
-   * Implements EntityInterface::setNewRevision().
+   * {@inheritdoc}
    */
-  public function setNewRevision($value = TRUE) {
-    $this->newRevision = $value;
+  public function getEntityTypeId() {
+    return $this->entityTypeId;
   }
 
   /**
-   * Implements EntityInterface::entityType().
-   */
-  public function entityType() {
-    return $this->entityType;
-  }
-
-  /**
-   * Implements EntityInterface::bundle().
+   * {@inheritdoc}
    */
   public function bundle() {
-    return $this->entityType;
+    return $this->entityTypeId;
   }
 
   /**
-   * Implements EntityInterface::label().
+   * {@inheritdoc}
    */
-  public function label($langcode = NULL) {
+  public function label() {
     $label = NULL;
-    $entity_info = $this->entityInfo();
-    if (isset($entity_info['label_callback']) && function_exists($entity_info['label_callback'])) {
-      $label = $entity_info['label_callback']($this->entityType, $this, $langcode);
+    $entity_type = $this->getEntityType();
+    if (($label_callback = $entity_type->getLabelCallback()) && is_callable($label_callback)) {
+      $label = call_user_func($label_callback, $this);
     }
-    elseif (!empty($entity_info['entity_keys']['label']) && isset($this->{$entity_info['entity_keys']['label']})) {
-      $label = $this->{$entity_info['entity_keys']['label']};
+    elseif (($label_key = $entity_type->getKey('label')) && isset($this->{$label_key})) {
+      $label = $this->{$label_key};
     }
     return $label;
   }
 
   /**
-   * Implements EntityInterface::uri().
+   * {@inheritdoc}
    */
-  public function uri() {
-    $bundle = $this->bundle();
-    // A bundle-specific callback takes precedence over the generic one for the
-    // entity type.
-    $entity_info = $this->entityInfo();
-    if (isset($entity_info['bundles'][$bundle]['uri_callback'])) {
-      $uri_callback = $entity_info['bundles'][$bundle]['uri_callback'];
+  public function urlInfo($rel = 'canonical', array $options = []) {
+    return $this->toUrl($rel, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toUrl($rel = 'canonical', array $options = []) {
+    if ($this->id() === NULL) {
+      throw new EntityMalformedException(sprintf('The "%s" entity cannot have a URI as it does not have an ID', $this->getEntityTypeId()));
     }
-    elseif (isset($entity_info['uri_callback'])) {
-      $uri_callback = $entity_info['uri_callback'];
+
+    // The links array might contain URI templates set in annotations.
+    $link_templates = $this->linkTemplates();
+
+    // Links pointing to the current revision point to the actual entity. So
+    // instead of using the 'revision' link, use the 'canonical' link.
+    if ($rel === 'revision' && $this instanceof RevisionableInterface && $this->isDefaultRevision()) {
+      $rel = 'canonical';
+    }
+
+    if (isset($link_templates[$rel])) {
+      $route_parameters = $this->urlRouteParameters($rel);
+      $route_name = "entity.{$this->entityTypeId}." . str_replace(array('-', 'drupal:'), array('_', ''), $rel);
+      $uri = new Url($route_name, $route_parameters);
     }
     else {
-      return NULL;
+      $bundle = $this->bundle();
+      // A bundle-specific callback takes precedence over the generic one for
+      // the entity type.
+      $bundles = $this->entityManager()->getBundleInfo($this->getEntityTypeId());
+      if (isset($bundles[$bundle]['uri_callback'])) {
+        $uri_callback = $bundles[$bundle]['uri_callback'];
+      }
+      elseif ($entity_uri_callback = $this->getEntityType()->getUriCallback()) {
+        $uri_callback = $entity_uri_callback;
+      }
+
+      // Invoke the callback to get the URI. If there is no callback, use the
+      // default URI format.
+      if (isset($uri_callback) && is_callable($uri_callback)) {
+        $uri = call_user_func($uri_callback, $this);
+      }
+      else {
+        throw new UndefinedLinkTemplateException("No link template '$rel' found for the '{$this->getEntityTypeId()}' entity type");
+      }
     }
 
-    // Invoke the callback to get the URI. If there is no callback, return NULL.
-    if (isset($uri_callback) && function_exists($uri_callback)) {
-      $uri = $uri_callback($this);
-      // Pass the entity data to url() so that alter functions do not need to
-      // look up this entity again.
-      $uri['options']['entity_type'] = $this->entityType;
-      $uri['options']['entity'] = $this;
-      return $uri;
+    // Pass the entity data through as options, so that alter functions do not
+    // need to look up this entity again.
+    $uri
+      ->setOption('entity_type', $this->getEntityTypeId())
+      ->setOption('entity', $this);
+
+    // Display links by default based on the current language.
+    if ($rel !== 'collection') {
+      $options += ['language' => $this->language()];
     }
+
+    $uri_options = $uri->getOptions();
+    $uri_options += $options;
+
+    return $uri->setOptions($uri_options);
   }
 
   /**
-   * Implements EntityInterface::get().
+   * {@inheritdoc}
    */
-  public function get($property_name, $langcode = NULL) {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
-    return isset($this->{$property_name}) ? $this->{$property_name} : NULL;
+  public function hasLinkTemplate($rel) {
+    $link_templates = $this->linkTemplates();
+    return isset($link_templates[$rel]);
   }
 
   /**
-   * Implements ComplexDataInterface::set().
+   * Gets an array link templates.
+   *
+   * @return array
+   *   An array of link templates containing paths.
    */
-  public function set($property_name, $value) {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
-    $this->{$property_name} = $value;
+  protected function linkTemplates() {
+    return $this->getEntityType()->getLinkTemplates();
   }
 
   /**
-   * Implements ComplexDataInterface::getProperties().
+   * {@inheritdoc}
    */
-  public function getProperties($include_computed = FALSE) {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
+  public function link($text = NULL, $rel = 'canonical', array $options = []) {
+    return $this->toLink($text, $rel, $options)->toString();
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyValues().
+   * {@inheritdoc}
    */
-  public function getPropertyValues() {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
+  public function toLink($text = NULL, $rel = 'canonical', array $options = []) {
+    if (!isset($text)) {
+      $text = $this->label();
+    }
+    $url = $this->toUrl($rel);
+    $options += $url->getOptions();
+    $url->setOptions($options);
+    return new Link($text, $url);
   }
 
   /**
-   * Implements ComplexDataInterface::setPropertyValues().
+   * {@inheritdoc}
    */
-  public function setPropertyValues($values) {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
+  public function url($rel = 'canonical', $options = array()) {
+    // While self::toUrl() will throw an exception if the entity has no id,
+    // the expected result for a URL is always a string.
+    if ($this->id() === NULL || !$this->hasLinkTemplate($rel)) {
+      return '';
+    }
+
+    $uri = $this->toUrl($rel);
+    $options += $uri->getOptions();
+    $uri->setOptions($options);
+    return $uri->toString();
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinition().
+   * Gets an array of placeholders for this entity.
+   *
+   * Individual entity classes may override this method to add additional
+   * placeholders if desired. If so, they should be sure to replicate the
+   * property caching logic.
+   *
+   * @param string $rel
+   *   The link relationship type, for example: canonical or edit-form.
+   *
+   * @return array
+   *   An array of URI placeholders.
    */
-  public function getPropertyDefinition($name) {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
+  protected function urlRouteParameters($rel) {
+    $uri_route_parameters = [];
+
+    if ($rel != 'collection') {
+      // The entity ID is needed as a route parameter.
+      $uri_route_parameters[$this->getEntityTypeId()] = $this->id();
+    }
+    if ($rel === 'revision') {
+      $uri_route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
+    }
+
+    return $uri_route_parameters;
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinitions().
+   * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
+  public function uriRelationships() {
+    return array_keys($this->linkTemplates());
   }
 
   /**
-   * Implements ComplexDataInterface::isEmpty().
+   * {@inheritdoc}
    */
-  public function isEmpty() {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
+  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    if ($operation == 'create') {
+      return $this->entityManager()
+        ->getAccessControlHandler($this->entityTypeId)
+        ->createAccess($this->bundle(), $account, [], $return_as_object);
+    }
+    return $this->entityManager()
+      ->getAccessControlHandler($this->entityTypeId)
+      ->access($this, $operation, $account, $return_as_object);
   }
 
   /**
-   * Implements ComplexDataInterface::getIterator().
-   */
-  public function getIterator() {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
-  }
-
-  /**
-   * Implements AccessibleInterface::access().
-   */
-  public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
-    $method = $operation . 'Access';
-    return entity_access_controller($this->entityType)->$method($this, LANGUAGE_DEFAULT, $account);
-  }
-
-  /**
-   * Implements TranslatableInterface::language().
+   * {@inheritdoc}
    */
   public function language() {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
-    return !empty($this->langcode) ? language_load($this->langcode) : new Language(array('langcode' => LANGUAGE_NOT_SPECIFIED));
-  }
-
-  /**
-   * Implements TranslatableInterface::getTranslation().
-   */
-  public function getTranslation($langcode, $strict = TRUE) {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
-  }
-
-  /**
-   * Returns the languages the entity is translated to.
-   *
-   * @todo: Remove once all entity types implement the entity field API.
-   *   This is deprecated by
-   *   Drupal\Core\TypedData\TranslatableInterface::getTranslationLanguages().
-   */
-  public function translations() {
-    return $this->getTranslationLanguages(FALSE);
-  }
-
-  /**
-   * Implements TranslatableInterface::getTranslationLanguages().
-   */
-  public function getTranslationLanguages($include_default = TRUE) {
-    // @todo: Replace by EntityNG implementation once all entity types have been
-    // converted to use the entity field API.
-    $default_language = $this->language();
-    $languages = array($default_language->langcode => $default_language);
-    $entity_info = $this->entityInfo();
-
-    if ($entity_info['fieldable']) {
-      // Go through translatable properties and determine all languages for
-      // which translated values are available.
-      foreach (field_info_instances($this->entityType, $this->bundle()) as $field_name => $instance) {
-        $field = field_info_field($field_name);
-        if (field_is_translatable($this->entityType, $field) && isset($this->$field_name)) {
-          foreach (array_filter($this->$field_name) as $langcode => $value)  {
-            $languages[$langcode] = TRUE;
-          }
-        }
+    if ($key = $this->getEntityType()->getKey('langcode')) {
+      $langcode = $this->$key;
+      $language = $this->languageManager()->getLanguage($langcode);
+      if ($language) {
+        return $language;
       }
-      $languages = array_intersect_key(language_list(LANGUAGE_ALL), $languages);
     }
-
-    if (empty($include_default)) {
-      unset($languages[$default_language->langcode]);
-    }
-
-    return $languages;
+    // Make sure we return a proper language object.
+    $langcode = !empty($this->langcode) ? $this->langcode : LanguageInterface::LANGCODE_NOT_SPECIFIED;
+    $language = new Language(array('id' => $langcode));
+    return $language;
   }
 
   /**
-   * Implements EntityInterface::save().
+   * {@inheritdoc}
    */
   public function save() {
-    return entity_get_controller($this->entityType)->save($this);
+    return $this->entityManager()->getStorage($this->entityTypeId)->save($this);
   }
 
   /**
-   * Implements EntityInterface::delete().
+   * {@inheritdoc}
    */
   public function delete() {
     if (!$this->isNew()) {
-      entity_get_controller($this->entityType)->delete(array($this->id() => $this));
+      $this->entityManager()->getStorage($this->entityTypeId)->delete(array($this->id() => $this));
     }
   }
 
   /**
-   * Implements EntityInterface::createDuplicate().
+   * {@inheritdoc}
    */
   public function createDuplicate() {
     $duplicate = clone $this;
-    $entity_info = $this->entityInfo();
-    $duplicate->{$entity_info['entity_keys']['id']} = NULL;
+    $entity_type = $this->getEntityType();
+    // Reset the entity ID and indicate that this is a new entity.
+    $duplicate->{$entity_type->getKey('id')} = NULL;
+    $duplicate->enforceIsNew();
 
     // Check if the entity type supports UUIDs and generate a new one if so.
-    if (!empty($entity_info['entity_keys']['uuid'])) {
-      $uuid = new Uuid();
-      $duplicate->{$entity_info['entity_keys']['uuid']} = $uuid->generate();
+    if ($entity_type->hasKey('uuid')) {
+      $duplicate->{$entity_type->getKey('uuid')} = $this->uuidGenerator()->generate();
     }
     return $duplicate;
   }
 
   /**
-   * Implements EntityInterface::entityInfo().
+   * {@inheritdoc}
    */
-  public function entityInfo() {
-    return entity_get_info($this->entityType);
+  public function getEntityType() {
+    return $this->entityManager()->getDefinition($this->getEntityTypeId());
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::getRevisionId().
+   * {@inheritdoc}
    */
-  public function getRevisionId() {
+  public function preSave(EntityStorageInterface $storage) {
+    // Check if this is an entity bundle.
+    if ($this->getEntityType()->getBundleOf()) {
+      // Throw an exception if the bundle ID is longer than 32 characters.
+      if (Unicode::strlen($this->id()) > EntityTypeInterface::BUNDLE_MAX_LENGTH) {
+        throw new ConfigEntityIdLengthException("Attempt to create a bundle with an ID longer than " . EntityTypeInterface::BUNDLE_MAX_LENGTH . " characters: $this->id().");
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    $this->invalidateTagsOnSave($update);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageInterface $storage, array &$values) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postCreate(EntityStorageInterface $storage) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    static::invalidateTagsOnDelete($storage->getEntityType(), $entities);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postLoad(EntityStorageInterface $storage, array &$entities) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function referencedEntities() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return $this->cacheContexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTagsToInvalidate() {
+    // @todo Add bundle-specific listing cache tag?
+    //   https://www.drupal.org/node/2145751
+    if ($this->isNew()) {
+      return [];
+    }
+    return [$this->entityTypeId . ':' . $this->id()];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    if ($this->cacheTags) {
+      return Cache::mergeTags($this->getCacheTagsToInvalidate(), $this->cacheTags);
+    }
+    return $this->getCacheTagsToInvalidate();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return $this->cacheMaxAge;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function load($id) {
+    $entity_manager = \Drupal::entityManager();
+    return $entity_manager->getStorage($entity_manager->getEntityTypeFromClass(get_called_class()))->load($id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function loadMultiple(array $ids = NULL) {
+    $entity_manager = \Drupal::entityManager();
+    return $entity_manager->getStorage($entity_manager->getEntityTypeFromClass(get_called_class()))->loadMultiple($ids);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(array $values = array()) {
+    $entity_manager = \Drupal::entityManager();
+    return $entity_manager->getStorage($entity_manager->getEntityTypeFromClass(get_called_class()))->create($values);
+  }
+
+  /**
+   * Invalidates an entity's cache tags upon save.
+   *
+   * @param bool $update
+   *   TRUE if the entity has been updated, or FALSE if it has been inserted.
+   */
+  protected function invalidateTagsOnSave($update) {
+    // An entity was created or updated: invalidate its list cache tags. (An
+    // updated entity may start to appear in a listing because it now meets that
+    // listing's filtering requirements. A newly created entity may start to
+    // appear in listings because it did not exist before.)
+    $tags = $this->getEntityType()->getListCacheTags();
+    if ($this->hasLinkTemplate('canonical')) {
+      // Creating or updating an entity may change a cached 403 or 404 response.
+      $tags = Cache::mergeTags($tags, ['4xx-response']);
+    }
+    if ($update) {
+      // An existing entity was updated, also invalidate its unique cache tag.
+      $tags = Cache::mergeTags($tags, $this->getCacheTagsToInvalidate());
+    }
+    Cache::invalidateTags($tags);
+  }
+
+  /**
+   * Invalidates an entity's cache tags upon delete.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
+   *   An array of entities.
+   */
+  protected static function invalidateTagsOnDelete(EntityTypeInterface $entity_type, array $entities) {
+    $tags = $entity_type->getListCacheTags();
+    foreach ($entities as $entity) {
+      // An entity was deleted: invalidate its own cache tag, but also its list
+      // cache tags. (A deleted entity may cause changes in a paged list on
+      // other pages than the one it's on. The one it's on is handled by its own
+      // cache tag, but subsequent list pages would not be invalidated, hence we
+      // must invalidate its list cache tags as well.)
+      $tags = Cache::mergeTags($tags, $entity->getCacheTagsToInvalidate());
+    }
+    Cache::invalidateTags($tags);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOriginalId() {
+    // By default, entities do not support renames and do not have original IDs.
     return NULL;
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::isDefaultRevision().
+   * {@inheritdoc}
    */
-  public function isDefaultRevision($new_value = NULL) {
-    $return = $this->isDefaultRevision;
-    if (isset($new_value)) {
-      $this->isDefaultRevision = (bool) $new_value;
+  public function setOriginalId($id) {
+    // By default, entities do not support renames and do not have original IDs.
+    // If the specified ID is anything except NULL, this should mark this entity
+    // as no longer new.
+    if ($id !== NULL) {
+      $this->enforceIsNew(FALSE);
     }
-    return $return;
+
+    return $this;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toArray() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTypedData() {
+    if (!isset($this->typedData)) {
+      $class = \Drupal::typedDataManager()->getDefinition('entity')['class'];
+      $this->typedData = $class::createFromEntity($this);
+    }
+    return $this->typedData;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    $this->typedData = NULL;
+    return $this->traitSleep();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigDependencyKey() {
+    return $this->getEntityType()->getConfigDependencyKey();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigDependencyName() {
+    return $this->getEntityTypeId() . ':' . $this->bundle() . ':' . $this->uuid();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigTarget() {
+    // For content entities, use the UUID for the config target identifier.
+    // This ensures that references to the target can be deployed reliably.
+    return $this->uuid();
+  }
+
 }

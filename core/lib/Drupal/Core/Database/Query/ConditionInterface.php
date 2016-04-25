@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Database\Query\ConditionInterface
- */
-
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
@@ -19,10 +14,23 @@ interface ConditionInterface {
    *
    * This method can take a variable number of parameters. If called with two
    * parameters, they are taken as $field and $value with $operator having a
-   * value of IN if $value is an array and = otherwise.
+   * value of =.
    *
    * Do not use this method to test for NULL values. Instead, use
    * QueryConditionInterface::isNull() or QueryConditionInterface::isNotNull().
+   *
+   * Drupal considers LIKE case insensitive and the following is often used
+   * to tell the database that case insensitive equivalence is desired:
+   * @code
+   * db_select('users')
+   *  ->condition('name', db_like($name), 'LIKE')
+   * @endcode
+   * Use 'LIKE BINARY' instead of 'LIKE' for case sensitive queries.
+   *
+   * Note: When using MySQL, the exact behavior also depends on the used
+   * collation. if the field is set to binary, then a LIKE condition will also
+   * be case sensitive and when a case insensitive collation is used, the =
+   * operator will also be case insensitive.
    *
    * @param $field
    *   The name of the field to check. If you would like to add a more complex
@@ -33,16 +41,15 @@ interface ConditionInterface {
    *   the array is dependent on the $operator.
    * @param $operator
    *   The comparison operator, such as =, <, or >=. It also accepts more
-   *   complex options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is
-   *   an array, and = otherwise.
+   *   complex options such as IN, LIKE, LIKE BINARY, or BETWEEN. Defaults to =.
    *
-   * @return QueryConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    *
-   * @see Drupal\Core\Database\Query\ConditionInterface::isNull()
-   * @see Drupal\Core\Database\Query\ConditionInterface::isNotNull()
+   * @see \Drupal\Core\Database\Query\ConditionInterface::isNull()
+   * @see \Drupal\Core\Database\Query\ConditionInterface::isNotNull()
    */
-  public function condition($field, $value = NULL, $operator = NULL);
+  public function condition($field, $value = NULL, $operator = '=');
 
   /**
    * Adds an arbitrary WHERE clause to the query.
@@ -53,7 +60,7 @@ interface ConditionInterface {
    * @param $args
    *   An associative array of arguments.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function where($snippet, $args = array());
@@ -64,7 +71,7 @@ interface ConditionInterface {
    * @param $field
    *   The name of the field to check.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function isNull($field);
@@ -75,7 +82,7 @@ interface ConditionInterface {
    * @param $field
    *   The name of the field to check.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function isNotNull($field);
@@ -83,10 +90,10 @@ interface ConditionInterface {
   /**
    * Sets a condition that the specified subquery returns values.
    *
-   * @param Drupal\Core\Database\Query\SelectInterface $select
+   * @param \Drupal\Core\Database\Query\SelectInterface $select
    *   The subquery that must contain results.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function exists(SelectInterface $select);
@@ -94,10 +101,10 @@ interface ConditionInterface {
   /**
    * Sets a condition that the specified subquery returns no values.
    *
-   * @param Drupal\Core\Database\Query\SelectInterface $select
+   * @param \Drupal\Core\Database\Query\SelectInterface $select
    *   The subquery that must not contain results.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function notExists(SelectInterface $select);
@@ -156,4 +163,32 @@ interface ConditionInterface {
    *   TRUE if the condition has been previously compiled.
    */
   public function compiled();
+
+  /**
+   * Creates an object holding a group of conditions.
+   *
+   * See andConditionGroup() and orConditionGroup() for more.
+   *
+   * @param $conjunction
+   *   - AND (default): this is the equivalent of andConditionGroup().
+   *   - OR: this is the equivalent of andConditionGroup().
+   *
+   * @return \Drupal\Core\Database\Query\ConditionInterface
+   *   An object holding a group of conditions.
+   */
+  public function conditionGroupFactory($conjunction = 'AND');
+
+  /**
+   * Creates a new group of conditions ANDed together.
+   *
+   * @return \Drupal\Core\Database\Query\ConditionInterface
+   */
+  public function andConditionGroup();
+
+  /**
+   * Creates a new group of conditions ORed together.
+   *
+   * @return \Drupal\Core\Database\Query\ConditionInterface
+   */
+  public function orConditionGroup();
 }

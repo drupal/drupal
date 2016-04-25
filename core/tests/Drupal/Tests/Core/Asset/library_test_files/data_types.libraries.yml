@@ -1,0 +1,13 @@
+example:
+  css:
+    theme:
+      # External URL.
+      'http://example.com/test.css':
+        type: external
+      # Absolute path.
+      /tmp/test.css: {}
+      # Protocol free.
+      //cdn.com/test.css: {}
+      # Stream wrapper URI.
+      'public://test.css': {}
+      'example://test2.css': {}

@@ -1,0 +1,22 @@
+id: user_profile_field_instance
+label: User profile field instance configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: profile_field
+  constants:
+    entity_type: user
+    bundle: user
+process:
+  entity_type: 'constants/entity_type'
+  bundle: 'constants/bundle'
+  label: title
+  description: explanation
+  field_name: name
+  required: required
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - user_profile_field

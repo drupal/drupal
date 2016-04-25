@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Support module for BigPipe testing.
+ */
+
+/**
+ * Implements hook_page_top().
+ */
+function big_pipe_test_page_top(array &$page_top) {
+  // Ensure this hook is invoked on every page load.
+  $page_top['#cache']['max-age'] = 0;
+
+  if (\Drupal::request()->query->get('trigger_session')) {
+    $_SESSION['big_pipe_test'] = TRUE;
+  }
+}

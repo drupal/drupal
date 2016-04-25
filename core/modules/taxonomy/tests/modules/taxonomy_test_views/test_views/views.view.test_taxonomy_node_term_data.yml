@@ -1,0 +1,89 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+    - user
+id: test_taxonomy_node_term_data
+label: test_taxonomy_node_term_data
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      arguments:
+        tid:
+          default_argument_type: fixed
+          field: tid
+          id: tid
+          relationship: term_node_tid
+          summary:
+            format: default_summary
+            number_of_records: 0
+          summary_options:
+            items_per_page: 25
+          table: taxonomy_term_field_data
+          plugin_id: taxonomy
+          entity_type: taxonomy_term
+          entity_field: tid
+        tid_1:
+          default_argument_type: fixed
+          field: tid
+          id: tid_1
+          relationship: term_node_tid_1
+          summary:
+            format: default_summary
+            number_of_records: 0
+          summary_options:
+            items_per_page: 25
+          table: taxonomy_term_field_data
+          plugin_id: taxonomy
+          entity_type: taxonomy_term
+          entity_field: tid
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      query:
+        type: views_query
+      relationships:
+        term_node_tid:
+          field: term_node_tid
+          id: term_node_tid
+          admin_label: 'Term #1'
+          table: node_field_data
+          vids: {}
+          plugin_id: node_term_data
+        term_node_tid_1:
+          field: term_node_tid
+          id: term_node_tid_1
+          admin_label: 'Term #2'
+          table: node_field_data
+          vids: {}
+          plugin_id: node_term_data
+      sorts:
+        nid:
+          field: nid
+          id: nid
+          order: DESC
+          table: node_field_data
+          plugin_id: standard
+          entity_type: node
+          entity_field: nid
+      style:
+        type: default
+      row:
+        type: 'entity:node'
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

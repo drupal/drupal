@@ -1,0 +1,57 @@
+/**
+ * @file
+ * The .contextual.css file is intended to contain styles that override declarations
+ * in the Contextual module.
+ */
+
+.views-live-preview .contextual-region-active {
+  outline: medium none;
+}
+.views-live-preview .contextual {
+  right: auto; /* LTR */
+  top: auto;
+}
+[dir="rtl"] .views-live-preview .contextual {
+  left: auto;
+}
+.js .views-live-preview .contextual {
+  display: inline;
+}
+.views-live-preview .contextual-links-trigger {
+  display: block;
+}
+.contextual .contextual-links {
+  border-radius: 0 4px 4px 4px; /* LTR */
+  min-width: 10em;
+  padding: 6px 6px 9px 6px;
+  right: auto; /* LTR */
+}
+[dir="rtl"] .contextual .contextual-links {
+  border-radius: 4px 0 4px 4px;
+  left: auto;
+}
+.contextual-links li a,
+.contextual-links li span {
+  padding-bottom: 0.25em;
+  padding-right: 0.1667em; /* LTR */
+  padding-top: 0.25em;
+}
+[dir="rtl"] .contextual-links li a,
+[dir="rtl"] .contextual-links li span {
+  padding-left: 0.1667em;
+  padding-right: 0;
+}
+.contextual-links li span {
+  font-weight: bold;
+}
+.contextual-links li a {
+  margin: 0.25em 0;
+  padding-left: 1em; /* LTR */
+}
+[dir="rtl"] .contextual-links li a {
+  padding-left: 0.1667em;
+  padding-right: 1em;
+}
+.contextual-links li a:hover {
+  background-color: #badbec;
+}

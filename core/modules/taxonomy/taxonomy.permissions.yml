@@ -1,0 +1,5 @@
+administer taxonomy:
+  title: 'Administer vocabularies and terms'
+
+permission_callbacks:
+  - Drupal\taxonomy\TaxonomyPermissions::permissions

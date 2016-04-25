@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Views Test module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function views_test_data_schema() {
+  return \Drupal::state()->get('views_test_data_schema');
+}
+
+/**
+ * Implements hook_install().
+ */
+function views_test_data_install() {
+  // Add the marquee tag to possible html elements to test the field handler.
+  $values = array(
+    'div' => 'DIV',
+    'span' => 'SPAN',
+    'h1' => 'H1',
+    'h2' => 'H2',
+    'h3' => 'H3',
+    'h4' => 'H4',
+    'h5' => 'H5',
+    'h6' => 'H6',
+    'p' => 'P',
+    'strong' => 'STRONG',
+    'em' => 'EM',
+    'marquee' => 'MARQUEE'
+  );
+  \Drupal::configFactory()->getEditable('views.settings')->set('field_rewrite_elements', $values)->save();
+}

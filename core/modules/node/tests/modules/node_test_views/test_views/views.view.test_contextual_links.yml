@@ -1,0 +1,99 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_contextual_links
+label: 'Contextual links'
+module: node
+description: ''
+tag: default
+base_table: node_field_data
+base_field: nid
+core: 8.x
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: tag
+        options: {  }
+      pager:
+        type: full
+        options:
+          items_per_page: 10
+          offset: 0
+          id: 0
+          total_pages: null
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          tags:
+            previous: '‹ Previous'
+            next: 'Next ›'
+            first: '« First'
+            last: 'Last »'
+          quantity: 9
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
+      row:
+        type: 'entity:node'
+        options:
+          view_mode: teaser
+      style:
+        type: default
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+      title: ''
+      header: {  }
+      footer: {  }
+      relationships: {  }
+      fields: {  }
+      arguments: {  }
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: node/%/contextual-links
+      defaults:
+        arguments: false
+      arguments:
+        nid:
+          field: nid
+          id: nid
+          relationship: none
+          table: node_field_data
+          plugin_id: numeric
+          entity_type: node
+          entity_field: nid
+      menu:
+        type: tab
+        title: 'Test contextual link'
+        description: ''
+        menu_name: tools
+        weight: 0
+        context: '1'
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 1

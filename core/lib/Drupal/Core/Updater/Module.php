@@ -1,11 +1,8 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Updater\Module.
- */
-
 namespace Drupal\Core\Updater;
+
+use Drupal\Core\Url;
 
 /**
  * Defines a class for updating modules using
@@ -16,43 +13,53 @@ class Module extends Updater implements UpdaterInterface {
   /**
    * Returns the directory where a module should be installed.
    *
-   * If the module is already installed, drupal_get_path() will return
-   * a valid path and we should install it there (although we need to use an
-   * absolute path, so we prepend DRUPAL_ROOT). If we're installing a new
-   * module, we always want it to go into /modules, since that's
-   * where all the documentation recommends users install their modules, and
-   * there's no way that can conflict on a multi-site installation, since
-   * the Update manager won't let you install a new module if it's already
-   * found on your system, and if there was a copy in the top-level we'd see it.
+   * If the module is already installed, drupal_get_path() will return a valid
+   * path and we should install it there. If we're installing a new module, we
+   * always want it to go into /modules, since that's where all the
+   * documentation recommends users install their modules, and there's no way
+   * that can conflict on a multi-site installation, since the Update manager
+   * won't let you install a new module if it's already found on your system,
+   * and if there was a copy in the top-level we'd see it.
    *
    * @return string
-   *   A directory path.
+   *   The absolute path of the directory.
    */
   public function getInstallDirectory() {
-    if ($relative_path = drupal_get_path('module', $this->name)) {
-      $relative_path = dirname($relative_path);
+    if ($this->isInstalled() && ($relative_path = drupal_get_path('module', $this->name))) {
+      // The return value of drupal_get_path() is always relative to the site,
+      // so prepend DRUPAL_ROOT.
+      return DRUPAL_ROOT . '/' . dirname($relative_path);
     }
     else {
-      $relative_path = 'modules';
+      // When installing a new module, prepend the requested root directory.
+      return $this->root . '/' . $this->getRootDirectoryRelativePath();
     }
-    return DRUPAL_ROOT . '/' . $relative_path;
   }
 
   /**
-   * Implements Drupal\Core\Updater\UpdaterInterface::isInstalled().
+   * {@inheritdoc}
+   */
+  public static function getRootDirectoryRelativePath() {
+    return 'modules';
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function isInstalled() {
-    return (bool) drupal_get_path('module', $this->name);
+    // Check if the module exists in the file system, regardless of whether it
+    // is enabled or not.
+    $modules = \Drupal::state()->get('system.module.files', array());
+    return isset($modules[$this->name]);
   }
 
   /**
-   * Implements Drupal\Core\Updater\UpdaterInterface::canUpdateDirectory().
+   * {@inheritdoc}
    */
   public static function canUpdateDirectory($directory) {
-    if (file_scan_directory($directory, '/.*\.module$/')) {
-      return TRUE;
-    }
-    return FALSE;
+    $info = static::getExtensionInfo($directory);
+
+    return (isset($info['type']) && $info['type'] == 'module');
   }
 
   /**
@@ -94,18 +101,38 @@ class Module extends Updater implements UpdaterInterface {
   }
 
   /**
-   * Overrides Drupal\Core\Updater\Updater::postInstallTasks().
+   * {@inheritdoc}
    */
   public function postInstallTasks() {
-    return array(
-      l(t('Install another module'), 'admin/modules/install'),
-      l(t('Enable newly added modules'), 'admin/modules'),
-      l(t('Administration pages'), 'admin'),
-    );
+    // Since this is being called outsite of the primary front controller,
+    // the base_url needs to be set explicitly to ensure that links are
+    // relative to the site root.
+    // @todo Simplify with https://www.drupal.org/node/2548095
+    $default_options = [
+      '#type' => 'link',
+      '#options' => [
+        'absolute' => TRUE,
+        'base_url' => $GLOBALS['base_url'],
+      ],
+    ];
+    return [
+      $default_options + [
+        '#url' => Url::fromRoute('update.module_install'),
+        '#title' => t('Install another module'),
+      ],
+      $default_options + [
+        '#url' => Url::fromRoute('system.modules_list'),
+        '#title' => t('Enable newly added modules'),
+      ],
+      $default_options + [
+        '#url' => Url::fromRoute('system.admin'),
+        '#title' => t('Administration pages'),
+      ],
+    ];
   }
 
   /**
-   * Overrides Drupal\Core\Updater\Updater::postUpdateTasks().
+   * {@inheritdoc}
    */
   public function postUpdateTasks() {
     // We don't want to check for DB updates here, we do that once for all

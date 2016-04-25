@@ -1,0 +1,13 @@
+/**
+ * @file
+ * Styles for Bartik's messages.
+ */
+
+.messages__wrapper {
+  padding: 20px 0 5px 8px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 8px 0;
+}
+[dir="rtl"] .messages__wrapper {
+  padding: 20px 8px 5px 0;
+}

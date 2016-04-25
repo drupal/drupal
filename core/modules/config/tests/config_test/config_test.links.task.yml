@@ -1,0 +1,4 @@
+entity.config_test.edit_form_tab:
+  route_name: entity.config_test.edit_form
+  title: 'Edit'
+  base_route: entity.config_test.edit_form

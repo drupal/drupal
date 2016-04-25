@@ -1,0 +1,19 @@
+{
+  "name": "drupal/core-annotation",
+  "description": "Annotation discovery and implementation of plugins.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.5.9",
+    "doctrine/common": "2.5.*",
+    "doctrine/annotations": "1.2.*",
+    "drupal/core-plugin": "~8.1",
+    "drupal/core-utility": "~8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Annotation\\": ""
+    }
+  }
+}

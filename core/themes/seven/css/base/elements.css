@@ -1,0 +1,174 @@
+/**
+ * Generic elements.
+ */
+body {
+  color: #333;
+  background: #fff;
+  font: normal 81.3%/1.538em "Lucida Grande", "Lucida Sans Unicode", "DejaVu Sans", "Lucida Sans", sans-serif;
+}
+a,
+.link {
+  color: #0074bd;
+  text-decoration: none;
+}
+a:hover,
+.link:hover,
+a:focus,
+.link:focus {
+  text-decoration: underline;
+  outline: 0;
+}
+hr {
+  margin: 0;
+  padding: 0;
+  border: none;
+  height: 1px;
+  background: #cccccc;
+}
+summary,
+.fieldgroup:not(.form-composite) > legend {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.simpletest-results-form summary {
+  text-transform: none;
+}
+
+/**
+ * Reusable heading classes are included to help modules change the styling of
+ * headings on a page without affecting accessibility.
+ */
+h1,
+.heading-a {
+  font-weight: bold;
+  margin: 0;
+  font-size: 1.625em;
+  line-height: 1.875em;
+}
+h2,
+.heading-b {
+  font-weight: bold;
+  margin: 10px 0;
+  font-size: 1.385em;
+}
+h3,
+.heading-c {
+  font-weight: bold;
+  margin: 10px 0;
+  font-size: 1.231em;
+}
+h4,
+.heading-d {
+  font-weight: bold;
+  margin: 10px 0;
+  font-size: 1.154em;
+}
+h5,
+.heading-e {
+  font-weight: bold;
+  margin: 10px 0;
+  font-size: 1.077em;
+}
+h6,
+.heading-f {
+  font-weight: bold;
+  margin: 10px 0;
+  font-size: 1.077em;
+}
+p {
+  margin: 1em 0;
+}
+dl {
+  margin: 0 0 20px;
+}
+dl dd,
+dl dl {
+  margin-left: 20px; /* LTR */
+  margin-bottom: 10px;
+}
+[dir="rtl"] dl dd,
+[dir="rtl"] dl dl {
+  margin-right: 20px;
+}
+blockquote {
+  margin: 1em 40px;
+}
+address {
+  font-style: italic;
+}
+u,
+ins {
+  text-decoration: underline;
+}
+s,
+strike,
+del {
+  text-decoration: line-through;
+}
+big {
+  font-size: larger;
+}
+small {
+  font-size: smaller;
+}
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+  line-height: normal;
+}
+sup {
+  vertical-align: super;
+  font-size: smaller;
+  line-height: normal;
+}
+nobr {
+  white-space: nowrap;
+}
+abbr,
+acronym {
+  border-bottom: dotted 1px;
+}
+ul {
+  list-style-type: disc;
+  list-style-image: none;
+  margin: 0.25em 0 0.25em 1.5em; /* LTR */
+}
+[dir="rtl"] ul {
+  margin-left: 0;
+  margin-right: 1.5em;
+}
+/* This is required to win over specificity of [dir="rtl"] ul */
+[dir="rtl"] .messages__list {
+  margin-right: 0;
+}
+ol {
+  list-style-type: decimal;
+  margin: 0.25em 0 0.25em 2em; /* LTR */
+  padding: 0;
+}
+[dir="rtl"] ol {
+  margin-left: 0;
+  margin-right: 2em;
+}
+quote,
+code {
+  margin: .5em 0;
+}
+pre {
+  margin: 0.5em 0;
+  white-space: pre-wrap;
+}
+details {
+  line-height: 1.295em;
+}
+details summary {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+details summary:focus {
+  outline: none;
+}
+details summary:focus,
+details summary:hover {
+  text-decoration: underline;
+}

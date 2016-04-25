@@ -1,0 +1,6 @@
+name: 'Page Cache Form Test'
+type: module
+description: 'Support module for the Page Cache module tests.'
+core: 8.x
+package: Testing
+version: VERSION

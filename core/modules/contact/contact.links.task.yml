@@ -1,0 +1,10 @@
+entity.contact_form.edit_form:
+  title: 'Edit'
+  route_name: entity.contact_form.edit_form
+  base_route: entity.contact_form.edit_form
+
+entity.user.contact_form:
+  title: 'Contact'
+  route_name: entity.user.contact_form
+  weight: 2
+  base_route: entity.user.canonical

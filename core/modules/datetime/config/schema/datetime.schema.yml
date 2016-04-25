@@ -1,0 +1,85 @@
+# Schema for the configuration files of the Datetime module.
+
+field.storage_settings.datetime:
+  type: mapping
+  label: 'Datetime settings'
+  mapping:
+    datetime_type:
+      type: string
+      label: 'Date type'
+
+field.field_settings.datetime:
+  type: mapping
+  label: 'Datetime settings'
+
+field.value.datetime:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    default_date_type:
+      type: string
+      label: 'Default date type'
+    default_date:
+      type: string
+      label: 'Default date value'
+
+field.formatter.settings.datetime_base:
+  type: mapping
+  mapping:
+    timezone_override:
+      type: string
+      label: 'Time zone override'
+
+field.formatter.settings.datetime_default:
+  type: field.formatter.settings.datetime_base
+  label: 'Datetime default display format settings'
+  mapping:
+    format_type:
+      type: string
+      label: 'Date format'
+
+field.formatter.settings.datetime_plain:
+  type: field.formatter.settings.datetime_base
+  label: 'Datetime plain display format settings'
+
+field.formatter.settings.datetime_custom:
+  type: field.formatter.settings.datetime_base
+  label: 'Datetime custom display format settings'
+  mapping:
+    date_format:
+      type: string
+      label: 'Date/time format'
+      translatable: true
+      translation context: 'PHP date format'
+
+field.formatter.settings.datetime_time_ago:
+  type: mapping
+  label: 'Datetime time ago display format settings'
+  mapping:
+    future_format:
+      type: string
+      label: 'Future format'
+    past_format:
+      type: string
+      label: 'Past format'
+    granularity:
+      type: integer
+      label: 'Granularity'
+
+field.widget.settings.datetime_datelist:
+  type: mapping
+  label: 'Datetime select list display format settings'
+  mapping:
+    increment:
+      type: integer
+      label: 'Time increments'
+    date_order:
+      type: string
+      label: 'Date part order'
+    time_type:
+      type: string
+      label: 'Time type'
+
+field.widget.settings.datetime_default:
+  type: mapping
+  label: 'Datetime default display format settings'

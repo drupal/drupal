@@ -5,256 +5,434 @@
  * Describes hooks and plugins provided by the Views module.
  */
 
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
+use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\ViewExecutable;
+
+/**
+ * @defgroup views_overview Views overview
+ * @{
+ * Overview of the Views module API
+ *
+ * The Views module is a generalized query and display engine, which can be used
+ * to make views (formatted lists, grids, feeds, and other output) of items
+ * (often entities, but can be other types of data). Developers can interact
+ * with Views in several ways:
+ * - Provide plugins: Views plugins govern nearly every aspect of views,
+ *   including querying (sorting, filtering, etc.) and display (at several
+ *   levels of granularity, ranging from the entire view to the details of a
+ *   field). See the @link views_plugins Views plugins topic @endlink for
+ *   more information.
+ * - Provide data: Data types can be provided to Views by implementing
+ *   hook_views_data(), and data types provided by other modules can be altered
+ *   by implementing hook_views_data_alter(). To provide views data for an
+ *   entity, create a class implementing
+ *   \Drupal\views\EntityViewsDataInterface and reference this in the
+ *   "views_data" annotation in the entity class. You can autogenerate big parts
+ *   of the integration if you extend the \Drupal\views\EntityViewsData base
+ *   class. See the @link entity_api Entity API topic @endlink for more
+ *   information about entities.
+ * - Implement hooks: A few operations in Views can be influenced by hooks.
+ *   See the @link views_hooks Views hooks topic @endlink for a list.
+ * - Theming: See the @link views_templates Views templates topic @endlink
+ *   for more information.
+ *
+ * @see \Drupal\views\ViewExecutable
+ * @see \Drupal\views\Views
+ * @}
+ */
+
 /**
  * @defgroup views_plugins Views plugins
+ * @{
+ * Overview of views plugins
  *
  * Views plugins are objects that are used to build and render the view.
- * Plugins are registered by extending one of the Views base plugin classes
- * and defining settings in the plugin annotation.
+ * See individual views plugin topics for more information about the
+ * specifics of each plugin type, and the
+ * @link plugin_api Plugin API topic @endlink for more information about
+ * plugins in general.
  *
- * Views has the following types of plugins:
- * - Access: Access plugins are responsible for controlling access to the
- *   view. Views includes plugins for checking user roles and individual
- *   permissions. Access plugins extend
- *   \Drupal\views\Plugin\views\access\AccessPluginBase.
- * - Argument default: Argument default plugins allow pluggable ways of
- *   providing default values for contextual filters. This is useful for
- *   blocks and other display types lacking a natural argument input.
- *   Examples are plugins to extract node and user IDs from the URL. Argument
- *   default plugins extend
- *   \Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase.
- * - Argument validator: Validator plugins can ensure arguments are valid,
- *   and even do transformations on the arguments. They can also provide
- *   replacement patterns for the view title. For example, the 'content'
- *   validator verifies verifies that the argument value corresponds to a
- *   node, loads that node and provides the node title as a replacement
- *   pattern. Argument validator plugins extend
- *   \Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase.
- * - Cache: Cache plugins control the storage and loading of caches.
- *   Currently they can do both result and render caching. It might also be
- *   possible to cache the generated query. Cache plugins extend
- *   \Drupal\views\Plugin\views\cache\CachePluginBase.
- * - Display: Display plugins are responsible for controlling where a View is
- *   rendered; that is, how it is exposed to other parts of Drupal. 'Page'
- *   and 'block' are the most commonly used display plugins. Each View also
- *   has a 'master' (or 'default') display that includes information shared
- *   between all its displays. (See
- *   \Drupal\views\Plugin\views\display\DefaultDisplay.) Display plugins extend
- *   \Drupal\views\Plugin\views\display\DisplayPluginBase.
- * - Display extender: Display extender plugins allow additional options or
- *   configurations to added to views across all display types. For example,
- *   if you wanted to allow site users to add certain metadata to the rendered
- *   output of every view display regardless of display type, you could provide
- *   this option as a display extender. Display extender plugins extend
- *   \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase.
- * - Exposed form: Exposed form plugins are responsible for building,
- *   rendering, and controlling exposed forms. Exposed form plugins extend
- *   \Drupal\views\Plugin\views\display\DisplayPluginBase.
- * - Handlers: Handler plugins help build the view query object that the query
- *   plugin then executes to retrieve the data from the storage backend (see
- *   below). There are several types of handlers:
- *   - Area handlers: Extend \Drupal\views\Plugin\views\area\AreaHandlerBase
- *   - Argument handlers: Extend
- *     \Drupal\views\Plugin\views\argument\ArgumentHandlerBase
- *   - Field handlers: Extend \Drupal\views\Plugin\views\field\FieldHandlerBase
- *   - Filter handlers: Extend
- *     \Drupal\views\Plugin\views\filter\FilterHandlerBase
- *   - Relationship handlers:
- *     Extend \Drupal\views\Plugin\views\relationship\RelationshipHandlerBase
- *   - Sort handlers: Extend \Drupal\views\Plugin\views\sort:SortHandlerBase
- * - Pager: Pager plugins take care of everything regarding pagers, including
- *   getting setting the total number of items to render the pager and
- *   setting the global pager arrays. Pager plugins extend
- *   \Drupal\views\Plugin\views\pager\PagerPluginBase.
- * - Query: Query plugins generate and execute a built query object against a
- *   particular storage backend, converting the Views query object into an
- *   actual query. The only default implementation is SQL. (Note that most
- *   handler plugins currently rely on the SQL query plugin.) Query plugins
- *   extend \Drupal\views\Plugin\views\query\QueryPluginBase.
- * - Row style: Row styles handle rendering each individual record from the
- *   main view table. The two default implementations render the entire entity
- *   (nodes only), or selected fields. Row style plugins extend
- *   \Drupal\views\Plugin\views\row\RowPluginBase).
- * - Style: Style plugins control how a view is displayed. For the most part
- *   they are object wrappers around theme templates. Examples of styles
- *   include HTML lists, tables, etc. Style plugins extend
- *   \Drupal\views\Plugin\views\style\StylePluginBase.
+ * Some Views plugins are known as handlers. Handler plugins help build the
+ * view query object: filtering, contextual filtering, sorting, relationships,
+ * etc.
  *
- * @todo Add an explanation for each type of handler.
- * @todo Document how to use annotations and what goes in them.
- * @todo Add @ingroup to all the base plugins for this group.
- * @todo Add a separate @ingroup for all plugins?
  * @todo Document specific options on the appropriate plugin base classes.
  * @todo Add examples.
  *
+ * @ingroup views_overview
  * @see \Drupal\views\Plugin\views\PluginBase
  * @see \Drupal\views\Plugin\views\HandlerBase
+ * @see plugin_api
+ * @see annotation
+ * @}
  */
 
 /**
  * @defgroup views_hooks Views hooks
  * @{
  * Hooks that allow other modules to implement the Views API.
+ * @ingroup views_overview
+ * @}
  */
 
 /**
- * Describe data tables (or the equivalent) to Views.
+ * @addtogroup hooks
+ * @{
+ */
+
+/**
+ * Analyze a view to provide warnings about its configuration.
  *
- * The data described with this hook is fetched and retrieved by
- * views_fetch_data().
+ * @param \Drupal\views\ViewExecutable $view
+ *   The view being executed.
  *
  * @return array
- *   An associative array describing the data structure. Primary key is the
- *   name used internally by Views for the table(s) – usually the actual table
- *   name. The values for the key entries are described in detail below.
+ *   Array of warning messages built by Analyzer::formatMessage to be displayed
+ *   to the user following analysis of the view.
+ */
+function hook_views_analyze(Drupal\views\ViewExecutable $view) {
+  $messages = array();
+
+  if ($view->display_handler->options['pager']['type'] == 'none') {
+    $messages[] = Drupal\views\Analyzer::formatMessage(t('This view has no pager. This could cause performance issues when the view contains many items.'), 'warning');
+  }
+
+  return $messages;
+}
+
+/**
+ * Describe data tables and fields (or the equivalent) to Views.
+ *
+ * The table and fields are processed in Views using various plugins. See
+ * the @link views_plugins Views plugins topic @endlink for more information.
+ *
+ * To provide views data for an entity, instead of implementing this hook,
+ * create a class implementing \Drupal\views\EntityViewsDataInterface and
+ * reference this in the "views" annotation in the entity class. The return
+ * value of the getViewsData() method on the interface is the same as this hook,
+ * and base class in \Drupal\views\EntityViewsData will take care of adding the
+ * basic Views tables and fields for your entity. See the
+ * @link entity_api Entity API topic @endlink for more information about
+ * entities.
+ *
+ * The data described with this hook is fetched and retrieved by
+ * \Drupal\views\Views::viewsData()->get().
+ *
+ * @return array
+ *   An associative array describing the structure of database tables and fields
+ *   (and their equivalents) provided for use in Views. At the outermost level,
+ *   the keys are the names used internally by Views for the tables (usually the
+ *   actual table name). Each table's array describes the table itself, how to
+ *   join to other tables, and the fields that are part of the table. The sample
+ *   function body provides documentation of the details.
+ *
+ * @see hook_views_data_alter()
  */
 function hook_views_data() {
-  // This example describes how to write hook_views_data() for the following
-  // table:
-  //
+  // This example describes how to write hook_views_data() for a table defined
+  // like this:
   // CREATE TABLE example_table (
-  //   nid INT(11) NOT NULL         COMMENT 'Primary key; refers to {node}.nid.',
+  //   nid INT(11) NOT NULL         COMMENT 'Primary key: {node}.nid.',
   //   plain_text_field VARCHAR(32) COMMENT 'Just a plain text field.',
   //   numeric_field INT(11)        COMMENT 'Just a numeric field.',
   //   boolean_field INT(1)         COMMENT 'Just an on/off field.',
   //   timestamp_field INT(8)       COMMENT 'Just a timestamp field.',
+  //   langcode VARCHAR(12)         COMMENT 'Language code field.',
   //   PRIMARY KEY(nid)
   // );
 
-  // First, the entry $data['example_table']['table'] describes properties of
-  // the actual table – not its content.
+  // Define the return array.
+  $data = array();
 
-  // The 'group' index will be used as a prefix in the UI for any of this
-  // table's fields, sort criteria, etc. so it's easy to tell where they came
-  // from.
+  // The outermost keys of $data are Views table names, which should usually
+  // be the same as the hook_schema() table names.
+  $data['example_table'] = array();
+
+  // The value corresponding to key 'table' gives properties of the table
+  // itself.
+  $data['example_table']['table'] = array();
+
+  // Within 'table', the value of 'group' (translated string) is used as a
+  // prefix in Views UI for this table's fields, filters, etc. When adding
+  // a field, filter, etc. you can also filter by the group.
   $data['example_table']['table']['group'] = t('Example table');
 
-  // Define this as a base table – a table that can be described in itself by
-  // views (and not just being brought in as a relationship). In reality this
-  // is not very useful for this table, as it isn't really a distinct object of
-  // its own, but it makes a good example.
+  // Within 'table', the value of 'provider' is the module that provides schema
+  // or the entity type that causes the table to exist. Setting this ensures
+  // that views have the correct dependencies. This is automatically set to the
+  // module that implements hook_views_data().
+  $data['example_table']['table']['provider'] = 'example_module';
+
+  // Some tables are "base" tables, meaning that they can be the base tables
+  // for views. Non-base tables can only be brought in via relationships in
+  // views based on other tables. To define a table to be a base table, add
+  // key 'base' to the 'table' array:
   $data['example_table']['table']['base'] = array(
-    'field' => 'nid', // This is the identifier field for the view.
+    // Identifier (primary) field in this table for Views.
+    'field' => 'nid',
+    // Label in the UI.
     'title' => t('Example table'),
+    // Longer description in the UI. Required.
     'help' => t('Example table contains example content and can be related to nodes.'),
     'weight' => -10,
   );
 
-  // This table references the {node} table. The declaration below creates an
-  // 'implicit' relationship to the node table, so that when 'node' is the base
-  // table, the fields are automatically available.
+  // Some tables have an implicit, automatic relationship to other tables,
+  // meaning that when the other table is available in a view (either as the
+  // base table or through a relationship), this table's fields, filters, etc.
+  // are automatically made available without having to add an additional
+  // relationship. To define an implicit relationship that will make your
+  // table automatically available when another table is present, add a 'join'
+  // section to your 'table' section. Note that it is usually only a good idea
+  // to do this for one-to-one joins, because otherwise your automatic join
+  // will add more rows to the view. It is also not a good idea to do this if
+  // most views won't need your table -- if that is the case, define a
+  // relationship instead (see below).
+  //
+  // If you've decided an automatic join is a good idea, here's how to do it;
+  // the resulting SQL query will look something like this:
+  //   ... FROM example_table et ... JOIN node_field_data nfd
+  //   ON et.nid = nfd.nid AND ('extra' clauses will be here) ...
+  // although the table aliases will be different.
   $data['example_table']['table']['join'] = array(
-    // Index this array by the table name to which this table refers.
-    // 'left_field' is the primary key in the referenced table.
-    // 'field' is the foreign key in this table.
-    'node' => array(
+    // Within the 'join' section, list one or more tables to automatically
+    // join to. In this example, every time 'node_field_data' is available in
+    // a view, 'example_table' will be too. The array keys here are the array
+    // keys for the other tables, given in their hook_views_data()
+    // implementations. If the table listed here is from another module's
+    // hook_views_data() implementation, make sure your module depends on that
+    // other module.
+    'node_field_data' => array(
+      // Primary key field in node_field_data to use in the join.
       'left_field' => 'nid',
+      // Foreign key field in example_table to use in the join.
       'field' => 'nid',
+      // 'extra' is an array of additional conditions on the join.
+      'extra' => array(
+        0 => array(
+          // Adds AND node_field_data.published = TRUE to the join.
+          'field' => 'published',
+          'value' => TRUE,
+        ),
+        1 => array(
+          // Adds AND example_table.numeric_field = 1 to the join.
+          'left_field' => 'numeric_field',
+          'value' => 1,
+          // If true, the value will not be surrounded in quotes.
+          'numeric' => TRUE,
+        ),
+        2 => array(
+          // Adds AND example_table.boolean_field <>
+          // node_field_data.published to the join.
+          'field' => 'published',
+          'left_field' => 'boolean_field',
+          // The operator used, Defaults to "=".
+          'operator' => '!=',
+        ),
+      ),
     ),
   );
 
-  // Next, describe each of the individual fields in this table to Views. This
-  // is done by describing $data['example_table']['FIELD_NAME']. This part of
-  // the array may then have further entries:
-  //   - title: The label for the table field, as presented in Views.
-  //   - help: The description text for the table field.
-  //   - relationship: A description of any relationship handler for the table
-  //     field.
-  //   - field: A description of any field handler for the table field.
-  //   - sort: A description of any sort handler for the table field.
-  //   - filter: A description of any filter handler for the table field.
-  //   - argument: A description of any argument handler for the table field.
-  //   - area: A description of any handler for adding content to header,
-  //     footer or as no result behaviour.
-  //
-  // The handler descriptions are described with examples below.
+  // You can also do a more complex join, where in order to get to a certain
+  // base table defined in a hook_views_data() implementation, you will join
+  // to a different table that Views knows how to auto-join to the base table.
+  // For instance, if another module that your module depends on had
+  // defined a table 'foo' with an automatic join to 'node_field_table' (as
+  // shown above), you could join to 'node_field_table' via the 'foo' table.
+  // Here's how to do this, and the resulting SQL query would look something
+  // like this:
+  //   ... FROM example_table et ... JOIN foo foo
+  //   ON et.nid = foo.nid AND ('extra' clauses will be here) ...
+  //   JOIN node_field_data nfd ON (definition of the join from the foo
+  //   module goes here) ...
+  // although the table aliases will be different.
+  $data['example_table']['table']['join']['node_field_data'] = array(
+    // 'node_field_data' above is the base we're joining to in Views.
+    // 'left_table' is the table we're actually joining to, in order to get to
+    // 'node_field_data'. It has to be something that Views knows how to join
+    // to 'node_field_data'.
+    'left_table' => 'foo',
+    'left_field' => 'nid',
+    'field' => 'nid',
+    // 'extra' is an array of additional conditions on the join.
+    'extra' => array(
+      // This syntax matches additional fields in the two tables:
+      // ... AND foo.langcode = example_table.langcode ...
+      array('left_field' => 'langcode', 'field' => 'langcode'),
+      // This syntax adds a condition on our table. 'operator' defaults to
+      // '=' for non-array values, or 'IN' for array values.
+      // ... AND example_table.numeric_field > 0 ...
+      array('field' => 'numeric_field', 'value' => 0, 'numeric' => TRUE, 'operator' => '>'),
+    ),
+  );
 
-  // Node ID table field.
+  // Other array elements at the top level of your table's array describe
+  // individual database table fields made available to Views. The array keys
+  // are the names (unique within the table) used by Views for the fields,
+  // usually equal to the database field names.
+  //
+  // Each field entry must have the following elements:
+  // - title: Translated label for the field in the UI.
+  // - help: Description of the field in the UI.
+  //
+  // Each field entry may also have one or more of the following elements,
+  // describing "handlers" (plugins) for the field:
+  // - relationship: Specifies a handler that allows this field to be used
+  //   to define a relationship to another table in Views.
+  // - field: Specifies a handler to make it available to Views as a field.
+  // - filter: Specifies a handler to make it available to Views as a filter.
+  // - sort: Specifies a handler to make it available to Views as a sort.
+  // - argument: Specifies a handler to make it available to Views as an
+  //   argument, or contextual filter as it is known in the UI.
+  // - area: Specifies a handler to make it available to Views to add content
+  //   to the header, footer, or as no result behavior.
+  //
+  // Note that when specifying handlers, you must give the handler plugin ID
+  // and you may also specify overrides for various settings that make up the
+  // plugin definition. See examples below; the Boolean example demonstrates
+  // setting overrides.
+
+  // Node ID field, exposed as relationship only, since it is a foreign key
+  // in this table.
   $data['example_table']['nid'] = array(
     'title' => t('Example content'),
-    'help' => t('Some example content that references a node.'),
-    // Define a relationship to the {node} table, so example_table views can
-    // add a relationship to nodes. If you want to define a relationship the
-    // other direction, use hook_views_data_alter(), or use the 'implicit' join
-    // method described above.
+    'help' => t('Relate example content to the node content'),
+
+    // Define a relationship to the node_field_data table, so views whose
+    // base table is example_table can add a relationship to nodes. To make a
+    // relationship in the other direction, you can:
+    // - Use hook_views_data_alter() -- see the function body example on that
+    //   hook for details.
+    // - Use the implicit join method described above.
     'relationship' => array(
-      'base' => 'node', // The name of the table to join with
-      'field' => 'nid', // The name of the field to join with
+      // Views name of the table to join to for the relationship.
+      'base' => 'node_field_data',
+      // Database field name in the other table to join on.
+      'base field' => 'nid',
+      // ID of relationship handler plugin to use.
       'id' => 'standard',
+      // Default label for relationship in the UI.
       'label' => t('Example node'),
     ),
   );
 
-  // Example plain text field.
+  // Plain text field, exposed as a field, sort, filter, and argument.
   $data['example_table']['plain_text_field'] = array(
     'title' => t('Plain text field'),
     'help' => t('Just a plain text field.'),
+
     'field' => array(
+      // ID of field handler plugin to use.
       'id' => 'standard',
-      'click sortable' => TRUE, // This is use by the table display plugin.
     ),
+
     'sort' => array(
+      // ID of sort handler plugin to use.
       'id' => 'standard',
     ),
+
     'filter' => array(
+      // ID of filter handler plugin to use.
       'id' => 'string',
     ),
+
     'argument' => array(
+      // ID of argument handler plugin to use.
       'id' => 'string',
     ),
   );
 
-  // Example numeric text field.
+  // Numeric field, exposed as a field, sort, filter, and argument.
   $data['example_table']['numeric_field'] = array(
     'title' => t('Numeric field'),
     'help' => t('Just a numeric field.'),
+
     'field' => array(
-      'id' => 'numeric',
-      'click sortable' => TRUE,
-     ),
-    'filter' => array(
+      // ID of field handler plugin to use.
       'id' => 'numeric',
     ),
+
     'sort' => array(
+      // ID of sort handler plugin to use.
       'id' => 'standard',
+    ),
+
+    'filter' => array(
+      // ID of filter handler plugin to use.
+      'id' => 'numeric',
+    ),
+
+    'argument' => array(
+      // ID of argument handler plugin to use.
+      'id' => 'numeric',
     ),
   );
 
-  // Example boolean field.
+  // Boolean field, exposed as a field, sort, and filter. The filter section
+  // illustrates overriding various settings.
   $data['example_table']['boolean_field'] = array(
     'title' => t('Boolean field'),
     'help' => t('Just an on/off field.'),
+
     'field' => array(
+      // ID of field handler plugin to use.
       'id' => 'boolean',
-      'click sortable' => TRUE,
     ),
-    'filter' => array(
-      'id' => 'boolean',
-      // Note that you can override the field-wide label:
-      'label' => t('Published'),
-      // This setting is used by the boolean filter handler, as possible option.
-      'type' => 'yes-no',
-      // use boolean_field = 1 instead of boolean_field <> 0 in WHERE statment.
-      'use_equal' => TRUE,
-    ),
+
     'sort' => array(
+      // ID of sort handler plugin to use.
       'id' => 'standard',
+    ),
+
+    'filter' => array(
+      // ID of filter handler plugin to use.
+      'id' => 'boolean',
+      // Override the generic field title, so that the filter uses a different
+      // label in the UI.
+      'label' => t('Published'),
+      // Override the default BooleanOperator filter handler's 'type' setting,
+      // to display this as a "Yes/No" filter instead of a "True/False" filter.
+      'type' => 'yes-no',
+      // Override the default Boolean filter handler's 'use_equal' setting, to
+      // make the query use 'boolean_field = 1' instead of 'boolean_field <> 0'.
+      'use_equal' => TRUE,
     ),
   );
 
-  // Example timestamp field.
+  // Integer timestamp field, exposed as a field, sort, and filter.
   $data['example_table']['timestamp_field'] = array(
     'title' => t('Timestamp field'),
     'help' => t('Just a timestamp field.'),
+
     'field' => array(
+      // ID of field handler plugin to use.
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
+
     'sort' => array(
+      // ID of sort handler plugin to use.
       'id' => 'date',
     ),
+
     'filter' => array(
+      // ID of filter handler plugin to use.
       'id' => 'date',
+    ),
+  );
+
+  // Area example. Areas are not generally associated with actual data
+  // tables and fields. This example is from views_views_data(), which defines
+  // the "Global" table (not really a table, but a group of Fields, Filters,
+  // etc. that are grouped into section "Global" in the UI). Here's the
+  // definition of the generic "Text area":
+  $data['views']['area'] = array(
+    'title' => t('Text area'),
+    'help' => t('Provide markup text for the area.'),
+    'area' => array(
+      // ID of the area handler plugin to use.
+      'id' => 'text',
     ),
   );
 
@@ -262,45 +440,60 @@ function hook_views_data() {
 }
 
 /**
- * Alter the table structure defined by hook_views_data().
+ * Alter the table and field information from hook_views_data().
  *
  * @param array $data
- *   An array of all Views data, passed by reference. See hook_views_data() for
- *   structure.
+ *   An array of all information about Views tables and fields, collected from
+ *   hook_views_data(), passed by reference.
  *
  * @see hook_views_data()
  */
 function hook_views_data_alter(array &$data) {
-  // This example alters the title of the node:nid field in the Views UI.
-  $data['node']['nid']['title'] = t('Node-Nid');
+  // Alter the title of the node_field_data:nid field in the Views UI.
+  $data['node_field_data']['nid']['title'] = t('Node-Nid');
 
-  // This example adds an example field to the users table.
-  $data['users']['example_field'] = array(
+  // Add an additional field to the users_field_data table.
+  $data['users_field_data']['example_field'] = array(
     'title' => t('Example field'),
     'help' => t('Some example content that references a user'),
-    'handler' => 'hook_handlers_field_example_field',
+
+    'field' => array(
+      // ID of the field handler to use.
+      'id' => 'example_field',
+    ),
   );
 
-  // This example changes the handler of the node title field.
-  // In this handler you could do stuff, like preview of the node when clicking
-  // the node title.
-  $data['node']['title']['handler'] = 'modulename_handlers_field_node_title';
+  // Change the handler of the node title field, presumably to a handler plugin
+  // you define in your module. Give the ID of this plugin.
+  $data['node_field_data']['title']['field']['id'] = 'node_title';
 
-  // This example adds a relationship to table {foo}, so that 'foo' views can
-  // add this table using a relationship. Because we don't want to write over
-  // the primary key field definition for the {foo}.fid field, we use a dummy
-  // field name as the key.
-  $data['foo']['dummy_name'] = array(
-    'title' => t('Example relationship'),
-    'help' => t('Example help'),
+  // Add a relationship that will allow a view whose base table is 'foo' (from
+  // another module) to have a relationship to 'example_table' (from my module),
+  // via joining foo.fid to example_table.eid.
+  //
+  // This relationship has to be added to the 'foo' Views data, which my module
+  // does not control, so it must be done in hook_views_data_alter(), not
+  // hook_views_data().
+  //
+  // In Views data definitions, each field can have only one relationship. So
+  // rather than adding this relationship directly to the $data['foo']['fid']
+  // field entry, which could overwrite an existing relationship, we define
+  // a dummy field key to handle the relationship.
+  $data['foo']['unique_dummy_name'] = array(
+    'title' => t('Title seen while adding relationship'),
+    'help' => t('More information about the relationship'),
+
     'relationship' => array(
-      'base' => 'example_table', // Table we're joining to.
-      'base field' => 'eid', // Field on the joined table.
-      'field' => 'fid', // Real field name on the 'foo' table.
+      // Views name of the table being joined to from foo.
+      'base' => 'example_table',
+      // Database field name in example_table for the join.
+      'base field' => 'eid',
+      // Real database field name in foo for the join, to override
+      // 'unique_dummy_name'.
+      'field' => 'fid',
+      // ID of relationship handler plugin to use.
       'id' => 'standard',
       'label' => t('Default label for relationship'),
-      'title' => t('Title seen when adding relationship'),
-      'help' => t('More information about relationship.'),
     ),
   );
 
@@ -308,22 +501,169 @@ function hook_views_data_alter(array &$data) {
 }
 
 /**
+ * Override the default Views data for a Field API field.
+ *
+ * The field module's implementation of hook_views_data() invokes this for each
+ * field storage, in the module that defines the field type. It is not invoked
+ * in other modules.
+ *
+ * If no hook implementation exists, hook_views_data() falls back to
+ * views_field_default_views_data().
+ *
+ * @param \Drupal\field\FieldStorageConfigInterface $field_storage
+ *   The field storage config entity.
+ *
+ * @return array
+ *   An array of views data, in the same format as the return value of
+ *   hook_views_data().
+ *
+ * @see views_views_data()
+ * @see hook_field_views_data_alter()
+ * @see hook_field_views_data_views_data_alter()
+ */
+function hook_field_views_data(\Drupal\field\FieldStorageConfigInterface $field_storage) {
+  $data = views_field_default_views_data($field_storage);
+  foreach ($data as $table_name => $table_data) {
+    // Add the relationship only on the target_id field.
+    $data[$table_name][$field_storage->getName() . '_target_id']['relationship'] = array(
+      'id' => 'standard',
+      'base' => 'file_managed',
+      'base field' => 'target_id',
+      'label' => t('image from @field_name', array('@field_name' => $field_storage->getName())),
+    );
+  }
+
+  return $data;
+}
+
+/**
+ * Alter the Views data for a single Field API field.
+ *
+ * This is called on all modules even if there is no hook_field_views_data()
+ * implementation for the field, and therefore may be used to alter the
+ * default data that views_field_default_views_data() supplies for the
+ * field storage.
+ *
+ *  @param array $data
+ *    The views data for the field storage. This has the same format as the
+ *    return value of hook_views_data().
+ *  @param \Drupal\field\FieldStorageConfigInterface $field_storage
+ *    The field storage config entity.
+ *
+ * @see views_views_data()
+ * @see hook_field_views_data()
+ * @see hook_field_views_data_views_data_alter()
+ */
+function hook_field_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field_storage) {
+  $entity_type_id = $field_storage->getTargetEntityTypeId();
+  $field_name = $field_storage->getName();
+  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+  $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
+  $table_mapping = \Drupal::entityManager()->getStorage($entity_type_id)->getTableMapping();
+
+  list($label) = views_entity_field_label($entity_type_id, $field_name);
+
+  $data['file_managed'][$pseudo_field_name]['relationship'] = array(
+    'title' => t('@entity using @field', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'help' => t('Relate each @entity with a @field set to the image.', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'id' => 'entity_reverse',
+    'field_name' => $field_name,
+    'entity_type' => $entity_type_id,
+    'field table' => $table_mapping->getDedicatedDataTableName($field_storage),
+    'field field' => $field_name . '_target_id',
+    'base' => $entity_type->getBaseTable(),
+    'base field' => $entity_type->getKey('id'),
+    'label' => $field_name,
+    'join_extra' => array(
+      0 => array(
+        'field' => 'deleted',
+        'value' => 0,
+        'numeric' => TRUE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Alter the Views data on a per field basis.
+ *
+ * The field module's implementation of hook_views_data_alter() invokes this for
+ * each field storage, in the module that defines the field type. It is not
+ * invoked in other modules.
+ *
+ * Unlike hook_field_views_data_alter(), this operates on the whole of the views
+ * data. This allows a field type to add data that concerns its fields in
+ * other tables, which would not yet be defined at the point when
+ * hook_field_views_data() and hook_field_views_data_alter() are invoked. For
+ * example, entityreference adds reverse relationships on the tables for the
+ * entities which are referenced by entityreference fields.
+ *
+ * (Note: this is weirdly named so as not to conflict with
+ * hook_field_views_data_alter().)
+ *
+ * @param array $data
+ *   The views data.
+ * @param \Drupal\field\FieldStorageConfigInterface $field
+ *   The field storage config entity.
+ *
+ * @see hook_field_views_data()
+ * @see hook_field_views_data_alter()
+ * @see views_views_data_alter()
+ */
+function hook_field_views_data_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field) {
+  $field_name = $field->getName();
+  $data_key = 'field_data_' . $field_name;
+  $entity_type_id = $field->entity_type;
+  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+  $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
+  list($label) = views_entity_field_label($entity_type_id, $field_name);
+  $table_mapping = \Drupal::entityManager()->getStorage($entity_type_id)->getTableMapping();
+
+  // Views data for this field is in $data[$data_key].
+  $data[$data_key][$pseudo_field_name]['relationship'] = array(
+    'title' => t('@entity using @field', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'help' => t('Relate each @entity with a @field set to the term.', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'id' => 'entity_reverse',
+    'field_name' => $field_name,
+    'entity_type' => $entity_type_id,
+    'field table' => $table_mapping->getDedicatedDataTableName($field),
+    'field field' => $field_name . '_target_id',
+    'base' => $entity_type->getBaseTable(),
+    'base field' => $entity_type->getKey('id'),
+    'label' => $field_name,
+    'join_extra' => array(
+      0 => array(
+        'field' => 'deleted',
+        'value' => 0,
+        'numeric' => TRUE,
+      ),
+    ),
+  );
+}
+
+/**
  * Replace special strings in the query before it is executed.
+ *
+ * The idea is that certain dynamic values can be placed in a query when it is
+ * built, and substituted at run-time, allowing the query to be cached and
+ * still work correctly when executed.
  *
  * @param \Drupal\views\ViewExecutable $view
  *   The View being executed.
+ *
  * @return array
  *   An associative array where each key is a string to be replaced, and the
  *   corresponding value is its replacement. The strings to replace are often
- *   surrounded with '***', as illustrated in the example implementation.
+ *   surrounded with '***', as illustrated in the example implementation, to
+ *   avoid collisions with other values in the query.
  */
 function hook_views_query_substitutions(ViewExecutable $view) {
   // Example from views_views_query_substitutions().
   return array(
-    '***CURRENT_VERSION***' => VERSION,
+    '***CURRENT_VERSION***' => \Drupal::VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
-    '***CURRENT_LANGUAGE***' => language(LANGUAGE_TYPE_CONTENT)->langcode,
-    '***DEFAULT_LANGUAGE***' => language_default()->langcode,
+    '***LANGUAGE_language_content***' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId(),
+    PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT => \Drupal::languageManager()->getDefaultLanguage()->getId(),
   );
 }
 
@@ -332,7 +672,8 @@ function hook_views_query_substitutions(ViewExecutable $view) {
  *
  * @return array
  *   An associative array where each key is a string to be replaced, and the
- *   corresponding value is its replacement.
+ *   corresponding value is its replacement. The value will be escaped unless it
+ *   is already marked safe.
  */
 function hook_views_form_substitutions() {
   return array(
@@ -355,13 +696,13 @@ function hook_views_form_substitutions() {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_pre_view(ViewExecutable &$view, &$display_id, array &$args) {
-  // Change the display if the acting user has 'administer site configuration'
-  // permission, to display something radically different.
-  // @todo Note that this is not necessarily the best way to solve that task.
-  //   Add a better example.
-  if ($view->name == 'my_special_view' && user_access('administer site configuration') && $display_id == 'public_display') {
-    $display_id = 'private_display';
+function hook_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
+
+  // Modify contextual filters for my_special_view if user has 'my special permission'.
+  $account = \Drupal::currentUser();
+
+  if ($view->name == 'my_special_view' && $account->hasPermission('my special permission') && $display_id == 'public_display') {
+    $args[0] = 'custom value';
   }
 }
 
@@ -376,8 +717,8 @@ function hook_views_pre_view(ViewExecutable &$view, &$display_id, array &$args) 
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_pre_build(ViewExecutable &$view) {
-  // Because of some unexplicable business logic, we should remove all
+function hook_views_pre_build(ViewExecutable $view) {
+  // Because of some inexplicable business logic, we should remove all
   // attachments from all views on Mondays.
   // (This alter could be done later in the execution process as well.)
   if (date('D') == 'Mon') {
@@ -397,7 +738,7 @@ function hook_views_pre_build(ViewExecutable &$view) {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_post_build(ViewExecutable &$view) {
+function hook_views_post_build(ViewExecutable $view) {
   // If the exposed field 'type' is set, hide the column containing the content
   // type. (Note that this is a solution for a particular view, and makes
   // assumptions about both exposed filter settings and the fields in the view.
@@ -422,12 +763,14 @@ function hook_views_post_build(ViewExecutable &$view) {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_pre_execute(ViewExecutable &$view) {
+function hook_views_pre_execute(ViewExecutable $view) {
   // Whenever a view queries more than two tables, show a message that notifies
   // view administrators that the query might be heavy.
   // (This action could be performed later in the execution process, but not
   // earlier.)
-  if (count($view->query->tables) > 2 && user_access('administer views')) {
+  $account = \Drupal::currentUser();
+
+  if (count($view->query->tables) > 2 && $account->hasPermission('administer views')) {
     drupal_set_message(t('The view %view may be heavy to execute.', array('%view' => $view->name)), 'warning');
   }
 }
@@ -435,7 +778,7 @@ function hook_views_pre_execute(ViewExecutable &$view) {
 /**
  * Act on the view immediately after the query has been executed.
  *
- * At this point the query has been executed, but the pre_render() phase has
+ * At this point the query has been executed, but the preRender() phase has
  * not yet happened for handlers.
  *
  * Output can be added to the view by setting $view->attachment_before
@@ -446,7 +789,7 @@ function hook_views_pre_execute(ViewExecutable &$view) {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_post_execute(ViewExecutable &$view) {
+function hook_views_post_execute(ViewExecutable $view) {
   // If there are more than 100 results, show a message that encourages the user
   // to change the filter settings.
   // (This action could be performed later in the execution process, but not
@@ -459,9 +802,9 @@ function hook_views_post_execute(ViewExecutable &$view) {
 /**
  * Act on the view immediately before rendering it.
  *
- * At this point the query has been executed, and the pre_render() phase has
+ * At this point the query has been executed, and the preRender() phase has
  * already happened for handlers, so all data should be available. This hook
- * can be utilized by themes.
+ * can be used by themes.
  *
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
@@ -471,7 +814,7 @@ function hook_views_post_execute(ViewExecutable &$view) {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_pre_render(ViewExecutable &$view) {
+function hook_views_pre_render(ViewExecutable $view) {
   // Scramble the order of the rows shown on this result page.
   // Note that this could be done earlier, but not later in the view execution
   // process.
@@ -484,7 +827,7 @@ function hook_views_pre_render(ViewExecutable &$view) {
  * This can be valuable to be able to cache a view and still have some level of
  * dynamic output. In an ideal world, the actual output will include HTML
  * comment-based tokens, and then the post process can replace those tokens.
- * This hook can be utilized by themes.
+ * This hook can be used by themes.
  *
  * Example usage. If it is known that the view is a node view and that the
  * primary field will be a nid, you can do something like this:
@@ -503,12 +846,12 @@ function hook_views_pre_render(ViewExecutable &$view) {
  *   The view object about to be processed.
  * @param string $output
  *   A flat string with the rendered output of the view.
- * @param CacheBackendInterface $cache
+ * @param \Drupal\views\Plugin\views\cache\CachePluginBase $cache
  *   The cache settings.
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_post_render(ViewExecutable &$view, &$output, CacheBackendInterface &$cache) {
+function hook_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
   // When using full pager, disable any time-based caching if there are fewer
   // than 10 results.
   if ($view->pager instanceof Drupal\views\Plugin\views\pager\Full && $cache instanceof Drupal\views\Plugin\views\cache\Time && count($view->result) < 10) {
@@ -528,11 +871,11 @@ function hook_views_post_render(ViewExecutable &$view, &$output, CacheBackendInt
  * @see hook_views_query_substitutions()
  * @see \Drupal\views\Plugin\views\query\Sql
  */
-function hook_views_query_alter(ViewExecutable &$view, QueryPluginBase &$query) {
+function hook_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
   // (Example assuming a view with an exposed filter on node title.)
   // If the input for the title filter is a positive integer, filter against
   // node ID instead of node title.
-  if ($view->name == 'my_view' && is_numeric($view->exposed_raw_input['title']) && $view->exposed_raw_input['title'] > 0) {
+  if ($view->id() == 'my_view' && is_numeric($view->exposed_raw_input['title']) && $view->exposed_raw_input['title'] > 0) {
     // Traverse through the 'where' part of the query.
     foreach ($query->where as &$condition_group) {
       foreach ($condition_group['conditions'] as &$condition) {
@@ -559,15 +902,15 @@ function hook_views_query_alter(ViewExecutable &$view, QueryPluginBase &$query) 
  *
  * @param array $rows
  *   An associative array with two keys:
- *   - query: An array of rows suitable for theme('table'), containing
+ *   - query: An array of rows suitable for '#type' => 'table', containing
  *     information about the query and the display title and path.
- *   - statistics: An array of rows suitable for theme('table'), containing
- *     performance statistics.
+ *   - statistics: An array of rows suitable for '#type' => 'table',
+ *     containing performance statistics.
  * @param \Drupal\views\ViewExecutable $view
  *   The view object.
  *
  * @see \Drupal\views_ui\ViewUI
- * @see theme_table()
+ * @see table.html.twig
  */
 function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
   // Adds information about the tables being queried by the view to the query
@@ -583,7 +926,8 @@ function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
  *
  * @param array $links
  *   A renderable array of links which will be displayed at the top of the
- *   view edit form. Each entry will be in a form suitable for theme('link').
+ *   view edit form. Each entry will be in a form suitable for
+ *   '#theme' => 'links'.
  * @param \Drupal\views\ViewExecutable $view
  *   The view object being edited.
  * @param string $display_id
@@ -598,25 +942,7 @@ function hook_views_ui_display_top_links_alter(array &$links, ViewExecutable $vi
   }
 }
 
-/**
- * Alter the commands used on a Views AJAX request.
- *
- * @param array $commands
- *   An array of ajax commands.
- * @param \Drupal\views\ViewExecutable $view
- *   The view which is requested.
- *
- * @see views_ajax()
- */
-function hook_views_ajax_data_alter(array &$commands, ViewExecutable $view) {
-  // Replace Views' method for scrolling to the top of the element with your
-  // custom scrolling method.
-  foreach ($commands as &$command) {
-    if ($command['method'] == 'viewsScrollTop') {
-      $command['method'] .= 'myScrollTop';
-    }
-  }
-}
+// @todo Describe how to alter a view ajax response with event listeners.
 
 /**
  * Allow modules to respond to the invalidation of the Views cache.
@@ -627,16 +953,318 @@ function hook_views_ajax_data_alter(array &$commands, ViewExecutable $view) {
  * @see views_invalidate_cache()
  */
 function hook_views_invalidate_cache() {
-  cache('mymodule')->invalidateTags(array('views' => TRUE));
+  \Drupal\Core\Cache\Cache::invalidateTags(array('views'));
 }
 
 /**
- * @}
+ * Modify the list of available views access plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_access_alter(array &$plugins) {
+  // Remove the available plugin because the users should not have access to it.
+  unset($plugins['role']);
+}
+
+/**
+ * Modify the list of available views default argument plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_argument_default_alter(array &$plugins) {
+  // Remove the available plugin because the users should not have access to it.
+  unset($plugins['php']);
+}
+
+/**
+ * Modify the list of available views argument validation plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_argument_validator_alter(array &$plugins) {
+  // Remove the available plugin because the users should not have access to it.
+  unset($plugins['php']);
+}
+
+/**
+ * Modify the list of available views cache plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_cache_alter(array &$plugins) {
+  // Change the title.
+  $plugins['time']['title'] = t('Custom title');
+}
+
+/**
+ * Modify the list of available views display extender plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_display_extenders_alter(array &$plugins) {
+  // Alter the title of an existing plugin.
+  $plugins['time']['title'] = t('Custom title');
+}
+
+/**
+ * Modify the list of available views display plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_display_alter(array &$plugins) {
+  // Alter the title of an existing plugin.
+  $plugins['rest_export']['title'] = t('Export');
+}
+
+/**
+ * Modify the list of available views exposed form plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_exposed_form_alter(array &$plugins) {
+  // Remove the available plugin because the users should not have access to it.
+  unset($plugins['input_required']);
+}
+
+/**
+ * Modify the list of available views join plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_join_alter(array &$plugins) {
+  // Print out all join plugin names for debugging purposes.
+  debug($plugins);
+}
+
+/**
+ * Modify the list of available views join plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_pager_alter(array &$plugins) {
+  // Remove the sql based plugin to force good performance.
+  unset($plugins['full']);
+}
+
+/**
+ * Modify the list of available views query plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_query_alter(array &$plugins) {
+  // Print out all query plugin names for debugging purposes.
+  debug($plugins);
+}
+
+/**
+ * Modify the list of available views row plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_row_alter(array &$plugins) {
+  // Change the used class of a plugin.
+  $plugins['entity:node']['class'] = 'Drupal\node\Plugin\views\row\NodeRow';
+  $plugins['entity:node']['module'] = 'node';
+}
+
+/**
+ * Modify the list of available views style plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_style_alter(array &$plugins) {
+  // Change the theme hook of a plugin.
+  $plugins['html_list']['theme'] = 'custom_views_view_list';
+}
+
+/**
+ * Modify the list of available views wizard plugins.
+ *
+ * This hook may be used to modify plugin properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing plugin definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
+ */
+function hook_views_plugins_wizard_alter(array &$plugins) {
+  // Change the title of a plugin.
+  $plugins['node_revision']['title'] = t('Node revision wizard');
+}
+
+/**
+ * Modify the list of available views area handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_area_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * Modify the list of available views argument handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_argument_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * Modify the list of available views field handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_field_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * Modify the list of available views filter handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_filter_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * Modify the list of available views relationship handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_relationship_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * Modify the list of available views sort handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_sort_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * @} End of "addtogroup hooks".
  */
 
 /**
- * @defgroup views_module_handlers Views module handlers
- * @{
- * Handlers exposed by various modules to Views.
  * @}
  */

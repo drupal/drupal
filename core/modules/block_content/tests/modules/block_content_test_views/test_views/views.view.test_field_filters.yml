@@ -1,0 +1,339 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+id: test_field_filters
+label: 'Test field filters'
+module: views
+description: ''
+tag: ''
+base_table: block_content_field_data
+base_field: id
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      access:
+        type: none
+        options: {  }
+      cache:
+        type: tag
+        options: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: none
+        options:
+          items_per_page: 0
+          offset: 0
+      style:
+        type: default
+      row:
+        type: 'entity:block_content'
+        options:
+          relationship: none
+          view_mode: default
+      fields:
+        info:
+          id: info
+          table: block_content_field_data
+          field: info
+          label: ''
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_alter_empty: true
+          entity_type: block_content
+          type: string
+          settings:
+            link_to_entity: true
+          entity_field: title
+          plugin_id: field
+      filters:
+        info:
+          id: info
+          table: block_content_field_data
+          field: info
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: Paris
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          entity_type: block_content
+          entity_field: info
+      sorts:
+        changed:
+          id: changed
+          table: block_content_field_data
+          field: changed
+          order: DESC
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: date
+          entity_type: block_content
+          entity_field: changed
+      title: 'Test field filters'
+      header: {  }
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      arguments: {  }
+      rendering_language: '***LANGUAGE_entity_translation***'
+      display_extenders: {  }
+  page_bf:
+    display_plugin: page
+    id: page_bf
+    display_title: 'Body filter page'
+    position: 1
+    display_options:
+      path: test-body-filter
+      display_description: ''
+      title: 'Test body filters'
+      defaults:
+        title: false
+        filters: false
+        filter_groups: false
+      filters:
+        body_value:
+          id: body_value
+          table: block_content__body
+          field: body_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: Comida
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          entity_type: block_content
+          entity_field: body
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      display_extenders: {  }
+  page_bfp:
+    display_plugin: page
+    id: page_bfp
+    display_title: 'Body filter page Paris'
+    position: 1
+    display_options:
+      path: test-body-paris
+      display_description: ''
+      title: 'Test body filters'
+      defaults:
+        title: false
+        filters: false
+        filter_groups: false
+      filters:
+        body_value:
+          id: body_value
+          table: block_content__body
+          field: body_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: Paris
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          entity_type: block_content
+          entity_field: body
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      display_extenders: {  }
+  page_if:
+    display_plugin: page
+    id: page_if
+    display_title: 'Info filter page'
+    position: 1
+    display_options:
+      path: test-info-filter
+      display_description: ''
+      title: 'Test info filter'
+      defaults:
+        title: false
+        filters: false
+        filter_groups: false
+      filters:
+        info:
+          id: info
+          table: block_content_field_data
+          field: info
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: Comida
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          entity_type: block_content
+          entity_field: info
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      display_extenders: {  }
+  page_ifp:
+    display_plugin: page
+    id: page_ifp
+    display_title: 'Info filter page Paris'
+    position: 1
+    display_options:
+      path: test-info-paris
+      display_description: ''
+      title: 'Test info filter'
+      defaults:
+        title: false
+      display_extenders: {  }

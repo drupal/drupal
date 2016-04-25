@@ -1,0 +1,9 @@
+entity.menu.edit_form:
+  title: 'Edit menu'
+  route_name: entity.menu.edit_form
+  base_route: entity.menu.edit_form
+
+entity.menu.collection:
+  title: 'List'
+  route_name: entity.menu.collection
+  base_route: entity.menu.collection

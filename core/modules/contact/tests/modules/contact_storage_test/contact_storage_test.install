@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update hooks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function contact_storage_test_install() {
+  $entity_manager = \Drupal::entityManager();
+  $entity_type = $entity_manager->getDefinition('contact_message');
+
+  // Recreate the original entity type definition, in order to notify the
+  // manager of what changed. The change of storage backend will trigger
+  // schema installation.
+  // @see contact_storage_test_entity_type_alter()
+  $original = clone $entity_type;
+  $original->setStorageClass('Drupal\Core\Entity\ContentEntityNullStorage');
+
+  $entity_manager->onEntityTypeUpdate($entity_type, $original);
+}

@@ -1,0 +1,24 @@
+id: d6_term_node_revision
+label: Term/node relationship revisions
+migration_tags:
+  - Drupal 6
+deriver: Drupal\taxonomy\Plugin\migrate\D6TermNodeDeriver
+source:
+  plugin: d6_term_node_revision
+process:
+  vid:
+    -
+      plugin: migration
+      migration: d6_node
+      source: vid
+    -
+      plugin: skip_on_empty
+      method: row
+  type: type
+  # The actual field name is dynamic and will be added by the builder.
+destination:
+  plugin: entity_revision:node
+migration_dependencies:
+  required:
+    - d6_term_node
+    - d6_node_revision

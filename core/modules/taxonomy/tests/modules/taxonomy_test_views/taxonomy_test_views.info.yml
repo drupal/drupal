@@ -1,0 +1,9 @@
+name: 'Taxonomy test views'
+type: module
+description: 'Provides default views for views taxonomy tests.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - taxonomy
+  - views

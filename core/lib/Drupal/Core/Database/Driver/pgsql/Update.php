@@ -1,17 +1,14 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Update
- */
-
 namespace Drupal\Core\Database\Driver\pgsql;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Update as QueryUpdate;
+use Drupal\Core\Database\Query\SelectInterface;
 
-use PDO;
-
+/**
+ * PostgreSQL implementation of \Drupal\Core\Database\Query\Update.
+ */
 class Update extends QueryUpdate {
 
   public function execute() {
@@ -29,7 +26,6 @@ class Update extends QueryUpdate {
     // Expressions take priority over literal fields, so we process those first
     // and remove any literal fields that conflict.
     $fields = $this->fields;
-    $expression_fields = array();
     foreach ($this->expressionFields as $field => $data) {
       if (!empty($data['arguments'])) {
         foreach ($data['arguments'] as $placeholder => $argument) {
@@ -37,6 +33,13 @@ class Update extends QueryUpdate {
           // which is a fairly safe assumption to make since in most cases
           // it would be an invalid query anyway.
           $stmt->bindParam($placeholder, $data['arguments'][$placeholder]);
+        }
+      }
+      if ($data['expression'] instanceof SelectInterface) {
+        $data['expression']->compile($this->connection, $this);
+        $select_query_arguments = $data['expression']->arguments();
+        foreach ($select_query_arguments as $placeholder => $argument) {
+          $stmt->bindParam($placeholder, $select_query_arguments[$placeholder]);
         }
       }
       unset($fields[$field]);
@@ -49,7 +52,7 @@ class Update extends QueryUpdate {
         $blobs[$blob_count] = fopen('php://memory', 'a');
         fwrite($blobs[$blob_count], $value);
         rewind($blobs[$blob_count]);
-        $stmt->bindParam($placeholder, $blobs[$blob_count], PDO::PARAM_LOB);
+        $stmt->bindParam($placeholder, $blobs[$blob_count], \PDO::PARAM_LOB);
         ++$blob_count;
       }
       else {
@@ -68,8 +71,18 @@ class Update extends QueryUpdate {
 
     $options = $this->queryOptions;
     $options['already_prepared'] = TRUE;
-    $this->connection->query($stmt, $options);
+    $options['return'] = Database::RETURN_AFFECTED;
 
-    return $stmt->rowCount();
+    $this->connection->addSavepoint();
+    try {
+      $result = $this->connection->query($stmt, array(), $options);
+      $this->connection->releaseSavepoint();
+      return $result;
+    }
+    catch (\Exception $e) {
+      $this->connection->rollbackSavepoint();
+      throw $e;
+    }
   }
+
 }

@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+/**
+ * Implements hook_page_top().
+ */
+function session_exists_cache_context_test_page_top(array &$page_top) {
+  // Ensure this hook is invoked on every page load.
+  $page_top['#cache']['max-age'] = 0;
+
+  $request = \Drupal::request();
+  $session_exists = \Drupal::service('session_configuration')->hasSession($request);
+  $page_top['session_exists_cache_context_test'] = [
+    'label' => [
+      '#markup' => '<p>' . ($session_exists ? 'Session exists!' : 'Session does not exist!') . '</p>',
+    ],
+    'cache_context_value' => [
+      '#markup' => '<code>[session.exists]=' . \Drupal::service('cache_context.session.exists')->getContext() . '</code>',
+    ],
+  ];
+
+  if (\Drupal::request()->query->get('trigger_session')) {
+    $_SESSION['session_exists_cache_context_test'] = TRUE;
+  }
+}

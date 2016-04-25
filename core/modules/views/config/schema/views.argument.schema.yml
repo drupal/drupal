@@ -1,0 +1,152 @@
+# Schema for the views argument plugins.
+
+views.argument.*:
+  type: views_argument
+  label: 'Default argument'
+
+views.argument.many_to_one:
+  type: views_argument
+  label: 'Many to one'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    add_table:
+      type: boolean
+      label: 'Allow multiple filter values to work together'
+    require_value:
+      type: boolean
+      label: 'Do not display items with no value in summary'
+    reduce_duplicates:
+      type: boolean
+      label: 'Reduce duplicates'
+
+views.argument.null:
+  type: views_argument
+  label: 'Null'
+  mapping:
+    must_not_be:
+      type: boolean
+      label: 'Fail basic validation if any argument is given'
+
+views.argument.numeric:
+  type: views_argument
+  label: 'Numeric'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    not:
+      type: boolean
+      label: 'Exclude'
+
+views.argument.string:
+  type: views_argument
+  label: 'String'
+  mapping:
+    glossary:
+      type: boolean
+      label: 'Glossary mode'
+    limit:
+      type: integer
+      label: 'Character limit'
+    case:
+      type: string
+      label: 'Case'
+    path_case:
+      type: string
+      label: 'Case in path'
+    transform_dash:
+      type: boolean
+      label: 'Transform spaces to dashes in URL'
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    add_table:
+      type: boolean
+      label: 'Allow multiple filter values to work together'
+    require_value:
+      type: boolean
+      label: 'Do not display items with no value in summary'
+
+
+views.argument.broken:
+  type: views_argument
+  label: 'Broken'
+
+views.argument.date:
+  type: views_argument
+  label: 'Date'
+  mapping:
+    date:
+      type: string
+      label: 'Date'
+    node_created:
+      type: string
+      label: 'Node Creation Time'
+    node_changed:
+      type: string
+      label: 'Node Update Time'
+
+views.argument.date_day:
+  type: views.argument.date
+  label: 'Day Date'
+  mapping:
+    day:
+      type: string
+      label: 'Day'
+
+views.argument.formula:
+  type: views_argument
+  label: 'Formula'
+  mapping:
+    placeholder:
+      type: string
+      label: 'Place Holder'
+    formula:
+      type: string
+      label: 'Formula Used'
+
+views.argument.date_fulldate:
+  type: views.argument.date
+  label: 'Full Date'
+  mapping:
+    created:
+      type: string
+      label: 'Full Date'
+
+views.argument.groupby_numeric:
+  type: views_argument
+  label: 'Group by Numeric'
+
+views.argument.date_month:
+  type: views.argument.date
+  label: 'Month Date'
+  mapping:
+    month:
+      type: string
+      label: 'Month'
+
+views.argument.standard:
+  type: views_argument
+  label: 'Standard'
+
+views.argument.date_week:
+  type: views.argument.date
+  label: 'Week Date'
+
+views.argument.date_year:
+  type: views.argument.date
+  label: 'Year Date'
+
+views.argument.date_year_month:
+  type: views.argument.date
+  label: 'YearMonthDate'
+  mapping:
+    created:
+      type: string
+      label: 'Date Year month'
+
+views.argument.language:
+  type: views_argument
+  label: 'Language'

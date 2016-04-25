@@ -1,12 +1,20 @@
 <?php
 
 /**
+ * @file
+ * Test module.
+ */
+
+use Drupal\Core\Extension\Extension;
+
+/**
  * Implements hook_theme().
  */
 function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test'] = array(
     'file' => 'theme_test.inc',
     'variables' => array('foo' => ''),
+    'function' => 'theme_theme_test',
   );
   $items['theme_test_template_test'] = array(
     'template' => 'theme_test.template_test',
@@ -14,137 +22,194 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test_template_test_2'] = array(
     'template' => 'theme_test.template_test',
   );
+  $items['theme_test_suggestion_provided'] = array(
+    'variables' => array(),
+  );
+  $items['theme_test_specific_suggestions'] = array(
+    'variables' => array(),
+  );
+  $items['theme_test_suggestions'] = array(
+    'variables' => array(),
+  );
+  $items['theme_test_general_suggestions'] = array(
+    'variables' => array(),
+  );
+  $items['theme_test_function_suggestions'] = array(
+    'variables' => array(),
+    'function' => 'theme_theme_test_function_suggestions',
+  );
+  $items['theme_test_suggestions_include'] = array(
+    'variables' => array(),
+    'function' => 'theme_theme_test_suggestions_include',
+  );
   $items['theme_test_foo'] = array(
     'variables' => array('foo' => NULL),
+    'function' => 'theme_theme_test_foo',
   );
+  $items['theme_test_render_element'] = array(
+    'render element' => 'elements',
+  );
+  $items['theme_test_render_element_children'] = array(
+    'render element' => 'element',
+    'function' => 'theme_theme_test_render_element_children',
+  );
+  $items['theme_test_function_template_override'] = array(
+    'variables' => array(),
+    'function' => 'theme_theme_test_function_template_override',
+  );
+  $info['test_theme_not_existing_function'] = array(
+    'function' => 'test_theme_not_existing_function',
+  );
+  $items['theme_test_preprocess_suggestions'] = [
+    'variables' => [
+      'foo' => '',
+      'bar' => '',
+    ],
+  ];
   return $items;
 }
 
 /**
- * Implements hook_system_theme_info().
- */
-function theme_test_system_theme_info() {
-  $themes['test_theme'] = drupal_get_path('module', 'system') . '/tests/themes/test_theme/test_theme.info';
-  $themes['test_basetheme'] = drupal_get_path('module', 'system') . '/tests/themes/test_basetheme/test_basetheme.info';
-  $themes['test_subtheme'] = drupal_get_path('module', 'system') . '/tests/themes/test_subtheme/test_subtheme.info';
-  $themes['test_theme_twig'] = drupal_get_path('module', 'system') . '/tests/themes/test_theme_twig/test_theme_twig.info';
-  return $themes;
-}
-
-/**
- * Implements hook_menu().
- */
-function theme_test_menu() {
-  $items['theme-test/suggestion'] = array(
-    'title' => 'Suggestion',
-    'page callback' => '_theme_test_suggestion',
-    'access callback' => TRUE,
-    'theme callback' => '_theme_custom_theme',
-    'type' => MENU_CALLBACK,
-  );
-  $items['theme-test/alter'] = array(
-    'title' => 'Suggestion',
-    'page callback' => '_theme_test_alter',
-    'access callback' => TRUE,
-    'theme callback' => '_theme_custom_theme',
-    'type' => MENU_CALLBACK,
-  );
-  $items['theme-test/hook-init'] = array(
-    'page callback' => 'theme_test_hook_init_page_callback',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-  $items['theme-test/template-test'] = array(
-    'page callback' => 'theme_test_template_test_page_callback',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-  return $items;
-}
-
-/**
- * Implements hook_init().
- */
-function theme_test_init() {
-  if (arg(0) == 'theme-test' && arg(1) == 'hook-init') {
-    // First, force the theme registry to be rebuilt on this page request. This
-    // allows us to test a full initialization of the theme system in the code
-    // below.
-    drupal_theme_rebuild();
-    // Next, initialize the theme system by storing themed text in a global
-    // variable. We will use this later in theme_test_hook_init_page_callback()
-    // to test that even when the theme system is initialized this early, it is
-    // still capable of returning output and theming the page as a whole.
-    $GLOBALS['theme_test_output'] = theme('more_link', array('url' => 'user', 'title' => 'Themed output generated in hook_init()'));
-  }
-  if (arg(0) == 'user' && arg(1) == 'autocomplete') {
-    // Register a fake registry loading callback. If it gets called by
-    // theme_get_registry(), the registry has not been initialized yet.
-    _theme_registry_callback('_theme_test_load_registry', array());
-  }
-}
-
-/**
- * Fake registry loading callback.
- */
-function _theme_test_load_registry() {
-  print 'registry initialized';
-  return array();
-}
-
-/**
- * Menu callback for testing themed output generated in hook_init().
- */
-function theme_test_hook_init_page_callback() {
-  return $GLOBALS['theme_test_output'];
-}
-
-/**
- * Menu callback for testing template overridding based on filename.
- */
-function theme_test_template_test_page_callback() {
-  return theme('theme_test_template_test');
-}
-
-/**
- * Custom theme callback.
- */
-function _theme_custom_theme() {
-  return 'test_theme';
-}
-
-/**
- * Page callback, calls drupal_alter().
- *
- * This is for testing that the theme can have hook_*_alter() implementations
- * that run during page callback execution, even before theme() is called for
- * the first time.
- */
-function _theme_test_alter() {
-  $data = 'foo';
-  drupal_alter('theme_test_alter', $data);
-  return "The altered data is $data.";
-}
-
-/**
- * Page callback, calls a theme hook suggestion.
- */
-function _theme_test_suggestion() {
-  return theme(array('theme_test__suggestion', 'theme_test'), array());
-}
-
-/**
- * Implements hook_preprocess_HOOK() for html.tpl.php.
+ * Implements hook_preprocess_HOOK() for HTML document templates.
  */
 function theme_test_preprocess_html(&$variables) {
   $variables['html_attributes']['theme_test_html_attribute'] = 'theme test html attribute value';
   $variables['attributes']['theme_test_body_attribute'] = 'theme test body attribute value';
+
+  $variables['attributes']['theme_test_page_variable'] = 'Page variable is an array.';
 }
 
 /**
- * Theme function for testing theme('theme_test_foo').
+ * Implements hook_page_bottom().
+ */
+function theme_test_page_bottom(array &$page_bottom) {
+  $page_bottom['theme_test_page_bottom'] = array('#markup' => 'theme test page bottom markup');
+}
+
+/**
+ * Implements template_preprocess_HOOK() for theme_test_function_suggestions theme functions.
+ */
+function template_preprocess_theme_test_function_suggestions(&$variables) {
+}
+
+/**
+ * Theme function for hook theme_test_foo.
  */
 function theme_theme_test_foo($variables) {
   return $variables['foo'];
 }
 
+/**
+ * Theme function for hook theme_test_function_template_override.
+ */
+function theme_theme_test_function_template_override($variables) {
+  return 'theme_test_function_template_override test failed.';
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function theme_test_theme_suggestions_theme_test_preprocess_suggestions($variables) {
+  return ['theme_test_preprocess_suggestions__' . $variables['foo']];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function theme_test_preprocess_theme_test_preprocess_suggestions(&$variables) {
+  $variables['foo'] = 'Theme hook implementor=theme_theme_test_preprocess_suggestions().';
+}
+
+/**
+ * Tests a module overriding a default hook with a suggestion.
+ */
+function theme_test_preprocess_theme_test_preprocess_suggestions__monkey(&$variables) {
+  $variables['foo'] = 'Monkey';
+}
+
+/**
+ * Prepares variables for test render element templates.
+ *
+ * Default template: theme-test-render-element.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the properties of the element.
+ */
+function template_preprocess_theme_test_render_element(&$variables) {
+  $variables['attributes']['data-variables-are-preprocessed'] = TRUE;
+}
+
+/**
+ * Theme function for testing rendering of child elements via drupal_render().
+ *
+ * Theme hooks defining a 'render element' add an internal '#render_children'
+ * property. When this property is found, drupal_render() avoids calling
+ * the 'theme.manager' service 'render' method on the top-level element to
+ * prevent infinite recursion.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ */
+function theme_theme_test_render_element_children($variables) {
+  return drupal_render($variables['element']);
+}
+
+/**
+ * Returns HTML for a theme function suggestion test.
+ */
+function theme_theme_test_function_suggestions($variables) {
+  return 'Original theme function.';
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function theme_test_theme_suggestions_theme_test_suggestion_provided(array $variables) {
+  return array('theme_test_suggestion_provided__' . 'foo');
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function theme_test_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  drupal_set_message(__FUNCTION__ . '() executed.');
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function theme_test_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
+  drupal_set_message(__FUNCTION__ . '() executed.');
+}
+
+/**
+ * Returns HTML for a theme function include test.
+ */
+function theme_theme_test_suggestions_include($variables) {
+  return 'Original function before altering theme suggestions.';
+}
+
+/**
+ * Implements hook_system_info_alter().
+ *
+ * @see \Drupal\system\Tests\Theme\ThemeInfoTest::testChanges()
+ */
+function theme_test_system_info_alter(array &$info, Extension $file, $type) {
+  if ($type == 'theme' && $file->getName() == 'test_theme' && \Drupal::state()->get('theme_test.modify_info_files')) {
+    // Add a library to see if the system picks it up.
+    $info += ['libraries' => []];
+    $info['libraries'][] = 'core/backbone';
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function theme_test_theme_suggestions_node(array $variables) {
+  $xss = '<script type="text/javascript">alert(\'yo\');</script>';
+  $suggestions[] = 'node__' . $xss;
+
+  return $suggestions;
+}

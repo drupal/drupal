@@ -1,0 +1,57 @@
+entity.contact_form.delete_form:
+  path: '/admin/structure/contact/manage/{contact_form}/delete'
+  defaults:
+    _entity_form: 'contact_form.delete'
+    _title: 'Delete'
+  requirements:
+    _entity_access: 'contact_form.delete'
+
+entity.contact_form.collection:
+  path: '/admin/structure/contact'
+  defaults:
+    _entity_list: 'contact_form'
+    _title: 'Contact forms'
+  requirements:
+    _permission: 'administer contact forms'
+
+contact.form_add:
+  path: '/admin/structure/contact/add'
+  defaults:
+    _entity_form: 'contact_form.add'
+    _title: 'Add contact form'
+  requirements:
+    _permission: 'administer contact forms'
+
+entity.contact_form.edit_form:
+  path: '/admin/structure/contact/manage/{contact_form}'
+  defaults:
+    _entity_form: 'contact_form.edit'
+    _title: 'Edit contact form'
+  requirements:
+    _entity_access: 'contact_form.update'
+
+contact.site_page:
+  path: '/contact'
+  defaults:
+    _title: 'Contact'
+    _controller: '\Drupal\contact\Controller\ContactController::contactSitePage'
+    contact_form: NULL
+  requirements:
+    _permission: 'access site-wide contact form'
+
+entity.contact_form.canonical:
+  path: '/contact/{contact_form}'
+  defaults:
+    _title: 'Contact'
+    _controller: '\Drupal\contact\Controller\ContactController::contactSitePage'
+  requirements:
+    _entity_access: 'contact_form.view'
+
+entity.user.contact_form:
+  path: '/user/{user}/contact'
+  defaults:
+    _title: 'Contact'
+    _controller: '\Drupal\contact\Controller\ContactController::contactPersonalPage'
+  requirements:
+    _access_contact_personal_tab: 'TRUE'
+    user: \d+

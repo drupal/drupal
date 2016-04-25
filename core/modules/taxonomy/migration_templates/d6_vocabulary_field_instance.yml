@@ -1,0 +1,32 @@
+id: d6_vocabulary_field_instance
+label: Vocabulary field instance configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_taxonomy_vocabulary_per_type
+  constants:
+    entity_type: node
+    auto_create: true
+    selection_handler: 'default:taxonomy_term'
+process:
+  entity_type: 'constants/entity_type'
+  bundle: type
+  field_name:
+    -
+      plugin: migration
+      migration: d6_taxonomy_vocabulary
+      source: vid
+    -
+      plugin: skip_on_empty
+      method: row
+  label: name
+  'settings/handler': 'constants/selection_handler'
+  'settings/handler_settings/target_bundles/0': '@field_name'
+  'settings/handler_settings/auto_create': 'constants/auto_create'
+  required: required
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d6_node_type
+    - d6_vocabulary_field

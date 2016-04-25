@@ -1,0 +1,6 @@
+name: 'Test Search Query Alter'
+type: module
+description: 'Support module for Search module testing.'
+package: Testing
+version: VERSION
+core: 8.x

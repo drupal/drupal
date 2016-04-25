@@ -1,0 +1,31 @@
+# Schema for the configuration files of the Update Test module.
+
+update_test.settings:
+  type: config_object
+  label: 'Update test settings'
+  mapping:
+    system_info:
+      type: sequence
+      label: 'System info'
+      sequence:
+        type: sequence
+        label: 'Items'
+        sequence:
+          type: string
+          label: 'Item'
+    update_status:
+      type: sequence
+      label: 'Update status'
+      sequence:
+        type: mapping
+        label: 'Module'
+        mapping:
+          status:
+            type: integer
+            label: 'Value'
+    xml_map:
+      type: sequence
+      label: 'XML map'
+      sequence:
+        type: string
+        label: 'Value'

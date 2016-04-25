@@ -1,0 +1,26 @@
+# Every migration that saves into {file_managed} must have the d6_file
+# migration as an optional dependency to ensure d6_file runs first.
+id: d6_file
+label: Files
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_file
+process:
+  fid: fid
+  filename: filename
+  uri:
+    plugin: file_uri
+    source:
+      - filepath
+      - file_directory_path
+      - temp_directory_path
+      - is_public
+  filemime: filemime
+  filesize: filesize
+  status: status
+  changed: timestamp
+  uid: uid
+destination:
+  plugin: entity:file
+  urlencode: true

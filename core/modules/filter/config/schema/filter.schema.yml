@@ -1,0 +1,70 @@
+# Schema for the configuration files of the Filter module.
+
+filter.settings:
+  type: config_object
+  label: 'Filter settings'
+  mapping:
+    fallback_format:
+      type: string
+      label: 'Fallback text format'
+    always_show_fallback_choice:
+      type: boolean
+      label: 'Always show fallback choice'
+
+filter.format.*:
+  type: config_entity
+  label: 'Text formats'
+  mapping:
+    name:
+      type: label
+      label: 'Name'
+    format:
+      type: string
+      label: 'Machine name'
+    weight:
+      type: integer
+      label: 'Weight'
+    roles:
+      type: sequence
+      label: 'Roles'
+      sequence:
+        type: string
+        label: 'Role'
+    filters:
+      type: sequence
+      label: 'Enabled filters'
+      sequence:
+        type: filter
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
+
+filter_settings.*:
+  type: sequence
+  label: 'Filter settings'
+  sequence:
+    type: string
+    label: 'Value'
+
+filter_settings.filter_html:
+  type: filter
+  label: 'Filter HTML'
+  mapping:
+    allowed_html:
+      type: string
+      label: 'Allowed HTML'
+    filter_html_help:
+      type: boolean
+      label: 'HTML help'
+    filter_html_nofollow:
+      type: boolean
+      label: 'HTML nofollow'
+
+
+filter_settings.filter_url:
+  type: filter
+  label: 'Filter URL'
+  mapping:
+    filter_url_length:
+      type: integer
+      label: 'URL length'

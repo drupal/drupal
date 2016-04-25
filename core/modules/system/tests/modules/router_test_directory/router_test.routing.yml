@@ -1,0 +1,214 @@
+router_test.1:
+  path: '/router_test/test1'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+router_test.2:
+  path: '/router_test/test2'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test2'
+  requirements:
+    _access: 'TRUE'
+
+router_test.3:
+  path: '/router_test/test3/{value}'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test3'
+  requirements:
+    _access: 'TRUE'
+
+router_test.4:
+  path: '/router_test/test4/{value}'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test4'
+    value: 'narf'
+  requirements:
+    _access: 'TRUE'
+
+router_test.6:
+  path: '/router_test/test6'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+router_test.7:
+  path: '/router_test/test7'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test7'
+  requirements:
+    _permission: 'access test7'
+
+router_test.8:
+  path: '/router_test/test8'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test8'
+
+router_test.10:
+  path: '/router_test/test10'
+  options:
+    _auth: [ 'basic_auth', 'cookie' ]
+  defaults:
+    _controller: '\Drupal\router_test\TestContent::test1'
+  requirements:
+    _access: 'TRUE'
+
+router_test.11:
+  path: '/router_test/test11'
+  options:
+    _auth: [ 'basic_auth' ]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  defaults:
+    _controller: '\Drupal\router_test\TestContent::test11'
+
+router_test.12:
+  path: '/router_test/test12/{user}'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: '\Drupal\router_test\TestContent::subrequestTest'
+
+router_test.13:
+  path: '/router_test/test13/{user}'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: '\Drupal\router_test\TestContent::testAccount'
+
+router_test.14:
+  path: '/router_test/test14/{uid}'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test9'
+
+router_test.15:
+  path: '/router_test/test15'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _access: 'FALSE'
+
+router_test.16:
+  path: '/router_test/test16'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _permission: 'administer users'
+
+router_test.17:
+  path: '/router_test/test17'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test10'
+  requirements:
+    _access: 'TRUE'
+
+router_test.18:
+  path: '/router_test/test18'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test18'
+  requirements:
+    _access: 'TRUE'
+
+router_test.19:
+  path: '/router_test/test19'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test18'
+  requirements:
+    _role: 'anonymous'
+
+router_test.20:
+  path: '/router_test/test20'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _role: 'anonymous'
+
+router_test.21:
+  path: '/router_test/test21'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test21'
+  requirements:
+    _access: 'TRUE'
+
+router_test.22:
+  path: '/router_test/test22'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test21'
+  requirements:
+    _role: 'anonymous'
+
+router_test.23:
+  path: '/router_test/test23'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test23'
+  requirements:
+    _access: 'TRUE'
+
+router_test.24:
+  path: '/router_test/test24'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test24'
+  requirements:
+    _access: 'TRUE'
+
+router_test.25:
+  path: '/router_test/test25'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test25'
+  requirements:
+    _access: 'TRUE'
+
+router_test.26:
+  path: '/router_test/test26'
+  defaults:
+    _form: 'Drupal\system\Form\LoggingForm'
+    _title: 'Cron'
+  requirements:
+    _access: 'TRUE'
+
+router_test.27:
+  path: '/router_test/test27'
+  defaults:
+    _entity_form: 'date_format.add'
+    _title: 'Add date format'
+  requirements:
+    _access: 'TRUE'
+
+router_test.hierarchy_parent:
+  path: '/menu-test/parent'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test'
+  requirements:
+    _access: 'TRUE'
+
+router_test.hierarchy_parent_child1:
+  path: '/menu-test/parent/child-1'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test'
+  requirements:
+    _access: 'TRUE'
+
+router_test.hierarchy_parent_child1_1:
+  path: '/menu-test/parent/child-1/child-1-1'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test'
+  requirements:
+    _access: 'TRUE'
+
+router_test.hierarchy_parent_child1_2:
+  path: '/menu-test/parent/child-1/child-1-2'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test'
+  requirements:
+    _access: 'TRUE'
+
+router_test.hierarchy_parent_child2:
+  path: '/menu-test/parent/child-2'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test'
+  requirements:
+    _access: 'TRUE'

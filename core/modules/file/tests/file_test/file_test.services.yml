@@ -1,0 +1,13 @@
+services:
+  stream_wrapper.dummy_readonly:
+    class: Drupal\file_test\StreamWrapper\DummyReadOnlyStreamWrapper
+    tags:
+      - { name: stream_wrapper, scheme: dummy-readonly }
+  stream_wrapper.dummy_remote:
+    class: Drupal\file_test\StreamWrapper\DummyRemoteStreamWrapper
+    tags:
+      - { name: stream_wrapper, scheme: dummy-remote }
+  stream_wrapper.dummy:
+    class: Drupal\file_test\StreamWrapper\DummyStreamWrapper
+    tags:
+      - { name: stream_wrapper, scheme: dummy }

@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Helper module for Views UI tests.
+ */
+
+/**
+ * Implements hook_views_preview_info_alter().
+ *
+ * Add a row count row to the live preview area.
+ */
+function views_ui_test_views_preview_info_alter(&$rows, $view) {
+  $data = ['#markup' => t('Test row count')];
+  $data['#attached']['library'][] = 'views_ui_test/views_ui_test.test';
+  $rows['query'][] = [['data' => $data], count($view->result)];
+}

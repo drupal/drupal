@@ -11,129 +11,113 @@
  */
 
 /**
- * Add settings to a field settings form.
+ * Allow modules to add settings to field formatters provided by other modules.
  *
- * Invoked from field_ui_field_settings_form() to allow the module defining the
- * field to add global settings (i.e. settings that do not depend on the bundle
- * or instance) to the field settings form. If the field already has data, only
- * include settings that are safe to change.
+ * @param \Drupal\Core\Field\FormatterInterface $plugin
+ *   The instantiated field formatter plugin.
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+ *   The field definition.
+ * @param $view_mode
+ *   The entity view mode.
+ * @param array $form
+ *   The (entire) configuration form array.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
  *
- * @todo: Only the field type module knows which settings will affect the
- * field's schema, but only the field storage module knows what schema
- * changes are permitted once a field already has data. Probably we need an
- * easy way for a field type module to ask whether an update to a new schema
- * will be allowed without having to build up a fake $prior_field structure
- * for hook_field_update_forbid().
+ * @return array
+ *   Returns the form array to be built.
  *
- * @param $field
- *   The field structure being configured.
- * @param $instance
- *   The instance structure being configured.
- * @param $has_data
- *   TRUE if the field already has data, FALSE if not.
- *
- * @return
- *   The form definition for the field settings.
+ * @see \Drupal\field_ui\DisplayOverView.
  */
-function hook_field_settings_form($field, $instance, $has_data) {
-  $settings = $field['settings'];
-  $form['max_length'] = array(
-    '#type' => 'number',
-    '#title' => t('Maximum length'),
-    '#default_value' => $settings['max_length'],
-    '#required' => FALSE,
-    '#min' => 1,
-    '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
-  );
-  return $form;
-}
-
-/**
- * Add settings to an instance field settings form.
- *
- * Invoked from field_ui_field_edit_form() to allow the module defining the
- * field to add settings for a field instance.
- *
- * @param $field
- *   The field structure being configured.
- * @param $instance
- *   The instance structure being configured.
- *
- * @return
- *   The form definition for the field instance settings.
- */
-function hook_field_instance_settings_form($field, $instance) {
-  $settings = $instance['settings'];
-
-  $form['text_processing'] = array(
-    '#type' => 'radios',
-    '#title' => t('Text processing'),
-    '#default_value' => $settings['text_processing'],
-    '#options' => array(
-      t('Plain text'),
-      t('Filtered text (user selects text format)'),
-    ),
-  );
-  if ($field['type'] == 'text_with_summary') {
-    $form['display_summary'] = array(
-      '#type' => 'select',
-      '#title' => t('Display summary'),
-      '#options' => array(
-        t('No'),
-        t('Yes'),
-      ),
-      '#description' => t('Display the summary to allow the user to input a summary value. Hide the summary to automatically fill it with a trimmed portion from the main post.'),
-      '#default_value' => !empty($settings['display_summary']) ? $settings['display_summary'] :  0,
-    );
-  }
-
-  return $form;
-}
-
-/**
- * Alter the formatter settings form.
- *
- * @param $element
- *   Form array as returned by hook_field_formatter_settings_form().
- * @param $form_state
- *   The form state of the (entire) configuration form.
- * @param $context
- *   An associative array with the following elements:
- *   - formatter: The formatter object.
- *   - field: The field structure being configured.
- *   - instance: The instance structure being configured.
- *   - view_mode: The view mode being configured.
- *   - form: The (entire) configuration form array.
- */
-function hook_field_formatter_settings_form_alter(&$element, &$form_state, $context) {
-  // Add a 'mysetting' checkbox to the settings form for 'foo_field' fields.
-  if ($context['field']['type'] == 'foo_field') {
-    $element['mysetting'] = array(
+function hook_field_formatter_third_party_settings_form(\Drupal\Core\Field\FormatterInterface $plugin, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, $view_mode, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $element = array();
+  // Add a 'my_setting' checkbox to the settings form for 'foo_formatter' field
+  // formatters.
+  if ($plugin->getPluginId() == 'foo_formatter') {
+    $element['my_setting'] = array(
       '#type' => 'checkbox',
       '#title' => t('My setting'),
-      '#default_value' => $context['formatter']->getSetting('mysetting'),
+      '#default_value' => $plugin->getThirdPartySetting('my_module', 'my_setting'),
     );
+  }
+  return $element;
+}
+
+/**
+ * Allow modules to add settings to field widgets provided by other modules.
+ *
+ * @param \Drupal\Core\Field\WidgetInterface $plugin
+ *   The instantiated field widget plugin.
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+ *   The field definition.
+ * @param $form_mode
+ *   The entity form mode.
+ * @param array $form
+ *   The (entire) configuration form array.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ *
+ * @return array
+ *   Returns the form array to be built.
+ *
+ * @see \Drupal\field_ui\FormDisplayOverView.
+ */
+function hook_field_widget_third_party_settings_form(\Drupal\Core\Field\WidgetInterface $plugin, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, $form_mode, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $element = array();
+  // Add a 'my_setting' checkbox to the settings form for 'foo_widget' field
+  // widgets.
+  if ($plugin->getPluginId() == 'foo_widget') {
+    $element['my_setting'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('My setting'),
+      '#default_value' => $plugin->getThirdPartySetting('my_module', 'my_setting'),
+    );
+  }
+  return $element;
+}
+
+/**
+ * Alters the field formatter settings summary.
+ *
+ * @param array $summary
+ *   An array of summary messages.
+ * @param $context
+ *   An associative array with the following elements:
+ *   - formatter: The formatter object.
+ *   - field_definition: The field definition.
+ *   - view_mode: The view mode being configured.
+ *
+ * @see \Drupal\field_ui\DisplayOverView.
+ */
+function hook_field_formatter_settings_summary_alter(&$summary, $context) {
+  // Append a message to the summary when an instance of foo_formatter has
+  // mysetting set to TRUE for the current view mode.
+  if ($context['formatter']->getPluginId() == 'foo_formatter') {
+    if ($context['formatter']->getThirdPartySetting('my_module', 'my_setting')) {
+      $summary[] = t('My setting enabled.');
+    }
   }
 }
 
 /**
- * Alter the field formatter settings summary.
+ * Alters the field widget settings summary.
  *
- * @param $summary
- *   The summary as returned by hook_field_formatter_settings_summary().
- * @param $context
+ * @param array $summary
+ *   An array of summary messages.
+ * @param array $context
  *   An associative array with the following elements:
- *   - formatter: The formatter object.
- *   - field: The field structure being configured.
- *   - instance: The instance structure being configured.
- *   - view_mode: The view mode being configured.
+ *   - widget: The widget object.
+ *   - field_definition: The field definition.
+ *   - form_mode: The form mode being configured.
+ *
+ * @see \Drupal\field_ui\FormDisplayOverView.
  */
-function hook_field_formatter_settings_summary_alter(&$summary, $context) {
-  // Append a message to the summary when an instance of foo_field has
+function hook_field_widget_settings_summary_alter(&$summary, $context) {
+  // Append a message to the summary when an instance of foo_widget has
   // mysetting set to TRUE for the current view mode.
-  if ($context['field']['type'] == 'foo_field') {
-    if ($context['formatter']->getSetting('mysetting')) {
-      $summary .= '<br />' . t('My setting enabled.');
+  if ($context['widget']->getPluginId() == 'foo_widget') {
+    if ($context['widget']->getThirdPartySetting('my_module', 'my_setting')) {
+      $summary[] = t('My setting enabled.');
     }
   }
 }

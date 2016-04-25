@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\StreamWrapper\LocalStream.
- */
-
 namespace Drupal\Core\StreamWrapper;
 
 /**
@@ -43,9 +38,16 @@ abstract class LocalStream implements StreamWrapperInterface {
   protected $uri;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getType() {
+    return StreamWrapperInterface::NORMAL;
+  }
+
+  /**
    * Gets the path that the wrapper is responsible for.
    *
-   * @todo Review this method name in D8 per http://drupal.org/node/701358.
+   * @todo Review this method name in D8 per https://www.drupal.org/node/701358.
    *
    * @return string
    *   String specifying the path.
@@ -53,14 +55,14 @@ abstract class LocalStream implements StreamWrapperInterface {
   abstract function getDirectoryPath();
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::setUri().
+   * {@inheritdoc}
    */
   function setUri($uri) {
     $this->uri = $uri;
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::getUri().
+   * {@inheritdoc}
    */
   function getUri() {
     return $this->uri;
@@ -87,57 +89,14 @@ abstract class LocalStream implements StreamWrapperInterface {
       $uri = $this->uri;
     }
 
-    list($scheme, $target) = explode('://', $uri, 2);
+    list(, $target) = explode('://', $uri, 2);
 
     // Remove erroneous leading or trailing, forward-slashes and backslashes.
     return trim($target, '\/');
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::getMimeType().
-   */
-  static function getMimeType($uri, $mapping = NULL) {
-    if (!isset($mapping)) {
-      // The default file map, defined in file.mimetypes.inc is quite big.
-      // We only load it when necessary.
-      include_once DRUPAL_ROOT . '/core/includes/file.mimetypes.inc';
-      $mapping = file_mimetype_mapping();
-    }
-
-    $extension = '';
-    $file_parts = explode('.', drupal_basename($uri));
-
-    // Remove the first part: a full filename should not match an extension.
-    array_shift($file_parts);
-
-    // Iterate over the file parts, trying to find a match.
-    // For my.awesome.image.jpeg, we try:
-    //   - jpeg
-    //   - image.jpeg, and
-    //   - awesome.image.jpeg
-    while ($additional_part = array_pop($file_parts)) {
-      $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
-      if (isset($mapping['extensions'][$extension])) {
-        return $mapping['mimetypes'][$mapping['extensions'][$extension]];
-      }
-    }
-
-    return 'application/octet-stream';
-  }
-
-  /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::chmod().
-   */
-  function chmod($mode) {
-    $output = @chmod($this->getLocalPath(), $mode);
-    // We are modifying the underlying file here, so we have to clear the stat
-    // cache so that PHP understands that URI has changed too.
-    clearstatcache(TRUE, $this->getLocalPath());
-    return $output;
-  }
-
-  /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::realpath().
+   * {@inheritdoc}
    */
   function realpath() {
     return $this->getLocalPath();
@@ -163,6 +122,15 @@ abstract class LocalStream implements StreamWrapperInterface {
       $uri = $this->uri;
     }
     $path = $this->getDirectoryPath() . '/' . $this->getTarget($uri);
+
+    // In PHPUnit tests, the base path for local streams may be a virtual
+    // filesystem stream wrapper URI, in which case this local stream acts like
+    // a proxy. realpath() is not supported by vfsStream, because a virtual
+    // file system does not have a real filepath.
+    if (strpos($path, 'vfs://') === 0) {
+      return $path;
+    }
+
     $realpath = realpath($path);
     if (!$realpath) {
       // This file does not yet exist.
@@ -271,19 +239,9 @@ abstract class LocalStream implements StreamWrapperInterface {
   }
 
   /**
-   * Support for fseek().
-   *
-   * @param int $offset
-   *   The byte offset to got to.
-   * @param int $whence
-   *   SEEK_SET, SEEK_CUR, or SEEK_END.
-   *
-   * @return bool
-   *   TRUE on success.
-   *
-   * @see http://php.net/manual/streamwrapper.stream-seek.php
+   * {@inheritdoc}
    */
-  public function stream_seek($offset, $whence) {
+  public function stream_seek($offset, $whence = SEEK_SET) {
     // fseek returns 0 on success and -1 on a failure.
     // stream_seek   1 on success and  0 on a failure.
     return !fseek($this->handle, $offset, $whence);
@@ -339,6 +297,71 @@ abstract class LocalStream implements StreamWrapperInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function stream_cast($cast_as) {
+    return $this->handle ? $this->handle : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function stream_metadata($uri, $option, $value) {
+    $target = $this->getLocalPath($uri);
+    $return = FALSE;
+    switch ($option) {
+      case STREAM_META_TOUCH:
+        if (!empty($value)) {
+          $return = touch($target, $value[0], $value[1]);
+        }
+        else {
+          $return = touch($target);
+        }
+        break;
+
+      case STREAM_META_OWNER_NAME:
+      case STREAM_META_OWNER:
+        $return = chown($target, $value);
+        break;
+
+      case STREAM_META_GROUP_NAME:
+      case STREAM_META_GROUP:
+        $return = chgrp($target, $value);
+        break;
+
+      case STREAM_META_ACCESS:
+        $return = chmod($target, $value);
+        break;
+    }
+    if ($return) {
+      // For convenience clear the file status cache of the underlying file,
+      // since metadata operations are often followed by file status checks.
+      clearstatcache(TRUE, $target);
+    }
+    return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Since Windows systems do not allow it and it is not needed for most use
+   * cases anyway, this method is not supported on local files and will trigger
+   * an error and return false. If needed, custom subclasses can provide
+   * OS-specific implementations for advanced use cases.
+   */
+  public function stream_set_option($option, $arg1, $arg2) {
+    trigger_error('stream_set_option() not supported for local file based stream wrappers', E_USER_WARNING);
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function stream_truncate($new_size) {
+    return ftruncate($this->handle, $new_size);
+  }
+
+  /**
    * Support for unlink().
    *
    * @param string $uri
@@ -387,8 +410,8 @@ abstract class LocalStream implements StreamWrapperInterface {
    * @see drupal_dirname()
    */
   public function dirname($uri = NULL) {
-    list($scheme, $target) = explode('://', $uri, 2);
-    $target  = $this->getTarget($uri);
+    list($scheme) = explode('://', $uri, 2);
+    $target = $this->getTarget($uri);
     $dirname = dirname($target);
 
     if ($dirname == '.') {
@@ -425,10 +448,10 @@ abstract class LocalStream implements StreamWrapperInterface {
       $localpath = $this->getLocalPath($uri);
     }
     if ($options & STREAM_REPORT_ERRORS) {
-      return mkdir($localpath, $mode, $recursive);
+      return drupal_mkdir($localpath, $mode, $recursive);
     }
     else {
-      return @mkdir($localpath, $mode, $recursive);
+      return @drupal_mkdir($localpath, $mode, $recursive);
     }
   }
 

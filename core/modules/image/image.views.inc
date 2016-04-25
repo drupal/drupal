@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Provide views data and handlers for image.module.
- *
- * @ingroup views_module_handlers
+ * Provide views data for image.module.
  */
+
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Implements hook_field_views_data().
@@ -13,17 +13,18 @@
  * Views integration for image fields. Adds an image relationship to the default
  * field data.
  *
- * @see field_views_field_default_views_data()
+ * @see views_field_default_views_data()
  */
-function image_field_views_data($field) {
-  $data = field_views_field_default_views_data($field);
+function image_field_views_data(FieldStorageConfigInterface $field_storage) {
+  $data = views_field_default_views_data($field_storage);
   foreach ($data as $table_name => $table_data) {
-    // Add the relationship only on the fid field.
-    $data[$table_name][$field['field_name'] . '_fid']['relationship'] = array(
+    // Add the relationship only on the target_id field.
+    $data[$table_name][$field_storage->getName() . '_target_id']['relationship'] = array(
       'id' => 'standard',
       'base' => 'file_managed',
+      'entity type' => 'file',
       'base field' => 'fid',
-      'label' => t('image from !field_name', array('!field_name' => $field['field_name'])),
+      'label' => t('image from @field_name', array('@field_name' => $field_storage->getName())),
     );
   }
 
@@ -35,38 +36,35 @@ function image_field_views_data($field) {
  *
  * Views integration to provide reverse relationships on image fields.
  */
-function image_field_views_data_views_data_alter(&$data, $field) {
-  foreach ($field['bundles'] as $entity_type => $bundles) {
-    $entity_info = entity_get_info($entity_type);
-    $pseudo_field_name = 'reverse_' . $field['field_name'] . '_' . $entity_type;
+function image_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
+  $entity_type_id = $field_storage->getTargetEntityTypeId();
+  $field_name = $field_storage->getName();
+  $entity_manager = \Drupal::entityManager();
+  $entity_type = $entity_manager->getDefinition($entity_type_id);
+  $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
+  /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+  $table_mapping = $entity_manager->getStorage($entity_type_id)->getTableMapping();
 
-    list($label, $all_labels) = field_views_field_label($field['field_name']);
-    $entity = $entity_info['label'];
-    if ($entity == t('Node')) {
-      $entity = t('Content');
-    }
+  list($label) = views_entity_field_label($entity_type_id, $field_name);
 
-    $data['file_managed'][$pseudo_field_name]['relationship'] = array(
-      'title' => t('@entity using @field', array('@entity' => $entity, '@field' => $label)),
-      'help' => t('Relate each @entity with a @field set to the image.', array('@entity' => $entity, '@field' => $label)),
-      'id' => 'entity_reverse',
-      'field_name' => $field['field_name'],
-      'field table' => _field_sql_storage_tablename($field),
-      'field field' => $field['field_name'] . '_fid',
-      'base' => $entity_info['base_table'],
-      'base field' => $entity_info['entity_keys']['id'],
-      'label' => t('!field_name', array('!field_name' => $field['field_name'])),
-      'join_extra' => array(
-        0 => array(
-          'field' => 'entity_type',
-          'value' => $entity_type,
-        ),
-        1 => array(
-          'field' => 'deleted',
-          'value' => 0,
-          'numeric' => TRUE,
-        ),
+  $data['file_managed'][$pseudo_field_name]['relationship'] = array(
+    'title' => t('@entity using @field', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'label' => t('@field_name', array('@field_name' => $field_name)),
+    'help' => t('Relate each @entity with a @field set to the image.', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'group' => $entity_type->getLabel(),
+    'id' => 'entity_reverse',
+    'base' => $entity_type->getDataTable() ?: $entity_type->getBaseTable(),
+    'entity_type' => $entity_type_id,
+    'base field' => $entity_type->getKey('id'),
+    'field_name' => $field_name,
+    'field table' => $table_mapping->getDedicatedDataTableName($field_storage),
+    'field field' => $field_name . '_target_id',
+    'join_extra' => array(
+      0 => array(
+        'field' => 'deleted',
+        'value' => 0,
+        'numeric' => TRUE,
       ),
-    );
-  }
+    ),
+  );
 }

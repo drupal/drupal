@@ -1,0 +1,5 @@
+# Schema for the views access plugins.
+
+views.access.none:
+  type: mapping
+  label: 'None'

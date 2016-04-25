@@ -1,0 +1,16 @@
+# Schema for the configuration files of the Hook Menu Test module.
+
+menu_test.menu_item:
+  type: config_object
+  label: 'Menu test'
+  mapping:
+    title:
+      type: label
+      label: 'Title'
+menu_test.links.action:
+  type: config_object
+  label: 'Menu test local action'
+  mapping:
+    title:
+      type: label
+      label: 'Title'

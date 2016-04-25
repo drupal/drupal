@@ -1,0 +1,24 @@
+name: 'Theme test base theme'
+type: theme
+description: 'Test theme which acts as a base theme for other test subthemes.'
+version: VERSION
+core: 8.x
+base theme: false
+hidden: true
+
+libraries:
+  - test_basetheme/global-styling
+stylesheets-remove:
+  - '@theme_test/css/base-remove.css'
+libraries-override:
+  core/drupal.dialog:
+    js:
+      misc/dialog/dialog.js: false
+  core/jquery.farbtastic:
+    css:
+      component:
+        assets/vendor/farbtastic/farbtastic.css: css/farbtastic.css
+
+libraries-extend:
+  classy/base:
+    - test_basetheme/global-styling

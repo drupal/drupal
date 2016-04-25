@@ -1,0 +1,9 @@
+name: 'Content Translation'
+type: module
+description: 'Allows users to translate content entities.'
+dependencies:
+  - language
+package: Multilingual
+version: VERSION
+core: 8.x
+configure: language.content_settings_page

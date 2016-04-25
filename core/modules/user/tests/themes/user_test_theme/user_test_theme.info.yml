@@ -1,0 +1,5 @@
+name: 'User Test theme'
+type: theme
+description: 'Theme for testing the available fields in user twig template'
+version: VERSION
+core: 8.x

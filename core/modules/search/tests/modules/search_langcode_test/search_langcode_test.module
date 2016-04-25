@@ -15,14 +15,25 @@ function search_langcode_test_search_preprocess($text, $langcode = NULL) {
     if ($text == 'we are testing') {
       $text .= ' test tested';
     }
-    // Prints the langcode for testPreprocessLangcode().
+    // Prints the langcode for testPreprocessLangcode() and adds some
+    // extra text.
     else {
       drupal_set_message('Langcode Preprocess Test: ' . $langcode);
+      $text .= 'Additional text';
     }
   }
   // Prints the langcode for testPreprocessLangcode().
   elseif (isset($langcode)) {
     drupal_set_message('Langcode Preprocess Test: ' . $langcode);
+
+    // Preprocessing for the excerpt test.
+    if ($langcode == 'ex') {
+      $text = str_replace('finding', 'find', $text);
+      $text = str_replace('finds', 'find', $text);
+      $text = str_replace('dic', ' dependency injection container', $text);
+      $text = str_replace('hypertext markup language', 'html', $text);
+    }
   }
+
   return $text;
 }

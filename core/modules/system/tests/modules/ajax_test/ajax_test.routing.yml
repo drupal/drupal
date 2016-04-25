@@ -1,0 +1,52 @@
+ajax_test.dialog_contents:
+  path: '/ajax-test/dialog-contents'
+  defaults:
+    _title: 'AJAX Dialog contents routing'
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::dialogContents'
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.dialog_form:
+  path: '/ajax-test/dialog-form'
+  defaults:
+    _title: 'Ajax Form contents'
+    _form: '\Drupal\ajax_test\Form\AjaxTestForm'
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.dialog:
+  path: '/ajax-test/dialog'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::dialog'
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.dialog_close:
+  path: '/ajax-test/dialog-close'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::dialogClose'
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.render:
+  path: '/ajax-test/render'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::render'
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.order:
+  path: '/ajax-test/order'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::order'
+  options:
+    _theme: ajax_base_page
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.render_error:
+  path: '/ajax-test/render-error'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::renderError'
+  requirements:
+    _access: 'TRUE'

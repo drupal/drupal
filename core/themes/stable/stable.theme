@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Stable theme.
+ */
+
+use Drupal\Component\Utility\Html;
+
+/**
+ * Implements template_preprocess_links().
+ */
+function stable_preprocess_links(&$variables) {
+  // @deprecated in Drupal 8.0.x and will be removed before 9.0.0. This feature
+  // of adding a class based on the associative key can cause CSS class name
+  // conflicts.
+  if (!empty($variables['links'])) {
+    foreach ($variables['links'] as $key => $value) {
+      if (!is_numeric($key)) {
+        $class = Html::getClass($key);
+        $variables['links'][$key]['attributes']->addClass($class);
+      }
+    }
+  }
+}

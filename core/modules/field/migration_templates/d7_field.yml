@@ -1,0 +1,42 @@
+id: d7_field
+label: Field configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_field
+  constants:
+    status: true
+    langcode: und
+process:
+  entity_type: entity_type
+  status: 'constants/status'
+  langcode: 'constants/langcode'
+  field_name: field_name
+  type:
+    plugin: static_map
+    source: type
+    map:
+      date: datetime
+      datestamp: datetime
+      datetime: datetime
+      email: email
+      file: file
+      image: image
+      link_field: link
+      list_boolean: boolean
+      list_integer: list_integer
+      list_text: list_string
+      number_integer: integer
+      number_decimal: decimal
+      number_float: float
+      phone: telephone
+      taxonomy_term_reference: entity_reference
+      text: text
+      text_long: text_long
+      text_with_summary: text_with_summary
+  translatable: translatable
+  cardinality: cardinality
+  settings:
+    plugin: d7_field_settings
+destination:
+  plugin: entity:field_storage_config

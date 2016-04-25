@@ -1,0 +1,28 @@
+tracker.page:
+  path: '/activity'
+  defaults:
+    _controller: '\Drupal\tracker\Controller\TrackerPage::getContent'
+    _title: 'Recent content'
+  requirements:
+    _permission: 'access content'
+
+tracker.users_recent_content:
+  path: '/activity/{user}'
+  defaults:
+    _controller: '\Drupal\tracker\Controller\TrackerUserRecent::getContent'
+    _title: 'My recent content'
+  requirements:
+    _permission: 'access content'
+    _access_tracker_own_information: 'TRUE'
+    user: \d+
+
+tracker.user_tab:
+  path: '/user/{user}/activity'
+  defaults:
+    _controller: '\Drupal\tracker\Controller\TrackerUserTab::getContent'
+    _title_callback: '\Drupal\tracker\Controller\TrackerUserTab::getTitle'
+  requirements:
+    _permission: 'access content'
+    _entity_access: 'user.view'
+    user: \d+
+

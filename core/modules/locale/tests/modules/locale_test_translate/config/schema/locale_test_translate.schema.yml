@@ -1,0 +1,10 @@
+locale_test_translate.settings:
+  type: config_object
+  label: 'Test for locale translations'
+  mapping:
+    translatable_no_default:
+      type: label
+    translatable_default_with_translation:
+      type: label
+    translatable_default_with_no_translation:
+      type: label

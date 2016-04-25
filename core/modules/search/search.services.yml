@@ -1,0 +1,8 @@
+services:
+  plugin.manager.search:
+    class: Drupal\search\SearchPluginManager
+    parent: default_plugin_manager
+
+  search.search_page_repository:
+    class: Drupal\search\SearchPageRepository
+    arguments: ['@config.factory', '@entity.manager']

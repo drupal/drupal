@@ -1,0 +1,6 @@
+name: RDF
+type: module
+description: 'Enriches your content with metadata to let other applications (e.g. search engines, aggregators) better understand its relationships and attributes.'
+package: Core
+version: VERSION
+core: 8.x

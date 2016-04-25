@@ -5,19 +5,22 @@
  * Simulate a custom module with a local po file.
  */
 
+use Drupal\Core\Extension\Extension;
+use Drupal\Core\StreamWrapper\PublicStream;
+
 /**
  * Implements hook_system_info_alter().
  *
  * Make the test scripts to be believe this is not a hidden test module, but
  * a regular custom module.
  */
-function locale_test_system_info_alter(&$info, $file, $type) {
+function locale_test_system_info_alter(&$info, Extension $file, $type) {
   // Only modify the system info if required.
   // By default the locale_test modules are hidden and have a project specified.
-  // To test the module detection proces by locale_project_list() the
+  // To test the module detection process by locale_project_list() the
   // test modules should mimic a custom module. I.e. be non-hidden.
-  if (state()->get('locale_translation_test_system_info_alter')) {
-    if ($file->name == 'locale_test' || $file->name == 'locale_test_disabled') {
+  if (\Drupal::state()->get('locale.test_system_info_alter')) {
+    if ($file->getName() == 'locale_test' || $file->getName() == 'locale_test_translate') {
       // Don't hide the module.
       $info['hidden'] = FALSE;
     }
@@ -33,41 +36,33 @@ function locale_test_system_info_alter(&$info, $file, $type) {
  * names, versions, timestamps etc must be fixed because they must match the
  * files created by the test script.
  *
- * The "locale_translation_test_projects" state variable must be set by the
+ * The "locale.test_projects_alter" state variable must be set by the
  * test script in order for this hook to take effect.
  */
 function locale_test_locale_translation_projects_alter(&$projects) {
-  if (state()->get('locale_translation_test_projects')) {
+  // Drupal core should not be translated. By overriding the server pattern we
+  // make sure that no translation for drupal core will be found and that the
+  // translation update system will not go out to l.d.o to check.
+  $projects['drupal']['server_pattern'] = 'translations://';
+
+  if (\Drupal::state()->get('locale.remove_core_project')) {
+    unset($projects['drupal']);
+  }
+
+  if (\Drupal::state()->get('locale.test_projects_alter')) {
 
     // Instead of the default ftp.drupal.org we use the file system of the test
     // instance to simulate a remote file location.
-    $url = url(NULL, array('absolute' => TRUE));
-    $remote_url = $url . variable_get('file_public_path', conf_path() . '/files') . '/remote/';
+    $url = \Drupal::url('<front>', [], ['absolute' => TRUE]);
+    $remote_url = $url . PublicStream::basePath() . '/remote/';
 
     // Completely replace the project data with a set of test projects.
-    $base_url = url();
-    $files_url = variable_get('file_public_path', conf_path() . '/files');
-    $projects = array (
-      'drupal' => array (
-        'name' => 'drupal',
-        'info' => array (
-          'name' => 'Drupal',
-          'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language.txt',
-          'package' => 'Core',
-          'version' => '8.0',
-          'project' => 'drupal',
-          '_info_file_ctime' => 1348824632,
-          'datestamp' => 0,
-        ),
-        'datestamp' => 0,
-        'project_type' => 'core',
-        'project_status' => TRUE,
-      ),
-      'contrib_module_one' => array (
+    $projects = array(
+      'contrib_module_one' => array(
         'name' => 'contrib_module_one',
-        'info' => array (
+        'info' => array(
           'name' => 'Contributed module one',
-          'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language.txt',
+          'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
           'package' => 'Other',
           'version' => '8.x-1.1',
           'project' => 'contrib_module_one',
@@ -78,11 +73,11 @@ function locale_test_locale_translation_projects_alter(&$projects) {
         'project_type' => 'module',
         'project_status' => TRUE,
       ),
-      'contrib_module_two' => array (
+      'contrib_module_two' => array(
         'name' => 'contrib_module_two',
-        'info' => array (
+        'info' => array(
           'name' => 'Contributed module two',
-          'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language.txt',
+          'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
           'package' => 'Other',
           'version' => '8.x-2.0-beta4',
           'project' => 'contrib_module_two',
@@ -93,11 +88,11 @@ function locale_test_locale_translation_projects_alter(&$projects) {
         'project_type' => 'module',
         'project_status' => TRUE,
       ),
-      'contrib_module_three' => array (
+      'contrib_module_three' => array(
         'name' => 'contrib_module_three',
-        'info' => array (
+        'info' => array(
           'name' => 'Contributed module three',
-          'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language.txt',
+          'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
           'package' => 'Other',
           'version' => '8.x-1.0',
           'project' => 'contrib_module_three',
@@ -108,9 +103,9 @@ function locale_test_locale_translation_projects_alter(&$projects) {
         'project_type' => 'module',
         'project_status' => TRUE,
       ),
-      'locale_test' => array (
+      'locale_test' => array(
         'name' => 'locale_test',
-        'info' => array (
+        'info' => array(
           'name' => 'Locale test',
           'interface translation project' => 'locale_test',
           'interface translation server pattern' => 'core/modules/locale/tests/test.%language.po',
@@ -124,9 +119,9 @@ function locale_test_locale_translation_projects_alter(&$projects) {
         'project_type' => 'module',
         'project_status' => TRUE,
       ),
-      'custom_module_one' => array (
+      'custom_module_one' => array(
         'name' => 'custom_module_one',
-        'info' => array (
+        'info' => array(
           'name' => 'Custom module one',
           'interface translation project' => 'custom_module_one',
           'interface translation server pattern' => 'translations://custom_module_one.%language.po',
@@ -142,4 +137,69 @@ function locale_test_locale_translation_projects_alter(&$projects) {
       ),
     );
   }
+}
+
+/**
+ * Implements hook_language_fallback_candidates_OPERATION_alter().
+ */
+function locale_test_language_fallback_candidates_locale_lookup_alter(array &$candidates, array $context) {
+  \Drupal::state()->set('locale.test_language_fallback_candidates_locale_lookup_alter_candidates', $candidates);
+  \Drupal::state()->set('locale.test_language_fallback_candidates_locale_lookup_alter_context', $context);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function locale_test_theme() {
+  $return = [];
+
+  $return['locale_test_tokenized'] = [
+    'variable' => ['content' => ''],
+  ];
+
+  return $return;
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function locale_test_token_info() {
+  $info = [];
+
+  $info['types']['locale_test'] = [
+    'name' => t('Locale test'),
+    'description' => t('Locale test'),
+  ];
+
+  $info['tokens']['locale_test']['security_test1'] = [
+    'type' => 'text',
+    'name' => t('Security test 1'),
+  ];
+  $info['tokens']['locale_test']['security_test2'] = [
+    'type' => 'text',
+    'name' => t('Security test 2'),
+  ];
+
+  return $info;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function locale_test_tokens($type, $tokens, array $data = [], array $options = []) {
+  $return = [];
+  if ($type == 'locale_test') {
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'security_test1':
+          $return[$original] = "javascript:alert('Mooooh!');";
+          break;
+        case 'security_test2':
+          $return[$original] = "<script>alert('Mooooh!');</script>";
+          break;
+      }
+    }
+  }
+
+  return $return;
 }

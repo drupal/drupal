@@ -1,0 +1,72 @@
+/**
+ * @file
+ * Presentational styles for Drupal dialogs.
+ */
+
+.ui-dialog {
+  position: absolute;
+  z-index: 1260;
+  overflow: visible;
+  color: #000;
+  background: #fff;
+  border: solid 1px #ccc;
+  padding: 0;
+}
+@media all and (max-width: 48em) { /* 768px */
+  .ui-dialog {
+    width: 92% !important;
+  }
+}
+.ui-dialog .ui-dialog-titlebar {
+  font-weight: bold;
+  background: #f3f4ee;
+  border-style: solid;
+  border-radius: 0;
+  border-width: 0 0 1px 0;
+  border-color: #ccc;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+  border: 0;
+  background: none;
+}
+.ui-dialog .ui-dialog-buttonpane {
+  margin-top: 0;
+  background: #f3f4ee;
+  padding: .3em 1em;
+  border-width: 1px 0 0 0;
+  border-color: #ccc;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  margin: 0;
+  padding: 0;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {
+  padding: 0;
+}
+
+/* Form action buttons are moved in dialogs. Remove empty space. */
+.ui-dialog .ui-dialog-content .form-actions {
+  padding: 0;
+  margin: 0;
+}
+.ui-dialog .ajax-progress-throbber {
+  /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
+  left: 49%;
+  position: fixed;
+  top: 48.5%;
+  z-index: 1000;
+  background-color: #232323;
+  background-image: url(../../../../misc/loading-small.gif);
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-radius: 7px;
+  height: 24px;
+  opacity: 0.9;
+  padding: 4px;
+  width: 24px;
+}
+.ui-dialog .ajax-progress-throbber .throbber,
+.ui-dialog .ajax-progress-throbber .message {
+  display: none;
+}
+

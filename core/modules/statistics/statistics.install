@@ -10,87 +10,14 @@
  */
 function statistics_uninstall() {
   // Remove states.
-  state()->delete('statistics.node_counter_scale');
-  state()->delete('statistics.day_timestamp');
+  \Drupal::state()->delete('statistics.node_counter_scale');
+  \Drupal::state()->delete('statistics.day_timestamp');
 }
 
 /**
  * Implements hook_schema().
  */
 function statistics_schema() {
-  $schema['accesslog'] = array(
-    'description' => 'Stores site access information for statistics.',
-    'fields' => array(
-      'aid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique accesslog ID.',
-      ),
-      'sid' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Browser session ID of user that visited page.',
-      ),
-      'title' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-        'description' => 'Title of page visited.',
-      ),
-      'path' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-        'description' => 'Internal path to page visited (relative to Drupal root.)',
-      ),
-      'url' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'description' => 'Referrer URI.',
-      ),
-      'hostname' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-        'description' => 'Hostname of user that visited the page.',
-      ),
-      'uid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-        'default' => 0,
-        'description' => 'User {users}.uid that visited the page.',
-      ),
-      'timer' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Time in milliseconds that the page took to load.',
-      ),
-      'timestamp' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Timestamp of when the page was visited.',
-      ),
-    ),
-    'indexes' => array(
-      'accesslog_timestamp' => array('timestamp'),
-      'uid' => array('uid'),
-    ),
-    'primary key' => array('aid'),
-    'foreign keys' => array(
-      'visitor' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-  );
-
   $schema['node_counter'] = array(
     'description' => 'Access statistics for {node}s.',
     'fields' => array(
@@ -132,44 +59,23 @@ function statistics_schema() {
 }
 
 /**
- * Moves statistics settings from variables to config.
- *
- * @ingroup config_upgrade
- */
-function statistics_update_8000() {
-  update_variables_to_config('statistics.settings', array(
-    'statistics_count_content_views' => 'count_content_views',
-    'statistics_enable_access_log' => 'access_log.enabled',
-    'statistics_flush_accesslog_timer' => 'access_log.max_lifetime',
-    'statistics_block_top_day_num' => 'block.popular.top_day_limit',
-    'statistics_block_top_all_num' => 'block.popular.top_all_limit',
-    'statistics_block_top_last_num' => 'block.popular.top_recent_limit',
-  ));
-}
-
-/**
- * Make *id fields unsigned.
+ * Disable the Statistics module if the node module is not enabled.
  */
 function statistics_update_8001() {
-  db_drop_primary_key('node_counter');
-  db_change_field('node_counter', 'nid', 'nid',
-    array(
-      'description' => 'The {node}.nid for these statistics.',
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    array('primary key' => array('nid'))
-  );
+  if (!\Drupal::moduleHandler()->moduleExists('node')) {
+    if (\Drupal::service('module_installer')->uninstall(array('statistics'), TRUE)) {
+      return 'The statistics module depends on the node module and has therefore been uninstalled.';
+    }
+    else {
+      return 'There was an error uninstalling the statistcs module.';
+    }
+  }
 }
 
 /**
- * Convert variables to state.
+ * Disable the Statistics module if the node module is not enabled.
  */
 function statistics_update_8002() {
-  update_variables_to_state(array(
-    'node_cron_views_scale' => 'statistics.node_counter_scale',
-    'statistics_day_timestamp' => 'statistics.day_timestamp',
-  ));
+  // Set the new configuration setting for max age to the initial value.
+  \Drupal::configFactory()->getEditable('statistics.settings')->set('display_max_age', 3600)->save();
 }

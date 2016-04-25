@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Ajax\CssCommand.
- */
-
 namespace Drupal\Core\Ajax;
-
-use Drupal\Core\Ajax\CommandInterface;
 
 /**
  * An AJAX command for calling the jQuery css() method.
@@ -15,10 +8,12 @@ use Drupal\Core\Ajax\CommandInterface;
  * The 'css' command will instruct the client to use the jQuery css() method to
  * apply the CSS arguments to elements matched by the given selector.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.css() defined
+ * This command is implemented by Drupal.AjaxCommands.prototype.css() defined
  * in misc/ajax.js.
  *
  * @see http://docs.jquery.com/CSS/css#properties
+ *
+ * @ingroup ajax
  */
 class CssCommand implements CommandInterface {
 
@@ -59,6 +54,8 @@ class CssCommand implements CommandInterface {
    *   The CSS property to be changed.
    * @param $value
    *   The new value of the CSS property.
+   *
+   * @return $this
    */
   public function setProperty($property, $value) {
     $this->css[$property] = $value;

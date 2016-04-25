@@ -1,0 +1,40 @@
+id: d6_node_revision
+label: Node revisions
+migration_tags:
+  - Drupal 6
+deriver: Drupal\node\Plugin\migrate\D6NodeDeriver
+source:
+  plugin: d6_node_revision
+process:
+  nid: nid
+  vid: vid
+  type: type
+  langcode:
+    plugin: default_value
+    source: language
+    default_value: "und"
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  'body/format':
+    plugin: migration
+    migration: d6_filter_format
+    source: format
+  'body/value': body
+  'body/summary': teaser
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+
+#  unmapped d6 fields.
+#  tnid
+#  translate
+#  moderate
+#  comment
+
+destination:
+  plugin: entity_revision:node

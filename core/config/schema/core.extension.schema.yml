@@ -1,0 +1,16 @@
+core.extension:
+  type: config_object
+  label: 'Extension settings'
+  mapping:
+    module:
+      type: sequence
+      label: 'Enabled modules'
+      sequence:
+        type: integer
+        label: 'Weight'
+    theme:
+      type: sequence
+      label: 'Installed themes'
+      sequence:
+        type: integer
+        label: 'Weight'

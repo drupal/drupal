@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Editor module.
+ */
+
+/**
+ * Synchronizes the editor status with the paired text format status.
+ */
+function editor_update_8001() {
+  $config_factory = \Drupal::configFactory();
+  // Iterate on all text formats config entities.
+  foreach ($config_factory->listAll('filter.format.') as $name) {
+    list(,, $id) = explode('.', $name, 3);
+    $status = $config_factory->get($name)->get('status');
+    $editor = $config_factory->getEditable("editor.editor.$id");
+    if (!$editor->isNew() && $editor->get('status') !== $status) {
+      $editor->set('status', $status)->save();
+    }
+  }
+}

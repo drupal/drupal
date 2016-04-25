@@ -1,0 +1,160 @@
+/**
+ * @file
+ * Visual styles for comments in Bartik.
+ */
+
+/* This is required to win over specificity of #content h2 */
+#content .comment-wrapper h2 {
+  margin-bottom: 1em;
+}
+#content .comment-wrapper h2.comment-form__title {
+  margin-bottom: 1em;
+}
+.field-node--comment {
+  font-size: 0.934em;
+}
+.comment {
+  margin-bottom: 19px;
+  vertical-align: top;
+  display: table;
+}
+[dir="rtl"] .comment {
+  direction: rtl;
+}
+
+.comment__meta {
+  padding: 0 30px 0 0; /* LTR */
+  font-size: 1.071em;
+}
+[dir="rtl"] .comment__meta {
+  padding: 0 0 0 30px;
+}
+.comment__attribution img {
+  border: 1px solid #d3d7d9;
+}
+/* This is required to win over specificity of .field--type-image img */
+.comment .field--name-user-picture img {
+  margin: 0;
+}
+.comment__author .username {
+  white-space: nowrap;
+}
+.comment__author {
+  margin: 4px 0;
+  line-height: 1.2;
+}
+.comment__time {
+  margin-bottom: 4px;
+  color: #68696b;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.733em;
+  line-height: 1.2;
+
+}
+.comment__permalink {
+  font-size: 0.733em;
+  line-height: 1.2;
+}
+.comment__content {
+  position: relative;
+  display: table-cell;
+  padding: 10px 25px 10px 25px;
+  vertical-align: top;
+  width: 100%;
+  border: 1px solid #d3d7d9;
+  font-size: 0.929em;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+.comment__content:before {
+  content: '';
+  position: absolute;
+  right: 100%; /* LTR */
+  top: 20px;
+  border-top: 20px solid transparent;
+  border-right: 20px solid #d3d7d9; /* LTR */
+  border-bottom: 20px solid transparent;
+}
+[dir="rtl"] .comment__content:before {
+  right: auto;
+  left: 100%;
+  border-right: none;
+  border-left: 20px solid #d3d7d9;
+}
+.comment__content:after {
+  content: '';
+  position: absolute;
+  right: 100%; /* LTR */
+  top: 20px;
+  border-top: 20px solid transparent;
+  border-right: 20px solid #fff; /* LTR */
+  border-bottom: 20px solid transparent;
+  margin-right: -1px; /* LTR */
+}
+[dir="rtl"] .comment__content:after {
+  right: auto;
+  left: 100%;
+  border-right: none;
+  border-left: 20px solid #fff;
+  margin-right: 0;
+  margin-left: -1px;
+}
+.comment__content h3 {
+  margin-top: 0.94em;
+  margin-bottom: 0.45em;
+  font-size: 1.171em;
+}
+.comment__content nav {
+  padding-top: 1px;
+}
+.indented {
+  margin-left: 40px; /* LTR */
+}
+[dir="rtl"] .indented {
+  margin-right: 40px;
+  margin-left: 0;
+}
+.comment .links {
+  padding: 0 0 0.25em 0;
+}
+.comment .links li {
+  padding: 0 0.5em 0 0; /* LTR */
+  font-size: 1.08em;
+}
+[dir="rtl"] .comment .links li {
+  padding: 0 0 0 0.5em;
+}
+.comment--unpublished {
+  margin-right: 5px; /* LTR */
+  padding: 5px 2px 5px 5px; /* LTR */
+  background: #fff4f4;
+}
+[dir="rtl"] .comment--unpublished {
+  margin-left: 5px;
+  margin-right: 0;
+  padding: 5px 5px 5px 2px;
+}
+
+/**
+ * @todo: unpublished nodes have class .node--unpublished.
+ * change this to .comment--unpublished.
+ */
+.unpublished .comment-text .comment-arrow {
+  border-left: 1px solid #fff4f4;
+  border-right: 1px solid #fff4f4;
+}
+.unpublished {
+  padding: 20px 15px 0;
+}
+.comment-footer {
+  display: table-row;
+}
+.comment--unpublished .comment__text:after,
+.node--unpublished .comment__text:after {
+  border-right-color: #fff4f4; /* LTR */
+}
+[dir="rtl"] .comment--unpublished .comment__content:after,
+[dir="rtl"] .node--unpublished .comment__content:after {
+  border-left-color: #fff4f4;
+}

@@ -1,0 +1,5 @@
+entity.responsive_image_style.edit_form:
+  title: Edit
+  route_name: entity.responsive_image_style.edit_form
+  base_route: entity.responsive_image_style.edit_form
+  weight: -10

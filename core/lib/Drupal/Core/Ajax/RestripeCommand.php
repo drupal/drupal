@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Ajax\RestripeCommand.
- */
-
 namespace Drupal\Core\Ajax;
-
-use Drupal\Core\Ajax\CommandInterface;
 
 /**
  * AJAX command for resetting the striping on a table.
@@ -15,8 +8,10 @@ use Drupal\Core\Ajax\CommandInterface;
  * The 'restripe' command instructs the client to restripe a table. This is
  * usually used after a table has been modified by a replace or append command.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.restripe()
+ * This command is implemented by Drupal.AjaxCommands.prototype.restripe()
  * defined in misc/ajax.js.
+ *
+ * @ingroup ajax
  */
 class RestripeCommand implements CommandInterface {
 

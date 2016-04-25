@@ -1,0 +1,6 @@
+name: 'BigPipe test'
+type: module
+description: 'Support module for BigPipe testing.'
+package: Testing
+version: VERSION
+core: 8.x

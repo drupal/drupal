@@ -1,0 +1,9 @@
+name: Shortcut
+type: module
+description: 'Allows users to manage customizable lists of shortcut links.'
+package: Core
+version: VERSION
+core: 8.x
+configure: entity.shortcut_set.collection
+dependencies:
+  - link

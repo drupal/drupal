@@ -1,0 +1,4 @@
+id: isinstallable
+label: Default
+weight: 0
+protected_property: Default

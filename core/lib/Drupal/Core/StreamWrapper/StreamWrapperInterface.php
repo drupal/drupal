@@ -1,11 +1,13 @@
 <?php
 
+namespace Drupal\Core\StreamWrapper;
+
 /**
- * @file
- * Definition of Drupal\Core\StreamWrapper\StreamWrapperInterface.
+ * Defines a Drupal stream wrapper extension.
  *
  * Provides a Drupal interface and classes to implement PHP stream wrappers for
- * public, private, and temporary files.
+ * public, private, and temporary files. Extends the StreamWrapperInterface
+ * with methods expected by Drupal stream wrapper classes.
  *
  * A stream wrapper is an abstraction of a file system that allows Drupal to
  * use the same set of methods to access both local files and remote resources.
@@ -18,16 +20,103 @@
  * @see http://www.faqs.org/rfcs/rfc3986.html
  * @see http://bugs.php.net/bug.php?id=47070
  */
-
-namespace Drupal\Core\StreamWrapper;
-
-/**
- * Defines a Drupal stream wrapper extension.
- *
- * Extends the StreamWrapperInterface with methods expected by Drupal stream
- * wrapper classes.
- */
 interface StreamWrapperInterface extends PhpStreamWrapperInterface {
+
+  /**
+   * Stream wrapper bit flags that are the basis for composite types.
+   *
+   * Note that 0x0002 is skipped, because it was the value of a constant that
+   * has since been removed.
+   */
+
+  /**
+   * A filter that matches all wrappers.
+   */
+  const ALL = 0x0000;
+
+  /**
+   * Refers to a local file system location.
+   */
+  const LOCAL = 0x0001;
+
+  /**
+   * Wrapper is readable (almost always true).
+   */
+  const READ = 0x0004;
+
+  /**
+   * Wrapper is writeable.
+   */
+  const WRITE = 0x0008;
+
+  /**
+   * Exposed in the UI and potentially web accessible.
+   */
+  const VISIBLE = 0x0010;
+
+  /**
+   * Composite stream wrapper bit flags that are usually used as the types.
+   */
+
+  /**
+   * Defines the stream wrapper bit flag for a hidden file.
+   *
+   * This is not visible in the UI or accessible via web, but readable and
+   * writable; for instance, the temporary directory for file uploads.
+   */
+  const HIDDEN = 0x000C;
+
+  /**
+   * Hidden, readable and writeable using local files.
+   */
+  const LOCAL_HIDDEN = 0x000D;
+
+  /**
+   * Visible, readable and writeable.
+   */
+  const WRITE_VISIBLE = 0x001C;
+
+  /**
+   * Visible and read-only.
+   */
+  const READ_VISIBLE = 0x0014;
+
+  /**
+   * This is the default 'type' falg. This does not include
+   * StreamWrapperInterface::LOCAL, because PHP grants a greater trust level to
+   * local files (for example, they can be used in an "include" statement,
+   * regardless of the "allow_url_include" setting), so stream wrappers need to
+   * explicitly opt-in to this.
+   */
+  const NORMAL = 0x001C;
+
+  /**
+   * Visible, readable and writeable using local files.
+   */
+  const LOCAL_NORMAL = 0x001D;
+
+  /**
+   * Returns the type of stream wrapper.
+   *
+   * @return int
+   */
+  public static function getType();
+
+  /**
+   * Returns the name of the stream wrapper for use in the UI.
+   *
+   * @return string
+   *   The stream wrapper name.
+   */
+  public function getName();
+
+  /**
+   * Returns the description of the stream wrapper for use in the UI.
+   *
+   * @return string
+   *   The stream wrapper description.
+   */
+  public function getDescription();
 
   /**
    * Sets the absolute stream resource URI.
@@ -38,7 +127,7 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
    * @param string $uri
    *   A string containing the URI that should be used for this instance.
    */
-  function setUri($uri);
+  public function setUri($uri);
 
   /**
    * Returns the stream resource URI.
@@ -60,37 +149,6 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
    *   Returns a string containing a web accessible URL for the resource.
    */
   public function getExternalUrl();
-
-  /**
-   * Returns the MIME type of the resource.
-   *
-   * @param string $uri
-   *   The URI, path, or filename.
-   * @param array $mapping
-   *   An optional map of extensions to their mimetypes, in the form:
-   *    - 'mimetypes': a list of mimetypes, keyed by an identifier,
-   *    - 'extensions': the mapping itself, an associative array in which
-   *      the key is the extension and the value is the mimetype identifier.
-   *
-   * @return string
-   *   Returns a string containing the MIME type of the resource.
-   */
-  public static function getMimeType($uri, $mapping = NULL);
-
-  /**
-   * Changes permissions of the resource.
-   *
-   * PHP lacks this functionality and it is not part of the official stream
-   * wrapper interface. This is a custom implementation for Drupal.
-   *
-   * @param int $mode
-   *   Integer value for the permissions. Consult PHP chmod() documentation
-   *   for more information.
-   *
-   * @return bool
-   *   Returns TRUE on success or FALSE on failure.
-   */
-  public function chmod($mode);
 
   /**
    * Returns canonical, absolute path of the resource.
@@ -122,4 +180,5 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
    * @see drupal_dirname()
    */
   public function dirname($uri = NULL);
+
 }

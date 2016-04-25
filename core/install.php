@@ -7,11 +7,8 @@
 
 // Change the directory to the Drupal root.
 chdir('..');
-
-/**
- * Defines the root directory of the Drupal installation.
- */
-define('DRUPAL_ROOT', getcwd());
+// Store the Drupal root path.
+$root_path = realpath('');
 
 /**
  * Global flag to indicate the site is in installation mode.
@@ -26,11 +23,17 @@ define('MAINTENANCE_MODE', 'install');
 // The minimum version is specified explicitly, as DRUPAL_MINIMUM_PHP is not
 // yet available. It is defined in bootstrap.inc, but it is not possible to
 // load that file yet as it would cause a fatal error on older versions of PHP.
-if (version_compare(PHP_VERSION, '5.3.3') < 0) {
-  print 'Your PHP installation is too old. Drupal requires at least PHP 5.3.3. See the <a href="http://drupal.org/requirements">system requirements</a> page for more information.';
+if (version_compare(PHP_VERSION, '5.5.9') < 0) {
+  print 'Your PHP installation is too old. Drupal requires at least PHP 5.5.9. See the <a href="https://www.drupal.org/requirements">system requirements</a> page for more information.';
   exit;
 }
 
+if (function_exists('opcache_get_status') && opcache_get_status()['opcache_enabled'] && !ini_get('opcache.save_comments')) {
+  print 'Systems with OPcache installed must have <a href="http://php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments">opcache.save_comments</a> enabled.';
+  exit();
+}
+
 // Start the installer.
-require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
-install_drupal();
+$class_loader = require_once $root_path . '/autoload.php';
+require_once $root_path . '/core/includes/install.core.inc';
+install_drupal($class_loader);

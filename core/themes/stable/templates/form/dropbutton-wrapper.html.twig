@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Theme override for a dropbutton wrapper.
+ *
+ * Available variables:
+ * - children: Contains the child elements of the dropbutton menu.
+ *
+ * @see template_preprocess()
+ */
+#}
+{% if children %}
+  {% spaceless %}
+    <div class="dropbutton-wrapper">
+      <div class="dropbutton-widget">
+        {{ children }}
+      </div>
+    </div>
+  {% endspaceless %}
+{% endif %}

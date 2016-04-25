@@ -1,0 +1,7 @@
+name: module handler test all2
+type: module
+description: 'Test module used to test adding groups of modules with loadAll during runtime.'
+package: Testing
+version: VERSION
+core: 8.x
+hidden: true

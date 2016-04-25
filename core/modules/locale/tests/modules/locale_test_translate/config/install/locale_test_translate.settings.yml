@@ -1,0 +1,3 @@
+translatable_no_default: ''
+translatable_default_with_translation: 'Locale can translate'
+translatable_default_with_no_translation: 'Locale can not translate'

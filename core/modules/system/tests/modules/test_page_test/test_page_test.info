@@ -1,6 +1,0 @@
-name = Test page
-description = Provides a test page for automated tests.
-package = Testing
-version = VERSION
-core = 8.x
-hidden = TRUE

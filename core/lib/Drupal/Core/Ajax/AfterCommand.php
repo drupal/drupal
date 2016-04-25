@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Ajax\AfterCommand.
- */
-
 namespace Drupal\Core\Ajax;
-
-use Drupal\Core\Ajax\InsertCommand;
 
 /**
  * An AJAX command for calling the jQuery after() method.
@@ -16,10 +9,12 @@ use Drupal\Core\Ajax\InsertCommand;
  * method to insert the given HTML content after each element matched by the
  * given selector.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
  *
  * @see http://docs.jquery.com/Manipulation/after#content
+ *
+ * @ingroup ajax
  */
 class AfterCommand extends InsertCommand {
 
@@ -32,7 +27,7 @@ class AfterCommand extends InsertCommand {
       'command' => 'insert',
       'method' => 'after',
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\FileTransfer\FTP.
- */
-
 namespace Drupal\Core\FileTransfer;
 
 /**
@@ -13,7 +8,7 @@ namespace Drupal\Core\FileTransfer;
 abstract class FTP extends FileTransfer {
 
   /**
-   * Overrides Drupal\Core\FileTransfer\FileTransfer::__construct().
+   * {@inheritdoc}
    */
   public function __construct($jail, $username, $password, $hostname, $port) {
     $this->username = $username;
@@ -24,7 +19,7 @@ abstract class FTP extends FileTransfer {
   }
 
   /**
-   * Overrides Drupal\Core\FileTransfer\FileTransfer::factory().
+   * {@inheritdoc}
    */
   static function factory($jail, $settings) {
     $username = empty($settings['username']) ? '' : $settings['username'];
@@ -43,7 +38,7 @@ abstract class FTP extends FileTransfer {
   }
 
   /**
-   * Overrides Drupal\Core\FileTransfer\FileTransfer::getSettingsForm().
+   * {@inheritdoc}
    */
   public function getSettingsForm() {
     $form = parent::getSettingsForm();

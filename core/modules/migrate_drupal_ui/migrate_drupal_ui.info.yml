@@ -1,0 +1,11 @@
+name: 'Migrate Drupal UI'
+type: module
+description: 'Provides a user interface for migrating from older Drupal versions.'
+package: 'Core (Experimental)'
+version: VERSION
+core: 8.x
+configure: migrate_drupal_ui.upgrade
+dependencies:
+  - migrate
+  - migrate_drupal
+  - dblog

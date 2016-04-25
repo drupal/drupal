@@ -1,0 +1,40 @@
+# Schema for the configuration files of the Action module.
+
+action.settings:
+  type: config_object
+  label: 'Action settings'
+  mapping:
+    recursion_limit:
+      type: integer
+      label: 'Recursion limit for actions'
+
+
+action.configuration.action_send_email_action:
+  type: mapping
+  label: 'Send email configuration'
+  mapping:
+    recipient:
+      type: string
+      label: 'Recipient'
+    subject:
+      type: label
+      label: 'Subject'
+    message:
+      type: text
+      label: 'Message'
+
+action.configuration.action_goto_action:
+  type: mapping
+  label: 'Redirect to URL configuration'
+  mapping:
+    url:
+      type: string
+      label: 'URL'
+
+action.configuration.action_message_action:
+  type: mapping
+  label: 'Display a message to the user configuration'
+  mapping:
+    message:
+      type: text
+      label: 'Message'

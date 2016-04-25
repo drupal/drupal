@@ -5,7 +5,13 @@
  * Batch callbacks for the Batch API tests.
  */
 
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
+ * Implements callback_batch_operation().
+ *
  * Performs a simple batch operation.
  */
 function _batch_test_callback_1($id, $sleep, &$context) {
@@ -19,6 +25,8 @@ function _batch_test_callback_1($id, $sleep, &$context) {
 }
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Performs a multistep batch operation.
  */
 function _batch_test_callback_2($start, $total, $sleep, &$context) {
@@ -52,7 +60,7 @@ function _batch_test_callback_2($start, $total, $sleep, &$context) {
 }
 
 /**
- * Performs a simple batch operation.
+ * Implements callback_batch_operation().
  */
 function _batch_test_callback_5($id, $sleep, &$context) {
   // No-op, but ensure the batch take a couple iterations.
@@ -67,6 +75,8 @@ function _batch_test_callback_5($id, $sleep, &$context) {
 }
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Performs a batch operation setting up its own batch.
  */
 function _batch_test_nested_batch_callback() {
@@ -78,10 +88,9 @@ function _batch_test_nested_batch_callback() {
  * Provides a common 'finished' callback for batches 1 to 4.
  */
 function _batch_test_finished_helper($batch_id, $success, $results, $operations) {
-  $messages = array("results for batch $batch_id");
   if ($results) {
     foreach ($results as $op => $op_results) {
-      $messages[] = 'op '. $op . ': processed ' . count($op_results) . ' elements';
+      $messages[] = 'op '. Html::escape($op) . ': processed ' . count($op_results) . ' elements';
     }
   }
   else {
@@ -91,13 +100,28 @@ function _batch_test_finished_helper($batch_id, $success, $results, $operations)
   if (!$success) {
     // A fatal error occurred during the processing.
     $error_operation = reset($operations);
-    $messages[] = t('An error occurred while processing @op with arguments:<br/>@args', array('@op' => $error_operation[0], '@args' => print_r($error_operation[1], TRUE)));
+    $messages[] = t('An error occurred while processing @op with arguments:<br />@args', array('@op' => $error_operation[0], '@args' => print_r($error_operation[1], TRUE)));
   }
 
-  drupal_set_message(implode('<br />', $messages));
+  // Use item list template to render the messages.
+  $error_message = [
+    '#type' => 'inline_template',
+    '#template' => 'results for batch {{ batch_id }}{{ errors }}',
+    '#context' => [
+      'batch_id' => $batch_id,
+      'errors' => [
+        '#theme' => 'item_list',
+        '#items' => $messages,
+      ],
+    ],
+  ];
+
+  drupal_set_message(\Drupal::service('renderer')->renderPlain($error_message));
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Triggers 'finished' callback for batch 0.
  */
 function _batch_test_finished_0($success, $results, $operations) {
@@ -105,6 +129,8 @@ function _batch_test_finished_0($success, $results, $operations) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Triggers 'finished' callback for batch 1.
  */
 function _batch_test_finished_1($success, $results, $operations) {
@@ -112,6 +138,18 @@ function _batch_test_finished_1($success, $results, $operations) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
+ * Triggers 'finished' callback for batch 1.
+ */
+function _batch_test_finished_1_finished($success, $results, $operations) {
+  _batch_test_finished_helper(1, $success, $results, $operations);
+  return new RedirectResponse(Url::fromRoute('test_page_test.test_page', [], ['absolute' => TRUE])->toString());
+}
+
+/**
+ * Implements callback_batch_finished().
+ *
  * Triggers 'finished' callback for batch 2.
  */
 function _batch_test_finished_2($success, $results, $operations) {
@@ -119,6 +157,8 @@ function _batch_test_finished_2($success, $results, $operations) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Triggers 'finished' callback for batch 3.
  */
 function _batch_test_finished_3($success, $results, $operations) {
@@ -126,6 +166,8 @@ function _batch_test_finished_3($success, $results, $operations) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Triggers 'finished' callback for batch 4.
  */
 function _batch_test_finished_4($success, $results, $operations) {
@@ -133,6 +175,8 @@ function _batch_test_finished_4($success, $results, $operations) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Triggers 'finished' callback for batch 5.
  */
 function _batch_test_finished_5($success, $results, $operations) {

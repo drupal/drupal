@@ -1,0 +1,43 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+    - entity_test
+    - user
+id: test_comment
+label: test_comment
+module: views
+description: ''
+tag: ''
+base_table: comment_field_data
+base_field: cid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      row:
+        type: fields
+      fields:
+        subject:
+          id: subject
+          table: comment_field_data
+          field: subject
+          label: ''
+          type: string
+          plugin_id: field
+          entity_type: comment
+          entity_field: subject
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts: {  }

@@ -1,0 +1,6 @@
+name: 'Twig registry loader test subtheme'
+type: theme
+base theme: test_theme_twig_registry_loader_theme
+description: 'Support module for Twig registry loader testing.'
+version: VERSION
+core: 8.x

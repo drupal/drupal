@@ -1,0 +1,22 @@
+id: update_settings
+label: Update configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - update_max_fetch_attempts
+    - update_fetch_url
+    - update_notification_threshold
+    - update_notify_emails
+    - update_check_frequency
+process:
+  'fetch/max_attempts': update_max_fetch_attempts
+  'fetch/url': update_fetch_url
+  'notification/threshold': update_notification_threshold
+  'notification/emails': update_notify_emails
+  'check/interval_days': update_check_frequency
+destination:
+  plugin: config
+  config_name: update.settings

@@ -1,0 +1,152 @@
+/**
+ * @file
+ * Stylesheet for the administration pages of the Color module.
+ */
+.color-form {
+  max-width: 50em;
+}
+.farbtastic {
+  margin: 0 auto;
+}
+.color-form .form-item {
+  margin: 0.5em 0;
+  height: 2em;
+  padding: 0.5em;
+}
+.color-form label {
+  clear: left; /* LTR */
+}
+[dir="rtl"] .color-form label {
+  clear: right;
+}
+.color-form .form-text {
+  float: left; /* LTR */
+  width: 86%;
+  text-align: center;
+  cursor: pointer;
+}
+[dir="rtl"] .color-form .form-text {
+  float: right;
+}
+.color-palette__hook {
+  float: left; /* LTR */
+  width: 16px;
+  height: 16px;
+}
+[dir="rtl"] .color-palette__hook {
+  float: right;
+}
+.color-palette__hook.is-down,
+.color-palette__hook.is-up,
+.color-palette__hook.is-both {
+  background: url(../images/hook.png) no-repeat 100% 0; /* LTR */
+}
+[dir="rtl"] .color-palette__hook.is-down,
+[dir="rtl"] .color-palette__hook.is-up,
+[dir="rtl"] .color-palette__hook.is-both {
+  background: url(../images/hook-rtl.png) no-repeat 0 0;
+}
+.color-palette__hook.is-up {
+  background-position: 100% -27px; /* LTR */
+}
+[dir="rtl"] .color-palette__hook.is-up {
+  background-position: 0 -27px;
+}
+.color-palette__hook.is-both {
+  background-position: 100% -54px; /* LTR */
+}
+[dir="rtl"] .color-palette__hook.is-both {
+  background-position: 0 -54px;
+}
+/**
+ * The button also inherits from .link, which hides the background. Use a more
+ * specific selector to overwrite.
+ */
+button.color-palette__lock,
+.color-palette__lock {
+  float: left; /* LTR */
+  width: 20px;
+  height: 19px;
+  background: url(../images/lock.png) no-repeat 50% 0;
+  cursor: pointer;
+  position: relative;
+  top: -1.7em;
+  left: -10px;
+  direction: ltr;
+  text-indent: -9999px;
+  border: 0;
+  outline: 0;
+}
+[dir="rtl"] button.color-palette__lock,
+[dir="rtl"] .color-palette__lock {
+  float: right;
+}
+/* Same as above .color-palette__lock rule. */
+button.is-unlocked,
+.is-unlocked {
+  background-position: 50% -22px;
+}
+
+/* wide viewport. */
+@media screen and (min-width: 37.5625em) { /* 601px */
+  .color-placeholder {
+    float: right; /* LTR */
+  }
+  [dir="rtl"] .color-placeholder {
+    float: left;
+  }
+  .color-form .form-item {
+    margin: 0.5em 195px 0.5em 0; /* LTR */
+  }
+  [dir="rtl"] .color-form .form-item {
+    margin: 0.5em 0 0.5em 195px;
+  }
+  .color-form label {
+    float: left; /* LTR */
+    clear: left; /* LTR */
+    width: 15em;
+  }
+  [dir="rtl"] .color-form label {
+    float: right;
+    clear: right;
+  }
+  .color-form .form-text,
+  .color-form .form-select {
+    float: left; /* LTR */
+    width: auto;
+  }
+  [dir="rtl"] .color-form .form-text,
+  [dir="rtl"] .color-form .form-select {
+    float: right;
+  }
+  .color-palette__hook {
+    float: left; /* LTR */
+    margin-top: 3px;
+  }
+  [dir="rtl"] .color-palette__hook {
+    float: right;
+  }
+}
+.item-selected {
+  background: #eee;
+}
+
+/* Preview */
+.color-preview {
+  display: none;
+}
+.js .color-preview {
+  display: block;
+  position: relative;
+  float: left; /* LTR */
+}
+.js[dir="rtl"] .color-preview {
+  float: right;
+}
+@media screen and (max-width: 30em) { /* 480px */
+  .color-form .color-preview-sidebar,
+  .color-form .color-preview-content {
+    width: auto;
+    margin: 0;
+  }
+}

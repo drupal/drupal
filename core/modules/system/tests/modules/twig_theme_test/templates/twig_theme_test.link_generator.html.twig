@@ -1,0 +1,5 @@
+<div>link via the linkgenerator: {{ link('register', test_url) }}</div>
+<div>link via the linkgenerator: {{ link('register', test_url, {'foo': 'bar'}) }}</div>
+<div>link via the linkgenerator: {{ link('register', test_url_attribute, {'id': 'kitten'}) }}</div>
+<div>link via the linkgenerator: {{ link('register', 'route:user.register', {'id': 'kitten'}) }}</div>
+<div>link via the linkgenerator: {{ link('register', 'route:user.register', attributes) }}</div>

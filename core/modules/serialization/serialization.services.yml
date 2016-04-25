@@ -1,0 +1,66 @@
+services:
+  serializer:
+    class: Symfony\Component\Serializer\Serializer
+    arguments: [{  }, {  }]
+  serializer.normalizer.config_entity:
+    class: Drupal\serialization\Normalizer\ConfigEntityNormalizer
+    tags:
+      - { name: normalizer }
+    arguments: ['@entity.manager']
+  serializer.normalizer.content_entity:
+      class: Drupal\serialization\Normalizer\ContentEntityNormalizer
+      tags:
+        - { name: normalizer }
+      arguments: ['@entity.manager']
+  serializer.normalizer.entity:
+    class: Drupal\serialization\Normalizer\EntityNormalizer
+    tags:
+      - { name: normalizer }
+    arguments: ['@entity.manager']
+  serializer.normalizer.complex_data:
+    class: Drupal\serialization\Normalizer\ComplexDataNormalizer
+    tags:
+      - { name: normalizer }
+  serializer.normalizer.entity_reference_field_item:
+    class: Drupal\serialization\Normalizer\EntityReferenceFieldItemNormalizer
+    tags:
+      # Set the priority lower than the hal entity reference field item
+      # normalizer, so that we do not replace that for hal_json.
+      # @todo Find a better way for this in https://www.drupal.org/node/2575761.
+      - { name: normalizer, priority: 5 }
+  serializer.normalizer.list:
+    class: Drupal\serialization\Normalizer\ListNormalizer
+    tags:
+      - { name: normalizer }
+  serializer.normalizer.password_field_item:
+      class: Drupal\serialization\Normalizer\NullNormalizer
+      arguments: ['Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem']
+      tags:
+        - { name: normalizer, priority: 20 }
+  serializer.normalizer.safe_string:
+      class: Drupal\serialization\Normalizer\MarkupNormalizer
+      tags:
+        - { name: normalizer }
+  serializer.normalizer.typed_data:
+    class: Drupal\serialization\Normalizer\TypedDataNormalizer
+    tags:
+      - { name: normalizer }
+  serializer.encoder.json:
+    class: Drupal\serialization\Encoder\JsonEncoder
+    tags:
+      - { name: encoder, format: json }
+  serializer.encoder.xml:
+    class: Drupal\serialization\Encoder\XmlEncoder
+    tags:
+      - { name: encoder, format: xml }
+  serializer.entity_resolver:
+    class: Drupal\serialization\EntityResolver\ChainEntityResolver
+  serializer.entity_resolver.uuid:
+    class: Drupal\serialization\EntityResolver\UuidResolver
+    tags:
+      - { name: entity_resolver}
+    arguments: ['@entity.manager']
+  serialization.entity_resolver.target_id:
+    class: Drupal\serialization\EntityResolver\TargetIdResolver
+    tags:
+      - { name: entity_resolver}

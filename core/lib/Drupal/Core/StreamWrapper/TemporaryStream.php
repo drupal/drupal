@@ -1,11 +1,8 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\StreamWrapper\TemporaryStream.
- */
-
 namespace Drupal\Core\StreamWrapper;
+
+use \Drupal\Core\Url;
 
 /**
  * Defines a Drupal temporary (temporary://) stream wrapper class.
@@ -16,17 +13,38 @@ namespace Drupal\Core\StreamWrapper;
 class TemporaryStream extends LocalStream {
 
   /**
-   * Implements Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath()
+   * {@inheritdoc}
    */
-  public function getDirectoryPath() {
-    return variable_get('file_temporary_path', file_directory_temp());
+  public static function getType() {
+    return StreamWrapperInterface::LOCAL_HIDDEN;
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::getExternalUrl().
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return t('Temporary files');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return t('Temporary local files for upload and previews.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDirectoryPath() {
+    return file_directory_temp();
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getExternalUrl() {
     $path = str_replace('\\', '/', $this->getTarget());
-    return url('system/temporary/' . $path, array('absolute' => TRUE));
+    return Url::fromRoute('system.temporary', [], ['absolute' => TRUE, 'query' => ['file' => $path]])->toString();
   }
 }

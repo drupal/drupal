@@ -1,56 +1,58 @@
 <?php
 
 /**
- * Implements hook_permission().
+ * @file
+ * Test module.
  */
-function module_test_permission() {
-  return array(
-    'module_test perm' => t('example perm for module_test module'),
-  );
-}
+
+use Drupal\Core\Extension\Extension;
 
 /**
  * Implements hook_system_info_alter().
  *
  * Manipulate module dependencies to test dependency chains.
  */
-function module_test_system_info_alter(&$info, $file, $type) {
-  if (state()->get('module_test.dependency') == 'missing dependency') {
-    if ($file->name == 'forum') {
-      // Make forum module depend on poll.
-      $info['dependencies'][] = 'poll';
+function module_test_system_info_alter(&$info, Extension $file, $type) {
+  if (\Drupal::state()->get('module_test.dependency') == 'missing dependency') {
+    if ($file->getName() == 'color') {
+      // Make color module depend on config.
+      $info['dependencies'][] = 'config';
     }
-    elseif ($file->name == 'poll') {
-      // Make poll depend on a made-up module.
+    elseif ($file->getName() == 'config') {
+      // Make config module depend on a non-existing module.
       $info['dependencies'][] = 'foo';
     }
   }
-  elseif (state()->get('module_test.dependency') == 'dependency') {
-    if ($file->name == 'forum') {
-      // Make the forum module depend on poll.
-      $info['dependencies'][] = 'poll';
+  elseif (\Drupal::state()->get('module_test.dependency') == 'dependency') {
+    if ($file->getName() == 'color') {
+      // Make color module depend on config.
+      $info['dependencies'][] = 'config';
     }
-    elseif ($file->name == 'poll') {
-      // Make poll depend on php module.
-      $info['dependencies'][] = 'php';
+    elseif ($file->getName() == 'config') {
+      // Make config module depend on help module.
+      $info['dependencies'][] = 'help';
+    }
+    elseif ($file->getName() == 'entity_test') {
+      // Make entity test module depend on help module.
+      $info['dependencies'][] = 'help';
     }
   }
-  elseif (state()->get('module_test.dependency') == 'version dependency') {
-    if ($file->name == 'forum') {
-      // Make the forum module depend on poll.
-      $info['dependencies'][] = 'poll';
+  elseif (\Drupal::state()->get('module_test.dependency') == 'version dependency') {
+    if ($file->getName() == 'color') {
+      // Make color module depend on config.
+      $info['dependencies'][] = 'config';
     }
-    elseif ($file->name == 'poll') {
-      // Make poll depend on a specific version of php module.
-      $info['dependencies'][] = 'php (1.x)';
+    elseif ($file->getName() == 'config') {
+      // Make config module depend on a specific version of help module.
+      $info['dependencies'][] = 'help (1.x)';
     }
-    elseif ($file->name == 'php') {
-      // Set php module to a version compatible with the above.
+    elseif ($file->getName() == 'help') {
+      // Set help module to a version compatible with the above.
       $info['version'] = '8.x-1.0';
     }
   }
-  if ($file->name == 'seven' && $type == 'theme') {
-    $info['regions']['test_region'] = t('Test region');
+  if ($file->getName() == 'seven' && $type == 'theme') {
+    $info['regions']['test_region'] = 'Test region';
   }
 }
 
@@ -65,106 +67,22 @@ function module_test_hook_info() {
 }
 
 /**
- * Implements hook_menu().
- */
-function module_test_menu() {
-  $items['module-test/hook-dynamic-loading-invoke'] = array(
-    'title' => 'Test hook dynamic loading (invoke)',
-    'page callback' => 'module_test_hook_dynamic_loading_invoke',
-    'access arguments' => array('access content'),
-  );
-  $items['module-test/hook-dynamic-loading-invoke-all'] = array(
-    'title' => 'Test hook dynamic loading (invoke_all)',
-    'page callback' => 'module_test_hook_dynamic_loading_invoke_all',
-    'access arguments' => array('access content'),
-  );
-  $items['module-test/hook-dynamic-loading-invoke-all-during-load/%module_test'] = array(
-    'title' => 'Test hook dynamic loading (menu item load)',
-    'page callback' => 'module_test_hook_dynamic_loading_invoke_all_during_load',
-    'page arguments' => array(2),
-    'access arguments' => array('access content'),
-  );
-  $items['module-test/class-loading'] = array(
-    'title' => 'Test loading a class from another module',
-    'page callback' => 'module_test_class_loading',
-    'access callback' => TRUE,
-  );
-  return $items;
-}
-
-/**
- * Page callback for 'hook dynamic loading' test.
- *
- * If the hook is dynamically loaded correctly, the menu callback should
- * return 'success!'.
- */
-function module_test_hook_dynamic_loading_invoke() {
-  $result = module_invoke('module_test', 'test_hook');
-  return $result['module_test'];
-}
-
-/**
- * Page callback for 'hook dynamic loading' test.
- *
- * If the hook is dynamically loaded correctly, the menu callback should
- * return 'success!'.
- */
-function module_test_hook_dynamic_loading_invoke_all() {
-  $result = module_invoke_all('test_hook');
-  return $result['module_test'];
-}
-
-/**
- * Page callback for 'hook dynamic loading' test.
- *
- * If the hook is dynamically loaded correctly, the menu callback should
- * return 'success!'.
- */
-function module_test_hook_dynamic_loading_invoke_all_during_load($param) {
-  return $param;
-}
-
-/**
  * Load function used by module_test_hook_dynamic_loading_invoke_all_during_load().
  *
  * @see module_test_menu().
  */
 function module_test_load($param) {
-  $result = module_invoke_all('test_hook');
+  $result = \Drupal::moduleHandler()->invokeAll('test_hook');
   return $result[$param];
 }
 
 /**
- * Page callback for 'class loading' test.
- *
- * This module does not have a dependency on module_autoload_test.module. If
- * that module is enabled, this function should return the string
- * 'Drupal\\module_autoload_test\\SomeClass::testMethod() was invoked.'. If
- * that module is not enabled, this function should return nothing.
+ * Implements hook_modules_installed().
  */
-function module_test_class_loading() {
-  if (class_exists('Drupal\module_autoload_test\SomeClass')) {
-    $obj = new Drupal\module_autoload_test\SomeClass();
-    return $obj->testMethod();
-  }
-}
-
-/**
- * Implements hook_modules_enabled().
- */
-function module_test_modules_enabled($modules) {
+function module_test_modules_installed($modules) {
   // Record the ordered list of modules that were passed in to this hook so we
   // can check that the modules were enabled in the correct sequence.
-  state()->set('system_test.module_enable_order', $modules);
-}
-
-/**
- * Implements hook_modules_disabled().
- */
-function module_test_modules_disabled($modules) {
-  // Record the ordered list of modules that were passed in to this hook so we
-  // can check that the modules were disabled in the correct sequence.
-  variable_set('test_module_disable_order', $modules);
+  \Drupal::state()->set('module_test.install_order', $modules);
 }
 
 /**
@@ -173,5 +91,25 @@ function module_test_modules_disabled($modules) {
 function module_test_modules_uninstalled($modules) {
   // Record the ordered list of modules that were passed in to this hook so we
   // can check that the modules were uninstalled in the correct sequence.
-  variable_set('test_module_uninstall_order', $modules);
+  \Drupal::state()->set('module_test.uninstall_order', $modules);
+}
+
+/**
+ * Implements hook_module_implements_alter()
+ *
+ * @see module_test_altered_test_hook()
+ * @see \Drupal\system\Tests\Module\ModuleImplementsAlterTest::testModuleImplementsAlter()
+ */
+function module_test_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'altered_test_hook') {
+    // Add a hook implementation, that will be found in
+    // module_test.implementation.inc.
+    $implementations['module_test'] = 'implementations';
+  }
+  if ($hook === 'unimplemented_test_hook') {
+    // Add the non-existing function module_test_unimplemented_test_hook(). This
+    // should cause an exception to be thrown in
+    // \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo('unimplemented_test_hook').
+    $implementations['module_test'] = FALSE;
+  }
 }

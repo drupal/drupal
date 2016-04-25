@@ -1,0 +1,239 @@
+name: Stable
+type: theme
+description: A default base theme using Drupal 8.0.0's core markup and CSS.
+package: Core
+version: VERSION
+core: 8.x
+base theme: false
+hidden: true
+
+libraries-override:
+  block/drupal.block.admin:
+    css:
+      theme:
+        css/block.admin.css: css/block/block.admin.css
+
+  ckeditor/drupal.ckeditor:
+    css:
+      state:
+        css/ckeditor.css: css/ckeditor/ckeditor.css
+  ckeditor/drupal.ckeditor.plugins.drupalimagecaption:
+    css:
+      component:
+        css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css: css/ckeditor/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css
+  ckeditor/drupal.ckeditor.plugins.language:
+    css:
+      component:
+        css/plugins/language/ckeditor.language.css: css/ckeditor/plugins/language/ckeditor.language.css
+  ckeditor/drupal.ckeditor.admin:
+    css:
+      theme:
+        css/ckeditor.admin.css: css/ckeditor/ckeditor.admin.css
+
+  color/admin:
+    css:
+      theme:
+        css/color.admin.css: css/color/color.admin.css
+
+  config_translation/drupal.config_translation.admin:
+    css:
+      theme:
+        css/config_translation.admin.css: css/config_translation/config_translation.admin.css
+
+  content_translation/drupal.content_translation.admin:
+    css:
+      theme:
+        css/content_translation.admin.css: css/content_translation/content_translation.admin.css
+
+  contextual/drupal.contextual-links:
+    css:
+      component:
+        css/contextual.module.css: css/contextual/contextual.module.css
+      theme:
+        css/contextual.theme.css: css/contextual/contextual.theme.css
+        css/contextual.icons.theme.css: css/contextual/contextual.icons.theme.css
+  contextual/drupal.contextual-toolbar:
+    css:
+      component:
+        css/contextual.toolbar.css: css/contextual/contextual.toolbar.css
+
+  core/drupal.dropbutton:
+    css:
+      component:
+        misc/dropbutton/dropbutton.css: css/core/dropbutton/dropbutton.css
+  core/drupal.vertical-tabs:
+    css:
+      component:
+        misc/vertical-tabs.css: css/core/vertical-tabs.css
+
+  dblog/drupal.dblog:
+    css:
+      component:
+        css/dblog.module.css: css/dblog/dblog.module.css
+
+  field_ui/drupal.field_ui:
+    css:
+      theme:
+        css/field_ui.admin.css: css/field_ui/field_ui.admin.css
+
+  file/drupal.file:
+    css:
+      theme:
+        css/file.admin.css: css/file/file.admin.css
+
+  filter/drupal.filter.admin:
+    css:
+      theme:
+        css/filter.admin.css: css/filter/filter.admin.css
+  filter/drupal.filter:
+    css:
+      theme:
+        css/filter.admin.css: css/filter/filter.admin.css
+  filter/caption:
+    css:
+      component:
+        css/filter.caption.css: css/filter/filter.caption.css
+
+  image/admin:
+    css:
+      theme:
+        css/image.admin.css: css/image/image.admin.css
+
+  language/drupal.language.admin:
+    css:
+      theme:
+        css/language.admin.css: css/language/language.admin.css
+
+  locale/drupal.locale.admin:
+    css:
+      component:
+        css/locale.admin.css: css/locale/locale.admin.css
+
+  menu_ui/drupal.menu_ui.adminforms:
+    css:
+      theme:
+        css/menu_ui.admin.css: css/menu_ui/menu_ui.admin.css
+
+  node/drupal.node:
+    css:
+      layout:
+        css/node.module.css: css/node/node.module.css
+  node/drupal.node.preview:
+    css:
+      theme:
+        css/node.preview.css: css/node/node.preview.css
+  node/form:
+    css:
+      layout:
+        css/node.module.css: css/node/node.module.css
+  node/drupal.node.admin:
+    css:
+      theme:
+        css/node.admin.css: css/node/node.admin.css
+
+  quickedit/quickedit:
+    css:
+      component:
+        css/quickedit.module.css: css/quickedit/quickedit.module.css
+      theme:
+        css/quickedit.theme.css: css/quickedit/quickedit.theme.css
+        css/quickedit.icons.theme.css: css/quickedit/quickedit.icons.theme.css
+
+  shortcut/drupal.shortcut:
+    css:
+      theme:
+        css/shortcut.theme.css: css/shortcut/shortcut.theme.css
+        css/shortcut.icons.theme.css: css/shortcut/shortcut.icons.theme.css
+
+  simpletest/drupal.simpletest:
+    css:
+      component:
+        css/simpletest.module.css: css/simpletest/simpletest.module.css
+
+  system/base:
+    css:
+      component:
+        css/components/ajax-progress.module.css: css/system/components/ajax-progress.module.css
+        css/components/align.module.css: css/system/components/align.module.css
+        css/components/autocomplete-loading.module.css: css/system/components/autocomplete-loading.module.css
+        css/components/fieldgroup.module.css: css/system/components/fieldgroup.module.css
+        css/components/container-inline.module.css: css/system/components/container-inline.module.css
+        css/components/clearfix.module.css: css/system/components/clearfix.module.css
+        css/components/details.module.css: css/system/components/details.module.css
+        css/components/hidden.module.css: css/system/components/hidden.module.css
+        css/components/item-list.module.css: css/system/components/item-list.module.css
+        css/components/js.module.css: css/system/components/js.module.css
+        css/components/nowrap.module.css: css/system/components/nowrap.module.css
+        css/components/position-container.module.css: css/system/components/position-container.module.css
+        css/components/progress.module.css: css/system/components/progress.module.css
+        css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
+        css/components/resize.module.css: css/system/components/resize.module.css
+        css/components/sticky-header.module.css: css/system/components/sticky-header.module.css
+        css/components/tabledrag.module.css: css/system/components/tabledrag.module.css
+        css/components/tablesort.module.css: css/system/components/tablesort.module.css
+        css/components/tree-child.module.css: css/system/components/tree-child.module.css
+  system/admin:
+    css:
+      theme:
+        css/system.admin.css: css/system/system.admin.css
+  system/maintenance:
+    css:
+      theme:
+        css/system.maintenance.css: css/system/system.maintenance.css
+  system/diff:
+    css:
+      component:
+        css/system.diff.css: css/system/system.diff.css
+
+  taxonomy/drupal.taxonomy:
+    css:
+      component:
+        css/taxonomy.theme.css: css/taxonomy/taxonomy.theme.css
+
+  toolbar/toolbar:
+    css:
+      component:
+        css/toolbar.module.css: css/toolbar/toolbar.module.css
+      theme:
+        css/toolbar.theme.css: css/toolbar/toolbar.theme.css
+        css/toolbar.icons.theme.css: css/toolbar/toolbar.icons.theme.css
+  toolbar/toolbar.menu:
+    css:
+      state:
+        css/toolbar.menu.css: css/toolbar/toolbar.menu.css
+
+  tour/tour-styling:
+    css:
+      component:
+        css/tour.module.css: css/tour/tour.module.css
+
+  update/drupal.update.admin:
+    css:
+      theme:
+        css/update.admin.theme.css: css/update/update.admin.theme.css
+
+  user/drupal.user:
+    css:
+      component:
+        css/user.module.css: css/user/user.module.css
+  user/drupal.user.admin:
+    css:
+      theme:
+        css/user.admin.css: css/user/user.admin.css
+  user/drupal.user.icons:
+    css:
+      theme:
+        css/user.icons.admin.css: css/user/user.icons.admin.css
+
+  views/views.module:
+    css:
+      component:
+        css/views.module.css: css/views/views.module.css
+
+  views_ui/admin.styling:
+    css:
+      component:
+        css/views_ui.admin.css: css/views_ui/views_ui.admin.css
+      theme:
+        css/views_ui.admin.theme.css: css/views_ui/views_ui.admin.theme.css
+        css/views_ui.contextual.css: css/views_ui/views_ui.contextual.css

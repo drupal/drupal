@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\FileTransfer\SSH.
- */
-
 namespace Drupal\Core\FileTransfer;
 
 /**
@@ -13,7 +8,7 @@ namespace Drupal\Core\FileTransfer;
 class SSH extends FileTransfer implements ChmodInterface {
 
   /**
-   * Overrides Drupal\Core\FileTransfer\FileTransfer::__construct().
+   * {@inheritdoc}
    */
   function __construct($jail, $username, $password, $hostname = "localhost", $port = 22) {
     $this->username = $username;
@@ -24,9 +19,9 @@ class SSH extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::connect().
+   * {@inheritdoc}
    */
-  function connect() {
+  public function connect() {
     $this->connection = @ssh2_connect($this->hostname, $this->port);
     if (!$this->connection) {
       throw new FileTransferException('SSH Connection failed to @host:@port', NULL, array('@host' => $this->hostname, '@port' => $this->port));
@@ -37,7 +32,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Overrides Drupal\Core\FileTransfer\FileTransfer::factory().
+   * {@inheritdoc}
    */
   static function factory($jail, $settings) {
     $username = empty($settings['username']) ? '' : $settings['username'];
@@ -48,7 +43,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::copyFileJailed().
+   * {@inheritdoc}
    */
   protected function copyFileJailed($source, $destination) {
     if (!@ssh2_scp_send($this->connection, $source, $destination)) {
@@ -57,7 +52,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::copyDirectoryJailed().
+   * {@inheritdoc}
    */
   protected function copyDirectoryJailed($source, $destination) {
     if (@!ssh2_exec($this->connection, 'cp -Rp ' . escapeshellarg($source) . ' ' . escapeshellarg($destination))) {
@@ -66,7 +61,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::createDirectoryJailed().
+   * {@inheritdoc}
    */
   protected function createDirectoryJailed($directory) {
     if (@!ssh2_exec($this->connection, 'mkdir ' . escapeshellarg($directory))) {
@@ -75,7 +70,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::removeDirectoryJailed().
+   * {@inheritdoc}
    */
   protected function removeDirectoryJailed($directory) {
     if (@!ssh2_exec($this->connection, 'rm -Rf ' . escapeshellarg($directory))) {
@@ -84,7 +79,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::removeFileJailed().
+   * {@inheritdoc}
    */
   protected function removeFileJailed($destination) {
     if (!@ssh2_exec($this->connection, 'rm ' . escapeshellarg($destination))) {
@@ -106,13 +101,14 @@ class SSH extends FileTransfer implements ChmodInterface {
         return TRUE;
       }
       return FALSE;
-    } else {
+    }
+    else {
       throw new FileTransferException('Cannot check @path.', NULL, array('@path' => $path));
     }
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::isFile().
+   * {@inheritdoc}
    */
   public function isFile($path) {
     $file = escapeshellarg($path);
@@ -122,13 +118,14 @@ class SSH extends FileTransfer implements ChmodInterface {
         return TRUE;
       }
       return FALSE;
-    } else {
+    }
+    else {
       throw new FileTransferException('Cannot check @path.', NULL, array('@path' => $path));
     }
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\ChmodInterface::chmodJailed().
+   * {@inheritdoc}
    */
   function chmodJailed($path, $mode, $recursive) {
     $cmd = sprintf("chmod %s%o %s", $recursive ? '-R ' : '', $mode, escapeshellarg($path));
@@ -138,7 +135,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Overrides Drupal\Core\FileTransfer\FileTransfer::getSettingsForm().
+   * {@inheritdoc}
    */
   public function getSettingsForm() {
     $form = parent::getSettingsForm();

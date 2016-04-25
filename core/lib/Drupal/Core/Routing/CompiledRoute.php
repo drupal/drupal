@@ -1,18 +1,13 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Routing\CompiledRoute.
- */
-
 namespace Drupal\Core\Routing;
 
-use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\CompiledRoute as SymfonyCompiledRoute;
 
 /**
- * Description of CompiledRoute
+ * A compiled route contains derived information from a route object.
  */
-class CompiledRoute {
+class CompiledRoute extends SymfonyCompiledRoute {
 
   /**
    * The fitness of this route.
@@ -36,39 +31,42 @@ class CompiledRoute {
   protected $numParts;
 
   /**
-   * The Route object of which this object is the compiled version.
+   * Constructs a new compiled route object.
    *
-   * @var Symfony\Component\Routing\Route
-   */
-  protected $route;
-
-  /**
-   * The regular expression to match placeholders out of this path.
+   * This is a ridiculously long set of constructor parameters, but as this
+   * object is little more than a collection of values it's not a serious
+   * problem. The parent Symfony class does the same, as well, making it
+   * difficult to override differently.
    *
-   * @var string
-   */
-  protected $regex;
-
-  /**
-   * Constructs a new CompiledRoute object.
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   A original Route instance.
    * @param int $fit
    *   The fitness of the route.
-   * @param string $fit
+   * @param string $pattern_outline
    *   The pattern outline for this route.
    * @param int $num_parts
    *   The number of parts in the path.
+   * @param string $staticPrefix
+   *   The static prefix of the compiled route
    * @param string $regex
-   *   The regular expression to match placeholders out of this path.
+   *   The regular expression to use to match this route
+   * @param array $tokens
+   *   An array of tokens to use to generate URL for this route
+   * @param array $pathVariables
+   *   An array of path variables
+   * @param string|null $hostRegex
+   *   Host regex
+   * @param array $hostTokens
+   *   Host tokens
+   * @param array $hostVariables
+   *   An array of host variables
+   * @param array $variables
+   *   An array of variables (variables defined in the path and in the host patterns)
    */
-  public function __construct(Route $route, $fit, $pattern_outline, $num_parts, $regex) {
-    $this->route = $route;
+  public function __construct($fit, $pattern_outline, $num_parts, $staticPrefix, $regex, array $tokens, array $pathVariables, $hostRegex = null, array $hostTokens = array(), array $hostVariables = array(), array $variables = array()) {
+    parent::__construct($staticPrefix, $regex, $tokens, $pathVariables, $hostRegex, $hostTokens, $hostVariables, $variables);
+
     $this->fit = $fit;
     $this->patternOutline = $pattern_outline;
     $this->numParts = $num_parts;
-    $this->regex = $regex;
   }
 
   /**
@@ -110,36 +108,6 @@ class CompiledRoute {
   }
 
   /**
-   * Returns the placeholder regex.
-   *
-   * @return string
-   *   The regex to locate placeholders in this pattern.
-   */
-  public function getRegex() {
-    return $this->regex;
-  }
-
-  /**
-   * Returns the Route instance.
-   *
-   * @return Route
-   *   A Route instance.
-   */
-  public function getRoute() {
-    return $this->route;
-  }
-
-  /**
-   * Returns the pattern.
-   *
-   * @return string
-   *   The pattern.
-   */
-  public function getPattern() {
-    return $this->route->getPattern();
-  }
-
-  /**
    * Returns the options.
    *
    * @return array
@@ -168,5 +136,32 @@ class CompiledRoute {
   public function getRequirements() {
     return $this->route->getRequirements();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function serialize() {
+    // Calling the parent method is safer than trying to optimize out the extra
+    // function calls.
+    $data = unserialize(parent::serialize());
+    $data['fit'] = $this->fit;
+    $data['patternOutline'] = $this->patternOutline;
+    $data['numParts'] = $this->numParts;
+
+    return serialize($data);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unserialize($serialized) {
+    parent::unserialize($serialized);
+    $data = unserialize($serialized);
+
+    $this->fit = $data['fit'];
+    $this->patternOutline = $data['patternOutline'];
+    $this->numParts = $data['numParts'];
+  }
+
 
 }

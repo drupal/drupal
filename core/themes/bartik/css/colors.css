@@ -1,58 +1,70 @@
-
 /* ---------- Color Module Styles ----------- */
 
-body,
-body.overlay {
+body {
   color: #3b3b3b;
-}
-.comment .comment-arrow {
-  border-color: #ffffff;
+  background: #292929;
 }
 #page,
 #main-wrapper,
-#main-menu-links li a.active,
-#main-menu-links li.active-trail a {
+.region-primary-menu .menu-item a.is-active,
+.region-primary-menu .menu-item--active-trail a {
   background: #ffffff;
 }
-.tabs ul.primary li a.active {
+.tabs ul.primary li a.is-active {
   background-color: #ffffff;
 }
-.tabs ul.primary li.active a {
+.tabs ul.primary li.is-active a {
   background-color: #ffffff;
-  border-bottom: 1px solid #ffffff;
+  border-bottom-color: #ffffff;
 }
 #header {
-  background-color: #48a9e4;
-  background-image: -moz-linear-gradient(top, #0779bf 0%, #48a9e4 100%);
-  background-image: -ms-linear-gradient(top, #0779bf 0%, #48a9e4 100%);
-  background-image: -o-linear-gradient(top, #0779bf 0%, #48a9e4 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #0779bf), color-stop(1, #48a9e4));
-  background-image: -webkit-linear-gradient(top, #0779bf 0%, #48a9e4 100%);
-  background-image: linear-gradient(top, #0779bf 0%, #48a9e4 100%);
+  background-color: #1d84c3;
+  background-image: -webkit-linear-gradient(top, #055a8e 0%, #1d84c3 100%);
+  background-image: linear-gradient(to bottom, #055a8e 0%, #1d84c3 100%);
 }
-a {
+a,
+.link {
   color: #0071b3;
 }
 a:hover,
-a:focus {
+a:focus,
+.link:hover,
+.link:focus {
   color: #018fe2;
 }
-a:active {
+a:active,
+.link:active {
   color: #23aeff;
 }
 .sidebar .block {
   background-color: #f6f6f2;
   border-color: #f9f9f9;
 }
-#page-wrapper,
-#footer-wrapper {
+.site-footer {
   background: #292929;
 }
 .region-header,
 .region-header a,
-.region-header li a.active,
-#name-and-slogan,
-#name-and-slogan a,
-#secondary-menu-links li a {
+.region-header li a.is-active,
+.site-branding__text,
+.site-branding,
+.site-branding__text a,
+.site-branding a,
+.region-secondary-menu .menu-item a,
+.region-secondary-menu .menu-item a.is-active {
   color: #fffeff;
+}
+
+/* ---------- Color Form ----------- */
+
+[dir="rtl"] .color-form .color-palette {
+  margin-left: 0;
+  margin-right: 20px;
+}
+[dir="rtl"] .color-form .form-item label {
+  float: right;
+}
+[dir="rtl"] .color-form .color-palette .lock {
+  right: -20px;
+  left: 0;
 }

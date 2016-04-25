@@ -1,11 +1,8 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Updater\Theme.
- */
-
 namespace Drupal\Core\Updater;
+
+use Drupal\Core\Url;
 
 /**
  * Defines a class for updating themes using
@@ -16,44 +13,53 @@ class Theme extends Updater implements UpdaterInterface {
   /**
    * Returns the directory where a theme should be installed.
    *
-   * If the theme is already installed, drupal_get_path() will return
-   * a valid path and we should install it there (although we need to use an
-   * absolute path, so we prepend DRUPAL_ROOT). If we're installing a new
-   * theme, we always want it to go into /themes, since that's
-   * where all the documentation recommends users install their themes, and
-   * there's no way that can conflict on a multi-site installation, since
-   * the Update manager won't let you install a new theme if it's already
-   * found on your system, and if there was a copy in the top-level we'd see it.
+   * If the theme is already installed, drupal_get_path() will return a valid
+   * path and we should install it there. If we're installing a new theme, we
+   * always want it to go into /themes, since that's where all the
+   * documentation recommends users install their themes, and there's no way
+   * that can conflict on a multi-site installation, since the Update manager
+   * won't let you install a new theme if it's already found on your system,
+   * and if there was a copy in the top-level we'd see it.
    *
    * @return string
-   *   A directory path.
+   *   The absolute path of the directory.
    */
   public function getInstallDirectory() {
-    if ($relative_path = drupal_get_path('theme', $this->name)) {
-      $relative_path = dirname($relative_path);
+    if ($this->isInstalled() && ($relative_path = drupal_get_path('theme', $this->name))) {
+      // The return value of drupal_get_path() is always relative to the site,
+      // so prepend DRUPAL_ROOT.
+      return DRUPAL_ROOT . '/' . dirname($relative_path);
     }
     else {
-      $relative_path = 'themes';
+      // When installing a new theme, prepend the requested root directory.
+      return $this->root . '/' . $this->getRootDirectoryRelativePath();
     }
-    return DRUPAL_ROOT . '/' . $relative_path;
   }
 
   /**
-   * Implements Drupal\Core\Updater\UpdaterInterface::isInstalled().
+   * {@inheritdoc}
+   */
+  public static function getRootDirectoryRelativePath() {
+    return 'themes';
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function isInstalled() {
-    return (bool) drupal_get_path('theme', $this->name);
+    // Check if the theme exists in the file system, regardless of whether it
+    // is enabled or not.
+    $themes = \Drupal::state()->get('system.theme.files', array());
+    return isset($themes[$this->name]);
   }
 
   /**
-   * Implements Drupal\Core\Updater\UpdaterInterface::canUpdateDirectory().
+   * {@inheritdoc}
    */
   static function canUpdateDirectory($directory) {
-    // This is a lousy test, but don't know how else to confirm it is a theme.
-    if (file_scan_directory($directory, '/.*\.module$/')) {
-      return FALSE;
-    }
-    return TRUE;
+    $info = static::getExtensionInfo($directory);
+
+    return (isset($info['type']) && $info['type'] == 'theme');
   }
 
   /**
@@ -69,21 +75,38 @@ class Theme extends Updater implements UpdaterInterface {
   }
 
   /**
-   * Overrides Drupal\Core\Updater\Updater::postInstall().
+   * {@inheritdoc}
    */
   public function postInstall() {
     // Update the theme info.
     clearstatcache();
-    system_rebuild_theme_data();
+    \Drupal::service('theme_handler')->rebuildThemeData();
   }
 
   /**
-   * Overrides Drupal\Core\Updater\Updater::postInstallTasks().
+   * {@inheritdoc}
    */
   public function postInstallTasks() {
-    return array(
-      l(t('Enable newly added themes'), 'admin/appearance'),
-      l(t('Administration pages'), 'admin'),
-    );
+    // Since this is being called outsite of the primary front controller,
+    // the base_url needs to be set explicitly to ensure that links are
+    // relative to the site root.
+    // @todo Simplify with https://www.drupal.org/node/2548095
+    $default_options = [
+      '#type' => 'link',
+      '#options' => [
+        'absolute' => TRUE,
+        'base_url' => $GLOBALS['base_url'],
+      ],
+    ];
+    return [
+      $default_options + [
+        '#url' => Url::fromRoute('system.themes_page'),
+        '#title' => t('Install newly added themes'),
+      ],
+      $default_options + [
+        '#url' => Url::fromRoute('system.admin'),
+        '#title' => t('Administration pages'),
+      ],
+    ];
   }
 }

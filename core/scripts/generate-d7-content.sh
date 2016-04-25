@@ -4,7 +4,8 @@
 /**
  * Generate content for a Drupal 7 database to test the upgrade process.
  *
- * Run this script at the root of an existing Drupal 6 installation.
+ * Run this script at the root of an existing Drupal 7 installation.
+ *
  * Steps to use this generation script:
  * - Install drupal 7.
  * - Run this script from your Drupal ROOT directory.
@@ -30,6 +31,7 @@ include_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 // Enable requested modules
+require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
 include_once './modules/system/system.admin.inc';
 $form = system_modules();
 foreach ($modules_to_enable as $module) {
@@ -44,13 +46,12 @@ drupal_cron_run();
 
 // Create six users
 $query = db_insert('users')->fields(array('uid', 'name', 'pass', 'mail', 'status', 'created', 'access'));
-$password_hasher = drupal_container()->get('password');
 for ($i = 0; $i < 6; $i++) {
   $name = "test user $i";
   $pass = md5("test PassW0rd $i !(.)");
   $mail = "test$i@example.com";
   $now = mktime(0, 0, 0, 1, $i + 1, 2010);
-  $query->values(array(db_next_id(), $name, $password_hasher->hash($pass), $mail, 1, $now, $now));
+  $query->values(array(db_next_id(), $name, user_hash_password($pass), $mail, 1, $now, $now));
 }
 $query->execute();
 
@@ -66,17 +67,16 @@ $required  = array(0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1);
 $voc_id = 0;
 $term_id = 0;
 for ($i = 0; $i < 24; $i++) {
+  $vocabulary = new stdClass;
   ++$voc_id;
-  $vocabulary = entity_create('taxonomy_vocabulary', array(
-    'name' => "vocabulary $voc_id (i=$i)",
-    'machine_name' => 'vocabulary_' . $voc_id . '_' . $i,
-    'description' => "description of " . $vocabulary->name,
-    'multiple' => $multiple[$i % 12],
-    'required' => $required[$i % 12],
-    'relations' => 1,
-    'hierarchy' => $hierarchy[$i % 12],
-    'weight' => $i,
-  ));
+  $vocabulary->name = "vocabulary $voc_id (i=$i)";
+  $vocabulary->machine_name = 'vocabulary_' . $voc_id . '_' . $i;
+  $vocabulary->description = "description of ". $vocabulary->name;
+  $vocabulary->multiple = $multiple[$i % 12];
+  $vocabulary->required = $required[$i % 12];
+  $vocabulary->relations = 1;
+  $vocabulary->hierarchy = $hierarchy[$i % 12];
+  $vocabulary->weight = $i;
   taxonomy_vocabulary_save($vocabulary);
   $field = array(
     'field_name' => 'taxonomy_'. $vocabulary->machine_name,
@@ -168,10 +168,10 @@ for ($i = 0; $i < 36; $i++) {
   if ($i < 12) {
     $node->type = 'page';
   }
-  else if ($i < 24) {
+  elseif ($i < 24) {
     $node->type = 'story';
   }
-  else if (module_exists('blog')) {
+  elseif (module_exists('blog')) {
     $node->type = 'blog';
   }
   $node->sticky = 0;
@@ -252,7 +252,7 @@ for ($i = 0; $i < 12; $i++) {
     'alias' => "content/poll/$i/results",
     'source' => "node/$node->nid/results",
   );
-  drupal_container()->get('path.crud')->save($path['source'], $path['alias']);
+  path_save($path);
 
   // Add some votes
   $node = node_load($node->nid);

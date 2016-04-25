@@ -1,12 +1,8 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\EventSubscriber\RequestCloseSubscriber.
- */
-
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -15,6 +11,21 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Subscriber for all responses.
  */
 class RequestCloseSubscriber implements EventSubscriberInterface {
+
+  /**
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * Constructs a new RequestCloseSubscriber instance.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   */
+  function __construct(ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
+  }
 
   /**
    * Performs end of request tasks.
@@ -28,9 +39,7 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onTerminate(PostResponseEvent $event) {
-    module_invoke_all('exit');
-    module_implements_write_cache();
-    system_run_automated_cron();
+    $this->moduleHandler->writeCache();
   }
 
   /**

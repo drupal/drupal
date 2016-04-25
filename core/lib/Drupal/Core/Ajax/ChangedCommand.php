@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Ajax\ChangedCommand.
- */
-
 namespace Drupal\Core\Ajax;
-
-use Drupal\Core\Ajax\CommandInterface;
 
 /**
  * An AJAX command for marking HTML elements as changed.
@@ -15,8 +8,10 @@ use Drupal\Core\Ajax\CommandInterface;
  * This command instructs the client to mark each of the elements matched by the
  * given selector as 'ajax-changed'.
  *
- * This command is implemented by Drupal.ajax.prototype.commands.changed()
+ * This command is implemented by Drupal.AjaxCommands.prototype.changed()
  * defined in misc/ajax.js.
+ *
+ * @ingroup ajax
  */
 class ChangedCommand implements CommandInterface {
 

@@ -1,0 +1,9 @@
+name: Comment
+type: module
+description: 'Allows users to comment on and discuss published content.'
+package: Core
+version: VERSION
+core: 8.x
+dependencies:
+  - text
+configure: comment.admin

@@ -1,0 +1,31 @@
+id: user_picture_entity_display
+label: User picture display configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: user_picture_instance
+  constants:
+    entity_type: user
+    bundle: user
+    view_mode: default
+    name: user_picture
+    type: image
+    options:
+      label: hidden
+      settings:
+        image_style: ''
+        image_link: content
+process:
+  entity_type: 'constants/entity_type'
+  bundle: 'constants/bundle'
+  view_mode: 'constants/view_mode'
+  field_name: 'constants/name'
+  type: 'constants/type'
+  options: 'constants/options'
+  'options/type': '@type'
+destination:
+  plugin: component_entity_display
+migration_dependencies:
+  required:
+    - user_picture_field_instance

@@ -1,0 +1,859 @@
+# All libraries are defined in alphabetical order.
+
+backbone:
+  remote: https://github.com/jashkenas/backbone
+  version: "1.2.3"
+  license:
+    name: MIT
+    url: https://github.com/jashkenas/backbone/blob/1.2.3/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
+  dependencies:
+    - core/underscore
+
+classList:
+  remote: https://github.com/eligrey/classList.js
+  version: "2014-12-13"
+  license:
+    name: Public Domain
+    url: https://github.com/eligrey/classList.js/blob/2014-12-13/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/classList/classList.min.js: { weight: -21, browsers: { IE: 'lte IE 9', '!IE': false }, minified: true }
+
+ckeditor:
+  remote: https://github.com/ckeditor/ckeditor-dev
+  version: "4.5.7"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor-dev/blob/4.5.7/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
+
+domready:
+  remote: https://github.com/ded/domready
+  version: "1.0.8"
+  license:
+    name: MIT
+    url: https://github.com/ded/domready/blob/v1.0.8/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/domready/ready.min.js: { weight: -21, minified: true }
+
+drupal:
+  version: VERSION
+  js:
+    misc/drupal.js: { weight: -18 }
+  dependencies:
+    - core/domready
+    - core/drupalSettings
+
+drupalSettings:
+  version: VERSION
+  js:
+    # Need to specify a negative weight like drupal.js until
+    # https://www.drupal.org/node/1945262 is resolved.
+    misc/drupalSettingsLoader.js: { weight: -18 }
+  drupalSettings:
+    # These placeholder values will be set by system_js_settings_alter().
+    path:
+      baseUrl: null
+      scriptPath: null
+      pathPrefix: null
+      currentPath: null
+      currentPathIsAdmin: null
+      isFront: null
+      currentLanguage: null
+    pluralDelimiter: null
+
+drupal.active-link:
+  version: VERSION
+  js:
+    misc/active-link.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/classList
+
+drupal.ajax:
+  version: VERSION
+  js:
+    misc/ajax.js: {}
+  drupalSettings:
+    # These placeholder values will be set by system_js_settings_alter().
+    ajaxPageState:
+      libraries: null
+      theme: null
+      theme_token: null
+    ajaxTrustedUrl: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.progress
+    - core/jquery.once
+
+drupal.announce:
+  version: VERSION
+  js:
+    misc/announce.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.debounce
+
+drupal.autocomplete:
+  version: VERSION
+  js:
+    misc/autocomplete.js: { weight: -1 }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax
+    - core/jquery.ui.autocomplete
+
+drupal.batch:
+  version: VERSION
+  js:
+    misc/batch.js: { cache: false }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax
+    - core/drupal.progress
+    - core/jquery.once
+
+drupal.collapse:
+  version: VERSION
+  js:
+    misc/details-aria.js: {}
+    misc/collapse.js: {}
+  dependencies:
+    - core/jquery
+    - core/modernizr
+    - core/drupal
+    - core/drupal.form
+    - core/jquery.once
+
+drupal.date:
+  version: VERSION
+  js:
+    misc/date.js: {}
+  dependencies:
+    - core/drupal
+    - core/modernizr
+    - core/jquery.once
+    - core/jquery.ui.datepicker
+
+drupal.debounce:
+  version: VERSION
+  js:
+    misc/debounce.js: {}
+  dependencies:
+    # @todo Remove Drupal dependency.
+    - core/drupal
+
+drupal.dialog:
+  version: VERSION
+  js:
+    misc/dialog/dialog.js: {}
+    misc/dialog/dialog.position.js: {}
+    misc/dialog/dialog.jquery-ui.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.debounce
+    - core/drupal.displace
+    - core/jquery.ui.dialog
+
+drupal.dialog.ajax:
+  version: VERSION
+  js:
+    misc/dialog/dialog.ajax.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax
+    - core/drupal.dialog
+
+drupal.displace:
+  version: VERSION
+  js:
+    misc/displace.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.debounce
+
+drupal.dropbutton:
+  version: VERSION
+  js:
+    misc/dropbutton/dropbutton.js: {}
+  css:
+    component:
+      misc/dropbutton/dropbutton.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+
+drupal.form:
+  version: VERSION
+  js:
+    misc/form.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.debounce
+    - core/jquery.cookie
+    - core/jquery.once
+
+drupal.machine-name:
+  version: VERSION
+  js:
+    misc/machine-name.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.form
+
+drupal.progress:
+  version: VERSION
+  js:
+    misc/progress.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupalSettings
+
+drupal.states:
+  version: VERSION
+  js:
+    misc/states.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+
+drupal.tabbingmanager:
+  version: VERSION
+  js:
+    misc/tabbingmanager.js: {}
+  dependencies:
+    - core/jquery
+    # Supplies the ':tabbable' pseudo selector.
+    - core/jquery.ui
+    - core/drupal
+
+drupal.tabledrag:
+  version: VERSION
+  js:
+    misc/tabledrag.js: { weight: -1 }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery.cookie
+
+drupal.tableheader:
+  version: VERSION
+  js:
+    misc/tableheader.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/drupal.displace
+
+drupal.tableresponsive:
+  version: VERSION
+  js:
+    misc/tableresponsive.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+
+drupal.tableselect:
+  version: VERSION
+  js:
+    misc/tableselect.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+
+drupal.timezone:
+  version: VERSION
+  js:
+    misc/timezone.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+
+drupal.vertical-tabs:
+  version: VERSION
+  js:
+    # Load before core/drupal.collapse.
+    misc/vertical-tabs.js: { weight: -1 }
+  css:
+    component:
+      misc/vertical-tabs.css: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.form
+    - core/matchmedia
+
+html5shiv:
+  # Block the page from being loaded until html5shiv is initialized.
+  header: true
+  remote: https://github.com/aFarkas/html5shiv
+  version: "3.7.3"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: http://www.gnu.org/licenses/gpl-2.0.html
+    gpl-compatible: true
+  js:
+    assets/vendor/html5shiv/html5shiv.min.js: { weight: -22, browsers: { IE: 'lte IE 8', '!IE': false }, minified: true }
+
+jquery:
+  remote: https://github.com/jquery/jquery
+  version: "2.1.4"
+  license:
+    name: MIT
+    url: https://github.com/jquery/jquery/blob/2.1.4/MIT-LICENSE.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
+
+jquery.cookie:
+  remote: https://github.com/carhartl/jquery-cookie
+  version: "v1.4.1"
+  license:
+    name: MIT
+    url: https://github.com/carhartl/jquery-cookie/blob/v1.4.1/MIT-LICENSE.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/jquery.cookie/jquery.cookie.min.js: { minified: true }
+  dependencies:
+    - core/jquery
+
+jquery.farbtastic:
+  remote: https://github.com/mattfarina/farbtastic
+  # @todo Ping @robloach or @mattfarina to retroactively create this release.
+  version: "1.2"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/mattfarina/farbtastic/blob/master/LICENSE.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/farbtastic/farbtastic.js: { minified: true }
+  css:
+    component:
+      assets/vendor/farbtastic/farbtastic.css: {}
+  dependencies:
+    - core/jquery
+
+jquery.form:
+  remote: https://github.com/malsup/form
+  version: "3.51"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: http://malsup.github.com/gpl-license-v2.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/jquery-form/jquery.form.min.js: { minified: true }
+  dependencies:
+    - core/jquery
+
+jquery.joyride:
+  remote: https://github.com/zurb/joyride
+  version: "v2.1.0"
+  license:
+    name: MIT
+    url: https://github.com/zurb/joyride/blob/v2.1.0/README.markdown
+    gpl-compatible: true
+  js:
+    assets/vendor/jquery-joyride/jquery.joyride-2.1.min.js: { minified: true }
+  dependencies:
+    - core/jquery
+    - core/jquery.cookie
+
+jquery.once:
+  remote: https://github.com/RobLoach/jquery-once
+  version: "2.1.1"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/RobLoach/jquery-once/blob/2.1.1/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
+  dependencies:
+    - core/jquery
+
+jquery.ui:
+  remote: https://github.com/jquery/jquery-ui
+  version: &jquery_ui_version 1.11.4
+  license: &jquery_ui_license
+    name: Public Domain
+    url: https://github.com/jquery/jquery-ui/blob/1.11.4/LICENSE.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/jquery.ui/ui/core-min.js: { weight: -11, minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/core.css: {}
+    theme:
+      assets/vendor/jquery.ui/themes/base/theme.css: {}
+  dependencies:
+    - core/jquery
+
+jquery.ui.accordion:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/accordion-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/accordion.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+
+jquery.ui.autocomplete:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/autocomplete-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/autocomplete.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.position
+    - core/jquery.ui.menu
+
+jquery.ui.button:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/button-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/button.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+
+jquery.ui.datepicker:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/datepicker-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/datepicker.css: {}
+  dependencies:
+    - core/jquery.ui
+
+jquery.ui.dialog:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/dialog-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/dialog.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.button
+    - core/jquery.ui.draggable
+    - core/jquery.ui.mouse
+    - core/jquery.ui.position
+    - core/jquery.ui.resizable
+
+jquery.ui.draggable:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/draggable-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.mouse
+    - core/jquery.ui.widget
+
+jquery.ui.droppable:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/droppable-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.mouse
+    - core/jquery.ui.draggable
+
+jquery.ui.effects.core:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-min.js: { weight: -9, minified: true }
+
+jquery.ui.effects.blind:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-blind-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.bounce:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-bounce-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.clip:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-clip-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.drop:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-drop-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.explode:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-explode-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.fade:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-fade-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.fold:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-fold-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.highlight:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-highlight-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.puff:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-puff-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.pulsate:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-pulsate-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.scale:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-scale-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.shake:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-shake-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.size:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-size-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.slide:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-slide-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.transfer:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-transfer-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.menu:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/menu-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/menu.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+
+jquery.ui.mouse:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/mouse-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.widget
+
+jquery.ui.position:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/position-min.js: { minified: true }
+
+jquery.ui.progressbar:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/progressbar-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/progressbar.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+
+jquery.ui.resizable:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/resizable-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/resizable.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.mouse
+
+jquery.ui.selectable:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/selectable-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/selectable.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.mouse
+    - core/jquery.ui.widget
+
+jquery.ui.selectmenu:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/selectmenu-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/selectmenu.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.menu
+    - core/jquery.ui.position
+    - core/jquery.ui.widget
+
+jquery.ui.slider:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/slider-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/slider.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.mouse
+    - core/jquery.ui.widget
+
+jquery.ui.sortable:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/sortable-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.mouse
+    - core/jquery.ui.widget
+
+jquery.ui.spinner:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/spinner-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/spinner.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.button
+
+jquery.ui.tabs:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/tabs-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/tabs.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+
+jquery.ui.tooltip:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/tooltip-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/tooltip.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.position
+
+jquery.ui.touch-punch:
+  remote: https://github.com/furf/jquery-ui-touch-punch
+  version: "0.2.3"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/furf/jquery-ui-touch-punch
+    gpl-compatible: true
+  js:
+    assets/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js: {}
+  dependencies:
+    - core/jquery.ui
+
+jquery.ui.widget:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -10, minified: true }
+  dependencies:
+    - core/jquery.ui
+
+matchmedia:
+  remote: https://github.com/paulirish/matchMedia.js
+  version: &matchmedia_version 0.2.0
+  license: &matchmedia_license
+    name: MIT
+    url: https://github.com/paulirish/matchMedia.js/blob/0.2.0/LICENSE.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/matchMedia/matchMedia.min.js: { minified: true }
+
+matchmedia.addListener:
+  version: *matchmedia_version
+  license: *matchmedia_license
+  js:
+    assets/vendor/matchMedia/matchMedia.addListener.min.js: { minified: true }
+  dependencies:
+    - core/matchmedia
+
+modernizr:
+  # Block the page from being loaded until Modernizr is initialized.
+  header: true
+  remote: https://github.com/Modernizr/Modernizr
+  license:
+    name: MIT
+    url: http://modernizr.com/license/
+    gpl-compatible: true
+  version: "v3.3.1"
+  js:
+    assets/vendor/modernizr/modernizr.min.js: { preprocess: 0, weight: -21, minified: true }
+
+normalize:
+  remote: https://github.com/necolas/normalize.css
+  version: "3.0.3"
+  license:
+    name: MIT
+    url: https://github.com/necolas/normalize.css/blob/master/LICENSE.md
+    gpl-compatible: true
+  css:
+    base:
+      assets/vendor/normalize-css/normalize.css: { weight: -20 }
+
+picturefill:
+  remote: https://github.com/scottjehl/picturefill
+  version: "3.0.1"
+  license:
+    name: MIT
+    url: https://github.com/scottjehl/picturefill/blob/3.0.1/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
+  dependencies:
+    - core/matchmedia
+
+underscore:
+  remote: https://github.com/jashkenas/underscore
+  version: "1.8.3"
+  license:
+    name: MIT
+    url: https://github.com/jashkenas/underscore/blob/1.8.3/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }

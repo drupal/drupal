@@ -1,0 +1,6 @@
+name: Internal Dynamic Page Cache
+type: module
+description: 'Caches pages for any user, handling dynamic content correctly.'
+package: Core
+version: VERSION
+core: 8.x

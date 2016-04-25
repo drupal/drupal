@@ -1,13 +1,18 @@
-(function ($) {
+/**
+ * @file
+ * Statistics functionality.
+ */
 
-  "use strict";
+(function ($, Drupal, drupalSettings) {
 
-  $(document).ready(function() {
+  'use strict';
+
+  $(document).ready(function () {
     $.ajax({
-      type: "POST",
+      type: 'POST',
       cache: false,
-      url: Drupal.settings.statistics.url,
-      data: Drupal.settings.statistics.data
+      url: drupalSettings.statistics.url,
+      data: drupalSettings.statistics.data
     });
   });
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

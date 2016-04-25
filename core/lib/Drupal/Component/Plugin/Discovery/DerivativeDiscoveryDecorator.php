@@ -1,11 +1,8 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator.
- */
-
 namespace Drupal\Component\Plugin\Discovery;
+
+use Drupal\Component\Plugin\Exception\InvalidDeriverException;
 
 /**
  * Base class providing the tools for a plugin discovery to be derivative aware.
@@ -15,14 +12,27 @@ namespace Drupal\Component\Plugin\Discovery;
  */
 class DerivativeDiscoveryDecorator implements DiscoveryInterface {
 
-  protected $derivativeFetchers = array();
+  use DiscoveryTrait;
+
+  /**
+   * Plugin derivers.
+   *
+   * @var \Drupal\Component\Plugin\Derivative\DeriverInterface[]
+   *   Keys are base plugin IDs.
+   */
+  protected $derivers = array();
+
+  /**
+   * The decorated plugin discovery.
+   *
+   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface
+   */
   protected $decorated;
 
   /**
-   * Creates a Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator
-   * object.
+   * Creates a new instance.
    *
-   * @param DiscoveryInterface $discovery
+   * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $decorated
    *   The parent object implementing DiscoveryInterface that is being
    *   decorated.
    */
@@ -31,17 +41,33 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
   }
 
   /**
-   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinition().
+   * {@inheritdoc}
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidDeriverException
+   *   Thrown if the 'deriver' class specified in the plugin definition
+   *   does not implement \Drupal\Component\Plugin\Derivative\DeriverInterface.
    */
-  public function getDefinition($plugin_id) {
+  public function getDefinition($plugin_id, $exception_on_invalid = TRUE) {
+    // This check is only for derivative plugins that have explicitly provided
+    // an ID. This is not common, and can be expected to fail. Therefore, opt
+    // out of the thrown exception, which will be handled when checking the
+    // $base_plugin_id.
+    $plugin_definition = $this->decorated->getDefinition($plugin_id, FALSE);
 
     list($base_plugin_id, $derivative_id) = $this->decodePluginId($plugin_id);
-
-    $plugin_definition = $this->decorated->getDefinition($base_plugin_id);
-    if (isset($plugin_definition)) {
-      $derivative_fetcher = $this->getDerivativeFetcher($base_plugin_id, $plugin_definition);
-      if ($derivative_fetcher) {
-        $plugin_definition = $derivative_fetcher->getDerivativeDefinition($derivative_id, $plugin_definition);
+    $base_plugin_definition = $this->decorated->getDefinition($base_plugin_id, $exception_on_invalid);
+    if ($base_plugin_definition) {
+      $deriver = $this->getDeriver($base_plugin_id, $base_plugin_definition);
+      if ($deriver) {
+        $derivative_plugin_definition = $deriver->getDerivativeDefinition($derivative_id, $base_plugin_definition);
+        // If a plugin defined itself as a derivative, merge in possible
+        // defaults from the derivative.
+        if ($derivative_id && isset($plugin_definition)) {
+          $plugin_definition = $this->mergeDerivativeDefinition($plugin_definition, $derivative_plugin_definition);
+        }
+        else {
+          $plugin_definition = $derivative_plugin_definition;
+        }
       }
     }
 
@@ -49,7 +75,11 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
   }
 
   /**
-   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinitions().
+   * {@inheritdoc}
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidDeriverException
+   *   Thrown if the 'deriver' class specified in the plugin definition
+   *   does not implement \Drupal\Component\Plugin\Derivative\DeriverInterface.
    */
   public function getDefinitions() {
     $plugin_definitions = $this->decorated->getDefinitions();
@@ -65,15 +95,22 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
   protected function getDerivatives(array $base_plugin_definitions) {
     $plugin_definitions = array();
     foreach ($base_plugin_definitions as $base_plugin_id => $plugin_definition) {
-      $derivative_fetcher = $this->getDerivativeFetcher($base_plugin_id, $plugin_definition);
-      if ($derivative_fetcher) {
-        $derivative_definitions = $derivative_fetcher->getDerivativeDefinitions($plugin_definition);
+      $deriver = $this->getDeriver($base_plugin_id, $plugin_definition);
+      if ($deriver) {
+        $derivative_definitions = $deriver->getDerivativeDefinitions($plugin_definition);
         foreach ($derivative_definitions as $derivative_id => $derivative_definition) {
           $plugin_id = $this->encodePluginId($base_plugin_id, $derivative_id);
+          // Use this definition as defaults if a plugin already defined
+          // itself as this derivative.
+          if ($derivative_id && isset($base_plugin_definitions[$plugin_id])) {
+            $derivative_definition = $this->mergeDerivativeDefinition($base_plugin_definitions[$plugin_id], $derivative_definition);
+          }
           $plugin_definitions[$plugin_id] = $derivative_definition;
         }
       }
-      else {
+      // If a plugin already defined itself as a derivative it might already
+      // be merged into the definitions.
+      elseif (!isset($plugin_definitions[$base_plugin_id])) {
         $plugin_definitions[$base_plugin_id] = $plugin_definition;
       }
     }
@@ -124,28 +161,77 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
   }
 
   /**
-   * Finds a Drupal\Component\Plugin\Discovery\DerivativeInterface.
-   *
-   * This Drupal\Component\Plugin\Discovery\DerivativeInterface can fetch
-   * derivatives for the plugin.
+   * Gets a deriver for a base plugin.
    *
    * @param string $base_plugin_id
    *   The base plugin id of the plugin.
+   * @param mixed $base_definition
+   *   The base plugin definition to build derivatives.
+   *
+   * @return \Drupal\Component\Plugin\Derivative\DeriverInterface|null
+   *   A DerivativeInterface or NULL if none exists for the plugin.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidDeriverException
+   *   Thrown if the 'deriver' class specified in the plugin definition
+   *   does not implement \Drupal\Component\Plugin\Derivative\DeriverInterface.
+   */
+  protected function getDeriver($base_plugin_id, $base_definition) {
+    if (!isset($this->derivers[$base_plugin_id])) {
+      $this->derivers[$base_plugin_id] = FALSE;
+      $class = $this->getDeriverClass($base_definition);
+      if ($class) {
+        $this->derivers[$base_plugin_id] = new $class($base_plugin_id);
+      }
+    }
+    return $this->derivers[$base_plugin_id] ?: NULL;
+  }
+
+  /**
+   * Gets the deriver class name from the base plugin definition.
+   *
    * @param array $base_definition
    *   The base plugin definition to build derivatives.
    *
-   * @return Drupal\Component\Plugin\Discovery\DerivativeInterface|null
-   *   A DerivativeInterface or null if none exists for the plugin.
+   * @return string|null
+   *   The name of a class implementing
+   *   \Drupal\Component\Plugin\Derivative\DeriverInterface.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidDeriverException
+   *   Thrown if the 'deriver' class specified in the plugin definition
+   *   does not implement
+   *   \Drupal\Component\Plugin\Derivative\DerivativeInterface.
    */
-  protected function getDerivativeFetcher($base_plugin_id, array $base_definition) {
-    if (!isset($this->derivativeFetchers[$base_plugin_id])) {
-      $this->derivativeFetchers[$base_plugin_id] = FALSE;
-      if (isset($base_definition['derivative'])) {
-        $class = $base_definition['derivative'];
-        $this->derivativeFetchers[$base_plugin_id] = new $class($base_plugin_id);
+  protected function getDeriverClass($base_definition) {
+    $class = NULL;
+    if ((is_array($base_definition) || ($base_definition = (array) $base_definition)) && (isset($base_definition['deriver']) && $class = $base_definition['deriver'])) {
+      if (!class_exists($class)) {
+        throw new InvalidDeriverException(sprintf('Plugin (%s) deriver "%s" does not exist.', $base_definition['id'], $class));
+      }
+      if (!is_subclass_of($class, '\Drupal\Component\Plugin\Derivative\DeriverInterface')) {
+        throw new InvalidDeriverException(sprintf('Plugin (%s) deriver "%s" must implement \Drupal\Component\Plugin\Derivative\DeriverInterface.', $base_definition['id'], $class));
       }
     }
-    return $this->derivativeFetchers[$base_plugin_id] ?: NULL;
+    return $class;
+  }
+
+  /**
+   * Merges a base and derivative definition, taking into account empty values.
+   *
+   * @param array $base_plugin_definition
+   *   The base plugin definition.
+   * @param array $derivative_definition
+   *   The derivative plugin definition.
+   *
+   * @return array
+   *   The merged definition.
+   */
+  protected function mergeDerivativeDefinition($base_plugin_definition, $derivative_definition) {
+    // Use this definition as defaults if a plugin already defined itself as
+    // this derivative, but filter out empty values first.
+    $filtered_base = array_filter($base_plugin_definition);
+    $derivative_definition = $filtered_base + ($derivative_definition ?: array());
+    // Add back any empty keys that the derivative didn't have.
+    return $derivative_definition + $base_plugin_definition;
   }
 
   /**

@@ -1,18 +1,11 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\FileTransfer\FileTransferException.
- */
-
 namespace Drupal\Core\FileTransfer;
-
-use RuntimeException;
 
 /**
  * FileTransferException class.
  */
-class FileTransferException extends RuntimeException {
+class FileTransferException extends \RuntimeException {
 
   /**
    * Arguments to be used in this exception.

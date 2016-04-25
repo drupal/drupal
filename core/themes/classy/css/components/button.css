@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Visual styles for buttons.
+ */
+
+.button,
+.image-button {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+.button:first-child,
+.image-button:first-child {
+  margin-left: 0;
+  margin-right: 0;
+}

@@ -1,0 +1,16 @@
+{
+  "name": "drupal/core-serialization",
+  "description": "Serialization.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.5.9",
+    "symfony/yaml": "2.7.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Serialization\\": ""
+    }
+  }
+}

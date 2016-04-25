@@ -1,0 +1,30 @@
+# Basic data types for image.
+
+image_size:
+  type: mapping
+  mapping:
+    width:
+      type: integer
+      label: 'Width'
+    height:
+      type: integer
+      label: 'Height'
+
+field_default_image:
+  type: mapping
+  mapping:
+    uuid:
+      type: string
+      label: 'Image'
+    alt:
+      type: label
+      label: 'Alternative text'
+    title:
+      type: label
+      label: 'Title'
+    width:
+      type: integer
+      label: 'Width'
+    height:
+      type: integer
+      label: 'Height'

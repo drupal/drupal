@@ -1,0 +1,6 @@
+name: 'Link generation test support'
+type: module
+description: 'Test hooks fired in link generation.'
+package: Testing
+version: VERSION
+core: 8.x

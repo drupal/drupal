@@ -1,0 +1,6 @@
+name: 'Image test'
+type: module
+description: 'Support module for image toolkit tests.'
+package: Testing
+version: VERSION
+core: 8.x

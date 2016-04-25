@@ -5,69 +5,25 @@
  * Allows to ban individual IP addresses.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
+
 /**
  * Implements hook_help().
  */
-function ban_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#ban':
+function ban_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.ban':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Ban module allows administrators to ban visits to their site from individual IP addresses.') . '</p>';
+      $output .= '<p>' . t('The Ban module allows administrators to ban visits to their site from individual IP addresses. For more information, see the <a href=":url">online documentation for the Ban module</a>.', array(':url' => 'https://www.drupal.org/documentation/modules/ban')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Banning IP addresses') . '</dt>';
-      $output .= '<dd>' . t('Administrators can enter IP addresses to ban on the <a href="@bans">IP address bans</a> page.', array('@bans' => url('admin/config/people/ban'))) . '</dd>';
+      $output .= '<dd>' . t('Administrators can enter IP addresses to ban on the <a href=":bans">IP address bans</a> page.', array(':bans' => \Drupal::url('ban.admin_page'))) . '</dd>';
       $output .= '</dl>';
       return $output;
 
-    case 'admin/config/people/ban':
+    case 'ban.admin_page':
       return '<p>' . t('IP addresses listed here are banned from your site. Banned addresses are completely forbidden from accessing the site and instead see a brief message explaining the situation.') . '</p>';
   }
-}
-
-/**
- * Implements hook_permission().
- */
-function ban_permission() {
-  return array(
-    'ban IP addresses' => array(
-      'title' => t('Ban IP addresses'),
-    ),
-  );
-}
-
-/**
- * Implements hook_menu().
- */
-function ban_menu() {
-  $items['admin/config/people/ban'] = array(
-    'title' => 'IP address bans',
-    'description' => 'Manage banned IP addresses.',
-    'page callback' => 'ban_admin_page',
-    'access arguments' => array('ban IP addresses'),
-    'file' => 'ban.admin.inc',
-    'weight' => 10,
-  );
-  $items['admin/config/people/ban/delete/%ban_ip'] = array(
-    'title' => 'Delete IP address',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ban_ip_delete_form', 5),
-    'access arguments' => array('ban IP addresses'),
-    'file' => 'ban.admin.inc',
-  );
-  return $items;
-}
-
-/**
- * Loads a banned IP address record from the database.
- *
- * @param int $iid
- *   The ID of the banned IP address to retrieve.
- *
- * @return array
- *   The banned IP address record from the database as an array.
- */
-function ban_ip_load($iid) {
-  return db_query("SELECT * FROM {ban_ip} WHERE iid = :iid", array(':iid' => $iid))->fetchAssoc();
 }

@@ -1,0 +1,5 @@
+entity.shortcut_set.collection:
+  title: Shortcuts
+  description: 'Add and modify shortcut sets.'
+  route_name: entity.shortcut_set.collection
+  parent: system.admin_config_ui

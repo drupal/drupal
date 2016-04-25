@@ -1,0 +1,71 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - locale
+id: locale
+label: Translation
+module: locale
+routes:
+  - route_name: locale.translate_page
+tips:
+  locale-overview:
+    id: locale-overview
+    plugin: text
+    label: 'User interface translation'
+    body: 'This page allows you to translate the user interface or modify existing translations. If you have installed your site initially in English, you must first add another language on the <a href="[site:url]/admin/config/regional/language">Languages page</a>, in order to use this page.'
+    weight: 1
+  locale-language:
+    id: locale-language
+    plugin: text
+    label: 'Translation language'
+    body: 'Choose the language you want to translate.'
+    weight: 2
+    attributes:
+      data-id: edit-langcode
+  locale-search:
+    id: locale-search
+    plugin: text
+    label: Search
+    body: 'Enter the specific word or sentence you want to translate, you can also write just a part of a word.'
+    weight: 3
+    attributes:
+      data-id: edit-string
+  locale-filter:
+    id: locale-filter
+    plugin: text
+    label: 'Filter the search'
+    body: 'You can search for untranslated strings if you want to translate something that isn''t translated yet. If you want to modify an existing translation, you might want to search only for translated strings.'
+    weight: 4
+    attributes:
+      data-id: edit-translation
+  locale-submit:
+    id: locale-submit
+    plugin: text
+    label: 'Apply your search criteria'
+    body: 'To apply your search criteria, click on the <em>Filter</em> button.'
+    weight: 5
+    attributes:
+      data-id: edit-submit
+  locale-translate:
+    id: locale-translate
+    plugin: text
+    label: Translate
+    body: 'You can write your own translation in the text fields of the right column. Try to figure out in which context the text will be used in order to translate it in the appropriate way.'
+    weight: 6
+    attributes:
+      data-class: js-form-type-textarea
+  locale-validate:
+    id: locale-validate
+    plugin: text
+    label: 'Validate the translation'
+    body: 'When you have finished your translations, click on the <em>Save translations</em> button. You must save your translations, each time before changing the page or making a new search.'
+    weight: 7
+    attributes:
+      data-id: edit-submit--2
+  locale-continue:
+    id: locale-continue
+    plugin: text
+    label: 'Continuing on'
+    body: 'The translations you have made here will be used on your site''s user interface. If you want to use them on another site or modify them on an external translation editor, you can <a href="[site:url]/admin/config/regional/translate/export">export them</a> to a .po file and <a href="[site:url]/admin/config/regional/translate/import">import them</a> later.'
+    weight: 8

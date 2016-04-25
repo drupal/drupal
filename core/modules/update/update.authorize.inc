@@ -11,6 +11,7 @@
  */
 
 use Drupal\Core\Updater\UpdaterException;
+use Drupal\Core\Url;
 
 /**
  * Updates existing projects when invoked by authorize.php.
@@ -28,10 +29,15 @@ use Drupal\Core\Updater\UpdaterException;
  *   - updater_name: The name of the Drupal\Core\Updater\Updater class to use
  *     for this project.
  *   - local_url: The locally installed location of new code to update with.
+ *
+ * @return \Symfony\Component\HttpFoundation\Response|null
+ *   The result of processing the batch that updates the projects. If this is
+ *   an instance of \Symfony\Component\HttpFoundation\Response the calling code
+ *   should use that response for the current page request.
  */
 function update_authorize_run_update($filetransfer, $projects) {
   $operations = array();
-  foreach ($projects as $project => $project_info) {
+  foreach ($projects as $project_info) {
     $operations[] = array(
       'update_authorize_batch_copy_project',
       array(
@@ -44,16 +50,20 @@ function update_authorize_run_update($filetransfer, $projects) {
   }
 
   $batch = array(
-    'title' => t('Installing updates'),
     'init_message' => t('Preparing to update your site'),
     'operations' => $operations,
     'finished' => 'update_authorize_update_batch_finished',
     'file' => drupal_get_path('module', 'update') . '/update.authorize.inc',
   );
-
   batch_set($batch);
+
+  // Since authorize.php has its own method for setting the page title, set it
+  // manually here rather than passing it in to batch_set() as would normally
+  // be done.
+  $_SESSION['authorize_page_title'] = t('Installing updates');
+
   // Invoke the batch via authorize.php.
-  system_authorized_batch_process();
+  return system_authorized_batch_process();
 }
 
 /**
@@ -74,6 +84,11 @@ function update_authorize_run_update($filetransfer, $projects) {
  * @param string $local_url
  *   The URL to the locally installed temp directory where the project has
  *   already been downloaded and extracted into.
+ *
+ * @return \Symfony\Component\HttpFoundation\Response|null
+ *   The result of processing the batch that installs the project. If this is
+ *   an instance of \Symfony\Component\HttpFoundation\Response the calling code
+ *   should use that response for the current page request.
  */
 function update_authorize_run_install($filetransfer, $project, $updater_name, $local_url) {
   $operations[] = array(
@@ -88,7 +103,6 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
 
   // @todo Instantiate our Updater to set the human-readable title?
   $batch = array(
-    'title' => t('Installing %project', array('%project' => $project)),
     'init_message' => t('Preparing to install'),
     'operations' => $operations,
     // @todo Use a different finished callback for different messages?
@@ -97,12 +111,19 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
   );
   batch_set($batch);
 
+  // Since authorize.php has its own method for setting the page title, set it
+  // manually here rather than passing it in to batch_set() as would normally
+  // be done.
+  $_SESSION['authorize_page_title'] = t('Installing %project', array('%project' => $project));
+
   // Invoke the batch via authorize.php.
-  system_authorized_batch_process();
+  return system_authorized_batch_process();
 }
 
 /**
- * Batch callback: Copies project to its proper place when authorized to do so.
+ * Implements callback_batch_operation().
+ *
+ * Copies project to its proper place when authorized to do so.
  *
  * @param string $project
  *   The canonical short name of the project being installed.
@@ -145,7 +166,7 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
     return;
   }
 
-  $updater = new $updater_name($local_url);
+  $updater = new $updater_name($local_url, \Drupal::getContainer()->get('update.root'));
 
   try {
     if ($updater->isInstalled()) {
@@ -178,7 +199,7 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
  *
  * This processes the results and stashes them into SESSION such that
  * authorize.php will render a report. Also responsible for putting the site
- * back online and clearing the update status cache after a successful update.
+ * back online and clearing the update status storage after a successful update.
  *
  * @param $success
  *   TRUE if the batch operation was successful; FALSE if there were errors.
@@ -186,20 +207,20 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
  *   An associative array of results from the batch operation.
  */
 function update_authorize_update_batch_finished($success, $results) {
-  foreach ($results['log'] as $project => $messages) {
+  foreach ($results['log'] as $messages) {
     if (!empty($messages['#abort'])) {
       $success = FALSE;
     }
   }
-  $offline = config('system.maintenance')->get('enabled');
+  $offline = \Drupal::state()->get('system.maintenance_mode');
   if ($success) {
-    // Now that the update completed, we need to clear the cache of available
-    // update data and recompute our status, so prevent show bogus results.
+    // Now that the update completed, we need to clear the available update data
+    // and recompute our status, so prevent show bogus results.
     _update_authorize_clear_update_status();
 
     // Take the site out of maintenance mode if it was previously that way.
     if ($offline && isset($_SESSION['maintenance_mode']) && $_SESSION['maintenance_mode'] == FALSE) {
-      config('system.maintenance')->set('enabled', FALSE)->save();
+      \Drupal::state()->set('system.maintenance_mode', FALSE);
       $page_message = array(
         'message' => t('Update was completed successfully. Your site has been taken out of maintenance mode.'),
         'type' => 'status',
@@ -227,7 +248,19 @@ function update_authorize_update_batch_finished($success, $results) {
   // Since we're doing an update of existing code, always add a task for
   // running update.php.
   $results['tasks'][] = t('Your modules have been downloaded and updated.');
-  $results['tasks'][] = t('<a href="@update">Run database updates</a>', array('@update' => base_path() . 'core/update.php'));
+  $results['tasks'][] = [
+    '#type' => 'link',
+    '#url' => Url::fromRoute('system.db_update'),
+    '#title' => t('Run database updates'),
+    // Since this is being called outsite of the primary front controller,
+    // the base_url needs to be set explicitly to ensure that links are
+    // relative to the site root.
+    // @todo Simplify with https://www.drupal.org/node/2548095
+    '#options' => [
+      'absolute' => TRUE,
+      'base_url' => $GLOBALS['base_url'],
+    ],
+  ];
 
   // Unset the variable since it is no longer needed.
   unset($_SESSION['maintenance_mode']);
@@ -237,11 +270,13 @@ function update_authorize_update_batch_finished($success, $results) {
   $_SESSION['authorize_results']['page_message'] = $page_message;
   $_SESSION['authorize_results']['messages'] = $results['log'];
   $_SESSION['authorize_results']['tasks'] = $results['tasks'];
-  $_SESSION['authorize_operation']['page_title'] = t('Update manager');
+  $_SESSION['authorize_page_title'] = t('Update manager');
 }
 
 /**
- * Batch callback: Performs actions when the authorized install batch is done.
+ * Implements callback_batch_finished().
+ *
+ * Performs actions when the authorized install batch is done.
  *
  * This processes the results and stashes them into SESSION such that
  * authorize.php will render a report. Also responsible for putting the site
@@ -253,16 +288,16 @@ function update_authorize_update_batch_finished($success, $results) {
  *   An associative array of results from the batch operation.
  */
 function update_authorize_install_batch_finished($success, $results) {
-  foreach ($results['log'] as $project => $messages) {
+  foreach ($results['log'] as $messages) {
     if (!empty($messages['#abort'])) {
       $success = FALSE;
     }
   }
-  $offline = config('system.maintenance')->get('enabled');
+  $offline = \Drupal::state()->get('system.maintenance_mode');
   if ($success) {
     // Take the site out of maintenance mode if it was previously that way.
     if ($offline && isset($_SESSION['maintenance_mode']) && $_SESSION['maintenance_mode'] == FALSE) {
-      config('system.maintenance')->set('enabled', FALSE)->save();
+      \Drupal::state()->set('system.maintenance_mode', FALSE);
       $page_message = array(
         'message' => t('Installation was completed successfully. Your site has been taken out of maintenance mode.'),
         'type' => 'status',
@@ -296,7 +331,7 @@ function update_authorize_install_batch_finished($success, $results) {
   $_SESSION['authorize_results']['page_message'] = $page_message;
   $_SESSION['authorize_results']['messages'] = $results['log'];
   $_SESSION['authorize_results']['tasks'] = $results['tasks'];
-  $_SESSION['authorize_operation']['page_title'] = t('Update manager');
+  $_SESSION['authorize_page_title'] = t('Update manager');
 }
 
 /**
@@ -315,25 +350,19 @@ function _update_batch_create_message(&$project_results, $message, $success = TR
 }
 
 /**
- * Clears cached available update status data.
+ * Clears available update status data.
  *
  * Since this function is run at such a low bootstrap level, the Update Manager
- * module is not loaded. So, we can't just call _update_cache_clear(). However,
- * the database is bootstrapped, so we can do a query ourselves to clear out
- * what we want to clear.
+ * module is not loaded. So, we can't just call update_storage_clear(). However,
+ * the key-value backend is available, so we just call that.
  *
- * Note that we do not want to just truncate the table, since that would remove
- * items related to currently pending fetch attempts.
+ * Note that we do not want to delete  items related to currently pending fetch
+ * attempts.
  *
  * @see update_authorize_update_batch_finished()
- * @see _update_cache_clear()
+ * @see update_storage_clear()
  */
 function _update_authorize_clear_update_status() {
-  $query = db_delete('cache_update');
-  $query->condition(
-    db_or()
-    ->condition('cid', 'update_project_%', 'LIKE')
-    ->condition('cid', 'available_releases::%', 'LIKE')
-  );
-  $query->execute();
+  \Drupal::keyValueExpirable('update')->deleteAll();
+  \Drupal::keyValueExpirable('update_available_release')->deleteAll();
 }

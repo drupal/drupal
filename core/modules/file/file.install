@@ -9,97 +9,6 @@
  * Implements hook_schema().
  */
 function file_schema() {
-  $schema['file_managed'] = array(
-    'description' => 'Stores information for uploaded files.',
-    'fields' => array(
-      'fid' => array(
-        'description' => 'File ID.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'uuid' => array(
-        'description' => 'Unique Key: Universally unique identifier for this entity.',
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-      ),
-      'uid' => array(
-        'description' => 'The {users}.uid of the user who is associated with the file.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'filename' => array(
-        'description' => 'Name of the file with no path components. This may differ from the basename of the URI if the file is renamed to avoid overwriting an existing file.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'uri' => array(
-        'description' => 'The URI to access the file (either local or remote).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'binary' => TRUE,
-      ),
-      'langcode' => array(
-        'description' => 'The {language}.langcode of this file.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'filemime' => array(
-        'description' => "The file's MIME type.",
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'filesize' => array(
-        'description' => 'The size of the file in bytes.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'status' => array(
-        'description' => 'A field indicating the status of the file. Two status are defined in core: temporary (0) and permanent (1). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'timestamp' => array(
-        'description' => 'UNIX timestamp for when the file was added.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'uid' => array('uid'),
-      'status' => array('status'),
-      'timestamp' => array('timestamp'),
-    ),
-    'unique keys' => array(
-      'uuid' => array('uuid'),
-      'uri' => array('uri'),
-    ),
-    'primary key' => array('fid'),
-    'foreign keys' => array(
-      'file_owner' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-  );
-
   $schema['file_usage'] = array(
     'description' => 'Track where a file is used.',
     'fields' => array(
@@ -111,22 +20,22 @@ function file_schema() {
       ),
       'module' => array(
         'description' => 'The name of the module that is using the file.',
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'varchar_ascii',
+        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
         'not null' => TRUE,
         'default' => '',
       ),
       'type' => array(
         'description' => 'The name of the object type in which the file is used.',
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
       ),
       'id' => array(
         'description' => 'The primary key of the object using the file.',
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar_ascii',
+        'length' => 64,
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -149,44 +58,6 @@ function file_schema() {
 }
 
 /**
- * Implements hook_field_schema().
- */
-function file_field_schema($field) {
-  return array(
-    'columns' => array(
-      'fid' => array(
-        'description' => 'The {file_managed}.fid being referenced in this field.',
-        'type' => 'int',
-        'not null' => FALSE,
-        'unsigned' => TRUE,
-      ),
-      'display' => array(
-        'description' => 'Flag to control whether this file should be displayed when viewing content.',
-        'type' => 'int',
-        'size' => 'tiny',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 1,
-      ),
-      'description' => array(
-        'description' => 'A description of the file.',
-        'type' => 'text',
-        'not null' => FALSE,
-      ),
-    ),
-    'indexes' => array(
-      'fid' => array('fid'),
-    ),
-    'foreign keys' => array(
-      'fid' => array(
-        'table' => 'file_managed',
-        'columns' => array('fid' => 'fid'),
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_requirements().
  *
  * Display information about getting upload progress bars working.
@@ -196,32 +67,49 @@ function file_requirements($phase) {
 
   // Check the server's ability to indicate upload progress.
   if ($phase == 'runtime') {
-    $implementation = file_progress_implementation();
-    $apache = strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== FALSE;
-    $fastcgi = strpos($_SERVER['SERVER_SOFTWARE'], 'mod_fastcgi') !== FALSE || strpos($_SERVER["SERVER_SOFTWARE"], 'mod_fcgi') !== FALSE;
     $description = NULL;
-    if (!$apache) {
+    $implementation = file_progress_implementation();
+    $server_software = \Drupal::request()->server->get('SERVER_SOFTWARE');
+
+    // Test the web server identity.
+    if (preg_match("/Nginx/i", $server_software)) {
+      $is_nginx = TRUE;
+      $is_apache = FALSE;
+      $fastcgi = FALSE;
+    }
+    elseif (preg_match("/Apache/i", $server_software)) {
+      $is_nginx = FALSE;
+      $is_apache = TRUE;
+      $fastcgi = strpos($server_software, 'mod_fastcgi') !== FALSE || strpos($server_software, 'mod_fcgi') !== FALSE;
+    }
+    else {
+      $is_nginx = FALSE;
+      $is_apache = FALSE;
+      $fastcgi = FALSE;
+    }
+
+    if (!$is_apache && !$is_nginx) {
       $value = t('Not enabled');
-      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires an Apache server running PHP with mod_php.');
+      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires an Apache server running PHP with mod_php or Nginx with PHP-FPM.');
     }
     elseif ($fastcgi) {
       $value = t('Not enabled');
-      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php and not as FastCGI.');
+      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php or PHP-FPM and not as FastCGI.');
     }
-    elseif (!$implementation && extension_loaded('apc')) {
+    elseif (!$implementation && extension_loaded('apcu')) {
       $value = t('Not enabled');
-      $description = t('Your server is capable of displaying file upload progress through APC, but it is not enabled. Add <code>apc.rfc1867 = 1</code> to your php.ini configuration. Alternatively, it is recommended to use <a href="@url">PECL uploadprogress</a>, which supports more than one simultaneous upload.', array('@url' => 'http://pecl.php.net/package/uploadprogress'));
+      $description = t('Your server is capable of displaying file upload progress through APC, but it is not enabled. Add <code>apc.rfc1867 = 1</code> to your php.ini configuration. Alternatively, it is recommended to use <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>, which supports more than one simultaneous upload.');
     }
     elseif (!$implementation) {
       $value = t('Not enabled');
-      $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="@uploadprogress_url">PECL uploadprogress library</a> (preferred) or to install <a href="@apc_url">APC</a>.', array('@uploadprogress_url' => 'http://pecl.php.net/package/uploadprogress', '@apc_url' => 'http://php.net/apc'));
+      $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a> (preferred) or to install <a href="http://php.net/apcu">APC</a>.');
     }
     elseif ($implementation == 'apc') {
-      $value = t('Enabled (<a href="@url">APC RFC1867</a>)', array('@url' => 'http://php.net/manual/apc.configuration.php#ini.apc.rfc1867'));
-      $description = t('Your server is capable of displaying file upload progress using APC RFC1867. Note that only one upload at a time is supported. It is recommended to use the <a href="@url">PECL uploadprogress library</a> if possible.', array('@url' => 'http://pecl.php.net/package/uploadprogress'));
+      $value = t('Enabled (<a href="http://php.net/manual/apcu.configuration.php#ini.apcu.rfc1867">APC RFC1867</a>)');
+      $description = t('Your server is capable of displaying file upload progress using APC RFC1867. Note that only one upload at a time is supported. It is recommended to use the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a> if possible.');
     }
     elseif ($implementation == 'uploadprogress') {
-      $value = t('Enabled (<a href="@url">PECL uploadprogress</a>)', array('@url' => 'http://pecl.php.net/package/uploadprogress'));
+      $value = t('Enabled (<a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>)');
     }
     $requirements['file_progress'] = array(
       'title' => t('Upload progress'),
@@ -231,17 +119,4 @@ function file_requirements($phase) {
   }
 
   return $requirements;
-}
-
-/**
-* Converts default_file_main variable to config.
-*
-* @ingroup config_upgrade
-*/
-function file_update_8000() {
-  update_variables_to_config('file.settings', array(
-    'file_description_type' => 'description.type',
-    'file_description_length'=>'description.length',
-    'file_icon_directory'=>'icon.directory',
-  ));
 }

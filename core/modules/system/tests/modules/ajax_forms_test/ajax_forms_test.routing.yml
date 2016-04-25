@@ -1,0 +1,32 @@
+ajax_forms_test.get_form:
+  path: '/ajax_forms_test_get_form'
+  defaults:
+    _title: 'AJAX forms simple form test'
+    _form: '\Drupal\ajax_forms_test\Form\AjaxFormsTestSimpleForm'
+  requirements:
+    _access: 'TRUE'
+
+ajax_forms_test.commands_form:
+  path: '/ajax_forms_test_ajax_commands_form'
+  defaults:
+    _title: 'AJAX forms AJAX commands test'
+    _form: '\Drupal\ajax_forms_test\Form\AjaxFormsTestCommandsForm'
+  requirements:
+    _access: 'TRUE'
+
+ajax_forms_test.validation_test:
+  path: '/ajax_validation_test'
+  defaults:
+    _title: 'AJAX Validation Test'
+    _form: '\Drupal\ajax_forms_test\Form\AjaxFormsTestValidationForm'
+  requirements:
+    _access: 'TRUE'
+
+ajax_forms_test.lazy_load_form:
+  path: '/ajax_forms_test_lazy_load_form'
+  defaults:
+    _title: 'AJAX forms lazy load test'
+    _form: '\Drupal\ajax_forms_test\Form\AjaxFormsTestLazyLoadForm'
+  requirements:
+    _access: 'TRUE'
+

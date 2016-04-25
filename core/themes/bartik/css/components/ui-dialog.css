@@ -1,0 +1,34 @@
+/**
+ * @file
+ * Styles for Bartik's modal windows
+ */
+
+.ui-widget-overlay {
+  background: #000;
+  opacity: 0.7;
+}
+.ui-dialog {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  border-radius: 0;
+}
+.ui-dialog input,
+.ui-dialog select,
+.ui-dialog textarea {
+  font-size: 0.9em;
+}
+.ui-dialog .button {
+  background-color: #fff;
+  background-image: -webkit-linear-gradient(top,#f3f3f3,#e8e8e8);
+  background-image: linear-gradient(to bottom,#f3f3f3,#e8e8e8);
+  border: 1px solid #e4e4e4;
+  border-bottom-color: #b4b4b4;
+  border-left-color: #d2d2d2;
+  border-right-color: #d2d2d2;
+  color: #3a3a3a;
+  cursor: pointer;
+  font-size: 0.929em;
+  font-weight: normal;
+  text-align: center;
+  padding: 0.250em 1.063em;
+  border-radius: 1em;
+}

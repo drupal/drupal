@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Routing\RouteBuildEvent.
- */
-
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\EventDispatcher\Event;
@@ -23,18 +18,13 @@ class RouteBuildEvent extends Event {
   protected $routeCollection;
 
   /**
-   * The module name that provides the route.
-   *
-   * @var string
-   */
-  protected $module;
-
-  /**
    * Constructs a RouteBuildEvent object.
+   *
+   * @param \Symfony\Component\Routing\RouteCollection $route_collection
+   *   The route collection.
    */
-  public function __construct(RouteCollection $route_collection, $module) {
+  public function __construct(RouteCollection $route_collection) {
     $this->routeCollection = $route_collection;
-    $this->module = $module;
   }
 
   /**
@@ -42,13 +32,6 @@ class RouteBuildEvent extends Event {
    */
   public function getRouteCollection() {
     return $this->routeCollection;
-  }
-
-  /**
-   * Gets the module that provides the route.
-   */
-  public function getModule() {
-    return $this->module;
   }
 
 }

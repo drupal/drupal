@@ -1,0 +1,66 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_filter_group_override
+label: test_filter_group_override
+module: views
+description: ''
+tag: default
+base_table: node_field_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        title:
+          alter:
+            ellipsis: false
+            word_boundary: false
+          field: title
+          id: title
+          label: ''
+          table: node_field_data
+          plugin_id: field
+          entity_type: node
+          entity_field: title
+      filters:
+        status:
+          expose:
+            operator: '0'
+          field: status
+          group: 1
+          id: status
+          table: node_field_data
+          value: true
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+      pager:
+        type: full
+      query:
+        type: views_query
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0

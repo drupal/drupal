@@ -1,0 +1,19 @@
+id: block_content_type
+label: Block content type
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: embedded_data
+  data_rows:
+    -
+      id: basic
+      label: Basic
+  ids:
+    id:
+      type: string
+process:
+  id: id
+  label: label
+destination:
+  plugin: entity:block_content_type

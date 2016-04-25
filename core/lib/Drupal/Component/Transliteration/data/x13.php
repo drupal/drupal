@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Generic transliteration data for the PHPTransliteration class.
+ * Generic transliteration data for the PhpTransliteration class.
  */
 
 $base = array(

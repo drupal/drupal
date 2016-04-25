@@ -1,0 +1,26 @@
+# Every migration that references a file by fid should specify this migration
+# as an optional dependency.
+id: d7_file
+label: Files
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_file
+process:
+  fid: fid
+  filename: filename
+  uri: uri
+  filemime: filemime
+  # filesize is dynamically computed when file entities are saved, so there is
+  # no point in migrating it.
+  # filesize: filesize
+  status: status
+  # Drupal 7 didn't keep track of the file's creation or update time -- all it
+  # had was the vague "timestamp" column. So we'll use it for both.
+  created: timestamp
+  changed: timestamp
+  uid: uid
+destination:
+  plugin: entity:file
+  source_path_property: filepath
+  urlencode: true

@@ -1,0 +1,28 @@
+id: d6_vocabulary_field
+label: Vocabulary field configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_taxonomy_vocabulary
+  constants:
+    entity_type: node
+    type: entity_reference
+    target_entity_type: taxonomy_term
+process:
+  entity_type: 'constants/entity_type'
+  type: 'constants/type'
+  field_name:
+    -
+      plugin: migration
+      migration: d6_taxonomy_vocabulary
+      source: vid
+    -
+      plugin: skip_on_empty
+      method: row
+  'settings/target_type': 'constants/target_entity_type'
+  cardinality: cardinality
+destination:
+  plugin: md_entity:field_storage_config
+migration_dependencies:
+  required:
+    - d6_taxonomy_vocabulary

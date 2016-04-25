@@ -1,0 +1,9 @@
+big_pipe.nojs:
+  path: '/big_pipe/no-js'
+  defaults:
+    _controller: '\Drupal\big_pipe\Controller\BigPipeController:setNoJsCookie'
+    _title: 'BigPipe no-JS check'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'

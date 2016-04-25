@@ -1,0 +1,6 @@
+name: 'Entity serialization test support'
+type: module
+description: 'Provides test support for entity serialization tests.'
+package: Testing
+version: VERSION
+core: 8.x

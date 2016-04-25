@@ -1,0 +1,5 @@
+config.sync:
+  title: 'Configuration synchronization'
+  description: 'Import and export your configuration.'
+  route_name: config.sync
+  parent: system.admin_config_development

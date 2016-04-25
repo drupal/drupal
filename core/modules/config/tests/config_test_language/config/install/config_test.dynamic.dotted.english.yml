@@ -1,0 +1,6 @@
+id: dotted.english
+label: Default
+weight: 0
+protected_property: Default
+# Used for testing default language code on imported config entities.
+# langcode: en

@@ -1,0 +1,17 @@
+{
+  "name": "drupal/core-event-dispatcher",
+  "description": "EventDispatcher.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.5.9",
+    "symfony/dependency-injection": "2.7.*",
+    "symfony/event-dispatcher": "2.7.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\EventDispatcher\\": ""
+    }
+  }
+}

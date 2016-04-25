@@ -1,0 +1,20 @@
+id: entity_test.field_test_import
+langcode: en
+field_name: field_test_import
+entity_type: entity_test
+type: text
+settings:
+  max_length: 255
+module: text
+locked: false
+cardinality: 1
+translatable: false
+indexes:
+  format:
+    - format
+dependencies:
+  module:
+    - entity_test
+    - text
+persist_with_no_fields: false
+custom_storage: false

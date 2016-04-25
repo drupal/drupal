@@ -1,0 +1,23 @@
+{% extends "@classy/block/block--search-form-block.html.twig" %}
+{#
+/**
+ * @file
+ * Bartik's theme implementation for a search form block. Extends Classy's
+ * search form block template.
+ *
+ * Available variables:
+ * - content: The content of this block.
+ * - content_attributes: A list of HTML attributes applied to the main content
+ *   tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ * @see search_preprocess_block()
+ *
+ * @ingroup themeable
+ */
+#}
+{% block content %}
+  <div{{ content_attributes.addClass('content', 'container-inline') }}>
+    {{ parent() }}
+  </div>
+{% endblock %}

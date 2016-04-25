@@ -1,0 +1,44 @@
+id: user_profile_entity_display
+label: User profile display configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: profile_field
+  constants:
+    entity_type: user
+    bundle: user
+    view_mode: default
+    options:
+      label: hidden
+      settings: {}
+process:
+  entity_type: 'constants/entity_type'
+  bundle: 'constants/bundle'
+  view_mode: 'constants/view_mode'
+  field_name: name
+  type:
+    plugin: static_map
+    source: type
+    map:
+      checkbox: list_default
+      date: datetime_default
+      list: text_default
+      selection: list_default
+      textfield: text_default
+      textarea: text_default
+      url: link
+  options: 'constants/options'
+  'options/type': '@type'
+  hidden:
+    plugin: static_map
+    source: visibility
+    default_value: false
+    map:
+      1: true # PROFILE_PRIVATE
+      4: true # PROFILE_HIDDEN
+destination:
+  plugin: component_entity_display
+migration_dependencies:
+  required:
+    - user_profile_field_instance

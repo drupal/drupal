@@ -1,0 +1,16 @@
+# Schema for the views exposed form.
+
+views.exposed_form.basic:
+  type: views_exposed_form
+  label: 'Basic'
+
+views.exposed_form.input_required:
+  type: views_exposed_form
+  label: 'Input required'
+  mapping:
+    text_input_required:
+      type: text
+      label: 'Text on demand'
+    text_input_required_format:
+      type: string
+      label: 'Text on demand format'

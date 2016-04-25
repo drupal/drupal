@@ -1,0 +1,18 @@
+# Schema for the configuration files of the Custom Block module.
+
+block_content.type.*:
+  type: config_entity
+  label: 'Custom block type settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    revision:
+      type: integer
+      label: 'Create new revision'
+    description:
+      type: text
+      label: 'Description'

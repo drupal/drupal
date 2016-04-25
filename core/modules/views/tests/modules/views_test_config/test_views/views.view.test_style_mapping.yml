@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - views_test_data
+id: test_style_mapping
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      fields:
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        job:
+          field: job
+          id: job
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      style:
+        type: mapping_test
+        options:
+          mapping:
+            name_field: name
+            numeric_field:
+              age: age
+            title_field: name
+            toggle_numeric_field: true
+            toggle_title_field: true
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

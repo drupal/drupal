@@ -1,0 +1,15 @@
+# Schema for the views plugins of the Contextual module.
+
+views.field.contextual_links:
+  type: views_field
+  label: 'Contextual link'
+  mapping:
+    fields:
+      type: sequence
+      label: 'Fields'
+      sequence:
+        type: string
+        label: 'Link'
+    destination:
+      type: boolean
+      label: 'Include destination'

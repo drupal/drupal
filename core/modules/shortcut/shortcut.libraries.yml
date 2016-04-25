@@ -1,0 +1,6 @@
+drupal.shortcut:
+  version: VERSION
+  css:
+    theme:
+      css/shortcut.theme.css: {}
+      css/shortcut.icons.theme.css: {}

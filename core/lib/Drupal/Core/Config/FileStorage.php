@@ -1,19 +1,21 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Config\FileStorage.
- */
-
 namespace Drupal\Core\Config;
 
-use Symfony\Component\Yaml\Dumper;
-use Symfony\Component\Yaml\Parser;
+use Drupal\Component\Serialization\Yaml;
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 
 /**
- * Defines the file storage controller.
+ * Defines the file storage.
  */
 class FileStorage implements StorageInterface {
+
+  /**
+   * The storage collection.
+   *
+   * @var string
+   */
+  protected $collection;
 
   /**
    * The filesystem path for configuration objects.
@@ -23,27 +25,17 @@ class FileStorage implements StorageInterface {
   protected $directory = '';
 
   /**
-   * A shared YAML dumper instance.
-   *
-   * @var Symfony\Component\Yaml\Dumper
-   */
-  protected $dumper;
-
-  /**
-   * A shared YAML parser instance.
-   *
-   * @var Symfony\Component\Yaml\Parser
-   */
-  protected $parser;
-
-  /**
-   * Constructs a new FileStorage controller.
+   * Constructs a new FileStorage.
    *
    * @param string $directory
    *   A directory path to use for reading and writing of configuration files.
+   * @param string $collection
+   *   (optional) The collection to store configuration in. Defaults to the
+   *   default collection.
    */
-  public function __construct($directory) {
+  public function __construct($directory, $collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->directory = $directory;
+    $this->collection = $collection;
   }
 
   /**
@@ -53,7 +45,7 @@ class FileStorage implements StorageInterface {
    *   The path to the configuration file.
    */
   public function getFilePath($name) {
-    return $this->directory . '/' . $name . '.' . static::getFileExtension();
+    return $this->getCollectionDirectory() . '/' . $name . '.' . static::getFileExtension();
   }
 
   /**
@@ -67,7 +59,23 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::exists().
+   * Check if the directory exists and create it if not.
+   */
+  protected function ensureStorage() {
+    $dir = $this->getCollectionDirectory();
+    $success = file_prepare_directory($dir, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    // Only create .htaccess file in root directory.
+    if ($dir == $this->directory) {
+      $success = $success && file_save_htaccess($this->directory, TRUE, TRUE);
+    }
+    if (!$success) {
+      throw new StorageException('Failed to create config directory ' . $dir);
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function exists($name) {
     return file_exists($this->getFilePath($name));
@@ -76,41 +84,71 @@ class FileStorage implements StorageInterface {
   /**
    * Implements Drupal\Core\Config\StorageInterface::read().
    *
-   * @throws Symfony\Component\Yaml\Exception\ParseException
+   * @throws \Drupal\Core\Config\UnsupportedDataTypeConfigException
    */
   public function read($name) {
     if (!$this->exists($name)) {
       return FALSE;
     }
-    $data = file_get_contents($this->getFilePath($name));
-    // @todo Yaml throws a ParseException on invalid data. Is it expected to be
-    //   caught or not?
-    $data = $this->decode($data);
+    $filepath = $this->getFilePath($name);
+    $data = file_get_contents($filepath);
+    try {
+      $data = $this->decode($data);
+    }
+    catch (InvalidDataTypeException $e) {
+      throw new UnsupportedDataTypeConfigException('Invalid data type in config ' . $name . ', found in file' . $filepath . ' : ' . $e->getMessage());
+    }
     return $data;
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::write().
-   *
-   * @throws Symfony\Component\Yaml\Exception\DumpException
-   * @throws Drupal\Core\Config\StorageException
+   * {@inheritdoc}
+   */
+  public function readMultiple(array $names) {
+    $list = array();
+    foreach ($names as $name) {
+      if ($data = $this->read($name)) {
+        $list[$name] = $data;
+      }
+    }
+    return $list;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function write($name, array $data) {
-    $data = $this->encode($data);
-    $status = @file_put_contents($this->getFilePath($name), $data);
+    try {
+      $data = $this->encode($data);
+    }
+    catch (InvalidDataTypeException $e) {
+      throw new StorageException("Invalid data type in config $name: {$e->getMessage()}");
+    }
+
+    $target = $this->getFilePath($name);
+    $status = @file_put_contents($target, $data);
+    if ($status === FALSE) {
+      // Try to make sure the directory exists and try writing again.
+      $this->ensureStorage();
+      $status = @file_put_contents($target, $data);
+    }
     if ($status === FALSE) {
       throw new StorageException('Failed to write configuration file: ' . $this->getFilePath($name));
+    }
+    else {
+      drupal_chmod($target);
     }
     return TRUE;
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($name) {
     if (!$this->exists($name)) {
-      if (!file_exists($this->directory)) {
-        throw new StorageException($this->directory . '/ not found.');
+      $dir = $this->getCollectionDirectory();
+      if (!file_exists($dir)) {
+        throw new StorageException($dir . '/ not found.');
       }
       return FALSE;
     }
@@ -118,7 +156,7 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::rename().
+   * {@inheritdoc}
    */
   public function rename($name, $new_name) {
     $status = @rename($this->getFilePath($name), $this->getFilePath($new_name));
@@ -129,50 +167,17 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Gets the YAML dumper instance.
-   *
-   * @return Symfony\Component\Yaml\Dumper
-   */
-  protected function getDumper() {
-    if (!isset($this->dumper)) {
-      $this->dumper = new Dumper();
-      // Set Yaml\Dumper's default indentation for nested nodes/collections to
-      // 2 spaces for consistency with Drupal coding standards.
-      $this->dumper->setIndentation(2);
-    }
-    return $this->dumper;
-  }
-
-  /**
-   * Gets the YAML parser instance.
-   *
-   * @return Symfony\Component\Yaml\Parser
-   */
-  protected function getParser() {
-    if (!isset($this->parser)) {
-      $this->parser = new Parser();
-    }
-    return $this->parser;
-  }
-
-  /**
-   * Implements Drupal\Core\Config\StorageInterface::encode().
-   *
-   * @throws Symfony\Component\Yaml\Exception\DumpException
+   * {@inheritdoc}
    */
   public function encode($data) {
-    // The level where you switch to inline YAML is set to PHP_INT_MAX to ensure
-    // this does not occur.
-    return $this->getDumper()->dump($data, PHP_INT_MAX);
+    return Yaml::encode($data);
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::decode().
-   *
-   * @throws Symfony\Component\Yaml\Exception\ParseException
+   * {@inheritdoc}
    */
   public function decode($raw) {
-    $data = $this->getParser()->parse($raw);
+    $data = Yaml::decode($raw);
     // A simple string is valid YAML for any reason.
     if (!is_array($data)) {
       return FALSE;
@@ -181,19 +186,150 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::listAll().
+   * {@inheritdoc}
    */
   public function listAll($prefix = '') {
-    // glob() silently ignores the error of a non-existing search directory,
-    // even with the GLOB_ERR flag.
-    if (!file_exists($this->directory)) {
-      throw new StorageException($this->directory . '/ not found.');
+    $dir = $this->getCollectionDirectory();
+    if (!is_dir($dir)) {
+      return array();
     }
     $extension = '.' . static::getFileExtension();
-    $files = glob($this->directory . '/' . $prefix . '*' . $extension);
-    $clean_name = function ($value) use ($extension) {
-      return basename($value, $extension);
-    };
-    return array_map($clean_name, $files);
+
+    // glob() directly calls into libc glob(), which is not aware of PHP stream
+    // wrappers. Same for \GlobIterator (which additionally requires an absolute
+    // realpath() on Windows).
+    // @see https://github.com/mikey179/vfsStream/issues/2
+    $files = scandir($dir);
+
+    $names = array();
+    $pattern = '/^' . preg_quote($prefix, '/') . '.*' . preg_quote($extension, '/') . '$/';
+    foreach ($files as $file) {
+      if ($file[0] !== '.' && preg_match($pattern, $file)) {
+        $names[] = basename($file, $extension);
+      }
+    }
+
+    return $names;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteAll($prefix = '') {
+    $success = TRUE;
+    $files = $this->listAll($prefix);
+    foreach ($files as $name) {
+      if (!$this->delete($name) && $success) {
+        $success = FALSE;
+      }
+    }
+    if ($success && $this->collection != StorageInterface::DEFAULT_COLLECTION) {
+      // Remove empty directories.
+      if (!(new \FilesystemIterator($this->getCollectionDirectory()))->valid()) {
+        drupal_rmdir($this->getCollectionDirectory());
+      }
+    }
+    return $success;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createCollection($collection) {
+    return new static(
+      $this->directory,
+      $collection
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCollectionName() {
+    return $this->collection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllCollectionNames() {
+    $collections = $this->getAllCollectionNamesHelper($this->directory);
+    sort($collections);
+    return $collections;
+  }
+
+  /**
+   * Helper function for getAllCollectionNames().
+   *
+   * If the file storage has the following subdirectory structure:
+   *   ./another_collection/one
+   *   ./another_collection/two
+   *   ./collection/sub/one
+   *   ./collection/sub/two
+   * this function will return:
+   * @code
+   *   array(
+   *     'another_collection.one',
+   *     'another_collection.two',
+   *     'collection.sub.one',
+   *     'collection.sub.two',
+   *   );
+   * @endcode
+   *
+   * @param string $directory
+   *   The directory to check for sub directories. This allows this
+   *   function to be used recursively to discover all the collections in the
+   *   storage.
+   *
+   * @return array
+   *   A list of collection names contained within the provided directory.
+   */
+  protected function getAllCollectionNamesHelper($directory) {
+    $collections = array();
+    $pattern = '/\.' . preg_quote($this->getFileExtension(), '/') . '$/';
+    foreach (new \DirectoryIterator($directory) as $fileinfo) {
+      if ($fileinfo->isDir() && !$fileinfo->isDot()) {
+        $collection = $fileinfo->getFilename();
+        // Recursively call getAllCollectionNamesHelper() to discover if there
+        // are subdirectories. Subdirectories represent a dotted collection
+        // name.
+        $sub_collections = $this->getAllCollectionNamesHelper($directory . '/' . $collection);
+        if (!empty($sub_collections)) {
+          // Build up the collection name by concatenating the subdirectory
+          // names with the current directory name.
+          foreach ($sub_collections as $sub_collection) {
+            $collections[] = $collection . '.' . $sub_collection;
+          }
+        }
+        // Check that the collection is valid by searching it for configuration
+        // objects. A directory without any configuration objects is not a valid
+        // collection.
+        // @see \Drupal\Core\Config\FileStorage::listAll()
+        foreach (scandir($directory . '/' . $collection) as $file) {
+          if ($file[0] !== '.' && preg_match($pattern, $file)) {
+            $collections[] = $collection;
+            break;
+          }
+        }
+      }
+    }
+    return $collections;
+  }
+
+  /**
+   * Gets the directory for the collection.
+   *
+   * @return string
+   *   The directory for the collection.
+   */
+  protected function getCollectionDirectory() {
+    if ($this->collection == StorageInterface::DEFAULT_COLLECTION) {
+      $dir = $this->directory;
+    }
+    else {
+      $dir = $this->directory . '/' . str_replace('.', '/', $this->collection);
+    }
+    return $dir;
+  }
+
 }

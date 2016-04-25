@@ -1,0 +1,35 @@
+# Schema for the views pager plugins.
+
+views.pager.*:
+  type: views_pager
+  label: 'Default pager'
+
+views.pager.none:
+  type: views_pager
+  label: 'Display all items'
+
+views.pager.some:
+  type: views_pager
+  label: 'Display a specified number of items'
+
+views.pager.mini:
+  type: views_pager_sql
+  label: 'Paged output, mini pager'
+
+views.pager.full:
+  type: views_pager_sql
+  label: 'Paged output, full pager'
+  mapping:
+    tags:
+      type: mapping
+      label: 'Tags'
+      mapping:
+        first:
+          type: label
+          label: 'First page link text'
+        last:
+          type: label
+          label: 'Last page link text'
+    quantity:
+      type: integer
+      label: 'Number of pager links visible'

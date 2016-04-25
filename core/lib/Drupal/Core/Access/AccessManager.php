@@ -1,150 +1,173 @@
 <?php
-/**
- * @file
- * Contains Drupal\Core\Access\AccessManager.
- */
 
 namespace Drupal\Core\Access;
 
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Drupal\Core\ParamConverter\ParamConverterManagerInterface;
+use Drupal\Core\ParamConverter\ParamNotConvertedException;
+use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Component\Utility\ArgumentsResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Attaches access check services to routes and runs them on request.
+ *
+ * @see \Drupal\Tests\Core\Access\AccessManagerTest
  */
-class AccessManager extends ContainerAware {
+class AccessManager implements AccessManagerInterface {
+  /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
 
   /**
-   * Array of registered access check service ids.
+   * The paramconverter manager.
    *
-   * @var array
+   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface
    */
-  protected $checkIds;
+  protected $paramConverterManager;
 
   /**
-   * Array of access check objects keyed by service id.
+   * The access arguments resolver.
    *
-   * @var array
+   * @var \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface
    */
-  protected $checks;
+  protected $argumentsResolverFactory;
 
   /**
-   * The request object.
+   * The current user.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Drupal\Core\Session\AccountInterface
    */
-  protected $request;
+  protected $currentUser;
 
   /**
-   * Constructs a new AccessManager.
+   * The check provider.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
+   * @var \Drupal\Core\Access\CheckProviderInterface
    */
-  public function __construct(Request $request) {
-    $this->request = $request;
+  protected $checkProvider;
+
+  /**
+   * Constructs a AccessManager instance.
+   *
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
+   * @param \Drupal\Core\ParamConverter\ParamConverterManagerInterface $paramconverter_manager
+   *   The param converter manager.
+   * @param \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface $arguments_resolver_factory
+   *   The access arguments resolver.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   * @param CheckProviderInterface $check_provider
+   */
+  public function __construct(RouteProviderInterface $route_provider, ParamConverterManagerInterface $paramconverter_manager, AccessArgumentsResolverFactoryInterface $arguments_resolver_factory, AccountInterface $current_user, CheckProviderInterface $check_provider) {
+    $this->routeProvider = $route_provider;
+    $this->paramConverterManager = $paramconverter_manager;
+    $this->argumentsResolverFactory = $arguments_resolver_factory;
+    $this->currentUser = $current_user;
+    $this->checkProvider = $check_provider;
   }
 
   /**
-   * Registers a new AccessCheck by service ID.
-   *
-   * @param string $service_id
-   *   The ID of the service in the Container that provides a check.
+   * {@inheritdoc}
    */
-  public function addCheckService($service_id) {
-    $this->checkIds[] = $service_id;
-  }
+  public function checkNamedRoute($route_name, array $parameters = array(), AccountInterface $account = NULL, $return_as_object = FALSE) {
+    try {
+      $route = $this->routeProvider->getRouteByName($route_name, $parameters);
 
-  /**
-   * For each route, saves a list of applicable access checks to the route.
-   *
-   * @param \Symfony\Component\Routing\RouteCollection $routes
-   *   A collection of routes to apply checks to.
-   */
-  public function setChecks(RouteCollection $routes) {
-    foreach ($routes as $route) {
-      $checks = $this->applies($route);
-      if (!empty($checks)) {
-        $route->setOption('_access_checks', $checks);
-      }
+      // ParamConverterManager relies on the route name and object being
+      // available from the parameters array.
+      $parameters[RouteObjectInterface::ROUTE_NAME] = $route_name;
+      $parameters[RouteObjectInterface::ROUTE_OBJECT] = $route;
+      $upcasted_parameters = $this->paramConverterManager->convert($parameters + $route->getDefaults());
+
+      $route_match = new RouteMatch($route_name, $route, $upcasted_parameters, $parameters);
+      return $this->check($route_match, $account, NULL, $return_as_object);
+    }
+    catch (RouteNotFoundException $e) {
+      // Cacheable until extensions change.
+      $result = AccessResult::forbidden()->addCacheTags(['config:core.extension']);
+      return $return_as_object ? $result : $result->isAllowed();
+    }
+    catch (ParamNotConvertedException $e) {
+      // Uncacheable because conversion of the parameter may not have been
+      // possible due to dynamic circumstances.
+      $result = AccessResult::forbidden()->setCacheMaxAge(0);
+      return $return_as_object ? $result : $result->isAllowed();
     }
   }
 
   /**
-   * Determine which registered access checks apply to a route.
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route to get list of access checks for.
-   *
-   * @return array
-   *   An array of service ids for the access checks that apply to passed
-   *   route.
+   * {@inheritdoc}
    */
-  protected function applies(Route $route) {
-    $checks = array();
-
-    foreach ($this->checkIds as $service_id) {
-      if (empty($this->checks[$service_id])) {
-        $this->loadCheck($service_id);
-      }
-
-      if ($this->checks[$service_id]->applies($route)) {
-        $checks[] = $service_id;
-      }
-    }
-
-    return $checks;
+  public function checkRequest(Request $request, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $route_match = RouteMatch::createFromRequest($request);
+    return $this->check($route_match, $account, $request, $return_as_object);
   }
 
   /**
-   * Checks a route against applicable access check services.
-   *
-   * Determines whether the route is accessible or not.
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route to check access to.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *   If any access check denies access or none explicitly approve.
+   * {@inheritdoc}
    */
-  public function check(Route $route) {
-    $access = FALSE;
+  public function check(RouteMatchInterface $route_match, AccountInterface $account = NULL, Request $request = NULL, $return_as_object = FALSE) {
+    if (!isset($account)) {
+      $account = $this->currentUser;
+    }
+    $route = $route_match->getRouteObject();
     $checks = $route->getOption('_access_checks') ?: array();
 
-    // No checks == deny by default.
-    foreach ($checks as $service_id) {
-      if (empty($this->checks[$service_id])) {
-        $this->loadCheck($service_id);
-      }
-
-      $access = $this->checks[$service_id]->access($route, $this->request);
-      if ($access === FALSE) {
-        // A check has denied access, no need to continue checking.
-        break;
-      }
+    // Filter out checks which require the incoming request.
+    if (!isset($request)) {
+      $checks = array_diff($checks, $this->checkProvider->getChecksNeedRequest());
     }
 
-    // Access has been denied or not explicily approved.
-    if (!$access) {
-      throw new AccessDeniedHttpException();
+    $result = AccessResult::neutral();
+    if (!empty($checks)) {
+      $arguments_resolver = $this->argumentsResolverFactory->getArgumentsResolver($route_match, $account, $request);
+
+      if (!$checks) {
+        return AccessResult::neutral();
+      }
+      $result = AccessResult::allowed();
+      foreach ($checks as $service_id) {
+        $result = $result->andIf($this->performCheck($service_id, $arguments_resolver));
+      }
     }
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**
-   * Lazy-loads access check services.
+   * Performs the specified access check.
    *
    * @param string $service_id
-   *   The service id of the access check service to load.
+   *   The access check service ID to use.
+   * @param \Drupal\Component\Utility\ArgumentsResolverInterface $arguments_resolver
+   *   The parametrized arguments resolver instance.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   *
+   * @throws \Drupal\Core\Access\AccessException
+   *   Thrown when the access check returns an invalid value.
    */
-  protected function loadCheck($service_id) {
-    if (!in_array($service_id, $this->checkIds)) {
-      throw new \InvalidArgumentException(sprintf('No check has been registered for %s', $service_id));
+  protected function performCheck($service_id, ArgumentsResolverInterface $arguments_resolver) {
+    $callable = $this->checkProvider->loadCheck($service_id);
+    $arguments = $arguments_resolver->getArguments($callable);
+    /** @var \Drupal\Core\Access\AccessResultInterface $service_access **/
+    $service_access = call_user_func_array($callable, $arguments);
+
+    if (!$service_access instanceof AccessResultInterface) {
+      throw new AccessException("Access error in $service_id. Access services must return an object that implements AccessResultInterface.");
     }
 
-    $this->checks[$service_id] = $this->container->get($service_id);
+    return $service_access;
   }
+
 
 }

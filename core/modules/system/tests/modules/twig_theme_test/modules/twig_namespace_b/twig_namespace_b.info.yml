@@ -1,0 +1,6 @@
+name: 'Twig namespace test: Module A'
+type: module
+description: 'Support module for Twig namespace testing.'
+package: Testing
+version: VERSION
+core: 8.x

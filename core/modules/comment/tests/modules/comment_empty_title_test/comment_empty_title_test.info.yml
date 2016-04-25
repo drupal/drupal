@@ -1,0 +1,8 @@
+name: 'Comment empty titles test'
+type: module
+description: 'Support module for testing empty title accessibility with Comment module.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - comment

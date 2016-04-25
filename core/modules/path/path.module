@@ -5,330 +5,86 @@
  * Enables users to rename URLs.
  */
 
-use Drupal\node\Plugin\Core\Entity\Node;
-
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function path_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#path':
+function path_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.path':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Path module allows you to specify an alias, or custom URL, for any existing internal system path. Aliases should not be confused with URL redirects, which allow you to forward a changed or inactive URL to a new URL. In addition to making URLs more readable, aliases also help search engines index content more effectively. Multiple aliases may be used for a single internal system path. To automate the aliasing of paths, you can install the contributed module <a href="@pathauto">Pathauto</a>. For more information, see the online handbook entry for the <a href="@path">Path module</a>.', array('@path' => 'http://drupal.org/documentation/modules/path', '@pathauto' => 'http://drupal.org/project/pathauto')) . '</p>';
+      $output .= '<p>' . t('The Path module allows you to specify an alias, or custom URL, for any existing internal system path. Aliases should not be confused with URL redirects, which allow you to forward a changed or inactive URL to a new URL. In addition to making URLs more readable, aliases also help search engines index content more effectively. Multiple aliases may be used for a single internal system path. To automate the aliasing of paths, you can install the contributed module <a href=":pathauto">Pathauto</a>. For more information, see the <a href=":path">online documentation for the Path module</a>.', array(':path' => 'https://www.drupal.org/documentation/modules/path', ':pathauto' => 'https://www.drupal.org/project/pathauto')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating aliases') . '</dt>';
-      $output .= '<dd>' . t('Users with sufficient <a href="@permissions">permissions</a> can create aliases under the <em>URL path settings</em> section when they create or edit content. Some examples of aliases are: ', array('@permissions' => url('admin/people/permissions', array('fragment' => 'module-path'))));
-      $output .= '<ul><li>' . t('<em>member/jane-smith</em> aliased to internal path <em>user/123</em>') . '</li>';
-      $output .= '<li>' . t('<em>about-us/team</em> aliased to internal path <em>node/456</em>') . '</li>';
-      $output .= '</ul></dd>';
+      $output .= '<dd>' . t('If you create or edit a taxonomy term you can add an alias (for example <em>music/jazz</em>) in the field "URL alias". When creating or editing content you can add an alias (for example <em>about-us/team</em>) under the section "URL path settings" in the field "URL alias". Aliases for any other path can be added through the page <a href=":aliases">URL aliases</a>. To add aliases a user needs the permission <a href=":permissions">Create and edit URL aliases</a>.', array(':aliases' => \Drupal::url('path.admin_overview'), ':permissions' => \Drupal::url('user.admin_permissions', array(), array('fragment' => 'module-path')))) . '</dd>';
       $output .= '<dt>' . t('Managing aliases') . '</dt>';
-      $output .= '<dd>' . t('The Path module provides a way to search and view a <a href="@aliases">list of all aliases</a> that are in use on your website. Aliases can be added, edited and deleted through this list.', array('@aliases' => url('admin/config/search/path'))) . '</dd>';
+      $output .= '<dd>' . t('The Path module provides a way to search and view a <a href=":aliases">list of all aliases</a> that are in use on your website. Aliases can be added, edited and deleted through this list.', array(':aliases' => \Drupal::url('path.admin_overview'))) . '</dd>';
       $output .= '</dl>';
       return $output;
 
-    case 'admin/config/search/path':
+    case 'path.admin_overview':
       return '<p>' . t("An alias defines a different name for an existing URL path - for example, the alias 'about' for the URL path 'node/1'. A URL path can have multiple aliases.") . '</p>';
 
-    case 'admin/config/search/path/add':
+    case 'path.admin_add':
       return '<p>' . t('Enter the path you wish to create the alias for, followed by the name of the new alias.') . '</p>';
   }
 }
 
 /**
- * Implements hook_permission().
- */
-function path_permission() {
-  return array(
-    'administer url aliases' => array(
-      'title' => t('Administer URL aliases'),
-    ),
-    'create url aliases' => array(
-      'title' => t('Create and edit URL aliases'),
-    ),
-  );
-}
-
-/**
- * Implements hook_menu().
- */
-function path_menu() {
-  $items['admin/config/search/path'] = array(
-    'title' => 'URL aliases',
-    'description' => "Change your site's URL paths by aliasing them.",
-    'page callback' => 'path_admin_overview',
-    'access arguments' => array('administer url aliases'),
-    'weight' => -5,
-    'file' => 'path.admin.inc',
-  );
-  $items['admin/config/search/path/edit/%path'] = array(
-    'title' => 'Edit alias',
-    'page callback' => 'path_admin_edit',
-    'page arguments' => array(5),
-    'access arguments' => array('administer url aliases'),
-    'file' => 'path.admin.inc',
-  );
-  $items['admin/config/search/path/delete/%path'] = array(
-    'title' => 'Delete alias',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('path_admin_delete_confirm', 5),
-    'access arguments' => array('administer url aliases'),
-    'file' => 'path.admin.inc',
-  );
-  $items['admin/config/search/path/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-  );
-  $items['admin/config/search/path/add'] = array(
-    'title' => 'Add alias',
-    'page callback' => 'path_admin_edit',
-    'access arguments' => array('administer url aliases'),
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'path.admin.inc',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
- *
- * @see path_form_element_validate()
  */
-function path_form_node_form_alter(&$form, $form_state) {
-  $node = $form_state['controller']->getEntity($form_state);
-  $path = array();
-  if (!empty($node->nid)) {
-    $conditions = array('source' => 'node/' . $node->nid);
-    if ($node->langcode != LANGUAGE_NOT_SPECIFIED) {
-      $conditions['langcode'] = $node->langcode;
-    }
-    $path = drupal_container()->get('path.crud')->load($conditions);
-    if ($path === FALSE) {
-      $path = array();
-    }
-  }
-  $path += array(
-    'pid' => NULL,
-    'source' => isset($node->nid) ? 'node/' . $node->nid : NULL,
-    'alias' => '',
-    'langcode' => isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED,
-  );
-
-  $form['path'] = array(
+function path_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+  $form['path_settings'] = array(
     '#type' => 'details',
     '#title' => t('URL path settings'),
-    '#collapsible' => TRUE,
-    '#collapsed' => empty($path['alias']),
-    '#group' => 'additional_settings',
+    '#open' => !empty($form['path']['widget'][0]['alias']['#value']),
+    '#group' => 'advanced',
+    '#access' => !empty($form['path']['#access']) && $node->hasField('path') && $node->get('path')->access('edit'),
     '#attributes' => array(
       'class' => array('path-form'),
     ),
     '#attached' => array(
-      'library' => array(array('path', 'drupal.path')),
+      'library' => array('path/drupal.path'),
     ),
-    '#access' => user_access('create url aliases') || user_access('administer url aliases'),
     '#weight' => 30,
-    '#tree' => TRUE,
-    '#element_validate' => array('path_form_element_validate'),
   );
-  $form['path']['alias'] = array(
-    '#type' => 'textfield',
-    '#title' => t('URL alias'),
-    '#default_value' => $path['alias'],
-    '#maxlength' => 255,
-    '#description' => t('The alternative URL for this content. Use a relative path without a trailing slash. For example, enter "about" for the about page.'),
-  );
-  $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
-  $form['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
-  $form['path']['langcode'] = array('#type' => 'value', '#value' => $path['langcode']);
+  $form['path']['#group'] = 'path_settings';
 }
 
 /**
- * Form element validation handler for URL alias form element.
- *
- * @see path_form_node_form_alter()
+ * Implements hook_entity_base_field_info().
  */
-function path_form_element_validate($element, &$form_state, $complete_form) {
-  if (!empty($form_state['values']['path']['alias'])) {
-    // Trim the submitted value.
-    $alias = trim($form_state['values']['path']['alias']);
-    form_set_value($element['alias'], $alias, $form_state);
-    // Node language needs special care. Since the language of the URL alias
-    // depends on the node language, and the node language can be switched
-    // right within the same form, we need to conditionally overload the
-    // originally assigned URL alias language.
-    // @todo Remove this after converting Path module to a field, and, after
-    //   stopping Locale module from abusing the content language system.
-    if (isset($form_state['values']['langcode'])) {
-      form_set_value($element['langcode'], $form_state['values']['langcode'], $form_state);
-    }
+function path_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'taxonomy_term' || $entity_type->id() === 'node') {
+    $fields['path'] = BaseFieldDefinition::create('path')
+      ->setLabel(t('URL alias'))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', array(
+        'type' => 'path',
+        'weight' => 30,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setCustomStorage(TRUE);
 
-    $path = $form_state['values']['path'];
-
-    // Ensure that the submitted alias does not exist yet.
-    $query = db_select('url_alias')
-      ->condition('alias', $path['alias'])
-      ->condition('langcode', $path['langcode']);
-    if (!empty($path['source'])) {
-      $query->condition('source', $path['source'], '<>');
-    }
-    $query->addExpression('1');
-    $query->range(0, 1);
-    if ($query->execute()->fetchField()) {
-      form_error($element, t('The alias is already in use.'));
-    }
+    return $fields;
   }
 }
 
 /**
- * Implements hook_node_insert().
+ * Implements hook_entity_translation_delete().
  */
-function path_node_insert(Node $node) {
-  if (isset($node->path)) {
-    $alias = trim($node->path['alias']);
-    // Only save a non-empty alias.
-    if (!empty($alias)) {
-      // Ensure fields for programmatic executions.
-      $source = 'node/' . $node->nid;
-      $langcode = isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED;
-      drupal_container()->get('path.crud')->save($source, $alias, $langcode);
-    }
+function path_entity_translation_delete(EntityInterface $translation) {
+  if ($translation->hasLinkTemplate('canonical')) {
+    $path = $translation->urlInfo()->getInternalPath();
+    $conditions = array('source' => '/' . $path, 'langcode' => $translation->language()->getId());
+    \Drupal::service('path.alias_storage')->delete($conditions);
   }
-}
-
-/**
- * Implements hook_node_update().
- */
-function path_node_update(Node $node) {
-  if (isset($node->path)) {
-    $path = $node->path;
-    $alias = trim($path['alias']);
-    // Delete old alias if user erased it.
-    if (!empty($path['pid']) && empty($path['alias'])) {
-      drupal_container()->get('path.crud')->delete(array('pid' => $path['pid']));
-    }
-    // Only save a non-empty alias.
-    if (!empty($path['alias'])) {
-      // Ensure fields for programmatic executions.
-      $source = 'node/' . $node->nid;
-      $langcode = isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED;
-      drupal_container()->get('path.crud')->save($source, $alias, $langcode, $path['pid']);
-    }
-  }
-}
-
-/**
- * Implements hook_node_predelete().
- */
-function path_node_predelete(Node $node) {
-  // Delete all aliases associated with this node.
-  drupal_container()->get('path.crud')->delete(array('source' => 'node/' . $node->nid));
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() for taxonomy_term_form().
- */
-function path_form_taxonomy_term_form_alter(&$form, $form_state) {
-  // Make sure this does not show up on the delete confirmation form.
-  if (empty($form_state['confirm_delete'])) {
-    $term = $form_state['controller']->getEntity($form_state);
-    $path = (isset($term->tid) ? drupal_container()->get('path.crud')->load(array('source' => 'taxonomy/term/' . $term->tid)) : array());
-    if ($path === FALSE) {
-      $path = array();
-    }
-    $path += array(
-      'pid' => NULL,
-      'source' => isset($term->tid) ? 'taxonomy/term/' . $term->tid : NULL,
-      'alias' => '',
-      'langcode' => LANGUAGE_NOT_SPECIFIED,
-    );
-    $form['path'] = array(
-      '#access' => user_access('create url aliases') || user_access('administer url aliases'),
-      '#tree' => TRUE,
-      '#element_validate' => array('path_form_element_validate'),
-    );
-    $form['path']['alias'] = array(
-      '#type' => 'textfield',
-      '#title' => t('URL alias'),
-      '#default_value' => $path['alias'],
-      '#maxlength' => 255,
-      '#weight' => 0,
-      '#description' => t("Optionally specify an alternative URL by which this term can be accessed. Use a relative path and don't add a trailing slash or the URL alias won't work."),
-    );
-    $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
-    $form['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
-    $form['path']['langcode'] = array('#type' => 'value', '#value' => $path['langcode']);
-  }
-}
-
-/**
- * Implements hook_taxonomy_term_insert().
- */
-function path_taxonomy_term_insert(Term $term) {
-  if (isset($term->path)) {
-    $path = $term->path;
-    $path['alias'] = trim($path['alias']);
-    // Only save a non-empty alias.
-    if (!empty($path['alias'])) {
-      // Ensure fields for programmatic executions.
-      $path['source'] = 'taxonomy/term/' . $term->tid;
-      $path['langcode'] = LANGUAGE_NOT_SPECIFIED;
-      drupal_container()->get('path.crud')->save($path['source'], $path['alias'], $path['langcode']);
-    }
-  }
-}
-
-/**
- * Implements hook_taxonomy_term_update().
- */
-function path_taxonomy_term_update(Term $term) {
-  if (isset($term->path)) {
-    $path = $term->path;
-    $path['alias'] = trim($path['alias']);
-    // Delete old alias if user erased it.
-    if (!empty($path['pid']) && empty($path['alias'])) {
-      drupal_container()->get('path.crud')->delete(array('pid' => $path['pid']));
-    }
-    // Only save a non-empty alias.
-    if (!empty($path['alias'])) {
-      $pid = (!empty($path['pid']) ? $path['pid'] : NULL);
-      // Ensure fields for programmatic executions.
-      $path['source'] = 'taxonomy/term/' . $term->tid;
-      $path['langcode'] = LANGUAGE_NOT_SPECIFIED;
-      drupal_container()->get('path.crud')->save($path['source'], $path['alias'], $path['langcode'], $pid);
-    }
-  }
-}
-
-/**
- * Implements hook_taxonomy_term_delete().
- */
-function path_taxonomy_term_delete(Term $term) {
-  // Delete all aliases associated with this term.
-  drupal_container()->get('path.crud')->delete(array('source' => 'taxonomy/term/' . $term->tid));
-}
-
-/**
- * Implements hook_library_info().
- */
-function path_library_info() {
-  $libraries['drupal.path'] = array(
-    'title' => 'Path',
-    'version' => VERSION,
-    'js' => array(
-      drupal_get_path('module', 'path') . '/path.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupal.form'),
-    ),
-  );
-
-  return $libraries;
 }

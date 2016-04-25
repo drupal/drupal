@@ -1,0 +1,154 @@
+# Schema for the configuration files of the Configuration Test module.
+
+config_test_dynamic:
+  type: config_entity
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    weight:
+      type: integer
+      label: 'Weight'
+    style:
+      type: string
+      label: 'style'
+    size:
+      type: string
+      label: 'Size'
+    size_value:
+      type: string
+      label: 'Size value'
+    protected_property:
+      type: string
+      label: 'Protected property'
+
+config_test.dynamic.*:
+  type: config_test_dynamic
+  label: 'Config test dynamic settings'
+
+config_test.dynamic.*.*:
+  type: config_test_dynamic
+  label: 'Config test dynamic settings'
+
+config_test.query.*:
+  type: config_entity
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    array:
+      type: sequence
+      label: 'Array level 1'
+      sequence:
+        type: sequence
+        label: 'Array level 2'
+        sequence:
+          type: integer
+          label: 'Value'
+    number:
+      type: integer
+      label: 'number'
+
+config_test.types:
+  type: config_object
+  label: 'Configuration type'
+  mapping:
+    array:
+      type: sequence
+      label: 'Array'
+      sequence:
+        type: string
+        label: 'Item'
+    boolean:
+      type: boolean
+      label: 'Boolean'
+    float:
+      type: float
+      label: 'Float'
+    float_as_integer:
+      type: float
+      label: 'Float'
+    exp:
+      type: float
+      label: 'Exponential'
+    hex:
+      type: integer
+      label: 'Hexadecimal'
+    int:
+      type: integer
+      label: 'Integer'
+    octal:
+      type: integer
+      label: 'Octal'
+    string:
+      type: string
+      label: 'String'
+    string_int:
+      type: string
+      label: 'String integer'
+
+config_test.no_status.default:
+  type: config_object
+  label: 'Configuration no status default'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+
+config_test.system:
+  type: config_object
+  label: 'Configuration system'
+  mapping:
+    foo:
+      type: string
+      label: 'Foo'
+    baz:
+      type: string
+      label: 'Baz'
+    '404':
+      type: string
+      label: '404'
+
+config_test.new:
+  type: config_object
+  label: 'Configuration test'
+  mapping:
+     key:
+       type: string
+       label: 'Test setting'
+     new_key:
+       type: string
+       label: 'Test setting'
+     uuid:
+       type: string
+       label: 'UUID'
+
+config_test.old:
+  type: config_test.new
+
+config_test.foo:
+  type: config_object
+  label: 'Configuration test'
+  mapping:
+     value:
+       type: mapping
+       label: 'Value'
+       mapping:
+         key:
+           type: string
+           label: 'Key'
+     label:
+       type: label
+       label: 'Label'
+
+config_test.bar:
+  type: config_test.foo

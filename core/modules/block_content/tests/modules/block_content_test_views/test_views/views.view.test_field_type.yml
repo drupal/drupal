@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+id: test_field_type
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: block_content_field_data
+base_field: id
+core: '8'
+display:
+  default:
+    display_options:
+      fields:
+        type:
+          field: type
+          id: type
+          table: block_content_field_data
+          plugin_id: field
+          entity_type: block_content
+          entity_field: type
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

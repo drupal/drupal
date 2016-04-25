@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="drupal_core">
+  <description>Default PHP CodeSniffer configuration for Drupal core.</description>
+  <file>.</file>
+  <arg name="extensions" value="inc,install,module,php,profile,test,theme"/>
+
+  <!--Exclude third party code.-->
+  <exclude-pattern>./assets/vendor/*</exclude-pattern>
+
+  <!--Exclude test files that are intentionally empty, or intentionally violate coding standards.-->
+  <exclude-pattern>./modules/system/tests/fixtures/HtaccessTest</exclude-pattern>
+
+  <!-- Only include specific sniffs that pass. This ensures that, if new sniffs are added, HEAD does not fail.-->
+  <!-- Drupal sniffs -->
+  <rule ref="Drupal.Classes.UnusedUseStatement"/>
+  <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>
+  <rule ref="Drupal.CSS.ColourDefinition"/>
+  <rule ref="Drupal.Commenting.DocCommentStar"/>
+  <rule ref="Drupal.Commenting.FileComment"/>
+  <rule ref="Drupal.ControlStructures.ElseIf"/>
+  <rule ref="Drupal.Files.TxtFileLineLength"/>
+  <rule ref="Drupal.Functions.DiscouragedFunctions"/>
+  <rule ref="Drupal.Functions.FunctionDeclaration.SpaceAfter"/>
+  <rule ref="Drupal.Functions.FunctionDeclaration.SpaceBeforeParenthesis"/>
+  <rule ref="Drupal.InfoFiles.AutoAddedKeys"/>
+  <rule ref="Drupal.InfoFiles.ClassFiles"/>
+  <rule ref="Drupal.InfoFiles.DuplicateEntry"/>
+  <rule ref="Drupal.InfoFiles.Required"/>
+  <rule ref="Drupal.Semantics.EmptyInstall"/>
+  <rule ref="Drupal.Semantics.FunctionWatchdog"/>
+  <rule ref="Drupal.Semantics.InstallHooks"/>
+  <rule ref="Drupal.Semantics.LStringTranslatable"/>
+  <rule ref="Drupal.Semantics.PregSecurity"/>
+  <rule ref="Drupal.Semantics.TInHookMenu"/>
+  <rule ref="Drupal.Semantics.TInHookSchema"/>
+  <rule ref="Drupal.WhiteSpace.Comma"/>
+  <rule ref="Drupal.WhiteSpace.ObjectOperatorIndent"/>
+
+  <!-- Generic sniffs -->
+  <rule ref="Generic.Files.LineEndings"/>
+  <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+  <rule ref="Generic.PHP.DeprecatedFunctions"/>
+  <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+  <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+
+</ruleset>

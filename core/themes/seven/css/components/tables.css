@@ -1,0 +1,147 @@
+/**
+ * @file
+ * Seven styles for Tables.
+ */
+
+table {
+  width: 100%;
+  margin: 0 0 10px;
+}
+caption {
+  text-align: left; /* LTR */
+}
+[dir="rtl"] caption {
+  text-align: right;
+}
+th {
+  text-align: left; /* LTR */
+  padding: 10px 12px;
+}
+[dir="rtl"] th {
+  text-align: right;
+}
+thead th {
+  background: #f5f5f2;
+  border: solid #bfbfba;
+  border-width: 1px 0;
+  color: #333;
+  text-transform: uppercase;
+}
+tr {
+  border-bottom: 1px solid #e6e4df;
+  padding: 0.1em 0.6em;
+}
+thead > tr {
+  border-bottom: 1px solid #000;
+}
+tbody tr:hover,
+tbody tr:focus {
+  background: #f7fcff;
+}
+
+/* See colors.css */
+tbody tr.color-warning:hover,
+tbody tr.color-warning:focus {
+  background: #fdf8ed;
+}
+tbody tr.color-error:hover,
+tbody tr.color-error:focus {
+  background: #fcf4f2;
+}
+td,
+th {
+  vertical-align: middle;
+}
+td {
+  padding: 10px 12px;
+  text-align: left; /* LTR */
+}
+[dir="rtl"] td {
+  text-align: right;
+}
+th > a {
+  position: relative;
+  display: block;
+}
+
+/* 1. Must match negative bottom padding of the parent <th> */
+th > a:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: -10px; /* 1. */
+  left: 0;
+  right: 0;
+  border-bottom: 2px solid transparent;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+}
+th.is-active > a {
+  color: #004875;
+}
+th.is-active img {
+  position: absolute;
+  right: 0; /* LTR */
+  top: 50%;
+}
+[dir="rtl"] th.is-active img {
+  right: auto;
+  left: 0;
+}
+th.is-active > a:after {
+  border-bottom-color: #004875;
+}
+th > a:hover,
+th > a:focus,
+th.is-active > a:hover,
+th.is-active > a:focus {
+  color: #008ee6;
+  text-decoration: none;
+}
+th > a:hover:after,
+th > a:focus:after,
+th.is-active > a:hover:after,
+th.is-active > a:focus:after {
+  border-bottom-color: #008ee6;
+}
+td .item-list ul {
+  margin: 0;
+}
+/* This is required to win over specificity of [dir="rtl"] .item-list ul */
+[dir="rtl"] td .item-list ul {
+  margin: 0;
+}
+td.is-active {
+  background: none;
+}
+
+/* Force browsers to calculate the width of a 'select all' TH element. */
+th.select-all {
+  width: 1px;
+}
+
+/**
+ * Captions.
+ */
+.caption {
+  margin-bottom: 1.2em;
+}
+
+/**
+ * Responsive tables.
+ */
+@media screen and (max-width: 37.5em) { /* 600px */
+  th.priority-low,
+  td.priority-low,
+  th.priority-medium,
+  td.priority-medium {
+    display: none;
+  }
+}
+@media screen and (max-width: 60em) { /* 920px */
+  th.priority-low,
+  td.priority-low {
+    display: none;
+  }
+}

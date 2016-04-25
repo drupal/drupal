@@ -1,0 +1,6 @@
+name: 'Requirements 1 Test'
+type: module
+description: 'Tests that a module is not installed when it fails hook_requirements(''install'').'
+package: Testing
+version: VERSION
+core: 8.x

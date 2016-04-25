@@ -1,0 +1,56 @@
+<?php
+
+namespace Drupal\help\Tests;
+
+use Drupal\simpletest\WebTestBase;
+
+/**
+ * Verifies help for experimental modules.
+ *
+ * @group help
+ */
+class ExperimentalHelpTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * The experimental_module_test module implements hook_help() and is in the
+   * Core (Experimental) package.
+   *
+   * @var array
+   */
+  public static $modules = array('help', 'experimental_module_test', 'help_page_test');
+
+  /**
+   * The admin user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
+   * {@inheritoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->adminUser = $this->drupalCreateUser(['access administration pages']);
+  }
+
+  /**
+   * Verifies that a warning message is displayed for experimental modules.
+   */
+  public function testExperimentalHelp() {
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('admin/help/experimental_module_test');
+    $this->assertText('This module is experimental.');
+
+    // Regular modules should not display the message.
+    $this->drupalGet('admin/help/help_page_test');
+    $this->assertNoText('This module is experimental.');
+
+    // Ensure the actual help page is displayed to avoid a false positive.
+    $this->assertResponse(200);
+    $this->assertText('online documentation for the Help Page Test module');
+  }
+
+}

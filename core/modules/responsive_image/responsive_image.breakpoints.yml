@@ -1,0 +1,6 @@
+responsive_image.viewport_sizing:
+  label: Viewport Sizing
+  mediaQuery: ''
+  weight: 0
+  multipliers:
+    - 1x

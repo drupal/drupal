@@ -1,0 +1,6 @@
+name: 'Menu link content dynamic route'
+type: module
+core: 8.x
+hidden: true
+dependencies:
+  - menu_link_content

@@ -1,0 +1,77 @@
+# Schema for the views plugins of the Comment module.
+
+views.argument.argument_comment_user_uid:
+  type: views_argument
+  label: 'Commented user ID'
+
+views.field.comment_depth:
+  type: views_field
+  label: 'Comment depth'
+
+views.field.comment_entity_link:
+  type: views_field
+  label: 'Comment link'
+  mapping:
+    teaser:
+      type: boolean
+      label: 'Show teaser-style link'
+
+views.field.comment_last_timestamp:
+  type: views.field.date
+  label: 'Last comment date'
+
+views.field.comment_link_approve:
+  type: views.field.comment_link
+  label: 'Comment approve link'
+
+views.field.comment_link_reply:
+  type: views.field.comment_link
+  label: 'Comment reply link'
+
+views.field.node_new_comments:
+  type: views.field.numeric
+  label: 'Number of new comments'
+  mapping:
+    link_to_comment:
+      type: boolean
+      label: 'Link this field to new comments'
+
+views.field.comment_ces_last_comment_name:
+  type: views_field
+  label: 'Name of last comment poster'
+
+views.field.comment_ces_last_updated:
+  type: views_field
+  label: 'Newer of last comment / node updated'
+
+views.filter.node_comment:
+  type: views.filter.in_operator
+  label: 'Comment node status'
+
+views.filter.comment_ces_last_updated:
+  type: views.filter.date
+  label: 'Newer of last comment / node updated'
+
+views.filter.comment_user_uid:
+  type: views_filter
+  label: 'Node user posted comment'
+
+views.row.comment_rss:
+  type: views_row
+  label: 'Comment'
+  mapping:
+    view_mode:
+      type: string
+      label: 'Display type'
+
+views.sort.comment_ces_last_comment_name:
+  type: views_sort
+  label: 'Last comment name'
+
+views.sort.comment_ces_last_updated:
+  type: views.sort.date
+  label: 'Newer of last comment / entity updated'
+
+views.sort.comment_thread:
+  type: views_sort
+  label: 'Thread'

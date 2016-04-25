@@ -10,6 +10,9 @@ http://www.test.com
 www.test.com
 person@test.com
 <code>www.test.com</code>
+http://test.com/?search=test
+http://test.com/?search=Test
+http://test.com/?search=tesT
 
 What about tags that don't exist <x>like x say www.test.com</x>? And what about tag <pooh>beginning www.test.com with p?</pooh>
 

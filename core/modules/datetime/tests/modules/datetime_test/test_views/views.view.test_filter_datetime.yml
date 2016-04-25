@@ -1,0 +1,56 @@
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+id: test_filter_datetime
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        nid:
+          field: nid
+          id: nid
+          table: node_field_data
+          plugin_id: node
+      filters:
+        field_date_value:
+          id: field_date_value
+          table: node__field_date
+          field: field_date_value
+          plugin_id: datetime
+      sorts:
+        id:
+          field: nid
+          id: nid
+          order: ASC
+          relationship: none
+          table: node_field_data
+          plugin_id: numeric
+      pager:
+        type: full
+      query:
+        options:
+          query_comment: ''
+        type: views_query
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

@@ -1,0 +1,7 @@
+name: '<"Cat" & ''Mouse''>'
+type: theme
+description: 'Theme for testing special characters in block admin.'
+core: 8.x
+regions:
+  content: Content
+  help: Help

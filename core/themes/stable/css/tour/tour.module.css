@@ -1,0 +1,142 @@
+/**
+ * @file
+ * Styling for tour module.
+ */
+
+/* Tab appearance. */
+.toolbar .toolbar-bar .tour-toolbar-tab.toolbar-tab {
+  float: right; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-bar .tour-toolbar-tab.toolbar-tab {
+  float: left;
+}
+
+/* Override placement of the tour progress indicator. */
+.tour-progress {
+  position: absolute;
+  bottom: 20px;
+  right: 20px; /* LTR */
+}
+[dir="rtl"] .tour-progress {
+  right: auto;
+  left: 20px;
+}
+
+/* Default styles for the container */
+.joyride-tip-guide {
+  position: absolute;
+  display: none;
+  background: #fff;
+  width: 300px;
+  z-index: 101;
+  top: 0;
+  left: 0;
+}
+@media only screen and (max-width: 767px) {
+  .joyride-tip-guide {
+    width: 85%;
+    left: 2.5%;
+  }
+}
+
+.joyride-content-wrapper {
+  position: relative;
+  padding: 20px 50px 20px 20px;  /* LTR */
+}
+[dir="rtl"] .joyride-content-wrapper {
+  padding: 20px 20px 20px 50px;
+}
+
+/* Add a little css triangle pip, older browser just miss out on the fanciness of it. */
+.joyride-tip-guide .joyride-nub {
+  display: block;
+  position: absolute;
+  left: 22px;
+  width: 0;
+  height: 0;
+}
+
+.joyride-tip-guide .joyride-nub.top {
+  top: -28px;
+  bottom: auto;
+}
+
+.joyride-tip-guide .joyride-nub.bottom {
+  bottom: -28px;
+}
+
+.joyride-tip-guide .joyride-nub.right {
+  top: 22px;
+  bottom: auto;
+  left: auto;
+  right: -28px;
+}
+
+.joyride-tip-guide .joyride-nub.left {
+  top: 22px;
+  left: -28px;
+  right: auto;
+  bottom: auto;
+}
+
+.joyride-tip-guide .joyride-nub.top-right {
+  top: -28px;
+  bottom: auto;
+  left: auto;
+  right: 28px;
+}
+
+.joyride-tip-guide .tour-tip-label {
+  margin-top: 0;
+}
+
+.joyride-tip-guide p {
+  margin: 0 0 1.4em;
+}
+
+.joyride-timer-indicator-wrap {
+  width: 50px;
+  height: 3px;
+  position: absolute;
+  right: 17px;
+  bottom: 16px;
+}
+.joyride-timer-indicator {
+  display: block;
+  width: 0;
+  height: inherit;
+}
+
+.joyride-close-tip {
+  position: absolute;
+  line-height: 1em;
+  right: 20px; /* LTR */
+  top: 20px;
+}
+[dir="rtl"] .joyride-close-tip {
+  left: 20px;
+  right: auto;
+}
+
+.joyride-modal-bg {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  display: none;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+
+.joyride-expose-wrapper {
+  position: absolute;
+  z-index: 102;
+}
+
+.joyride-expose-cover {
+  position: absolute;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+}
