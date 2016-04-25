@@ -207,13 +207,13 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
       else {
         try {
           $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN ( :names[] )', array(':names[]' => $routes_to_load));
+          $routes = $result->fetchAllKeyed();
+
+          $this->cache->set($cid, $routes, Cache::PERMANENT, ['routes']);
         }
         catch (\Exception $e) {
-          $result = [];
+          $routes = [];
         }
-        $routes = $result->fetchAllKeyed();
-
-        $this->cache->set($cid, $routes, Cache::PERMANENT, ['routes']);
       }
 
       $this->serializedRoutes += $routes;
