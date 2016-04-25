@@ -177,11 +177,7 @@ class Error {
 
       $line = '';
       if (isset($trace['line'])) {
-        $line = " (Line: {$trace['line']}";
-        if (isset($trace['file'])) {
-          $line .= ':' . $trace['file'];
-        }
-        $line .= ")";
+        $line = " (Line: {$trace['line']})";
       }
 
       $return .= $call['function'] . '(' . implode(', ', $call['args']) . ")$line\n";
