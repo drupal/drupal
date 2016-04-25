@@ -332,6 +332,25 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       ),
     );
     $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler (does not include anonymous)');
+
+    // Check that the Anonymous user is not included in the results when no
+    // label matching is done, for example when using the 'options_select'
+    // widget.
+    $referenceable_tests = array(
+      array(
+        'arguments' => array(
+          array(NULL),
+        ),
+        'result' => array(
+          'user' => array(
+            $users['admin']->id() => $user_labels['admin'],
+            $users['non_admin']->id() => $user_labels['non_admin'],
+            $users['blocked']->id() => $user_labels['blocked'],
+          ),
+        ),
+      ),
+    );
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler (does not include anonymous)');
   }
 
   /**
