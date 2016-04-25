@@ -4,7 +4,12 @@
  */
 
 .feed-icon {
-  border-bottom: none;
+  border-bottom: 1px solid transparent;
   display: inline-block;
-  padding: 15px 0 0 0;
+  padding-bottom: 2px;
+}
+
+.feed-icon:focus,
+.feed-icon:hover {
+  border-color: #018fe2;
 }
