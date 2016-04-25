@@ -143,6 +143,13 @@ class UserSelection extends DefaultSelection {
    */
   protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $query = parent::buildEntityQuery($match, $match_operator);
+    $handler_settings = $this->configuration['handler_settings'];
+
+    // Filter out the Anonymous user if the selection handler is configured to
+    // exclude it.
+    if (isset($handler_settings['include_anonymous']) && !$handler_settings['include_anonymous']) {
+      $query->condition('uid', 0, '<>');
+    }
 
     // The user entity doesn't have a label column.
     if (isset($match)) {
@@ -150,7 +157,6 @@ class UserSelection extends DefaultSelection {
     }
 
     // Filter by role.
-    $handler_settings = $this->configuration['handler_settings'];
     if (!empty($handler_settings['filter']['role'])) {
       $query->condition('roles', $handler_settings['filter']['role'], 'IN');
     }
