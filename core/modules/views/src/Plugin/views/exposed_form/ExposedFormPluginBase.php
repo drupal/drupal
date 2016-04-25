@@ -10,31 +10,20 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\PluginBase;
 
 /**
- * @defgroup views_exposed_form_plugins Views exposed form plugins
- * @{
- * Plugins that handle validation, submission, and rendering of exposed forms.
- *
- * Exposed forms are used for filters, sorts, and pager settings that are
- * exposed to site visitors. Exposed form plugins handle the rendering,
- * validation, and submission of exposed forms, and may add additional form
- * elements.
- *
- * Exposed form plugins extend
- * \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase. They must be
- * annotated with \Drupal\views\Annotation\ViewsExposedForm annotation,
- * and they must be in namespace directory Plugin\views\exposed_form.
- */
-
-/**
  * Base class for Views exposed filter form plugins.
+ *
+ * @ingroup views_exposed_form_plugins
  */
-abstract class ExposedFormPluginBase extends PluginBase implements CacheableDependencyInterface {
+abstract class ExposedFormPluginBase extends PluginBase implements CacheableDependencyInterface, ExposedFormPluginInterface {
 
   /**
    * {@inheritdoc}
    */
   protected $usesOptions = TRUE;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['submit_button'] = array('default' => $this->t('Apply'));
@@ -47,6 +36,9 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['submit_button'] = array(
@@ -115,11 +107,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
   }
 
   /**
-   * Render the exposed filter form.
-   *
-   * This actually does more than that; because it's using FAPI, the form will
-   * also assign data to the appropriate handlers for use in building the
-   * query.
+   * {@inheritdoc}
    */
   public function renderExposedForm($block = FALSE) {
     // Deal with any exposed filters we may have, before building.
@@ -154,6 +142,9 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $view = $this->view;
     $exposed_data = isset($view->exposed_data) ? $view->exposed_data : array();
@@ -179,21 +170,28 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function preRender($values) { }
 
+  /**
+   * {@inheritdoc}
+   */
   public function postRender(&$output) { }
 
+  /**
+   * {@inheritdoc}
+   */
   public function preExecute() { }
 
+  /**
+   * {@inheritdoc}
+   */
   public function postExecute() { }
 
   /**
-   * Alters the view exposed form.
-   *
-   * @param $form
-   *   The form build array. Passed by reference.
-   * @param $form_state
-   *   The form state. Passed by reference.
+   * {@inheritdoc}
    */
   public function exposedFormAlter(&$form, FormStateInterface $form_state) {
     if (!empty($this->options['submit_button'])) {
@@ -273,6 +271,9 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function exposedFormValidate(&$form, FormStateInterface $form_state) {
     if ($pager_plugin = $form_state->get('pager_plugin')) {
       $pager_plugin->exposedFormValidate($form, $form_state);
@@ -280,15 +281,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
   }
 
   /**
-   * This function is executed when exposed form is submitted.
-   *
-   * @param $form
-   *   Nested array of form elements that comprise the form.
-   * @param $form_state
-   *   The current state of the form.
-   * @param $exclude
-   *   Nested array of keys to exclude of insert into
-   *   $view->exposed_raw_input
+   * {@inheritdoc}
    */
   public function exposedFormSubmit(&$form, FormStateInterface $form_state, &$exclude) {
     if (!$form_state->isValueEmpty('op') && $form_state->getValue('op') == $this->options['reset_button_label']) {
@@ -300,6 +293,17 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     }
   }
 
+  /**
+   * Resets all the states of the exposed form.
+   *
+   * This method is called when the "Reset" button is triggered. Clears
+   * user inputs, stored session, and the form state.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
   public function resetForm(&$form, FormStateInterface $form_state) {
     // _SESSION is not defined for users who are not logged in.
 
@@ -373,7 +377,3 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
   }
 
 }
-
-/**
- * @}
- */

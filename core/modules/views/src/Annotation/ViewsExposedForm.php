@@ -5,6 +5,7 @@ namespace Drupal\views\Annotation;
 /**
  * Defines a Plugin annotation object for views exposed form plugins.
  *
+ * @see \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginInterface
  * @see \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase
  *
  * @ingroup views_exposed_form_plugins
