@@ -224,7 +224,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
       'pass' => $this->randomMachineName(),
     );
     $this->drupalPostForm('user/login', $edit, t('Log in'));
-    $this->assertRaw(t('Unrecognized username or password. <a href=":password">Have you forgotten your password?</a>',
+    $this->assertRaw(t('Unrecognized username or password. <a href=":password">Forgot your password?</a>',
       array(':password' => \Drupal::url('user.pass', [], array('query' => array('name' => $edit['name']))))));
     unset($edit['pass']);
     $this->drupalGet('user/password', array('query' => array('name' => $edit['name'])));
