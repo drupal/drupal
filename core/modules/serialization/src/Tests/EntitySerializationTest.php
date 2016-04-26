@@ -122,6 +122,7 @@ class EntitySerializationTest extends NormalizerTestBase {
       'default_langcode' => array(
         array('value' => TRUE),
       ),
+      'non_rev_field' => array(),
       'field_test_text' => array(
         array(
           'value' => $this->values['field_test_text']['value'],
@@ -190,6 +191,7 @@ class EntitySerializationTest extends NormalizerTestBase {
       'user_id' => '<user_id><target_id>' . $this->user->id() . '</target_id><target_type>' . $this->user->getEntityTypeId() . '</target_type><target_uuid>' . $this->user->uuid() . '</target_uuid><url>' . $this->user->url() . '</url></user_id>',
       'revision_id' => '<revision_id><value>' . $this->entity->getRevisionId() . '</value></revision_id>',
       'default_langcode' => '<default_langcode><value>1</value></default_langcode>',
+      'non_rev_field' => '<non_rev_field/>',
       'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format></field_test_text>',
     );
     // Sort it in the same order as normalised.
