@@ -15,7 +15,7 @@ use Drupal\Core\Render\Element;
  * @code
  * $form['expiration'] = array(
  *   '#type' => 'date',
- *   '#title' => t('Content expiration'),
+ *   '#title' => $this->t('Content expiration'),
  *   '#default_value' => array('year' => 2020, 'month' => 2, 'day' => 15,)
  * );
  * @endcode

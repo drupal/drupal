@@ -11,7 +11,7 @@ use Drupal\Core\Render\Element;
  * @code
  * $form['search'] = array(
  *   '#type' => 'search',
- *   '#title' => t('Search'),
+ *   '#title' => $this->t('Search'),
  * );
  * @endcode
  *

@@ -14,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @code
  * $form['pass'] = array(
  *   '#type' => 'password_confirm',
- *   '#title' => t('Password'),
+ *   '#title' => $this->t('Password'),
  *   '#size' => 25,
  * );
  * @endcode

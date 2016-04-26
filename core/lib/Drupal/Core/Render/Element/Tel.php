@@ -14,7 +14,7 @@ use Drupal\Core\Render\Element;
  * @code
  * $form['phone'] = array(
  *   '#type' => 'tel',
- *   '#title' => t('Phone'),
+ *   '#title' => $this->t('Phone'),
  * );
  * @endcode
  *
