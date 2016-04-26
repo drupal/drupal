@@ -26,6 +26,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The number of times this formatter allows rendering the same entity.
+   *
+   * @var int
+   */
+  const RECURSIVE_RENDER_LIMIT = 20;
+
+  /**
    * The logger factory.
    *
    * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
@@ -47,7 +54,19 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase implem
   protected $entityDisplayRepository;
 
   /**
-   * Constructs a StringFormatter instance.
+   * An array of counters for the recursive rendering protection.
+   *
+   * Each counter takes into account all the relevant information about the
+   * field and the referenced entity that is being rendered.
+   *
+   * @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter::viewElements()
+   *
+   * @var array
+   */
+  protected static $recursiveRenderDepth = [];
+
+  /**
+   * Constructs a EntityReferenceEntityFormatter instance.
    *
    * @param string $plugin_id
    *   The plugin_id for the formatter.
@@ -141,15 +160,35 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase implem
     $elements = array();
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
-      // Protect ourselves from recursive rendering.
-      static $depth = 0;
-      $depth++;
-      if ($depth > 20) {
-        $this->loggerFactory->get('entity')->error('Recursive rendering detected when rendering entity @entity_type @entity_id. Aborting rendering.', array('@entity_type' => $entity->getEntityTypeId(), '@entity_id' => $entity->id()));
-        return $elements;
-      }
-
       if ($entity->id()) {
+        // Due to render caching and delayed calls, the viewElements() method
+        // will be called later in the rendering process through a '#pre_render'
+        // callback, so we need to generate a counter that takes into account
+        // all the relevant information about this field and the referenced
+        // entity that is being rendered.
+        $recursive_render_id = $items->getFieldDefinition()->getTargetEntityTypeId()
+          . $items->getFieldDefinition()->getTargetBundle()
+          . $items->getName()
+          . $entity->id();
+
+        if (isset(static::$recursiveRenderDepth[$recursive_render_id])) {
+          static::$recursiveRenderDepth[$recursive_render_id]++;
+        }
+        else {
+          static::$recursiveRenderDepth[$recursive_render_id] = 1;
+        }
+
+        // Protect ourselves from recursive rendering.
+        if (static::$recursiveRenderDepth[$recursive_render_id] > static::RECURSIVE_RENDER_LIMIT) {
+          $this->loggerFactory->get('entity')->error('Recursive rendering detected when rendering entity %entity_type: %entity_id, using the %field_name field on the %bundle_name bundle. Aborting rendering.', [
+            '%entity_type' => $entity->getEntityTypeId(),
+            '%entity_id' => $entity->id(),
+            '%field_name' => $items->getName(),
+            '%bundle_name' => $items->getFieldDefinition()->getTargetBundle(),
+          ]);
+          return $elements;
+        }
+
         $view_builder = $this->entityTypeManager->getViewBuilder($entity->getEntityTypeId());
         $elements[$delta] = $view_builder->view($entity, $view_mode, $entity->language()->getId());
 
@@ -164,7 +203,6 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase implem
         // This is an "auto_create" item.
         $elements[$delta] = array('#markup' => $entity->label());
       }
-      $depth = 0;
     }
 
     return $elements;
