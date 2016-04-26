@@ -81,9 +81,20 @@ class Tables implements TablesInterface {
 
     $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
     for ($key = 0; $key <= $count; $key ++) {
-      // If there is revision support and only the current revision is being
-      // queried then use the revision id. Otherwise, the entity id will do.
-      if (($revision_key = $entity_type->getKey('revision')) && $all_revisions) {
+      // This can either be the name of an entity base field or a configurable
+      // field.
+      $specifier = $specifiers[$key];
+      if (isset($field_storage_definitions[$specifier])) {
+        $field_storage = $field_storage_definitions[$specifier];
+      }
+      else {
+        $field_storage = FALSE;
+      }
+
+      // If there is revision support, only the current revisions are being
+      // queried, and the field is revisionable then use the revision id.
+      // Otherwise, the entity id will do.
+      if (($revision_key = $entity_type->getKey('revision')) && $all_revisions && $field_storage && $field_storage->isRevisionable()) {
         // This contains the relevant SQL field to be used when joining entity
         // tables.
         $entity_id_field = $revision_key;
@@ -94,15 +105,6 @@ class Tables implements TablesInterface {
       else {
         $entity_id_field = $entity_type->getKey('id');
         $field_id_field = 'entity_id';
-      }
-      // This can either be the name of an entity base field or a configurable
-      // field.
-      $specifier = $specifiers[$key];
-      if (isset($field_storage_definitions[$specifier])) {
-        $field_storage = $field_storage_definitions[$specifier];
-      }
-      else {
-        $field_storage = FALSE;
       }
 
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
@@ -152,11 +154,18 @@ class Tables implements TablesInterface {
         // finds the property first. The data table is preferred, which is why
         // it gets added before the base table.
         $entity_tables = array();
-        if ($data_table = $all_revisions ? $entity_type->getRevisionDataTable() : $entity_type->getDataTable()) {
+        if ($all_revisions && $field_storage && $field_storage->isRevisionable()) {
+          $data_table = $entity_type->getRevisionDataTable();
+          $entity_base_table = $entity_type->getRevisionTable();
+        }
+        else {
+          $data_table = $entity_type->getDataTable();
+          $entity_base_table = $entity_type->getBaseTable();
+        }
+        if ($data_table) {
           $this->sqlQuery->addMetaData('simple_query', FALSE);
           $entity_tables[$data_table] = $this->getTableMapping($data_table, $entity_type_id);
         }
-        $entity_base_table = $all_revisions ? $entity_type->getRevisionTable() : $entity_type->getBaseTable();
         $entity_tables[$entity_base_table] = $this->getTableMapping($entity_base_table, $entity_type_id);
         $sql_column = $specifier;
 
