@@ -1052,6 +1052,7 @@ function template_preprocess_table(&$variables) {
  *     render properties for all nested child lists.
  *   - title: A title to be prepended to the list.
  *   - list_type: The type of list to return (e.g. "ul", "ol").
+ *   - wrapper_attributes: HTML attributes to be applied to the list wrapper.
  *
  * @see https://www.drupal.org/node/1842756
  */
