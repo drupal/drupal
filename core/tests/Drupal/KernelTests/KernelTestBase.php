@@ -136,10 +136,9 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   /**
    * Modules to enable.
    *
-   * Test classes extending this class, and any classes in the hierarchy up to
-   * this class, may specify individual lists of modules to enable by setting
-   * this property. The values of all properties in all classes in the class
-   * hierarchy are merged.
+   * The test runner will merge the $modules lists from this class, the class
+   * it extends, and so on up the class hierarchy. It is not necessary to
+   * include modules in your list that a parent class has already declared.
    *
    * @see \Drupal\Tests\KernelTestBase::enableModules()
    * @see \Drupal\Tests\KernelTestBase::bootKernel()
