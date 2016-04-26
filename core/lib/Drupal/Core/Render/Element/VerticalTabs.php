@@ -24,24 +24,24 @@ use Drupal\Core\Render\Element;
  *
  * $form['author'] = array(
  *   '#type' => 'details',
- *   '#title' => 'Author',
+ *   '#title' => $this->t('Author'),
  *   '#group' => 'information',
  * );
  *
  * $form['author']['name'] = array(
  *   '#type' => 'textfield',
- *   '#title' => t('Name'),
+ *   '#title' => $this->t('Name'),
  * );
  *
  * $form['publication'] = array(
  *   '#type' => 'details',
- *   '#title' => t('Publication'),
+ *   '#title' => $this->t('Publication'),
  *   '#group' => 'information',
  * );
  *
  * $form['publication']['publisher'] = array(
  *   '#type' => 'textfield',
- *   '#title' => t('Publisher'),
+ *   '#title' => $this->t('Publisher'),
  * );
  * @endcode
  *

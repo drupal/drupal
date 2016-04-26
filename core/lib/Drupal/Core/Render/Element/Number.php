@@ -21,7 +21,7 @@ use Drupal\Component\Utility\Number as NumberUtility;
  * @code
  * $form['quantity'] = array(
  *   '#type' => 'number',
- *   '#title' => t('Quantity'),
+ *   '#title' => $this->t('Quantity'),
  * );
  * @endcode
  *

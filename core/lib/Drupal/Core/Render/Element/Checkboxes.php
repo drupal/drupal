@@ -17,8 +17,8 @@ use Drupal\Core\Form\FormStateInterface;
  * @code
  * $form['high_school']['tests_taken'] = array(
  *   '#type' => 'checkboxes',
- *   '#options' => array('SAT' => t('SAT'), 'ACT' => t('ACT'))),
- *   '#title' => t('What standardized tests did you take?'),
+ *   '#options' => array('SAT' => $this->t('SAT'), 'ACT' => $this->t('ACT'))),
+ *   '#title' => $this->t('What standardized tests did you take?'),
  *   ...
  * );
  * @endcode

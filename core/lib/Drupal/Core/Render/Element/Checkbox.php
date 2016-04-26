@@ -15,7 +15,7 @@ use Drupal\Core\Render\Element;
  * @code
  * $form['copy'] = array(
  *   '#type' => 'checkbox',
- *   '#title' => t('Send me a copy'),
+ *   '#title' => $this->t('Send me a copy'),
  * );
  * @endcode
  *
