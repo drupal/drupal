@@ -116,8 +116,9 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param \Drupal\views\ResultRow $values
    *   An object containing all retrieved values.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   Returns the entity matching the values.
+   * @return \Drupal\Core\Entity\EntityInterface|null
+   *   Returns the entity matching the values or NULL if there is no matching
+   *   entity.
    */
   public function getEntity(ResultRow $values);
 
