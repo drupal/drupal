@@ -374,6 +374,7 @@ class DbUpdateController extends ControllerBase {
         '#attributes' => array('class' => array('button', 'button--primary')),
         '#weight' => 5,
         '#url' => $url,
+        '#access' => $url->access($this->currentUser()),
       );
     }
 
