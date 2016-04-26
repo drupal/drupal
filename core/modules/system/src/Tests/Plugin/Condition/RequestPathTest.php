@@ -127,5 +127,14 @@ class RequestPathTest extends KernelTestBase {
 
     $this->assertFalse($condition->evaluate(), 'The system_path /my/pass/page4 fails for a missing path.');
 
+    // Test a path of '/'.
+    $this->aliasManager->addAlias('/', '/my/pass/page3');
+    $this->currentPath->setPath('/', $request);
+    $this->requestStack->pop();
+    $this->requestStack->push($request);
+
+    $this->assertTrue($condition->evaluate(), 'The system_path my/pass/page3 passes for wildcard paths.');
+    $this->assertEqual($condition->summary(), 'Return true on the following pages: /my/pass/*', 'The condition summary matches for a wildcard path');
+
   }
 }
