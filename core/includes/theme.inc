@@ -585,15 +585,15 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *   - links: An array of links to be themed. Each link should be itself an
  *     array, with the following elements:
  *     - title: The link text.
- *     - url: (optional) The url object to link to. If omitted, no a tag is
- *       printed out.
+ *     - url: (optional) The \Drupal\Core\Url object to link to. If omitted, no
+ *       anchor tag is printed out.
  *     - attributes: (optional) Attributes for the anchor, or for the <span>
  *       tag used in its place if no 'href' is supplied. If element 'class' is
  *       included, it must be an array of one or more class names.
  *     If the 'href' element is supplied, the entire link array is passed to
  *     l() as its $options parameter.
- *   - attributes: A keyed array of attributes for the UL containing the
- *     list of links.
+ *   - attributes: A keyed array of attributes for the <ul> containing the list
+ *     of links.
  *   - set_active_class: (optional) Whether each link should compare the
  *     route_name + route_parameters or href (path), language and query options
  *     to the current URL, to determine whether the link is "active". If so, an
