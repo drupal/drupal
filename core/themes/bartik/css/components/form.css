@@ -116,8 +116,12 @@ input.form-submit:focus {
   margin-right: 1.2em;
   margin-left: 0;
 }
-.form-item label {
+.form-item label,
+.form-wrapper .label {
   font-size: 0.929em;
+}
+.form-wrapper .field-multiple-table .label {
+  font-size: inherit;
 }
 .form-type-radio label,
 .form-type-checkbox label {
@@ -146,8 +150,12 @@ input.form-submit:focus {
   margin-bottom: 2em;
 }
 .node-form label,
-.node-form .description {
+.node-form .description,
+.node-form .form-wrapper .label {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.node-form .form-wrapper .field-multiple-table .label {
+  font-family: inherit;
 }
 .node-form .form-wrapper {
   margin-bottom: 2em;
