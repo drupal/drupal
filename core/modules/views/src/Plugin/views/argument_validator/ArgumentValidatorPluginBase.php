@@ -51,34 +51,32 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
   }
 
   /**
-   * Retrieve the options when this is a new access
-   * control plugin
+   * Retrieves the options when this is a new access control plugin.
    */
   protected function defineOptions() { return array(); }
 
   /**
-   * Provide the default form for setting options.
+   * Provides the default form for setting options.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) { }
 
   /**
-   * Provide the default form form for validating options
+   * Provides the default form for validating options.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) { }
 
   /**
-   * Provide the default form form for submitting options
+   * Provides the default form for submitting options.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = array()) { }
 
   /**
-   * Determine if the administrator has the privileges to use this plugin
+   * Determines if the administrator has the privileges to use this plugin.
    */
   public function access() { return TRUE; }
 
   /**
-   * If we don't have access to the form but are showing it anyway, ensure that
-   * the form is safe and cannot be changed from user input.
+   * Blocks user input when the form is shown but we don´t have access.
    *
    * This is only called by child objects if specified in the buildOptionsForm(),
    * so it will not always be used.
@@ -91,10 +89,13 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
     }
   }
 
+  /**
+   * Performs validation for a given argument.
+   */
   public function validateArgument($arg) { return TRUE; }
 
   /**
-   * Process the summary arguments for displaying.
+   * Processes the summary arguments for displaying.
    *
    * Some plugins alter the argument so it uses something else internally.
    * For example the user validation set's the argument to the uid,
