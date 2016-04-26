@@ -4,9 +4,9 @@ namespace Drupal\KernelTests\Core\Entity\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -14,7 +14,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  *
  * @group entity_reference
  */
-class EntityReferenceSelectionSortTest extends EntityUnitTestBase {
+class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
 
   /**
    * Modules to enable.

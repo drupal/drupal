@@ -16,6 +16,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\simpletest\AssertContentTrait;
 use Drupal\simpletest\AssertHelperTrait;
@@ -602,6 +603,9 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       ->addTag('persist');
     $container
       ->setAlias('keyvalue', 'keyvalue.memory');
+
+    // Set the default language on the minimal container.
+    $container->setParameter('language.default_values', Language::$defaultValues);
 
     if ($this->strictConfigSchema) {
       $container

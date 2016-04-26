@@ -4,7 +4,7 @@ namespace Drupal\system\Tests\KeyValueStore;
 
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
-use Drupal\simpletest\KernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\entity_test\Entity\EntityTestLabel;
 
 /**

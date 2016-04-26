@@ -4,7 +4,7 @@ namespace Drupal\condition_test\Tests;
 
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
-use Drupal\simpletest\KernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
 /**
