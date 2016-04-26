@@ -200,3 +200,13 @@ body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu .
     display: none;
   }
 }
+
+/**
+ * Ensures that the open mobile menu hides when the screen dimensions become
+ * 461px or wider.
+ */
+@media all and (min-width: 461px) {
+  body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-toggle--hide {
+    display: none;
+  }
+}
