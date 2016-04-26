@@ -76,6 +76,10 @@ class MockAliasManager implements AliasManagerInterface {
    * @return
    */
   public function getAliasByPath($path, $langcode = NULL) {
+    if ($path[0] !== '/') {
+      throw new \InvalidArgumentException(sprintf('Source path %s has to start with a slash.', $path));
+    }
+
     $langcode = $langcode ?: $this->defaultLanguage;
     $this->lookedUp[$path] = 1;
     return $this->aliases[$path][$langcode];
