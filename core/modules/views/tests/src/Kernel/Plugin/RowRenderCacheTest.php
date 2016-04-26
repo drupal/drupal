@@ -31,7 +31,7 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_row_render_cache');
+  public static $testViews = array('test_row_render_cache', 'test_row_render_cache_none');
 
   /**
    * An editor user account.
@@ -104,6 +104,34 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Test that rows are not cached when the none cache plugin is used.
+   */
+  public function testNoCaching() {
+    $this->setCurrentUser($this->regularUser);
+    $view = Views::getView('test_row_render_cache_none');
+    $view->setDisplay();
+    $view->preview();
+
+    /** @var \Drupal\Core\Render\RenderCacheInterface $render_cache */
+    $render_cache = $this->container->get('render_cache');
+
+    /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache_plugin */
+    $cache_plugin = $view->display_handler->getPlugin('cache');
+
+    foreach ($view->result as $row) {
+      $keys = $cache_plugin->getRowCacheKeys($row);
+      $cache = [
+        '#cache' => [
+          'keys' => $keys,
+          'contexts' => ['languages:language_interface', 'theme', 'user.permissions'],
+        ],
+      ];
+      $element = $render_cache->get($cache);
+      $this->assertFalse($element);
+    }
+  }
+
+  /**
    * Check whether the rendered output matches expectations.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
@@ -161,7 +189,13 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
       if ($check_cache) {
         $keys = $cache_plugin->getRowCacheKeys($view->result[$index]);
         $user_context = !$account->hasPermission('edit any test content') ? 'user' : 'user.permissions';
-        $element = $render_cache->get(['#cache' => ['keys' => $keys, 'contexts' => ['languages:language_interface', 'theme', $user_context]]]);
+        $cache = [
+          '#cache' => [
+            'keys' => $keys,
+            'contexts' => ['languages:language_interface', 'theme', $user_context],
+          ],
+        ];
+        $element = $render_cache->get($cache);
         $this->assertTrue($element);
       }
 
