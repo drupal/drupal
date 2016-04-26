@@ -465,7 +465,7 @@ system.db_update:
   defaults:
     op: 'info'
   requirements:
-    _access: 'TRUE'
+    _access_system_update: 'TRUE'
   options:
     default_url_options:
       path_processing: FALSE

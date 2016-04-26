@@ -56,20 +56,38 @@ class UpdateScriptTest extends WebTestBase {
     $this->drupalGet($this->updateUrl, array('external' => TRUE));
     $this->assertResponse(403);
 
+    // Check that a link to the update page is not accessible to regular users.
+    $this->drupalGet('/update-script-test/database-updates-menu-item');
+    $this->assertNoLink('Run database updates');
+
     // Try accessing update.php as an anonymous user.
     $this->drupalLogout();
     $this->drupalGet($this->updateUrl, array('external' => TRUE));
     $this->assertResponse(403);
+
+    // Check that a link to the update page is not accessible to anonymous
+    // users.
+    $this->drupalGet('/update-script-test/database-updates-menu-item');
+    $this->assertNoLink('Run database updates');
 
     // Access the update page with the proper permission.
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl, array('external' => TRUE));
     $this->assertResponse(200);
 
+    // Check that a link to the update page is accessible to users with proper
+    // permissions.
+    $this->drupalGet('/update-script-test/database-updates-menu-item');
+    $this->assertLink('Run database updates');
+
     // Access the update page as user 1.
     $this->drupalLogin($this->rootUser);
     $this->drupalGet($this->updateUrl, array('external' => TRUE));
     $this->assertResponse(200);
+
+    // Check that a link to the update page is accessible to user 1.
+    $this->drupalGet('/update-script-test/database-updates-menu-item');
+    $this->assertLink('Run database updates');
   }
 
   /**
