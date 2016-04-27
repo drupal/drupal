@@ -63,9 +63,6 @@ function twig_render_template($template_file, array $variables) {
   try {
     $output['rendered_markup'] = $twig_service->loadTemplate($template_file)->render($variables);
   }
-  catch (\Twig_Error_Loader $e) {
-    drupal_set_message($e->getMessage(), 'error');
-  }
   catch (\Twig_Error_Runtime $e) {
     // In case there is a previous exception, re-throw the previous exception,
     // so that the original exception is shown, rather than
