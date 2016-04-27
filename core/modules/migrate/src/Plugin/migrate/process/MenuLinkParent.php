@@ -97,7 +97,7 @@ class MenuLinkParent extends ProcessPluginBase implements ContainerFactoryPlugin
         }
       }
     }
-    throw new MigrateSkipRowException;
+    throw new MigrateSkipRowException();
   }
 
 }

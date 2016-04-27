@@ -1528,7 +1528,7 @@ function template_preprocess_field(&$variables, $hook) {
 
   static $default_attributes;
   if (!isset($default_attributes)) {
-    $default_attributes = new Attribute;
+    $default_attributes = new Attribute();
   }
 
   // Merge attributes when a single-value field has a hidden label.
