@@ -136,9 +136,9 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // /user is just a redirect, so skip it.
     // @todo Find a better way to deal with /user.
     $exclude['/user'] = TRUE;
-    // Because this breadcrumb builder is entirely path-based, vary by the
-    // 'url.path' cache context.
-    $breadcrumb->addCacheContexts(['url.path']);
+    // Add the url.path.parent cache context. This code ignores the last path
+    // part so the result only depends on the path parents.
+    $breadcrumb->addCacheContexts(['url.path.parent']);
     while (count($path_elements) > 1) {
       array_pop($path_elements);
       // Copy the path elements for up-casting.

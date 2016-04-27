@@ -80,6 +80,11 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
+  cache_context.url.path.parent:
+    class: Drupal\Core\Cache\Context\PathParentCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }
   cache_context.url.query_args:
     class: Drupal\Core\Cache\Context\QueryArgsCacheContext
     arguments: ['@request_stack']
