@@ -278,4 +278,3 @@ class PrivateTempStoreTest extends UnitTestCase {
   }
 
 }
-

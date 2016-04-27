@@ -43,4 +43,3 @@ class StaticDiscoveryTest extends DiscoveryTestBase {
     $this->emptyDiscovery = $discovery;
   }
 }
-

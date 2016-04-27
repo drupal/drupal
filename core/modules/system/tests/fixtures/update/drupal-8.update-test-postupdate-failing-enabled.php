@@ -36,4 +36,3 @@ $connection->update('config')
   ->condition('collection', '')
   ->condition('name', 'core.extension')
   ->execute();
-

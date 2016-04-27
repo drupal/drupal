@@ -76,4 +76,3 @@ interface ContentLanguageSettingsInterface extends ConfigEntityInterface {
   public function isDefaultConfiguration();
 
 }
-

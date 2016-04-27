@@ -215,4 +215,3 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
   }
 
 }
-

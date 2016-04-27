@@ -20,4 +20,3 @@ class HalServiceProvider implements ServiceModifierInterface {
   }
 
 }
-

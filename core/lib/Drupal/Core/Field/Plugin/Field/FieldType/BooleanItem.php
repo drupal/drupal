@@ -120,4 +120,3 @@ class BooleanItem extends FieldItemBase implements OptionsProviderInterface {
     return $values;
   }
 }
-

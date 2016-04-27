@@ -35,4 +35,3 @@ if ($views) {
       ->execute();
   }
 }
-

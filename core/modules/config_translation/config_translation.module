@@ -196,4 +196,3 @@ function config_translation_config_schema_info_alter(&$definitions) {
     }
   }
 }
-

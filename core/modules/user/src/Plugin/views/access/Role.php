@@ -163,4 +163,3 @@ class Role extends AccessPluginBase implements CacheableDependencyInterface {
   }
 
 }
-

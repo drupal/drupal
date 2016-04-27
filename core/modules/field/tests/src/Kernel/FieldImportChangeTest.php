@@ -49,4 +49,3 @@ class FieldImportChangeTest extends FieldKernelTestBase {
     $this->assertEqual($field->getLabel(), $new_label, 'field label updated');
   }
 }
-

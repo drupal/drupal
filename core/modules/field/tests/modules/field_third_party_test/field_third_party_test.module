@@ -46,4 +46,3 @@ function field_third_party_test_field_formatter_settings_summary_alter(&$summary
   $summary[] = 'field_test_field_formatter_settings_summary_alter';
   return $summary;
 }
-

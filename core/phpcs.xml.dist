@@ -18,6 +18,7 @@
   <rule ref="Drupal.Commenting.DocCommentStar"/>
   <rule ref="Drupal.Commenting.FileComment"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>
+  <rule ref="Drupal.Files.EndFileNewline"/>
   <rule ref="Drupal.Files.TxtFileLineLength"/>
   <rule ref="Drupal.Functions.DiscouragedFunctions"/>
   <rule ref="Drupal.Functions.FunctionDeclaration.SpaceAfter"/>

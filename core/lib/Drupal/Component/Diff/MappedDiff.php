@@ -56,4 +56,3 @@ class MappedDiff extends Diff {
     }
   }
 }
-

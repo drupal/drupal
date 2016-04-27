@@ -132,4 +132,3 @@ class ExtensionInstallStorage extends InstallStorage {
     return $this->folders;
   }
 }
-

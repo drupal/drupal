@@ -115,4 +115,3 @@ class UserPasswordResetForm extends FormBase {
   }
 
 }
-

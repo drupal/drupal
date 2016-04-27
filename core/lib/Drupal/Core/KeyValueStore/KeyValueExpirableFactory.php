@@ -14,4 +14,3 @@ class KeyValueExpirableFactory extends KeyValueFactory implements KeyValueExpira
   const DEFAULT_SETTING = 'keyvalue_expirable_default';
 
 }
-

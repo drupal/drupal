@@ -109,4 +109,3 @@ class FieldImportDeleteTest extends FieldKernelTestBase {
     $this->assertTrue(empty($deleted_storages), 'Fields are deleted');
   }
 }
-

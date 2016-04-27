@@ -82,4 +82,3 @@ interface ModuleInstallerInterface {
   public function validateUninstall(array $module_list);
 
 }
-

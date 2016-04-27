@@ -10,4 +10,3 @@
  */
 function test_subsubtheme_preprocess_theme_test_template_test(&$variables) {
 }
-

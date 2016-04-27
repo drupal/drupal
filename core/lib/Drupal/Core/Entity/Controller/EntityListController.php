@@ -23,4 +23,3 @@ class EntityListController extends ControllerBase {
   }
 
 }
-

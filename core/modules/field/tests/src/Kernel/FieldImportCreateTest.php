@@ -116,4 +116,3 @@ class FieldImportCreateTest extends FieldKernelTestBase {
     $this->assertTrue($field, 'Test import field 2b from sync exists');
   }
 }
-
