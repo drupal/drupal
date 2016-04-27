@@ -11,7 +11,7 @@ services:
       - { name: placeholder_strategy, priority: 0 }
   big_pipe:
     class: Drupal\big_pipe\Render\BigPipe
-    arguments: ['@renderer', '@session', '@request_stack', '@http_kernel', '@event_dispatcher']
+    arguments: ['@renderer', '@session', '@request_stack', '@http_kernel', '@event_dispatcher', '@config.factory']
   html_response.attachments_processor.big_pipe:
     public: false
     class: \Drupal\big_pipe\Render\BigPipeResponseAttachmentsProcessor
