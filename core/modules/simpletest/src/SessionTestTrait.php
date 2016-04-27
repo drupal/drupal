@@ -2,39 +2,18 @@
 
 namespace Drupal\simpletest;
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Tests\SessionTestTrait as BaseSessionTestTrait;
 
 /**
  * Provides methods to generate and get session name in tests.
+ *
+ * @deprecated in Drupal 8.1.1 will be removed before 9.0.0.
+ * This was moved to another namespace.
+ *
+ * @see \Drupal\Tests
  */
 trait SessionTestTrait {
 
-  /**
-   * The name of the session cookie.
-   *
-   * @var string
-   */
-  protected $sessionName;
-
-  /**
-   * Generates a session cookie name.
-   *
-   * @param string $data
-   *   The data to generate session name.
-   */
-  protected function generateSessionName($data) {
-    $prefix = (Request::createFromGlobals()->isSecure() ? 'SSESS' : 'SESS');
-    $this->sessionName = $prefix . substr(hash('sha256', $data), 0, 32);
-  }
-
-  /**
-   * Returns the session name in use on the child site.
-   *
-   * @return string
-   *   The name of the session cookie.
-   */
-  protected function getSessionName() {
-    return $this->sessionName;
-  }
+  use BaseSessionTestTrait;
 
 }

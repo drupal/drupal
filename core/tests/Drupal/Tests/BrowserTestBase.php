@@ -20,9 +20,6 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Url;
-use Drupal\simpletest\RandomGeneratorTrait;
-use Drupal\simpletest\SessionTestTrait;
-use Drupal\simpletest\WebAssert;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -39,11 +36,6 @@ use Symfony\Component\HttpFoundation\Request;
  * @ingroup testing
  */
 abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
-
-  /**
-   * @todo Move these into Drupal\Tests namespace and leave deprecated stubs
-   *   in simpletest module. See https://www.drupal.org/node/2702281
-   */
   use RandomGeneratorTrait;
   use SessionTestTrait;
 
@@ -534,7 +526,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * @param string $name
    *   (optional) Name of the session. Defaults to the active session.
    *
-   * @return \Drupal\simpletest\WebAssert
+   * @return \Drupal\Tests\WebAssert
    *   A new web-assert option for asserting the presence of elements with.
    */
   public function assertSession($name = NULL) {

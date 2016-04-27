@@ -13,6 +13,8 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Utility\Error;
+use Drupal\Tests\RandomGeneratorTrait;
+use Drupal\Tests\SessionTestTrait;
 
 /**
  * Base class for Drupal tests.
