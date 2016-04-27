@@ -101,7 +101,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
       }
 
       // @todo This is crazy. Find a way to remove the override functionality.
-      $plugin_id = $override ? : $definition['id'];
+      $plugin_id = $override ?: $definition['id'];
       // Try to use the overridden handler.
       $handler = $this->createInstance($plugin_id, $definition);
       if ($override && method_exists($handler, 'broken') && $handler->broken()) {

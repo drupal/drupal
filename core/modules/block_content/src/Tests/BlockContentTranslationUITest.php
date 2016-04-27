@@ -91,8 +91,8 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
    *   Created custom block.
    */
   protected function createBlockContent($title = FALSE, $bundle = FALSE) {
-    $title = ($title ? : $this->randomMachineName());
-    $bundle = ($bundle ? : $this->bundle);
+    $title = $title ?: $this->randomMachineName();
+    $bundle = $bundle ?: $this->bundle;
     $block_content = BlockContent::create(array(
       'info' => $title,
       'type' => $bundle,

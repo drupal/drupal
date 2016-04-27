@@ -20,6 +20,7 @@
   <rule ref="Drupal.ControlStructures.ElseIf"/>
   <rule ref="Drupal.Files.EndFileNewline"/>
   <rule ref="Drupal.Files.TxtFileLineLength"/>
+  <rule ref="Drupal.Formatting.SpaceInlineIf"/>
   <rule ref="Drupal.Functions.DiscouragedFunctions"/>
   <rule ref="Drupal.Functions.FunctionDeclaration.SpaceAfter"/>
   <rule ref="Drupal.Functions.FunctionDeclaration.SpaceBeforeParenthesis"/>
