@@ -48,7 +48,7 @@ class TranslatedViewTest extends WebTestBase {
       'translate interface',
     ];
 
-    // Create and login user.
+    // Create and log in user.
     $this->adminUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->adminUser);
 

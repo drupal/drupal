@@ -48,7 +48,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     // Create searching user.
     $this->searchingUser = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'post comments', 'skip comment approval'));
 
-    // Login with sufficient privileges.
+    // Log in with sufficient privileges.
     $this->drupalLogin($this->searchingUser);
 
     // Add a comment field.

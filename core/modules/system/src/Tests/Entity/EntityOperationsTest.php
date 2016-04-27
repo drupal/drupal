@@ -21,7 +21,7 @@ class EntityOperationsTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create and login user.
+    // Create and log in user.
     $this->drupalLogin($this->drupalCreateUser(array('administer permissions')));
   }
 

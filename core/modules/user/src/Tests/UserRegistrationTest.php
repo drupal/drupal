@@ -99,13 +99,13 @@ class UserRegistrationTest extends WebTestBase {
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->assertText(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.'), 'Users are notified of pending approval');
 
-    // Try to login before administrator approval.
+    // Try to log in before administrator approval.
     $auth = array(
       'name' => $name,
       'pass' => $pass,
     );
     $this->drupalPostForm('user/login', $auth, t('Log in'));
-    $this->assertText(t('The username @name has not been activated or is blocked.', array('@name' => $name)), 'User cannot login yet.');
+    $this->assertText(t('The username @name has not been activated or is blocked.', array('@name' => $name)), 'User cannot log in yet.');
 
     // Activate the new account.
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
@@ -118,7 +118,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->drupalPostForm('user/' . $new_user->id() . '/edit', $edit, t('Save'));
     $this->drupalLogout();
 
-    // Login after administrator approval.
+    // Log in after administrator approval.
     $this->drupalPostForm('user/login', $auth, t('Log in'));
     $this->assertText(t('Member for'), 'User can log in after administrator approval.');
   }

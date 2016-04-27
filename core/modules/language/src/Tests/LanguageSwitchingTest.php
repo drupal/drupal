@@ -25,7 +25,7 @@ class LanguageSwitchingTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create and login user.
+    // Create and log in user.
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer languages', 'access administration pages'));
     $this->drupalLogin($admin_user);
   }

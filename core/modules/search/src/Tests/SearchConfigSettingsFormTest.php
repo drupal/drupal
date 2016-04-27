@@ -35,7 +35,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Login as a user that can create and search content.
+    // Log in as a user that can create and search content.
     $this->searchUser = $this->drupalCreateUser(array('search content', 'administer search', 'administer nodes', 'bypass node access', 'access user profiles', 'administer users', 'administer blocks', 'access site reports'));
     $this->drupalLogin($this->searchUser);
 

@@ -7,7 +7,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 /**
  * Defines an interface for building comment links on a commented entity.
  *
- * Comment links include 'login to post new comment', 'add new comment' etc.
+ * Comment links include 'log in to post new comment', 'add new comment' etc.
  */
 interface CommentLinkBuilderInterface {
 

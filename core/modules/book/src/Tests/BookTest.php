@@ -377,7 +377,7 @@ class BookTest extends WebTestBase {
     // Create a book.
     $nodes = $this->createBook();
 
-    // Login as web user and view printer-friendly version.
+    // Log in as web user and view printer-friendly version.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $this->book->id());
     $this->clickLink(t('Printer-friendly version'));
@@ -735,7 +735,7 @@ class BookTest extends WebTestBase {
     $node_storage = \Drupal::entityManager()->getStorage('node');
     $node_storage->resetCache();
 
-    // Login as user without access to the book node, so no 'node test view'
+    // Log in as user without access to the book node, so no 'node test view'
     // permission.
     // @see node_access_test_node_grants().
     $this->drupalLogin($this->webUserWithoutNodeAccess);

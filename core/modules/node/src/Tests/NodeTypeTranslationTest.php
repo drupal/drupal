@@ -58,7 +58,7 @@ class NodeTypeTranslationTest extends WebTestBase {
       'translate configuration',
     );
 
-    // Create and login user.
+    // Create and log in user.
     $this->adminUser = $this->drupalCreateUser($admin_permissions);
 
     // Add languages.

@@ -104,7 +104,7 @@ class ConfigTranslationUiTest extends WebTestBase {
         'translate interface',
       ]
     );
-    // Create and login user.
+    // Create and log in user.
     $this->translatorUser = $this->drupalCreateUser($translator_permissions);
     $this->adminUser = $this->drupalCreateUser($admin_permissions);
 

@@ -51,12 +51,12 @@ class HelpTest extends WebTestBase {
    * Logs in users, tests help pages.
    */
   public function testHelp() {
-    // Login the root user to ensure as many admin links appear as possible on
+    // Log in the root user to ensure as many admin links appear as possible on
     // the module overview pages.
     $this->drupalLogin($this->rootUser);
     $this->verifyHelp();
 
-    // Login the regular user.
+    // Log in the regular user.
     $this->drupalLogin($this->anyUser);
     $this->verifyHelp(403);
 

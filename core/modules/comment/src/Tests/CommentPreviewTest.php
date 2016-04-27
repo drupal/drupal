@@ -35,7 +35,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
     $this->drupalLogout();
 
-    // Login as web user.
+    // Log in as web user.
     $this->drupalLogin($this->webUser);
 
     // Test escaping of the username on the preview form.
@@ -86,7 +86,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
     $this->drupalLogout();
 
-    // Login as web user.
+    // Log in as web user.
     $this->drupalLogin($this->webUser);
 
     // As the web user, fill in the comment form and preview the comment.

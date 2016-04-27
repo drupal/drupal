@@ -36,7 +36,7 @@ class SearchRankingTest extends SearchTestBase {
     // Create a plugin instance.
     $this->nodeSearch = entity_load('search_page', 'node_search');
 
-    // Login with sufficient privileges.
+    // Log in with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('post comments', 'skip comment approval', 'create page content', 'administer search')));
   }
 

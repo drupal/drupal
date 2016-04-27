@@ -91,7 +91,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->assertText($edit[$title_key], 'Title displayed.');
     $this->assertText($edit[$body_key], 'Body displayed.');
 
-    // Login as a second administrator user.
+    // Log in as a second administrator user.
     $second_web_user = $this->drupalCreateUser(array('administer nodes', 'edit any page content'));
     $this->drupalLogin($second_web_user);
     // Edit the same node, creating a new revision.

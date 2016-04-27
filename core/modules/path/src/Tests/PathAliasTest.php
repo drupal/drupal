@@ -24,7 +24,7 @@ class PathAliasTest extends PathTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create test user and login.
+    // Create test user and log in.
     $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content', 'administer url aliases', 'create url aliases'));
     $this->drupalLogin($web_user);
   }

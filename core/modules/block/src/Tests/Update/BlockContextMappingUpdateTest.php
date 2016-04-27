@@ -42,7 +42,7 @@ class BlockContextMappingUpdateTest extends UpdatePathTestBase {
     // Disable maintenance mode.
     \Drupal::state()->set('system.maintenance_mode', FALSE);
 
-    // We finished updating so we can login the user now.
+    // We finished updating so we can log in the user now.
     $this->drupalLogin($this->rootUser);
 
     // The block that we are testing has the following visibility rules:

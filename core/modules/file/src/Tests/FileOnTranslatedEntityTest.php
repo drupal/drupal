@@ -36,7 +36,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->fieldName = strtolower($this->randomMachineName());
     $this->createFileField($this->fieldName, 'node', 'page');
 
-    // Create and login user.
+    // Create and log in user.
     $permissions = array(
       'access administration pages',
       'administer content translation',

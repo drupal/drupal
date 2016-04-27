@@ -564,7 +564,7 @@ function user_user_logout($account) {
 }
 
 /**
- * Generates a unique URL for a user to login and reset their password.
+ * Generates a unique URL for a user to log in and reset their password.
  *
  * @param \Drupal\user\UserInterface $account
  *   An object containing the user account.

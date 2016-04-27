@@ -19,7 +19,7 @@ class SearchBlockTest extends SearchTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create and login user.
+    // Create and log in user.
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'search content'));
     $this->drupalLogin($admin_user);
   }

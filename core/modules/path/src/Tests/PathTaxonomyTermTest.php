@@ -28,7 +28,7 @@ class PathTaxonomyTermTest extends PathTestBase {
     ]);
     $vocabulary->save();
 
-    // Create and login user.
+    // Create and log in user.
     $web_user = $this->drupalCreateUser(array('administer url aliases', 'administer taxonomy', 'access administration pages'));
     $this->drupalLogin($web_user);
   }

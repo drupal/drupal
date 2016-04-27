@@ -86,7 +86,7 @@ class UserLanguageCreationTest extends WebTestBase {
     $this->drupalGet($user_edit);
     $this->assertOptionSelected("edit-preferred-langcode", $langcode, 'Language selector is accessible and correct language is selected.');
 
-    // Set pass_raw so we can login the new user.
+    // Set pass_raw so we can log in the new user.
     $user->pass_raw = $this->randomMachineName(10);
     $edit = array(
       'pass[pass1]' => $user->pass_raw,

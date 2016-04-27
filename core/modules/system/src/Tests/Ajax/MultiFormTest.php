@@ -43,7 +43,7 @@ class MultiFormTest extends AjaxTestBase {
       ->setComponent($field_name, array('type' => 'text_textfield'))
       ->save();
 
-    // Login a user who can create 'page' nodes.
+    // Log in a user who can create 'page' nodes.
     $this->drupalLogin ($this->drupalCreateUser(array('create page content')));
   }
 
