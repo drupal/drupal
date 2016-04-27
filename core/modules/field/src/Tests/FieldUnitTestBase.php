@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field\Tests\FieldUnitTestBase.
- */
-
 namespace Drupal\field\Tests;
 
 use Drupal\Component\Utility\Unicode;
