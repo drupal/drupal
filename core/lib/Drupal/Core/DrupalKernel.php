@@ -1208,7 +1208,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     foreach ($this->serviceProviderClasses as $origin => $classes) {
       foreach ($classes as $name => $class) {
         if (!is_object($class)) {
-          $this->serviceProviders[$origin][$name] = new $class;
+          $this->serviceProviders[$origin][$name] = new $class();
         }
         else {
           $this->serviceProviders[$origin][$name] = $class;

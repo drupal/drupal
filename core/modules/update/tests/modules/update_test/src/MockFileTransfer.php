@@ -14,7 +14,7 @@ class MockFileTransfer {
    *   A new Drupal\update_test\MockFileTransfer object.
    */
   public static function factory() {
-    return new FileTransfer;
+    return new FileTransfer();
   }
 
   /**

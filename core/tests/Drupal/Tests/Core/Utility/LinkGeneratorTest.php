@@ -519,7 +519,7 @@ class LinkGeneratorTest extends UnitTestCase {
     }
 
     // Execute the query.
-    $document = new \DOMDocument;
+    $document = new \DOMDocument();
     $document->loadHTML($html);
     $xpath = new \DOMXPath($document);
 
@@ -538,7 +538,7 @@ class LinkGeneratorTest extends UnitTestCase {
    *   The number of results that are found.
    */
   protected function assertNoXPathResults($query, $html) {
-    $document = new \DOMDocument;
+    $document = new \DOMDocument();
     $document->loadHTML($html);
     $xpath = new \DOMXPath($document);
 

@@ -19,7 +19,7 @@ class SimpletestPhpunitRunCommandTest extends UnitTestCase {
     include_once __DIR__ .'/../../fixtures/simpletest_phpunit_run_command_test.php';
     $app_root = __DIR__ . '/../../../../../..';
     include_once "$app_root/core/modules/simpletest/simpletest.module";
-    $container = new ContainerBuilder;
+    $container = new ContainerBuilder();
     $container->set('app.root', $app_root);
     $file_system = $this->prophesize('Drupal\Core\File\FileSystemInterface');
     $file_system->realpath('public://simpletest')->willReturn(sys_get_temp_dir());

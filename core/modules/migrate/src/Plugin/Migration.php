@@ -416,7 +416,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function getDestinationPlugin($stub_being_requested = FALSE) {
     if ($stub_being_requested && !empty($this->destination['no_stub'])) {
-      throw new MigrateSkipRowException;
+      throw new MigrateSkipRowException();
     }
     if (!isset($this->destinationPlugin)) {
       $this->destinationPlugin = $this->destinationPluginManager->createInstance($this->destination['plugin'], $this->destination, $this);

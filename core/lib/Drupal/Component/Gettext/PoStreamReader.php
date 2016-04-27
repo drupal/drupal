@@ -219,7 +219,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
     if (!$item) {
       return;
     }
-    $header = new PoHeader;
+    $header = new PoHeader();
     $header->setFromString(trim($item->getTranslation()));
     $this->_header = $header;
   }
