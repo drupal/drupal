@@ -84,4 +84,3 @@ abstract class ExecutablePluginBase extends ContextAwarePluginBase implements Ex
     return $this;
   }
 }
-

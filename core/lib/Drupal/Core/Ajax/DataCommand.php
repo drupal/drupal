@@ -71,4 +71,3 @@ class DataCommand implements CommandInterface {
   }
 
 }
-

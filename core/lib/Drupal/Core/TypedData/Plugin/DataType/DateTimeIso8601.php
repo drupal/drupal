@@ -43,4 +43,3 @@ class DateTimeIso8601 extends StringData implements DateTimeInterface {
     }
   }
 }
-

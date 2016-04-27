@@ -68,4 +68,3 @@ class EntityRouteProviderSubscriber implements EventSubscriberInterface {
   }
 
 }
-

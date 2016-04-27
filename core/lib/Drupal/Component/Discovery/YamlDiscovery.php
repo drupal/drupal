@@ -86,4 +86,3 @@ class YamlDiscovery implements DiscoverableInterface {
   }
 
 }
-

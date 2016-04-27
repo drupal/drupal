@@ -350,4 +350,3 @@ class SharedTempStoreTest extends UnitTestCase {
   }
 
 }
-

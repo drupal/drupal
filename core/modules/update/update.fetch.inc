@@ -48,4 +48,3 @@ function _update_cron_notify() {
     }
   }
 }
-

@@ -18,4 +18,3 @@ function quickedit_test_quickedit_render_field(EntityInterface $entity, $field_n
     '#suffix' => '</div>',
   );
 }
-

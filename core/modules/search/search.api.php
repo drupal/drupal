@@ -82,4 +82,3 @@ function hook_search_plugin_alter(array &$definitions) {
 /**
  * @} End of "addtogroup hooks".
  */
-

@@ -60,4 +60,3 @@ interface InfoParserInterface  {
   public function parse($filename);
 
 }
-

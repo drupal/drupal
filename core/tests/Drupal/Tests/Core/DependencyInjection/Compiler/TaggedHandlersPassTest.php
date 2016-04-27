@@ -378,4 +378,3 @@ class ValidHandler implements HandlerInterface {
 }
 class InvalidHandler {
 }
-

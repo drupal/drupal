@@ -65,4 +65,3 @@ class MigrateTrackerNodeTest extends MigrateDrupal7TestBase {
   }
 
 }
-

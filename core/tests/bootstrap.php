@@ -142,4 +142,3 @@ date_default_timezone_set('Australia/Sydney');
 // make PHP 5 and 7 handle assertion failures the same way, but this call does
 // not turn runtime assertions on if they weren't on already.
 \Drupal\Component\Assertion\Handle::register();
-

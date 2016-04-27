@@ -90,5 +90,3 @@ class FilterFormat extends DrupalSqlBase {
   }
 
 }
-
-

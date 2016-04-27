@@ -169,4 +169,3 @@ class Diff {
     return $this->edits;
   }
 }
-

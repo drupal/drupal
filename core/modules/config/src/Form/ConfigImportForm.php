@@ -100,4 +100,3 @@ class ConfigImportForm extends FormBase {
   }
 
 }
-

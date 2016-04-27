@@ -64,4 +64,3 @@ class QueueFactory implements ContainerAwareInterface {
     return $this->queues[$name];
   }
 }
-

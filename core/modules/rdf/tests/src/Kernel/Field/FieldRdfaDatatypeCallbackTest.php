@@ -55,4 +55,3 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
   }
 
 }
-

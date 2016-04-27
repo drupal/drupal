@@ -65,4 +65,3 @@ function template_preprocess_search_result(&$variables) {
     '#context' => array('info' => $info),
   );
 }
-

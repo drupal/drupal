@@ -161,4 +161,3 @@ class NaughtyRecursiveLogger implements LoggerInterface  {
     $this->channel->log(rand(0, 7), $message, $context);
   }
 }
-

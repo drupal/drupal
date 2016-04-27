@@ -144,4 +144,3 @@ class TokenReplaceTest extends TaxonomyTestBase {
     }
   }
 }
-

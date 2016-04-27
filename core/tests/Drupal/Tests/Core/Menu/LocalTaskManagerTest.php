@@ -491,4 +491,3 @@ class LocalTaskManagerTest extends UnitTestCase {
   }
 
 }
-

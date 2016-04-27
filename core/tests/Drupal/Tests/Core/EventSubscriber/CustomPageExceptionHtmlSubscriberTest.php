@@ -162,4 +162,3 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   }
 
 }
-

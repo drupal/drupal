@@ -50,4 +50,3 @@ interface PermissionHandlerInterface {
   public function moduleProvidesPermissions($module_name);
 
 }
-

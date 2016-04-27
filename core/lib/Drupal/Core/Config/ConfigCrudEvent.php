@@ -49,4 +49,3 @@ class ConfigCrudEvent extends Event {
   }
 
 }
-
