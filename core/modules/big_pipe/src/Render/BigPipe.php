@@ -8,6 +8,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -74,6 +75,13 @@ class BigPipe implements BigPipeInterface {
   protected $eventDispatcher;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * Constructs a new BigPipe class.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -86,13 +94,16 @@ class BigPipe implements BigPipeInterface {
    *   The HTTP kernel.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
-  public function __construct(RendererInterface $renderer, SessionInterface $session, RequestStack $request_stack, HttpKernelInterface $http_kernel, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(RendererInterface $renderer, SessionInterface $session, RequestStack $request_stack, HttpKernelInterface $http_kernel, EventDispatcherInterface $event_dispatcher, ConfigFactoryInterface $config_factory) {
     $this->renderer = $renderer;
     $this->session = $session;
     $this->requestStack = $request_stack;
     $this->httpKernel = $http_kernel;
     $this->eventDispatcher = $event_dispatcher;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -243,7 +254,7 @@ class BigPipe implements BigPipeInterface {
         $elements = $this->renderPlaceholder($placeholder, $placeholder_plus_cumulative_settings);
       }
       catch (\Exception $e) {
-        if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+        if ($this->configFactory->get('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
           throw $e;
         }
         else {
@@ -280,7 +291,7 @@ class BigPipe implements BigPipeInterface {
         $html_response = $this->filterEmbeddedResponse($fake_request, $html_response);
       }
       catch (\Exception $e) {
-        if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+        if ($this->configFactory->get('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
           throw $e;
         }
         else {
@@ -355,7 +366,7 @@ class BigPipe implements BigPipeInterface {
         $elements = $this->renderPlaceholder($placeholder_id, $placeholder_render_array);
       }
       catch (\Exception $e) {
-        if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+        if ($this->configFactory->get('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
           throw $e;
         }
         else {
@@ -388,7 +399,7 @@ class BigPipe implements BigPipeInterface {
         $ajax_response = $this->filterEmbeddedResponse($fake_request, $ajax_response);
       }
       catch (\Exception $e) {
-        if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+        if ($this->configFactory->get('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
           throw $e;
         }
         else {
