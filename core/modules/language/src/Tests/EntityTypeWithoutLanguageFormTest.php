@@ -30,7 +30,7 @@ class EntityTypeWithoutLanguageFormTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create and login administrative user.
+    // Create and log in administrative user.
     $admin_user = $this->drupalCreateUser(array(
       'administer languages',
     ));

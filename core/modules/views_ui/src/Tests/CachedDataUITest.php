@@ -44,7 +44,7 @@ class CachedDataUITest extends UITestBase {
     // Test we are redirected to the view listing page.
     $this->assertUrl('admin/structure/views', array(), 'Redirected back to the view listing page.');
 
-    // Login with another user and make sure the view is locked and break.
+    // Log in with another user and make sure the view is locked and break.
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', array(), t('Apply'));
     $this->drupalLogin($this->adminUser);
 

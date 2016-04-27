@@ -24,7 +24,7 @@ class MainContentFallbackTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create and login admin user.
+    // Create and log in admin user.
     $this->adminUser = $this->drupalCreateUser(array(
       'access administration pages',
       'administer site configuration',

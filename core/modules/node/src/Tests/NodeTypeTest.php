@@ -49,7 +49,7 @@ class NodeTypeTest extends NodeTestBase {
     $type_exists = (bool) NodeType::load($type->id());
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
 
-    // Login a test user.
+    // Log in a test user.
     $web_user = $this->drupalCreateUser(array('create ' . $type->label() . ' content'));
     $this->drupalLogin($web_user);
 

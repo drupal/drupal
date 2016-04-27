@@ -54,7 +54,7 @@ class CommentTypeTest extends CommentTestBase {
     $comment_type = CommentType::load('other');
     $this->assertTrue($comment_type, 'The new comment type has been created.');
 
-    // Login a test user.
+    // Log in a test user.
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/structure/comment/manage/' . $type->id());

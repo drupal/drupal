@@ -91,7 +91,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $this->assertEqual($entity->link->options, $loaded->link->options);
     }
 
-    // Login as non admin user, to check that access is checked when creating
+    // Log in as non admin user, to check that access is checked when creating
     // shortcuts.
     $this->drupalLogin($this->shortcutUser);
     $title = $this->randomMachineName();

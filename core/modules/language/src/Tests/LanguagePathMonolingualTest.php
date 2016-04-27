@@ -21,7 +21,7 @@ class LanguagePathMonolingualTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create and login user.
+    // Create and log in user.
     $web_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'administer site configuration'));
     $this->drupalLogin($web_user);
 

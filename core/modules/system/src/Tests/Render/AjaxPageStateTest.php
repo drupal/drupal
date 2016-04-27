@@ -24,7 +24,7 @@ class AjaxPageStateTest extends WebTestBase {
     $this->adminUser = $this->drupalCreateUser(array_keys(\Drupal::service('user.permissions')
       ->getPermissions()));
 
-    // Login so there are more libraries to test with otherwise only html5shiv
+    // Log in so there are more libraries to test with otherwise only html5shiv
     // is the only one in the source we can easily test for.
     $this->drupalLogin($this->adminUser);
   }

@@ -36,7 +36,7 @@ class BulkFormAccessTest extends UserTestBase {
     // Ensure this account is not blocked.
     $this->assertFalse($no_edit_user->isBlocked(), 'The user is not blocked.');
 
-    // Login as user admin.
+    // Log in as user admin.
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin_user);
 
@@ -76,7 +76,7 @@ class BulkFormAccessTest extends UserTestBase {
     $normal_user = User::load($normal_user->id());
     $this->assertTrue($normal_user->isBlocked(), 'The user is blocked.');
 
-    // Login as user without the 'administer users' permission.
+    // Log in as user without the 'administer users' permission.
     $this->drupalLogin($this->drupalCreateUser());
 
     $edit = array(
@@ -98,7 +98,7 @@ class BulkFormAccessTest extends UserTestBase {
     $account = $this->drupalCreateUser(array(), 'no_delete');
     $account2 = $this->drupalCreateUser(array(), 'may_delete');
 
-    // Login as user admin.
+    // Log in as user admin.
     $this->drupalLogin($this->drupalCreateUser(array('administer users')));
 
     // Ensure that the account "no_delete" can not be deleted.

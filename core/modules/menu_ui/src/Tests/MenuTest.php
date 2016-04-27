@@ -77,7 +77,7 @@ class MenuTest extends MenuWebTestBase {
    * Tests menu functionality using the admin and user interfaces.
    */
   function testMenu() {
-    // Login the user.
+    // Log in the user.
     $this->drupalLogin($this->adminUser);
     $this->items = array();
 
@@ -96,7 +96,7 @@ class MenuTest extends MenuWebTestBase {
     $after_count = $menu_link_manager->countMenuLinks(NULL);
     $this->assertIdentical($before_count, $after_count, 'MenuLinkManager::rebuild() does not add more links');
     // Do standard user tests.
-    // Login the user.
+    // Log in the user.
     $this->drupalLogin($this->authenticatedUser);
     $this->verifyAccess(403);
 
@@ -106,7 +106,7 @@ class MenuTest extends MenuWebTestBase {
       $this->verifyMenuLink($item, $node);
     }
 
-    // Login the administrator.
+    // Log in the administrator.
     $this->drupalLogin($this->adminUser);
 
     // Verify delete link exists and reset link does not exist.
@@ -870,7 +870,7 @@ class MenuTest extends MenuWebTestBase {
     $this->assertResponse(200);
 
     // Do standard user tests.
-    // Login the user.
+    // Log in the user.
     $this->drupalLogin($this->authenticatedUser);
     $this->drupalGetAjax('admin/structure/menu/parents');
     $this->assertResponse(403);

@@ -94,7 +94,7 @@ class UserController extends ControllerBase {
       // A different user is already logged in on the computer.
       else {
         if ($reset_link_user = $this->userStorage->load($uid)) {
-          drupal_set_message($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href=":logout">logout</a> and try using the link again.',
+          drupal_set_message($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href=":logout">log out</a> and try using the link again.',
             array('%other_user' => $account->getUsername(), '%resetting_user' => $reset_link_user->getUsername(), ':logout' => $this->url('user.logout'))), 'warning');
         }
         else {

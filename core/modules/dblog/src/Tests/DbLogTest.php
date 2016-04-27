@@ -59,7 +59,7 @@ class DbLogTest extends WebTestBase {
    * interfaces.
    */
   function testDbLog() {
-    // Login the admin user.
+    // Log in the admin user.
     $this->drupalLogin($this->adminUser);
 
     $row_limit = 100;
@@ -78,7 +78,7 @@ class DbLogTest extends WebTestBase {
       }
     }
 
-    // Login the regular user.
+    // Log in the regular user.
     $this->drupalLogin($this->webUser);
     $this->verifyReports(403);
   }
@@ -302,9 +302,9 @@ class DbLogTest extends WebTestBase {
     $this->assertTrue($user != NULL, format_string('User @name was loaded', array('@name' => $name)));
     // pass_raw property is needed by drupalLogin.
     $user->pass_raw = $pass;
-    // Login user.
+    // Log in user.
     $this->drupalLogin($user);
-    // Logout user.
+    // Log out user.
     $this->drupalLogout();
     // Fetch the row IDs in watchdog that relate to the user.
     $result = db_query('SELECT wid FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->id()));
@@ -314,7 +314,7 @@ class DbLogTest extends WebTestBase {
     $count_before = (isset($ids)) ? count($ids) : 0;
     $this->assertTrue($count_before > 0, format_string('DBLog contains @count records for @name', array('@count' => $count_before, '@name' => $user->getUsername())));
 
-    // Login the admin user.
+    // Log in the admin user.
     $this->drupalLogin($this->adminUser);
     // Delete the user created at the start of this test.
     // We need to POST here to invoke batch_process() in the internal browser.
@@ -329,9 +329,9 @@ class DbLogTest extends WebTestBase {
     // Default display includes name and email address; if too long, the email
     // address is replaced by three periods.
     $this->assertLogMessage(t('New user: %name %email.', array('%name' => $name, '%email' => '<' . $user->getEmail() . '>')), 'DBLog event was recorded: [add user]');
-    // Login user.
+    // Log in user.
     $this->assertLogMessage(t('Session opened for %name.', array('%name' => $name)), 'DBLog event was recorded: [login user]');
-    // Logout user.
+    // Log out user.
     $this->assertLogMessage(t('Session closed for %name.', array('%name' => $name)), 'DBLog event was recorded: [logout user]');
     // Delete user.
     $message = t('Deleted user: %name %email.', array('%name' => $name, '%email' => '<' . $user->getEmail() . '>'));
@@ -374,7 +374,7 @@ class DbLogTest extends WebTestBase {
     // Create user.
     $perm = array('create ' . $type . ' content', 'edit own ' . $type . ' content', 'delete own ' . $type . ' content');
     $user = $this->drupalCreateUser($perm);
-    // Login user.
+    // Log in user.
     $this->drupalLogin($user);
 
     // Create a node using the form in order to generate an add content event
@@ -400,7 +400,7 @@ class DbLogTest extends WebTestBase {
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse(403);
 
-    // Login the admin user.
+    // Log in the admin user.
     $this->drupalLogin($this->adminUser);
     // View the database log report.
     $this->drupalGet('admin/reports/dblog');
@@ -499,7 +499,7 @@ class DbLogTest extends WebTestBase {
     $this->container->get('logger.dblog')->log($log['severity'], $log['message'], $log);
     // Make sure the table count has actually been incremented.
     $this->assertEqual($count + 1, db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), format_string('\Drupal\dblog\Logger\DbLog->log() added an entry to the dblog :count', array(':count' => $count)));
-    // Login the admin user.
+    // Log in the admin user.
     $this->drupalLogin($this->adminUser);
     // Post in order to clear the database table.
     $this->drupalPostForm('admin/reports/dblog', array(), t('Clear log messages'));

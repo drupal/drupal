@@ -38,7 +38,7 @@ class PathLanguageTest extends PathTestBase {
       'edit any page content',
       'translate any entity',
     );
-    // Create and login user.
+    // Create and log in user.
     $this->webUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->webUser);
 

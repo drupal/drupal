@@ -24,7 +24,7 @@ class EntityListBuilderTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create and login user.
+    // Create and log in user.
     $this->webUser = $this->drupalCreateUser(array(
       'administer entity_test content',
     ));

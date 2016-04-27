@@ -32,7 +32,7 @@ class CommentLanguageTest extends WebTestBase {
 
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
 
-    // Create and login user.
+    // Create and log in user.
     $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'administer comments', 'create article content', 'access comments', 'post comments', 'skip comment approval'));
     $this->drupalLogin($admin_user);
 

@@ -19,7 +19,7 @@ class SearchQueryAlterTest extends SearchTestBase {
    * Tests that the query alter works.
    */
   function testQueryAlter() {
-    // Login with sufficient privileges.
+    // Log in with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('create page content', 'search content')));
 
     // Create a node and an article with the same keyword. The query alter

@@ -65,7 +65,7 @@ class FileListingTest extends FileFieldTestBase {
     $this->drupalGet('admin/content/files');
     $this->assertResponse(403);
 
-    // Login with user with right permissions and test listing.
+    // Log in with user with right permissions and test listing.
     $this->drupalLogin($this->adminUser);
 
     for ($i = 0; $i < 5; $i++) {

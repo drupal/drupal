@@ -39,7 +39,7 @@ class NodeFormButtonsTest extends NodeTestBase {
    */
   function testNodeFormButtons() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
-    // Login as administrative user.
+    // Log in as administrative user.
     $this->drupalLogin($this->adminUser);
 
     // Verify the buttons on a node add form.
@@ -91,7 +91,7 @@ class NodeFormButtonsTest extends NodeTestBase {
     $node_2 = $node_storage->load(2);
     $this->assertTrue($node_2->isPublished(), 'Node is published');
 
-    // Login as an administrator and unpublish the node that just
+    // Log in as an administrator and unpublish the node that just
     // was created by the normal user.
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
@@ -100,7 +100,7 @@ class NodeFormButtonsTest extends NodeTestBase {
     $node_2 = $node_storage->load(2);
     $this->assertFalse($node_2->isPublished(), 'Node is unpublished');
 
-    // Login again as the normal user, save the node and verify
+    // Log in again as the normal user, save the node and verify
     // it's still unpublished.
     $this->drupalLogout();
     $this->drupalLogin($this->webUser);

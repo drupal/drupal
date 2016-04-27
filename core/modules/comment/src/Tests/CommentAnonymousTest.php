@@ -173,7 +173,7 @@ class CommentAnonymousTest extends CommentTestBase {
     ));
     $this->drupalGet('node/' . $this->node->id());
     $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
-    $this->assertLink('Log in', 1, 'Link to log in was found.');
+    $this->assertLink('Log in', 1, 'Link to login was found.');
     $this->assertLink('register', 1, 'Link to register was found.');
 
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
