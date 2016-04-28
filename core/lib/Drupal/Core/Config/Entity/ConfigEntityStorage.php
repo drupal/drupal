@@ -382,8 +382,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * {@inheritdoc}
    */
   public function importCreate($name, Config $new_config, Config $old_config) {
-    $entity = $this->createFromStorageRecord($new_config->get());
-    $entity->setSyncing(TRUE);
+    $entity = $this->_doCreateFromStorageRecord($new_config->get(), TRUE);
     $entity->save();
     return TRUE;
   }
@@ -425,6 +424,27 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * {@inheritdoc}
    */
   public function createFromStorageRecord(array $values) {
+    return $this->_doCreateFromStorageRecord($values);
+  }
+
+  /**
+   * Helps create a configuration entity from storage values.
+   *
+   * Allows the configuration entity storage to massage storage values before
+   * creating an entity.
+   *
+   * @param array $values
+   *   The array of values from the configuration storage.
+   * @param bool $is_syncing
+   *   Is the configuration entity being created as part of a config sync.
+   *
+   * @return ConfigEntityInterface
+   *   The configuration entity.
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigEntityStorageInterface::createFromStorageRecord()
+   * @see \Drupal\Core\Config\Entity\ImportableEntityStorageInterface::importCreate()
+   */
+  protected function _doCreateFromStorageRecord(array $values, $is_syncing = FALSE) {
     // Assign a new UUID if there is none yet.
     if ($this->uuidKey && $this->uuidService && !isset($values[$this->uuidKey])) {
       $values[$this->uuidKey] = $this->uuidService->generate();
@@ -432,6 +452,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     $data = $this->mapFromStorageRecords(array($values));
     $entity = current($data);
     $entity->original = clone $entity;
+    $entity->setSyncing($is_syncing);
     $entity->enforceIsNew();
     $entity->postCreate($this);
 
@@ -439,6 +460,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     // entity object, for instance to fill-in default values.
     $this->invokeHook('create', $entity);
     return $entity;
+
   }
 
   /**

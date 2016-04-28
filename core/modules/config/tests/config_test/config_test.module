@@ -5,8 +5,6 @@
  * Provides Config module hook implementations for testing purposes.
  */
 
-use Drupal\config_test\Entity\ConfigTest;
-
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
 
 /**
@@ -15,15 +13,6 @@ require_once dirname(__FILE__) . '/config_test.hooks.inc';
 function config_test_cache_flush() {
   // Set a global value we can check in test code.
   $GLOBALS['hook_cache_flush'] = __FUNCTION__;
-}
-
-/**
- * Implements hook_ENTITY_TYPE_create() for 'config_test'.
- */
-function config_test_config_test_create(ConfigTest $config_test) {
-  if (\Drupal::state()->get('config_test.prepopulate')) {
-    $config_test->set('foo', 'baz');
-  }
 }
 
 /**
