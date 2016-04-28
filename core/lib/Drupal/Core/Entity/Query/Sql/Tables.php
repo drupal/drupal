@@ -80,7 +80,7 @@ class Tables implements TablesInterface {
     $entity_type = $this->entityManager->getDefinition($entity_type_id);
 
     $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
-    for ($key = 0; $key <= $count; $key ++) {
+    for ($key = 0; $key <= $count; $key++) {
       // This can either be the name of an entity base field or a configurable
       // field.
       $specifier = $specifiers[$key];
