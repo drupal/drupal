@@ -27,4 +27,14 @@ class HelpPageTestController {
     return ['#markup' => 'A route without help.'];
   }
 
+  /**
+   * Provides a route which has multiple array returns from hook_help().
+   *
+   * @return array
+   *   A render array.
+   */
+  public function testArray() {
+    return ['#markup' => 'A route which has multiple array returns from hook_help().'];
+  }
+
 }

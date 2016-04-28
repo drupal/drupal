@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * More Help Page Test module to test the help blocks.
+ */
+
+use \Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function more_help_page_test_help($route_name, RouteMatchInterface $route_match) {
+
+  switch ($route_name) {
+    // Return help for the same route as the help_page_test module.
+    case 'help_page_test.test_array':
+      return ['#markup' => 'Help text from more_help_page_test_help module.'];
+  }
+}

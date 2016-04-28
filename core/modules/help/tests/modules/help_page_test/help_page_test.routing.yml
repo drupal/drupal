@@ -11,3 +11,10 @@ help_page_test.no_help:
     _controller: '\Drupal\help_page_test\HelpPageTestController::noHelp'
   requirements:
     _access: 'TRUE'
+
+help_page_test.test_array:
+  path: '/help_page_test/test_array'
+  defaults:
+    _controller: '\Drupal\help_page_test\HelpPageTestController::testArray'
+  requirements:
+    _access: 'TRUE'
