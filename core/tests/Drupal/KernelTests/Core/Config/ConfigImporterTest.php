@@ -686,4 +686,98 @@ class ConfigImporterTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Tests the isSyncing flags.
+   */
+  public function testIsSyncingInHooks() {
+    $dynamic_name = 'config_test.dynamic.dotted.default';
+    $storage = $this->container->get('config.storage');
+
+    // Verify the default configuration values exist.
+    $config = $this->config($dynamic_name);
+    $this->assertSame('dotted.default', $config->get('id'));
+
+    // Delete the config so that create hooks will fire.
+    $storage->delete($dynamic_name);
+    \Drupal::state()->set('config_test.store_isSyncing', []);
+    $this->configImporter->reset()->import();
+
+    // The values of the syncing values should be stored in state by
+    // config_test_config_test_create().
+    $state = \Drupal::state()->get('config_test.store_isSyncing');
+    $this->assertTrue($state['global_state::create'], '\Drupal::isConfigSyncing() returns TRUE');
+    $this->assertTrue($state['entity_state::create'], 'ConfigEntity::isSyncing() returns TRUE');
+    $this->assertTrue($state['global_state::presave'], '\Drupal::isConfigSyncing() returns TRUE');
+    $this->assertTrue($state['entity_state::presave'], 'ConfigEntity::isSyncing() returns TRUE');
+    $this->assertTrue($state['global_state::insert'], '\Drupal::isConfigSyncing() returns TRUE');
+    $this->assertTrue($state['entity_state::insert'], 'ConfigEntity::isSyncing() returns TRUE');
+
+    // Cause a config update so update hooks will fire.
+    $config = $this->config($dynamic_name);
+    $config->set('label', 'A new name')->save();
+    \Drupal::state()->set('config_test.store_isSyncing', []);
+    $this->configImporter->reset()->import();
+
+    // The values of the syncing values should be stored in state by
+    // config_test_config_test_create().
+    $state = \Drupal::state()->get('config_test.store_isSyncing');
+    $this->assertTrue($state['global_state::presave'], '\Drupal::isConfigSyncing() returns TRUE');
+    $this->assertTrue($state['entity_state::presave'], 'ConfigEntity::isSyncing() returns TRUE');
+    $this->assertTrue($state['global_state::update'], '\Drupal::isConfigSyncing() returns TRUE');
+    $this->assertTrue($state['entity_state::update'], 'ConfigEntity::isSyncing() returns TRUE');
+
+    // Cause a config delete so delete hooks will fire.
+    $sync = $this->container->get('config.storage.sync');
+    $sync->delete($dynamic_name);
+    \Drupal::state()->set('config_test.store_isSyncing', []);
+    $this->configImporter->reset()->import();
+
+    // The values of the syncing values should be stored in state by
+    // config_test_config_test_create().
+    $state = \Drupal::state()->get('config_test.store_isSyncing');
+    $this->assertTrue($state['global_state::predelete'], '\Drupal::isConfigSyncing() returns TRUE');
+    $this->assertTrue($state['entity_state::predelete'], 'ConfigEntity::isSyncing() returns TRUE');
+    $this->assertTrue($state['global_state::delete'], '\Drupal::isConfigSyncing() returns TRUE');
+    $this->assertTrue($state['entity_state::delete'], 'ConfigEntity::isSyncing() returns TRUE');
+  }
+
+  /**
+   * Tests that the isConfigSyncing flag is cleanup after an invalid step.
+   */
+  public function testInvalidStep() {
+    $this->assertFalse(\Drupal::isConfigSyncing(), 'Before an import \Drupal::isConfigSyncing() returns FALSE');
+    $context = [];
+    try {
+      $this->configImporter->doSyncStep('a_non_existent_step', $context);
+      $this->fail('Expected \InvalidArgumentException thrown');
+    }
+    catch (\InvalidArgumentException $e) {
+      $this->pass('Expected \InvalidArgumentException thrown');
+    }
+    $this->assertFalse(\Drupal::isConfigSyncing(), 'After an invalid step \Drupal::isConfigSyncing() returns FALSE');
+  }
+
+  /**
+   * Tests that the isConfigSyncing flag is set correctly during a custom step.
+   */
+  public function testCustomStep() {
+    $this->assertFalse(\Drupal::isConfigSyncing(), 'Before an import \Drupal::isConfigSyncing() returns FALSE');
+    $context = [];
+    $this->configImporter->doSyncStep([self::class, 'customStep'], $context);
+    $this->assertTrue($context['is_syncing'], 'Inside a custom step \Drupal::isConfigSyncing() returns TRUE');
+    $this->assertFalse(\Drupal::isConfigSyncing(), 'After an valid custom step \Drupal::isConfigSyncing() returns FALSE');
+  }
+
+  /**
+   * Helper meothd to test custom config installer steps.
+   *
+   * @param array $context
+   *   Batch context.
+   * @param \Drupal\Core\Config\ConfigImporter $importer
+   *   The config importer.
+   */
+  public static function customStep(array &$context, ConfigImporter $importer) {
+    $context['is_syncing'] = \Drupal::isConfigSyncing();
+  }
+
 }

@@ -484,14 +484,17 @@ class ConfigImporter {
    */
   public function doSyncStep($sync_step, &$context) {
     if (!is_array($sync_step) && method_exists($this, $sync_step)) {
+      \Drupal::service('config.installer')->setSyncing(TRUE);
       $this->$sync_step($context);
     }
     elseif (is_callable($sync_step)) {
+      \Drupal::service('config.installer')->setSyncing(TRUE);
       call_user_func_array($sync_step, array(&$context, $this));
     }
     else {
       throw new \InvalidArgumentException('Invalid configuration synchronization step');
     }
+    \Drupal::service('config.installer')->setSyncing(FALSE);
   }
 
   /**
@@ -778,7 +781,6 @@ class ConfigImporter {
     // Set the config installer to use the sync directory instead of the
     // extensions own default config directories.
     \Drupal::service('config.installer')
-      ->setSyncing(TRUE)
       ->setSourceStorage($this->storageComparer->getSourceStorage());
     if ($type == 'module') {
       $this->moduleInstaller->$op(array($name), FALSE);
@@ -805,8 +807,6 @@ class ConfigImporter {
     }
 
     $this->setProcessedExtension($type, $op, $name);
-    \Drupal::service('config.installer')
-      ->setSyncing(FALSE);
   }
 
   /**
