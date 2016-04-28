@@ -113,11 +113,11 @@ class DrupalComponentTest extends UnitTestCase {
     $file_uri = vfsStream::url('root/Test.php');
 
     try {
-      $pass = true;
+      $pass = TRUE;
       $this->assertNoCoreUsage($file_uri);
     }
     catch (\PHPUnit_Framework_AssertionFailedError $e) {
-      $pass = false;
+      $pass = FALSE;
     }
     $this->assertEquals($expected_pass, $pass, $expected_pass ?
       'Test caused a false positive' :

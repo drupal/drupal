@@ -59,13 +59,13 @@ class FieldEntityTranslationTest extends ViewTestBase {
     $node = Node::create([
       'type' => 'article',
       'title' => 'example EN',
-      'sticky' => false,
+      'sticky' => FALSE,
     ]);
     $node->save();
 
     $translation = $node->addTranslation('es');
     $translation->title->value = 'example ES';
-    $translation->sticky->value = true;
+    $translation->sticky->value = TRUE;
     $translation->save();
 
     $this->drupalGet('test_entity_field_renderers/entity_translation');

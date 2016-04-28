@@ -52,7 +52,7 @@ class StringLoader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface
    * {@inheritdoc}
    */
   public function isFresh($name, $time) {
-    return true;
+    return TRUE;
   }
 
 }

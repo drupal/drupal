@@ -33,8 +33,8 @@ class MigrateImageStylesTest extends MigrateDrupal7TestBase {
    */
   public function testImageStylesMigration() {
     $this->assertEntity('custom_image_style_1', "Custom image style 1", ['image_scale_and_crop', 'image_desaturate'], [['width' => 55, 'height' => 55], []]);
-    $this->assertEntity('custom_image_style_2', "Custom image style 2", ['image_resize', 'image_rotate'], [['width' => 55, 'height' => 100], ['degrees' => 45, 'bgcolor' => '#FFFFFF', 'random' => false]]);
-    $this->assertEntity('custom_image_style_3', "Custom image style 3", ['image_scale', 'image_crop'], [['width' => 150, 'height' => NULL, 'upscale' => false], ['width' => 50, 'height' => 50, 'anchor' => 'left-top']]);
+    $this->assertEntity('custom_image_style_2', "Custom image style 2", ['image_resize', 'image_rotate'], [['width' => 55, 'height' => 100], ['degrees' => 45, 'bgcolor' => '#FFFFFF', 'random' => FALSE]]);
+    $this->assertEntity('custom_image_style_3', "Custom image style 3", ['image_scale', 'image_crop'], [['width' => 150, 'height' => NULL, 'upscale' => FALSE], ['width' => 50, 'height' => 50, 'anchor' => 'left-top']]);
   }
 
   /**

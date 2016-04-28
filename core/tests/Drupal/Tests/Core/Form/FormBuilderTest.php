@@ -738,7 +738,7 @@ class FormBuilderTest extends FormTestBase {
    */
   public function testValueCallableIsSafe($callback, $expected) {
     $method = new \ReflectionMethod(FormBuilder::class, 'valueCallableIsSafe');
-    $method->setAccessible(true);
+    $method->setAccessible(TRUE);
     $is_safe = $method->invoke($this->formBuilder, $callback);
     $this->assertSame($expected, $is_safe);
   }

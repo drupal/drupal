@@ -57,7 +57,7 @@ class TrustedHostsRequestFactory {
    * @return \Symfony\Component\HttpFoundation\Request
    *   A new request object.
    **/
-  public function createRequest(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null) {
+  public function createRequest(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = NULL) {
     if (empty($server['HTTP_HOST']) || ($server['HTTP_HOST'] === 'localhost' && $this->host !== 'localhost')) {
       $server['HTTP_HOST'] = $this->host;
     }

@@ -238,7 +238,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * @covers ::loadAllIncludes
    */
   public function testLoadAllIncludes() {
-    $this->assertTrue(true);
+    $this->assertTrue(TRUE);
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
         $this->root,

@@ -63,7 +63,7 @@ class Block extends DrupalSqlBase {
    */
   protected function initializeIterator() {
     $this->defaultTheme = $this->variableGet('theme_default', 'Garland');
-    $this->adminTheme = $this->variableGet('admin_theme', null);
+    $this->adminTheme = $this->variableGet('admin_theme', NULL);
     return parent::initializeIterator();
   }
 

@@ -29,7 +29,7 @@ class InstallTranslationFilePatternTest extends UnitTestCase {
     parent::setUp();
     $this->fileTranslation = new FileTranslation('filename');
     $method = new \ReflectionMethod('\Drupal\Core\StringTranslation\Translator\FileTranslation', 'getTranslationFilesPattern');
-    $method->setAccessible(true);
+    $method->setAccessible(TRUE);
     $this->filePatternMethod = $method;
   }
 

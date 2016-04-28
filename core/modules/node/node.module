@@ -1172,7 +1172,7 @@ function node_access_rebuild($batch_mode = FALSE) {
       // user does not have access. And unless the current user has the bypass
       // node access permission, no nodes are accessible since the grants have
       // just been deleted.
-      $entity_query->accessCheck(false);
+      $entity_query->accessCheck(FALSE);
       $nids = $entity_query->execute();
       foreach ($nids as $nid) {
         $node_storage->resetCache(array($nid));
@@ -1227,7 +1227,7 @@ function _node_access_rebuild_batch_operation(&$context) {
     // user does not have access. And unless the current user has the bypass
     // node access permission, no nodes are accessible since the grants have
     // just been deleted.
-    ->accessCheck(false)
+    ->accessCheck(FALSE)
     ->range(0, $limit)
     ->execute();
   $node_storage->resetCache($nids);
