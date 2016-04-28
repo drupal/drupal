@@ -105,12 +105,19 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
    * {@inheritdoc}
    */
   public function processPlaceholders(array $placeholders) {
+    $request = $this->requestStack->getCurrentRequest();
+
+    // @todo remove this check when https://www.drupal.org/node/2367555 lands.
+    if (!$request->isMethodSafe()) {
+      return [];
+    }
+
     // Routes can opt out from using the BigPipe HTML delivery technique.
     if ($this->routeMatch->getRouteObject()->getOption('_no_big_pipe')) {
       return [];
     }
 
-    if (!$this->sessionConfiguration->hasSession($this->requestStack->getCurrentRequest())) {
+    if (!$this->sessionConfiguration->hasSession($request)) {
       return [];
     }
 

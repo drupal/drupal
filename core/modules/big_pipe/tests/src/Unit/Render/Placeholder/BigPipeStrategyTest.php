@@ -22,8 +22,9 @@ class BigPipeStrategyTest extends UnitTestCase {
    *
    * @dataProvider placeholdersProvider
    */
-  public function testProcessPlaceholders(array $placeholders, $route_match_has_no_big_pipe_option, $request_has_session, $request_has_big_pipe_nojs_cookie, array $expected_big_pipe_placeholders) {
+  public function testProcessPlaceholders(array $placeholders, $method, $route_match_has_no_big_pipe_option, $request_has_session, $request_has_big_pipe_nojs_cookie, array $expected_big_pipe_placeholders) {
     $request = new Request();
+    $request->setMethod($method);
     if ($request_has_big_pipe_nojs_cookie) {
       $request->cookies->set(BigPipeStrategy::NOJS_COOKIE, 1);
     }
@@ -45,7 +46,7 @@ class BigPipeStrategyTest extends UnitTestCase {
     $big_pipe_strategy = new BigPipeStrategy($session_configuration->reveal(), $request_stack->reveal(), $route_match->reveal());
     $processed_placeholders = $big_pipe_strategy->processPlaceholders($placeholders);
 
-    if (!$route_match_has_no_big_pipe_option && $request_has_session) {
+    if ($request->isMethodSafe() && !$route_match_has_no_big_pipe_option && $request_has_session) {
       $this->assertSameSize($expected_big_pipe_placeholders, $processed_placeholders, 'BigPipe is able to deliver all placeholders.');
       foreach (array_keys($placeholders) as $placeholder) {
         $this->assertSame($expected_big_pipe_placeholders[$placeholder], $processed_placeholders[$placeholder], "Verifying how BigPipeStrategy handles the placeholder '$placeholder'");
@@ -75,13 +76,13 @@ class BigPipeStrategyTest extends UnitTestCase {
     ];
 
     return [
-      '_no_big_pipe absent, no session, no-JS cookie absent' => [$placeholders, FALSE, FALSE, FALSE, []],
-      '_no_big_pipe absent, no session, no-JS cookie present' => [$placeholders, FALSE, FALSE, TRUE, []],
-      '_no_big_pipe present, no session, no-JS cookie absent' => [$placeholders, TRUE, FALSE, FALSE, []],
-      '_no_big_pipe present, no session, no-JS cookie present' => [$placeholders, TRUE, FALSE, TRUE, []],
-      '_no_big_pipe present, session, no-JS cookie absent' => [$placeholders, TRUE, TRUE, FALSE, []],
-      '_no_big_pipe present, session, no-JS cookie present' => [$placeholders, TRUE, TRUE, TRUE, []],
-      '_no_big_pipe absent, session, no-JS cookie absent: (JS-powered) BigPipe placeholder used for HTML placeholders' => [$placeholders, FALSE, TRUE, FALSE, [
+      '_no_big_pipe absent, no session, no-JS cookie absent' => [$placeholders, 'GET', FALSE, FALSE, FALSE, []],
+      '_no_big_pipe absent, no session, no-JS cookie present' => [$placeholders, 'GET', FALSE, FALSE, TRUE, []],
+      '_no_big_pipe present, no session, no-JS cookie absent' => [$placeholders, 'GET', TRUE, FALSE, FALSE, []],
+      '_no_big_pipe present, no session, no-JS cookie present' => [$placeholders, 'GET', TRUE, FALSE, TRUE, []],
+      '_no_big_pipe present, session, no-JS cookie absent' => [$placeholders, 'GET', TRUE, TRUE, FALSE, []],
+      '_no_big_pipe present, session, no-JS cookie present' => [$placeholders, 'GET', TRUE, TRUE, TRUE, []],
+      '_no_big_pipe absent, session, no-JS cookie absent: (JS-powered) BigPipe placeholder used for HTML placeholders' => [$placeholders, 'GET', FALSE, TRUE, FALSE, [
         $cases['html']->placeholder                             => $cases['html']->bigPipePlaceholderRenderArray,
         $cases['html_attribute_value']->placeholder             => $cases['html_attribute_value']->bigPipeNoJsPlaceholderRenderArray,
         $cases['html_attribute_value_subset']->placeholder      => $cases['html_attribute_value_subset']->bigPipeNoJsPlaceholderRenderArray,
@@ -90,7 +91,8 @@ class BigPipeStrategyTest extends UnitTestCase {
         $cases['exception__lazy_builder']->placeholder          => $cases['exception__lazy_builder']->bigPipePlaceholderRenderArray,
         $cases['exception__embedded_response']->placeholder     => $cases['exception__embedded_response']->bigPipePlaceholderRenderArray,
       ]],
-      '_no_big_pipe absent, session, no-JS cookie present: no-JS BigPipe placeholder used for HTML placeholders' => [$placeholders, FALSE, TRUE, TRUE, [
+      '_no_big_pipe absent, session, no-JS cookie absent: (JS-powered) BigPipe placeholder used for HTML placeholders — but unsafe method' => [$placeholders, 'POST', FALSE, TRUE, FALSE, []],
+      '_no_big_pipe absent, session, no-JS cookie present: no-JS BigPipe placeholder used for HTML placeholders' => [$placeholders, 'GET', FALSE, TRUE, TRUE, [
         $cases['html']->placeholder                             => $cases['html']->bigPipeNoJsPlaceholderRenderArray,
         $cases['html_attribute_value']->placeholder             => $cases['html_attribute_value']->bigPipeNoJsPlaceholderRenderArray,
         $cases['html_attribute_value_subset']->placeholder      => $cases['html_attribute_value_subset']->bigPipeNoJsPlaceholderRenderArray,
@@ -99,6 +101,7 @@ class BigPipeStrategyTest extends UnitTestCase {
         $cases['exception__lazy_builder']->placeholder          => $cases['exception__lazy_builder']->bigPipeNoJsPlaceholderRenderArray,
         $cases['exception__embedded_response']->placeholder     => $cases['exception__embedded_response']->bigPipeNoJsPlaceholderRenderArray,
       ]],
+      '_no_big_pipe absent, session, no-JS cookie present: no-JS BigPipe placeholder used for HTML placeholders — but unsafe method' => [$placeholders, 'POST', FALSE, TRUE, TRUE, []],
     ];
   }
 

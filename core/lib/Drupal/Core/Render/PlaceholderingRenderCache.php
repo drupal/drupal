@@ -92,6 +92,11 @@ class PlaceholderingRenderCache extends RenderCache {
    * {@inheritdoc}
    */
   public function get(array $elements) {
+    // @todo remove this check when https://www.drupal.org/node/2367555 lands.
+    if (!$this->requestStack->getCurrentRequest()->isMethodSafe()) {
+      return FALSE;
+    }
+
     // When rendering placeholders, special case auto-placeholdered elements:
     // avoid retrieving them from cache again, or rendering them again.
     if (isset($elements['#create_placeholder']) && $elements['#create_placeholder'] === FALSE) {
@@ -120,6 +125,11 @@ class PlaceholderingRenderCache extends RenderCache {
    */
   public function set(array &$elements, array $pre_bubbling_elements) {
     $result = parent::set($elements, $pre_bubbling_elements);
+
+    // @todo remove this check when https://www.drupal.org/node/2367555 lands.
+    if (!$this->requestStack->getCurrentRequest()->isMethodSafe()) {
+      return FALSE;
+    }
 
     if ($this->placeholderGenerator->canCreatePlaceholder($pre_bubbling_elements) && $this->placeholderGenerator->shouldAutomaticallyPlaceholder($elements)) {
       // Overwrite $elements with a placeholder. The Renderer (which called this
