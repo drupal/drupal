@@ -78,6 +78,15 @@ class ComposerIntegrationTest extends UnitTestCase {
   }
 
   /**
+   * Tests composer.lock hash.
+   */
+  public function testComposerLockHash() {
+    $json = file_get_contents($this->root . '/composer.json');
+    $lock = json_decode(file_get_contents($this->root . '/composer.lock'), TRUE);
+    $this->assertSame(md5($json), $lock['hash']);
+  }
+
+  /**
    * Tests core's composer.json replace section.
    *
    * Verify that all core modules are also listed in the 'replace' section of
