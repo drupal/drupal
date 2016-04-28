@@ -750,11 +750,20 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Returns the container cache key based on the environment.
    *
+   * The 'environment' consists of:
+   * - The kernel environment string.
+   * - The Drupal version constant.
+   * - The deployment identifier from settings.php. This allows custom
+   *   deployments to force a container rebuild.
+   * - The operating system running PHP. This allows compiler passes to optimize
+   *   services for different operating systems.
+   * - The paths to any additional container YAMLs from settings.php.
+   *
    * @return string
    *   The cache key used for the service container.
    */
   protected function getContainerCacheKey() {
-    $parts = array('service_container', $this->environment, \Drupal::VERSION, Settings::get('deployment_identifier'), serialize(Settings::get('container_yamls')));
+    $parts = array('service_container', $this->environment, \Drupal::VERSION, Settings::get('deployment_identifier'), PHP_OS, serialize(Settings::get('container_yamls')));
     return implode(':', $parts);
   }
 
