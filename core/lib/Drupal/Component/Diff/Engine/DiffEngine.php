@@ -363,7 +363,7 @@ class DiffEngine {
       while ($j < $other_len && $other_changed[$j]) {
         $j++;
       }
-      while ($i < $len && ! $changed[$i]) {
+      while ($i < $len && !$changed[$i]) {
         $this::USE_ASSERTS && assert('$j < $other_len && ! $other_changed[$j]');
         $i++;
         $j++;
