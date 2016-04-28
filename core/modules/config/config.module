@@ -19,7 +19,7 @@ function config_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Exporting the full configuration') . '</dt>';
-      $output .= '<dd>' . t('You can create and download an archive consisting of all your site\'s configuration exported as <em>*.yml</em> files on the <a href=":url">Export</a> page.' , array(':url' => \Drupal::url('config.export_full'))) . '</dd>';
+      $output .= '<dd>' . t('You can create and download an archive consisting of all your site\'s configuration exported as <em>*.yml</em> files on the <a href=":url">Export</a> page.', array(':url' => \Drupal::url('config.export_full'))) . '</dd>';
       $output .= '<dt>' . t('Importing a full configuration') . '</dt>';
       $output .= '<dd>' . t('You can upload a full site configuration from an archive file on the <a href=":url">Import</a> page. When importing data from a different environment, the site and import files must have matching configuration values for UUID in the <em>system.site</em> configuration item. That means that your other environments should initially be set up as clones of the target site. Migrations are not supported.', array(':url' => \Drupal::url('config.import_full'))) . '</dd>';
       $output .= '<dt>' . t('Synchronizing configuration'). '</dt>';

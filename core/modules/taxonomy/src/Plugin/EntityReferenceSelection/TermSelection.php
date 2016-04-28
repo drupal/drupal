@@ -49,7 +49,7 @@ class TermSelection extends DefaultSelection {
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     if ($match || $limit) {
-      return parent::getReferenceableEntities($match , $match_operator, $limit);
+      return parent::getReferenceableEntities($match, $match_operator, $limit);
     }
 
     $options = array();
