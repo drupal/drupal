@@ -33,4 +33,17 @@ class InstallerKernel extends DrupalKernel {
     $this->configStorage = NULL;
   }
 
+  /**
+   * Returns the active configuration storage used during early install.
+   *
+   * This override changes the visibility so that the installer can access
+   * config storage before the container is properly built.
+   *
+   * @return \Drupal\Core\Config\StorageInterface
+   *   The config storage.
+   */
+  public function getConfigStorage() {
+    return parent::getConfigStorage();
+  }
+
 }
