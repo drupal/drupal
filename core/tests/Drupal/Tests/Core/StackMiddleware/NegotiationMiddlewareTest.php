@@ -101,7 +101,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
     $request->setRequestFormat('html')->shouldBeCalled();
 
     // Some getContentType calls we don't really care about but have to mock.
-    $request->get('ajax_iframe_upload', false)->shouldBeCalled();
+    $request->get('ajax_iframe_upload', FALSE)->shouldBeCalled();
     $request_mock = $request->reveal();
     $request_mock->query = new ParameterBag([]);
 
@@ -126,7 +126,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
 
     // Some calls we don't care about.
     $request->setRequestFormat('html')->shouldBeCalled();
-    $request->get('ajax_iframe_upload', false)->shouldBeCalled();
+    $request->get('ajax_iframe_upload', FALSE)->shouldBeCalled();
     $request_mock = $request->reveal();
     $request_mock->query = new ParameterBag([]);
 

@@ -67,7 +67,7 @@ class NormalizeTest extends NormalizerTestBase {
           array(
             'href' => '/relations',
             'name' => 'site',
-            'templated' => true,
+            'templated' => TRUE,
           ),
         ),
         'self' => array(

@@ -150,12 +150,12 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFilter('placeholder', [$this, 'escapePlaceholder'], array('is_safe' => array('html'), 'needs_environment' => TRUE)),
 
       // Replace twig's escape filter with our own.
-      new \Twig_SimpleFilter('drupal_escape', [$this, 'escapeFilter'], array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
+      new \Twig_SimpleFilter('drupal_escape', [$this, 'escapeFilter'], array('needs_environment' => TRUE, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
 
       // Implements safe joining.
       // @todo Make that the default for |join? Upstream issue:
       //   https://github.com/fabpot/Twig/issues/1420
-      new \Twig_SimpleFilter('safe_join', [$this, 'safeJoin'], ['needs_environment' => true, 'is_safe' => ['html']]),
+      new \Twig_SimpleFilter('safe_join', [$this, 'safeJoin'], ['needs_environment' => TRUE, 'is_safe' => ['html']]),
 
       // Array filters.
       new \Twig_SimpleFilter('without', 'twig_without'),
@@ -547,7 +547,7 @@ class TwigExtension extends \Twig_Extension {
    */
   public function safeJoin(\Twig_Environment $env, $value, $glue = '') {
     if ($value instanceof \Traversable) {
-      $value = iterator_to_array($value, false);
+      $value = iterator_to_array($value, FALSE);
     }
 
     return implode($glue, array_map(function($item) use ($env) {

@@ -109,9 +109,9 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
             ),
           'settings' =>
             array (
-              'display_summary' => true,
+              'display_summary' => TRUE,
               'text_processing' => 1,
-              'user_register_form' => false,
+              'user_register_form' => FALSE,
             ),
           'display' =>
             array (
@@ -136,7 +136,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
                   'weight' => 0,
                 ),
             ),
-          'required' => false,
+          'required' => FALSE,
           'description' => '',
         )),
       ))

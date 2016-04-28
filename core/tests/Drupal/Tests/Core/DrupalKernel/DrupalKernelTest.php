@@ -37,12 +37,12 @@ namespace Drupal\Tests\Core\DrupalKernel {
 
       $method = new \ReflectionMethod('Drupal\Core\DrupalKernel', 'setupTrustedHosts');
       $method->setAccessible(TRUE);
-      $valid_host = $method->invoke(null, $request, $trusted_host_patterns);
+      $valid_host = $method->invoke(NULL, $request, $trusted_host_patterns);
 
       $this->assertSame($expected, $valid_host, $message);
 
       // Reset the trusted hosts because it is statically stored on the request.
-      $method->invoke(null, $request, []);
+      $method->invoke(NULL, $request, []);
       // Reset the request factory because it is statically stored on the request.
       Request::setFactory(NULL);
     }

@@ -649,7 +649,7 @@ class MenuTest extends MenuWebTestBase {
    * Tests that parent options are limited by depth when adding menu links.
    */
   function checkInvalidParentMenuLinks() {
-    $last_link = null;
+    $last_link = NULL;
     $created_links = array();
 
     // Get the max depth of the tree.

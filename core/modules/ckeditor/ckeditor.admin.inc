@@ -107,7 +107,7 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
 
     // Set additional flag on the button if it can occur multiple times.
     if (!empty($button['multiple'])) {
-      $button_item['multiple'] = true;
+      $button_item['multiple'] = TRUE;
     }
 
     return $button_item;

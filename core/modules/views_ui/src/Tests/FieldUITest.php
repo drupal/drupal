@@ -54,7 +54,7 @@ class FieldUITest extends UITestBase {
     $this->assertEqual((string) $result[2], '{{ name }} == Name');
 
     $result = $this->xpath('//details[@id="edit-options-more"]');
-    $this->assertEqual(empty($result), true, "Container 'more' is empty and should not be displayed.");
+    $this->assertEqual(empty($result), TRUE, "Container 'more' is empty and should not be displayed.");
   }
 
   /**

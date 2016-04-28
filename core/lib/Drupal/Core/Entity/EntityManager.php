@@ -121,7 +121,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    *
    * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    */
-  public function createHandlerInstance($class, EntityTypeInterface $definition = null) {
+  public function createHandlerInstance($class, EntityTypeInterface $definition = NULL) {
     return $this->container->get('entity_type.manager')->createHandlerInstance($class, $definition);
   }
 
