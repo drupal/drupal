@@ -25,7 +25,7 @@ class RedirectTest extends UITestBase {
     $random_destination = $this->randomMachineName();
     $edit_path = "admin/structure/views/view/$view_name/edit";
 
-    $this->drupalPostForm($edit_path, array(), t('Save') , array('query' => array('destination' => $random_destination)));
+    $this->drupalPostForm($edit_path, array(), t('Save'), array('query' => array('destination' => $random_destination)));
     $this->assertUrl($random_destination, array(), 'Make sure the user got redirected to the expected page defined in the destination.');
 
     // Setup a view with a certain page display path. If you change the path

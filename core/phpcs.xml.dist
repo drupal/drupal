@@ -41,6 +41,7 @@
 
   <!-- Generic sniffs -->
   <rule ref="Generic.Files.LineEndings"/>
+  <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
   <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
   <rule ref="Generic.PHP.DeprecatedFunctions"/>
   <rule ref="Generic.PHP.DisallowShortOpenTag"/>

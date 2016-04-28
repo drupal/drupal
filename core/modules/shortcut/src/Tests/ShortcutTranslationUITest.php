@@ -111,7 +111,7 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
 
     $this->assertFalse(
       $entity instanceof EntityChangedInterface,
-      format_string('%entity is not implementing EntityChangedInterface.' , array('%entity' => $this->entityTypeId))
+      format_string('%entity is not implementing EntityChangedInterface.', array('%entity' => $this->entityTypeId))
     );
   }
 
