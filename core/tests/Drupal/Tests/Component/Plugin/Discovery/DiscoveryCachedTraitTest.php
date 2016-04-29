@@ -5,8 +5,8 @@ namespace Drupal\Tests\Component\Plugin\Discovery;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait
- * @uses Drupal\Component\Plugin\Discovery\DiscoveryTrait
+ * @coversDefaultClass \Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait
+ * @uses \Drupal\Component\Plugin\Discovery\DiscoveryTrait
  * @group Plugin
  */
 class DiscoveryCachedTraitTest extends UnitTestCase {
