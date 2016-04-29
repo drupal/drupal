@@ -302,7 +302,7 @@ function rdf_preprocess_node(&$variables) {
   $bundle = $variables['node']->bundle();
   $mapping = rdf_get_mapping('node', $bundle);
   $bundle_mapping = $mapping->getPreparedBundleMapping('node', $bundle);
-  $variables['attributes']['about'] = empty($variables['url']) ? NULL: $variables['url'];
+  $variables['attributes']['about'] = empty($variables['url']) ? NULL : $variables['url'];
   $variables['attributes']['typeof'] = empty($bundle_mapping['types']) ? NULL : $bundle_mapping['types'];
 
   // Adds RDFa markup for the node title as metadata because wrapping the title

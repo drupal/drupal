@@ -44,7 +44,7 @@ class MatcherDumperTest extends KernelTestBase {
    */
   function testCreate() {
     $connection = Database::getConnection();
-    $dumper= new MatcherDumper($connection, $this->state);
+    $dumper = new MatcherDumper($connection, $this->state);
 
     $class_name = 'Drupal\Core\Routing\MatcherDumper';
     $this->assertTrue($dumper instanceof $class_name, 'Dumper created successfully');
@@ -55,7 +55,7 @@ class MatcherDumperTest extends KernelTestBase {
    */
   function testAddRoutes() {
     $connection = Database::getConnection();
-    $dumper= new MatcherDumper($connection, $this->state);
+    $dumper = new MatcherDumper($connection, $this->state);
 
     $route = new Route('test');
     $collection = new RouteCollection();
@@ -76,7 +76,7 @@ class MatcherDumperTest extends KernelTestBase {
    */
   function testAddAdditionalRoutes() {
     $connection = Database::getConnection();
-    $dumper= new MatcherDumper($connection, $this->state);
+    $dumper = new MatcherDumper($connection, $this->state);
 
     $route = new Route('test');
     $collection = new RouteCollection();

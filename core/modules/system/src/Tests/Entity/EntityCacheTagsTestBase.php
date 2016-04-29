@@ -327,7 +327,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $referencing_entity_url = $this->referencingEntity->urlInfo('canonical');
     $non_referencing_entity_url = $this->nonReferencingEntity->urlInfo('canonical');
     $listing_url = Url::fromRoute('entity.entity_test.collection_referencing_entities', [
-      'entity_reference_field_name' =>  $entity_type . '_reference',
+      'entity_reference_field_name' => $entity_type . '_reference',
       'referenced_entity_type' => $entity_type,
       'referenced_entity_id' => $this->entity->id(),
     ]);
@@ -346,7 +346,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $page_cache_tags = Cache::mergeTags(['rendered'], ['config:user.role.anonymous']);
     // If the block module is used, the Block page display variant is used,
     // which adds the block config entity type's list cache tags.
-    $page_cache_tags = Cache::mergeTags($page_cache_tags, \Drupal::moduleHandler()->moduleExists('block') ? ['config:block_list']: []);
+    $page_cache_tags = Cache::mergeTags($page_cache_tags, \Drupal::moduleHandler()->moduleExists('block') ? ['config:block_list'] : []);
 
     $page_cache_tags_referencing_entity = in_array('user.permissions', $this->getAccessCacheContextsForEntity($this->referencingEntity)) ? ['config:user.role.anonymous'] : [];
 

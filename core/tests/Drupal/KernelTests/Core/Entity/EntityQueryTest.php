@@ -535,7 +535,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
   protected function assertBundleOrder($order) {
     // This loop is for bundle1 entities.
-    for ($i = 1; $i <= 15; $i +=2) {
+    for ($i = 1; $i <= 15; $i += 2) {
       $ok = TRUE;
       $index1 = array_search($i, $this->queryResults);
       $this->assertNotIdentical($index1, FALSE, "$i found at $index1.");

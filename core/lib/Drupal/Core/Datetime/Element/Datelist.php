@@ -88,7 +88,7 @@ class Datelist extends DateElementBase {
                 break;
 
               case 'hour':
-                $format = in_array('ampm', $element['#date_part_order']) ? 'g': 'G';
+                $format = in_array('ampm', $element['#date_part_order']) ? 'g' : 'G';
                 break;
 
               case 'minute':
@@ -218,7 +218,7 @@ class Datelist extends DateElementBase {
           break;
 
         case 'hour':
-          $format = in_array('ampm', $element['#date_part_order']) ? 'g': 'G';
+          $format = in_array('ampm', $element['#date_part_order']) ? 'g' : 'G';
           $options = $date_helper->hours($format, $element['#required']);
           $title = t('Hour');
           break;

@@ -85,7 +85,7 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
 
     // Set up the expected result.
     $expected_rdf = array(
-      'value' =>  $this->uri . '/',
+      'value' => $this->uri . '/',
       'type' => 'uri',
     );
 

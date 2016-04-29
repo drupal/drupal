@@ -86,7 +86,7 @@ class CKEditorPluginManagerTest extends UnitTestCase {
    * @dataProvider providerGetEnabledButtons
    */
   public function testGetEnabledButtons(array $toolbar_rows, array $expected_buttons) {
-    $editor= $this->prophesize(Editor::class);
+    $editor = $this->prophesize(Editor::class);
     $editor->getSettings()
       ->willReturn(['toolbar' => ['rows' => $toolbar_rows]]);
 

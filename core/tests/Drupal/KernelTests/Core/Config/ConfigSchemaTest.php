@@ -95,7 +95,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['label'] = 'Maintenance mode';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
     $expected['mapping']['message'] = array(
-      'label' =>  'Message to display when in maintenance mode',
+      'label' => 'Message to display when in maintenance mode',
       'type' => 'text',
     );
     $expected['mapping']['langcode'] = array(
@@ -119,7 +119,7 @@ class ConfigSchemaTest extends KernelTestBase {
     );
     $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['label'] = array(
-      'label' =>  'Label',
+      'label' => 'Label',
       'type' => 'label',
     );
     $expected['mapping']['irrelevant'] = array(
@@ -204,7 +204,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $effects = \Drupal::service('config.typed')->get('image.style.medium')->get('effects');
     $definition = $effects->get('bddf0d06-42f9-4c75-a700-a33cafa25ea0')->get('data')->getDataDefinition()->toArray();
     // This should be the schema for image.effect.image_scale, reuse previous one.
-    $expected['type'] =  'image.effect.image_scale';
+    $expected['type'] = 'image.effect.image_scale';
 
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for the first effect of image.style.medium');
 

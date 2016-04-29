@@ -68,7 +68,7 @@ class Vocabulary extends DrupalSqlBase {
       ->execute()
       ->fetchCol();
     $row->setSourceProperty('node_types', $node_types);
-    $row->setSourceProperty('cardinality', ($row->getSourceProperty('tags') == 1 || $row->getSourceProperty('multiple') == 1) ?  FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : 1);
+    $row->setSourceProperty('cardinality', ($row->getSourceProperty('tags') == 1 || $row->getSourceProperty('multiple') == 1) ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : 1);
     return parent::prepareRow($row);
   }
 

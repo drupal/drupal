@@ -79,7 +79,7 @@ function update_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Checking for available updates') . '</dt>';
-      $output .= '<dd>' . t('The <a href=":update-report">Available updates report</a> displays core, contributed modules, and themes for which there are new releases available for download. On the report page, you can also check manually for updates. You can configure the frequency of update checks, which are performed during cron runs, and whether notifications are sent on the <a href=":update-settings">Update Manager settings page</a>.', array(':update-report' =>  \Drupal::url('update.status'), ':update-settings' => \Drupal::url('update.settings'))) . '</dd>';
+      $output .= '<dd>' . t('The <a href=":update-report">Available updates report</a> displays core, contributed modules, and themes for which there are new releases available for download. On the report page, you can also check manually for updates. You can configure the frequency of update checks, which are performed during cron runs, and whether notifications are sent on the <a href=":update-settings">Update Manager settings page</a>.', array(':update-report' => \Drupal::url('update.status'), ':update-settings' => \Drupal::url('update.settings'))) . '</dd>';
       // Only explain the Update manager if it has not been disabled.
       if (_update_manager_access()) {
         $output .= '<dt>' . t('Performing updates through the Update page') . '</dt>';

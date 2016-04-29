@@ -121,7 +121,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
     $edit = array(
       'id' => $menu_name,
       'description' => '',
-      'label' =>  $label,
+      'label' => $label,
     );
     // Create the menu by posting the form.
     $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));

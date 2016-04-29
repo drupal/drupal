@@ -1797,7 +1797,7 @@ function install_check_translations($langcode, $server_pattern) {
   $writable = FALSE;
   // @todo: Make this configurable.
   $site_path = \Drupal::service('site.path');
-  $files_directory =  $site_path . '/files';
+  $files_directory = $site_path . '/files';
   $translations_directory = $site_path . '/files/translations';
   $translations_directory_exists = FALSE;
   $online = FALSE;

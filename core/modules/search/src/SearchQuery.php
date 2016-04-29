@@ -226,7 +226,7 @@ class SearchQuery extends SelectExtender {
     // something between two spaces, optionally quoted.
     preg_match_all('/ (-?)("[^"]+"|[^" ]+)/i', ' ' .  $this->searchExpression, $keywords, PREG_SET_ORDER);
 
-    if (count($keywords) ==  0) {
+    if (count($keywords) == 0) {
       return;
     }
 

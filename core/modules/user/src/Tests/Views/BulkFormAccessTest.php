@@ -47,7 +47,7 @@ class BulkFormAccessTest extends UserTestBase {
 
     // Test blocking the account "no_edit".
     $edit = array(
-      'user_bulk_form[' . ($no_edit_user->id() -1) . ']' => TRUE,
+      'user_bulk_form[' . ($no_edit_user->id() - 1) . ']' => TRUE,
       'action' => 'user_block_user_action',
     );
     $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply'));
@@ -68,7 +68,7 @@ class BulkFormAccessTest extends UserTestBase {
     $this->assertTrue($normal_user->access('update', $admin_user));
 
     $edit = array(
-      'user_bulk_form[' . ($normal_user->id() -1) . ']' => TRUE,
+      'user_bulk_form[' . ($normal_user->id() - 1) . ']' => TRUE,
       'action' => 'user_block_user_action',
     );
     $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply'));
@@ -80,7 +80,7 @@ class BulkFormAccessTest extends UserTestBase {
     $this->drupalLogin($this->drupalCreateUser());
 
     $edit = array(
-      'user_bulk_form[' . ($normal_user->id() -1) . ']' => TRUE,
+      'user_bulk_form[' . ($normal_user->id() - 1) . ']' => TRUE,
       'action' => 'user_unblock_user_action',
     );
     $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply'));
@@ -110,8 +110,8 @@ class BulkFormAccessTest extends UserTestBase {
 
     // Test deleting the accounts "no_delete" and "may_delete".
     $edit = array(
-      'user_bulk_form[' . ($account->id() -1) . ']' => TRUE,
-      'user_bulk_form[' . ($account2->id() -1) . ']' => TRUE,
+      'user_bulk_form[' . ($account->id() - 1) . ']' => TRUE,
+      'user_bulk_form[' . ($account2->id() - 1) . ']' => TRUE,
       'action' => 'user_cancel_user_action',
     );
     $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply'));

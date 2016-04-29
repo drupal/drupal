@@ -181,7 +181,7 @@ class DiffEngine {
       }
     }
     $this->lcs = 0;
-    $this->seq[0]= $yoff - 1;
+    $this->seq[0] = $yoff - 1;
     $this->in_seq = array();
     $ymids[0] = array();
 
@@ -190,11 +190,11 @@ class DiffEngine {
     for ($chunk = 0; $chunk < $nchunks; $chunk++) {
       if ($chunk > 0) {
         for ($i = 0; $i <= $this->lcs; $i++) {
-          $ymids[$i][$chunk-1] = $this->seq[$i];
+          $ymids[$i][$chunk - 1] = $this->seq[$i];
         }
       }
 
-      $x1 = $xoff + (int)(($numer + ($xlim-$xoff)*$chunk) / $nchunks);
+      $x1 = $xoff + (int)(($numer + ($xlim - $xoff) * $chunk) / $nchunks);
       for ( ; $x < $x1; $x++) {
         $line = $flip ? $this->yv[$x] : $this->xv[$x];
         if (empty($ymatches[$line])) {
@@ -206,12 +206,12 @@ class DiffEngine {
           if (empty($this->in_seq[$y])) {
             $k = $this->_lcs_pos($y);
             $this::USE_ASSERTS && assert($k > 0);
-            $ymids[$k] = $ymids[$k-1];
+            $ymids[$k] = $ymids[$k - 1];
             break;
           }
         }
         while (list ($junk, $y) = each($matches)) {
-          if ($y > $this->seq[$k-1]) {
+          if ($y > $this->seq[$k - 1]) {
             $this::USE_ASSERTS && assert($y < $this->seq[$k]);
             // Optimization: this is a common case:
             // next match is just replacing previous match.
@@ -222,7 +222,7 @@ class DiffEngine {
           elseif (empty($this->in_seq[$y])) {
             $k = $this->_lcs_pos($y);
             $this::USE_ASSERTS && assert($k > 0);
-            $ymids[$k] = $ymids[$k-1];
+            $ymids[$k] = $ymids[$k - 1];
           }
         }
       }

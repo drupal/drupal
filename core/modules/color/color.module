@@ -71,7 +71,7 @@ function color_form_system_theme_settings_alter(&$form, FormStateInterface $form
  * Replaces style sheets declared in libraries with color-altered style sheets.
  */
 function color_library_info_alter(&$libraries, $extension) {
-  $themes =  array_keys(\Drupal::service('theme_handler')->listInfo());
+  $themes = array_keys(\Drupal::service('theme_handler')->listInfo());
   if (in_array($extension, $themes)) {
     $color_paths = \Drupal::config('color.theme.' . $extension)->get('stylesheets');
     if (!empty($color_paths)) {
@@ -780,7 +780,7 @@ function _color_hsl2rgb($hsl) {
   $h = $hsl[0];
   $s = $hsl[1];
   $l = $hsl[2];
-  $m2 = ($l <= 0.5) ? $l * ($s + 1) : $l + $s - $l*$s;
+  $m2 = ($l <= 0.5) ? $l * ($s + 1) : $l + $s - $l * $s;
   $m1 = $l * 2 - $m2;
 
   return array(

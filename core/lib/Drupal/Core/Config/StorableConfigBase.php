@@ -191,7 +191,7 @@ abstract class StorableConfigBase extends ConfigBase {
         // we have to special case the meaning of an empty string for numeric
         // types. In PHP this would be casted to a 0 but for the purposes of
         // configuration we need to treat this as a NULL.
-        $empty_value =  $value === '' && ($element instanceof IntegerInterface || $element instanceof FloatInterface);
+        $empty_value = $value === '' && ($element instanceof IntegerInterface || $element instanceof FloatInterface);
 
         if ($value === NULL || $empty_value) {
           $value = NULL;

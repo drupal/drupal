@@ -20,7 +20,7 @@ class MailCaptureTest extends WebTestBase {
     $body = $this->randomString(128);
     $message = array(
       'id' => 'drupal_mail_test',
-      'headers' => array('Content-type'=> 'text/html'),
+      'headers' => array('Content-type' => 'text/html'),
       'subject' => $subject,
       'to' => 'foobar@example.com',
       'body' => $body,
@@ -47,7 +47,7 @@ class MailCaptureTest extends WebTestBase {
     for ($index = 0; $index < 5; $index++) {
       $message = array(
         'id' => 'drupal_mail_test_' . $index,
-        'headers' => array('Content-type'=> 'text/html'),
+        'headers' => array('Content-type' => 'text/html'),
         'subject' => $this->randomString(64),
         'to' => $this->randomMachineName(32) . '@example.com',
         'body' => $this->randomString(512),

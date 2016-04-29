@@ -46,7 +46,7 @@ class ErrorTestController extends ControllerBase {
     // This will generate a notice.
     $monkey_love = $bananas;
     // This will generate a warning.
-    $awesomely_big = 1/0;
+    $awesomely_big = 1 / 0;
     // This will generate a user error. Use & to check for double escaping.
     trigger_error("Drupal & awesome", E_USER_WARNING);
     return [];

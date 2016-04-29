@@ -95,12 +95,12 @@ class DateTimeFieldItemList extends FieldItemList {
       // A default value should be in the format and timezone used for date
       // storage.
       $date = new DrupalDateTime($default_value[0]['default_date'], DATETIME_STORAGE_TIMEZONE);
-      $storage_format = $definition->getSetting('datetime_type') == DateTimeItem::DATETIME_TYPE_DATE ? DATETIME_DATE_STORAGE_FORMAT: DATETIME_DATETIME_STORAGE_FORMAT;
+      $storage_format = $definition->getSetting('datetime_type') == DateTimeItem::DATETIME_TYPE_DATE ? DATETIME_DATE_STORAGE_FORMAT : DATETIME_DATETIME_STORAGE_FORMAT;
       $value = $date->format($storage_format);
       // We only provide a default value for the first item, as do all fields.
       // Otherwise, there is no way to clear out unwanted values on multiple value
       // fields.
-      $default_value =  array(
+      $default_value = array(
         array(
           'value' => $value,
           'date' => $date,

@@ -185,7 +185,7 @@ class MenuTest extends MenuWebTestBase {
     $edit = array(
       'id' => $menu_name,
       'description' => '',
-      'label' =>  $label,
+      'label' => $label,
     );
     $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));
 
@@ -576,7 +576,7 @@ class MenuTest extends MenuWebTestBase {
     // Get server-rendered contextual links.
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()
     $post = array('ids[0]' => $id);
-    $response =  $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => 'test-page')));
+    $response = $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => 'test-page')));
     $this->assertResponse(200);
     $json = Json::decode($response);
     $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="entitymenuedit-form"><a href="' . base_path() . 'admin/structure/menu/manage/' . $custom_menu->id() . '">Edit menu</a></li></ul>');
@@ -613,7 +613,7 @@ class MenuTest extends MenuWebTestBase {
       'description[0][value]' => '',
       'enabled[value]' => 1,
       'expanded[value]' => $expanded,
-      'menu_parent' =>  $menu_name . ':' . $parent,
+      'menu_parent' => $menu_name . ':' . $parent,
       'weight[0][value]' => $weight,
     );
 

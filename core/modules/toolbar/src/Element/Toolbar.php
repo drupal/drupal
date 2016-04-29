@@ -68,7 +68,7 @@ class Toolbar extends RenderElement {
     // toolbar presentation.
     $breakpoints = static::breakpointManager()->getBreakpointsByGroup('toolbar');
     if (!empty($breakpoints)) {
-      $media_queries =  array();
+      $media_queries = array();
       foreach ($breakpoints as $id => $breakpoint) {
         $media_queries[$id] = $breakpoint->getMediaQuery();
       }

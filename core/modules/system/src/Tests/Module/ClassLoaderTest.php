@@ -26,7 +26,7 @@ class ClassLoaderTest extends WebTestBase {
     \Drupal::service('module_installer')->install(array('module_test', 'module_autoload_test'), FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
-    for ($i=0; $i<2; $i++) {
+    for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('module-test/class-loading');
       $this->assertText($this->expected, 'Autoloader loads classes from an enabled module.');
     }
@@ -42,7 +42,7 @@ class ClassLoaderTest extends WebTestBase {
     $this->container->get('module_installer')->uninstall(array('module_autoload_test'), FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
-    for ($i=0; $i<2; $i++) {
+    for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('module-test/class-loading');
       $this->assertNoText($this->expected, 'Autoloader does not load classes from a disabled module.');
     }

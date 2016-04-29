@@ -137,7 +137,7 @@ class UpdateTest extends DatabaseTestBase {
       ->execute();
     $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
-    $saved_name= db_query('SELECT name FROM {test} WHERE id = :id', array(':id' => 42))->fetchField();
+    $saved_name = db_query('SELECT name FROM {test} WHERE id = :id', array(':id' => 42))->fetchField();
     $this->assertIdentical($saved_name, 'John', 'Updated primary key successfully.');
   }
 

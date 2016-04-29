@@ -252,7 +252,7 @@ class AliasManagerTest extends UnitTestCase {
    * @covers ::writeCache
    */
   public function testGetAliasByPathCachedMatch() {
-    $path_part1 =  $this->randomMachineName();
+    $path_part1 = $this->randomMachineName();
     $path_part2 = $this->randomMachineName();
     $path = '/' . $path_part1 . '/' . $path_part2;
     $alias = $this->randomMachineName();

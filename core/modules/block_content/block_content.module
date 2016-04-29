@@ -80,7 +80,7 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
   $field = FieldConfig::loadByName('block_content', $block_type_id, 'body');
   if (empty($field)) {
     $field = FieldConfig::create([
-      'field_storage' =>  FieldStorageConfig::loadByName('block_content', 'body'),
+      'field_storage' => FieldStorageConfig::loadByName('block_content', 'body'),
       'bundle' => $block_type_id,
       'label' => $label,
       'settings' => array('display_summary' => FALSE),

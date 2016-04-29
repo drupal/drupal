@@ -80,7 +80,7 @@ class Combine extends StringFilter {
       $separated_fields = array();
       foreach ($fields as $key => $field) {
         $separated_fields[] = $field;
-        if ($key < $count-1) {
+        if ($key < $count - 1) {
           $separated_fields[] = "' '";
         }
       }

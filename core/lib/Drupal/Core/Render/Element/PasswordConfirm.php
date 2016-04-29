@@ -65,7 +65,7 @@ class PasswordConfirm extends FormElement {
    * Expand a password_confirm field into two text boxes.
    */
   public static function processPasswordConfirm(&$element, FormStateInterface $form_state, &$complete_form) {
-    $element['pass1'] =  array(
+    $element['pass1'] = array(
       '#type' => 'password',
       '#title' => t('Password'),
       '#value' => empty($element['#value']) ? NULL : $element['#value']['pass1'],
@@ -73,7 +73,7 @@ class PasswordConfirm extends FormElement {
       '#attributes' => array('class' => array('password-field', 'js-password-field')),
       '#error_no_message' => TRUE,
     );
-    $element['pass2'] =  array(
+    $element['pass2'] = array(
       '#type' => 'password',
       '#title' => t('Confirm password'),
       '#value' => empty($element['#value']) ? NULL : $element['#value']['pass2'],

@@ -525,7 +525,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     $used_advanced = !empty($parameters[self::ADVANCED_FORM]);
     if ($used_advanced) {
       $f = isset($parameters['f']) ? (array) $parameters['f'] : array();
-      $defaults =  $this->parseAdvancedDefaults($f, $keys);
+      $defaults = $this->parseAdvancedDefaults($f, $keys);
     }
     else {
       $defaults = array('keys' => $keys);

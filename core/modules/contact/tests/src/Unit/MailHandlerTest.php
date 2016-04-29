@@ -364,7 +364,7 @@ class MailHandlerTest extends UnitTestCase {
     $message->expects($this->once())
       ->method('copySender')
       ->willReturn($copy_sender);
-    $recipient =$this->getMock('\Drupal\user\UserInterface');
+    $recipient = $this->getMock('\Drupal\user\UserInterface');
     $recipient->expects($this->once())
       ->method('getEmail')
       ->willReturn('user2@drupal.org');

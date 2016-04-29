@@ -77,7 +77,7 @@ class DateTimeDefaultWidget extends DateTimeWidgetBase implements ContainerFacto
     }
 
     $element['value'] += array(
-      '#date_date_format'=>  $date_format,
+      '#date_date_format' => $date_format,
       '#date_date_element' => $date_type,
       '#date_date_callbacks' => array(),
       '#date_time_format' => $time_format,

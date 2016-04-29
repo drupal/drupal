@@ -324,7 +324,7 @@ class DbUpdateController extends ControllerBase {
             $text = $this->t('This update will been skipped due to the following missing dependencies:') . '<em>' . implode(', ', $data['missing_dependencies']) . '</em>';
           }
           else {
-            $text =  $this->t("This update will be skipped due to an error in the module's code.");
+            $text = $this->t("This update will be skipped due to an error in the module's code.");
           }
           $build['start'][$module_update_key]['#items'][$data['number']] .= '<div class="warning">' . $text . '</div>';
         }

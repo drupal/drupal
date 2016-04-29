@@ -106,7 +106,7 @@ class DateTimeItem extends FieldItemBase {
 
     // Just pick a date in the past year. No guidance is provided by this Field
     // type.
-    $timestamp = REQUEST_TIME - mt_rand(0, 86400*365);
+    $timestamp = REQUEST_TIME - mt_rand(0, 86400 * 365);
     if ($type == DateTimeItem::DATETIME_TYPE_DATE) {
       $values['value'] = gmdate(DATETIME_DATE_STORAGE_FORMAT, $timestamp);
     }

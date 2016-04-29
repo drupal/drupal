@@ -96,7 +96,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
     $fit = 0;
     foreach ($parts as $k => $part) {
       if (strpos($part, '{') === FALSE) {
-        $fit |=  1 << ($slashes - $k);
+        $fit |= 1 << ($slashes - $k);
       }
     }
 

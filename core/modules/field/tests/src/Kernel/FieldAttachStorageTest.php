@@ -46,7 +46,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
       $values[$current_revision] = $current_values;
     }
 
-    $storage =  $this->container->get('entity.manager')->getStorage($entity_type);
+    $storage = $this->container->get('entity.manager')->getStorage($entity_type);
     $storage->resetCache();
     $entity = $storage->load($entity_id);
     // Confirm current revision loads the correct data.
@@ -363,7 +363,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     // Verify no data gets loaded
     $controller = $this->container->get('entity.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache();
-    $entity= $controller->load($entity->id());
+    $entity = $controller->load($entity->id());
 
     $this->assertTrue(empty($entity->{$this->fieldTestData->field_name}), 'No data for first field');
     $this->assertTrue(empty($entity->{$field_name}), 'No data for second field');

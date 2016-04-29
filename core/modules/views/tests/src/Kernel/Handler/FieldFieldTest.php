@@ -163,7 +163,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
       'name' => 'base value',
       'field_test' => 1,
       'field_test_multiple' => [1, 3, 7],
-      'user_id' =>  $this->testUsers[0]->id(),
+      'user_id' => $this->testUsers[0]->id(),
     ]);
     $entity->save();
     $original_entity = clone $entity;

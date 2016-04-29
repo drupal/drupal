@@ -46,7 +46,7 @@ class ContextualUnitTest extends KernelTestBase {
     $tests[] = array(
       'links' => array(
         'foo' => array(
-          'route_parameters'=> array(
+          'route_parameters' => array(
             'bar',
             'key' => 'baz',
             'qux',

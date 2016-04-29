@@ -1524,7 +1524,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         );
 
         $access = $this->getOption('access');
-        $form['access']['type'] =  array(
+        $form['access']['type'] = array(
           '#title' => $this->t('Access'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
@@ -1561,7 +1561,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         );
 
         $cache = $this->getOption('cache');
-        $form['cache']['type'] =  array(
+        $form['cache']['type'] = array(
           '#title' => $this->t('Caching'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
@@ -1782,7 +1782,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         );
 
         $exposed_form = $this->getOption('exposed_form');
-        $form['exposed_form']['type'] =  array(
+        $form['exposed_form']['type'] = array(
           '#title' => $this->t('Exposed form'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
@@ -1818,7 +1818,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         );
 
         $pager = $this->getOption('pager');
-        $form['pager']['type'] =  array(
+        $form['pager']['type'] = array(
           '#title' => $this->t('Pager'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
@@ -2372,7 +2372,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $build['#cache']['keys'][] = implode(',', $args);
     }
 
-    $build['#cache_properties'] =  ['#view_id', '#view_display_show_admin_links', '#view_display_plugin_id'];
+    $build['#cache_properties'] = ['#view_id', '#view_display_show_admin_links', '#view_display_plugin_id'];
 
     return $build;
 

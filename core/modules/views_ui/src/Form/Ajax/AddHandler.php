@@ -160,7 +160,7 @@ class AddHandler extends ViewsFormBase {
     }
     else {
       $form['options']['markup'] = array(
-        '#markup' => '<div class="js-form-item form-item">' . $this->t('There are no @types available to add.', array('@types' =>  $ltitle)) . '</div>',
+        '#markup' => '<div class="js-form-item form-item">' . $this->t('There are no @types available to add.', array('@types' => $ltitle)) . '</div>',
       );
     }
     // Add a div to show the selected items

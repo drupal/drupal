@@ -103,7 +103,7 @@ class EditorAdminTest extends WebTestBase {
    * Tests format disabling.
    */
   public function testDisableFormatWithEditor() {
-    $formats = ['monocerus' => 'Monocerus', 'tattoo' =>  'Tattoo'];
+    $formats = ['monocerus' => 'Monocerus', 'tattoo' => 'Tattoo'];
 
     // Install the node module.
     $this->container->get('module_installer')->install(['node']);

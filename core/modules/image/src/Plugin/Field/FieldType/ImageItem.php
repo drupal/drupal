@@ -317,7 +317,7 @@ class ImageItem extends FileItem {
       $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
       if ($image->isValid()) {
         $this->width = $image->getWidth();
-        $this->height =$image->getHeight();
+        $this->height = $image->getHeight();
       }
     }
   }
@@ -366,7 +366,7 @@ class ImageItem extends FileItem {
       'target_id' => $file->id(),
       'alt' => $random->sentences(4),
       'title' => $random->sentences(4),
-      'width' =>$width,
+      'width' => $width,
       'height' => $height,
     );
     return $values;

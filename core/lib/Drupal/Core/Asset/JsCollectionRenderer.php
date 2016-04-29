@@ -68,7 +68,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
             'type' => 'application/json',
             'data-drupal-selector' => 'drupal-settings-json',
           );
-          $element['#value'] =  Json::encode($js_asset['data']);
+          $element['#value'] = Json::encode($js_asset['data']);
           break;
 
         case 'file':

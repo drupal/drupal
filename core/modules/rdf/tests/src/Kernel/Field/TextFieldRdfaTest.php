@@ -63,10 +63,10 @@ class TextFieldRdfaTest extends FieldRdfaTestBase {
     $formatted_value = strip_tags($this->entity->{$this->fieldName}->processed);
 
     // Tests the default formatter.
-    $this->assertFormatterRdfa(array('type'=>'text_default'), 'http://schema.org/text', array('value' => $formatted_value));
+    $this->assertFormatterRdfa(array('type' => 'text_default'), 'http://schema.org/text', array('value' => $formatted_value));
     // Tests the summary formatter.
-    $this->assertFormatterRdfa(array('type'=>'text_summary_or_trimmed'), 'http://schema.org/text', array('value' => $formatted_value));
+    $this->assertFormatterRdfa(array('type' => 'text_summary_or_trimmed'), 'http://schema.org/text', array('value' => $formatted_value));
     // Tests the trimmed formatter.
-    $this->assertFormatterRdfa(array('type'=>'text_trimmed'), 'http://schema.org/text', array('value' => $formatted_value));
+    $this->assertFormatterRdfa(array('type' => 'text_trimmed'), 'http://schema.org/text', array('value' => $formatted_value));
   }
 }

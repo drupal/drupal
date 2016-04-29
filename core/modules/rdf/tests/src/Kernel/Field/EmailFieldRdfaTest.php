@@ -43,8 +43,8 @@ class EmailFieldRdfaTest extends FieldRdfaTestBase {
    */
   public function testAllFormatters() {
     // Test the plain formatter.
-    $this->assertFormatterRdfa(array('type'=>'string'), 'http://schema.org/email', array('value' => $this->testValue));
+    $this->assertFormatterRdfa(array('type' => 'string'), 'http://schema.org/email', array('value' => $this->testValue));
     // Test the mailto formatter.
-    $this->assertFormatterRdfa(array('type'=>'email_mailto'), 'http://schema.org/email', array('value' => $this->testValue));
+    $this->assertFormatterRdfa(array('type' => 'email_mailto'), 'http://schema.org/email', array('value' => $this->testValue));
   }
 }

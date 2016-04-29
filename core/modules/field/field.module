@@ -213,7 +213,7 @@ function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundl
 function field_entity_bundle_delete($entity_type_id, $bundle) {
   $storage = \Drupal::entityManager()->getStorage('field_config');
   // Get the fields on the bundle.
-  $fields =  $storage->loadByProperties(['entity_type' => $entity_type_id, 'bundle' => $bundle]);
+  $fields = $storage->loadByProperties(['entity_type' => $entity_type_id, 'bundle' => $bundle]);
   // This deletes the data for the field as well as the field themselves. This
   // function actually just marks the data and fields as deleted, leaving the
   // garbage collection for a separate process, because it is not always

@@ -50,7 +50,7 @@ class FileStorage implements PhpStorageInterface {
     $path = $this->getFullPath($name);
     $directory = dirname($path);
     if ($this->ensureDirectory($directory)) {
-      $htaccess_path =  $directory . '/.htaccess';
+      $htaccess_path = $directory . '/.htaccess';
       if (!file_exists($htaccess_path) && file_put_contents($htaccess_path, static::htaccessLines())) {
         @chmod($htaccess_path, 0444);
       }
@@ -126,7 +126,7 @@ EOF;
    */
   protected function ensureDirectory($directory, $mode = 0777) {
     if ($this->createDirectory($directory, $mode)) {
-      $htaccess_path =  $directory . '/.htaccess';
+      $htaccess_path = $directory . '/.htaccess';
       if (!file_exists($htaccess_path) && file_put_contents($htaccess_path, static::htaccessLines())) {
         @chmod($htaccess_path, 0444);
       }

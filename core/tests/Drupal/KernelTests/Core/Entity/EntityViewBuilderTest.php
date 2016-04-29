@@ -185,7 +185,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
 
     // Create and build a test entity.
     $entity_test = $this->createTestEntity('entity_test');
-    $view =  $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
+    $view = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
     $renderer->renderRoot($view);
 
     // Check that the weight is respected.

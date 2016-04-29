@@ -147,7 +147,7 @@ class NodeViewBuilder extends EntityViewBuilder {
     parent::alterBuild($build, $entity, $display, $view_mode);
     if ($entity->id()) {
       $build['#contextual_links']['node'] = array(
-        'route_parameters' =>array('node' => $entity->id()),
+        'route_parameters' => array('node' => $entity->id()),
         'metadata' => array('changed' => $entity->getChangedTime()),
       );
     }

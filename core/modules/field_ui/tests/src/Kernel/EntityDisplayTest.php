@@ -202,7 +202,7 @@ class EntityDisplayTest extends KernelTestBase {
     $display->setComponent($field_name);
     $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_storage->getType());
     $default_formatter = $field_type_info['default_formatter'];
-    $formatter_settings =  \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($default_formatter);
+    $formatter_settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($default_formatter);
     $expected = array(
       'weight' => -4,
       'label' => 'above',
@@ -249,7 +249,7 @@ class EntityDisplayTest extends KernelTestBase {
     ));
 
     // Check that default options are correctly filled in.
-    $formatter_settings =  \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings('text_default');
+    $formatter_settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings('text_default');
     $expected = array(
       'test_no_display' => NULL,
       'test_display_configurable' => array(
@@ -337,7 +337,7 @@ class EntityDisplayTest extends KernelTestBase {
     $field->save();
 
     // Create default and teaser entity display.
-    EntityViewMode::create(array('id' =>  'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
+    EntityViewMode::create(array('id' => 'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
     EntityViewDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

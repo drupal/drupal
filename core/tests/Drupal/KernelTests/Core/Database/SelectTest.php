@@ -133,7 +133,7 @@ class SelectTest extends DatabaseTestBase {
     // Ensure that we got the right record.
     $record = $result->fetch();
     $this->assertEqual($record->$name_field, 'George', 'Fetched name is correct.');
-    $this->assertEqual($record->$age_field, 27*2, 'Fetched age expression is correct.');
+    $this->assertEqual($record->$age_field, 27 * 2, 'Fetched age expression is correct.');
   }
 
   /**
@@ -154,8 +154,8 @@ class SelectTest extends DatabaseTestBase {
     // Ensure that we got the right record.
     $record = $result->fetch();
     $this->assertEqual($record->$name_field, 'George', 'Fetched name is correct.');
-    $this->assertEqual($record->$age_double_field, 27*2, 'Fetched double age expression is correct.');
-    $this->assertEqual($record->$age_triple_field, 27*3, 'Fetched triple age expression is correct.');
+    $this->assertEqual($record->$age_double_field, 27 * 2, 'Fetched double age expression is correct.');
+    $this->assertEqual($record->$age_triple_field, 27 * 3, 'Fetched triple age expression is correct.');
   }
 
   /**

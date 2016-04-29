@@ -52,7 +52,7 @@ class DatabaseTestForm extends FormBase {
       $options[$account->id()] = array(
         'title' => array('data' => array('#title' => $account->getUsername())),
         'username' => $account->getUsername(),
-        'status' =>  $account->isActive() ? t('active') : t('blocked'),
+        'status' => $account->isActive() ? t('active') : t('blocked'),
       );
     }
 

@@ -230,7 +230,7 @@ class ModuleTest extends ViewsKernelTestBase {
     $plugins = Views::fetchPluginNames('style');
     $definitions = $this->container->get('plugin.manager.views.style')->getDefinitions();
     $expected = array();
-    foreach ($definitions as $id =>$definition) {
+    foreach ($definitions as $id => $definition) {
       $expected[$id] = $definition['title'];
     }
     asort($expected);

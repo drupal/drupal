@@ -344,7 +344,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $message = 'The new_bundle_field_shape column is not nullable.';
     $values = array(
       'bundle' => $entity->bundle(),
-      'deleted'=> 0,
+      'deleted' => 0,
       'entity_id' => $entity->id(),
       'revision_id' => $entity->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,

@@ -125,7 +125,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     ])->save();
 
     // Create 12 entities to ensure that the purging works as expected.
-    for ($i=0; $i < 12; $i++) {
+    for ($i = 0; $i < 12; $i++) {
       $entity = EntityTest::create();
       $value = '+0123456789';
       $entity->field_test = $value;
