@@ -149,11 +149,11 @@ class UserAdminLanguageTest extends WebTestBase {
   /**
    * Sets the User interface negotiation detection method.
    *
-   * @param bool $admin_first
-   *   Whether the admin negotiation should be first.
-   *
    * Enables the "Account preference for administration pages" language
    * detection method for the User interface language negotiation type.
+   *
+   * @param bool $admin_first
+   *   Whether the admin negotiation should be first.
    */
   function setLanguageNegotiation($admin_first = FALSE) {
     $edit = array(
