@@ -236,13 +236,13 @@ class CssOptimizer implements AssetOptimizerInterface {
   /**
    * Prefixes all paths within a CSS file for processFile().
    *
-   * @param array $matches
-   *   An array of matches by a preg_replace_callback() call that scans for
-   *   url() references in CSS files, except for external or absolute ones.
-   *
    * Note: the only reason this method is public is so color.module can call it;
    * it is not on the AssetOptimizerInterface, so future refactorings can make
    * it protected.
+   *
+   * @param array $matches
+   *   An array of matches by a preg_replace_callback() call that scans for
+   *   url() references in CSS files, except for external or absolute ones.
    *
    * @return string
    *   The file path.

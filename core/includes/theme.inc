@@ -580,6 +580,15 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *
  * Default template: links.html.twig.
  *
+ * Unfortunately links templates duplicate the "active" class handling of l()
+ * and LinkGenerator::generate() because it needs to be able to set the "active"
+ * class not on the links themselves ("a" tags), but on the list items ("li"
+ * tags) that contain the links. This is necessary for CSS to be able to style
+ * list items differently when the link is active, since CSS does not yet allow
+ * one to style list items only if it contains a certain element with a certain
+ * class. I.e. we cannot yet convert this jQuery selector to a CSS selector:
+ * jQuery('li:has("a.is-active")')
+ *
  * @param array $variables
  *   An associative array containing:
  *   - links: An array of links to be themed. Each link should be itself an
@@ -621,15 +630,6 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *     navigate to or skip the links. See
  *     http://juicystudio.com/article/screen-readers-display-none.php and
  *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
- *
- * Unfortunately links templates duplicate the "active" class handling of l()
- * and LinkGenerator::generate() because it needs to be able to set the "active"
- * class not on the links themselves ("a" tags), but on the list items ("li"
- * tags) that contain the links. This is necessary for CSS to be able to style
- * list items differently when the link is active, since CSS does not yet allow
- * one to style list items only if it contains a certain element with a certain
- * class. I.e. we cannot yet convert this jQuery selector to a CSS selector:
- *   jQuery('li:has("a.is-active")')
  *
  * @see \Drupal\Core\Utility\LinkGenerator
  * @see \Drupal\Core\Utility\LinkGenerator::generate()

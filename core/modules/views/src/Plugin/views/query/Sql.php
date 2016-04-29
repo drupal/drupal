@@ -789,6 +789,17 @@ class Sql extends QueryPluginBase {
    * ensuring that all fields are fully qualified (TABLE.FIELD) and that
    * the table already exists in the query.
    *
+   * The $field, $value and $operator arguments can also be passed in with a
+   * single DatabaseCondition object, like this:
+   * @code
+   * $this->query->addWhere(
+   *   $this->options['group'],
+   *   db_or()
+   *     ->condition($field, $value, 'NOT IN')
+   *     ->condition($field, $value, 'IS NULL')
+   * );
+   * @endcode
+   *
    * @param $group
    *   The WHERE group to add these to; groups are used to create AND/OR
    *   sections. Groups cannot be nested. Use 0 as the default group.
@@ -803,17 +814,6 @@ class Sql extends QueryPluginBase {
    *   The comparison operator, such as =, <, or >=. It also accepts more
    *   complex options such as IN, LIKE, LIKE BINARY, or BETWEEN. Defaults to =.
    *   If $field is a string you have to use 'formula' here.
-   *
-   * The $field, $value and $operator arguments can also be passed in with a
-   * single DatabaseCondition object, like this:
-   * @code
-   *   $this->query->addWhere(
-   *     $this->options['group'],
-   *     db_or()
-   *       ->condition($field, $value, 'NOT IN')
-   *       ->condition($field, $value, 'IS NULL')
-   *   );
-   * @endcode
    *
    * @see \Drupal\Core\Database\Query\ConditionInterface::condition()
    * @see \Drupal\Core\Database\Query\Condition

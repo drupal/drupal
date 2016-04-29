@@ -228,7 +228,10 @@ class Url {
    *   that are known not to be handled by the Drupal routing system (such as
    *   static files), use base: for the scheme to get a link relative to the
    *   Drupal base path (like the <base> HTML element). For a link to an entity
-   *   you may use entity:{entity_type}/{entity_id} URIs.
+   *   you may use entity:{entity_type}/{entity_id} URIs. The internal: scheme
+   *   should be avoided except when processing actual user input that may or
+   *   may not correspond to a Drupal route. Normally use Url::fromRoute() for
+   *   code linking to any any Drupal page.
    * @param array $options
    *   (optional) An associative array of additional URL options, with the
    *   following elements:
@@ -249,14 +252,9 @@ class Url {
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
    *
-   * Note: the internal: scheme should be avoided except when processing actual
-   * user input that may or may not correspond to a Drupal route. Normally use
-   * Url::fromRoute() for code linking to any any Drupal page.
-   *
-   * You can call access() on the returned object to do access checking.
-   *
    * @return \Drupal\Core\Url
-   *   A new Url object with properties depending on the URI scheme.
+   *   A new Url object with properties depending on the URI scheme. Call the
+   *   access() method on this to do access checking.
    *
    * @throws \InvalidArgumentException
    *   Thrown when the passed in path has no scheme.

@@ -320,7 +320,7 @@ class Block extends DisplayPluginBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * * @see \Drupal\views\Plugin\Block\ViewsBlock::blockSubmit()
+   * @see \Drupal\views\Plugin\Block\ViewsBlock::blockSubmit()
    */
   public function blockSubmit(ViewsBlock $block, $form, FormStateInterface $form_state) {
     if ($items_per_page = $form_state->getValue(array('override', 'items_per_page'))) {

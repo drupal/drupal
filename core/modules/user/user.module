@@ -447,12 +447,12 @@ function user_template_preprocess_default_variables_alter(&$variables) {
  *
  * Default template: username.html.twig.
  *
+ * Modules that make any changes to variables like 'name' or 'extra' must ensure
+ * that the final string is safe.
+ *
  * @param array $variables
  *   An associative array containing:
  *   - account: The user account (\Drupal\Core\Session\AccountInterface).
- *
- * Modules that make any changes to variables like 'name' or 'extra' must ensure
- * that the final string is safe.
  */
 function template_preprocess_username(&$variables) {
   $account = $variables['account'] ?: new AnonymousUserSession();

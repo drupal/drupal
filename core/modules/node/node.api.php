@@ -208,14 +208,14 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
  *
  * A module may deny all access to a node by setting $grants to an empty array.
  *
+ * The preferred use of this hook is in a module that bridges multiple node
+ * access modules with a configurable behavior, as shown in the example with the
+ * 'is_preview' field.
+ *
  * @param array $grants
  *   The $grants array returned by hook_node_access_records().
  * @param \Drupal\node\NodeInterface $node
  *   The node for which the grants were acquired.
- *
- * The preferred use of this hook is in a module that bridges multiple node
- * access modules with a configurable behavior, as shown in the example with the
- * 'is_preview' field.
  *
  * @see hook_node_access_records()
  * @see hook_node_grants()
