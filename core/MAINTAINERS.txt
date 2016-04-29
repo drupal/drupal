@@ -314,6 +314,7 @@ Database Logging module
 - Khalid Baheyeldin 'kbahey' https://www.drupal.org/u/kbahey
 
 DateTime module
+- Jonathan Hedstrom 'jhedstrom' https://www.drupal.org/u/jhedstrom
 - Matthew Donadio 'mpdonadio' https://www.drupal.org/u/mpdonadio
 
 Dynamic Page Cache module
