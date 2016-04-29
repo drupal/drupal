@@ -293,7 +293,7 @@ class Page extends PathPluginBase {
           '#title' => $this->t('Show as expanded'),
           '#type' => 'checkbox',
           '#default_value' => !empty($menu['expanded']),
-          '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded. '),
+          '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded.'),
         ];
 
         // Only display the parent selector if Menu UI module is enabled.

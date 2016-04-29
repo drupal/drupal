@@ -45,7 +45,11 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
    */
   public function providerTestMarkupInterfaceEmpty() {
     return [
+      // @codingStandardsIgnoreStart
+      // The first argument to \Drupal\Core\StringTranslation\TranslatableMarkup
+      // is not supposed to be an empty string.
       'empty TranslatableMarkup' => ['', new TranslatableMarkup('')],
+      // @codingStandardsIgnoreEnd
       'non-empty TranslatableMarkup' => ['<span>test</span>', new TranslatableMarkup('test')],
       'empty FormattableMarkup' => ['', new FormattableMarkup('', ['@foo' => 'bar'])],
       'non-empty FormattableMarkup' => ['<span>bar</span>', new FormattableMarkup('@foo', ['@foo' => 'bar'])],

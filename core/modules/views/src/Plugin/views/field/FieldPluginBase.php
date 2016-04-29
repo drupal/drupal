@@ -301,7 +301,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if (!isset($elements)) {
       // @todo Add possible html5 elements.
       $elements = array(
-        '' => $this->t(' - Use default -'),
+        '' => $this->t('- Use default -'),
         '0' => $this->t('- None -')
       );
       $elements += \Drupal::config('views.settings')->get('field_rewrite_elements');
