@@ -894,6 +894,9 @@ function hook_updater_info_alter(&$updaters) {
  * Module dependencies do not belong to these installation requirements,
  * but should be defined in the module's .info.yml file.
  *
+ * During installation (when $phase == 'install'), if you need to load a class
+ * from your module, you'll need to include the class file directly.
+ *
  * The 'runtime' phase is not limited to pure installation requirements
  * but can also be used for more general status information like maintenance
  * tasks and security issues.
