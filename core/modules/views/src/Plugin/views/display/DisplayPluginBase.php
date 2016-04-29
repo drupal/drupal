@@ -2666,11 +2666,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    *   TRUE if the base table is of a translatable entity type, FALSE otherwise.
    */
   protected function isBaseTableTranslatable() {
-    $view_base_table = $this->view->storage->get('base_table');
-    $views_data = Views::viewsData()->get($view_base_table);
-    if (!empty($views_data['table']['entity type'])) {
-      $entity_type_id = $views_data['table']['entity type'];
-      return \Drupal::entityManager()->getDefinition($entity_type_id)->isTranslatable();
+    if ($entity_type = $this->view->getBaseEntityType()) {
+      return $entity_type->isTranslatable();
     }
     return FALSE;
   }

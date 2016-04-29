@@ -1,0 +1,47 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_test
+    - rest
+id: test_serializer_display_entity_translated
+label: 'Test serialize translated entity rows'
+module: rest
+description: ''
+tag: ''
+base_table: entity_test_mul_property_data
+base_field: id
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: null
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: tag
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      style:
+        type: serializer
+      row:
+        type: data_entity
+      title: 'Test serialize translated entity rows'
+      rendering_language: '***LANGUAGE_entity_translation***'
+      arguments: {  }
+  rest_export_1:
+    display_plugin: rest_export
+    id: rest_export_1
+    display_title: serializer
+    position: null
+    display_options:
+      defaults:
+        access: false
+      path: test/serialize/translated_entity
