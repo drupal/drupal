@@ -6,7 +6,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @group Plugin
- * @coversDefaultClass Drupal\Component\Plugin\Discovery\DiscoveryTrait
+ * @coversDefaultClass \Drupal\Component\Plugin\Discovery\DiscoveryTrait
  */
 class DiscoveryTraitTest extends UnitTestCase {
 
@@ -58,9 +58,9 @@ class DiscoveryTraitTest extends UnitTestCase {
 
   /**
    * @covers ::doGetDefinition
-   * @expectedException Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @expectedException \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @dataProvider providerDoGetDefinitionException
-   * @uses Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @uses \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function testDoGetDefinitionException($expected, $definitions, $plugin_id) {
     // Mock the trait.
@@ -96,9 +96,9 @@ class DiscoveryTraitTest extends UnitTestCase {
 
   /**
    * @covers ::getDefinition
-   * @expectedException Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @expectedException \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @dataProvider providerDoGetDefinitionException
-   * @uses Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @uses \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function testGetDefinitionException($expected, $definitions, $plugin_id) {
     // Since getDefinition is a wrapper around doGetDefinition(), we can re-use
