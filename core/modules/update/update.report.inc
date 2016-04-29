@@ -43,7 +43,7 @@ function template_preprocess_update_report(&$variables) {
 
   foreach ($data as $project) {
     $project_status = array(
-      '#theme' =>  'update_project_status',
+      '#theme' => 'update_project_status',
       '#project' => $project,
     );
 

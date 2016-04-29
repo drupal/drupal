@@ -126,7 +126,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     ));
 
     // Check that default options are correctly filled in.
-    $formatter_settings =  \Drupal::service('plugin.manager.field.widget')->getDefaultSettings('text_textfield');
+    $formatter_settings = \Drupal::service('plugin.manager.field.widget')->getDefaultSettings('text_textfield');
     $expected = array(
       'test_no_display' => NULL,
       'test_display_configurable' => array(
@@ -193,7 +193,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     $field->save();
 
     // Create default and compact entity display.
-    EntityFormMode::create(array('id' =>  'entity_test.compact', 'targetEntityType' => 'entity_test'))->save();
+    EntityFormMode::create(array('id' => 'entity_test.compact', 'targetEntityType' => 'entity_test'))->save();
     EntityFormDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

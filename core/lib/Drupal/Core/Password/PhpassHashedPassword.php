@@ -187,7 +187,7 @@ class PhpassHashedPassword implements PasswordInterface {
     } while (--$count);
 
     $len = strlen($hash);
-    $output =  $setting . $this->base64Encode($hash, $len);
+    $output = $setting . $this->base64Encode($hash, $len);
     // $this->base64Encode() of a 16 byte MD5 will always be 22 characters.
     // $this->base64Encode() of a 64 byte sha512 will always be 86 characters.
     $expected = 12 + ceil((8 * $len) / 6);

@@ -427,7 +427,7 @@ class SchemaTest extends KernelTestBase {
     // Now set up columns for the other types.
     $types = array('int', 'float', 'numeric');
     foreach ($types as $type) {
-      $column_spec = array('type' => $type, 'unsigned'=> TRUE);
+      $column_spec = array('type' => $type, 'unsigned' => TRUE);
       if ($type == 'numeric') {
         $column_spec += array('precision' => 10, 'scale' => 0);
       }

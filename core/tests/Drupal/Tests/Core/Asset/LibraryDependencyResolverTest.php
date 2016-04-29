@@ -61,7 +61,7 @@ class LibraryDependencyResolverTest extends UnitTestCase {
       ->method('getLibrariesByExtension')
       ->with('test')
       ->will($this->returnValue($this->libraryData));
-    $this->libraryDependencyResolver= new LibraryDependencyResolver($this->libraryDiscovery);
+    $this->libraryDependencyResolver = new LibraryDependencyResolver($this->libraryDiscovery);
   }
 
 

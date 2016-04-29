@@ -1265,7 +1265,7 @@ function template_preprocess_html(&$variables) {
   // Add a variable for the root path. This can be used to create a class and
   // theme the page depending on the current path (e.g. node, admin, user) as
   // well as more specific data like path-frontpage.
-  $is_front_page =  \Drupal::service('path.matcher')->isFrontPage();
+  $is_front_page = \Drupal::service('path.matcher')->isFrontPage();
 
   if ($is_front_page) {
     $variables['root_path'] = FALSE;

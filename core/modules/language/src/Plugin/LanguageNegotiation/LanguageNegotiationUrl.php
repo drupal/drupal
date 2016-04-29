@@ -144,7 +144,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
         }
       }
     }
-    elseif ($config['source'] ==  LanguageNegotiationUrl::CONFIG_DOMAIN) {
+    elseif ($config['source'] == LanguageNegotiationUrl::CONFIG_DOMAIN) {
       if (is_object($options['language']) && !empty($config['domains'][$options['language']->getId()])) {
 
         // Save the original base URL. If it contains a port, we need to

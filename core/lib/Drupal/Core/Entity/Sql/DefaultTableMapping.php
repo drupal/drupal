@@ -201,7 +201,7 @@ class DefaultTableMapping implements TableMappingInterface {
     $field_name = $storage_definition->getName();
 
     if ($this->allowsSharedTableStorage($storage_definition)) {
-      $column_name = count($storage_definition->getColumns()) == 1 ? $field_name :  $field_name . '__' . $property_name;
+      $column_name = count($storage_definition->getColumns()) == 1 ? $field_name : $field_name . '__' . $property_name;
     }
     elseif ($this->requiresDedicatedTableStorage($storage_definition)) {
       $column_name = !in_array($property_name, $this->getReservedColumns()) ? $field_name . '_' . $property_name : $property_name;

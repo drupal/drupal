@@ -74,7 +74,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $this->assertIdentical($this->storage->countFieldData($field_storage), 0, 'There are 0 entities with field data.');
 
     // Create 12 entities to ensure that the purging works as expected.
-    for ($i=0; $i < 12; $i++) {
+    for ($i = 0; $i < 12; $i++) {
       $entity = EntityTest::create();
       $entity->field_int[] = mt_rand(1, 99);
       $entity->field_int[] = mt_rand(1, 99);
@@ -135,7 +135,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
 
     $this->assertIdentical($this->fieldTestData->field_storage_2->hasData(), TRUE, 'There are entities with field data.');
 
-    $storage =  $this->container->get('entity.manager')->getStorage($entity_type);
+    $storage = $this->container->get('entity.manager')->getStorage($entity_type);
     $entity = $storage->loadRevision($first_revision);
     $this->assertEqual(count($entity->{$this->fieldTestData->field_name_2}), $cardinality, format_string('Revision %revision_id: expected number of values.', array('%revision_id' => $first_revision)));
   }

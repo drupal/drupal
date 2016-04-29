@@ -116,7 +116,7 @@ class ExposedFormTest extends ViewTestBase {
     $identifier = 'bad identifier';
     $view->displayHandlers->get('default')->overrideOption('filters', array(
       'type' => [
-        'exposed' =>  TRUE,
+        'exposed' => TRUE,
         'field' => 'type',
         'id' => 'type',
         'table' => 'node_field_data',

@@ -17,7 +17,7 @@ function node_views_query_substitutions(ViewExecutable $view) {
   return array(
     '***ADMINISTER_NODES***' => intval($account->hasPermission('administer nodes')),
     '***VIEW_OWN_UNPUBLISHED_NODES***' => intval($account->hasPermission('view own unpublished content')),
-    '***BYPASS_NODE_ACCESS***' =>  intval($account->hasPermission('bypass node access')),
+    '***BYPASS_NODE_ACCESS***' => intval($account->hasPermission('bypass node access')),
   );
 }
 

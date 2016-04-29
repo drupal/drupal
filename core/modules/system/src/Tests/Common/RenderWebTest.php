@@ -31,7 +31,7 @@ class RenderWebTest extends WebTestBase {
     $this->assertTitle('Test active link class | Drupal');
     $this->assertCacheContext('url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT);
 
-    $this->drupalGet('common-test/type-link-active-class', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT =>  'json']]);
+    $this->drupalGet('common-test/type-link-active-class', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'json']]);
     $this->assertIdentical('application/json', $this->drupalGetHeader('Content-Type'));
     $json = Json::decode($this->getRawContent());
     $this->assertEqual(['content', 'title'], array_keys($json));
@@ -127,7 +127,7 @@ class RenderWebTest extends WebTestBase {
       ),
     );
     $this->assertRenderedElement($element, '//a[@href=:href and contains(., :title)]', array(
-      ':href' =>  URL::fromRoute('common_test.destination')->setAbsolute()->toString(),
+      ':href' => URL::fromRoute('common_test.destination')->setAbsolute()->toString(),
       ':title' => $element['#title'],
     ));
 

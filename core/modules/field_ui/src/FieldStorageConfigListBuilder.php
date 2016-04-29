@@ -94,7 +94,7 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $field_storage) {
     if ($field_storage->isLocked()) {
       $row['class'] = array('menu-disabled');
-      $row['data']['id'] =  $this->t('@field_name (Locked)', array('@field_name' => $field_storage->getName()));
+      $row['data']['id'] = $this->t('@field_name (Locked)', array('@field_name' => $field_storage->getName()));
     }
     else {
       $row['data']['id'] = $field_storage->getName();

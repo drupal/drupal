@@ -195,7 +195,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
     // Get the labels. This is not cacheable due to translation.
     $group_labels = array();
     foreach ($groups as $group) {
-      $group_labels[$group] =  $this->getGroupLabel($group);
+      $group_labels[$group] = $this->getGroupLabel($group);
     }
     asort($group_labels);
     return $group_labels;

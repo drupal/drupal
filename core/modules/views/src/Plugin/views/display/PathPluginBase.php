@@ -304,7 +304,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $path = implode('/', $bits);
     $view_id = $this->view->storage->id();
     $display_id = $this->display['id'];
-    $view_id_display =  "{$view_id}.{$display_id}";
+    $view_id_display = "{$view_id}.{$display_id}";
     $menu_link_id = 'views.' . str_replace('/', '.', $view_id_display);
 
     if ($path) {

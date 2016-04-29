@@ -51,7 +51,7 @@ function simpletest_requirements($phase) {
   }
 
   $site_directory = 'sites/simpletest';
-  if (!drupal_verify_install_file(\Drupal::root() . '/' . $site_directory, FILE_EXIST|FILE_READABLE|FILE_WRITABLE|FILE_EXECUTABLE, 'dir')) {
+  if (!drupal_verify_install_file(\Drupal::root() . '/' . $site_directory, FILE_EXIST | FILE_READABLE | FILE_WRITABLE | FILE_EXECUTABLE, 'dir')) {
     $requirements['simpletest_site_directory'] = array(
       'title' => t('Simpletest site directory'),
       'value' => is_dir(\Drupal::root() . '/' . $site_directory) ? t('Not writable') : t('Missing'),

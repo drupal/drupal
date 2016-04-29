@@ -56,7 +56,7 @@ class AccessDeniedTest extends WebTestBase {
       'site_403' => 'user/' . $this->adminUser->id(),
     ];
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
-    $this->assertRaw(SafeMarkup::format("The path '%path' has to start with a slash.", ['%path' =>  $edit['site_403']]));
+    $this->assertRaw(SafeMarkup::format("The path '%path' has to start with a slash.", ['%path' => $edit['site_403']]));
 
     // Use a custom 403 page.
     $edit = [

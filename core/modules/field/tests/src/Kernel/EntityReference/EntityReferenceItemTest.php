@@ -229,7 +229,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEqual($vocabulary->label(), $new_name);
 
     // Make sure the computed term reflects updates to the term id.
-    $vocabulary2 =  $vocabulary = Vocabulary::create([
+    $vocabulary2 = $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,

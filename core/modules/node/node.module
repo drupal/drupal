@@ -742,7 +742,7 @@ function node_get_recent($number = 10) {
     // If the user is able to view their own unpublished nodes, allow them
     // to see these in addition to published nodes. Check that they actually
     // have some unpublished nodes to view before adding the condition.
-    $access_query =  \Drupal::entityQuery('node')
+    $access_query = \Drupal::entityQuery('node')
       ->condition('uid', $account->id())
       ->condition('status', NODE_NOT_PUBLISHED);
     if ($account->hasPermission('view own unpublished content') && ($own_unpublished = $access_query->execute())) {

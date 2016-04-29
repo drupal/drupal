@@ -161,7 +161,7 @@ class TermTest extends TaxonomyTestBase {
     for ($x = 1; $x <= 17; $x++) {
       $this->assertNoText($terms_array[$x]->getName(), $terms_array[$x]->getName() . ' not found on Page 3');
     }
-    for ($x =18; $x <= 25; $x++) {
+    for ($x = 18; $x <= 25; $x++) {
       $this->assertText($terms_array[$x]->getName(), $terms_array[$x]->getName() . ' found on Page 3');
     }
   }

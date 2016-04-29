@@ -94,7 +94,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
 
     // Empty result (no entities yet).
     $this->pass('Test without entities');
-    $base_tags =  ['config:views.view.entity_test_fields', 'entity_test_list'];
+    $base_tags = ['config:views.view.entity_test_fields', 'entity_test_list'];
     $this->assertViewsCacheTags($view, $base_tags, $do_assert_views_caches, $base_tags);
     $this->assertViewsCacheTagsFromStaticRenderArray($view, $base_tags, $do_assert_views_caches);
 

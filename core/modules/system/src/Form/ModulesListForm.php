@@ -216,7 +216,7 @@ class ModulesListForm extends FormBase {
         '#type' => 'link',
         '#title' => $this->t('Help'),
         '#url' => Url::fromRoute('help.page', ['name' => $module->getName()]),
-        '#options' => array('attributes' => array('class' =>  array('module-link', 'module-link-help'), 'title' => $this->t('Help'))),
+        '#options' => array('attributes' => array('class' => array('module-link', 'module-link-help'), 'title' => $this->t('Help'))),
       );
     }
 

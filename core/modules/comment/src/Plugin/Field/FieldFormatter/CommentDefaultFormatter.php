@@ -174,7 +174,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
             // that page, we need to pass that subrequest route to our pager to
             // keep the pager working.
             $build['pager']['#route_name'] = $this->routeMatch->getRouteObject();
-            $build['pager']['#route_parameters'] =  $this->routeMatch->getRawParameters()->all();
+            $build['pager']['#route_parameters'] = $this->routeMatch->getRawParameters()->all();
             if ($this->getSetting('pager_id')) {
               $build['pager']['#element'] = $this->getSetting('pager_id');
             }

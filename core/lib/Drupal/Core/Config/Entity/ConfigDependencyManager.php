@@ -165,7 +165,7 @@ class ConfigDependencyManager {
       // If checking content, module, or theme dependencies, discover which
       // entities are dependent on the entities that have a direct dependency.
       foreach ($dependent_entities as $entity) {
-        $entities_to_check[] =  $entity->getConfigDependencyName();
+        $entities_to_check[] = $entity->getConfigDependencyName();
       }
     }
     $dependencies = array_merge($this->createGraphConfigEntityDependencies($entities_to_check), $dependent_entities);

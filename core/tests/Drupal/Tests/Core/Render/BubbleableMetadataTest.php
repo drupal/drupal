@@ -401,12 +401,12 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @return array
    */
   public function providerTestMergeAttachmentsFeedMerging() {
-    $feed_a =         [
+    $feed_a = [
       'aggregator/rss',
       'Feed title',
     ];
 
-    $feed_b =         [
+    $feed_b = [
       'taxonomy/term/1/feed',
       'RSS - foo',
     ];
@@ -533,12 +533,12 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @return array
    */
   public function providerTestMergeAttachmentsHtmlHeadLinkMerging() {
-    $rel =         [
+    $rel = [
       'rel' => 'rel',
       'href' => 'http://rel.example.com',
     ];
 
-    $shortlink =         [
+    $shortlink = [
       'rel' => 'shortlink',
       'href' => 'http://shortlink.example.com',
     ];

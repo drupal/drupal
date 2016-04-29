@@ -70,7 +70,7 @@ class FrontPageTest extends WebTestBase {
     // Change the front page to a path without a starting slash.
     $edit = ['site_frontpage' => $this->nodePath];
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
-    $this->assertRaw(SafeMarkup::format("The path '%path' has to start with a slash.", ['%path' =>  $edit['site_frontpage']]));
+    $this->assertRaw(SafeMarkup::format("The path '%path' has to start with a slash.", ['%path' => $edit['site_frontpage']]));
 
     // Change the front page to a valid path.
     $edit['site_frontpage'] = '/' . $this->nodePath;

@@ -334,7 +334,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       $driver = $reflector->newInstanceArgs($this->minkDefaultDriverArgs);
     }
     else {
-      $driver =  new $this->minkDefaultDriverClass();
+      $driver = new $this->minkDefaultDriverClass();
     }
     return $driver;
   }

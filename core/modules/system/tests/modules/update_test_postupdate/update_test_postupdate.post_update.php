@@ -64,6 +64,6 @@ function update_test_postupdate_post_update_test_batch(&$sandbox = NULL) {
   $execution[] = __FUNCTION__ . '-' . $sandbox['current_step'];
   \Drupal::state()->set('post_update_test_execution', $execution);
 
-  $sandbox['#finished'] = $sandbox['current_step'] /  $sandbox['steps'];
+  $sandbox['#finished'] = $sandbox['current_step'] / $sandbox['steps'];
   return 'Test post update batches';
 }

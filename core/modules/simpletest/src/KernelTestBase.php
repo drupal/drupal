@@ -519,7 +519,7 @@ EOD;
 
     // Write directly to active storage to avoid early instantiation of
     // the event dispatcher which can prevent modules from registering events.
-    $active_storage =  \Drupal::service('config.storage');
+    $active_storage = \Drupal::service('config.storage');
     $extensions = $active_storage->read('core.extension');
 
     foreach ($modules as $module) {

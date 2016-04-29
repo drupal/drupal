@@ -952,7 +952,7 @@ abstract class TestBase {
     }
 
     $message = '<hr />ID #' . $this->verboseId . ' (<a href="' . $this->verboseClassName . '-' . ($this->verboseId - 1) . '-' . $this->testId . '.html">Previous</a> | <a href="' . $this->verboseClassName . '-' . ($this->verboseId + 1) . '-' . $this->testId . '.html">Next</a>)<hr />' . $message;
-    $verbose_filename =  $this->verboseClassName . '-' . $this->verboseId . '-' . $this->testId . '.html';
+    $verbose_filename = $this->verboseClassName . '-' . $this->verboseId . '-' . $this->testId . '.html';
     if (file_put_contents($this->verboseDirectory . '/' . $verbose_filename, $message)) {
       $url = $this->verboseDirectoryUrl . '/' . $verbose_filename;
       // Not using \Drupal\Core\Utility\LinkGeneratorInterface::generate()

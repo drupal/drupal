@@ -212,7 +212,7 @@ class Tables implements TablesInterface {
           $entity_type = $this->entityManager->getDefinition($entity_type_id);
           $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
           // Add the new entity base table using the table and sql column.
-          $join_condition= '%alias.' . $entity_type->getKey('id') . " = $table.$sql_column";
+          $join_condition = '%alias.' . $entity_type->getKey('id') . " = $table.$sql_column";
           $base_table = $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
           $propertyDefinitions = array();
           $key++;

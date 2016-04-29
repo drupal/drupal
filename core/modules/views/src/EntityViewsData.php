@@ -496,7 +496,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         $views_field['title'] = $this->t('Translation language');
       }
       if ($table == $this->entityType->getBaseTable() || $table == $this->entityType->getRevisionTable()) {
-        $views_field['title'] =  $this->t('Original language');
+        $views_field['title'] = $this->t('Original language');
       }
     }
   }

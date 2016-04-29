@@ -123,7 +123,7 @@ class LinkFieldTest extends WebTestBase {
       //   https://www.drupal.org/node/2421941
       '<front>' => '&lt;front&gt;',
       '<front>#example' => '&lt;front&gt;#example',
-      '<front>?example=llama' =>'&lt;front&gt;?example=llama',
+      '<front>?example=llama' => '&lt;front&gt;?example=llama',
 
       // Query string and fragment.
       '?example=llama' => '?example=llama',

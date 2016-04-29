@@ -48,6 +48,6 @@ class DateTimeFieldRdfaTest extends FieldRdfaTestBase {
    * Tests the default formatter.
    */
   public function testDefaultFormatter() {
-    $this->assertFormatterRdfa(array('type'=>'datetime_default'), 'http://schema.org/dateCreated', array('value' => $this->testValue . 'Z', 'type' => 'literal', 'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime'));
+    $this->assertFormatterRdfa(array('type' => 'datetime_default'), 'http://schema.org/dateCreated', array('value' => $this->testValue . 'Z', 'type' => 'literal', 'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime'));
   }
 }

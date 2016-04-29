@@ -139,7 +139,7 @@ class Random {
    * @return string
    */
   public function word($length) {
-    mt_srand((double) microtime()*1000000);
+    mt_srand((double) microtime() * 1000000);
 
     $vowels = array("a", "e", "i", "o", "u");
     $cons = array("b", "c", "d", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "u", "v", "w", "tr",

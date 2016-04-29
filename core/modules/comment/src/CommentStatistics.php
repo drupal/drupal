@@ -66,7 +66,7 @@ class CommentStatistics implements CommentStatisticsInterface {
    */
   public function read($entities, $entity_type, $accurate = TRUE) {
     $options = $accurate ? array() : array('target' => 'replica');
-    $stats =  $this->database->select('comment_entity_statistics', 'ces', $options)
+    $stats = $this->database->select('comment_entity_statistics', 'ces', $options)
       ->fields('ces')
       ->condition('ces.entity_id', array_keys($entities), 'IN')
       ->condition('ces.entity_type', $entity_type)

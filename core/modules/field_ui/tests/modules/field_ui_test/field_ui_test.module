@@ -38,7 +38,7 @@ function field_ui_test_form_entity_view_display_edit_form_alter(&$form, FormStat
     'parent_wrapper' => array(
       'parent' => array(
         '#type' => 'select',
-        '#options' =>  array('indent' => 'Indent'),
+        '#options' => array('indent' => 'Indent'),
         '#empty_value' => '',
         '#default_value' => '',
         '#attributes' => array('class' => array('field-parent')),

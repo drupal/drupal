@@ -469,7 +469,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     if ($pct_memory > $threshold) {
       $this->message->display(
         $this->t('Memory usage is @usage (@pct% of limit @limit), reclaiming memory.',
-          array('@pct' => round($pct_memory*100),
+          array('@pct' => round($pct_memory * 100),
                 '@usage' => $this->formatSize($usage),
                 '@limit' => $this->formatSize($this->memoryLimit))),
         'warning');
@@ -480,7 +480,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       if ($pct_memory > (0.90 * $threshold)) {
         $this->message->display(
           $this->t('Memory usage is now @usage (@pct% of limit @limit), not enough reclaimed, starting new batch',
-            array('@pct' => round($pct_memory*100),
+            array('@pct' => round($pct_memory * 100),
                   '@usage' => $this->formatSize($usage),
                   '@limit' => $this->formatSize($this->memoryLimit))),
           'warning');
@@ -489,7 +489,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       else {
         $this->message->display(
           $this->t('Memory usage is now @usage (@pct% of limit @limit), reclaimed enough, continuing',
-            array('@pct' => round($pct_memory*100),
+            array('@pct' => round($pct_memory * 100),
                   '@usage' => $this->formatSize($usage),
                   '@limit' => $this->formatSize($this->memoryLimit))),
           'warning');
@@ -523,7 +523,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     drupal_static_reset();
 
     // Entity storage can blow up with caches so clear them out.
-    $manager =  \Drupal::entityManager();
+    $manager = \Drupal::entityManager();
     foreach ($manager->getDefinitions() as $id => $definition) {
       $manager->getStorage($id)->resetCache();
     }

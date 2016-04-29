@@ -182,7 +182,7 @@ class ModulesUninstallForm extends FormBase {
     $account = $this->currentUser()->id();
     // Store the values for 6 hours. This expiration time is also used in
     // the form cache.
-    $this->keyValueExpirable->setWithExpire($account, $uninstall, 6*60*60);
+    $this->keyValueExpirable->setWithExpire($account, $uninstall, 6 * 60 * 60);
 
     // Redirect to the confirm form.
     $form_state->setRedirect('system.modules_uninstall_confirm');

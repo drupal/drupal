@@ -72,7 +72,7 @@ class SelectProfileForm extends FormBase {
       $form['profile'][$profile_name]['#description'] = isset($profiles[$profile_name]['description']) ? $this->t($profiles[$profile_name]['description']) : '';
     }
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] =  array(
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Save and continue'),
       '#button_type' => 'primary',

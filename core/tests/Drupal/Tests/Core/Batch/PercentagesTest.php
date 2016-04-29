@@ -72,11 +72,11 @@ class PercentagesTest extends UnitTestCase {
       // but for the last pass through, when 500 out of 501 items have been
       // processed, we do not want to round up to 100%, since that would
       // erroneously indicate that the processing is complete.
-      array('total' => 1, 'current' => 100/501, '20'),
-      array('total' => 1, 'current' => 200/501, '40'),
-      array('total' => 1, 'current' => 300/501, '60'),
-      array('total' => 1, 'current' => 400/501, '80'),
-      array('total' => 1, 'current' => 500/501, '99.8'),
+      array('total' => 1, 'current' => 100 / 501, '20'),
+      array('total' => 1, 'current' => 200 / 501, '40'),
+      array('total' => 1, 'current' => 300 / 501, '60'),
+      array('total' => 1, 'current' => 400 / 501, '80'),
+      array('total' => 1, 'current' => 500 / 501, '99.8'),
     );
   }
 

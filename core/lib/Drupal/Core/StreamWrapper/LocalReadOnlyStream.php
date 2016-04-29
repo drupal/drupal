@@ -76,11 +76,11 @@ abstract class LocalReadOnlyStream extends LocalStream {
    */
   public function stream_lock($operation) {
     // Disallow exclusive lock or non-blocking lock requests
-    if (in_array($operation, array(LOCK_EX, LOCK_EX|LOCK_NB))) {
+    if (in_array($operation, array(LOCK_EX, LOCK_EX | LOCK_NB))) {
       trigger_error('stream_lock() exclusive lock operations not supported for read-only stream wrappers', E_USER_WARNING);
       return FALSE;
     }
-    if (in_array($operation, array(LOCK_SH, LOCK_UN, LOCK_SH|LOCK_NB))) {
+    if (in_array($operation, array(LOCK_SH, LOCK_UN, LOCK_SH | LOCK_NB))) {
       return flock($this->handle, $operation);
     }
 

@@ -25,7 +25,7 @@ db_insert('contact')->fields(array(
 ))
 ->values(array(
   'category' => 'Upgrade test',
-  'recipients'=> 'test1@example.com,test2@example.com',
+  'recipients' => 'test1@example.com,test2@example.com',
   'reply' => 'Test reply',
   'weight' => 1,
   'selected' => 1,

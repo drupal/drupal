@@ -22,7 +22,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Forum module lets you create threaded discussion forums with functionality similar to other message board systems. In a forum, users post topics and threads in nested hierarchies, allowing discussions to be categorized and grouped.') . '</p>';
-      $output .= '<p>' . t('The Forum module adds and uses a content type called <em>Forum topic</em>. For background information on content types, see the <a href=":node_help">Node module help page</a>.', array(':node_help'=>\Drupal::url('help.page', array('name' => 'node')))) . '</p>';
+      $output .= '<p>' . t('The Forum module adds and uses a content type called <em>Forum topic</em>. For background information on content types, see the <a href=":node_help">Node module help page</a>.', array(':node_help' => \Drupal::url('help.page', array('name' => 'node')))) . '</p>';
       $output .= '<p>' . t('A forum is represented by a hierarchical structure, consisting of:');
       $output .= '<ul>';
       $output .= '<li>' . t('<em>Forums</em> (for example, <em>Recipes for cooking vegetables</em>)') . '</li>';

@@ -163,7 +163,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $language = ConfigurableLanguage::load($langcode);
     $source_langcode = 'it';
     $edit = array('source_langcode[source]' => $source_langcode);
-    $entity_type_id =  $entity->getEntityTypeId();
+    $entity_type_id = $entity->getEntityTypeId();
     $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $default_langcode,

@@ -1032,7 +1032,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
       // Assign a decimal placeholder weight to preserve original array order.
       if (!isset($element[$key]['#weight'])) {
-        $element[$key]['#weight'] = $count/1000;
+        $element[$key]['#weight'] = $count / 1000;
       }
       else {
         // If one of the child elements has a weight then we will need to sort

@@ -17,7 +17,7 @@ function text_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.text':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Text module allows you to create short and long text fields with optional summaries. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":text_documentation">online documentation for the Text module</a>.', array(':field' => \Drupal::url('help.page', array('name' => 'field')), ':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? \Drupal::url('help.page', array('name' => 'field_ui')) :'#', ':text_documentation' => 'https://www.drupal.org/documentation/modules/text')) . '</p>';
+      $output .= '<p>' . t('The Text module allows you to create short and long text fields with optional summaries. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":text_documentation">online documentation for the Text module</a>.', array(':field' => \Drupal::url('help.page', array('name' => 'field')), ':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? \Drupal::url('help.page', array('name' => 'field_ui')) : '#', ':text_documentation' => 'https://www.drupal.org/documentation/modules/text')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing and displaying text fields') . '</dt>';

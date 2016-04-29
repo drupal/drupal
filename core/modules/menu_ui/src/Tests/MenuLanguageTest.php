@@ -48,7 +48,7 @@ class MenuLanguageTest extends MenuWebTestBase {
     $edit = array(
       'id' => $menu_name,
       'description' => '',
-      'label' =>  $label,
+      'label' => $label,
       'langcode' => 'aa',
     );
     $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));

@@ -58,7 +58,7 @@ class TermViewsData extends EntityViewsData {
         'relationship field' => 'tid',
         'outer field' => 'taxonomy_term_field_data.tid',
         'argument table' => 'taxonomy_term_field_data',
-        'argument field' =>  'tid',
+        'argument field' => 'tid',
         'base'   => 'node_field_data',
         'field'  => 'nid',
         'relationship' => 'node_field_data:term_node_tid'

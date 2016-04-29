@@ -75,7 +75,7 @@ class AggregatorTitleTest extends KernelTestBase {
     $this->assertNotContains($aggregator_feed->getUrl(), $result);
 
     // Verify aggregator item title with and without links.
-    $build = $aggregator_item->{$this->fieldName}->view(['type' => 'aggregator_title', 'settings' => ['display_as_link' =>TRUE]]);
+    $build = $aggregator_item->{$this->fieldName}->view(['type' => 'aggregator_title', 'settings' => ['display_as_link' => TRUE]]);
     $result = $this->render($build);
 
     $this->assertContains('test title', $result);

@@ -86,7 +86,7 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
           'description' => 'The Unix timestamp when the node was created.',
           'type' => 'int',
           'not null' => TRUE,
-          'default'=> 0,
+          'default' => 0,
         ),
       ),
       'primary key' => array('nid', 'tid'),

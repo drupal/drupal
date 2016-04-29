@@ -234,12 +234,12 @@ class DateFormatter implements DateFormatterInterface {
         switch ($value) {
           case 'y':
             $interval_output = $this->formatPlural($interval->y, '1 year', '@count years', array(), array('langcode' => $options['langcode']));
-            $max_age = min($max_age, 365*86400);
+            $max_age = min($max_age, 365 * 86400);
             break;
 
           case 'm':
             $interval_output = $this->formatPlural($interval->m, '1 month', '@count months', array(), array('langcode' => $options['langcode']));
-            $max_age = min($max_age, 30*86400);
+            $max_age = min($max_age, 30 * 86400);
             break;
 
           case 'd':
@@ -252,7 +252,7 @@ class DateFormatter implements DateFormatterInterface {
               $interval_output .= $this->formatPlural($weeks, '1 week', '@count weeks', array(), array('langcode' => $options['langcode']));
               $days -= $weeks * 7;
               $granularity--;
-              $max_age = min($max_age, 7*86400);
+              $max_age = min($max_age, 7 * 86400);
             }
 
             if ((!$output || $weeks > 0) && $granularity > 0 && $days > 0) {

@@ -44,7 +44,7 @@ class PageNotFoundTest extends WebTestBase {
       'site_404' => 'user/' . $this->adminUser->id(),
     ];
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
-    $this->assertRaw(SafeMarkup::format("The path '%path' has to start with a slash.", ['%path' =>  $edit['site_404']]));
+    $this->assertRaw(SafeMarkup::format("The path '%path' has to start with a slash.", ['%path' => $edit['site_404']]));
 
     // Use a custom 404 page.
     $edit = array(

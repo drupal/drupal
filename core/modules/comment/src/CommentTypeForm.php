@@ -164,7 +164,7 @@ class CommentTypeForm extends EntityForm {
     else {
       $this->commentManager->addBodyField($comment_type->id());
       drupal_set_message(t('Comment type %label has been added.', array('%label' => $comment_type->label())));
-      $this->logger->notice('Comment type %label has been added.', array('%label' => $comment_type->label(), 'link' =>  $edit_link));
+      $this->logger->notice('Comment type %label has been added.', array('%label' => $comment_type->label(), 'link' => $edit_link));
     }
 
     $form_state->setRedirectUrl($comment_type->urlInfo('collection'));

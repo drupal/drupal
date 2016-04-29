@@ -109,7 +109,7 @@ class RegionalForm extends ConfigFormBase {
       '#default_value' => $configurable_timezones,
     );
 
-    $form['timezone']['configurable_timezones_wrapper'] =  array(
+    $form['timezone']['configurable_timezones_wrapper'] = array(
       '#type' => 'container',
       '#states' => array(
         // Hide the user configured timezone settings when users are forced to use

@@ -106,7 +106,7 @@ class RendererTestBase extends UnitTestCase {
     'auto_placeholder_conditions' => [
       'max-age' => 0,
       'contexts' => ['session', 'user'],
-      'tags' =>  ['current-temperature'],
+      'tags' => ['current-temperature'],
     ],
   ];
 

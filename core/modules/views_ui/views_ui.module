@@ -270,7 +270,7 @@ function views_ui_contextual_links_suppress($set = NULL) {
  * @see views_ui_contextual_links_suppress_pop()
  */
 function views_ui_contextual_links_suppress_push() {
-  views_ui_contextual_links_suppress(((int) views_ui_contextual_links_suppress())+1);
+  views_ui_contextual_links_suppress(((int) views_ui_contextual_links_suppress()) + 1);
 }
 
 /**
@@ -279,7 +279,7 @@ function views_ui_contextual_links_suppress_push() {
  * @see views_ui_contextual_links_suppress_push()
  */
 function views_ui_contextual_links_suppress_pop() {
-  views_ui_contextual_links_suppress(((int) views_ui_contextual_links_suppress())-1);
+  views_ui_contextual_links_suppress(((int) views_ui_contextual_links_suppress()) - 1);
 }
 
 /**

@@ -249,7 +249,7 @@ class TestEntityFile extends EntityFile {
   public $storage;
 
   public function __construct($configuration = []) {
-    $configuration +=  array(
+    $configuration += array(
       'source_base_path' => '',
       'source_path_property' => 'filepath',
       'destination_path_property' => 'uri',

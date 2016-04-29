@@ -135,7 +135,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
     $function_expected['min'] = array(array('id_min' => 1));
     $function_expected['max'] = array(array('id_max' => 6));
     $function_expected['sum'] = array(array('id_sum' => 21));
-    $function_expected['avg'] = array(array('id_avg' => (21.0/6.0)));
+    $function_expected['avg'] = array(array('id_avg' => (21.0 / 6.0)));
 
     // Apply a simple aggregation for different aggregation functions.
     foreach ($function_expected as $aggregation_function => $expected) {

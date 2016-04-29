@@ -2098,7 +2098,7 @@ class ViewExecutable implements \Serializable {
 
         $result = $this->displayHandlers->get($id)->validate();
         if (!empty($result) && is_array($result)) {
-          $errors[$id] =  $result;
+          $errors[$id] = $result;
         }
       }
     }

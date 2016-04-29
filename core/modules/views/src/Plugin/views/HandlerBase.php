@@ -259,7 +259,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
     $form['admin_label'] = array(
       '#type' => 'details',
-      '#title' =>$this->t('Administrative title'),
+      '#title' => $this->t('Administrative title'),
       '#weight' => 150,
     );
     $form['admin_label']['admin_label'] = array(

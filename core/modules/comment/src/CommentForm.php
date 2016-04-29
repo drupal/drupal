@@ -162,7 +162,7 @@ class CommentForm extends ContentEntityForm {
       '#maxlength' => 60,
       '#access' => $this->currentUser->isAnonymous() || $is_admin,
       '#size' => 30,
-      '#attributes'=> [
+      '#attributes' => [
         'data-drupal-default-value' => $config->get('anonymous'),
       ],
     );

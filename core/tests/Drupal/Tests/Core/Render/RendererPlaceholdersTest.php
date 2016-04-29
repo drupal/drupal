@@ -1035,7 +1035,7 @@ HTML;
     $dom = Html::load($cached_element['#markup']);
     $xpath = new \DOMXPath($dom);
     $parent = $xpath->query('//details/summary[text()="Parent"]')->length;
-    $child =  $xpath->query('//details/div[@class="details-wrapper"]/details/summary[text()="Child"]')->length;
+    $child = $xpath->query('//details/div[@class="details-wrapper"]/details/summary[text()="Child"]')->length;
     $subchild = $xpath->query('//details/div[@class="details-wrapper"]/details/div[@class="details-wrapper" and text()="Subchild"]')->length;
     $this->assertTrue($parent && $child && $subchild, 'The correct data is cached: the stored #markup is not affected by placeholder #lazy_builder callbacks.');
 

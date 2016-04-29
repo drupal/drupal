@@ -208,7 +208,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   public function providerIsDefaultConfiguration() {
-    $alteredLanguage= new ContentLanguageSettings(array(
+    $alteredLanguage = new ContentLanguageSettings(array(
       'target_entity_type_id' => 'test_entity_type',
       'target_bundle' => 'test_bundle',
     ), 'language_content_settings');
@@ -271,7 +271,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   public function providerLoadByEntityTypeBundle() {
-    $alteredLanguage= new ContentLanguageSettings(array(
+    $alteredLanguage = new ContentLanguageSettings(array(
       'target_entity_type_id' => 'test_entity_type',
       'target_bundle' => 'test_bundle',
     ), 'language_content_settings');

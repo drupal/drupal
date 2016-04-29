@@ -161,7 +161,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->assertCount(6, $base_tables, 'The correct amount of base tables were returned.');
     $base_tables_keys = array_keys($base_tables);
     for ($i = 1; $i < count($base_tables); ++$i) {
-      $prev =  $base_tables[$base_tables_keys[$i - 1]];
+      $prev = $base_tables[$base_tables_keys[$i - 1]];
       $current = $base_tables[$base_tables_keys[$i]];
       $this->assertTrue($prev['weight'] <= $current['weight'] && $prev['title'] <= $prev['title'], 'The tables are sorted as expected.');
     }
