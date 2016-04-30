@@ -153,7 +153,6 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @param string $name
    *   The route name or other identifying string from ::getRouteDebugMessage().
    *
-   *
    * @return string
    *   The url path, without any base path, including possible query string.
    *

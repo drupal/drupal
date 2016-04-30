@@ -1507,7 +1507,7 @@ abstract class WebTestBase extends TestBase {
    *   $edit = array(...);
    *   $this->drupalPostForm(NULL, $edit, t('Save'));
    *   @endcode
-   * @param  $edit
+   * @param $edit
    *   Field data in an associative array. Changes the current input fields
    *   (where possible) to the values indicated.
    *
@@ -2309,7 +2309,6 @@ abstract class WebTestBase extends TestBase {
 
   /**
    * Follows a link by partial name.
-   *
    *
    * If the link is discovered and clicked, the test passes. Fail otherwise.
    *

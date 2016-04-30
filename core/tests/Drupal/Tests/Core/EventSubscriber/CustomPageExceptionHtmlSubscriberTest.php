@@ -31,7 +31,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   /**
    * The mocked config factory
    *
-   * @var  \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $configFactory;
 

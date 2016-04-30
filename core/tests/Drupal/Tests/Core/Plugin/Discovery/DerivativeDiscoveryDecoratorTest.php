@@ -29,7 +29,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
   /**
    * Tests the getDerivativeFetcher method.
    *
-   * @see  \Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator::getDerivativeFetcher().
+   * @see \Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator::getDerivativeFetcher().
    */
   public function testGetDerivativeFetcher() {
     $definitions = array();
