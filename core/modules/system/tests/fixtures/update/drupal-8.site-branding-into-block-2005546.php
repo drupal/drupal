@@ -6,12 +6,13 @@
  * upgrade path of https://www.drupal.org/node/2005546.
  */
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Database\Database;
 
 $connection = Database::getConnection();
 
 // Structure of a custom block with visibility settings.
-$block_configs[] = \Drupal\Component\Serialization\Yaml::decode(file_get_contents(__DIR__ . '/block.block.testfor2005546.yml'));
+$block_configs[] = Yaml::decode(file_get_contents(__DIR__ . '/block.block.testfor2005546.yml'));
 
 foreach ($block_configs as $block_config) {
   $connection->insert('config')

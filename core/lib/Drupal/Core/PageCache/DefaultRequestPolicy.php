@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\PageCache;
 
+use Drupal\Core\PageCache\RequestPolicy\CommandLineOrUnsafeMethod;
+use Drupal\Core\PageCache\RequestPolicy\NoSessionOpen;
 use Drupal\Core\Session\SessionConfigurationInterface;
 
 /**
@@ -20,8 +22,8 @@ class DefaultRequestPolicy extends ChainRequestPolicy {
    *   The session configuration.
    */
   public function __construct(SessionConfigurationInterface $session_configuration) {
-    $this->addPolicy(new RequestPolicy\CommandLineOrUnsafeMethod());
-    $this->addPolicy(new RequestPolicy\NoSessionOpen($session_configuration));
+    $this->addPolicy(new CommandLineOrUnsafeMethod());
+    $this->addPolicy(new NoSessionOpen($session_configuration));
   }
 
 }

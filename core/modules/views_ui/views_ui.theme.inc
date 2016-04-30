@@ -8,6 +8,8 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\Checkboxes;
+use Drupal\Core\Render\Element\Radios;
 use Drupal\Core\Url;
 
 /**
@@ -88,8 +90,8 @@ function template_preprocess_views_ui_build_group_filter_form(&$variables) {
 
   // Prepare default selectors.
   $form_state = new FormState();
-  $form['default_group'] = Element\Radios::processRadios($form['default_group'], $form_state, $form);
-  $form['default_group_multiple'] = Element\Checkboxes::processCheckboxes($form['default_group_multiple'], $form_state, $form);
+  $form['default_group'] = Radios::processRadios($form['default_group'], $form_state, $form);
+  $form['default_group_multiple'] = Checkboxes::processCheckboxes($form['default_group_multiple'], $form_state, $form);
   $form['default_group']['All']['#title'] = '';
 
   $rows[] = array(

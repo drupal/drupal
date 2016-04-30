@@ -9,6 +9,7 @@ namespace Drupal\big_pipe\Tests;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -93,7 +94,7 @@ class BigPipePlaceholderTestCases {
               'theme' => 'classy',
               'libraries' => 'big_pipe/big_pipe,classy/base,classy/messages,core/drupal.active-link,core/html5shiv,core/normalize,system/base',
             ],
-            'pluralDelimiter' => \Drupal\Core\StringTranslation\PluralTranslatableMarkup::DELIMITER,
+            'pluralDelimiter' => PluralTranslatableMarkup::DELIMITER,
             'user' => [
               'uid' => '1',
               'permissionsHash' => $container->get('user_permissions_hash_generator')->generate($user),

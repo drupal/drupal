@@ -19,6 +19,7 @@
  * @see \Drupal\node\Tests\NodeAccessBaseTableTest
  */
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
@@ -144,7 +145,7 @@ function node_access_test_add_field(NodeTypeInterface $type) {
 /**
  * Implements hook_node_access().
  */
-function node_access_test_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account) {
+function node_access_test_node_access(NodeInterface $node, $op, AccountInterface $account) {
   $secret_catalan = \Drupal::state()
     ->get('node_access_test_secret_catalan') ?: 0;
   if ($secret_catalan && $node->language()->getId() == 'ca') {

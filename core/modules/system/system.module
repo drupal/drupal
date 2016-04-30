@@ -1254,7 +1254,7 @@ function system_get_module_admin_tasks($module, array $info) {
     $access_manager = \Drupal::service('access_manager');
     if ($access_manager->checkNamedRoute('user.admin_permissions', array(), \Drupal::currentUser())) {
       /** @var \Drupal\Core\Url $url */
-      $url = new \Drupal\Core\Url('user.admin_permissions');
+      $url = new Url('user.admin_permissions');
       $url->setOption('fragment', 'module-' . $module);
       $admin_tasks["user.admin_permissions.$module"] = array(
         'title' => t('Configure @module permissions', array('@module' => $info['name'])),

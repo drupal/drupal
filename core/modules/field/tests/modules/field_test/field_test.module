@@ -13,8 +13,9 @@
  * test helper functions
  */
 
-use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\field\FieldStorageConfigInterface;
 
 require_once __DIR__ . '/field_test.entity.inc';
 require_once __DIR__ . '/field_test.field.inc';
@@ -149,7 +150,7 @@ function field_test_entity_extra_field_info_alter(&$info) {
 /**
  * Implements hook_entity_bundle_field_info_alter().
  */
-function field_test_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle) {
+function field_test_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
   if (($field_name = \Drupal::state()->get('field_test_set_constraint', FALSE)) && $entity_type->id() == 'entity_test' && $bundle == 'entity_test' && !empty($fields[$field_name])) {
     $fields[$field_name]->setPropertyConstraints('value', [
       'Range' => [

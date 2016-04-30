@@ -3,12 +3,16 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\TypedData\EntityDataDefinition;
+use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
+use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
+use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\node\Entity\Node;
@@ -420,7 +424,7 @@ class EntityFieldTest extends EntityKernelTestBase  {
     $this->assertEqual($value_definition->getDataType(), 'string');
 
     // Test deriving metadata from references.
-    $entity_definition = \Drupal\Core\Entity\TypedData\EntityDataDefinition::create($entity_type);
+    $entity_definition = EntityDataDefinition::create($entity_type);
     $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
     $reference_definition = $entity_definition->getPropertyDefinition($langcode_key)
       ->getPropertyDefinition('language')
@@ -431,7 +435,7 @@ class EntityFieldTest extends EntityKernelTestBase  {
       ->getPropertyDefinition('entity')
       ->getTargetDefinition();
 
-    $this->assertTrue($reference_definition instanceof \Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface, 'Definition of the referenced user retrieved.');
+    $this->assertTrue($reference_definition instanceof EntityDataDefinitionInterface, 'Definition of the referenced user retrieved.');
     $this->assertEqual($reference_definition->getEntityTypeId(), 'user', 'Referenced entity is of type "user".');
 
     // Test propagating down.
@@ -583,12 +587,12 @@ class EntityFieldTest extends EntityKernelTestBase  {
 
     // Recurse until a certain depth is reached if possible.
     if ($depth < 7) {
-      if ($wrapper instanceof \Drupal\Core\TypedData\ListInterface) {
+      if ($wrapper instanceof ListInterface) {
         foreach ($wrapper as $item) {
           $this->getContainedStrings($item, $depth + 1, $strings);
         }
       }
-      elseif ($wrapper instanceof \Drupal\Core\TypedData\ComplexDataInterface) {
+      elseif ($wrapper instanceof ComplexDataInterface) {
         foreach ($wrapper as $property) {
           $this->getContainedStrings($property, $depth + 1, $strings);
         }

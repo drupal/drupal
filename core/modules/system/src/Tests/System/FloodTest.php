@@ -2,6 +2,8 @@
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Core\Flood\DatabaseBackend;
+use Drupal\Core\Flood\MemoryBackend;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -59,7 +61,7 @@ class FloodTest extends WebTestBase {
     $name = 'flood_test_cleanup';
 
     $request_stack = \Drupal::service('request_stack');
-    $flood = new \Drupal\Core\Flood\MemoryBackend($request_stack);
+    $flood = new MemoryBackend($request_stack);
     // Register expired event.
     $flood->register($name, $window_expired);
     // Verify event is not allowed.
@@ -87,7 +89,7 @@ class FloodTest extends WebTestBase {
 
     $connection = \Drupal::service('database');
     $request_stack = \Drupal::service('request_stack');
-    $flood = new \Drupal\Core\Flood\DatabaseBackend($connection, $request_stack);
+    $flood = new DatabaseBackend($connection, $request_stack);
     // Register expired event.
     $flood->register($name, $window_expired);
     // Verify event is not allowed.

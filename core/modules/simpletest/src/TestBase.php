@@ -2,6 +2,7 @@
 
 namespace Drupal\simpletest;
 
+use Drupal\Component\Assertion\Handle;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\SafeMarkup;
@@ -1019,7 +1020,7 @@ abstract class TestBase {
 
     // Force assertion failures to be thrown as AssertionError for PHP 5 & 7
     // compatibility.
-    \Drupal\Component\Assertion\Handle::register();
+    Handle::register();
 
     set_error_handler(array($this, 'errorHandler'));
     // Iterate through all the methods in this class, unless a specific list of

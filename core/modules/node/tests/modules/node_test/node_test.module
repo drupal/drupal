@@ -8,6 +8,7 @@
  * interaction with the Node module.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
@@ -151,7 +152,7 @@ function node_test_node_update(NodeInterface $node) {
 /**
  * Implements hook_entity_view_mode_alter().
  */
-function node_test_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInterface $entity, $context) {
+function node_test_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
   // Only alter the view mode if we are on the test callback.
   $change_view_mode = \Drupal::state()->get( 'node_test_change_view_mode') ?: '';
   if ($change_view_mode) {

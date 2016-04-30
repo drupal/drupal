@@ -8,6 +8,7 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\field\Entity\FieldStorageConfig;
 
 $connection = Database::getConnection();
 
@@ -59,8 +60,8 @@ $installed = $connection->select('key_value')
   ->execute()
   ->fetchField();
 $installed = unserialize($installed);
-$installed['field_ref_views_select_2429191'] = new \Drupal\field\Entity\FieldStorageConfig($field_ref_views_select_2429191);
-$installed['field_ref_autocreate_2412569'] = new \Drupal\field\Entity\FieldStorageConfig($field_ref_autocreate_2412569);
+$installed['field_ref_views_select_2429191'] = new FieldStorageConfig($field_ref_views_select_2429191);
+$installed['field_ref_autocreate_2412569'] = new FieldStorageConfig($field_ref_autocreate_2412569);
 $connection->update('key_value')
   ->condition('collection', 'entity.definitions.installed')
   ->condition('name', 'node.field_storage_definitions')

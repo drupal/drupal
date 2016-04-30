@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\ParamConverter;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
@@ -116,7 +117,7 @@ class EntityConverterTest extends UnitTestCase {
     $this->entityManager->expects($this->once())
       ->method('getStorage')
       ->with('invalid_id')
-      ->willThrowException(new \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException('invalid_id'));
+      ->willThrowException(new InvalidPluginDefinitionException('invalid_id'));
 
     $this->entityConverter->convert('id', ['type' => 'entity:invalid_id'], 'foo', ['foo' => 'id']);
   }

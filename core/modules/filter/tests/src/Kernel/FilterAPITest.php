@@ -207,7 +207,7 @@ class FilterAPITest extends EntityKernelTestBase {
     // Test on nonsensical_restricted_html, where the allowed attribute values
     // contain asterisks, which do not have any meaning, but which we also
     // cannot prevent because configuration can be modified outside of forms.
-    $nonsensical_restricted_html = \Drupal\filter\Entity\FilterFormat::create(array(
+    $nonsensical_restricted_html = FilterFormat::create(array(
       'format' => 'nonsensical_restricted_html',
       'name' => 'Nonsensical Restricted HTML',
       'filters' => array(
@@ -468,7 +468,7 @@ class FilterAPITest extends EntityKernelTestBase {
    */
   public function testDependencyRemoval() {
     $this->installSchema('user', array('users_data'));
-    $filter_format = \Drupal\filter\Entity\FilterFormat::load('filtered_html');
+    $filter_format = FilterFormat::load('filtered_html');
 
     // Disable the filter_test_restrict_tags_and_attributes filter plugin but
     // have custom configuration so that the filter plugin is still configured
@@ -498,7 +498,7 @@ class FilterAPITest extends EntityKernelTestBase {
     // Verify the filter format still exists but the dependency and filter is
     // gone.
     \Drupal::entityManager()->getStorage('filter_format')->resetCache();
-    $filter_format = \Drupal\filter\Entity\FilterFormat::load('filtered_html');
+    $filter_format = FilterFormat::load('filtered_html');
     $this->assertEqual([], $filter_format->getDependencies());
     // Use the get method since the FilterFormat::filters() method only returns
     // existing plugins.

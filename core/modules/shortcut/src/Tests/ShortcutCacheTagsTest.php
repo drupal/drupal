@@ -2,6 +2,7 @@
 
 namespace Drupal\shortcut\Tests;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 use Drupal\user\Entity\Role;
@@ -55,7 +56,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   public function testEntityCreation() {
     // Create a cache entry that is tagged with a shortcut set cache tag.
     $cache_tags = ['config:shortcut.set.default'];
-    \Drupal::cache('render')->set('foo', 'bar', \Drupal\Core\Cache\CacheBackendInterface::CACHE_PERMANENT, $cache_tags);
+    \Drupal::cache('render')->set('foo', 'bar', CacheBackendInterface::CACHE_PERMANENT, $cache_tags);
 
     // Verify a cache hit.
     $this->verifyRenderCache('foo', $cache_tags);

@@ -7,6 +7,7 @@
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
+use Drupal\field\ConfigImporterFieldPurger;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldConfigInterface;
@@ -168,7 +169,7 @@ function field_cron() {
 /**
  * Implements hook_entity_field_storage_info().
  */
-function field_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+function field_entity_field_storage_info(EntityTypeInterface $entity_type) {
   if (\Drupal::entityManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
     // Query by filtering on the ID as this is more efficient than filtering
     // on the entity_type property directly.
@@ -301,7 +302,7 @@ function _field_create_entity_from_ids($ids) {
  * Implements hook_config_import_steps_alter().
  */
 function field_config_import_steps_alter(&$sync_steps, ConfigImporter $config_importer) {
-  $field_storages = \Drupal\field\ConfigImporterFieldPurger::getFieldStoragesToPurge(
+  $field_storages = ConfigImporterFieldPurger::getFieldStoragesToPurge(
     $config_importer->getStorageComparer()->getSourceStorage()->read('core.extension'),
     $config_importer->getStorageComparer()->getChangelist('delete')
   );
@@ -327,7 +328,7 @@ function field_form_config_admin_import_form_alter(&$form, FormStateInterface $f
   $user_input = $form_state->getUserInput();
   $storage_comparer = $form_state->get('storage_comparer');
   if ($storage_comparer && empty($user_input)) {
-    $field_storages = \Drupal\field\ConfigImporterFieldPurger::getFieldStoragesToPurge(
+    $field_storages = ConfigImporterFieldPurger::getFieldStoragesToPurge(
       $storage_comparer->getSourceStorage()->read('core.extension'),
       $storage_comparer->getChangelist('delete')
     );

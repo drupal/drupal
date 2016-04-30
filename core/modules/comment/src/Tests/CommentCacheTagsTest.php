@@ -82,7 +82,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
       'entity_id' => $this->entityTestCamelid->id(),
       'entity_type' => 'entity_test',
       'field_name' => 'comment',
-      'status' => \Drupal\comment\CommentInterface::PUBLISHED,
+      'status' => CommentInterface::PUBLISHED,
     ));
     $comment->save();
 
