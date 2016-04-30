@@ -5,8 +5,22 @@
  * Simpletest mock module for Ajax forms testing.
  */
 
-use Drupal\Core\Ajax;
+use Drupal\Core\Ajax\AddCssCommand;
+use Drupal\Core\Ajax\AfterCommand;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\AlertCommand;
+use Drupal\Core\Ajax\AppendCommand;
+use Drupal\Core\Ajax\BeforeCommand;
+use Drupal\Core\Ajax\ChangedCommand;
+use Drupal\Core\Ajax\CssCommand;
+use Drupal\Core\Ajax\DataCommand;
+use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\InsertCommand;
+use Drupal\Core\Ajax\InvokeCommand;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\RemoveCommand;
+use Drupal\Core\Ajax\RestripeCommand;
+use Drupal\Core\Ajax\SettingsCommand;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -16,7 +30,7 @@ function ajax_forms_test_advanced_commands_after_callback($form, FormStateInterf
   $selector = '#after_div';
 
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\AfterCommand($selector, "This will be placed after"));
+  $response->addCommand(new AfterCommand($selector, "This will be placed after"));
   return $response;
 }
 
@@ -25,7 +39,7 @@ function ajax_forms_test_advanced_commands_after_callback($form, FormStateInterf
  */
 function ajax_forms_test_advanced_commands_alert_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\AlertCommand('Alert'));
+  $response->addCommand(new AlertCommand('Alert'));
   return $response;
 }
 
@@ -35,7 +49,7 @@ function ajax_forms_test_advanced_commands_alert_callback($form, FormStateInterf
 function ajax_forms_test_advanced_commands_append_callback($form, FormStateInterface $form_state) {
   $selector = '#append_div';
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\AppendCommand($selector, "Appended text"));
+  $response->addCommand(new AppendCommand($selector, "Appended text"));
   return $response;
 }
 
@@ -45,7 +59,7 @@ function ajax_forms_test_advanced_commands_append_callback($form, FormStateInter
 function ajax_forms_test_advanced_commands_before_callback($form, FormStateInterface $form_state) {
   $selector = '#before_div';
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\BeforeCommand($selector, "Before text"));
+  $response->addCommand(new BeforeCommand($selector, "Before text"));
   return $response;
 }
 
@@ -54,7 +68,7 @@ function ajax_forms_test_advanced_commands_before_callback($form, FormStateInter
  */
 function ajax_forms_test_advanced_commands_changed_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\ChangedCommand('#changed_div'));
+  $response->addCommand(new ChangedCommand('#changed_div'));
   return $response;
 }
 
@@ -63,7 +77,7 @@ function ajax_forms_test_advanced_commands_changed_callback($form, FormStateInte
  */
 function ajax_forms_test_advanced_commands_changed_asterisk_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\ChangedCommand('#changed_div', '#changed_div_mark_this'));
+  $response->addCommand(new ChangedCommand('#changed_div', '#changed_div_mark_this'));
   return $response;
 }
 
@@ -75,7 +89,7 @@ function ajax_forms_test_advanced_commands_css_callback($form, FormStateInterfac
   $color = 'blue';
 
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\CssCommand($selector, array('background-color' => $color)));
+  $response->addCommand(new CssCommand($selector, array('background-color' => $color)));
   return $response;
 }
 
@@ -85,7 +99,7 @@ function ajax_forms_test_advanced_commands_css_callback($form, FormStateInterfac
 function ajax_forms_test_advanced_commands_data_callback($form, FormStateInterface $form_state) {
   $selector = '#data_div';
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\DataCommand($selector, 'testkey', 'testvalue'));
+  $response->addCommand(new DataCommand($selector, 'testkey', 'testvalue'));
   return $response;
 }
 
@@ -94,7 +108,7 @@ function ajax_forms_test_advanced_commands_data_callback($form, FormStateInterfa
  */
 function ajax_forms_test_advanced_commands_invoke_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\InvokeCommand('#invoke_div', 'addClass', array('error')));
+  $response->addCommand(new InvokeCommand('#invoke_div', 'addClass', array('error')));
   return $response;
 }
 
@@ -103,7 +117,7 @@ function ajax_forms_test_advanced_commands_invoke_callback($form, FormStateInter
  */
 function ajax_forms_test_advanced_commands_html_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\HtmlCommand('#html_div', 'replacement text'));
+  $response->addCommand(new HtmlCommand('#html_div', 'replacement text'));
   return $response;
 }
 
@@ -112,7 +126,7 @@ function ajax_forms_test_advanced_commands_html_callback($form, FormStateInterfa
  */
 function ajax_forms_test_advanced_commands_insert_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\InsertCommand('#insert_div', 'insert replacement text'));
+  $response->addCommand(new InsertCommand('#insert_div', 'insert replacement text'));
   return $response;
 }
 
@@ -121,7 +135,7 @@ function ajax_forms_test_advanced_commands_insert_callback($form, FormStateInter
  */
 function ajax_forms_test_advanced_commands_prepend_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\PrependCommand('#prepend_div', "prepended text"));
+  $response->addCommand(new PrependCommand('#prepend_div', "prepended text"));
   return $response;
 }
 
@@ -130,7 +144,7 @@ function ajax_forms_test_advanced_commands_prepend_callback($form, FormStateInte
  */
 function ajax_forms_test_advanced_commands_remove_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\RemoveCommand('#remove_text'));
+  $response->addCommand(new RemoveCommand('#remove_text'));
   return $response;
 }
 
@@ -139,7 +153,7 @@ function ajax_forms_test_advanced_commands_remove_callback($form, FormStateInter
  */
 function ajax_forms_test_advanced_commands_restripe_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\RestripeCommand('#restripe_table'));
+  $response->addCommand(new RestripeCommand('#restripe_table'));
   return $response;
 }
 
@@ -149,7 +163,7 @@ function ajax_forms_test_advanced_commands_restripe_callback($form, FormStateInt
 function ajax_forms_test_advanced_commands_settings_callback($form, FormStateInterface $form_state) {
   $setting['ajax_forms_test']['foo'] = 42;
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\SettingsCommand($setting));
+  $response->addCommand(new SettingsCommand($setting));
   return $response;
 }
 
@@ -158,7 +172,7 @@ function ajax_forms_test_advanced_commands_settings_callback($form, FormStateInt
  */
 function ajax_forms_test_advanced_commands_add_css_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new Ajax\AddCssCommand('my/file.css'));
+  $response->addCommand(new AddCssCommand('my/file.css'));
   return $response;
 }
 

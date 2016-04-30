@@ -5,12 +5,13 @@
  * Contains hook implementations for Entity Operation Test Module.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 
 /**
  * Implements hook_entity_operation().
  */
-function entity_test_operation_entity_operation(\Drupal\Core\Entity\EntityInterface $entity) {
+function entity_test_operation_entity_operation(EntityInterface $entity) {
   return [
     'test' => [
       'title' => t('Front page'),

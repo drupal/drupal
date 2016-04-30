@@ -14,6 +14,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Render\Element\Link;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
@@ -748,7 +749,7 @@ function drupal_clear_js_cache() {
  *   Use \Drupal\Core\Render\Element\Link::preRenderLink().
  */
 function drupal_pre_render_link($element) {
-  return Element\Link::preRenderLink($element);
+  return Link::preRenderLink($element);
 }
 
 /**

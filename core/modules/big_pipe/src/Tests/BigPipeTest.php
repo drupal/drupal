@@ -361,7 +361,7 @@ class BigPipeTest extends WebTestBase {
     $csrf_token_seed = unserialize(explode('_sf2_meta|', $session_data)[1])['s'];
     $this->container->get('session_manager.metadata_bag')->setCsrfTokenSeed($csrf_token_seed);
 
-    return \Drupal\big_pipe\Tests\BigPipePlaceholderTestCases::cases($this->container, $this->rootUser);
+    return BigPipePlaceholderTestCases::cases($this->container, $this->rootUser);
   }
 
   /**

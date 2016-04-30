@@ -6,19 +6,20 @@
  * upgrade path of https://www.drupal.org/node/2354889.
  */
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Database\Database;
 
 $connection = Database::getConnection();
 
 // A custom block with visibility settings.
-$block_configs[] = \Drupal\Component\Serialization\Yaml::decode(file_get_contents(__DIR__ . '/block.block.testfor2354889.yml'));
+$block_configs[] = Yaml::decode(file_get_contents(__DIR__ . '/block.block.testfor2354889.yml'));
 
 // A custom block without any visibility settings.
-$block_configs[] = \Drupal\Component\Serialization\Yaml::decode(file_get_contents(__DIR__ . '/block.block.secondtestfor2354889.yml'));
+$block_configs[] = Yaml::decode(file_get_contents(__DIR__ . '/block.block.secondtestfor2354889.yml'));
 
 // A custom block with visibility settings that contain a non-existing context
 // mapping.
-$block_configs[] = \Drupal\Component\Serialization\Yaml::decode(file_get_contents(__DIR__ . '/block.block.thirdtestfor2354889.yml'));
+$block_configs[] = Yaml::decode(file_get_contents(__DIR__ . '/block.block.thirdtestfor2354889.yml'));
 
 foreach ($block_configs as $block_config) {
   $connection->insert('config')

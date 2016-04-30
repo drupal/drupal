@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel\Extension;
 
+use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use \Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\entity_test\Entity\EntityTest;
@@ -121,7 +122,7 @@ class ModuleHandlerTest extends KernelTestBase {
       $result = $this->moduleInstaller()->install(array('color'));
       $this->fail(t('ModuleInstaller::install() throws an exception if dependencies are missing.'));
     }
-    catch (\Drupal\Core\Extension\MissingDependencyException $e) {
+    catch (MissingDependencyException $e) {
       $this->pass(t('ModuleInstaller::install() throws an exception if dependencies are missing.'));
     }
 

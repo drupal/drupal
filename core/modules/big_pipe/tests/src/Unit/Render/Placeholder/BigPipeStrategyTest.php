@@ -3,6 +3,7 @@
 namespace Drupal\Tests\big_pipe\Unit\Render\Placeholder;
 
 use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;
+use Drupal\big_pipe\Tests\BigPipePlaceholderTestCases;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\SessionConfigurationInterface;
 use Drupal\Tests\UnitTestCase;
@@ -61,7 +62,7 @@ class BigPipeStrategyTest extends UnitTestCase {
    * @see \Drupal\big_pipe\Tests\BigPipePlaceholderTestCases
    */
   public function placeholdersProvider() {
-    $cases = \Drupal\big_pipe\Tests\BigPipePlaceholderTestCases::cases();
+    $cases = BigPipePlaceholderTestCases::cases();
 
     // Generate $placeholders variable as expected by
     // \Drupal\Core\Render\Placeholder\PlaceholderStrategyInterface::processPlaceholders().

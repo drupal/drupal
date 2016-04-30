@@ -25,7 +25,7 @@ class TestInfoParsingTest extends UnitTestCase {
    * @dataProvider infoParserProvider
    */
   public function testTestInfoParser($expected, $classname, $doc_comment = NULL) {
-    $info = \Drupal\simpletest\TestDiscovery::getTestInfo($classname, $doc_comment);
+    $info = TestDiscovery::getTestInfo($classname, $doc_comment);
     $this->assertEquals($expected, $info);
   }
 
@@ -245,7 +245,7 @@ class TestInfoParsingTest extends UnitTestCase {
  * Bulk delete storages and fields, and clean up afterwards.
  */
 EOT;
-    \Drupal\simpletest\TestDiscovery::getTestInfo($classname, $doc_comment);
+    TestDiscovery::getTestInfo($classname, $doc_comment);
   }
 
   /**
@@ -258,7 +258,7 @@ EOT;
  * @group field
  */
 EOT;
-    $info = \Drupal\simpletest\TestDiscovery::getTestInfo($classname, $doc_comment);
+    $info = TestDiscovery::getTestInfo($classname, $doc_comment);
     $this->assertEmpty($info['description']);
   }
 

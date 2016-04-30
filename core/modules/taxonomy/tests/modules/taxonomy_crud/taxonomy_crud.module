@@ -5,9 +5,11 @@
  * Provides hook implementations for testing purposes.
  */
 
+use Drupal\taxonomy\VocabularyInterface;
+
 /**
  * Implements hook_ENTITY_TYPE_presave() for taxonomy_vocabulary entities.
  */
-function taxonomy_crud_taxonomy_vocabulary_presave(\Drupal\taxonomy\VocabularyInterface $vocabulary) {
+function taxonomy_crud_taxonomy_vocabulary_presave(VocabularyInterface $vocabulary) {
   $vocabulary->setThirdPartySetting('taxonomy_crud', 'foo', 'bar');
 }

@@ -8,6 +8,7 @@
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -134,7 +135,7 @@ function forum_uri($forum) {
 /**
  * Implements hook_entity_bundle_field_info_alter().
  */
-function forum_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle) {
+function forum_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
   if ($entity_type->id() == 'node'  && !empty($fields['taxonomy_forums'])) {
     $fields['taxonomy_forums']->addConstraint('ForumLeaf', []);
   }

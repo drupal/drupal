@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\user\UserInterface;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
@@ -56,7 +57,7 @@ class NodeFieldOverridesTest extends EntityKernelTestBase {
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::create(['type' => 'ponies']);
     $owner = $node->getOwner();
-    $this->assertTrue($owner instanceof \Drupal\user\UserInterface);
+    $this->assertTrue($owner instanceof UserInterface);
     $this->assertEqual($owner->id(), $this->user->id());
   }
 

@@ -3,6 +3,7 @@
 namespace Drupal\big_pipe_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
+use Drupal\big_pipe\Tests\BigPipePlaceholderTestCases;
 use Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber;
 
 class BigPipeTestController {
@@ -15,7 +16,7 @@ class BigPipeTestController {
   public function test() {
     $build = [];
 
-    $cases = \Drupal\big_pipe\Tests\BigPipePlaceholderTestCases::cases(\Drupal::getContainer());
+    $cases = BigPipePlaceholderTestCases::cases(\Drupal::getContainer());
 
     // 1. HTML placeholder: status messages. Drupal renders those automatically,
     // so all that we need to do in this controller is set a message.

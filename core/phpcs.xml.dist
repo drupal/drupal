@@ -13,6 +13,7 @@
   <!-- Only include specific sniffs that pass. This ensures that, if new sniffs are added, HEAD does not fail.-->
   <!-- Drupal sniffs -->
   <rule ref="Drupal.Classes.ClassCreateInstance"/>
+  <rule ref="Drupal.Classes.FullyQualifiedNamespace"/>
   <rule ref="Drupal.Classes.UnusedUseStatement"/>
   <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>
   <rule ref="Drupal.CSS.ColourDefinition"/>

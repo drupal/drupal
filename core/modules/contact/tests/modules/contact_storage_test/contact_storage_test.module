@@ -6,13 +6,14 @@
  */
 
 use Drupal\contact\ContactFormInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_entity_base_field_info().
  */
-function contact_storage_test_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+function contact_storage_test_entity_base_field_info(EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'contact_message') {
     $fields = array();
 

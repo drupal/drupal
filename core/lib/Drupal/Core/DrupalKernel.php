@@ -2,6 +2,7 @@
 
 namespace Drupal\Core;
 
+use Drupal\Component\Assertion\Handle;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
@@ -18,6 +19,7 @@ use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -923,7 +925,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         assert_options(ASSERT_ACTIVE, TRUE);
         // Now synchronize PHP 5 and 7's handling of assertions as much as
         // possible.
-        \Drupal\Component\Assertion\Handle::register();
+        Handle::register();
 
         // Log fatal errors to the test site directory.
         ini_set('log_errors', 1);
@@ -978,7 +980,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         && Settings::get('class_loader_auto_detect', TRUE)
         && extension_loaded('apc')) {
       $prefix = Settings::getApcuPrefix('class_loader', $this->root);
-      $apc_loader = new \Symfony\Component\ClassLoader\ApcClassLoader($prefix, $this->classLoader);
+      $apc_loader = new ApcClassLoader($prefix, $this->classLoader);
       $this->classLoader->unregister();
       $apc_loader->register();
       $this->classLoader = $apc_loader;

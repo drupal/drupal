@@ -340,7 +340,7 @@ function locale_translate_batch_refresh(&$context) {
     // Clear cache and force refresh of JavaScript translations.
     _locale_refresh_translations($context['sandbox']['refresh']['languages'], $next);
     // Check whether we need to refresh configuration objects.
-    if ($names = \Drupal\locale\Locale::config()->getStringNames($next)) {
+    if ($names = Locale::config()->getStringNames($next)) {
       $context['sandbox']['refresh']['names_finished'] = $context['finished'];
       $context['sandbox']['refresh']['names'] = $names;
     }
@@ -533,7 +533,7 @@ function locale_translate_delete_translation_files(array $projects = array(), ar
  */
 function locale_config_batch_update_components(array $options, array $langcodes = array(), array $components = array()) {
   $langcodes = $langcodes ? $langcodes : array_keys(\Drupal::languageManager()->getLanguages());
-  if ($langcodes && $names = \Drupal\locale\Locale::config()->getComponentNames($components)) {
+  if ($langcodes && $names = Locale::config()->getComponentNames($components)) {
     return locale_config_batch_build($names, $langcodes, $options);
   }
 }

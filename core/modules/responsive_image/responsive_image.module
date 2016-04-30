@@ -5,6 +5,8 @@
  * Responsive image display formatter for image fields.
  */
 
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\image\Entity\ImageStyle;
@@ -162,7 +164,7 @@ function template_preprocess_responsive_image(&$variables) {
   // execution.
   if (!$responsive_image_style) {
     $variables['img_element'] = [];
-    \Drupal::logger('responsive_image')->log(\Drupal\Core\Logger\RfcLogLevel::ERROR, 'Failed to load responsive image style: “@style“ while displaying responsive image.', ['@style' => $variables['responsive_image_style_id']]);
+    \Drupal::logger('responsive_image')->log(RfcLogLevel::ERROR, 'Failed to load responsive image style: “@style“ while displaying responsive image.', ['@style' => $variables['responsive_image_style_id']]);
     return;
   }
   // Retrieve all breakpoints and multipliers and reverse order of breakpoints.
@@ -411,7 +413,7 @@ function responsive_image_build_source_attributes(ImageInterface $image, array $
   }
   // Sort the srcset from small to large image width or multiplier.
   ksort($srcset);
-  $source_attributes = new \Drupal\Core\Template\Attribute(array(
+  $source_attributes = new Attribute(array(
     'srcset' => implode(', ', array_unique($srcset)),
   ));
   $media_query = trim($breakpoint->getMediaQuery());
@@ -494,7 +496,7 @@ function _responsive_image_image_style_url($style_name, $path) {
     return 'data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
   }
   $entity = ImageStyle::load($style_name);
-  if ($entity instanceof Drupal\image\Entity\ImageStyle) {
+  if ($entity instanceof ImageStyle) {
     return file_url_transform_relative($entity->buildUrl($path));
   }
   return file_url_transform_relative(file_create_url($path));
