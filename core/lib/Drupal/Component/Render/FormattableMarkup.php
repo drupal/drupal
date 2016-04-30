@@ -163,9 +163,9 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    *     wrapped in quotes:
    *     @code
    *     // Secure (with quotes):
-   *     $this->placeholderFormat('<a href=":url">@variable</a>', [':url' => $url, @variable => $variable]);
+   *     $this->placeholderFormat('<a href=":url">@variable</a>', [':url' => $url, '@variable' => $variable]);
    *     // Insecure (without quotes):
-   *     $this->placeholderFormat('<a href=:url>@variable</a>', [':url' => $url, @variable => $variable]);
+   *     $this->placeholderFormat('<a href=:url>@variable</a>', [':url' => $url, '@variable' => $variable]);
    *     @endcode
    *     When ":variable" comes from arbitrary user input, the result is secure,
    *     but not guaranteed to be a valid URL (which means the resulting output
