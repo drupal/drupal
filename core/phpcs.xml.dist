@@ -16,6 +16,23 @@
   <rule ref="Drupal.Classes.UnusedUseStatement"/>
   <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>
   <rule ref="Drupal.CSS.ColourDefinition"/>
+  <rule ref="Drupal.Commenting.DocComment">
+    <!-- Sniff for these errors: SpacingAfterTagGroup, WrongEnd, SpacingBetween,
+      ContentAfterOpen, SpacingBeforeShort, TagValueIndent -->
+    <exclude name="Drupal.Commenting.DocComment.ShortStartSpace"/>
+    <exclude name="Drupal.Commenting.DocComment.LongNotCapital"/>
+    <exclude name="Drupal.Commenting.DocComment.ParamGroup"/>
+    <exclude name="Drupal.Commenting.DocComment.SpacingAfter"/>
+    <exclude name="Drupal.Commenting.DocComment.ParamNotFirst"/>
+    <exclude name="Drupal.Commenting.DocComment.SpacingBeforeTags"/>
+    <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
+    <exclude name="Drupal.Commenting.DocComment.ShortNotCapital"/>
+    <exclude name="Drupal.Commenting.DocComment.ShortFullStop"/>
+    <exclude name="Drupal.Commenting.DocComment.TagsNotGrouped"/>
+    <exclude name="Drupal.Commenting.DocComment.ShortSingleLine"/>
+    <exclude name="Drupal.Commenting.DocComment.TagGroupSpacing"/>
+    <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
+  </rule>
   <rule ref="Drupal.Commenting.DocCommentStar"/>
   <rule ref="Drupal.Commenting.FileComment"/>
   <rule ref="Drupal.Commenting.FunctionComment">

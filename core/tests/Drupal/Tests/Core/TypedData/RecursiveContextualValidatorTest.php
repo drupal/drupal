@@ -315,7 +315,6 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   }
 
   /**
-   *
    * Builds some example type data object.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface|\PHPUnit_Framework_MockObject_MockObject

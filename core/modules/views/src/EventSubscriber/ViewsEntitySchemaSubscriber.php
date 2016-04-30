@@ -269,7 +269,6 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
   }
 
   /**
-   *
    * Updates views if a data table is renamed.
    *
    * @param \Drupal\views\Entity\View[] $all_views
