@@ -17,10 +17,10 @@ use Drupal\Component\Utility\SortArray;
  * The configuration dependency value is structured like this:
  * @code
  * array(
- *   'config => array(
+ *   'config' => array(
  *     // An array of configuration entity object names. Recalculated on save.
  *   ),
- *   'content => array(
+ *   'content' => array(
  *     // An array of content entity configuration dependency names. The default
  *     // format is "ENTITY_TYPE_ID:BUNDLE:UUID". Recalculated on save.
  *   ),
@@ -291,10 +291,10 @@ class ConfigDependencyManager {
    *   The configuration dependencies. The array is structured like this:
    *   @code
    *   array(
-   *     'config => array(
+   *     'config' => array(
    *       // An array of configuration entity object names.
    *     ),
-   *     'content => array(
+   *     'content' => array(
    *       // An array of content entity configuration dependency names. The default
    *       // format is "ENTITY_TYPE_ID:BUNDLE:UUID".
    *     ),

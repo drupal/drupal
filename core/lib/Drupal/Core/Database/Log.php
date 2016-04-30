@@ -22,8 +22,8 @@ class Log {
    *
    * array(
    *   $logging_key = array(
-   *     array(query => '', args => array(), caller => '', target => '', time => 0),
-   *     array(query => '', args => array(), caller => '', target => '', time => 0),
+   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0),
+   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0),
    *   ),
    * );
    *

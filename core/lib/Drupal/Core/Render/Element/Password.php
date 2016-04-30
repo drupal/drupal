@@ -12,7 +12,7 @@ use Drupal\Core\Render\Element;
  * @code
  * $form['pass'] = array(
  *   '#type' => 'password',
- *   '#title => $this->t('Password'),
+ *   '#title' => $this->t('Password'),
  *   '#size' => 25,
  * );
  * @endcode

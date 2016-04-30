@@ -116,7 +116,7 @@ class DateTimePlus {
    * date even if some values are missing.
    *
    * @param array $date_parts
-   *   An array of date parts, like ('year' => 2014, 'month => 4).
+   *   An array of date parts, like ('year' => 2014, 'month' => 4).
    * @param mixed $timezone
    *   (optional) \DateTimeZone object, time zone string or NULL. NULL uses the
    *   default system time zone. Defaults to NULL.
