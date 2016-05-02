@@ -55,11 +55,13 @@ abstract class TaxonomyTestBase extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
     $this->mockStandardInstall();
 
-    ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
+    if ($import_test_views) {
+      ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
+    }
 
     $this->term1 = $this->createTerm();
     $this->term2 = $this->createTerm();
