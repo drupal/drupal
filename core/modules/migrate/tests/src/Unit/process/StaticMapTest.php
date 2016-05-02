@@ -66,6 +66,17 @@ class StaticMapTest extends MigrateProcessTestCase {
   }
 
   /**
+   * Tests when the source is invalid but there's a default value of NULL.
+   */
+  public function testMapWithInvalidSourceWithANullDefaultValue() {
+    $configuration['map']['foo']['bar'] = 'baz';
+    $configuration['default_value'] = NULL;
+    $this->plugin = new StaticMap($configuration, 'map', []);
+    $value = $this->plugin->transform(array('bar'), $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->assertNull($value);
+  }
+
+  /**
    * Tests when the source is invalid and bypass is enabled.
    *
    * @expectedException \Drupal\migrate\MigrateException
