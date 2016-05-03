@@ -53,7 +53,7 @@ class PathWidget extends WidgetBase {
       '#default_value' => $path['alias'],
       '#required' => $element['#required'],
       '#maxlength' => 255,
-      '#description' => $this->t('The alternative URL for this content. Use a relative path. For example, enter "/about" for the about page.'),
+      '#description' => $this->t('Specify an alternative path by which this data can be accessed. For example, type "/about" when writing an about page.'),
     );
     $element['pid'] = array(
       '#type' => 'value',

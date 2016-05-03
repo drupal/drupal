@@ -111,7 +111,7 @@ abstract class PathFormBase extends FormBase {
       '#default_value' => $this->path['alias'],
       '#maxlength' => 255,
       '#size' => 45,
-      '#description' => $this->t('Specify an alternative path by which this data can be accessed. For example, type "/about" when writing an about page. Use a relative path with a slash in front.'),
+      '#description' => $this->t('Specify an alternative path by which this data can be accessed. For example, type "/about" when writing an about page.'),
       '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
       '#required' => TRUE,
     );
