@@ -344,7 +344,7 @@ class LinkFieldTest extends WebTestBase {
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
-      'cardinality' => 2,
+      'cardinality' => 3,
     ));
     $this->fieldStorage->save();
     FieldConfig::create([
@@ -369,23 +369,28 @@ class LinkFieldTest extends WebTestBase {
       ->setComponent($field_name, $display_options)
       ->save();
 
-    // Create an entity with two link field values:
+    // Create an entity with three link field values:
     // - The first field item uses a URL only.
     // - The second field item uses a URL and link text.
+    // - The third field item uses a fragment-only URL with text.
     // For consistency in assertion code below, the URL is assigned to the title
     // variable for the first field.
     $this->drupalGet('entity_test/add');
     $url1 = 'http://www.example.com/content/articles/archive?author=John&year=2012#com';
     $url2 = 'http://www.example.org/content/articles/archive?author=John&year=2012#org';
+    $url3 = '#net';
     $title1 = $url1;
     // Intentionally contains an ampersand that needs sanitization on output.
     $title2 = 'A very long & strange example title that could break the nice layout of the site';
+    $title3 = 'Fragment only';
     $edit = array(
       "{$field_name}[0][uri]" => $url1,
       // Note that $title1 is not submitted.
       "{$field_name}[0][title]" => '',
       "{$field_name}[1][uri]" => $url2,
       "{$field_name}[1][title]" => $title2,
+      "{$field_name}[2][uri]" => $url3,
+      "{$field_name}[2][title]" => $title3,
     );
     // Assert label is shown.
     $this->assertText('Read more about this entity');
@@ -433,18 +438,24 @@ class LinkFieldTest extends WebTestBase {
             $url = $url2;
             $title = isset($new_value) ? Unicode::truncate($title2, $new_value, FALSE, TRUE) : $title2;
             $this->assertRaw('<a href="' . Html::escape($url) . '">' . Html::escape($title) . '</a>');
+
+            $url = $url3;
+            $title = isset($new_value) ? Unicode::truncate($title3, $new_value, FALSE, TRUE) : $title3;
+            $this->assertRaw('<a href="' . Html::escape($url) . '">' . Html::escape($title) . '</a>');
             break;
 
           case 'rel':
             $rel = isset($new_value) ? ' rel="' . $new_value . '"' : '';
             $this->assertRaw('<a href="' . Html::escape($url1) . '"' . $rel . '>' . Html::escape($title1) . '</a>');
             $this->assertRaw('<a href="' . Html::escape($url2) . '"' . $rel . '>' . Html::escape($title2) . '</a>');
+            $this->assertRaw('<a href="' . Html::escape($url3) . '"' . $rel . '>' . Html::escape($title3) . '</a>');
             break;
 
           case 'target':
             $target = isset($new_value) ? ' target="' . $new_value . '"' : '';
             $this->assertRaw('<a href="' . Html::escape($url1) . '"' . $target . '>' . Html::escape($title1) . '</a>');
             $this->assertRaw('<a href="' . Html::escape($url2) . '"' . $target . '>' . Html::escape($title2) . '</a>');
+            $this->assertRaw('<a href="' . Html::escape($url3) . '"' . $target . '>' . Html::escape($title3) . '</a>');
             break;
 
           case 'url_only':
@@ -452,17 +463,21 @@ class LinkFieldTest extends WebTestBase {
             if (!$new_value['url_only']) {
               $this->assertRaw('<a href="' . Html::escape($url1) . '">' . Html::escape($title1) . '</a>');
               $this->assertRaw('<a href="' . Html::escape($url2) . '">' . Html::escape($title2) . '</a>');
+              $this->assertRaw('<a href="' . Html::escape($url3) . '">' . Html::escape($title3) . '</a>');
             }
             else {
               if (empty($new_value['url_plain'])) {
                 $this->assertRaw('<a href="' . Html::escape($url1) . '">' . Html::escape($url1) . '</a>');
                 $this->assertRaw('<a href="' . Html::escape($url2) . '">' . Html::escape($url2) . '</a>');
+                $this->assertRaw('<a href="' . Html::escape($url3) . '">' . Html::escape($url3) . '</a>');
               }
               else {
                 $this->assertNoRaw('<a href="' . Html::escape($url1) . '">' . Html::escape($url1) . '</a>');
                 $this->assertNoRaw('<a href="' . Html::escape($url2) . '">' . Html::escape($url2) . '</a>');
+                $this->assertNoRaw('<a href="' . Html::escape($url3) . '">' . Html::escape($url3) . '</a>');
                 $this->assertEscaped($url1);
                 $this->assertEscaped($url2);
+                $this->assertEscaped($url3);
               }
             }
             break;
@@ -484,7 +499,7 @@ class LinkFieldTest extends WebTestBase {
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
-      'cardinality' => 2,
+      'cardinality' => 3,
     ));
     $this->fieldStorage->save();
     FieldConfig::create([
@@ -508,20 +523,25 @@ class LinkFieldTest extends WebTestBase {
       ->setComponent($field_name, $display_options)
       ->save();
 
-    // Create an entity with two link field values:
+    // Create an entity with three link field values:
     // - The first field item uses a URL only.
     // - The second field item uses a URL and link text.
+    // - The third field item uses a fragment-only URL with text.
     // For consistency in assertion code below, the URL is assigned to the title
     // variable for the first field.
     $this->drupalGet('entity_test/add');
     $url1 = 'http://www.example.com/content/articles/archive?author=John&year=2012#com';
     $url2 = 'http://www.example.org/content/articles/archive?author=John&year=2012#org';
+    $url3 = '#net';
     // Intentionally contains an ampersand that needs sanitization on output.
     $title2 = 'A very long & strange example title that could break the nice layout of the site';
+    $title3 = 'Fragment only';
     $edit = array(
       "{$field_name}[0][uri]" => $url1,
       "{$field_name}[1][uri]" => $url2,
       "{$field_name}[1][title]" => $title2,
+      "{$field_name}[2][uri]" => $url3,
+      "{$field_name}[2][title]" => $title3,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
@@ -560,18 +580,29 @@ class LinkFieldTest extends WebTestBase {
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
             $expected .= '</div>';
             $this->assertRaw($expected);
+
+            $url = $url3;
+            $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
+            $title = isset($new_value) ? Unicode::truncate($title3, $new_value, FALSE, TRUE) : $title3;
+            $expected = '<div class="link-item">';
+            $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
+            $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
+            $expected .= '</div>';
+            $this->assertRaw($expected);
             break;
 
           case 'rel':
             $rel = isset($new_value) ? ' rel="' . $new_value . '"' : '';
             $this->assertRaw('<div class="link-url"><a href="' . Html::escape($url1) . '"' . $rel . '>' . Html::escape($url1) . '</a></div>');
             $this->assertRaw('<div class="link-url"><a href="' . Html::escape($url2) . '"' . $rel . '>' . Html::escape($url2) . '</a></div>');
+            $this->assertRaw('<div class="link-url"><a href="' . Html::escape($url3) . '"' . $rel . '>' . Html::escape($url3) . '</a></div>');
             break;
 
           case 'target':
             $target = isset($new_value) ? ' target="' . $new_value . '"' : '';
             $this->assertRaw('<div class="link-url"><a href="' . Html::escape($url1) . '"' . $target . '>' . Html::escape($url1) . '</a></div>');
             $this->assertRaw('<div class="link-url"><a href="' . Html::escape($url2) . '"' . $target . '>' . Html::escape($url2) . '</a></div>');
+            $this->assertRaw('<div class="link-url"><a href="' . Html::escape($url3) . '"' . $target . '>' . Html::escape($url3) . '</a></div>');
             break;
         }
       }
