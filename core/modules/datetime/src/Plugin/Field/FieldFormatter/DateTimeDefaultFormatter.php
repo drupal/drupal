@@ -41,13 +41,15 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
       if ($item->date) {
         /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
         $date = $item->date;
-        // Create the ISO date in Universal Time.
-        $iso_date = $date->format("Y-m-d\TH:i:s") . 'Z';
 
         if ($this->getFieldSetting('datetime_type') == 'date') {
           // A date without time will pick up the current time, use the default.
           datetime_date_default_time($date);
         }
+
+        // Create the ISO date in Universal Time.
+        $iso_date = $date->format("Y-m-d\TH:i:s") . 'Z';
+
         $this->setTimeZone($date);
 
         $output = $this->formatDate($date);
