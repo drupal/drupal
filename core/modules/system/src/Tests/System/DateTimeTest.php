@@ -19,13 +19,20 @@ class DateTimeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'node', 'language'];
+  public static $modules = ['block', 'node', 'language', 'field', 'field_ui', 'datetime', 'options'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create admin user and log in admin user.
-    $this->drupalLogin ($this->drupalCreateUser(array('administer site configuration')));
+    $this->drupalLogin ($this->drupalCreateUser(array(
+      'administer site configuration',
+      'administer content types',
+      'administer nodes',
+      'administer node fields',
+      'administer node form display',
+      'administer node display',
+    )));
     $this->drupalPlaceBlock('local_actions_block');
   }
 
@@ -155,6 +162,66 @@ class DateTimeTest extends WebTestBase {
     $this->assertText(t('Custom date format added.'), 'Date format added confirmation message appears.');
     $this->assertText($name, 'Custom date format appears in the date format list.');
     $this->assertEscaped('<em>' . date("Y") . '</em>');
+  }
+
+  /**
+   * Test handling case with invalid data in selectors (like February, 31st).
+   */
+  function testEnteringDateTimeViaSelectors() {
+
+    $this->drupalCreateContentType(array('type' => 'page_with_date', 'name' => 'Page with date'));
+
+    $this->drupalGet('admin/structure/types/manage/page_with_date');
+    $this->assertResponse(200, 'Content type created.');
+
+    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/add-field');
+    $edit = array(
+      'new_storage_type' => 'datetime',
+      'label' => 'dt',
+      'field_name' => 'dt',
+    );
+    $this->drupalPostForm('admin/structure/types/manage/page_with_date/fields/add-field', $edit, t('Save and continue'));
+    $this->assertText(t('These settings apply to the'), 'New datetime field created, now configuring');
+
+    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage');
+    $edit = array(
+      'settings[datetime_type]' => 'datetime',
+      'cardinality' => 'number',
+      'cardinality_number' => '1',
+    );
+    $this->drupalPostForm('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage', $edit, t('Save field settings'));
+
+    $this->drupalGet('admin/structure/types/manage/page_with_date/fields');
+    $this->assertText('field_dt', 'New field is in place');
+
+    $this->drupalGet('admin/structure/types/manage/page_with_date/form-display');
+    $edit = array(
+      'fields[field_dt][type]' => 'datetime_datelist',
+    );
+    $this->drupalPostForm('admin/structure/types/manage/page_with_date/form-display', $edit, t('Save'));
+    $this->drupalLogout();
+
+    // Now log in as a regular editor.
+    $this->drupalLogin($this->drupalCreateUser(array('create page_with_date content')));
+
+    $this->drupalGet('node/add/page_with_date');
+    $edit = array(
+      'title[0][value]' => 'sample doc',
+      'field_dt[0][value][year]' => '2016',
+      'field_dt[0][value][month]' => '2',
+      'field_dt[0][value][day]' => '31',
+      'field_dt[0][value][hour]' => '1',
+      'field_dt[0][value][minute]' => '30',
+    );
+    $this->drupalPostForm('node/add/page_with_date', $edit, t('Save'));
+    $this->assertText(t('Selected combination of day and month is not valid.'), 'Inorrect date failed validation');
+
+    $edit['field_dt[0][value][day]'] = '29';
+    $this->drupalPostForm('node/add/page_with_date', $edit, t('Save'));
+    $this->assertNoText(t('Selected combination of day and month is not valid.'), 'Correct date passed validation.');
+
+    $this->drupalGet('node/1');
+    $this->assertText(t('Mon, 02/29/2016 - 01:30'), 'Node successfully created with valid date.');
   }
 
 }
