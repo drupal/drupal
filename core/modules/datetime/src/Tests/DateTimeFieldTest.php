@@ -162,8 +162,9 @@ class DateTimeFieldTest extends WebTestBase {
           case 'format_type':
             // Verify that a date is displayed.
             $expected = format_date($date->getTimestamp(), $new_value);
+            $expected_iso = format_date($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
             $this->renderTestEntity($id);
-            $this->assertText($expected, SafeMarkup::format('Formatted date field using %value format displayed as %expected.', array('%value' => $new_value, '%expected' => $expected)));
+            $this->assertFieldByXPath('//time[@datetime="' . $expected_iso . '"]', $expected, SafeMarkup::format('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', array('%value' => $new_value, '%expected' => $expected, '%expected_iso' => $expected_iso)));
             break;
         }
       }
@@ -291,8 +292,9 @@ class DateTimeFieldTest extends WebTestBase {
           case 'format_type':
             // Verify that a date is displayed.
             $expected = format_date($date->getTimestamp(), $new_value);
+            $expected_iso = format_date($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
             $this->renderTestEntity($id);
-            $this->assertText($expected, SafeMarkup::format('Formatted date field using %value format displayed as %expected.', array('%value' => $new_value, '%expected' => $expected)));
+            $this->assertFieldByXPath('//time[@datetime="' . $expected_iso . '"]', $expected, SafeMarkup::format('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', array('%value' => $new_value, '%expected' => $expected, '%expected_iso' => $expected_iso)));
             break;
         }
       }
