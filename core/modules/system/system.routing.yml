@@ -397,6 +397,13 @@ system.theme_settings_theme:
   requirements:
     _access: 'TRUE'
 
+'<nolink>':
+  path: ''
+  options:
+    _no_path: TRUE
+  requirements:
+    _access: 'TRUE'
+
 '<current>':
   path: '<current>'
 
