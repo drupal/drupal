@@ -112,7 +112,7 @@ class NodeEditFormTest extends NodeTestBase {
     // made by different users.
     $first_node_version = node_revision_load($node->getRevisionId());
     $second_node_version = node_revision_load($revised_node->getRevisionId());
-    $this->assertNotIdentical($first_node_version->getRevisionAuthor()->id(), $second_node_version->getRevisionAuthor()->id(), 'Each revision has a distinct user.');
+    $this->assertNotIdentical($first_node_version->getRevisionUser()->id(), $second_node_version->getRevisionUser()->id(), 'Each revision has a distinct user.');
   }
 
   /**

@@ -353,7 +353,7 @@ class UserCancelTest extends WebTestBase {
     $test_node = $node_storage->load($node->id());
     $this->assertTrue(($test_node->getOwnerId() == 0 && $test_node->isPublished()), 'Node of the user has been attributed to anonymous user.');
     $test_node = node_revision_load($revision, TRUE);
-    $this->assertTrue(($test_node->getRevisionAuthor()->id() == 0 && $test_node->isPublished()), 'Node revision of the user has been attributed to anonymous user.');
+    $this->assertTrue(($test_node->getRevisionUser()->id() == 0 && $test_node->isPublished()), 'Node revision of the user has been attributed to anonymous user.');
     $node_storage->resetCache(array($revision_node->id()));
     $test_node = $node_storage->load($revision_node->id());
     $this->assertTrue(($test_node->getOwnerId() != 0 && $test_node->isPublished()), "Current revision of the user's node was not attributed to anonymous user.");

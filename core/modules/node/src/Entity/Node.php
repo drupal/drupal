@@ -102,8 +102,8 @@ class Node extends ContentEntityBase implements NodeInterface {
 
     // If no revision author has been set explicitly, make the node owner the
     // revision author.
-    if (!$this->getRevisionAuthor()) {
-      $this->setRevisionAuthorId($this->getOwnerId());
+    if (!$this->getRevisionUser()) {
+      $this->setRevisionUserId($this->getOwnerId());
     }
   }
 

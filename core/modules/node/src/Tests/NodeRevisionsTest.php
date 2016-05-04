@@ -104,10 +104,10 @@ class NodeRevisionsTest extends NodeTestBase {
       // Edit the 2nd revision with a different user.
       if ($i == 1) {
         $editor = $this->drupalCreateUser();
-        $node->setRevisionAuthorId($editor->id());
+        $node->setRevisionUserId($editor->id());
       }
       else {
-        $node->setRevisionAuthorId($web_user->id());
+        $node->setRevisionUserId($web_user->id());
       }
 
       $node->save();

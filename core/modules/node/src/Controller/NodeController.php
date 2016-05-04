@@ -182,7 +182,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       if ($revision->hasTranslation($langcode) && $revision->getTranslation($langcode)->isRevisionTranslationAffected()) {
         $username = [
           '#theme' => 'username',
-          '#account' => $revision->getRevisionAuthor(),
+          '#account' => $revision->getRevisionUser(),
         ];
 
         // Use revision link to link to revisions that are not active.

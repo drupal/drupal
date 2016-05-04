@@ -30,14 +30,14 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
     $this->assertIdentical('Test title rev 2', $node->getTitle());
     $this->assertIdentical('body test rev 2', $node->body->value);
     $this->assertIdentical('teaser test rev 2', $node->body->summary);
-    $this->assertIdentical('2', $node->getRevisionAuthor()->id());
+    $this->assertIdentical('2', $node->getRevisionUser()->id());
     $this->assertIdentical('modified rev 2', $node->revision_log->value);
     $this->assertIdentical('1390095702', $node->getRevisionCreationTime());
 
     $node = \Drupal::entityManager()->getStorage('node')->loadRevision(5);
     $this->assertIdentical('1', $node->id());
     $this->assertIdentical('body test rev 3', $node->body->value);
-    $this->assertIdentical('1', $node->getRevisionAuthor()->id());
+    $this->assertIdentical('1', $node->getRevisionUser()->id());
     $this->assertIdentical('modified rev 3', $node->revision_log->value);
     $this->assertIdentical('1390095703', $node->getRevisionCreationTime());
   }

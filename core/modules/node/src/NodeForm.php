@@ -322,7 +322,7 @@ class NodeForm extends ContentEntityForm {
       $node->setNewRevision();
       // If a new revision is created, save the current user as revision author.
       $node->setRevisionCreationTime(REQUEST_TIME);
-      $node->setRevisionAuthorId(\Drupal::currentUser()->id());
+      $node->setRevisionUserId(\Drupal::currentUser()->id());
     }
     else {
       $node->setNewRevision(FALSE);

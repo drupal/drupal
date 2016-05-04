@@ -46,7 +46,7 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     /** @var \Drupal\node\NodeInterface $node_revision */
     $node_revision = \Drupal::entityManager()->getStorage('node')->loadRevision(1);
     $this->assertIdentical('Test title', $node_revision->getTitle());
-    $this->assertIdentical('1', $node_revision->getRevisionAuthor()->id(), 'Node revision has the correct user');
+    $this->assertIdentical('1', $node_revision->getRevisionUser()->id(), 'Node revision has the correct user');
     // This is empty on the first revision.
     $this->assertIdentical(NULL, $node_revision->revision_log->value);
     $this->assertIdentical('This is a shared text field', $node->field_test->value);
