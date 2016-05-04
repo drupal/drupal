@@ -311,6 +311,13 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function getRevisionAuthor() {
+    return $this->getRevisionUser();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionUser() {
     return $this->get('revision_uid')->entity;
   }
 
@@ -318,7 +325,45 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function setRevisionAuthorId($uid) {
-    $this->set('revision_uid', $uid);
+    $this->setRevisionUserId($uid);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionUser(UserInterface $user) {
+    $this->set('revision_uid', $user);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionUserId() {
+    return $this->get('revision_uid')->entity->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionUserId($user_id) {
+    $this->set('revision_uid', $user_id);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionLogMessage() {
+    return $this->get('revision_log')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionLogMessage($revision_log_message) {
+    $this->set('revision_log', $revision_log_message);
     return $this;
   }
 
