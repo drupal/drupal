@@ -1,0 +1,9 @@
+name: Test protocol-relative CKEditor stylesheets
+type: theme
+description: 'A theme that uses a protocol-relative CKEditor stylesheet.'
+version: VERSION
+base theme: false
+core: 8.x
+
+ckeditor_stylesheets:
+  - //fonts.googleapis.com/css?family=Open+Sans

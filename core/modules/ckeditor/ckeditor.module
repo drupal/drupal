@@ -5,6 +5,7 @@
  * Provides integration with the CKEditor WYSIWYG editor.
  */
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\editor\Entity\Editor;
 
@@ -85,8 +86,13 @@ function _ckeditor_theme_css($theme = NULL) {
     $info = system_get_info('theme', $theme);
     if (isset($info['ckeditor_stylesheets'])) {
       $css = $info['ckeditor_stylesheets'];
-      foreach ($css as $key => $path) {
-        $css[$key] = $theme_path . '/' . $path;
+      foreach ($css as $key => $url) {
+        if (UrlHelper::isExternal($url)) {
+          $css[$key] = $url;
+        }
+        else {
+          $css[$key] = $theme_path . '/' . $url;
+        }
       }
     }
     if (isset($info['base theme'])) {

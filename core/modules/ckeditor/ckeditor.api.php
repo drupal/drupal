@@ -44,7 +44,7 @@ function hook_ckeditor_plugin_info_alter(array &$plugins) {
  *
  * @param array &$css
  *   An array of CSS files, passed by reference. This is a flat list of file
- *   paths relative to the Drupal root.
+ *   paths which can be either relative to the Drupal root or external URLs.
  * @param $editor
  *   The text editor object as returned by editor_load(), for which these files
  *   are being loaded. Based on this information, it is possible to load the

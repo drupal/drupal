@@ -194,6 +194,36 @@ class CKEditorLoadingTest extends WebTestBase {
     $this->assertTrue(isset($editor_settings['disallowedContent']));
   }
 
+  /**
+   * Tests loading of theme's CKEditor stylesheets defined in the .info file.
+   */
+  function testExternalStylesheets() {
+    $theme_handler = \Drupal::service('theme_handler');
+    // Case 1: Install theme which has an absolute external CSS URL.
+    $theme_handler->install(['test_ckeditor_stylesheets_external']);
+    $theme_handler->setDefault('test_ckeditor_stylesheets_external');
+    $expected = [
+      'https://fonts.googleapis.com/css?family=Open+Sans',
+    ];
+    $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_external'));
+
+    // Case 2: Install theme which has an external protocol-relative CSS URL.
+    $theme_handler->install(['test_ckeditor_stylesheets_protocol_relative']);
+    $theme_handler->setDefault('test_ckeditor_stylesheets_protocol_relative');
+    $expected = [
+      '//fonts.googleapis.com/css?family=Open+Sans',
+    ];
+    $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_protocol_relative'));
+
+    // Case 3: Install theme which has a relative CSS URL.
+    $theme_handler->install(['test_ckeditor_stylesheets_relative']);
+    $theme_handler->setDefault('test_ckeditor_stylesheets_relative');
+    $expected = [
+      'core/modules/system/tests/themes/test_ckeditor_stylesheets_relative/css/yokotsoko.css',
+    ];
+    $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_relative'));
+  }
+
   protected function getThingsToCheck() {
     $settings = $this->getDrupalSettings();
     return array(
