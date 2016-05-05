@@ -55,15 +55,15 @@ use Drupal\views\Views;
  */
 abstract class ArgumentPluginBase extends HandlerBase implements CacheableDependencyInterface {
 
-  var $validator = NULL;
-  var $argument = NULL;
-  var $value = NULL;
+  public $validator = NULL;
+  public $argument = NULL;
+  public $value = NULL;
 
   /**
    * The table to use for the name, should it not be in the same table as the argument.
    * @var string
    */
-  var $name_table;
+  public $name_table;
 
   /**
    * The field to use for the name to use in the summary, which is
@@ -71,7 +71,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * the argument itself is the nid, but node.title is displayed.
    * @var string
    */
-  var $name_field;
+  public $name_field;
 
   /**
    * Overrides Drupal\views\Plugin\views\HandlerBase:init().

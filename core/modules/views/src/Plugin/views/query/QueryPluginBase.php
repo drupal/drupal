@@ -38,7 +38,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    *
    * @var views_plugin_pager
    */
-  var $pager = NULL;
+  public $pager = NULL;
 
   /**
    * Stores the limit of items that should be requested in the query.
@@ -62,7 +62,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param view $view
    *   The view which is executed.
    */
-  function alter(ViewExecutable $view) {  }
+  public function alter(ViewExecutable $view) {  }
 
   /**
    * Builds the necessary info to execute the query.
@@ -70,7 +70,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param view $view
    *   The view which is executed.
    */
-  function build(ViewExecutable $view) { }
+  public function build(ViewExecutable $view) { }
 
   /**
    * Executes the query and fills the associated view object with according
@@ -85,7 +85,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param view $view
    *   The view which is executed.
    */
-  function execute(ViewExecutable $view) {  }
+  public function execute(ViewExecutable $view) {  }
 
   /**
    * Add a signature to the query, if such a thing is feasible.

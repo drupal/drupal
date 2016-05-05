@@ -8,7 +8,7 @@ namespace Drupal\Component\Diff\Engine;
  * @subpackage DifferenceEngine
  */
 class DiffOpDelete extends DiffOp {
-  var $type = 'delete';
+  public $type = 'delete';
 
   public function __construct($lines) {
     $this->orig = $lines;

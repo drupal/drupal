@@ -16,7 +16,7 @@ class Combine extends StringFilter {
   /**
    * @var views_plugin_query_default
    */
-  var $query;
+  public $query;
 
   protected function defineOptions() {
     $options = parent::defineOptions();

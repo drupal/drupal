@@ -19,7 +19,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
    *
    * @var array
    */
-  static $modules = array('config_test');
+  public static $modules = array('config_test');
 
   /**
    * Stores the search results for alter comparison.

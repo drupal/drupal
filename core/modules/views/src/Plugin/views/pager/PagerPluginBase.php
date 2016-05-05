@@ -27,9 +27,9 @@ use Drupal\views\Plugin\views\PluginBase;
  */
 abstract class PagerPluginBase extends PluginBase {
 
-  var $current_page = NULL;
+  public $current_page = NULL;
 
-  var $total_items = 0;
+  public $total_items = 0;
 
   /**
    * {@inheritdoc}

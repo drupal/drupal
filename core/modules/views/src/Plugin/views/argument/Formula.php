@@ -19,7 +19,7 @@ use Drupal\views\ViewExecutable;
  */
 class Formula extends ArgumentPluginBase {
 
-  var $formula = NULL;
+  public $formula = NULL;
 
   /**
    * {@inheritdoc}

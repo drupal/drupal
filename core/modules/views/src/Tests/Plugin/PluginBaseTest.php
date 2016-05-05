@@ -22,7 +22,7 @@ class PluginBaseTest extends KernelTestBase {
   /**
    * @var TestPluginBase
    */
-  var $testPluginBase;
+  protected $testPluginBase;
 
   protected function setUp() {
     parent::setUp();

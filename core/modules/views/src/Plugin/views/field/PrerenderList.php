@@ -25,7 +25,7 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
    *
    * @var array
    */
-  var $items = array();
+  public $items = array();
 
   /**
    * {@inheritdoc}

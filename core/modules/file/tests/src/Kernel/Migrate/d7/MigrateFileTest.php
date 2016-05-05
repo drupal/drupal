@@ -14,7 +14,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateFileTest extends MigrateDrupal7TestBase {
 
-  static $modules = ['file'];
+  public static $modules = ['file'];
 
   /**
    * {@inheritdoc}

@@ -21,7 +21,7 @@ class PagerSelectExtender extends SelectExtender {
    *
    * @var int
    */
-  static $maxElement = 0;
+  public static $maxElement = 0;
 
   /**
    * The number of elements per page to allow.

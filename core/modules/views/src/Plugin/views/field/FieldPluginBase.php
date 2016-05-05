@@ -68,8 +68,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    */
   const RENDER_TEXT_PHASE_EMPTY = 2;
 
-  var $field_alias = 'unknown';
-  var $aliases = array();
+  public $field_alias = 'unknown';
+  public $aliases = array();
 
   /**
    * The field value prior to any rewriting.
@@ -85,7 +85,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    *
    * @var array
    */
-  var $additional_fields = array();
+  public $additional_fields = array();
 
   /**
    * The link generator.

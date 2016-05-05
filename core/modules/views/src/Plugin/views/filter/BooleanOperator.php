@@ -44,9 +44,9 @@ class BooleanOperator extends FilterPluginBase {
   // exposed filter options
   protected $alwaysMultiple = TRUE;
   // Don't display empty space where the operator would be.
-  var $no_operator = TRUE;
+  public $no_operator = TRUE;
   // Whether to accept NULL as a false value or not
-  var $accept_null = FALSE;
+  public $accept_null = FALSE;
 
 
 
