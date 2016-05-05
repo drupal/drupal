@@ -18,7 +18,7 @@ class DiffFormatter {
   /**
    * Should a block header be shown?
    */
-  var $show_header = TRUE;
+  public $show_header = TRUE;
 
   /**
    * Number of leading context "lines" to preserve.
@@ -26,7 +26,7 @@ class DiffFormatter {
    * This should be left at zero for this class, but subclasses
    * may want to set this to other values.
    */
-  var $leading_context_lines = 0;
+  public $leading_context_lines = 0;
 
   /**
    * Number of trailing context "lines" to preserve.
@@ -34,7 +34,7 @@ class DiffFormatter {
    * This should be left at zero for this class, but subclasses
    * may want to set this to other values.
    */
-  var $trailing_context_lines = 0;
+  public $trailing_context_lines = 0;
 
   /**
    * Format a diff.

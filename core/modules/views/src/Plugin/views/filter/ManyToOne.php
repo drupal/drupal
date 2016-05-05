@@ -26,7 +26,7 @@ class ManyToOne extends InOperator {
    *
    * Stores the Helper object which handles the many_to_one complexity.
    */
-  var $helper = NULL;
+  public $helper = NULL;
 
   /**
    * {@inheritdoc}

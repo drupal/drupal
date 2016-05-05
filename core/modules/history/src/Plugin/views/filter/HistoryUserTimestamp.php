@@ -21,7 +21,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
   use UncacheableDependencyTrait;
 
   // Don't display empty space where the operator would be.
-  var $no_operator = TRUE;
+  public $no_operator = TRUE;
 
   /**
    * {@inheritdoc}

@@ -13,7 +13,7 @@ use Drupal\node\NodeInterface;
  */
 class MigrateNodeTest extends MigrateDrupal7TestBase {
 
-  static $modules = array(
+  public static $modules = array(
     'comment',
     'datetime',
     'filter',

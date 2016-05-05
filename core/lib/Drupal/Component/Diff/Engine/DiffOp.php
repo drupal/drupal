@@ -8,9 +8,9 @@ namespace Drupal\Component\Diff\Engine;
  * @subpackage DifferenceEngine
  */
 class DiffOp {
-  var $type;
-  var $orig;
-  var $closing;
+  public $type;
+  public $orig;
+  public $closing;
 
   public function reverse() {
     trigger_error('pure virtual', E_USER_ERROR);

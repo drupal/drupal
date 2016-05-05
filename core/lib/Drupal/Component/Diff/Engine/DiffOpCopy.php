@@ -8,7 +8,7 @@ namespace Drupal\Component\Diff\Engine;
  * @subpackage DifferenceEngine
  */
 class DiffOpCopy extends DiffOp {
-  var $type = 'copy';
+  public $type = 'copy';
 
   public function __construct($orig, $closing = FALSE) {
     if (!is_array($closing)) {

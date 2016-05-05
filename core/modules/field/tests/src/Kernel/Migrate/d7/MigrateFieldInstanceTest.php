@@ -20,7 +20,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
    *
    * @var array
    */
-  static $modules = array(
+  public static $modules = array(
     'comment',
     'datetime',
     'file',

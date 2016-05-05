@@ -105,6 +105,11 @@
   <rule ref="Generic.PHP.UpperCaseConstant"/>
   <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
 
+  <!-- PSR-2 sniffs -->
+  <rule ref="PSR2.Classes.PropertyDeclaration">
+    <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+  </rule>
+
   <!-- Squiz sniffs -->
   <rule ref="Squiz.Strings.ConcatenationSpacing">
     <properties>

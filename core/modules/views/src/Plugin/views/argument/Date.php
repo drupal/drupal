@@ -40,7 +40,7 @@ class Date extends Formula implements ContainerFactoryPluginInterface {
    */
   protected $argFormat = 'Y-m-d';
 
-  var $option_name = 'default_argument_date';
+  public $option_name = 'default_argument_date';
 
   /**
    * The route match.

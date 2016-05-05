@@ -30,7 +30,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    *
    * @var \Drupal\views\ViewExecutable
    */
-  var $view = NULL;
+  public $view = NULL;
 
   /**
    * An array of instantiated handlers used in this display.
