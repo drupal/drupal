@@ -68,7 +68,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     $form['total_pages'] = array(
       '#type' => 'number',
       '#title' => $this->t('Number of pages'),
-      '#description' => $this->t('The total number of pages. Leave empty to show all pages.'),
+      '#description' => $this->t('Leave empty to show all pages.'),
       '#default_value' => $this->options['total_pages'],
     );
 

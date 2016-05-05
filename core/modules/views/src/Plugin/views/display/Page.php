@@ -519,7 +519,7 @@ class Page extends PathPluginBase {
   public function getPagerText() {
     return array(
       'items per page title' => $this->t('Items per page'),
-      'items per page description' => $this->t('The number of items to display per page. Enter 0 for no limit.')
+      'items per page description' => $this->t('Enter 0 for no limit.')
     );
   }
 
