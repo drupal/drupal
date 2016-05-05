@@ -407,6 +407,7 @@ RDF module
 REST module
 - Klaus Purer 'klausi' https://www.drupal.org/u/klausi
 - Larry Garfield 'Crell' https://www.drupal.org/u/crell
+- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Responsive Image module
 - Peter Droogmans 'attiks' https://www.drupal.org/u/attiks
