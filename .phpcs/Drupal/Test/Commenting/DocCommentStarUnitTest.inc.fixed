@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Test broken stars in comments.
+ */
+
+/**
+ * Star missing here.
+ */
+function test1() {
+
+}
+
+/**
+ * Malformed doxygen asterisks.
+ */
+function test2() {
+
+}
