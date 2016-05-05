@@ -231,7 +231,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    *   An appropriate query expression pointing to the date field.
    * @param string $format
    *   A format string for the result, like 'Y-m-d H:i:s'.
-   * @param boolean $string_date
+   * @param bool $string_date
    *   For certain databases, date format functions vary depending on string or
    *   numeric storage.
    *

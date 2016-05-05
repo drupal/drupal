@@ -48,7 +48,7 @@ class DataCommand implements CommandInterface {
    *   A CSS selector for the elements to which the data will be attached.
    * @param string $name
    *   The key of the data to be attached to elements matched by the selector.
-   * @param type $value
+   * @param mixed $value
    *   The value of the data to be attached to elements matched by the selector.
    */
   public function __construct($selector, $name, $value) {
