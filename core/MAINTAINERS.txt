@@ -53,7 +53,7 @@ Authentication and authorization system
 - ?
 
 Base system
-- Damien Tournoud 'DamZ' https://www.drupal.org/u/damz
+- Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
 
 Batch system
@@ -63,7 +63,7 @@ Bootstrap system
 - ?
 
 Cache system
-- Damien Tournoud 'DamZ' https://www.drupal.org/u/damz
+- Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Mark Sonnabaum 'msonnabaum' https://www.drupal.org/u/msonnabaum
 
@@ -91,11 +91,11 @@ Database system
   - David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
 
   PostgreSQL DB driver
-  - Damien Tournoud 'DamZ' https://www.drupal.org/u/damz
+  - Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
   - Josh Waihi 'fiasco' https://www.drupal.org/u/fiasco
 
   Sqlite DB driver
-  - Damien Tournoud 'DamZ' https://www.drupal.org/u/damz
+  - Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
 
 Database update system
 - ?
@@ -138,7 +138,7 @@ Language system
 - Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
 
 Lock system
-- Damien Tournoud 'DamZ' https://www.drupal.org/u/damz
+- Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
 
 Mail system
 - ?
@@ -199,7 +199,7 @@ Translations
 
 Transliteration system
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
-- Damien Tournoud 'DamZ' https://www.drupal.org/u/damz
+- Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
 - Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
 - Jennifer Hodgdon 'jhodgdon' https://www.drupal.org/u/jhodgdon
 
@@ -444,7 +444,7 @@ Taxonomy module
 - Benjamin Doherty 'bangpound' https://www.drupal.org/u/bangpound
 
 Telephone module
-- Dave Reid 'davereid' https://www.drupal.org/u/davereid
+- Dave Reid 'dave-reid' https://www.drupal.org/u/dave-reid
 
 Text module
 - ?
