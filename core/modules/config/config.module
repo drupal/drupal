@@ -22,7 +22,7 @@ function config_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('You can create and download an archive consisting of all your site\'s configuration exported as <em>*.yml</em> files on the <a href=":url">Export</a> page.', array(':url' => \Drupal::url('config.export_full'))) . '</dd>';
       $output .= '<dt>' . t('Importing a full configuration') . '</dt>';
       $output .= '<dd>' . t('You can upload a full site configuration from an archive file on the <a href=":url">Import</a> page. When importing data from a different environment, the site and import files must have matching configuration values for UUID in the <em>system.site</em> configuration item. That means that your other environments should initially be set up as clones of the target site. Migrations are not supported.', array(':url' => \Drupal::url('config.import_full'))) . '</dd>';
-      $output .= '<dt>' . t('Synchronizing configuration'). '</dt>';
+      $output .= '<dt>' . t('Synchronizing configuration') . '</dt>';
       $output .= '<dd>' . t('You can review differences between the active configuration and an imported configuration archive on the <a href=":synchronize">Synchronize</a> page to ensure that the changes are as expected, before finalizing the import. The Synchronize page also shows configuration items that would be added or removed.', array(':synchronize' => \Drupal::url('config.sync'))) . '</dd>';
       $output .= '<dt>' . t('Exporting a single configuration item') . '</dt>';
       $output .= '<dd>' . t('You can export a single configuration item by selecting a <em>Configuration type</em> and <em>Configuration name</em> on the <a href=":single-export">Single export</a> page. The configuration and its corresponding <em>*.yml file name</em> are then displayed on the page for you to copy.', array(':single-export' => \Drupal::url('config.export_single'))) . '</dd>';
@@ -69,7 +69,7 @@ function config_file_download($uri) {
     $date = DateTime::createFromFormat('U', $request->server->get('REQUEST_TIME'));
     $date_string = $date->format('Y-m-d-H-i');
     $hostname = str_replace('.', '-', $request->getHttpHost());
-    $filename = 'config' . '-' . $hostname . '-' . $date_string. '.tar.gz';
+    $filename = 'config' . '-' . $hostname . '-' . $date_string . '.tar.gz';
     $disposition = 'attachment; filename="' . $filename . '"';
     return array(
       'Content-disposition' => $disposition,

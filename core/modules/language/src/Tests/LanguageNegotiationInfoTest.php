@@ -86,7 +86,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     $test_type = 'test_language_type';
     $interface_method_id = LanguageNegotiationUI::METHOD_ID;
     $test_method_id = 'test_language_negotiation_method';
-    $form_field = $type . '[enabled]['. $interface_method_id .']';
+    $form_field = $type . '[enabled][' . $interface_method_id . ']';
     $edit = array(
       $form_field => TRUE,
       $type . '[enabled][' . $test_method_id . ']' => TRUE,

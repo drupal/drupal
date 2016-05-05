@@ -35,7 +35,7 @@ class DisplayCRUDTest extends UITestBase {
     $settings['page[create]'] = FALSE;
     $view = $this->randomView($settings);
 
-    $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
     $this->drupalGet($path_prefix);
 
     // Add a new display.
@@ -54,7 +54,7 @@ class DisplayCRUDTest extends UITestBase {
    */
   public function testRemoveDisplay() {
     $view = $this->randomView();
-    $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
 
     $this->drupalGet($path_prefix . '/default');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is no delete button on the default display.');
@@ -97,7 +97,7 @@ class DisplayCRUDTest extends UITestBase {
    */
   public function testDuplicateDisplay() {
     $view = $this->randomView();
-    $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
     $path = $view['page[path]'];
 
     $this->drupalGet($path_prefix);

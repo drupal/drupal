@@ -304,7 +304,7 @@ class ManageDisplayTest extends WebTestBase {
     $field_test_with_prepare_view_settings = $formatter_plugin_manager->getDefaultSettings('field_test_with_prepare_view');
     $output = array(
       'field_test_default' => $field_test_default_settings['test_formatter_setting'] . '|' . $value,
-      'field_test_with_prepare_view' => $field_test_with_prepare_view_settings['test_formatter_setting_additional'] . '|' . $value. '|' . ($value + 1),
+      'field_test_with_prepare_view' => $field_test_with_prepare_view_settings['test_formatter_setting_additional'] . '|' . $value . '|' . ($value + 1),
     );
 
     // Check that the field is displayed with the default formatter in 'rss'
@@ -470,7 +470,7 @@ class ManageDisplayTest extends WebTestBase {
     $clone = clone $node;
     $element = node_view($clone, $view_mode);
     $output = \Drupal::service('renderer')->renderRoot($element);
-    $this->verbose(t('Rendered node - view mode: @view_mode', array('@view_mode' => $view_mode)) . '<hr />'. $output);
+    $this->verbose(t('Rendered node - view mode: @view_mode', array('@view_mode' => $view_mode)) . '<hr />' . $output);
 
     // Assign content so that WebTestBase functions can be used.
     $this->setRawContent($output);

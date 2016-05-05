@@ -86,8 +86,8 @@ class SimpleTestBrowserTest extends WebTestBase {
     $this->drupalLogout();
 
     $system_path = $base_url . '/' . drupal_get_path('module', 'system');
-    $HTTP_path = $system_path .'/tests/http.php/user/login';
-    $https_path = $system_path .'/tests/https.php/user/login';
+    $HTTP_path = $system_path . '/tests/http.php/user/login';
+    $https_path = $system_path . '/tests/https.php/user/login';
     // Generate a valid simpletest User-Agent to pass validation.
     $this->assertTrue(preg_match('/simpletest\d+/', $this->databasePrefix, $matches), 'Database prefix contains simpletest prefix.');
     $test_ua = drupal_generate_test_ua($matches[0]);

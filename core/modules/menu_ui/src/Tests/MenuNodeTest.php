@@ -229,10 +229,10 @@ class MenuNodeTest extends WebTestBase {
     ));
     $child_item->save();
     // Edit the first node.
-    $this->drupalGet('node/'. $node->id() .'/edit');
+    $this->drupalGet('node/' . $node->id() . '/edit');
     // Assert that it is not possible to set the parent of the first node to itself or the second node.
-    $this->assertNoOption('edit-menu-menu-parent', 'tools:'. $item->getPluginId());
-    $this->assertNoOption('edit-menu-menu-parent', 'tools:'. $child_item->getPluginId());
+    $this->assertNoOption('edit-menu-menu-parent', 'tools:' . $item->getPluginId());
+    $this->assertNoOption('edit-menu-menu-parent', 'tools:' . $child_item->getPluginId());
     // Assert that unallowed Administration menu is not available in options.
     $this->assertNoOption('edit-menu-menu-parent', 'admin:');
   }

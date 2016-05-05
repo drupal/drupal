@@ -120,7 +120,7 @@ class ViewsKernelTestBase extends KernelTestBase {
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();
-    $verbose_message = '<pre>Executed view: ' . ((string) $view->build_info['query']). '</pre>';
+    $verbose_message = '<pre>Executed view: ' . ((string) $view->build_info['query']) . '</pre>';
     if ($view->build_info['query'] instanceof SelectInterface) {
       $verbose_message .= '<pre>Arguments: ' . print_r($view->build_info['query']->getArguments(), TRUE) . '</pre>';
     }

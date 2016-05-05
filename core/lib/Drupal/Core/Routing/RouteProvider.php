@@ -143,7 +143,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
   public function getRouteCollectionForRequest(Request $request) {
     // Cache both the system path as well as route parameters and matching
     // routes.
-    $cid = 'route:' . $request->getPathInfo() . ':' .  $request->getQueryString();
+    $cid = 'route:' . $request->getPathInfo() . ':' . $request->getQueryString();
     if ($cached = $this->cache->get($cid)) {
       $this->currentPath->setPath($cached->data['path'], $request);
       $request->query->replace($cached->data['query']);

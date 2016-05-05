@@ -170,7 +170,7 @@ function node_test_entity_view_mode_alter(&$view_mode, EntityInterface $entity, 
 function node_test_node_insert(NodeInterface $node) {
   // Set the node title to the node ID and save.
   if ($node->getTitle() == 'new') {
-    $node->setTitle('Node '. $node->id());
+    $node->setTitle('Node ' . $node->id());
     $node->setNewRevision(FALSE);
     $node->save();
   }

@@ -370,7 +370,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
 
     // Verify that the fields are gone.
     $this->assertFalse(FieldConfig::load('entity_test.' . $this->fieldTestData->field->getTargetBundle() . '.' . $this->fieldTestData->field_name), "First field is deleted");
-    $this->assertFalse(FieldConfig::load('entity_test.' . $field['bundle']. '.' . $field_name), "Second field is deleted");
+    $this->assertFalse(FieldConfig::load('entity_test.' . $field['bundle'] . '.' . $field_name), "Second field is deleted");
   }
 
 }

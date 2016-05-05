@@ -113,7 +113,7 @@ class FieldModuleUninstallValidatorTest extends EntityKernelTestBase {
       $this->enableModules([$module_name]);
     }
     $this->entityDefinitionUpdateManager->applyUpdates();
-    $this->assertTrue($this->getModuleHandler()->moduleExists($module_name), $module_name .' module is enabled.');
+    $this->assertTrue($this->getModuleHandler()->moduleExists($module_name), $module_name . ' module is enabled.');
     $this->getModuleInstaller()->uninstall([$module_name]);
     $this->entityDefinitionUpdateManager->applyUpdates();
     $this->assertFalse($this->getModuleHandler()->moduleExists($module_name), $module_name . ' module is disabled.');

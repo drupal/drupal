@@ -29,7 +29,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<li>' . t('<em>Forums</em> (for example, <em>Recipes for cooking vegetables</em>)') . '</li>';
       $output .= '<li>' . t('<em>Forum topics</em> submitted by users (for example, <em>How to cook potatoes</em>), which start discussions.') . '</li>';
       $output .= '<li>' . t('Threaded <em>comments</em> submitted by users (for example, <em>You wash the potatoes first and then...</em>).') . '</li>';
-      $output .= '<li>' . t('Optional <em>containers</em>, used to group similar forums. Forums can be placed inside containers, and vice versa.').'</li>';
+      $output .= '<li>' . t('Optional <em>containers</em>, used to group similar forums. Forums can be placed inside containers, and vice versa.') . '</li>';
       $output .= '</ul>';
       $output .= '</p>';
       $output .= '<p>' . t('For more information, see the <a href=":forum">online documentation for the Forum module</a>.', array(':forum' => 'https://www.drupal.org/documentation/modules/forum')) . '</p>';

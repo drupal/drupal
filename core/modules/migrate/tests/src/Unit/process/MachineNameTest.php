@@ -44,7 +44,7 @@ class MachineNameTest extends MigrateProcessTestCase {
     // - Uppercase -> lowercase,
     // - Multiple consecutive underscore -> single underscore.
     $human_name_ascii = 'foo2, the.bar;2*&the%baz!YEE____HaW ';
-    $human_name = $human_name_ascii .'áéő';
+    $human_name = $human_name_ascii . 'áéő';
     $expected_result = 'foo2_the_bar_2_the_baz_yee_haw_aeo';
     // Test for calling transliterate on mock object.
     $this->transliteration

@@ -251,7 +251,7 @@ class Random {
   public function paragraphs($paragraph_count = 12) {
     $output = '';
     for ($i = 1; $i <= $paragraph_count; $i++) {
-      $output .= $this->sentences(mt_rand(20, 60)) ."\n\n";
+      $output .= $this->sentences(mt_rand(20, 60)) . "\n\n";
     }
     return $output;
   }
@@ -291,7 +291,7 @@ class Random {
     $smaller_dimension = ($smaller_dimension % 2) ? $smaller_dimension : $smaller_dimension;
     imageellipse($im, $width / 2, $height / 2, $smaller_dimension, $smaller_dimension, $color);
 
-    $save_function = 'image'. ($extension == 'jpg' ? 'jpeg' : $extension);
+    $save_function = 'image' . ($extension == 'jpg' ? 'jpeg' : $extension);
     $save_function($im, $destination);
     return $destination;
   }

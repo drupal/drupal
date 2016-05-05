@@ -387,8 +387,8 @@ abstract class AccountForm extends ContentEntityForm {
     $user = $this->getEntity($form_state);
     // If there's a session set to the users id, remove the password reset tag
     // since a new password was saved.
-    if (isset($_SESSION['pass_reset_'. $user->id()])) {
-      unset($_SESSION['pass_reset_'. $user->id()]);
+    if (isset($_SESSION['pass_reset_' . $user->id()])) {
+      unset($_SESSION['pass_reset_' . $user->id()]);
     }
   }
 }

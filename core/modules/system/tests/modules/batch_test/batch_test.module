@@ -23,7 +23,7 @@ function _batch_test_batch_0() {
   $batch = array(
     'operations' => array(),
     'finished' => '_batch_test_finished_0',
-    'file' => drupal_get_path('module', 'batch_test'). '/batch_test.callbacks.inc',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
   );
   return $batch;
 }
@@ -45,7 +45,7 @@ function _batch_test_batch_1() {
   $batch = array(
     'operations' => $operations,
     'finished' => '_batch_test_finished_1',
-    'file' => drupal_get_path('module', 'batch_test'). '/batch_test.callbacks.inc',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
   );
   return $batch;
 }
@@ -148,7 +148,7 @@ function _batch_test_batch_5() {
   $batch = array(
     'operations' => $operations,
     'finished' => '_batch_test_finished_5',
-    'file' => drupal_get_path('module', 'batch_test'). '/batch_test.callbacks.inc',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
   );
   return $batch;
 }

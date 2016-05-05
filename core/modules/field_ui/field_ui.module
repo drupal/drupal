@@ -144,7 +144,7 @@ function field_ui_entity_operation(EntityInterface $entity) {
   // of another and that type has field UI enabled.
   if (($bundle_of = $info->getBundleOf()) && \Drupal::entityManager()->getDefinition($bundle_of)->get('field_ui_base_route')) {
     $account = \Drupal::currentUser();
-    if ($account->hasPermission('administer '. $bundle_of . ' fields')) {
+    if ($account->hasPermission('administer ' . $bundle_of . ' fields')) {
       $operations['manage-fields'] = array(
         'title' => t('Manage fields'),
         'weight' => 15,
@@ -153,7 +153,7 @@ function field_ui_entity_operation(EntityInterface $entity) {
         )),
       );
     }
-    if ($account->hasPermission('administer '. $bundle_of . ' form display')) {
+    if ($account->hasPermission('administer ' . $bundle_of . ' form display')) {
       $operations['manage-form-display'] = array(
         'title' => t('Manage form display'),
         'weight' => 20,
@@ -162,7 +162,7 @@ function field_ui_entity_operation(EntityInterface $entity) {
         )),
       );
     }
-    if ($account->hasPermission('administer '. $bundle_of . ' display')) {
+    if ($account->hasPermission('administer ' . $bundle_of . ' display')) {
       $operations['manage-display'] = array(
         'title' => t('Manage display'),
         'weight' => 25,

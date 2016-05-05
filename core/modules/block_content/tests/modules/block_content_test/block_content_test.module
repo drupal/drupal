@@ -25,12 +25,12 @@ function block_content_test_block_content_view(array &$build, BlockContent $bloc
  */
 function block_content_test_block_content_presave(BlockContent $block_content) {
   if ($block_content->label() == 'testing_block_content_presave') {
-    $block_content->setInfo($block_content->label() .'_presave');
+    $block_content->setInfo($block_content->label() . '_presave');
   }
   // Determine changes.
   if (!empty($block_content->original) && $block_content->original->label() == 'test_changes') {
     if ($block_content->original->label() != $block_content->label()) {
-      $block_content->setInfo($block_content->label() .'_presave');
+      $block_content->setInfo($block_content->label() . '_presave');
       // Drupal 1.0 release.
       $block_content->changed = 979534800;
     }
@@ -44,7 +44,7 @@ function block_content_test_block_content_update(BlockContent $block_content) {
   // Determine changes on update.
   if (!empty($block_content->original) && $block_content->original->label() == 'test_changes') {
     if ($block_content->original->label() != $block_content->label()) {
-      $block_content->setInfo($block_content->label() .'_update');
+      $block_content->setInfo($block_content->label() . '_update');
     }
   }
 }

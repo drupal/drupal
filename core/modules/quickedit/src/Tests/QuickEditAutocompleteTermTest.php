@@ -128,7 +128,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
   public function testAutocompleteQuickEdit() {
     $this->drupalLogin($this->editorUser);
 
-    $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->fieldName . '/' . $this->node->language()->getId() . '/full';
+    $quickedit_uri = 'quickedit/form/node/' . $this->node->id() . '/' . $this->fieldName . '/' . $this->node->language()->getId() . '/full';
     $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost($quickedit_uri, 'application/vnd.drupal-ajax', $post);
     $ajax_commands = Json::decode($response);
@@ -159,7 +159,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
 
       // Load the form again, which should now get it back from
       // PrivateTempStore.
-      $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->fieldName . '/' . $this->node->language()->getId() . '/full';
+      $quickedit_uri = 'quickedit/form/node/' . $this->node->id() . '/' . $this->fieldName . '/' . $this->node->language()->getId() . '/full';
       $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
       $response = $this->drupalPost($quickedit_uri, 'application/vnd.drupal-ajax', $post);
       $ajax_commands = Json::decode($response);

@@ -487,7 +487,7 @@ function _filter_url($text, $filter) {
   // Allow URL paths to contain balanced parens
   // 1. Used in Wikipedia URLs like /Primer_(film)
   // 2. Used in IIS sessions like /S(dfd346)/
-  $valid_url_balanced_parens = '\('. $valid_url_path_characters . '+\)';
+  $valid_url_balanced_parens = '\(' . $valid_url_path_characters . '+\)';
 
   // Valid end-of-path characters (so /foo. does not gobble the period).
   // 1. Allow =&# for empty URL parameters and other URL-join artifacts
@@ -498,7 +498,7 @@ function _filter_url($text, $filter) {
 
   //full path
   //and allow @ in a url, but only in the middle. Catch things like http://example.com/@user/
-  $valid_url_path = '(?:(?:'.$valid_url_path_characters . '*(?:'.$valid_url_balanced_parens .$valid_url_path_characters . '*)*'. $valid_url_ending_characters . ')|(?:@' . $valid_url_path_characters . '+\/))';
+  $valid_url_path = '(?:(?:' . $valid_url_path_characters . '*(?:' . $valid_url_balanced_parens . $valid_url_path_characters . '*)*' . $valid_url_ending_characters . ')|(?:@' . $valid_url_path_characters . '+\/))';
 
   // Prepare domain name pattern.
   // The ICANN seems to be on track towards accepting more diverse top level
@@ -507,7 +507,7 @@ function _filter_url($text, $filter) {
   $domain = '(?:[\p{L}\p{M}\p{N}._+-]+\.)?[\p{L}\p{M}]{2,64}\b';
   $ip = '(?:[0-9]{1,3}\.){3}[0-9]{1,3}';
   $auth = '[\p{L}\p{M}\p{N}:%_+*~#?&=.,/;-]+@';
-  $trail = '('.$valid_url_path.'*)?(\\?'.$valid_url_query_chars .'*'.$valid_url_query_ending_chars.')?';
+  $trail = '(' . $valid_url_path . '*)?(\\?' . $valid_url_query_chars . '*' . $valid_url_query_ending_chars . ')?';
 
   // Match absolute URLs.
   $url_pattern = "(?:$auth)?(?:$domain|$ip)/?(?:$trail)?";

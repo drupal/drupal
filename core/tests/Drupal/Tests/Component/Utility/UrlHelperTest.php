@@ -370,7 +370,7 @@ class UrlHelperTest extends UnitTestCase {
       array(json_decode('"\u00AD"') . "//www.example.com", TRUE),
       array(json_decode('"\u200E"') . "//www.example.com", TRUE),
       array(json_decode('"\uE0020"') . "//www.example.com", TRUE),
-      array(json_decode('"\uE000"')  . "//www.example.com", TRUE),
+      array(json_decode('"\uE000"') . "//www.example.com", TRUE),
       // Backslashes should be normalized to forward.
       array('\\\\example.com', TRUE),
       // Local URLs.

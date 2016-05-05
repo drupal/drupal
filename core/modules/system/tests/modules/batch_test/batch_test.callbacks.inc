@@ -90,7 +90,7 @@ function _batch_test_nested_batch_callback() {
 function _batch_test_finished_helper($batch_id, $success, $results, $operations) {
   if ($results) {
     foreach ($results as $op => $op_results) {
-      $messages[] = 'op '. Html::escape($op) . ': processed ' . count($op_results) . ' elements';
+      $messages[] = 'op ' . Html::escape($op) . ': processed ' . count($op_results) . ' elements';
     }
   }
   else {

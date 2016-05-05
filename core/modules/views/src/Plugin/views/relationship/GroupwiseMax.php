@@ -203,8 +203,8 @@ class GroupwiseMax extends RelationshipPluginBase {
     }
 
     // Get the namespace string.
-    $temp_view->namespace = (!empty($options['subquery_namespace'])) ? '_'. $options['subquery_namespace'] : '_INNER';
-    $this->subquery_namespace = (!empty($options['subquery_namespace'])) ? '_'. $options['subquery_namespace'] : 'INNER';
+    $temp_view->namespace = (!empty($options['subquery_namespace'])) ? '_' . $options['subquery_namespace'] : '_INNER';
+    $this->subquery_namespace = (!empty($options['subquery_namespace'])) ? '_' . $options['subquery_namespace'] : 'INNER';
 
     // The value we add here does nothing, but doing this adds the right tables
     // and puts in a WHERE clause with a placeholder we can grab later.

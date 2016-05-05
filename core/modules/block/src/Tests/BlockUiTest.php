@@ -119,12 +119,12 @@ class BlockUiTest extends WebTestBase {
     foreach ($this->blockValues as $values) {
       // Check if the region and weight settings changes have persisted.
       $this->assertOptionSelected(
-        'edit-blocks-' . $values['settings']['id']  . '-region',
+        'edit-blocks-' . $values['settings']['id'] . '-region',
         'header',
         'The block "' . $label . '" has the correct region assignment (header).'
       );
       $this->assertOptionSelected(
-        'edit-blocks-' . $values['settings']['id']  . '-weight',
+        'edit-blocks-' . $values['settings']['id'] . '-weight',
         $values['test_weight'],
         'The block "' . $label . '" has the correct weight assignment (' . $values['test_weight'] . ').'
       );

@@ -248,7 +248,7 @@ class ToolkitGdTest extends KernelTestBase {
     }
 
     // Prepare a directory for test file results.
-    $directory = $this->publicFilesDirectory .'/imagetest';
+    $directory = $this->publicFilesDirectory . '/imagetest';
     file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
 
     foreach ($files as $file) {
@@ -424,7 +424,7 @@ class ToolkitGdTest extends KernelTestBase {
    */
   function testGifTransparentImages() {
     // Prepare a directory for test file results.
-    $directory = $this->publicFilesDirectory .'/imagetest';
+    $directory = $this->publicFilesDirectory . '/imagetest';
     file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
 
     // Test loading an indexed GIF image with transparent color set.

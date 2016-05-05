@@ -175,7 +175,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
       // make sure that access is denied.
       $file_noaccess = array_shift($files);
       $original_uri_noaccess = file_unmanaged_copy($file_noaccess->uri, $scheme . '://', FILE_EXISTS_RENAME);
-      $generated_uri_noaccess = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/'. drupal_basename($original_uri_noaccess);
+      $generated_uri_noaccess = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . drupal_basename($original_uri_noaccess);
       $this->assertFalse(file_exists($generated_uri_noaccess), 'Generated file does not exist.');
       $generate_url_noaccess = $this->style->buildUrl($original_uri_noaccess);
 
@@ -249,7 +249,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
 
     // Check that requesting a nonexistent image does not create any new
     // directories in the file system.
-    $directory = $scheme . '://styles/' .  $this->style->id() . '/' . $scheme . '/' . $this->randomMachineName();
+    $directory = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $this->randomMachineName();
     $this->drupalGet(file_create_url($directory . '/' . $this->randomString()));
     $this->assertFalse(file_exists($directory), 'New directory was not created in the filesystem when requesting an unauthorized image.');
   }

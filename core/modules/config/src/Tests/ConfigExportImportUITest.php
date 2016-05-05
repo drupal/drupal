@@ -226,7 +226,7 @@ class ConfigExportImportUITest extends WebTestBase {
     // Export the configuration.
     $this->drupalPostForm('admin/config/development/configuration/full/export', array(), 'Export');
     $this->tarball = $this->getRawContent();
-    $filename = file_directory_temp() .'/' . $this->randomMachineName();
+    $filename = file_directory_temp() . '/' . $this->randomMachineName();
     file_put_contents($filename, $this->tarball);
 
     // Set up the active storage collections to test import.
