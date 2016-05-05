@@ -76,10 +76,10 @@ class Cache {
    */
   public static function mergeMaxAges($a = Cache::PERMANENT, $b = Cache::PERMANENT) {
     // If one of the values is Cache::PERMANENT, return the other value.
-    if ($a === Cache::PERMANENT){
+    if ($a === Cache::PERMANENT) {
       return $b;
     }
-    if ($b === Cache::PERMANENT){
+    if ($b === Cache::PERMANENT) {
       return $a;
     }
 

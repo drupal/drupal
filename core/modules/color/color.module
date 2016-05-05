@@ -76,7 +76,7 @@ function color_library_info_alter(&$libraries, $extension) {
     $color_paths = \Drupal::config('color.theme.' . $extension)->get('stylesheets');
     if (!empty($color_paths)) {
       foreach (array_keys($libraries) as $name) {
-        if(isset($libraries[$name]['css'])) {
+        if (isset($libraries[$name]['css'])) {
           // Override stylesheets.
           foreach ($libraries[$name]['css'] as $category => $css_assets) {
             foreach ($css_assets as $path  => $metadata) {

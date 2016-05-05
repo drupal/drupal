@@ -368,7 +368,8 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
           ->fields($values)
           ->execute();
         $this->pass($message);
-      } else {
+      }
+      else {
         // Keep throwing it.
         throw $e;
       }

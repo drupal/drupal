@@ -134,7 +134,8 @@ class UninstallTest extends WebTestBase {
     try {
       $this->container->get('module_installer')->install(array('module_installer_config_test'));
       $this->fail($message);
-    } catch (EntityMalformedException $e) {
+    }
+    catch (EntityMalformedException $e) {
       $this->pass($message);
     }
 

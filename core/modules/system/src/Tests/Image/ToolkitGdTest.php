@@ -378,7 +378,7 @@ class ToolkitGdTest extends KernelTestBase {
       if ($image_reloaded->getToolkit()->getType() == IMAGETYPE_GIF) {
         $this->assertEqual('#ffff00', $image_reloaded->getToolkit()->getTransparentColor(), SafeMarkup::format('Image file %file has the correct transparent color channel set.', array('%file' => $file)));
       }
-      else  {
+      else {
         $this->assertEqual(NULL, $image_reloaded->getToolkit()->getTransparentColor(), SafeMarkup::format('Image file %file has no color channel set.', array('%file' => $file)));
       }
     }

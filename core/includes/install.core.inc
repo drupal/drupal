@@ -1595,7 +1595,7 @@ function install_download_additional_translations_operations(&$install_state) {
   // should download/import translations.
   $languages = \Drupal::languageManager()->getLanguages();
   $operations = array();
-  foreach($languages as $langcode => $language) {
+  foreach ($languages as $langcode => $language) {
     // The installer language was already downloaded. Check downloads for the
     // other languages if any. Ignore any download errors here, since we
     // are in the middle of an install process and there is no way back. We

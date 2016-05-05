@@ -263,7 +263,7 @@ class ConfigCRUDTest extends KernelTestBase {
     $this->assertIdentical($config->get(), $data);
 
     // Re-set each key using Config::set().
-    foreach($data as $key => $value) {
+    foreach ($data as $key => $value) {
       $config->set($key, $value);
     }
     $config->save();

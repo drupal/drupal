@@ -372,7 +372,8 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
       );
       if (isset($item['display'])) {
         $element['display']['#value'] = $item['display'] ? '1' : '';
-      } else {
+      }
+      else {
         $element['display']['#value'] = $element['#display_default'];
       }
     }

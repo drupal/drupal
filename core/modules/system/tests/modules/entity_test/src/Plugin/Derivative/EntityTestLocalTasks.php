@@ -16,7 +16,7 @@ class EntityTestLocalTasks extends DeriverBase {
     $this->derivatives = array();
     $types = entity_test_entity_types(ENTITY_TEST_TYPES_ROUTING);
 
-    foreach($types as $entity_type) {
+    foreach ($types as $entity_type) {
       $this->derivatives[$entity_type . '.canonical'] = array();
       $this->derivatives[$entity_type . '.canonical']['base_route'] = "entity.$entity_type.canonical";
       $this->derivatives[$entity_type . '.canonical']['route_name'] = "entity.$entity_type.canonical";

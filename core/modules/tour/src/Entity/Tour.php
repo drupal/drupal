@@ -171,7 +171,7 @@ class Tour extends ConfigEntityBase implements TourInterface {
   public function calculateDependencies() {
     parent::calculateDependencies();
 
-    foreach($this->tipsCollection as $instance) {
+    foreach ($this->tipsCollection as $instance) {
       $definition = $instance->getPluginDefinition();
       $this->addDependency('module', $definition['provider']);
     }

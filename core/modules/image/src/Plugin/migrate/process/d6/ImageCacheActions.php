@@ -19,7 +19,7 @@ class ImageCacheActions extends ProcessPluginBase {
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $effects = [];
 
-    foreach($row->getSourceProperty('actions') as $action) {
+    foreach ($row->getSourceProperty('actions') as $action) {
       $id = preg_replace('/^imagecache/', 'image', $action['action']);
 
       if ($id === 'image_crop') {

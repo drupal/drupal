@@ -60,7 +60,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     \Drupal::service('module_installer')->install(array_keys($all_modules));
 
     $this->assertModules(array_keys($all_modules), TRUE);
-    foreach($all_modules as $module => $info) {
+    foreach ($all_modules as $module => $info) {
       $this->assertModuleConfig($module);
       $this->assertModuleTablesExist($module);
     }
@@ -118,7 +118,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     \Drupal::service('module_installer')->uninstall(array_keys($modules_to_uninstall));
 
     $this->assertModules(array_keys($modules_to_uninstall), FALSE);
-    foreach($modules_to_uninstall as $module => $info) {
+    foreach ($modules_to_uninstall as $module => $info) {
       $this->assertNoModuleConfig($module);
       $this->assertModuleTablesDoNotExist($module);
     }
@@ -133,7 +133,7 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     // Check that all modules that were uninstalled are now reinstalled.
     $this->assertModules(array_keys($modules_to_uninstall), TRUE);
-    foreach($modules_to_uninstall as $module => $info) {
+    foreach ($modules_to_uninstall as $module => $info) {
       $this->assertModuleConfig($module);
       $this->assertModuleTablesExist($module);
     }

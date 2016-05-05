@@ -68,6 +68,7 @@
     <exclude name="Drupal.Commenting.FunctionComment.WrongStyle"/>
   </rule>
   <rule ref="Drupal.ControlStructures.ElseIf"/>
+  <rule ref="Drupal.ControlStructures.ControlSignature"/>
   <rule ref="Drupal.Files.EndFileNewline"/>
   <rule ref="Drupal.Files.TxtFileLineLength"/>
   <rule ref="Drupal.Formatting.SpaceInlineIf"/>

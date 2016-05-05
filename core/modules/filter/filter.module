@@ -647,7 +647,7 @@ function _filter_url_escape_comments($match, $escape = NULL) {
 
   if (isset($escape)) {
     $mode = $escape;
-    if ($escape){
+    if ($escape) {
       $comments = array();
     }
     return;

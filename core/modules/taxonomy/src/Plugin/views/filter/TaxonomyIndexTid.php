@@ -322,7 +322,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
     // We only validate if they've chosen the text field style.
     if ($this->options['type'] != 'textfield') {
-      if ($form_state->getValue($identifier) != 'All')  {
+      if ($form_state->getValue($identifier) != 'All') {
         $this->validated_exposed_input = (array) $form_state->getValue($identifier);
       }
       return;

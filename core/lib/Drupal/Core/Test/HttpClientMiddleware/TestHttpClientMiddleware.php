@@ -40,7 +40,7 @@ class TestHttpClientMiddleware {
                   // Call \Drupal\simpletest\WebTestBase::error() with the parameters from
                   // the header.
                   $parameters = unserialize(urldecode($header_value));
-                  if (count($parameters) === 3)  {
+                  if (count($parameters) === 3) {
                     throw new \Exception($parameters[1] . ': ' . $parameters[0] . "\n" . Error::formatBacktrace([$parameters[2]]));
                   }
                   else {

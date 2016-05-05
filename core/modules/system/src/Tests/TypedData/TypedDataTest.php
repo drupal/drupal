@@ -248,7 +248,7 @@ class TypedDataTest extends KernelTestBase {
 
     // Generate some files that will be used to test the binary data type.
     $files = array();
-    for ($i = 0; $i < 3; $i++){
+    for ($i = 0; $i < 3; $i++) {
       $path = "public://example_$i.png";
       file_unmanaged_copy(\Drupal::root() . '/core/misc/druplicon.png', $path);
       $image = File::create(['uri' => $path]);

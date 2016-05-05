@@ -371,7 +371,7 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
         $entity->delete();
       }
     }
-    elseif (trim($values['title']))  {
+    elseif (trim($values['title'])) {
       // Decompose the selected menu parent option into 'menu_name' and 'parent',
       // if the form used the default parent selection widget.
       if (!empty($values['menu_parent'])) {

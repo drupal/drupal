@@ -168,7 +168,7 @@ function language_entity_base_field_info_alter(&$fields) {
   foreach ($fields as $definition) {
     // Set configurable form display for language fields with display options.
     if ($definition->getType() == 'language') {
-      foreach (array('form', 'view') as $type)  {
+      foreach (array('form', 'view') as $type) {
         if ($definition->getDisplayOptions($type)) {
           // The related configurations will be purged manually on Language
           // module uninstallation. @see language_modules_uninstalled().

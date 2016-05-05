@@ -256,7 +256,7 @@ class ContactSitewideTest extends WebTestBase {
 
     // Find out in which row the form we want to add a field to is.
     $i = 0;
-    foreach($this->xpath('//table/tbody/tr') as $row) {
+    foreach ($this->xpath('//table/tbody/tr') as $row) {
       if (((string) $row->td[0]->a) == $label) {
         break;
       }

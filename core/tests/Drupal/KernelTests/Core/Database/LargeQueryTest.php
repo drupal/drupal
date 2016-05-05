@@ -31,7 +31,8 @@ class LargeQueryTest extends DatabaseTestBase {
         try {
           db_query('SELECT name FROM {test} WHERE name = :name', array(':name' => $long_name));
           $this->fail("An exception should be thrown for queries larger than 'max_allowed_packet'");
-        } catch (DatabaseException $e) {
+        }
+        catch (DatabaseException $e) {
           // Close and re-open the connection. Otherwise we will run into error
           // 2006 "MySQL server had gone away" afterwards.
           Database::closeConnection();

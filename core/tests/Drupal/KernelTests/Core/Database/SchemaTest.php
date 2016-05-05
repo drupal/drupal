@@ -230,7 +230,8 @@ class SchemaTest extends KernelTestBase {
     try {
       db_create_table('test_timestamp', $table_specification);
     }
-    catch (\Exception $e) {}
+    catch (\Exception $e) {
+    }
     $this->assertTrue(db_table_exists('test_timestamp'), 'Table with database specific datatype was created.');
   }
 

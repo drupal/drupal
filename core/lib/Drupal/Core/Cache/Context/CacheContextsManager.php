@@ -195,7 +195,7 @@ class CacheContextsManager {
             $ancestor_found = TRUE;
           }
 
-        } while(!$ancestor_found && strpos($ancestor, '.') !== FALSE);
+        } while (!$ancestor_found && strpos($ancestor, '.') !== FALSE);
         if (!$ancestor_found) {
           $optimized_content_tokens[] = $context_token;
         }

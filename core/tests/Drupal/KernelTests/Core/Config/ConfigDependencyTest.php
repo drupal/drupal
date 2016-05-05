@@ -473,7 +473,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
    */
   protected function getDependentIds(array $dependents) {
     $dependent_ids = array();
-    foreach($dependents as $dependent) {
+    foreach ($dependents as $dependent) {
       $dependent_ids[] = $dependent->getEntityTypeId() . ':' . $dependent->id();
     }
     return $dependent_ids;

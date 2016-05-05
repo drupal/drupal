@@ -34,7 +34,8 @@ class InsertDefaultsTest extends DatabaseTestBase {
       db_insert('test')->execute();
       // This is only executed if no exception has been thrown.
       $this->fail('Expected exception NoFieldsException has not been thrown.');
-    } catch (NoFieldsException $e) {
+    }
+    catch (NoFieldsException $e) {
       $this->pass('Expected exception NoFieldsException has been thrown.');
     }
 

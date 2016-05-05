@@ -388,7 +388,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     if ($config_importer->alreadyImporting()) {
       drupal_set_message($this->t('Another request may be importing configuration already.'), 'error');
     }
-    else{
+    else {
       try {
         $sync_steps = $config_importer->initialize();
         $batch = [

@@ -326,7 +326,7 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
   $values = array('name' => trim($name));
   if (isset($vocabulary)) {
     $vocabularies = taxonomy_vocabulary_get_names();
-    if (isset($vocabularies[$vocabulary])){
+    if (isset($vocabularies[$vocabulary])) {
       $values['vid'] = $vocabulary;
     }
     else {

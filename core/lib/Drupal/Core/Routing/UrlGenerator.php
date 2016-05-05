@@ -358,7 +358,8 @@ class UrlGenerator implements UrlGeneratorInterface {
     $port = '';
     if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
       $port = ':' . $this->context->getHttpPort();
-    } elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
+    }
+    elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
       $port = ':' . $this->context->getHttpsPort();
     }
     if ($collect_bubbleable_metadata) {
