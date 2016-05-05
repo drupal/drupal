@@ -545,7 +545,6 @@ interface DisplayPluginInterface {
    *
    * @return bool
    *   Returns whether the identifier is unique on all handlers.
-   *
    */
   public function isIdentifierUnique($id, $identifier);
 

@@ -18,7 +18,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *   \Drupal\Core\TypedData\OptionsProviderInterface::getSettableOptions(). An
  *   empty option (_none) might have been added, depending on the field
  *   properties.
- *
  * @param array $context
  *   An associative array containing:
  *   - field_definition: The field definition

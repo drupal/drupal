@@ -48,7 +48,6 @@ class FormController implements FormInterface {
 
   /**
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
-   *
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $this->condition->validateConfigurationForm($form, $form_state);

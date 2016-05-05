@@ -5,7 +5,7 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- *  Test SimplePageVariant main content rendering fallback page display variant.
+ * Test SimplePageVariant main content rendering fallback page display variant.
  *
  * @group system
  */

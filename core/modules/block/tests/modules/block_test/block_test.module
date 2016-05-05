@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Provide test blocks.
+ * Provide test blocks.
  */
 
 use Drupal\Core\Block\BlockPluginInterface;

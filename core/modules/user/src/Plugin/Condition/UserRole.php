@@ -15,7 +15,6 @@ use Drupal\Core\Form\FormStateInterface;
  *     "user" = @ContextDefinition("entity:user", label = @Translation("User"))
  *   }
  * )
- *
  */
 class UserRole extends ConditionPluginBase {
 

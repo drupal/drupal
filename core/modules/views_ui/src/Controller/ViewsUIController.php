@@ -153,7 +153,6 @@ class ViewsUIController extends ControllerBase {
    * @return \Drupal\Core\Ajax\AjaxResponse|\Symfony\Component\HttpFoundation\RedirectResponse
    *   Either returns a rebuilt listing page as an AJAX response, or redirects
    *   back to the listing page.
-   *
    */
   public function ajaxOperation(ViewEntityInterface $view, $op, Request $request) {
     // Perform the operation.

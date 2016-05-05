@@ -1045,7 +1045,6 @@ class BookManager implements BookManagerInterface {
    *
    * @return array
    *   Book tree.
-   *
    */
   protected function buildBookOutlineRecursive(&$links, $parents, $depth) {
     $tree = array();

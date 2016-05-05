@@ -215,7 +215,6 @@ class ContentEntityNormalizer extends NormalizerBase {
    *
    * @return array
    *   The typed data IDs.
-   *
    */
   protected function getTypedDataIds($types, $context = array()) {
     // The 'type' can potentially contain an array of type objects. By default,

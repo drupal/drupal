@@ -18,7 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   }
  * )
- *
  */
 class NodeType extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 

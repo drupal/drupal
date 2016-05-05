@@ -32,7 +32,6 @@ interface MenuTreeStorageInterface {
    *
    * @param array $definitions
    *   The new menu link definitions.
-   *
    */
   public function rebuild(array $definitions);
 

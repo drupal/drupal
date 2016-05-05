@@ -19,17 +19,20 @@
   <rule ref="Drupal.CSS.ColourDefinition"/>
   <rule ref="Drupal.Commenting.DocComment">
     <!-- Sniff for these errors: SpacingAfterTagGroup, WrongEnd, SpacingBetween,
-      ContentAfterOpen, SpacingBeforeShort, TagValueIndent -->
-    <exclude name="Drupal.Commenting.DocComment.ShortStartSpace"/>
+      ContentAfterOpen, SpacingBeforeShort, TagValueIndent, ShortStartSpace,
+      SpacingAfter -->
     <exclude name="Drupal.Commenting.DocComment.LongNotCapital"/>
-    <exclude name="Drupal.Commenting.DocComment.ParamGroup"/>
-    <exclude name="Drupal.Commenting.DocComment.SpacingAfter"/>
+    <!-- ParamNotFirst still not decided for PHPUnit-based tests.
+      @see https://www.drupal.org/node/2253915 -->
     <exclude name="Drupal.Commenting.DocComment.ParamNotFirst"/>
     <exclude name="Drupal.Commenting.DocComment.SpacingBeforeTags"/>
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.ShortNotCapital"/>
     <exclude name="Drupal.Commenting.DocComment.ShortFullStop"/>
+    <!-- TagsNotGrouped and ParamGroup have false-positives.
+      @see https://www.drupal.org/node/2060925 -->
     <exclude name="Drupal.Commenting.DocComment.TagsNotGrouped"/>
+    <exclude name="Drupal.Commenting.DocComment.ParamGroup"/>
     <exclude name="Drupal.Commenting.DocComment.ShortSingleLine"/>
     <exclude name="Drupal.Commenting.DocComment.TagGroupSpacing"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>

@@ -196,7 +196,6 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *
    * @param array $storage
    *   The stored options.
-   *
    * @param array $options
    *   The defined options.
    */

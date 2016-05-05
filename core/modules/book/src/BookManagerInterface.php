@@ -81,7 +81,6 @@ interface BookManagerInterface {
    *
    * @param int[] $nids
    *   An array of nids to load.
-   *
    * @param bool $translate
    *   If TRUE, set access, title, and other elements.
    *

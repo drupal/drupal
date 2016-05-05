@@ -261,7 +261,6 @@ function user_load_by_name($name) {
  * @return string|null
  *   A translated violation message if the name is invalid or NULL if the name
  *   is valid.
- *
  */
 function user_validate_name($name) {
   $definition = BaseFieldDefinition::create('string')

@@ -357,7 +357,6 @@ class Datelist extends DateElementBase {
    * Rounds minutes and seconds to nearest requested value.
    *
    * @param $date
-   *
    * @param $increment
    *
    * @return

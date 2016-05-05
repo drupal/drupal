@@ -348,20 +348,20 @@ class FormState implements FormStateInterface {
   protected $groups = array();
 
   /**
-   *  This is not a special key, and no specific support is provided for it in
-   *  the Form API. By tradition it was the location where application-specific
-   *  data was stored for communication between the submit, validation, and form
-   *  builder functions, especially in a multi-step-style form. Form
-   *  implementations may use any key(s) within $form_state (other than the keys
-   *  listed here and other reserved ones used by Form API internals) for this
-   *  kind of storage. The recommended way to ensure that the chosen key doesn't
-   *  conflict with ones used by the Form API or other modules is to use the
-   *  module name as the key name or a prefix for the key name. For example, the
-   *  entity form classes use $this->entity in entity forms, or
-   *  $form_state->getFormObject()->getEntity() outside the controller, to store
-   *  information about the entity being edited, and this information stays
-   *  available across successive clicks of the "Preview" button (if available)
-   *  as well as when the "Save" button is finally clicked.
+   * This is not a special key, and no specific support is provided for it in
+   * the Form API. By tradition it was the location where application-specific
+   * data was stored for communication between the submit, validation, and form
+   * builder functions, especially in a multi-step-style form. Form
+   * implementations may use any key(s) within $form_state (other than the keys
+   * listed here and other reserved ones used by Form API internals) for this
+   * kind of storage. The recommended way to ensure that the chosen key doesn't
+   * conflict with ones used by the Form API or other modules is to use the
+   * module name as the key name or a prefix for the key name. For example, the
+   * entity form classes use $this->entity in entity forms, or
+   * $form_state->getFormObject()->getEntity() outside the controller, to store
+   * information about the entity being edited, and this information stays
+   * available across successive clicks of the "Preview" button (if available)
+   * as well as when the "Save" button is finally clicked.
    *
    * @var array
    */

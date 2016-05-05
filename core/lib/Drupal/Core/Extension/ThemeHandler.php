@@ -54,7 +54,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $state;
 
   /**
-   *  The config installer to install configuration.
+   * The config installer to install configuration.
    *
    * @var \Drupal\Core\Config\ConfigInstallerInterface
    */

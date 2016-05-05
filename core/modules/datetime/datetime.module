@@ -50,7 +50,6 @@ function datetime_help($route_name, RouteMatchInterface $route_match) {
  * same value for in both the local timezone and UTC.
  *
  * @param $date
- *
  */
 function datetime_date_default_time($date) {
   $date->setTime(12, 0, 0);

@@ -337,7 +337,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
   }
 
   /**
-   *  Test that subtrees hashes vary by the language of the page.
+   * Test that subtrees hashes vary by the language of the page.
    */
   function testLanguageSwitching() {
     // Create a new language with the langcode 'xx'.

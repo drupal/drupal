@@ -210,7 +210,6 @@ function common_test_library_info_alter(&$libraries, $module) {
  * cron going.
  *
  * @see common_test_cron_helper()
- *
  */
 function common_test_cron() {
   throw new Exception(t('Uncaught exception'));

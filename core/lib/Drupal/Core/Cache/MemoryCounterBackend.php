@@ -9,7 +9,6 @@ namespace Drupal\Core\Cache;
  * many times a cache entry was set or requested.
  *
  * @todo On the longrun this backend should be replaced by phpunit mock objects.
- *
  */
 class MemoryCounterBackend extends MemoryBackend {
 
@@ -49,7 +48,6 @@ class MemoryCounterBackend extends MemoryBackend {
    *
    * @param string $function
    *   The called function.
-   *
    * @param string $cid
    *   The cache ID of the cache entry to increase the counter.
    */
