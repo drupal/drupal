@@ -1,0 +1,3 @@
+<?php
+
+// Wrong file comment.

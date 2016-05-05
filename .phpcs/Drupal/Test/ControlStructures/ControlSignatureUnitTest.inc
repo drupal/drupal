@@ -1,0 +1,13 @@
+<?php
+
+try {
+  $response = $httpClient->get($url);
+  $data = (string) $response->getBody();
+}catch (RequestException $e) {
+  $logger('example')->warning('Failed to get data "%error".', array('%error' => $e->getMessage()));
+}catch (BadResponseException $e) {
+  $logger('example')->warning('Failed to get data "%error".', array('%error' => $e->getMessage()));
+}
+catch (\Exception $e) {
+  $logger('example')->warning('Failed to get data "%error".', array('%error' => $e->getMessage()));
+}
