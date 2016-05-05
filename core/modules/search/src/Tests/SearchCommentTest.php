@@ -120,7 +120,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit_comment['comment_body[0][value]'] = '<h1>' . $comment_body . '</h1>';
     $full_html_format_id = 'full_html';
     $edit_comment['comment_body[0][format]'] = $full_html_format_id;
-    $this->drupalPostForm('comment/reply/node/' . $node->id() .'/comment', $edit_comment, t('Save'));
+    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit_comment, t('Save'));
 
     // Post a comment with an evil script tag in the comment subject and a
     // script tag nearby a keyword in the comment body. Use the 'FULL HTML' text

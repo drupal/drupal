@@ -326,7 +326,7 @@ function update_get_update_list() {
       $updates = array_combine($updates, $updates);
       foreach (array_keys($updates) as $update) {
         if ($update == \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
-          $ret[$module]['warning'] = '<em>' . $module . '</em> module cannot be updated. It contains an update numbered as ' . \Drupal::CORE_MINIMUM_SCHEMA_VERSION . ' which is reserved for the earliest installation of a module in Drupal ' .  \Drupal::CORE_COMPATIBILITY . ', before any updates. In order to update <em>' . $module . '</em> module, you will need to install a version of the module with valid updates.';
+          $ret[$module]['warning'] = '<em>' . $module . '</em> module cannot be updated. It contains an update numbered as ' . \Drupal::CORE_MINIMUM_SCHEMA_VERSION . ' which is reserved for the earliest installation of a module in Drupal ' . \Drupal::CORE_COMPATIBILITY . ', before any updates. In order to update <em>' . $module . '</em> module, you will need to install a version of the module with valid updates.';
           continue 2;
         }
         if ($update > $schema_version) {

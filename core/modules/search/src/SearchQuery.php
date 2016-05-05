@@ -224,7 +224,7 @@ class SearchQuery extends SelectExtender {
   protected function parseSearchExpression() {
     // Matches words optionally prefixed by a - sign. A word in this case is
     // something between two spaces, optionally quoted.
-    preg_match_all('/ (-?)("[^"]+"|[^" ]+)/i', ' ' .  $this->searchExpression, $keywords, PREG_SET_ORDER);
+    preg_match_all('/ (-?)("[^"]+"|[^" ]+)/i', ' ' . $this->searchExpression, $keywords, PREG_SET_ORDER);
 
     if (count($keywords) == 0) {
       return;

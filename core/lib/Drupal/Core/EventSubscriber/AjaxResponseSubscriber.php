@@ -94,7 +94,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
         // the JSON data by making it the value of a textarea.
         // @see http://malsup.com/jquery/form/#file-upload
         // @see https://www.drupal.org/node/1009382
-        $response->setContent('<textarea>' . $response->getContent()  . '</textarea>');
+        $response->setContent('<textarea>' . $response->getContent() . '</textarea>');
       }
 
       // User-uploaded files cannot set any response headers, so a custom header

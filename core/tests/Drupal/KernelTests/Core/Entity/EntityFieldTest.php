@@ -410,9 +410,9 @@ class EntityFieldTest extends EntityKernelTestBase  {
     // Test getting metadata upfront. The entity types used for this test have
     // a default bundle that is the same as the entity type.
     $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type, $entity_type);
-    $this->assertEqual($definitions['name']->getType(), 'string', $entity_type .': Name field found.');
-    $this->assertEqual($definitions['user_id']->getType(), 'entity_reference', $entity_type .': User field found.');
-    $this->assertEqual($definitions['field_test_text']->getType(), 'text', $entity_type .': Test-text-field field found.');
+    $this->assertEqual($definitions['name']->getType(), 'string', $entity_type . ': Name field found.');
+    $this->assertEqual($definitions['user_id']->getType(), 'entity_reference', $entity_type . ': User field found.');
+    $this->assertEqual($definitions['field_test_text']->getType(), 'text', $entity_type . ': Test-text-field field found.');
 
     // Test deriving further metadata.
     $this->assertTrue($definitions['name'] instanceof FieldDefinitionInterface);
@@ -450,21 +450,21 @@ class EntityFieldTest extends EntityKernelTestBase  {
       ->create();
 
     $definitions = $entity->getFieldDefinitions();
-    $this->assertEqual($definitions['name']->getType(), 'string', $entity_type .': Name field found.');
-    $this->assertEqual($definitions['user_id']->getType(), 'entity_reference', $entity_type .': User field found.');
-    $this->assertEqual($definitions['field_test_text']->getType(), 'text', $entity_type .': Test-text-field field found.');
+    $this->assertEqual($definitions['name']->getType(), 'string', $entity_type . ': Name field found.');
+    $this->assertEqual($definitions['user_id']->getType(), 'entity_reference', $entity_type . ': User field found.');
+    $this->assertEqual($definitions['field_test_text']->getType(), 'text', $entity_type . ': Test-text-field field found.');
 
     $name_properties = $entity->name->getFieldDefinition()->getPropertyDefinitions();
-    $this->assertEqual($name_properties['value']->getDataType(), 'string', $entity_type .': String value property of the name found.');
+    $this->assertEqual($name_properties['value']->getDataType(), 'string', $entity_type . ': String value property of the name found.');
 
     $userref_properties = $entity->user_id->getFieldDefinition()->getPropertyDefinitions();
-    $this->assertEqual($userref_properties['target_id']->getDataType(), 'integer', $entity_type .': Entity id property of the user found.');
-    $this->assertEqual($userref_properties['entity']->getDataType(), 'entity_reference', $entity_type .': Entity reference property of the user found.');
+    $this->assertEqual($userref_properties['target_id']->getDataType(), 'integer', $entity_type . ': Entity id property of the user found.');
+    $this->assertEqual($userref_properties['entity']->getDataType(), 'entity_reference', $entity_type . ': Entity reference property of the user found.');
 
     $textfield_properties = $entity->field_test_text->getFieldDefinition()->getFieldStorageDefinition()->getPropertyDefinitions();
-    $this->assertEqual($textfield_properties['value']->getDataType(), 'string', $entity_type .': String value property of the test-text field found.');
-    $this->assertEqual($textfield_properties['format']->getDataType(), 'filter_format', $entity_type .': String format field of the test-text field found.');
-    $this->assertEqual($textfield_properties['processed']->getDataType(), 'string', $entity_type .': String processed property of the test-text field found.');
+    $this->assertEqual($textfield_properties['value']->getDataType(), 'string', $entity_type . ': String value property of the test-text field found.');
+    $this->assertEqual($textfield_properties['format']->getDataType(), 'filter_format', $entity_type . ': String format field of the test-text field found.');
+    $this->assertEqual($textfield_properties['processed']->getDataType(), 'string', $entity_type . ': String processed property of the test-text field found.');
 
     // Make sure provided contextual information is right.
     $entity_adapter = $entity->getTypedData();

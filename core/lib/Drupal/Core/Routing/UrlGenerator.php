@@ -188,7 +188,7 @@ class UrlGenerator implements UrlGeneratorInterface {
       if ('variable' === $token[0]) {
         if (!$optional || !array_key_exists($token[3], $defaults) || (isset($mergedParams[$token[3]]) && (string) $mergedParams[$token[3]] !== (string) $defaults[$token[3]])) {
           // check requirement
-          if (!preg_match('#^'.$token[2].'$#', $mergedParams[$token[3]])) {
+          if (!preg_match('#^' . $token[2] . '$#', $mergedParams[$token[3]])) {
             $message = sprintf('Parameter "%s" for route "%s" must match "%s" ("%s" given) to generate a corresponding URL.', $token[3], $name, $token[2], $mergedParams[$token[3]]);
             throw new InvalidParameterException($message);
           }
@@ -232,7 +232,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     if ($query_params && $query = http_build_query($query_params, '', '&')) {
       // "/" and "?" can be left decoded for better user experience, see
       // http://tools.ietf.org/html/rfc3986#section-3.4
-      $url .= '?'.strtr($query, array('%2F' => '/'));
+      $url .= '?' . strtr($query, array('%2F' => '/'));
     }
 
     return $url;

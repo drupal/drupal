@@ -139,7 +139,7 @@ class ExportForm extends FormBase {
       $reader->setOptions($content_options);
       $languages = $this->languageManager->getLanguages();
       $language_name = isset($languages[$language->getId()]) ? $languages[$language->getId()]->getName() : '';
-      $filename = $language->getId() .'.po';
+      $filename = $language->getId() . '.po';
     }
     else {
       // Template required.

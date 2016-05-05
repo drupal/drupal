@@ -58,7 +58,7 @@ class Formula extends ArgumentPluginBase {
     $this->ensureMyTable();
     // Now that our table is secure, get our formula.
     $placeholder = $this->placeholder();
-    $formula = $this->getFormula() .' = ' . $placeholder;
+    $formula = $this->getFormula() . ' = ' . $placeholder;
     $placeholders = array(
       $placeholder => $this->argument,
     );

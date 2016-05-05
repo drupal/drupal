@@ -16,7 +16,7 @@ use Drupal\Tests\UnitTestCase;
 class SimpletestPhpunitRunCommandTest extends UnitTestCase {
 
   function testSimpletestPhpUnitRunCommand() {
-    include_once __DIR__ .'/../../fixtures/simpletest_phpunit_run_command_test.php';
+    include_once __DIR__ . '/../../fixtures/simpletest_phpunit_run_command_test.php';
     $app_root = __DIR__ . '/../../../../../..';
     include_once "$app_root/core/modules/simpletest/simpletest.module";
     $container = new ContainerBuilder();

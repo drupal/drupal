@@ -89,7 +89,7 @@ class DisplayTest extends UITestBase {
    */
   public function testDisableDisplay() {
     $view = $this->randomView();
-    $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
 
     $this->drupalGet($path_prefix);
     $this->assertFalse($this->xpath('//div[contains(@class, :class)]', array(':class' => 'views-display-disabled')), 'Make sure the disabled display css class does not appear after initial adding of a view.');

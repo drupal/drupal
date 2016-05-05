@@ -91,7 +91,7 @@ abstract class ModuleTestBase extends WebTestBase {
    *   TRUE if configuration has been installed, FALSE otherwise.
    */
   function assertModuleConfig($module) {
-    $module_config_dir = drupal_get_path('module', $module) . '/'. InstallStorage::CONFIG_INSTALL_DIRECTORY;
+    $module_config_dir = drupal_get_path('module', $module) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
     if (!is_dir($module_config_dir)) {
       return;
     }

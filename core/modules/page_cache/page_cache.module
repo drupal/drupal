@@ -23,7 +23,7 @@ function page_cache_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('Pages are usually identical for all anonymous users, while they can be personalized for each authenticated user. This is why entire pages can be cached for anonymous users, whereas they will have to be rebuilt for every authenticated user.') . '</dd>';
       $output .= '<dd>' . t('To speed up your site for authenticated users, see the <a href=":dynamic_page_cache-help">Dynamic Page Cache module</a>.', [':dynamic_page_cache-help' => (\Drupal::moduleHandler()->moduleExists('dynamic_page_cache')) ? Url::fromRoute('help.page', ['name' => 'dynamic_page_cache'])->toString() : '#']) . '</p>';
       $output .= '<dt>' . t('Configuring the internal page cache') . '</dt>';
-      $output .= '<dd>' . t('On the <a href=":cache-settings">Performance page</a>, you can configure how long browsers and proxies may cache pages; that setting is also respected by the Internal Page Cache module. There is no other configuration.', array(':cache-settings' => \Drupal::url('system.performance_settings')))  . '</dd>';
+      $output .= '<dd>' . t('On the <a href=":cache-settings">Performance page</a>, you can configure how long browsers and proxies may cache pages; that setting is also respected by the Internal Page Cache module. There is no other configuration.', array(':cache-settings' => \Drupal::url('system.performance_settings'))) . '</dd>';
       $output .= '</dl>';
 
       return $output;

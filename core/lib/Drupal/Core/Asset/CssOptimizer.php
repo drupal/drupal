@@ -163,7 +163,7 @@ class CssOptimizer implements AssetOptimizerInterface {
     $directory = dirname($filename);
     // If the file is in the current directory, make sure '.' doesn't appear in
     // the url() path.
-    $directory = $directory == '.' ? '' : $directory .'/';
+    $directory = $directory == '.' ? '' : $directory . '/';
 
     // Alter all internal url() paths. Leave external paths alone. We don't need
     // to normalize absolute paths here because that will be done later.

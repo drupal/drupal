@@ -57,7 +57,7 @@ class ContactFieldsTest extends ViewTestBase {
   public function testViewsData() {
     // Test that the field is not exposed to views, since contact_message
     // entities have no storage.
-    $table_name = 'contact_message__' .  $this->fieldStorage->getName();
+    $table_name = 'contact_message__' . $this->fieldStorage->getName();
     $data = $this->container->get('views.views_data')->get($table_name);
     $this->assertFalse($data, 'The field is not exposed to Views.');
   }

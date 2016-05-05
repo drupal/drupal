@@ -58,7 +58,7 @@ class AreaTest extends HandlerTestBase {
     $types = array('header', 'footer', 'empty');
     $labels = array();
     foreach ($types as $type) {
-      $edit_path = 'admin/structure/views/nojs/handler/test_example_area/default/' . $type .'/test_example';
+      $edit_path = 'admin/structure/views/nojs/handler/test_example_area/default/' . $type . '/test_example';
 
       // First setup an empty label.
       $this->drupalPostForm($edit_path, array(), t('Apply'));

@@ -31,15 +31,24 @@ class UserNameConstraintValidator extends ConstraintValidator {
     }
     if (preg_match('/[^\x{80}-\x{F7} a-z0-9@_.\'-]/i', $name)
       || preg_match(
-        '/[\x{80}-\x{A0}' .       // Non-printable ISO-8859-1 + NBSP
-        '\x{AD}' .                // Soft-hyphen
-        '\x{2000}-\x{200F}' .     // Various space characters
-        '\x{2028}-\x{202F}' .     // Bidirectional text overrides
-        '\x{205F}-\x{206F}' .     // Various text hinting characters
-        '\x{FEFF}' .              // Byte order mark
-        '\x{FF01}-\x{FF60}' .     // Full-width latin
-        '\x{FFF9}-\x{FFFD}' .     // Replacement characters
-        '\x{0}-\x{1F}]/u', // NULL byte and control characters
+        // Non-printable ISO-8859-1 + NBSP
+        '/[\x{80}-\x{A0}' .
+        // Soft-hyphen
+        '\x{AD}' .
+        // Various space characters
+        '\x{2000}-\x{200F}' .
+        // Bidirectional text overrides
+        '\x{2028}-\x{202F}' .
+        // Various text hinting characters
+        '\x{205F}-\x{206F}' .
+        // Byte order mark
+        '\x{FEFF}' .
+        // Full-width latin
+        '\x{FF01}-\x{FF60}' .
+        // Replacement characters
+        '\x{FFF9}-\x{FFFD}' .
+        // NULL byte and control characters
+        '\x{0}-\x{1F}]/u',
         $name)
     ) {
       $this->context->addViolation($constraint->illegalMessage);

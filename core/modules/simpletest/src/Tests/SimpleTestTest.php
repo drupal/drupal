@@ -78,7 +78,7 @@ if (!function_exists('simpletest_test_stub_settings_function')) {
 }
 EOD;
 
-      file_put_contents($this->siteDirectory. '/' . 'settings.testing.php', $php);
+      file_put_contents($this->siteDirectory . '/' . 'settings.testing.php', $php);
       // @see \Drupal\system\Tests\DrupalKernel\DrupalKernelSiteTest
       $class = __CLASS__;
       $yaml = <<<EOD

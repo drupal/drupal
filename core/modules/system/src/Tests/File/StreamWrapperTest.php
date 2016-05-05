@@ -107,7 +107,7 @@ class StreamWrapperTest extends FileTestBase {
    * Test some file handle functions.
    */
   function testFileFunctions() {
-    $filename = 'public://'. $this->randomMachineName();
+    $filename = 'public://' . $this->randomMachineName();
     file_put_contents($filename, str_repeat('d', 1000));
 
     // Open for rw and place pointer at beginning of file so select will return.

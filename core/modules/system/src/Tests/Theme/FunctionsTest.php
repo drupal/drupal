@@ -278,7 +278,7 @@ class FunctionsTest extends WebTestBase {
     $expected_links .= '<li data-drupal-link-system-path="router_test/test1" class="router-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '" data-drupal-link-system-path="router_test/test1">' . Html::escape('Test route') . '</a></li>';
     $query = array('key' => 'value');
     $encoded_query = Html::escape(Json::encode($query));
-    $expected_links .= '<li data-drupal-link-query="'.$encoded_query.'" data-drupal-link-system-path="router_test/test1" class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '" data-drupal-link-query="'.$encoded_query.'" data-drupal-link-system-path="router_test/test1">' . Html::escape('Query test route') . '</a></li>';
+    $expected_links .= '<li data-drupal-link-query="' . $encoded_query . '" data-drupal-link-system-path="router_test/test1" class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '" data-drupal-link-query="' . $encoded_query . '" data-drupal-link-system-path="router_test/test1">' . Html::escape('Query test route') . '</a></li>';
     $expected_links .= '</ul>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);

@@ -422,7 +422,7 @@ class DbUpdateController extends ControllerBase {
     }
 
     if (Settings::get('update_free_access')) {
-      $message .= '<p>' . $this->t("<strong>Reminder: don't forget to set the <code>\$settings['update_free_access']</code> value in your <code>settings.php</code> file back to <code>FALSE</code>.</strong>")  . '</p>';
+      $message .= '<p>' . $this->t("<strong>Reminder: don't forget to set the <code>\$settings['update_free_access']</code> value in your <code>settings.php</code> file back to <code>FALSE</code>.</strong>") . '</p>';
     }
 
     $build['message'] = array(

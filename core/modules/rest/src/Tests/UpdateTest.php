@@ -69,7 +69,7 @@ class UpdateTest extends RESTTestBase {
     $this->assertResponse(204);
 
     $entity = entity_load($entity_type, $entity->id(), TRUE);
-    $this->assertNotNull($entity->field_test_text->value. 'Test field has not been deleted.');
+    $this->assertNotNull($entity->field_test_text->value . 'Test field has not been deleted.');
 
     // Try to empty a field.
     $normalized['field_test_text'] = array();

@@ -181,7 +181,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     if ($fatal) {
       // When called from CLI, simply output a plain text message.
       // Should not translate the string to avoid errors producing more errors.
-      $response->setContent(html_entity_decode(strip_tags(SafeMarkup::format('%type: @message in %function (line %line of %file).', $error))). "\n");
+      $response->setContent(html_entity_decode(strip_tags(SafeMarkup::format('%type: @message in %function (line %line of %file).', $error))) . "\n");
       $response->send();
       exit;
     }

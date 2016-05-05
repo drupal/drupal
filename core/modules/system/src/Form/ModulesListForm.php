@@ -259,7 +259,7 @@ class ModulesListForm extends FormBase {
     if (!empty($module->info['required'])) {
       // Used when displaying modules that are required by the installation profile
       $row['enable']['#disabled'] = TRUE;
-      $row['#required_by'][] = $distribution . (!empty($module->info['explanation']) ? ' ('. $module->info['explanation'] .')' : '');
+      $row['#required_by'][] = $distribution . (!empty($module->info['explanation']) ? ' (' . $module->info['explanation'] . ')' : '');
     }
 
     // Check the compatibilities.

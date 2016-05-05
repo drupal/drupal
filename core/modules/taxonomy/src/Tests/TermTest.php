@@ -225,10 +225,10 @@ class TermTest extends TaxonomyTestBase {
     // three letters.
     // @see https://www.drupal.org/node/2397691
     $terms = array(
-      'term1' => 'a'. $this->randomMachineName(),
-      'term2' => 'b'. $this->randomMachineName(),
-      'term3' => 'c'. $this->randomMachineName() . ', ' . $this->randomMachineName(),
-      'term4' => 'd'. $this->randomMachineName(),
+      'term1' => 'a' . $this->randomMachineName(),
+      'term2' => 'b' . $this->randomMachineName(),
+      'term3' => 'c' . $this->randomMachineName() . ', ' . $this->randomMachineName(),
+      'term4' => 'd' . $this->randomMachineName(),
     );
 
     $edit = array();

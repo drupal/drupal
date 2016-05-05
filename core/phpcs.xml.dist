@@ -100,4 +100,12 @@
   <rule ref="Generic.PHP.UpperCaseConstant"/>
   <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
 
+  <!-- Squiz sniffs -->
+  <rule ref="Squiz.Strings.ConcatenationSpacing">
+    <properties>
+      <property name="spacing" value="1"/>
+      <property name="ignoreNewlines" value="true"/>
+    </properties>
+ </rule>
+
 </ruleset>

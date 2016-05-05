@@ -138,7 +138,7 @@ class Block extends DrupalSqlBase {
         $settings['book']['block_mode'] = $this->variableGet('book_block_mode', 'all pages');
         break;
       case 'forum':
-        $settings['forum']['block_num'] = $this->variableGet('forum_block_num_'. $delta, 5);
+        $settings['forum']['block_num'] = $this->variableGet('forum_block_num_' . $delta, 5);
         break;
       case 'statistics':
         foreach (array('statistics_block_top_day_num', 'statistics_block_top_all_num', 'statistics_block_top_last_num') as $name) {

@@ -593,7 +593,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
    */
   public function enterScope($name) {
     if ('request' !== $name) {
-      @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+      @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
     }
 
     throw new \BadMethodCallException(sprintf("'%s' is not supported by Drupal 8.", __FUNCTION__));
@@ -604,7 +604,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
    */
   public function leaveScope($name) {
     if ('request' !== $name) {
-      @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+      @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
     }
 
     throw new \BadMethodCallException(sprintf("'%s' is not supported by Drupal 8.", __FUNCTION__));
@@ -617,7 +617,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
 
     $name = $scope->getName();
     if ('request' !== $name) {
-      @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+      @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
     }
     throw new \BadMethodCallException(sprintf("'%s' is not supported by Drupal 8.", __FUNCTION__));
   }
@@ -627,7 +627,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
    */
   public function hasScope($name) {
     if ('request' !== $name) {
-      @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+      @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
     }
 
     throw new \BadMethodCallException(sprintf("'%s' is not supported by Drupal 8.", __FUNCTION__));
@@ -637,7 +637,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
    * {@inheritdoc}
    */
   public function isScopeActive($name) {
-    @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
 
     throw new \BadMethodCallException(sprintf("'%s' is not supported by Drupal 8.", __FUNCTION__));
   }

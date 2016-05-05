@@ -181,7 +181,7 @@ class ProcessingTest extends WebTestBase {
    *   TRUE on pass, FALSE on fail.
    */
   function assertBatchMessages($texts, $message) {
-    $pattern = '|' . implode('.*', $texts) .'|s';
+    $pattern = '|' . implode('.*', $texts) . '|s';
     return $this->assertPattern($pattern, $message);
   }
 

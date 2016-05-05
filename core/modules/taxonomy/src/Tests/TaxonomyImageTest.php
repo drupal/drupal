@@ -75,7 +75,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     $image = array_pop($files);
     $edit['name[0][value]'] = $this->randomMachineName();
     $edit['files[field_test_0]'] = drupal_realpath($image->uri);
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id()  . '/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, t('Save'));
     $this->drupalPostForm(NULL, ['field_test[0][alt]' => $this->randomMachineName()], t('Save'));
     $terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => $edit['name[0][value]']));
     $term = reset($terms);

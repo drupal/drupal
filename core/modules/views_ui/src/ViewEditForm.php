@@ -1071,7 +1071,7 @@ class ViewEditForm extends ViewFormBase {
         'type' => $type,
         'id' => $id,
       ), array('attributes' => $link_attributes)));
-      $build['fields'][$id]['#class'][] = Html::cleanCssIdentifier($display['id']. '-' . $type . '-' . $id);
+      $build['fields'][$id]['#class'][] = Html::cleanCssIdentifier($display['id'] . '-' . $type . '-' . $id);
 
       if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
         $build['fields'][$id]['#settings_links'][] = $this->l(SafeMarkup::format('<span class="label">@text</span>', array('@text' => $this->t('Aggregation settings'))), new Url('views_ui.form_handler_group', array(

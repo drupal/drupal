@@ -223,7 +223,7 @@ class EditorAdminTest extends WebTestBase {
     $settings = $editor->getSettings();
     $this->assertIdentical($editor->getEditor(), 'unicorn', 'The text editor is configured correctly.');
     $this->assertIdentical($settings['ponies_too'], $ponies_too, 'The text editor settings are stored correctly.');
-    $this->drupalGet('admin/config/content/formats/manage/'. $format_id);
+    $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
     $select = $this->xpath('//select[@name="editor[editor]"]');
     $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
     $options = $this->xpath('//select[@name="editor[editor]"]/option');

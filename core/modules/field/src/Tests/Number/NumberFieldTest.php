@@ -551,11 +551,11 @@ class NumberFieldTest extends WebTestBase {
     );
     $this->drupalPostForm($field_configuration_url, $edit, t('Save settings'));
     // Check if an error message is shown.
-    $this->assertNoRaw(t('%name is not a valid number.', array('%name' => t('Minimum'))), 'Saved ' . gettype($minimum_value) .'  value as minimal value on a ' . $field->getType() . ' field');
+    $this->assertNoRaw(t('%name is not a valid number.', array('%name' => t('Minimum'))), 'Saved ' . gettype($minimum_value) . '  value as minimal value on a ' . $field->getType() . ' field');
     // Check if a success message is shown.
     $this->assertRaw(t('Saved %label configuration.', array('%label' => $field->getLabel())));
     // Check if the minimum value was actually set.
     $this->drupalGet($field_configuration_url);
-    $this->assertFieldById('edit-settings-min', $minimum_value, 'Minimal ' . gettype($minimum_value) .'  value was set on a ' . $field->getType() . ' field.');
+    $this->assertFieldById('edit-settings-min', $minimum_value, 'Minimal ' . gettype($minimum_value) . '  value was set on a ' . $field->getType() . ' field.');
   }
 }
