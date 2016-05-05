@@ -47,13 +47,6 @@ class Query extends QueryBase implements QueryInterface {
   protected $connection;
 
   /**
-   * Stores the entity manager used by the query.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * Constructs a query object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
