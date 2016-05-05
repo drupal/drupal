@@ -151,6 +151,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    *   A config object for 'search.settings'.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The $account object to use for checking for access to advanced search.
    */
