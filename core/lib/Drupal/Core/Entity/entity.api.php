@@ -883,6 +883,9 @@ function hook_ENTITY_TYPE_storage_load(array $entities) {
 /**
  * Act on an entity before it is created or updated.
  *
+ * You can get the original entity object from $entity->original when it is an
+ * update of the entity.
+ *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
  *
@@ -898,6 +901,9 @@ function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
 
 /**
  * Act on a specific type of entity before it is created or updated.
+ *
+ * You can get the original entity object from $entity->original when it is an
+ * update of the entity.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -963,7 +969,8 @@ function hook_ENTITY_TYPE_insert(Drupal\Core\Entity\EntityInterface $entity) {
  * Respond to updates to an entity.
  *
  * This hook runs once the entity storage has been updated. Note that hook
- * implementations may not alter the stored entity data.
+ * implementations may not alter the stored entity data. Get the original entity
+ * object from $entity->original.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -986,7 +993,8 @@ function hook_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
  * Respond to updates to an entity of a particular type.
  *
  * This hook runs once the entity storage has been updated. Note that hook
- * implementations may not alter the stored entity data.
+ * implementations may not alter the stored entity data. Get the original entity
+ * object from $entity->original.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
