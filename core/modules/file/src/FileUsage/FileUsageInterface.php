@@ -64,7 +64,6 @@ interface FileUsageInterface {
    *   A nested array with usage data. The first level is keyed by module name,
    *   the second by object type and the third by the object id. The value of
    *   the third level contains the usage count.
-   *
    */
   public function listUsage(FileInterface $file);
 }

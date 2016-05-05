@@ -49,7 +49,6 @@ interface BookOutlineStorageInterface {
    *
    * @param array $book_link
    *   The book link.
-   *
    * @param int $max_depth
    *   The maximum supported depth of the book tree.
    *

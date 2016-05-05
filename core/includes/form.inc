@@ -313,7 +313,6 @@ function template_preprocess_checkboxes(&$variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties and children of
  *     the details element. Properties used: #children.
- *
  */
 function template_preprocess_vertical_tabs(&$variables) {
   $element = $variables['element'];
@@ -372,7 +371,6 @@ function template_preprocess_form(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #rows, #cols,
  *     #placeholder, #required, #attributes, #resizable
- *
  */
 function template_preprocess_textarea(&$variables) {
   $element = $variables['element'];

@@ -53,7 +53,6 @@ class AjaxPageStateTest extends WebTestBase {
    * When called with ajax_page_state[libraries]=core/html5shiv the library
    * should be excluded as it is already loaded. This should not affect other
    * libraries so test if drupalSettings is still available.
-   *
    */
   public function testHtml5ShivIsNotLoaded() {
     $this->drupalGet('node',
@@ -82,7 +81,6 @@ class AjaxPageStateTest extends WebTestBase {
    *
    * ajax_page_state[libraries] should be able to support multiple libraries
    * comma separated.
-   *
    */
   public function testMultipleLibrariesAreNotLoaded() {
     $this->drupalGet('node',

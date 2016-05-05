@@ -28,7 +28,6 @@ class QueryFactory implements QueryFactoryInterface {
 
   /**
    * Constructs a QueryFactory object.
-   *
    */
   public function __construct(KeyValueFactoryInterface $key_value_factory) {
     $this->keyValueFactory = $key_value_factory;

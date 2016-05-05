@@ -127,7 +127,6 @@ class ChainEntityResolverTest extends UnitTestCase {
    *
    * @param null|int $return
    *   Whether the mocked resolve method should return TRUE or FALSE.
-   *
    * @param bool $called
    *   Whether or not the resolve method is expected to be called.
    *

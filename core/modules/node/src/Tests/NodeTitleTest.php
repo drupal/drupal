@@ -41,7 +41,7 @@ class NodeTitleTest extends NodeTestBase {
   }
 
   /**
-   *  Creates one node and tests if the node title has the correct value.
+   * Creates one node and tests if the node title has the correct value.
    */
   function testNodeTitle() {
     // Create "Basic page" content with title.

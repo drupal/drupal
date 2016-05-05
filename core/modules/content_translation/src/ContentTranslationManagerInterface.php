@@ -74,7 +74,6 @@ interface ContentTranslationManagerInterface {
    * @returns bool
    *   TRUE if the specified bundle is translatable. If no bundle is provided
    *   returns TRUE if at least one of the entity bundles is translatable.
-   *
    */
   public function isEnabled($entity_type_id, $bundle = NULL);
 

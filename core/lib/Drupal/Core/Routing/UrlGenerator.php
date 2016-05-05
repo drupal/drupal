@@ -63,7 +63,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   ];
 
   /**
-   *  Constructs a new generator object.
+   * Constructs a new generator object.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $provider
    *   The route provider to be searched for routes.

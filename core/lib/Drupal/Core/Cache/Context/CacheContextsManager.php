@@ -98,7 +98,6 @@ class CacheContextsManager {
    * @return \Drupal\Core\Cache\Context\ContextCacheKeys
    *   The ContextCacheKeys object containing the converted cache keys and
    *   cacheability metadata.
-   *
    */
   public function convertTokensToKeys(array $context_tokens) {
     assert('$this->assertValidTokens($context_tokens)');

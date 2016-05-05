@@ -51,7 +51,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   }
 
   /**
-   *  This ensures a specific file is actually an image.
+   * This ensures a specific file is actually an image.
    */
   function testFileValidateIsImage() {
     $this->assertTrue(file_exists($this->image->getFileUri()), 'The image being tested exists.', 'File');
@@ -64,8 +64,9 @@ class ValidatorTest extends FileManagedUnitTestBase {
   }
 
   /**
-   *  This ensures the resolution of a specific file is within bounds.
-   *  The image will be resized if it's too large.
+   * This ensures the resolution of a specific file is within bounds.
+   *
+   * The image will be resized if it's too large.
    */
   function testFileValidateImageResolution() {
     // Non-images.
@@ -113,7 +114,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   }
 
   /**
-   *  This will ensure the filename length is valid.
+   * This will ensure the filename length is valid.
    */
   function testFileValidateNameLength() {
     // Create a new file entity.

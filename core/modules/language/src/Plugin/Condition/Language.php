@@ -19,7 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     "language" = @ContextDefinition("language", label = @Translation("Language"))
  *   }
  * )
- *
  */
 class Language extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 

@@ -220,7 +220,6 @@ function valid_email_address($mail) {
  *   UrlHelper::filterBadProtocol() is functionality equivalent to check_url()
  *   apart from the fact it is protected from double escaping bugs. Note that
  *   this method no longer marks its output as safe.
- *
  */
 function check_url($uri) {
   return Html::escape(UrlHelper::stripDangerousProtocols($uri));

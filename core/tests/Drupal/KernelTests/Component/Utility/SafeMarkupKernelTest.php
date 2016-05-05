@@ -32,7 +32,6 @@ class SafeMarkupKernelTest extends KernelTestBase {
    *
    * @param string $uri
    *   The URI of the resource.
-   *
    * @param array $options
    *   The options to pass to Url::fromUri().
    *

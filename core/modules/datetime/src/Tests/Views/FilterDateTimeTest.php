@@ -100,7 +100,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   *  Test between operations.
+   * Test between operations.
    */
   protected function _testBetween() {
     $view = Views::getView('test_filter_datetime');

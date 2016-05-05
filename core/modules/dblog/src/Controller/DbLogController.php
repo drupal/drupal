@@ -234,7 +234,6 @@ class DbLogController extends ControllerBase {
    * @return array
    *   If the ID is located in the Database Logging table, a build array in the
    *   format expected by drupal_render();
-   *
    */
   public function eventDetails($event_id) {
     $build = array();

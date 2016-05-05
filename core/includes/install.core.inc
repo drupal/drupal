@@ -1372,7 +1372,7 @@ function install_retrieve_file($uri, $destination) {
 }
 
 /**
- *  Checks if the localization server can be contacted.
+ * Checks if the localization server can be contacted.
  *
  * @param string $uri
  *   The URI to contact.
