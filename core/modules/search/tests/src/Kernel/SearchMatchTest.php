@@ -5,18 +5,18 @@ namespace Drupal\Tests\search\Kernel;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 
-// The search index can contain different types of content. Typically the type
-// is 'node'. Here we test with _test_ and _test2_ as the type.
-const SEARCH_TYPE = '_test_';
-const SEARCH_TYPE_2 = '_test2_';
-const SEARCH_TYPE_JPN = '_test3_';
-
 /**
  * Indexes content and queries it.
  *
  * @group search
  */
 class SearchMatchTest extends KernelTestBase {
+
+  // The search index can contain different types of content. Typically the type
+  // is 'node'. Here we test with _test_ and _test2_ as the type.
+  const SEARCH_TYPE = '_test_';
+  const SEARCH_TYPE_2 = '_test2_';
+  const SEARCH_TYPE_JPN = '_test3_';
 
   /**
    * Modules to enable.
@@ -49,10 +49,10 @@ class SearchMatchTest extends KernelTestBase {
     $this->config('search.settings')->set('index.minimum_word_size', 3)->save();
 
     for ($i = 1; $i <= 7; ++$i) {
-      search_index(SEARCH_TYPE, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText($i));
+      search_index(static::SEARCH_TYPE, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText($i));
     }
     for ($i = 1; $i <= 5; ++$i) {
-      search_index(SEARCH_TYPE_2, $i + 7, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText2($i));
+      search_index(static::SEARCH_TYPE_2, $i + 7, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText2($i));
     }
     // No getText builder function for Japanese text; just a simple array.
     foreach (array(
@@ -60,7 +60,7 @@ class SearchMatchTest extends KernelTestBase {
       14 => 'ドルーパルが大好きよ！',
       15 => 'コーヒーとケーキ',
     ) as $i => $jpn) {
-      search_index(SEARCH_TYPE_JPN, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $jpn);
+      search_index(static::SEARCH_TYPE_JPN, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $jpn);
     }
     search_update_totals();
   }
@@ -161,7 +161,7 @@ class SearchMatchTest extends KernelTestBase {
     foreach ($queries as $query => $results) {
       $result = db_select('search_index', 'i')
         ->extend('Drupal\search\SearchQuery')
-        ->searchExpression($query, SEARCH_TYPE)
+        ->searchExpression($query, static::SEARCH_TYPE)
         ->execute();
 
       $set = $result ? $result->fetchAll() : array();
@@ -181,7 +181,7 @@ class SearchMatchTest extends KernelTestBase {
     foreach ($queries as $query => $results) {
       $result = db_select('search_index', 'i')
         ->extend('Drupal\search\SearchQuery')
-        ->searchExpression($query, SEARCH_TYPE_2)
+        ->searchExpression($query, static::SEARCH_TYPE_2)
         ->execute();
 
       $set = $result ? $result->fetchAll() : array();
@@ -204,7 +204,7 @@ class SearchMatchTest extends KernelTestBase {
     foreach ($queries as $query => $results) {
       $result = db_select('search_index', 'i')
         ->extend('Drupal\search\SearchQuery')
-        ->searchExpression($query, SEARCH_TYPE_JPN)
+        ->searchExpression($query, static::SEARCH_TYPE_JPN)
         ->execute();
 
       $set = $result ? $result->fetchAll() : array();
