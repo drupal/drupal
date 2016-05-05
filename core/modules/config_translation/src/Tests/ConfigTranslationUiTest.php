@@ -456,7 +456,7 @@ class ConfigTranslationUiTest extends WebTestBase {
       'medium' => 'Default medium date',
       'custom_medium' => 'Custom medium date',
     );
-    foreach($formats as $id => $label) {
+    foreach ($formats as $id => $label) {
       $translation_base_url = 'admin/config/regional/date-time/formats/manage/' . $id . '/translate';
 
       $this->drupalGet($translation_base_url);

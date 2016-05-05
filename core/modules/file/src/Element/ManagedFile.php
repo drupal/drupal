@@ -97,7 +97,7 @@ class ManagedFile extends FormElement {
               // Temporary files that belong to other users should never be
               // allowed.
               if ($file->isTemporary()) {
-                if ($file->getOwnerId() != \Drupal::currentUser()->id())  {
+                if ($file->getOwnerId() != \Drupal::currentUser()->id()) {
                   $force_default = TRUE;
                   break;
                 }

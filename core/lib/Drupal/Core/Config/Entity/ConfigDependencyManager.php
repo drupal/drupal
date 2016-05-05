@@ -228,7 +228,7 @@ class ConfigDependencyManager {
     $graph = $this->getGraph();
 
     foreach ($entities_to_check as $entity) {
-      if (isset($graph[$entity]) && !empty($graph[$entity]['reverse_paths'])){
+      if (isset($graph[$entity]) && !empty($graph[$entity]['reverse_paths'])) {
         foreach ($graph[$entity]['reverse_paths'] as $dependency => $value) {
           $dependent_entities[$dependency] = $this->data[$dependency];
         }

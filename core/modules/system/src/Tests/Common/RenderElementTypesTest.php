@@ -187,7 +187,7 @@ class RenderElementTypesTest extends KernelTestBase {
       ),
     );
 
-    foreach($elements as $element) {
+    foreach ($elements as $element) {
       $xml = new \SimpleXMLElement(\Drupal::service('renderer')->renderRoot($element['value']));
       $result = $xml->xpath($element['expected']);
       $this->assertTrue($result, '"' . $element['name'] . '" input rendered correctly by drupal_render().');

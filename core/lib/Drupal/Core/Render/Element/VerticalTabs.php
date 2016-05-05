@@ -125,7 +125,7 @@ class VerticalTabs extends RenderElement {
     // form is rendered, e.g. on preview pages or when form validation
     // fails.
     $name = implode('__', $element['#parents']);
-    if ($form_state->hasValue($name . '__active_tab')){
+    if ($form_state->hasValue($name . '__active_tab')) {
       $element['#default_tab'] = $form_state->getValue($name . '__active_tab');
     }
     $element[$name . '__active_tab'] = array(

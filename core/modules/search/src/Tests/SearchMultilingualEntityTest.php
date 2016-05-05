@@ -182,7 +182,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $this->assertEqual(count($search_result), 2, 'The search found 2 results');
 
     // Test to check for the language of result items.
-    foreach($search_result as $result) {
+    foreach ($search_result as $result) {
       $this->assertEqual($result['langcode'], 'hu', 'The search found the correct Hungarian result');
     }
 

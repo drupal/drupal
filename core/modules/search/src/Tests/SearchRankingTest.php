@@ -244,7 +244,8 @@ class SearchRankingTest extends SearchTestBase {
       // Assert the results.
       if ($tag == 'notag') {
         $this->assertEqual($set[$tag_rank]['node']->id(), $nodes[$tag]->id(), 'Search tag ranking for plain text order.');
-      } else {
+      }
+      else {
         $this->assertEqual($set[$tag_rank]['node']->id(), $nodes[$tag]->id(), 'Search tag ranking for "&lt;' . $sorted_tags[$tag_rank] . '&gt;" order.');
       }
     }

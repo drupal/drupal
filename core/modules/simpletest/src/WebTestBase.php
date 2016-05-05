@@ -2539,7 +2539,7 @@ abstract class WebTestBase extends TestBase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertUrl($path, array $options = array(), $message = '', $group = 'Other') {
-    if ($path instanceof Url)  {
+    if ($path instanceof Url) {
       $url_obj = $path;
     }
     elseif (UrlHelper::isExternal($path)) {

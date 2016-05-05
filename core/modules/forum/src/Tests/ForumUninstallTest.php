@@ -138,7 +138,7 @@ class ForumUninstallTest extends WebTestBase {
     // Delete all terms in the Forums vocabulary. Uninstalling the forum module
     // will fail unless this is done.
     $terms = entity_load_multiple_by_properties('taxonomy_term', array('vid' => 'forums'));
-    foreach($terms as $term) {
+    foreach ($terms as $term) {
       $term->delete();
     }
 

@@ -90,7 +90,7 @@ class PhpTransliteration implements TransliterationInterface {
       $replacement = $character;
       if (($range1 && !in_array($code, $exclusions_range1)) || ($range2 && !in_array($code, $exclusions_range2))) {
         $to_add = $this->lookupReplacement($code, 'xyz');
-        if(strlen($to_add) === 1) {
+        if (strlen($to_add) === 1) {
           $replacement = $to_add;
         }
       }

@@ -720,7 +720,7 @@ abstract class StylePluginBase extends PluginBase {
           $fields = $this->view->field;
           $rendered_fields = &$this->rendered_fields[$index];
           $post_render_tokens = [];
-          foreach ($field_ids as $id)  {
+          foreach ($field_ids as $id) {
             $rendered_fields[$id] = $data[$id]['#markup'];
             $tokens = $fields[$id]->postRender($row, $rendered_fields[$id]);
             if ($tokens) {

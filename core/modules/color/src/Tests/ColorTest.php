@@ -164,7 +164,7 @@ class ColorTest extends WebTestBase {
       $edit['palette[bg]'] = $color;
       $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
 
-      if($is_valid) {
+      if ($is_valid) {
         $this->assertText('The configuration options have been saved.');
       }
       else {

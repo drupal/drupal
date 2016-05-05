@@ -149,7 +149,7 @@ class Random {
     $num_cons = count($cons);
     $word = '';
 
-    while(strlen($word) < $length){
+    while (strlen($word) < $length) {
       $word .= $cons[mt_rand(0, $num_cons - 1)] . $vowels[mt_rand(0, $num_vowels - 1)];
     }
 

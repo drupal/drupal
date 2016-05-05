@@ -113,7 +113,7 @@ function rdf_get_namespaces() {
   // namespace, do not use \Drupal::moduleHandler()->invokeAll().
   foreach (\Drupal::moduleHandler()->getImplementations('rdf_namespaces') as $module) {
     $function = $module . '_rdf_namespaces';
-    foreach($function() as $prefix => $namespace) {
+    foreach ($function() as $prefix => $namespace) {
       if (array_key_exists($prefix, $namespaces) && $namespace !== $namespaces[$prefix]) {
         throw new Exception(t('Tried to map @prefix to @namespace, but @prefix is already mapped to @orig_namespace.', array('@prefix' => $prefix, '@namespace' => $namespace, '@orig_namespace' => $namespaces[$prefix])));
       }
@@ -265,7 +265,7 @@ function rdf_preprocess_html(&$variables) {
   if (!isset($variables['html_attributes']['prefix'])) {
     $variables['html_attributes']['prefix'] = array();
   }
-  foreach(rdf_get_namespaces() as $prefix => $uri) {
+  foreach (rdf_get_namespaces() as $prefix => $uri) {
     $variables['html_attributes']['prefix'][] = $prefix . ': ' . $uri . " ";
   }
 }

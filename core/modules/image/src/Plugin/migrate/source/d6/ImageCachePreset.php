@@ -54,7 +54,7 @@ class ImageCachePreset extends DrupalSqlBase {
       ->condition('presetid', $row->getSourceProperty('presetid'))
       ->execute();
 
-    foreach($results as $key => $result) {
+    foreach ($results as $key => $result) {
       $actions[$key] = $result;
       $actions[$key]['data'] = unserialize($result['data']);
     }

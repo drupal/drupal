@@ -76,7 +76,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
     // Creating a duplicate needs to result in a new UUID.
     $entity_duplicate = $entity->createDuplicate();
     foreach ($entity->getFields() as $property => $value) {
-      switch($property) {
+      switch ($property) {
         case 'uuid':
           $this->assertNotNull($entity_duplicate->uuid());
           $this->assertNotNull($entity->uuid());

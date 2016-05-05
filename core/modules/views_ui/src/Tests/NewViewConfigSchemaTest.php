@@ -38,7 +38,7 @@ class NewViewConfigSchemaTest extends WebTestBase {
       'standard:aggregator_feed',
       'standard:aggregator_item',
     );
-    foreach($wizards as $wizard_key) {
+    foreach ($wizards as $wizard_key) {
       $edit = array();
       $edit['label'] = $this->randomString();
       $edit['id'] = strtolower($this->randomMachineName());

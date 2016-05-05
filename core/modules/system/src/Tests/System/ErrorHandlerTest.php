@@ -46,7 +46,7 @@ class ErrorHandlerTest extends WebTestBase {
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
       '@message' => 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 62 and defined',
     );
-    if (version_compare(PHP_VERSION, '7.0.0-dev') >= 0)  {
+    if (version_compare(PHP_VERSION, '7.0.0-dev') >= 0) {
       // In PHP 7, instead of a recoverable fatal error we get a TypeError.
       $fatal_error['%type'] = 'TypeError';
       // The error message also changes in PHP 7.

@@ -218,7 +218,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
             $definitions[$plugin_id]['base_route'] = $definitions[$task_info['parent_id']]['base_route'];
           }
           if ($route_name == $task_info['route_name']) {
-            if(!empty($task_info['base_route'])) {
+            if (!empty($task_info['base_route'])) {
               $base_routes[$task_info['base_route']] = $task_info['base_route'];
             }
             // Tabs that link to the current route are viable parents

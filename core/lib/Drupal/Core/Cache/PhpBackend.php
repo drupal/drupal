@@ -211,7 +211,7 @@ class PhpBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function invalidateAll() {
-    foreach($this->storage()->listAll() as $cidhash) {
+    foreach ($this->storage()->listAll() as $cidhash) {
       $this->invalidatebyHash($cidhash);
     }
   }
