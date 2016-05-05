@@ -160,7 +160,7 @@ class PoItem {
   /**
    * Set the comment of this translation.
    *
-   * @param String $comment
+   * @param string $comment
    */
   function setComment($comment) {
     $this->_comment = $comment;

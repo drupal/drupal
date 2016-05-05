@@ -40,7 +40,6 @@
   <rule ref="Drupal.Commenting.DocCommentStar"/>
   <rule ref="Drupal.Commenting.FileComment"/>
   <rule ref="Drupal.Commenting.FunctionComment">
-    <exclude name="Drupal.Commenting.FunctionComment.IncorrectParamVarName"/>
     <exclude name="Drupal.Commenting.FunctionComment.IncorrectTypeHint"/>
     <exclude name="Drupal.Commenting.FunctionComment.$InReturnType"/>
     <exclude name="Drupal.Commenting.FunctionComment.InvalidNoReturn"/>
