@@ -29,7 +29,7 @@ class UserNameConstraintValidator extends ConstraintValidator {
     if (strpos($name, '  ') !== FALSE) {
       $this->context->addViolation($constraint->multipleSpacesMessage);
     }
-    if (preg_match('/[^\x{80}-\x{F7} a-z0-9@_.\'-]/i', $name)
+    if (preg_match('/[^\x{80}-\x{F7} a-z0-9@+_.\'-]/i', $name)
       || preg_match(
         // Non-printable ISO-8859-1 + NBSP
         '/[\x{80}-\x{A0}' .

@@ -48,6 +48,7 @@ class UserValidationTest extends KernelTestBase {
       'foo@example.com'        => array('Valid username', 'assertNull'),
       'foo@-example.com'       => array('Valid username', 'assertNull'), // invalid domains are allowed in usernames
       'þòøÇßªř€'               => array('Valid username', 'assertNull'),
+      'foo+bar'                => array('Valid username', 'assertNull'), // '+' symbol is allowed
       'ᚠᛇᚻ᛫ᛒᛦᚦ'                => array('Valid UTF8 username', 'assertNull'), // runes
       ' foo'                   => array('Invalid username that starts with a space', 'assertNotNull'),
       'foo '                   => array('Invalid username that ends with a space', 'assertNotNull'),

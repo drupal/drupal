@@ -27,7 +27,9 @@ class UrlAlterFunctionalTest extends WebTestBase {
     // Ensure that the url_alias table exists after Drupal installation.
     $this->assertTrue(Database::getConnection()->schema()->tableExists('url_alias'), 'The url_alias table exists after Drupal installation.');
 
-    $account = $this->drupalCreateUser(array('administer url aliases'));
+    // User names can have quotes and plus signs so we should ensure that URL
+    // altering works with this.
+    $account = $this->drupalCreateUser(array('administer url aliases'), "a'foo+bar");
     $this->drupalLogin($account);
 
     $uid = $account->id();

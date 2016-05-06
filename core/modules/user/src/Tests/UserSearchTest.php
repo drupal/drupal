@@ -21,8 +21,9 @@ class UserSearchTest extends WebTestBase {
 
   function testUserSearch() {
     // Verify that a user without 'administer users' permission cannot search
-    // for users by email address.
-    $user1 = $this->drupalCreateUser(array('access user profiles', 'search content'));
+    // for users by email address. Additionally, ensure that the username has a
+    // plus sign to ensure searching works with that.
+    $user1 = $this->drupalCreateUser(array('access user profiles', 'search content'), "foo+bar");
     $this->drupalLogin($user1);
     $keys = $user1->getEmail();
     $edit = array('keys' => $keys);
