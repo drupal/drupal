@@ -145,7 +145,7 @@ function seven_preprocess_maintenance_page(&$variables) {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\NodeForm.
  *
  * Changes vertical tabs to container and adds meta information.
  */
