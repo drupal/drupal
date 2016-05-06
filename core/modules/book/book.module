@@ -127,7 +127,7 @@ function book_node_links_alter(array &$links, NodeInterface $node, array &$conte
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for node_form().
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\NodeForm.
  *
  * Adds the book form element to the node form.
  *
@@ -323,7 +323,7 @@ function book_node_prepare_form(NodeInterface $node, $operation, FormStateInterf
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\Form\NodeDeleteForm.
  *
  * Alters the confirm form for a single node deletion.
  */

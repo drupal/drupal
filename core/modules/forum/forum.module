@@ -282,7 +282,7 @@ function forum_comment_delete(CommentInterface $comment) {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\taxonomy\VocabularyForm.
  */
 function forum_form_taxonomy_vocabulary_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $vid = \Drupal::config('forum.settings')->get('vocabulary');
@@ -304,7 +304,7 @@ function forum_form_taxonomy_vocabulary_form_alter(&$form, FormStateInterface $f
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for taxonomy_term_form().
+ * Implements hook_form_FORM_ID_alter() for \Drupal\taxonomy\TermForm.
  */
 function forum_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $vid = \Drupal::config('forum.settings')->get('vocabulary');
@@ -315,7 +315,7 @@ function forum_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_st
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for node_form().
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\NodeForm.
  */
 function forum_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $node = $form_state->getFormObject()->getEntity();

@@ -66,7 +66,7 @@ function editor_element_info_alter(&$types) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for \Drupal\filter\FilterFormatListBuilder.
  */
 function editor_form_filter_admin_overview_alter(&$form, FormStateInterface $form_state) {
   // @todo Cleanup column injection: https://www.drupal.org/node/1876718.
@@ -88,7 +88,7 @@ function editor_form_filter_admin_overview_alter(&$form, FormStateInterface $for
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for 'filter_format_form'.
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\filter\FilterFormatEditForm.
  */
 function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_state) {
   $editor = $form_state->get('editor');
