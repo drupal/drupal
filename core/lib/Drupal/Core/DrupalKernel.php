@@ -248,15 +248,18 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @param bool $allow_dumping
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
+   * @param string $app_root
+   *   (optional) The path to the application root as a string. If not supplied,
+   *   the application root will be computed.
    *
    * @return static
    *
    * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
    *   In case the host name in the request is not trusted.
    */
-  public static function createFromRequest(Request $request, $class_loader, $environment, $allow_dumping = TRUE) {
-    $kernel = new static($environment, $class_loader, $allow_dumping);
-    static::bootEnvironment();
+  public static function createFromRequest(Request $request, $class_loader, $environment, $allow_dumping = TRUE, $app_root = NULL) {
+    $kernel = new static($environment, $class_loader, $allow_dumping, $app_root);
+    static::bootEnvironment($app_root);
     $kernel->initializeSettings($request);
     return $kernel;
   }
@@ -273,12 +276,28 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @param bool $allow_dumping
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
+   * @param string $app_root
+   *   (optional) The path to the application root as a string. If not supplied,
+   *   the application root will be computed.
    */
-  public function __construct($environment, $class_loader, $allow_dumping = TRUE) {
+  public function __construct($environment, $class_loader, $allow_dumping = TRUE, $app_root = NULL) {
     $this->environment = $environment;
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
-    $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
+    if ($app_root === NULL) {
+      $app_root = static::guessApplicationRoot();
+    }
+    $this->root = $app_root;
+  }
+
+  /**
+   * Determine the application root directory based on assumptions.
+   *
+   * @return string
+   *   The application root.
+   */
+  protected static function guessApplicationRoot() {
+    return dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
   }
 
   /**
@@ -320,6 +339,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   Defaults to TRUE. During initial installation, this is set to FALSE so
    *   that Drupal can detect a matching directory, then create a new
    *   settings.php file in it.
+   * @param string $app_root
+   *   (optional) The path to the application root as a string. If not supplied,
+   *   the application root will be computed.
    *
    * @return string
    *   The path of the matching directory.
@@ -332,9 +354,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @see default.settings.php
    * @see example.sites.php
    */
-  public static function findSitePath(Request $request, $require_settings = TRUE) {
+  public static function findSitePath(Request $request, $require_settings = TRUE, $app_root = NULL) {
     if (static::validateHostname($request) === FALSE) {
       throw new BadRequestHttpException();
+    }
+
+    if ($app_root === NULL) {
+      $app_root = static::guessApplicationRoot();
     }
 
     // Check for a simpletest override.
@@ -343,7 +369,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     // Determine whether multi-site functionality is enabled.
-    if (!file_exists(DRUPAL_ROOT . '/sites/sites.php')) {
+    if (!file_exists($app_root . '/sites/sites.php')) {
       return 'sites/default';
     }
 
@@ -355,17 +381,17 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $http_host = $request->getHttpHost();
 
     $sites = array();
-    include DRUPAL_ROOT . '/sites/sites.php';
+    include $app_root . '/sites/sites.php';
 
     $uri = explode('/', $script_name);
     $server = explode('.', implode('.', array_reverse(explode(':', rtrim($http_host, '.')))));
     for ($i = count($uri) - 1; $i > 0; $i--) {
       for ($j = count($server); $j > 0; $j--) {
         $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
-        if (isset($sites[$dir]) && file_exists(DRUPAL_ROOT . '/sites/' . $sites[$dir])) {
+        if (isset($sites[$dir]) && file_exists($app_root . '/sites/' . $sites[$dir])) {
           $dir = $sites[$dir];
         }
-        if (file_exists(DRUPAL_ROOT . '/sites/' . $dir . '/settings.php') || (!$require_settings && file_exists(DRUPAL_ROOT . '/sites/' . $dir))) {
+        if (file_exists($app_root . '/sites/' . $dir . '/settings.php') || (!$require_settings && file_exists($app_root . '/sites/' . $dir))) {
           return "sites/$dir";
         }
       }
@@ -877,15 +903,23 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * This method sets PHP environment options we want to be sure are set
    * correctly for security or just saneness.
+   *
+   * @param string $app_root
+   *   (optional) The path to the application root as a string. If not supplied,
+   *   the application root will be computed.
    */
-  public static function bootEnvironment() {
+  public static function bootEnvironment($app_root = NULL) {
     if (static::$isEnvironmentInitialized) {
       return;
     }
 
+    // Determine the application root if it's not supplied.
+    if ($app_root === NULL) {
+      $app_root = static::guessApplicationRoot();
+    }
+
     // Include our bootstrap file.
-    $core_root = dirname(dirname(dirname(__DIR__)));
-    require_once $core_root . '/includes/bootstrap.inc';
+    require_once $app_root . '/core/includes/bootstrap.inc';
 
     // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
     error_reporting(E_STRICT | E_ALL);
@@ -929,7 +963,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
         // Log fatal errors to the test site directory.
         ini_set('log_errors', 1);
-        ini_set('error_log', DRUPAL_ROOT . '/sites/simpletest/' . substr($test_prefix, 10) . '/error.log');
+        ini_set('error_log', $app_root . '/sites/simpletest/' . substr($test_prefix, 10) . '/error.log');
 
         // Ensure that a rewritten settings.php is used if opcache is on.
         ini_set('opcache.validate_timestamps', 'on');
