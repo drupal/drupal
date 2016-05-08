@@ -319,8 +319,8 @@ interface RendererInterface {
    *   The rendered HTML.
    *
    * @throws \LogicException
-   *   When called outside of a render context. (i.e. outside of a renderRoot(),
-   *   renderPlain() or executeInRenderContext() call.)
+   *   When called outside of a render context (i.e. outside of a renderRoot(),
+   *   renderPlain() or executeInRenderContext() call).
    * @throws \Exception
    *   If a #pre_render callback throws an exception, it is caught to mark the
    *   renderer as no longer being in a root render call, if any. Then the

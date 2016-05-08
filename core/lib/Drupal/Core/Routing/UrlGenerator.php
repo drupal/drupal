@@ -157,10 +157,10 @@ class UrlGenerator implements UrlGeneratorInterface {
    *   The url path, without any base path, including possible query string.
    *
    * @throws MissingMandatoryParametersException
-   *   When some parameters are missing that are mandatory for the route
+   *   When some parameters are missing that are mandatory for the route.
    * @throws InvalidParameterException
    *   When a parameter value for a placeholder is not correct because it does
-   *   not match the requirement
+   *   not match the requirement.
    */
   protected function doGenerate(array $variables, array $defaults, array $tokens, array $parameters, array $query_params, $name) {
     $variables = array_flip($variables);

@@ -62,9 +62,6 @@
     <exclude name="Drupal.Commenting.FunctionComment.ReturnCommentIndentation"/>
     <exclude name="Drupal.Commenting.FunctionComment.SeeAdditionalText"/>
     <exclude name="Drupal.Commenting.FunctionComment.SeePunctuation"/>
-    <exclude name="Drupal.Commenting.FunctionComment.ThrowsComment"/>
-    <exclude name="Drupal.Commenting.FunctionComment.ThrowsNoFullStop"/>
-    <exclude name="Drupal.Commenting.FunctionComment.ThrowsNotCapital"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
     <exclude name="Drupal.Commenting.FunctionComment.VoidReturn"/>
   </rule>

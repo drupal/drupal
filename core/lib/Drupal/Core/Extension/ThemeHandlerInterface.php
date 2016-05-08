@@ -21,7 +21,7 @@ interface ThemeHandlerInterface {
    *   Whether any of the given themes have been installed.
    *
    * @throws \Drupal\Core\Extension\ExtensionNameLengthException
-   *   Thrown when the theme name is to long
+   *   Thrown when the theme name is to long.
    *
    * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
    *   Use the theme_installer service instead.

@@ -298,7 +298,8 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage.
    *
-   * @throws \Drupal\Core\Field\FieldException If the field definition is invalid.
+   * @throws \Drupal\Core\Field\FieldException
+   *   If the field definition is invalid.
    */
   protected function preSaveNew(EntityStorageInterface $storage) {
     $entity_manager = \Drupal::entityManager();
