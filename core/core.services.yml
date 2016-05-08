@@ -396,6 +396,9 @@ services:
   logger.channel.form:
     parent: logger.channel_base
     arguments: ['form']
+  logger.channel.system:
+    parent: logger.channel_base
+    arguments: ['system']
   logger.log_message_parser:
     class: Drupal\Core\Logger\LogMessageParser
 
@@ -476,6 +479,7 @@ services:
     arguments: ['@app.root', '%container.modules%', '@cache.bootstrap']
   module_installer:
     class: Drupal\Core\Extension\ModuleInstaller
+    arguments: ['@app.root', '@module_handler', '@kernel', '@config.factory', '@config.installer', '@plugin.cache_clearer', '@router.builder', '@stream_wrapper_manager', '@theme_handler', '@logger.channel.system', '@config.manager', '@keyvalue']
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
     arguments: ['@app.root', '@module_handler', '@kernel', '@router.builder']
