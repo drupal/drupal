@@ -382,7 +382,6 @@ form_test.checkboxes_zero:
   defaults:
     _form: '\Drupal\form_test\Form\FormTestCheckboxesZeroForm'
     _title: 'FAPI test involving checkboxes and zero'
-    json: TRUE
   requirements:
     _access: 'TRUE'
 
