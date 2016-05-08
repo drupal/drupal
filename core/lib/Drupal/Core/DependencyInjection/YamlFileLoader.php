@@ -125,7 +125,8 @@ class YamlFileLoader
      * @param array $service
      * @param string $file
      *
-     * @throws InvalidArgumentException When tags are invalid
+     * @throws InvalidArgumentException
+     *   When tags are invalid.
      */
     private function parseDefinition($id, $service, $file)
     {
@@ -319,7 +320,8 @@ class YamlFileLoader
      *
      * @return array The file content
      *
-     * @throws InvalidArgumentException when the given file is not a local file or when it does not exist
+     * @throws InvalidArgumentException
+     *   When the given file is not a local file or when it does not exist.
      */
     protected function loadFile($file)
     {
@@ -342,7 +344,8 @@ class YamlFileLoader
      *
      * @return array
      *
-     * @throws InvalidArgumentException When service file is not valid
+     * @throws InvalidArgumentException
+     *   When service file is not valid.
      */
     private function validate($content, $file)
     {
