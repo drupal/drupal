@@ -549,7 +549,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   /**
    * Retrieves a Drupal path or an absolute path.
    *
-   * @param string $path
+   * @param string|\Drupal\Core\Url $path
    *   Drupal path or URL to load into Mink controlled browser.
    * @param array $options
    *   (optional) Options to be forwarded to the url generator.
@@ -560,9 +560,15 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   protected function drupalGet($path, array $options = array()) {
     $options['absolute'] = TRUE;
 
+    if ($path instanceof Url) {
+      $url_options = $path->getOptions();
+      $options = $url_options + $options;
+      $path->setOptions($options);
+      $url = $path->setAbsolute()->toString();
+    }
     // The URL generator service is not necessarily available yet; e.g., in
     // interactive installer tests.
-    if ($this->container->has('url_generator')) {
+    elseif ($this->container->has('url_generator')) {
       if (UrlHelper::isExternal($path)) {
         $url = Url::fromUri($path, $options)->toString();
       }
