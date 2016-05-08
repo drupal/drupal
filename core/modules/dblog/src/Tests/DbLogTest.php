@@ -84,6 +84,39 @@ class DbLogTest extends WebTestBase {
   }
 
   /**
+   * Test individual log event page.
+   */
+  public function testLogEventPage() {
+    // Login the admin user.
+    $this->drupalLogin($this->adminUser);
+
+    // Since referrer and location links vary by how the tests are run, inject
+    // fake log data to test these.
+    $context = [
+      'request_uri' => 'http://example.com?dblog=1',
+      'referer' => 'http://example.org?dblog=2',
+      'uid' => 0,
+      'channel' => 'testing',
+      'link' => 'foo/bar',
+      'ip' => '0.0.1.0',
+      'timestamp' => REQUEST_TIME,
+    ];
+    \Drupal::service('logger.dblog')->log(RfcLogLevel::NOTICE, 'Test message', $context);
+    $wid = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+
+    // Verify the links appear correctly.
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+    $this->assertLinkByHref($context['request_uri']);
+    $this->assertLinkByHref($context['referer']);
+
+    // Verify hostname.
+    $this->assertRaw($context['ip'], 'Found hostname on the detail page.');
+
+    // Verify severity.
+    $this->assertText('Notice', 'The severity was properly displayed on the detail page.');
+  }
+
+  /**
    * Verifies setting of the database log row limit.
    *
    * @param int $row_limit
@@ -229,7 +262,6 @@ class DbLogTest extends WebTestBase {
     if ($response == 200) {
       $this->assertText(t('Details'), 'DBLog event node was displayed');
     }
-
   }
 
   /**
