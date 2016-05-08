@@ -53,20 +53,22 @@ class CheckboxTest extends WebTestBase {
       }
     }
 
-    // Ensure that $form_state->getValues() is populated correctly for a checkboxes
-    // group that includes a 0-indexed array of options.
-    $results = json_decode($this->drupalPostForm('form-test/checkboxes-zero', array(), 'Save'));
+    // Ensure that $form_state->getValues() is populated correctly for a
+    // checkboxes group that includes a 0-indexed array of options.
+    $results = json_decode($this->drupalPostForm('form-test/checkboxes-zero/1', array(), 'Save'));
     $this->assertIdentical($results->checkbox_off, array(0, 0, 0), 'All three in checkbox_off are zeroes: off.');
     $this->assertIdentical($results->checkbox_zero_default, array('0', 0, 0), 'The first choice is on in checkbox_zero_default');
     $this->assertIdentical($results->checkbox_string_zero_default, array('0', 0, 0), 'The first choice is on in checkbox_string_zero_default');
     $edit = array('checkbox_off[0]' => '0');
-    $results = json_decode($this->drupalPostForm('form-test/checkboxes-zero', $edit, 'Save'));
+    $results = json_decode($this->drupalPostForm('form-test/checkboxes-zero/1', $edit, 'Save'));
     $this->assertIdentical($results->checkbox_off, array('0', 0, 0), 'The first choice is on in checkbox_off but the rest is not');
 
     // Ensure that each checkbox is rendered correctly for a checkboxes group
     // that includes a 0-indexed array of options.
     $this->drupalPostForm('form-test/checkboxes-zero/0', array(), 'Save');
     $checkboxes = $this->xpath('//input[@type="checkbox"]');
+
+    $this->assertIdentical(count($checkboxes), 9, 'Correct number of checkboxes found.');
     foreach ($checkboxes as $checkbox) {
       $checked = isset($checkbox['checked']);
       $name = (string) $checkbox['name'];
@@ -75,6 +77,8 @@ class CheckboxTest extends WebTestBase {
     $edit = array('checkbox_off[0]' => '0');
     $this->drupalPostForm('form-test/checkboxes-zero/0', $edit, 'Save');
     $checkboxes = $this->xpath('//input[@type="checkbox"]');
+
+    $this->assertIdentical(count($checkboxes), 9, 'Correct number of checkboxes found.');
     foreach ($checkboxes as $checkbox) {
       $checked = isset($checkbox['checked']);
       $name = (string) $checkbox['name'];
