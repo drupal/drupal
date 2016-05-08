@@ -43,7 +43,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
       'field_config' => 62,
       'field_storage_config' => 43,
       'file' => 7,
-      'filter_format' => 8,
+      'filter_format' => 7,
       'image_style' => 5,
       'migration' => 105,
       'node' => 9,
