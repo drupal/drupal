@@ -137,6 +137,17 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->drupalGet($path, $options);
     $this->assertRaw(t('There are no entities matching "%value".', array('%value' => implode(', ', $users))));
 
+    // Pass in an invalid target_id in for the entity_autocomplete value format.
+    // There should be no errors, but all results should be returned as the
+    // default value for the autocomplete will not match any users so should
+    // be empty.
+    $options['query']['uid'] = [['target_id' => 9999]];
+    $this->drupalGet($path, $options);
+    // The actual result should contain all of the user ids.
+    foreach ($this->accounts as $account) {
+      $this->assertRaw($account->id());
+    }
+
     // Pass in an invalid username and a valid username.
     $users = array($this->randomMachineName(), $this->names[0]);
     $users = array_map('strtolower', $users);
@@ -149,6 +160,18 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     // Pass in just valid usernames.
     $users = $this->names;
     $options['query']['uid'] = implode(', ', $users);
+
+    $this->drupalGet($path, $options);
+    $this->assertNoRaw('Unable to find user');
+    // The actual result should contain all of the user ids.
+    foreach ($this->accounts as $account) {
+      $this->assertRaw($account->id());
+    }
+
+    // Pass in just valid user IDs in the entity_autocomplete target_id format.
+    $options['query']['uid'] = array_map(function($account) {
+      return ['target_id' => $account->id()];
+    }, $this->accounts);
 
     $this->drupalGet($path, $options);
     $this->assertNoRaw('Unable to find user');
