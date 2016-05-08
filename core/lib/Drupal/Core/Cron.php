@@ -2,6 +2,7 @@
 
 namespace Drupal\Core;
 
+use Drupal\Component\Utility\Timer;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\Core\Queue\RequeueException;
@@ -192,8 +193,25 @@ class Cron implements CronInterface {
    * Invokes any cron handlers implementing hook_cron.
    */
   protected function invokeCronHandlers() {
+    $module_previous = '';
+
     // Iterate through the modules calling their cron handlers (if any):
     foreach ($this->moduleHandler->getImplementations('cron') as $module) {
+
+      if (!$module_previous) {
+        $this->logger->notice('Starting execution of @module_cron().', [
+          '@module' => $module,
+        ]);
+      }
+      else {
+        $this->logger->notice('Starting execution of @module_cron(), execution of @module_previous_cron() took @time.', [
+          '@module' => $module,
+          '@module_previous' => $module_previous,
+          '@time' => Timer::read('cron_' . $module_previous) . 'ms',
+        ]);
+      }
+      Timer::start('cron_' . $module);
+
       // Do not let an exception thrown by one module disturb another.
       try {
         $this->moduleHandler->invoke($module, 'cron');
@@ -201,6 +219,9 @@ class Cron implements CronInterface {
       catch (\Exception $e) {
         watchdog_exception('cron', $e);
       }
+
+      Timer::stop('cron_' . $module);
+      $module_previous = $module;
     }
   }
 

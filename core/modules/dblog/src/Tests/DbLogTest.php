@@ -114,12 +114,23 @@ class DbLogTest extends WebTestBase {
     $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
     $this->assertTrue($count > $row_limit, format_string('Dblog row count of @count exceeds row limit of @limit', array('@count' => $count, '@limit' => $row_limit)));
 
+    // Get last ID to compare against; log entries get deleted, so we can't
+    // reliably add the number of newly created log entries to the current count
+    // to measure number of log entries created by cron.
+    $last_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+
     // Run a cron job.
     $this->cronRun();
-    // Verify that the database log row count equals the row limit plus one
-    // because cron adds a record after it runs.
-    $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
-    $this->assertTrue($count == $row_limit + 1, format_string('Dblog row count of @count equals row limit of @limit plus one', array('@count' => $count, '@limit' => $row_limit)));
+
+    // Get last ID after cron was run.
+    $current_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+
+    // Get the number of enabled modules. Cron adds a log entry for each module.
+    $list = \Drupal::moduleHandler()->getImplementations('cron');
+    $module_count = count($list);
+
+    $count = $current_id - $last_id;
+    $this->assertTrue(($current_id - $last_id) == $module_count + 1, format_string('Cron added @count of @expected new log entries', array('@count' => $count, '@expected' => $module_count + 1)));
   }
 
   /**
