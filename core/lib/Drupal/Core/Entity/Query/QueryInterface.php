@@ -35,17 +35,40 @@ interface QueryInterface extends AlterableInterface {
    * @endcode
    *
    * @param $field
-   *   Name of the field being queried. It must contain a field name,
-   *   optionally followed by a column name. The column can be "entity" for
-   *   reference fields and that can be followed similarly by a field name
-   *   and so on. Some examples:
+   *   Name of the field being queried. It must contain a field name, optionally
+   *   followed by a column name. The column can be "entity" for reference
+   *   fields and that can be followed similarly by a field name and so on. Some
+   *   examples:
    *   - nid
    *   - tags.value
    *   - tags
    *   - uid.entity.name
    *   "tags" "is the same as "tags.value" as value is the default column.
    *   If two or more conditions have the same field names they apply to the
-   *   same delta within that field.
+   *   same delta within that field. In order to limit the condition to a
+   *   specific item a numeric delta should be added between the field name and
+   *   the column name.
+   *   @code
+   *   ->condition('tags.5.value', 'news')
+   *   @endcode
+   *   This will require condition to be satisfied on a specific delta of the
+   *   field. The condition above will require the 6th value of the field to
+   *   match the provided value. Further, it's possible to create a condition on
+   *   the delta itself by using '%delta'. For example,
+   *   @code
+   *   ->condition('tags.%delta', 5)
+   *   @endcode
+   *   will find only entities which have at least six tags. Finally, the
+   *   condition on the delta itself accompanied with a condition on the value
+   *   will require the value to appear in the specific delta range. For
+   *   example,
+   *   @code
+   *   ->condition('tags.%delta', 0, '>'))
+   *   ->condition('tags.%delta.value', 'news'))
+   *   @endcode
+   *   will only find the "news" tag if it is not the first value. It should be
+   *   noted that conditions on specific deltas and delta ranges are only
+   *   supported when querying content entities.
    * @param $value
    *   The value for $field. In most cases, this is a scalar and it's treated as
    *   case-insensitive. For more complex operators, it is an array. The meaning

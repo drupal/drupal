@@ -512,6 +512,89 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(6, 14);
   }
 
+  /**
+   * Test queries with delta conditions.
+   */
+  public function testDelta() {
+    $figures = $this->figures;
+    // Test numeric delta value in field condition.
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition("$figures.0.color", 'red')
+      ->sort('id')
+      ->execute();
+    // As unit 0 at delta 0 was the red triangle bit 0 needs to be set.
+    $this->assertResult(1, 3, 5, 7, 9, 11, 13, 15);
+
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition("$figures.1.color", 'red')
+      ->sort('id')
+      ->execute();
+    // Delta 1 is not red.
+    $this->assertResult();
+
+    // Test on two different deltas.
+    $query = $this->factory->get('entity_test_mulrev');
+    $or = $query->andConditionGroup()
+      ->condition("$figures.0.color", 'red')
+      ->condition("$figures.1.color", 'blue');
+    $this->queryResults = $query
+      ->condition($or)
+      ->sort('id')
+      ->execute();
+    $this->assertResult(3, 7, 11, 15);
+
+    // Test the delta range condition.
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition("$figures.%delta.color", array('blue', 'red'), 'IN')
+      ->condition("$figures.%delta", array(0, 1), 'IN')
+      ->sort('id')
+      ->execute();
+    // Figure delta 0 or 1 can be blue or red, this matches a lot of entities.
+    $this->assertResult(1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15);
+
+    // Test the delta range condition without conditions on the value.
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition("$figures.%delta", 1)
+      ->sort('id')
+      ->execute();
+    // Entity needs to have atleast two figures.
+    $this->assertResult(3, 7, 11, 15);
+
+    // Numeric delta on single value base field should return results only if
+    // the first item is being targeted.
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition("id.0.value", array(1, 3, 5), 'IN')
+      ->sort('id')
+      ->execute();
+    $this->assertResult(1, 3, 5);
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition("id.1.value", array(1, 3, 5), 'IN')
+      ->sort('id')
+      ->execute();
+    $this->assertResult();
+
+    // Delta range condition on single value base field should return results
+    // only if just the field value is targeted.
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition("id.%delta.value", array(1, 3, 5), 'IN')
+      ->sort('id')
+      ->execute();
+    $this->assertResult(1, 3, 5);
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition("id.%delta.value", array(1, 3, 5), 'IN')
+      ->condition("id.%delta", 0, '=')
+      ->sort('id')
+      ->execute();
+    $this->assertResult(1, 3, 5);
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition("id.%delta.value", array(1, 3, 5), 'IN')
+      ->condition("id.%delta", 1, '=')
+      ->sort('id')
+      ->execute();
+    $this->assertResult();
+
+  }
+
   protected function assertResult() {
     $assert = array();
     $expected = func_get_args();

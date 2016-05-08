@@ -204,7 +204,12 @@ class DefaultTableMapping implements TableMappingInterface {
       $column_name = count($storage_definition->getColumns()) == 1 ? $field_name : $field_name . '__' . $property_name;
     }
     elseif ($this->requiresDedicatedTableStorage($storage_definition)) {
-      $column_name = !in_array($property_name, $this->getReservedColumns()) ? $field_name . '_' . $property_name : $property_name;
+      if ($property_name == TableMappingInterface::DELTA) {
+        $column_name = 'delta';
+      }
+      else {
+        $column_name = !in_array($property_name, $this->getReservedColumns()) ? $field_name . '_' . $property_name : $property_name;
+      }
     }
     else {
       throw new SqlContentEntityStorageException("Column information not available for the '$field_name' field.");
