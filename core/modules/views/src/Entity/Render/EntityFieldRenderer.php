@@ -88,7 +88,6 @@ class EntityFieldRenderer extends RendererBase {
   /**
    * {@inheritdoc}
    */
-
   protected function getLanguageManager() {
     return $this->languageManager;
   }

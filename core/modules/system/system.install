@@ -996,7 +996,7 @@ function system_schema() {
  * @{
  */
 
-/*
+/**
  * Change two fields on the default menu link storage to be serialized data.
  */
 function system_update_8001(&$sandbox = NULL) {

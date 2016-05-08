@@ -1227,7 +1227,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     );
   }
 
-  /*
+  /**
    * Transform the input from a grouped filter into a standard filter.
    *
    * When a filter is a group, find the set of operator and values

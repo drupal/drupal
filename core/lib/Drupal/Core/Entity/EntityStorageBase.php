@@ -159,7 +159,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @param string $hook
    *   One of 'presave', 'insert', 'update', 'predelete', 'delete', or
    *   'revision_delete'.
-   * @param \Drupal\Core\Entity\EntityInterface  $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    */
   protected function invokeHook($hook, EntityInterface $entity) {

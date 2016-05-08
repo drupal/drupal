@@ -181,7 +181,9 @@ class FakePhpassHashedPassword extends PhpassHashedPassword {
     // Noop.
   }
 
-  // Expose this method as public for tests.
+  /**
+   * Exposes this method as public for tests.
+   */
   public function enforceLog2Boundaries($count_log2) {
     return parent::enforceLog2Boundaries($count_log2);
   }

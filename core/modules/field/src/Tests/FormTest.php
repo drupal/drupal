@@ -230,14 +230,6 @@ class FormTest extends FieldTestBase {
     $this->assertRaw(t('@name field is required.', array('@name' => $this->field['label'])), 'Required field with no value fails validation');
   }
 
-//  function testFieldFormMultiple() {
-//    $this->field = $this->field_multiple;
-//    $field_name = $this->field['field_name'];
-//    $this->instance['field_name'] = $field_name;
-//    FieldStorageConfig::create($this->field)->save();
-//    FieldConfig::create($this->instance)->save();
-//  }
-
   function testFieldFormUnlimited() {
     $field_storage = $this->fieldStorageUnlimited;
     $field_name = $field_storage['field_name'];

@@ -118,9 +118,10 @@ class Combine extends StringFilter {
     return $errors;
   }
 
-  // By default things like opEqual uses add_where, that doesn't support
-  // complex expressions, so override all operators.
-
+  /**
+   * By default things like opEqual uses add_where, that doesn't support
+   * complex expressions, so override opEqual (and all operators below).
+   */
   function opEqual($expression) {
     $placeholder = $this->placeholder();
     $operator = $this->operator();

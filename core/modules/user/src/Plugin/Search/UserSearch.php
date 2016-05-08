@@ -158,7 +158,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
     return $results;
   }
 
-  /*
+  /**
    * {@inheritdoc}
    */
   public function getHelp() {

@@ -31,7 +31,7 @@ class BlockHookOperationTest extends WebTestBase {
     $this->drupalLogin($admin_user);
   }
 
-  /*
+  /**
    * Tests the block list to see if the test_operation link is added.
    */
   public function testBlockOperationAlter() {

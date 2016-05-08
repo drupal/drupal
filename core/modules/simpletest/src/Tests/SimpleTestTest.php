@@ -284,11 +284,16 @@ EOD;
   /**
    * Asserts that an assertion with specified values is displayed in results.
    *
-   * @param string $message Assertion message.
-   * @param string $type Assertion type.
-   * @param string $status Assertion status.
-   * @param string $file File where the assertion originated.
-   * @param string $function Function where the assertion originated.
+   * @param string $message
+   *   Assertion message.
+   * @param string $type
+   *   Assertion type.
+   * @param string $status
+   *   Assertion status.
+   * @param string $file
+   *   File where the assertion originated.
+   * @param string $function
+   *   Function where the assertion originated.
    *
    * @return Assertion result.
    */

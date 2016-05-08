@@ -97,7 +97,7 @@ class NodeFieldMultilingualTest extends WebTestBase {
     $this->assertRaw($body_value, 'Body correctly displayed using English as requested language');
   }
 
-  /*
+  /**
    * Tests multilingual field display settings.
    */
   function testMultilingualDisplaySettings() {

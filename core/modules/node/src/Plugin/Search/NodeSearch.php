@@ -623,7 +623,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     }
   }
 
-  /*
+  /**
    * {@inheritdoc}
    */
   public function buildSearchUrlQuery(FormStateInterface $form_state) {

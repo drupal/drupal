@@ -84,7 +84,9 @@ class FieldCounterTest extends ViewsKernelTestBase {
     $this->assertEqual($counter, (string) $expected_number, format_string('Make sure the expected number (@expected) patches with the rendered number (@counter)', array('@expected' => $expected_number, '@counter' => $counter)));
   }
 
-  // @TODO: Write tests for pager.
+  /**
+   * @todo: Write tests for pager.
+   */
   function testPager() {
   }
 
