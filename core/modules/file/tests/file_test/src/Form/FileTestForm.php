@@ -117,4 +117,5 @@ class FileTestForm implements FormInterface {
       drupal_set_message(t('Epic upload FAIL!'), 'error');
     }
   }
+
 }

@@ -116,4 +116,5 @@ class BrokenSetUpTest extends WebTestBase {
       $this->pass('The test method has run.');
     }
   }
+
 }

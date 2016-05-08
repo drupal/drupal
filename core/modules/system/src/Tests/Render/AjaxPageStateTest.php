@@ -103,4 +103,5 @@ class AjaxPageStateTest extends WebTestBase {
       'The drupalSettings library from core should be excluded from loading.'
     );
   }
+
 }

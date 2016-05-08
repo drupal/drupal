@@ -203,4 +203,5 @@ class PrivateTempStore {
   protected function getOwner() {
     return $this->currentUser->id() ?: $this->requestStack->getCurrentRequest()->getSession()->getId();
   }
+
 }

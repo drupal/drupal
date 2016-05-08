@@ -158,4 +158,5 @@ class HelpTest extends WebTestBase {
     }
     return $modules;
   }
+
 }

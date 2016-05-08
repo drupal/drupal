@@ -278,4 +278,5 @@ class HandlerTest extends UITestBase {
     $elements = $this->xpath('//td[.=:entity_type]/preceding-sibling::td[@class="title" and .=:title]', [':title' => $field_name, ':entity_type' => $entity_type]);
     $this->assertEqual(1, count($elements), $field_name . ' appears just once in ' . $entity_type . '.');
   }
+
 }

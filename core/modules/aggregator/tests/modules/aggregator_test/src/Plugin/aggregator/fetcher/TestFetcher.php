@@ -28,4 +28,5 @@ class TestFetcher extends DefaultFetcher implements FetcherInterface {
     }
     return parent::fetch($feed);
   }
+
 }

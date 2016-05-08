@@ -71,4 +71,5 @@ class SearchDateIntervalTest extends SearchTestBase {
     $this->assertLink('Node ES', 0, 'Spanish translation found in search results');
     $this->assertNoLink('Node EN', 'Search results do not contain English node');
   }
+
 }

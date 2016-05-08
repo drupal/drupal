@@ -39,4 +39,5 @@ class DuplicateTest extends UITestBase {
     // Assert that the page title is correctly displayed.
     $this->assertText($view['label']);
   }
+
 }

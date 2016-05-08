@@ -163,5 +163,4 @@ class CompiledRoute extends SymfonyCompiledRoute {
     $this->numParts = $data['numParts'];
   }
 
-
 }

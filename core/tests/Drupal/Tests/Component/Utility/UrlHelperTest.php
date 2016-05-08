@@ -584,4 +584,5 @@ class UrlHelperTest extends UnitTestCase {
       array('http://', 'http://example.com/foo'),
     );
   }
+
 }

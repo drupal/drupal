@@ -209,4 +209,5 @@ class PathProcessorTest extends UnitTestCase {
     $processed = $processor_manager->processInbound($test_path, $request);
     $this->assertEquals('/user/1', $processed, 'Processing in the correct order resolves the system path from an alias.');
   }
+
 }

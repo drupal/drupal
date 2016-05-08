@@ -79,4 +79,5 @@ class ForumIndexTest extends WebTestBase {
     $this->drupalGet('forum/' . $tid);
     $this->assertNoText($title, 'Unpublished forum topic no longer appears on index.');
   }
+
 }

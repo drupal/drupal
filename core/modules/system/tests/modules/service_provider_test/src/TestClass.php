@@ -69,4 +69,5 @@ class TestClass implements EventSubscriberInterface, DestructableInterface, Cont
   public function destruct() {
     $this->state->set('service_provider_test.destructed', TRUE);
   }
+
 }

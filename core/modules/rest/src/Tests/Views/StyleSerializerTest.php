@@ -785,4 +785,5 @@ class StyleSerializerTest extends PluginTestBase {
     $expected = ['mul-l1-l2', 'mul-l1-orig', 'mul-l2-l1', 'mul-l2-orig', 'mul-none'];
     $this->assertIdentical($names, $expected, 'The translated content was found in the JSON.');
   }
+
 }

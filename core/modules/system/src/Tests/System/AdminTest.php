@@ -167,4 +167,5 @@ class AdminTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode persists on new requests.');
   }
+
 }

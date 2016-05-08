@@ -286,4 +286,5 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $events[KernelEvents::RESPONSE][] = array('onRespond');
     return $events;
   }
+
 }

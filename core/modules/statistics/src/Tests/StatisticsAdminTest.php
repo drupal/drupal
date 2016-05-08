@@ -167,4 +167,5 @@ class StatisticsAdminTest extends WebTestBase {
       ->fetchField();
     $this->assertFalse($result, 'Daycounter is zero.');
   }
+
 }

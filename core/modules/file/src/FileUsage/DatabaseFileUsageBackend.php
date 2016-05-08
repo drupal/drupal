@@ -107,4 +107,5 @@ class DatabaseFileUsageBackend extends FileUsageBase {
     }
     return $references;
   }
+
 }

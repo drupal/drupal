@@ -165,4 +165,5 @@ interface BookOutlineStorageInterface {
    *   Array of unordered subtree book items.
    */
   public function getBookSubtree($link, $max_depth);
+
 }

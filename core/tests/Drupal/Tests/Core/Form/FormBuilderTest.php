@@ -886,11 +886,13 @@ class TestForm implements FormInterface {
   }
   public function validateForm(array &$form, FormStateInterface $form_state) { }
   public function submitForm(array &$form, FormStateInterface $form_state) { }
+
 }
 class TestFormInjected extends TestForm implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static();
   }
+
 }
 
 

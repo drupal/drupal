@@ -200,4 +200,5 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
     $this->entity = EntityTest::create(array());
     $this->entity->{$this->fieldName}->value = $testValue;
   }
+
 }

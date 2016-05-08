@@ -99,4 +99,5 @@ class NodeTitleTest extends NodeTestBase {
     $this->assertTitle($edge_case_title_escaped . ' | Drupal', 'Page title is equal to article\'s "title".', 'Node');
 
   }
+
 }

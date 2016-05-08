@@ -308,4 +308,5 @@ class DisplayApiTest extends FieldKernelTestBase {
     // default "empty" text.
     $this->assertText($display['settings']['test_empty_string']);
   }
+
 }

@@ -26,4 +26,5 @@ class MockUserLoginBlock extends PluginBase {
   public function getTitle() {
     return $this->title;
   }
+
 }

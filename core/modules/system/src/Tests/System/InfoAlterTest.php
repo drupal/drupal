@@ -32,4 +32,5 @@ class InfoAlterTest extends KernelTestBase {
     $info = system_rebuild_module_data();
     $this->assertTrue($info['node']->info['required'], 'After the module_required_test is installed the node module is required.');
   }
+
 }

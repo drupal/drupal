@@ -23,4 +23,5 @@ class DiffOp {
   public function nclosing() {
     return $this->closing ? sizeof($this->closing) : 0;
   }
+
 }

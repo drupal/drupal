@@ -54,4 +54,5 @@ interface CacheTagsChecksumInterface {
    * This is only used by tests.
    */
   public function reset();
+
 }

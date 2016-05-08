@@ -89,4 +89,5 @@ class Zip implements ArchiverInterface {
   public function getArchive() {
     return $this->zip;
   }
+
 }

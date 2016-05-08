@@ -318,4 +318,5 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $this->assertEqual($count_foo, count($results), 'Foo count was ' . $count_foo . ' for ' . $message);
 
   }
+
 }

@@ -38,4 +38,5 @@ class SystemListingCompatibleTest extends WebTestBase {
   function testSystemListing() {
     $this->pass(__CLASS__ . ' test executed.');
   }
+
 }

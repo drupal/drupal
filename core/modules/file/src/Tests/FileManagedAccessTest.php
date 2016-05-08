@@ -65,4 +65,5 @@ class FileManagedAccessTest extends FileManagedTestBase {
     $this->assertFalse($file->access('view', $account), 'Private file is not viewable to anonymous user');
     $this->assertFalse($file->access('download', $account), 'Private file is not downloadable to anonymous user');
   }
+
 }

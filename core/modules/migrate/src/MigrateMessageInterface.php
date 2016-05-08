@@ -14,4 +14,5 @@ interface MigrateMessageInterface {
    *   The type of message, for example: status or warning.
    */
   public function display($message, $type = 'status');
+
 }

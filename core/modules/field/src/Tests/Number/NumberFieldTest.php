@@ -558,4 +558,5 @@ class NumberFieldTest extends WebTestBase {
     $this->drupalGet($field_configuration_url);
     $this->assertFieldById('edit-settings-min', $minimum_value, 'Minimal ' . gettype($minimum_value) . '  value was set on a ' . $field->getType() . ' field.');
   }
+
 }

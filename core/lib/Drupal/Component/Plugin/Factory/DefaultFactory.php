@@ -103,4 +103,5 @@ class DefaultFactory implements FactoryInterface {
 
     return $class;
   }
+
 }

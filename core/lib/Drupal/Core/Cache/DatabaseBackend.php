@@ -477,4 +477,5 @@ class DatabaseBackend implements CacheBackendInterface {
     );
     return $schema;
   }
+
 }

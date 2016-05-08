@@ -677,4 +677,5 @@ class ForumTest extends WebTestBase {
       $this->nids[] = $node->id();
     }
   }
+
 }

@@ -45,4 +45,5 @@ class EmailTest extends WebTestBase {
     $this->assertEqual($values['email'], 'foo@example.com');
     $this->assertEqual($values['email_required'], 'example@drupal.org');
   }
+
 }

@@ -103,4 +103,5 @@ class FieldInstance extends DrupalSqlBase {
       ),
     );
   }
+
 }

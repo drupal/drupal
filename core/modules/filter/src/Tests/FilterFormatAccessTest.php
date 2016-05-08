@@ -329,4 +329,5 @@ class FilterFormatAccessTest extends WebTestBase {
   protected function resetFilterCaches() {
     filter_formats_reset();
   }
+
 }

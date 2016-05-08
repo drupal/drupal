@@ -282,4 +282,5 @@ class Tasks extends InstallTasks {
     }
     return $form;
   }
+
 }

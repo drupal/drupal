@@ -245,5 +245,4 @@ class EntityResource extends ResourceBase {
     return $route;
   }
 
-
 }

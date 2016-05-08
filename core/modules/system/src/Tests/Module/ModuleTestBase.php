@@ -190,4 +190,5 @@ abstract class ModuleTestBase extends WebTestBase {
       ->fetchField();
     $this->assertTrue($count > 0, format_string('watchdog table contains @count rows for @message', array('@count' => $count, '@message' => format_string($message, $variables))));
   }
+
 }

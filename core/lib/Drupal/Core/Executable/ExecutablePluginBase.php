@@ -83,4 +83,5 @@ abstract class ExecutablePluginBase extends ContextAwarePluginBase implements Ex
     $this->configuration[$key] = $value;
     return $this;
   }
+
 }

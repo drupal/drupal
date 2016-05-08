@@ -358,4 +358,5 @@ class SaveUploadTest extends FileManagedTestBase {
       '@destination' => 'temporary://' . $test_directory . '/' . $this->image->getFilename()
     )), 'Found upload error log entry.');
   }
+
 }

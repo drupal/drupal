@@ -164,6 +164,7 @@ class ContextTest extends UnitTestCase {
       ->with($mock_data_definition, $default_value)
       ->willReturn($this->typedData);
   }
+
 }
 
 /**

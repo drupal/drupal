@@ -126,4 +126,5 @@ class UserCreateTest extends WebTestBase {
     $this->assertText("Created a new user account for $name. No email has been sent");
     $this->assertNoText('Password field is required');
   }
+
 }

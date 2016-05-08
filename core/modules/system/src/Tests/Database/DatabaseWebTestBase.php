@@ -22,4 +22,5 @@ abstract class DatabaseWebTestBase extends WebTestBase {
 
     DatabaseTestBase::addSampleData();
   }
+
 }

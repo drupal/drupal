@@ -21,4 +21,5 @@ use Drupal\Component\Render\MarkupTrait;
  */
 final class FilteredMarkup implements MarkupInterface, \Countable {
   use MarkupTrait;
+
 }

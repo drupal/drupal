@@ -67,4 +67,5 @@ class ReindexConfirm extends ConfirmFormBase {
       $form_state->setRedirectUrl($this->getCancelUrl());
     }
   }
+
 }

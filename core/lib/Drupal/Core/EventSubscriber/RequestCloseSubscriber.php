@@ -53,4 +53,5 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
 
     return $events;
   }
+
 }

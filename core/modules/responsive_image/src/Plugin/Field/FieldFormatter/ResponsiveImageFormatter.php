@@ -246,4 +246,5 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
     }
     return $elements;
   }
+
 }

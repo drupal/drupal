@@ -84,4 +84,5 @@ class FrontPageTest extends WebTestBase {
     $this->drupalGet($this->nodePath);
     $this->assertText(t('On front page.'), 'Path is the front page.');
   }
+
 }

@@ -146,4 +146,5 @@ class NodeRevisionsAllTest extends NodeTestBase {
       '%revision-date' => format_date($old_revision_date),
     )));
   }
+
 }

@@ -17,4 +17,5 @@ class TrackerUserRecent extends ControllerBase {
     module_load_include('inc', 'tracker', 'tracker.pages');
     return tracker_page($user);
   }
+
 }

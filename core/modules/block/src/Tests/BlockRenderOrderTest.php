@@ -76,4 +76,5 @@ class BlockRenderOrderTest extends WebTestBase {
     $this->assertTrue($position['stark_powered'] < $position['stark_by'], 'Blocks with different weight are rendered in the correct order.');
     $this->assertTrue($position['stark_drupal'] < $position['stark_by'], 'Blocks with identical weight are rendered in alphabetical order.');
   }
+
 }

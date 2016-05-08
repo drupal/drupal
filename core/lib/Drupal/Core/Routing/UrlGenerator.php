@@ -452,4 +452,5 @@ class UrlGenerator implements UrlGeneratorInterface {
 
     return serialize($name);
   }
+
 }

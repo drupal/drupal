@@ -78,4 +78,5 @@ interface UpdateProcessorInterface {
    * @see \Drupal\Core\Queue\QueueInterface::deleteItem()
    */
   public function deleteQueueItem($item);
+
 }

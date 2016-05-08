@@ -154,4 +154,5 @@ class UpdateTest extends DatabaseTestBase {
     $saved_value = db_query('SELECT "offset" FROM {test_special_columns} WHERE id = :id', array(':id' => 1))->fetchField();
     $this->assertIdentical($saved_value, 'New offset value', 'Updated special column name value successfully.');
   }
+
 }

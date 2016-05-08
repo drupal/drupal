@@ -54,4 +54,5 @@ class ServiceDestructionTest extends KernelTestBase {
     $kernel->terminate($request, $response);
     $this->assertNull(\Drupal::state()->get('service_provider_test.destructed'));
   }
+
 }

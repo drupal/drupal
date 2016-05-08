@@ -46,4 +46,5 @@ class DummyReadOnlyStreamWrapper extends LocalReadOnlyStream {
   function getExternalUrl() {
     return '/dummy/example.txt';
   }
+
 }

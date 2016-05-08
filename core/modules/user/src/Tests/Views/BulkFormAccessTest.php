@@ -127,4 +127,5 @@ class BulkFormAccessTest extends UserTestBase {
     $account = User::load($account2->id());
     $this->assertNull($account, 'The user "may_delete" is deleted.');
   }
+
 }

@@ -54,4 +54,5 @@ class NodePostSettingsTest extends NodeTestBase {
     $elements = $this->xpath('//div[contains(@class, :class)]', array(':class' => 'node__submitted'));
     $this->assertEqual(count($elements), 0, 'Post information is not displayed.');
   }
+
 }

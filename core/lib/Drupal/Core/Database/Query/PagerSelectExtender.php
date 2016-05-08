@@ -166,4 +166,5 @@ class PagerSelectExtender extends SelectExtender {
     }
     return $this;
   }
+
 }

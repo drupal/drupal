@@ -48,4 +48,5 @@ class FileMoveTest extends WebTestBase {
     // Check if derivative image has been flushed.
     $this->assertFalse(file_exists($derivative_uri), 'Make sure derivative image has been flushed.');
   }
+
 }

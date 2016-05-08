@@ -126,4 +126,5 @@ class RssTest extends TaxonomyTestBase {
     $this->drupalGet('taxonomy/term/all/feed');
     $this->assertNoRaw($raw_xml);
   }
+
 }

@@ -116,4 +116,5 @@ class ZfExtensionManagerSfContainerTest extends UnitTestCase {
       ),
     );
   }
+
 }

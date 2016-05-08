@@ -46,4 +46,5 @@ class LanguageConfigurationElement extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
+
 }

@@ -42,4 +42,5 @@ interface EntityChangedInterface {
    *   translations.
    */
   public function getChangedTimeAcrossTranslations();
+
 }

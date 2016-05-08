@@ -49,4 +49,5 @@ interface AliasManagerInterface {
    *   if entire cache needs to be flushed.
    */
   public function cacheClear($source = NULL);
+
 }

@@ -164,4 +164,5 @@ class DatabaseStorage extends StorageBase {
       ->condition('collection', $this->collection)
       ->execute();
   }
+
 }

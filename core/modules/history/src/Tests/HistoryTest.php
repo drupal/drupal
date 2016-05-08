@@ -144,4 +144,5 @@ class HistoryTest extends WebTestBase {
     $this->markNodeAsRead($nid);
     $this->assertResponse(403);
   }
+
 }

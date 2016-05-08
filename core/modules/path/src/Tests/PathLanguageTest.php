@@ -187,4 +187,5 @@ class PathLanguageTest extends PathTestBase {
     $english_node->save();
     $this->assertFalse($this->container->get('path.alias_storage')->aliasExists('/' . $french_alias, 'fr'), 'Alias for French translation is removed when translation is deleted.');
   }
+
 }

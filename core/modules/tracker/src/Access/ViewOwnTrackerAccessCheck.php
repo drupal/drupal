@@ -26,4 +26,5 @@ class ViewOwnTrackerAccessCheck implements AccessInterface {
   public function access(AccountInterface $account, UserInterface $user) {
     return AccessResult::allowedIf($user && $account->isAuthenticated() && ($user->id() == $account->id()))->cachePerUser();
   }
+
 }

@@ -27,4 +27,5 @@ class PageCacheAcceptHeaderController {
       return new CacheableResponse("<p>oh hai this is html.</p>");
     }
   }
+
 }

@@ -25,4 +25,5 @@ interface ExtendableInterface {
    *   The extender object, which now contains a reference to this object.
    */
   public function extend($extender_name);
+
 }

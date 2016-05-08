@@ -1506,4 +1506,5 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function addServiceFiles(array $service_yamls) {
     $this->serviceYamls['site'] = array_filter($service_yamls, 'file_exists');
   }
+
 }

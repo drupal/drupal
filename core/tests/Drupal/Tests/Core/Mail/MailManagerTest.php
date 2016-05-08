@@ -123,6 +123,7 @@ class MailManagerTest extends UnitTestCase {
     $instance = $this->mailManager->getInstance($options);
     $this->assertInstanceOf('Drupal\Core\Mail\Plugin\Mail\TestMailCollector', $instance);
   }
+
 }
 
 /**
@@ -138,4 +139,5 @@ class TestMailManager extends MailManager {
   public function setDiscovery(DiscoveryInterface $discovery) {
     $this->discovery = $discovery;
   }
+
 }

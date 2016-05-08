@@ -297,4 +297,5 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
 
     $chain->removeBin();
   }
+
 }

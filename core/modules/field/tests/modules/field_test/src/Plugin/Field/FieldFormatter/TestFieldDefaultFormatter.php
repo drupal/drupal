@@ -66,4 +66,5 @@ class TestFieldDefaultFormatter extends FormatterBase {
 
     return $elements;
   }
+
 }

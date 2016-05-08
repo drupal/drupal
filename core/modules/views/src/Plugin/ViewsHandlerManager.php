@@ -132,4 +132,5 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
   public function getFallbackPluginId($plugin_id, array $configuration = array()) {
     return 'broken';
   }
+
 }

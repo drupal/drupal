@@ -244,4 +244,5 @@ class ContentEntityNormalizer extends NormalizerBase {
 
     return $typed_data_ids;
   }
+
 }

@@ -28,4 +28,5 @@ class RequiredTest extends ModuleTestBase {
       }
     }
   }
+
 }

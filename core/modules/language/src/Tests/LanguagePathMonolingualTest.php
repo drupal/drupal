@@ -69,4 +69,5 @@ class LanguagePathMonolingualTest extends WebTestBase {
     $this->assertResponse(200, 'Clicked link results in a valid page');
     $this->assertText(t('Add language'), 'Page contains the add language text');
   }
+
 }

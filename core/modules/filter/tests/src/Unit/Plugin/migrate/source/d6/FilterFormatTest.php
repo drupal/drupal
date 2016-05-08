@@ -102,4 +102,5 @@ class FilterFormatTest extends MigrateSqlSourceTestCase {
     }
     parent::setUp();
   }
+
 }

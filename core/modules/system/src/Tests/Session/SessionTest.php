@@ -320,4 +320,5 @@ class SessionTest extends WebTestBase {
       $this->assertIdentical($this->drupalGetHeader('X-Session-Empty'), '0', 'Session was not empty.');
     }
   }
+
 }

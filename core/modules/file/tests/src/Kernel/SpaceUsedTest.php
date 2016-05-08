@@ -71,4 +71,5 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
     $this->assertEqual($file->spaceUsed(3, 0), 3);
     $this->assertEqual($file->spaceUsed(3, FILE_STATUS_PERMANENT), 300);
   }
+
 }

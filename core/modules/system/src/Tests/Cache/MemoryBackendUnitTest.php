@@ -22,4 +22,5 @@ class MemoryBackendUnitTest extends GenericCacheBackendUnitTestBase {
     \Drupal::service('cache_tags.invalidator')->addInvalidator($backend);
     return $backend;
   }
+
 }

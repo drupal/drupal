@@ -42,4 +42,5 @@ class ResourcePluginManager extends DefaultPluginManager {
       return $this->createInstance($options['id']);
     }
   }
+
 }

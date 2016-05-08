@@ -51,4 +51,5 @@ class UserDeleteTest extends WebTestBase {
     $this->assertNull(User::load($user_b->id()), format_string('User with id @uid deleted.', array('@uid' => $user_b->id())));
     $this->assertNull(User::load($user_c->id()), format_string('User with id @uid deleted.', array('@uid' => $user_c->id())));
   }
+
 }

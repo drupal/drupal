@@ -23,4 +23,5 @@ class KeyValueMemoryFactory implements KeyValueFactoryInterface {
     }
     return $this->collections[$collection];
   }
+
 }

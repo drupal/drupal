@@ -107,4 +107,5 @@ class CrudTest extends KernelTestBase {
       ->getFieldMapping($field_name);
     $this->assertEqual($mapping, $field_mapping, 'Field mapping updated.');
   }
+
 }

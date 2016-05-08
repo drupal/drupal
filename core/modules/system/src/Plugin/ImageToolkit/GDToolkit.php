@@ -431,4 +431,5 @@ class GDToolkit extends ImageToolkitBase {
   protected static function supportedTypes() {
     return array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
   }
+
 }

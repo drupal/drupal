@@ -54,4 +54,5 @@ class StringFieldRdfaTest extends FieldRdfaTestBase {
     // Tests the string formatter.
     $this->assertFormatterRdfa(array('type' => 'string'), 'http://schema.org/text', array('value' => $this->testValue));
   }
+
 }

@@ -136,4 +136,5 @@ class ConstraintManager extends DefaultPluginManager {
     }
     return $definitions;
   }
+
 }

@@ -66,4 +66,5 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $this->updateFeedItems($feed);
     $this->assertResponse(200);
   }
+
 }

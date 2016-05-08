@@ -131,4 +131,5 @@ class NodeFormButtonsTest extends NodeTestBase {
     $node_3 = $node_storage->load(3);
     $this->assertFalse($node_3->isPublished(), 'Node is unpublished');
   }
+
 }

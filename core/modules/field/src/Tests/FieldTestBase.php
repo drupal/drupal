@@ -58,4 +58,5 @@ abstract class FieldTestBase extends WebTestBase {
       $this->assertEqual($values[$key][$column], $value, format_string('Value @value was saved correctly.', array('@value' => $value)));
     }
   }
+
 }

@@ -97,4 +97,5 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     ));
     $this->assertUrl(\Drupal::url('language.add', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
   }
+
 }

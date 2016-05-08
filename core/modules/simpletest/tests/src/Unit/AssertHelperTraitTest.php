@@ -36,6 +36,7 @@ class AssertHelperTraitTest extends UnitTestCase {
       [['test safe string', 'mixed array', 'test safe string'], [$safe_string, 'mixed array', $safe_string]],
     ];
   }
+
 }
 
 class AssertHelperTestClass {
@@ -44,4 +45,5 @@ class AssertHelperTestClass {
   public function testMethod($value) {
     return $this->castSafeStrings($value);
   }
+
 }

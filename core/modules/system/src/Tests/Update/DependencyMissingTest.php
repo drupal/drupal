@@ -34,4 +34,5 @@ class DependencyMissingTest extends WebTestBase {
     $this->assertFalse($update_graph['update_test_2_update_8002']['allowed'], "The module's second update function is not allowed to run, since it has a direct dependency on a missing update.");
     $this->assertFalse($update_graph['update_test_2_update_8003']['allowed'], "The module's third update function is not allowed to run, since it has an indirect dependency on a missing update.");
   }
+
 }

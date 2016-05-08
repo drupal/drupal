@@ -581,4 +581,5 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   protected function assertSortedResults($expected) {
     return $this->assertResults($expected, TRUE);
   }
+
 }

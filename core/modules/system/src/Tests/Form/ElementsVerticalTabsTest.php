@@ -85,4 +85,5 @@ class ElementsVerticalTabsTest extends WebTestBase {
     $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
     $this->assertFalse(isset($values['vertical_tabs__active_tab']), SafeMarkup::format('%element was removed.', ['%element' => 'vertical_tabs__active_tab']));
   }
+
 }

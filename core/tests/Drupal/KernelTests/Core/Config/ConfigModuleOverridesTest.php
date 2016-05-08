@@ -47,4 +47,5 @@ class ConfigModuleOverridesTest extends KernelTestBase {
 
     unset($GLOBALS['config_test_run_module_overrides']);
   }
+
 }

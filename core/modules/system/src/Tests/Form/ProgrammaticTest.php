@@ -115,4 +115,5 @@ class ProgrammaticTest extends WebTestBase {
     $this->assertNotEqual($values['field_restricted'], 'dummy value', 'The value for the restricted field is not stored.');
 
   }
+
 }

@@ -89,4 +89,5 @@ class FileTransferTest extends WebTestBase {
     }
     $this->assertTrue($gotit, 'Was able to copy a directory inside of the jailed area');
   }
+
 }

@@ -80,4 +80,5 @@ class Truncate extends Query {
       return $comments . 'TRUNCATE {' . $this->connection->escapeTable($this->table) . '} ';
     }
   }
+
 }

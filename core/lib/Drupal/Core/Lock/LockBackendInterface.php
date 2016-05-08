@@ -128,4 +128,5 @@ interface LockBackendInterface {
    * @return string
    */
   public function getLockId();
+
 }

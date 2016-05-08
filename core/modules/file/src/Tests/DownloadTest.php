@@ -168,4 +168,5 @@ class DownloadTest extends FileManagedTestBase {
 
     $file->delete();
   }
+
 }

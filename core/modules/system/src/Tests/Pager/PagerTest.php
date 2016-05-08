@@ -233,4 +233,5 @@ class PagerTest extends WebTestBase {
     }
     $this->assertTrue(strpos($element['class'], $class) === FALSE, $message);
   }
+
 }

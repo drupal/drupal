@@ -29,4 +29,5 @@ class RangeQueryTest extends DatabaseTestBase {
     $raw_rows = array_slice($raw_rows, 1, 3);
     $this->assertEqual($range_rows, $raw_rows);
   }
+
 }

@@ -62,4 +62,5 @@ class KernelDestructionSubscriber implements EventSubscriberInterface, Container
     $events[KernelEvents::TERMINATE][] = array('onKernelTerminate', 100);
     return $events;
   }
+
 }

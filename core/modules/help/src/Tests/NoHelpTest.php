@@ -45,4 +45,5 @@ class NoHelpTest extends WebTestBase {
     $this->drupalGet('admin/help/menu_test');
     $this->assertResponse(404, 'Getting a module overview help page for a module that does not implement hook_help() results in a 404.');
   }
+
 }

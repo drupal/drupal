@@ -109,5 +109,4 @@ class User extends Entity {
     return $dependencies;
   }
 
-
 }

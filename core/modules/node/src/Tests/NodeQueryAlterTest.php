@@ -193,4 +193,5 @@ class NodeQueryAlterTest extends NodeTestBase {
     }
     \Drupal::state()->delete('node_access_test.no_access_uid');
   }
+
 }

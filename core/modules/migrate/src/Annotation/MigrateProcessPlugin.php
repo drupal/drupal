@@ -44,4 +44,5 @@ class MigrateProcessPlugin extends Plugin {
    * @var bool (optional)
    */
   public $handle_multiples = FALSE;
+
 }

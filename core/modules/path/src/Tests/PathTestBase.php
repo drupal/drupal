@@ -25,4 +25,5 @@ abstract class PathTestBase extends WebTestBase {
       $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
     }
   }
+
 }

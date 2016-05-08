@@ -100,4 +100,5 @@ class EntityUUIDTest extends EntityKernelTestBase {
     $entity_duplicate->save();
     $this->assertNotEqual($entity->id(), $entity_duplicate->id());
   }
+
 }

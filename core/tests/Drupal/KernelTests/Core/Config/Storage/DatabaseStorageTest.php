@@ -40,4 +40,5 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
   protected function delete($name) {
     db_delete('config')->condition('name', $name)->execute();
   }
+
 }

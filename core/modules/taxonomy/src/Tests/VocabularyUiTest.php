@@ -153,4 +153,5 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->container->get('entity.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertFalse(Vocabulary::load($vid), 'Vocabulary not found.');
   }
+
 }

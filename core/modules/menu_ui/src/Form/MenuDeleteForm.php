@@ -92,4 +92,5 @@ class MenuDeleteForm extends EntityDeleteForm {
 
     parent::submitForm($form, $form_state);
   }
+
 }

@@ -388,4 +388,5 @@ class MailFormatHelper {
     // Add prefix and padding, and restore linebreak.
     return $text . $prefix . str_repeat($pad, $n) . "\n";
   }
+
 }

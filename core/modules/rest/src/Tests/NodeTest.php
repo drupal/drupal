@@ -194,4 +194,5 @@ class NodeTest extends RESTTestBase {
     $this->assertResponse(400);
     $this->assertResponseBody('{"error":"A string must be provided as a bundle value."}');
   }
+
 }

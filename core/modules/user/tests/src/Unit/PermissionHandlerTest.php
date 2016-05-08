@@ -426,6 +426,7 @@ class TestPermissionCallbacks {
       ),
     );
   }
+
 }
 
 /**

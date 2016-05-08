@@ -94,4 +94,5 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
     $this->assertSame($settings->get('reverse_proxy_forwarded_header'), $request->getTrustedHeaderName($request::HEADER_FORWARDED));
     $this->assertSame($settings->get('reverse_proxy_addresses'), $request->getTrustedProxies());
   }
+
 }

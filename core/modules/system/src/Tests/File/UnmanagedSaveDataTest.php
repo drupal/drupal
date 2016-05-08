@@ -28,4 +28,5 @@ class UnmanagedSaveDataTest extends FileTestBase {
     $this->assertEqual($contents, file_get_contents($filepath), 'Contents of the file are correct.');
     $this->assertFilePermissions($filepath, 0777);
   }
+
 }

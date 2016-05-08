@@ -201,4 +201,5 @@ class LocaleStringTest extends WebTestBase {
       'translation' => $this->randomMachineName(100),
     ))->save();
   }
+
 }

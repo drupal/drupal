@@ -251,4 +251,5 @@ class SearchMatchTest extends KernelTestBase {
     // Check range.
     $this->assertEqual(!count($scores) || (min($scores) > 0.0 && max($scores) <= 1.0001), TRUE, "Query scoring '$query'");
   }
+
 }

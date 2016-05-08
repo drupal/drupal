@@ -140,4 +140,5 @@ class ContentTranslationMetadataFieldsTest extends ContentTranslationTestBase {
     $this->assertNotEqual($metadata_source_translation->isPublished(), $metadata_target_translation->isPublished(), 'Metadata published field correctly different on both translations.');
     $this->assertNotEqual($metadata_source_translation->getAuthor()->id(), $metadata_target_translation->getAuthor()->id(), 'Metadata author field correctly different on both translations.');
   }
+
 }

@@ -2674,6 +2674,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
     return FALSE;
   }
+
 }
 
 /**

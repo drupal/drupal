@@ -47,4 +47,5 @@ class TranslationsStream extends LocalStream {
   function getExternalUrl() {
     throw new \LogicException('PO files URL should not be public.');
   }
+
 }

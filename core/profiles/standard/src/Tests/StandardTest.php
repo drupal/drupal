@@ -198,4 +198,5 @@ class StandardTest extends WebTestBase {
     $this->drupalGet($url);
     $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'User profile page is cached by Dynamic Page Cache.');
   }
+
 }

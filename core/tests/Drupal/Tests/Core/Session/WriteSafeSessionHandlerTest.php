@@ -174,4 +174,5 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
       ['gc', TRUE, [42]],
     ];
   }
+
 }

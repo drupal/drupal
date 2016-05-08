@@ -31,4 +31,5 @@ class CommentNodeChangesTest extends CommentTestBase {
     $this->assertNull(FieldStorageConfig::load('node.comment'), 'Comment field storage deleted');
     $this->assertNull(FieldConfig::load('node.article.comment'), 'Comment field deleted');
   }
+
 }

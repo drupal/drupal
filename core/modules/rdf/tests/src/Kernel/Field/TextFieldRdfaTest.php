@@ -69,4 +69,5 @@ class TextFieldRdfaTest extends FieldRdfaTestBase {
     // Tests the trimmed formatter.
     $this->assertFormatterRdfa(array('type' => 'text_trimmed'), 'http://schema.org/text', array('value' => $formatted_value));
   }
+
 }

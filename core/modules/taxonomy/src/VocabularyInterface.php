@@ -38,4 +38,5 @@ interface VocabularyInterface extends ConfigEntityInterface {
    *   The vocabulary description.
    */
   public function getDescription();
+
 }

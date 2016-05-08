@@ -88,4 +88,5 @@ class BinaryData extends PrimitiveBase implements BinaryInterface {
   public function getCastedValue() {
     return $this->getValue();
   }
+
 }

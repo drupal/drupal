@@ -176,4 +176,5 @@ interface StringStorageInterface {
    *   New string translation object.
    */
   public function createTranslation($values = array());
+
 }

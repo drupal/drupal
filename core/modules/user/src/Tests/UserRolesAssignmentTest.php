@@ -90,4 +90,5 @@ class UserRolesAssignmentTest extends WebTestBase {
       $this->assertTrue(array_search($rid, $account->getRoles()) === FALSE, 'The role is not present in the user object.');
     }
   }
+
 }

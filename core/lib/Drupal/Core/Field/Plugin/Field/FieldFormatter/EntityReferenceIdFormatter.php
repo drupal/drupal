@@ -40,4 +40,5 @@ class EntityReferenceIdFormatter extends EntityReferenceFormatterBase {
 
     return $elements;
   }
+
 }

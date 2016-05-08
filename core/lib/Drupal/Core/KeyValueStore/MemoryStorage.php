@@ -97,4 +97,5 @@ class MemoryStorage extends StorageBase {
   public function deleteAll() {
     $this->data = array();
   }
+
 }

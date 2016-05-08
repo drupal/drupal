@@ -77,4 +77,5 @@ class SearchSimplifyTest extends SearchTestBase {
       $this->assertEqual($out, $case[1], $case[2]);
     }
   }
+
 }

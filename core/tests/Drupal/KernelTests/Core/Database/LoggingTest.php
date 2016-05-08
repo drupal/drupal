@@ -125,4 +125,5 @@ class LoggingTest extends DatabaseTestBase {
     $this->assertEqual(count($queries1), 1, 'Correct number of queries recorded for first connection.');
     $this->assertEqual(count($queries2), 1, 'Correct number of queries recorded for second connection.');
   }
+
 }

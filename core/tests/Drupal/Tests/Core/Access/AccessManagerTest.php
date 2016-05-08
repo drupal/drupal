@@ -568,4 +568,5 @@ class AccessManagerTest extends UnitTestCase {
  */
 interface TestAccessCheckInterface extends AccessCheckInterface {
   public function access();
+
 }

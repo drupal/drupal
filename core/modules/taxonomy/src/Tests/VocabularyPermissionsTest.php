@@ -124,4 +124,5 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
     $this->assertResponse(403, 'Delete taxonomy term form open failed.');
   }
+
 }

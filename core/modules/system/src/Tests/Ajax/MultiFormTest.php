@@ -94,4 +94,5 @@ class MultiFormTest extends AjaxTestBase {
       }
     }
   }
+
 }

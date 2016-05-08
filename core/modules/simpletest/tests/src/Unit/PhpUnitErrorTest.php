@@ -36,4 +36,5 @@ class PhpUnitErrorTest extends UnitTestCase {
     // didn't run.
     simpletest_phpunit_xml_to_rows(1, 'foobar');
   }
+
 }

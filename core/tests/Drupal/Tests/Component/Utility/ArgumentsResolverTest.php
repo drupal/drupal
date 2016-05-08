@@ -199,6 +199,7 @@ class ArgumentsResolverTest extends UnitTestCase {
 class TestClass {
   public function access($foo) {
   }
+
 }
 
 /**

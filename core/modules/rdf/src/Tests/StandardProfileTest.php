@@ -533,4 +533,5 @@ class StandardProfileTest extends WebTestBase {
     $parser->parse($graph, $this->drupalGet($url), 'rdfa', $this->baseUri);
     return $graph;
   }
+
 }

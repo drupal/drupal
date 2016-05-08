@@ -40,4 +40,5 @@ class SearchPageOverrideTest extends SearchTestBase {
     $this->assertText('Dummy search snippet', 'Dummy search snippet is shown');
     $this->assertText('Test page text is here', 'Page override is working');
   }
+
 }

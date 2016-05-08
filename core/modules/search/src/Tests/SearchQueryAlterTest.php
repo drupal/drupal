@@ -45,4 +45,5 @@ class SearchQueryAlterTest extends SearchTestBase {
     $this->assertText('article', 'Article is in search results');
     $this->assertNoText('page', 'Page is not in search results');
   }
+
 }

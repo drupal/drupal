@@ -35,4 +35,5 @@ class RedirectBlockForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setRedirect('form_test.route1', array(), array('query' => array('test1' => 'test2')));
   }
+
 }

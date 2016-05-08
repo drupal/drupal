@@ -105,4 +105,5 @@ class NodeFieldFilterTest extends NodeTestBase {
       $this->assertEqual(substr_count($text, $this->nodeTitles[$langcode]), 2 * $count, 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
     }
   }
+
 }

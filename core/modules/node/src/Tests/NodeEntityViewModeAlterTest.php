@@ -46,4 +46,5 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
     $build = $this->drupalBuildEntityView($node);
     $this->assertEqual($build['#view_mode'], 'teaser', 'The view mode has correctly been set to teaser.');
   }
+
 }

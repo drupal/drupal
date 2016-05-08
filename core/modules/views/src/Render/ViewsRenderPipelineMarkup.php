@@ -20,4 +20,5 @@ use Drupal\Component\Render\MarkupTrait;
  */
 final class ViewsRenderPipelineMarkup implements MarkupInterface, \Countable {
   use MarkupTrait;
+
 }

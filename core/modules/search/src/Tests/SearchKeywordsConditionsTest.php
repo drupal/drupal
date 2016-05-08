@@ -58,4 +58,5 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
     $this->assertText("Dummy search snippet to display.");
     $this->assertRaw(Html::escape(print_r(array('keys' => 'bike', 'search_conditions' => $keys), TRUE)));
   }
+
 }

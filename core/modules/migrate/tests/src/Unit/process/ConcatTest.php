@@ -49,6 +49,7 @@ class ConcatTest extends MigrateProcessTestCase {
     $value = $this->plugin->transform(array('foo', 'bar'), $this->migrateExecutable, $this->row, 'destinationproperty');
     $this->assertSame($value, 'foo_bar');
   }
+
 }
 
 class TestConcat extends Concat {

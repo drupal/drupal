@@ -962,6 +962,7 @@ class TestEntityViewsData extends EntityViewsData {
   public function setEntityType(EntityTypeInterface $entity_type) {
     $this->entityType = $entity_type;
   }
+
 }
 
 class TestEntityType extends EntityType {

@@ -109,4 +109,5 @@ class Theme extends Updater implements UpdaterInterface {
       ],
     ];
   }
+
 }

@@ -33,4 +33,5 @@ class DependencyHookInvocationTest extends WebTestBase {
     $this->assertTrue($update_dependencies['update_test_0'][8001]['update_test_2'] == 8002, 'An update function that has a dependency on two separate modules has the second dependency recorded correctly.');
     $this->assertTrue($update_dependencies['update_test_0'][8002]['update_test_1'] == 8003, 'An update function that depends on more than one update from the same module only has the dependency on the higher-numbered update function recorded.');
   }
+
 }

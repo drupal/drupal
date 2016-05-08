@@ -27,4 +27,5 @@ class SerializationTestEncoder implements EncoderInterface {
   public function supportsEncoding($format) {
     return static::$format === $format;
   }
+
 }

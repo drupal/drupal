@@ -78,4 +78,5 @@ class CommentNodeAccessTest extends CommentTestBase {
     $this->assertText($reply_text);
     $this->assertText($reply_subject);
   }
+
 }

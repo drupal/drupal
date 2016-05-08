@@ -274,4 +274,5 @@ class SearchRankingTest extends SearchTestBase {
       $node->delete();
     }
   }
+
 }

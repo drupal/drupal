@@ -66,4 +66,5 @@ interface FileUsageInterface {
    *   the third level contains the usage count.
    */
   public function listUsage(FileInterface $file);
+
 }

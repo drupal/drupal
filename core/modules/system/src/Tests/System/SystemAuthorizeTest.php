@@ -57,4 +57,5 @@ class SystemAuthorizeTest extends WebTestBase {
     // expected to the first page of the authorize.php script.
     $this->assertRaw('core/misc/states.js');
   }
+
 }

@@ -94,4 +94,5 @@ class UserEntityReferenceTest extends EntityKernelTestBase {
     $matches = $autocomplete->getMatches('user', 'default', $field_definition->getSetting('handler_settings'), 'aabbbb');
     $this->assertEqual(count($matches), 0, '');
   }
+
 }

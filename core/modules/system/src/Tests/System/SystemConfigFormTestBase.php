@@ -63,4 +63,5 @@ abstract class SystemConfigFormTestBase extends WebTestBase {
       $this->assertEqual($data['#value'], $this->config($data['#config_name'])->get($data['#config_key']));
     }
   }
+
 }

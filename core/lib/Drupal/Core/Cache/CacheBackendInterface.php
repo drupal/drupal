@@ -215,4 +215,5 @@ interface CacheBackendInterface {
    * Remove a cache bin.
    */
   public function removeBin();
+
 }

@@ -24,4 +24,5 @@ class TestFileUsage extends FileUsageBase {
    */
   public function listUsage(FileInterface $file) {
   }
+
 }

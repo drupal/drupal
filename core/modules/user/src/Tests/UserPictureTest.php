@@ -139,4 +139,5 @@ class UserPictureTest extends WebTestBase {
     $account = $user_storage->load($this->webUser->id());
     return File::load($account->user_picture->target_id);
   }
+
 }

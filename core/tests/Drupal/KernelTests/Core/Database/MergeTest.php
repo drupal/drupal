@@ -229,4 +229,5 @@ class MergeTest extends DatabaseTestBase {
     }
     $this->fail('No InvalidMergeQueryException thrown');
   }
+
 }

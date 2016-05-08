@@ -15,4 +15,5 @@ class TypedDataStringBlock extends ContextAwarePluginBase {
   public function getTitle() {
     return $this->getContextValue('string');
   }
+
 }

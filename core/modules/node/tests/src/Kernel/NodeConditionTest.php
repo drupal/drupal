@@ -79,4 +79,5 @@ class NodeConditionTest extends EntityKernelTestBase {
     $condition = $manager->createInstance('node_type', array('bundles' => array('article' => 'article'), 'context' => array('node' => $article)));
     $this->assertTrue($condition->execute(), 'Constructor injection of context and configuration working as anticipated.');
   }
+
 }

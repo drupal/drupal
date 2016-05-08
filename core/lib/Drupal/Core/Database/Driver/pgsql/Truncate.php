@@ -25,4 +25,5 @@ class Truncate extends QueryTruncate {
 
     return $result;
   }
+
 }

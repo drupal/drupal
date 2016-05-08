@@ -38,4 +38,5 @@ class MinimalTest extends WebTestBase {
     // Ensure that there are no pending entity updates after installation.
     $this->assertFalse($this->container->get('entity.definition_update_manager')->needsUpdates(), 'After installation, entity schema is up to date.');
   }
+
 }

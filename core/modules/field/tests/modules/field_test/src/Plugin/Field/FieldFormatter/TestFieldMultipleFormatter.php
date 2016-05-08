@@ -71,4 +71,5 @@ class TestFieldMultipleFormatter extends FormatterBase {
 
     return $elements;
   }
+
 }

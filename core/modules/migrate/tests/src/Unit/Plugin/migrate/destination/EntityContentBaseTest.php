@@ -115,4 +115,5 @@ class EntityTestDestination extends EntityContentBase {
   protected function getEntity(Row $row, array $old_destination_id_values) {
     return $this->entity;
   }
+
 }

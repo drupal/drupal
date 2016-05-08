@@ -85,4 +85,5 @@ class LinkSeparateFormatter extends LinkFormatter {
     }
     return $element;
   }
+
 }

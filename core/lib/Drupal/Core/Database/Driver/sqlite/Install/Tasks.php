@@ -103,4 +103,5 @@ class Tasks extends InstallTasks {
     }
     return TRUE;
   }
+
 }

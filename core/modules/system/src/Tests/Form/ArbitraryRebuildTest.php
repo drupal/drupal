@@ -72,4 +72,5 @@ class ArbitraryRebuildTest extends WebTestBase {
     $this->assertFieldByName('name', 'foo', 'Entered username has been kept.');
     $this->assertFieldByName('mail', 'bar@example.com', 'Entered mail address has been kept.');
   }
+
 }

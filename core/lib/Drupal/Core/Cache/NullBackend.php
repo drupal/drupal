@@ -88,4 +88,5 @@ class NullBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function removeBin() {}
+
 }

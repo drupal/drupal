@@ -16,4 +16,5 @@ class ForumLeafConstraint extends Constraint {
 
   public $selectForum = 'Select a forum.';
   public $noLeafMessage = 'The item %forum is a forum container, not a forum. Select one of the forums below instead.';
+
 }

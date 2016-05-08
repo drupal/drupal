@@ -84,4 +84,5 @@ class ConfigurationTest extends WebTestBase {
     $action = entity_load('action', $aid);
     $this->assertFalse($action, 'Make sure the action is gone after being deleted.');
   }
+
 }

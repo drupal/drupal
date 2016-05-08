@@ -57,4 +57,5 @@ class EntityTypeConstraintValidatorTest extends EntityKernelTestBase {
     $this->assertEqual($violation->getRoot(), $typed_data, 'Violation root is correct.');
     $this->assertEqual($violation->getInvalidValue(), $account, 'The invalid value is set correctly in the violation.');
   }
+
 }

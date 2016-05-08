@@ -147,4 +147,5 @@ class AlterTest extends DatabaseTestBase {
     $this->assertEqual($record->$name_field, 'George', 'Fetched name is correct.');
     $this->assertEqual($record->$age_field, 27 * 3, 'Fetched age expression is correct.');
   }
+
 }

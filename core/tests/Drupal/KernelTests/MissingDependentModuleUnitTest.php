@@ -18,4 +18,5 @@ class MissingDependentModuleUnitTest extends KernelTestBase {
   function testFail() {
     $this->fail('Running test with missing required module.');
   }
+
 }

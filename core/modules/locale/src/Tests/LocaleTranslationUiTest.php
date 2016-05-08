@@ -539,4 +539,5 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertText($string->getString(), "Translation is marked as customized.");
   }
+
 }

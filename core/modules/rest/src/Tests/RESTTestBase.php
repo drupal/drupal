@@ -425,4 +425,5 @@ abstract class RESTTestBase extends WebTestBase {
   protected function assertResponseBody($expected, $message = '', $group = 'REST Response') {
     return $this->assertIdentical($expected, $this->responseBody, $message ? $message : strtr('Response body @expected (expected) is equal to @response (actual).', array('@expected' => var_export($expected, TRUE), '@response' => var_export($this->responseBody, TRUE))), $group);
   }
+
 }

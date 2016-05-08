@@ -391,4 +391,5 @@ abstract class AccountForm extends ContentEntityForm {
       unset($_SESSION['pass_reset_' . $user->id()]);
     }
   }
+
 }

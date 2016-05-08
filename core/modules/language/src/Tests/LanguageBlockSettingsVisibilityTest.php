@@ -23,4 +23,5 @@ class LanguageBlockSettingsVisibilityTest extends WebTestBase {
     $this->assertFieldByXPath('//input[@id="edit-visibility-language-langcodes-en"]', NULL, '\'English\' option appears at block config, language settings section.');
     $this->assertFieldByXpath('//input[@id="edit-visibility-language-langcodes-hu"]', NULL, '\'Hungarian\' option appears at block config, language settings section.');
   }
+
 }

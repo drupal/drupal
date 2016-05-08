@@ -140,4 +140,5 @@ class FieldUpdateTest extends UpdatePathTestBase {
     $dependencies += ['module' => []];
     $this->assertEqual(in_array('entity_reference', $dependencies['module']), $present);
   }
+
 }

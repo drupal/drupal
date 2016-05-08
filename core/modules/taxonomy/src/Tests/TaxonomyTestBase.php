@@ -32,4 +32,5 @@ abstract class TaxonomyTestBase extends WebTestBase {
       $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
     }
   }
+
 }

@@ -141,4 +141,5 @@ interface ItemInterface extends ContentEntityInterface {
    *   The called feed item entity.
    */
   public function setGuid($guid);
+
 }

@@ -34,4 +34,5 @@ class RemoteFileUnmanagedMoveTest extends UnmanagedMoveTest {
     parent::setUp();
     $this->config('system.file')->set('default_scheme', 'dummy-remote')->save();
   }
+
 }

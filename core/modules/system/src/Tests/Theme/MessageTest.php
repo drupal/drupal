@@ -33,4 +33,5 @@ class MessageTest extends KernelTestBase {
     $this->assertRaw('messages messages--error');
     $this->assertRaw('messages messages--status');
   }
+
 }

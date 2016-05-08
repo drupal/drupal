@@ -119,4 +119,5 @@ class BooleanItem extends FieldItemBase implements OptionsProviderInterface {
     $values['value'] = mt_rand(0, 1);
     return $values;
   }
+
 }

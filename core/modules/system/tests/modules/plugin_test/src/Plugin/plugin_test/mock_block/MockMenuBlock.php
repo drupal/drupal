@@ -44,4 +44,5 @@ class MockMenuBlock {
     }
     return $content;
   }
+
 }

@@ -136,4 +136,5 @@ class UserEditTest extends WebTestBase {
     $this->drupalPostForm("user/" . $user1->id() . "/edit", array('mail' => ''), t('Save'));
     $this->assertRaw(t("The changes have been saved."));
   }
+
 }

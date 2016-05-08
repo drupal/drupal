@@ -67,4 +67,5 @@ abstract class BlockTestBase extends WebTestBase {
       $block->delete();
     }
   }
+
 }

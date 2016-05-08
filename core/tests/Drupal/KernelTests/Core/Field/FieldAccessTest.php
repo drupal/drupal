@@ -75,4 +75,5 @@ class FieldAccessTest extends KernelTestBase {
     $this->assertTrue($entity->field_test_text->access('view', $account), 'Access to the field was granted.');
     $this->assertEqual(AccessResult::allowed(), $entity->field_test_text->access('view', $account, TRUE), 'Access to the field was granted.');
   }
+
 }

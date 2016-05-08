@@ -98,4 +98,5 @@ interface LocaleProjectStorageInterface {
    *   The number of saved items.
    */
   public function countProjects();
+
 }

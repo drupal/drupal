@@ -19,4 +19,5 @@ class SimpletestPhpunitRunCommandTestWillDie extends UnitTestCase {
     }
     $this->assertTrue(TRUE, 'Assertion to ensure test pass');
   }
+
 }

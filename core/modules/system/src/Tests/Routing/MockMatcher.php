@@ -32,4 +32,5 @@ class MockMatcher implements RequestMatcherInterface {
     $matcher = $this->matcher;
     return $matcher($request);
   }
+
 }

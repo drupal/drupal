@@ -28,4 +28,5 @@ class AjaxInGroupTest extends AjaxTestBase {
     $this->assertText('AJAX checkbox in a nested group');
     $this->assertText('Another AJAX checkbox in a nested group');
   }
+
 }

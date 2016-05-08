@@ -130,4 +130,5 @@ class SiteMaintenanceTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
   }
+
 }

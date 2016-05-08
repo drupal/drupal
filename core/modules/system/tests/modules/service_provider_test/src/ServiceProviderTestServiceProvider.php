@@ -26,4 +26,5 @@ class ServiceProviderTestServiceProvider implements ServiceModifierInterface {
       $container->setParameter('container_rebuild_test_parameter', $parameter);
     }
   }
+
 }

@@ -53,4 +53,5 @@ class ArgumentValidatorTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_argument/default/argument/id', $options, t('Apply'));
     $this->drupalPostForm('admin/structure/views/view/test_argument', array(), t('Save'));
   }
+
 }

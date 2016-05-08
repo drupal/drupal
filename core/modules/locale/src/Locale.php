@@ -20,4 +20,5 @@ class Locale {
   public static function config() {
     return \Drupal::service('locale.config_manager');
   }
+
 }

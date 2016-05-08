@@ -559,4 +559,5 @@ class QuickEditLoadingTest extends WebTestBase {
     $ajax_commands = Json::decode($response);
     $this->assertIdentical('<form ', Unicode::substr($ajax_commands[0]['data'], 0, 6), 'The quickeditFieldForm command contains a form.');
   }
+
 }

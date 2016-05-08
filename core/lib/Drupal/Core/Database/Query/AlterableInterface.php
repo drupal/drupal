@@ -87,4 +87,5 @@ interface AlterableInterface {
    *   The previously attached metadata object, or NULL if one doesn't exist.
    */
   public function getMetaData($key);
+
 }

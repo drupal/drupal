@@ -39,4 +39,5 @@ class IgnoreReplicaSubscriberTest extends KernelTestBase {
 
     $this->assertIdentical($db1, $db2, 'System Init ignores secondaries when requested.');
   }
+
 }

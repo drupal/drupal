@@ -153,4 +153,5 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       $this->assertEqual($output, $expected, format_string('Date token %token replaced.', array('%token' => $input)));
     }
   }
+
 }
