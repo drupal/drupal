@@ -28,7 +28,7 @@ class PathItem extends FieldItemBase {
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['alias'] = DataDefinition::create('string')
       ->setLabel(t('Path alias'));
-    $properties['pid'] = DataDefinition::create('string')
+    $properties['pid'] = DataDefinition::create('integer')
       ->setLabel(t('Path id'));
     return $properties;
   }
