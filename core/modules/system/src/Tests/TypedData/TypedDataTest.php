@@ -50,7 +50,7 @@ class TypedDataTest extends KernelTestBase {
   /**
    * Creates a typed data object and ensures it implements TypedDataInterface.
    *
-   * @see \Drupal\Core\TypedData\TypedDataManager::create().
+   * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
   protected function createTypedData($definition, $value = NULL, $name = NULL) {
     if (is_array($definition)) {

@@ -1302,7 +1302,7 @@ abstract class WebTestBase extends TestBase {
    * @param $header
    *   An header.
    *
-   * @see _drupal_log_error().
+   * @see _drupal_log_error()
    */
   protected function curlHeaderCallback($curlHandler, $header) {
     // Header fields can be extended over multiple lines by preceding each

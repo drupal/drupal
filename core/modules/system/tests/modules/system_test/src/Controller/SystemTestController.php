@@ -242,7 +242,7 @@ class SystemTestController extends ControllerBase {
   /**
    * Initialize authorize.php during testing.
    *
-   * @see system_authorized_init().
+   * @see system_authorized_init()
    */
   public function authorizeInit($page_title) {
     $authorize_url = Url::fromUri('base:core/authorize.php', array('absolute' => TRUE))->toString();

@@ -1206,7 +1206,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * @return string
    *   The sanitized identifier.
    *
-   * @see decodeValidatorId().
+   * @see decodeValidatorId()
    */
   public static function encodeValidatorId($id) {
     return str_replace(':', '---', $id);

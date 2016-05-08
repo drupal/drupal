@@ -180,7 +180,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return bool
    *   TRUE if the correct existing password was provided.
    *
-   * @see UserInterface::setExistingPassword().
+   * @see UserInterface::setExistingPassword()
    */
   public function checkExistingPassword(UserInterface $account_unchanged);
 

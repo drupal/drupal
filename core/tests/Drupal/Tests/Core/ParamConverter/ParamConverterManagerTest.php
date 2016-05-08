@@ -65,7 +65,7 @@ class ParamConverterManagerTest extends UnitTestCase {
    *   An array of arrays, each containing the input parameters for
    *   providerTestResolvers::testAddConverter().
    *
-   * @see ParamConverterManagerTest::testAddConverter().
+   * @see ParamConverterManagerTest::testAddConverter()
    */
   public function providerTestAddConverter() {
     $converters[0]['unsorted'] = array(
@@ -108,7 +108,7 @@ class ParamConverterManagerTest extends UnitTestCase {
    *   An array of arrays, each containing the input parameters for
    *   providerTestResolvers::testGetConverter().
    *
-   * @see ParamConverterManagerTest::testGetConverter().
+   * @see ParamConverterManagerTest::testGetConverter()
    */
   public function providerTestGetConverter() {
     return array(

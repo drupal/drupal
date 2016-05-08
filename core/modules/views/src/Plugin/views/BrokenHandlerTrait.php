@@ -13,7 +13,7 @@ trait BrokenHandlerTrait {
   /**
    * Returns this handlers name in the UI.
    *
-   * @see \Drupal\views\Plugin\views\PluginBase::defineOptions().
+   * @see \Drupal\views\Plugin\views\PluginBase::defineOptions()
    */
   public function adminLabel($short = FALSE) {
     return t('Broken/missing handler');
@@ -22,7 +22,7 @@ trait BrokenHandlerTrait {
   /**
    * The option definition for this handler.
    *
-   * @see \Drupal\views\Plugin\views\PluginBase::defineOptions().
+   * @see \Drupal\views\Plugin\views\PluginBase::defineOptions()
    */
   public function defineOptions() {
     return array();
@@ -32,7 +32,7 @@ trait BrokenHandlerTrait {
    * Ensure the main table for this handler is in the query. This is used
    * a lot.
    *
-   * @see \Drupal\views\Plugin\views\HandlerBase::ensureMyTable().
+   * @see \Drupal\views\Plugin\views\HandlerBase::ensureMyTable()
    */
   public function ensureMyTable() {
     // No table to ensure.
@@ -48,7 +48,7 @@ trait BrokenHandlerTrait {
   /**
    * Provides a form to edit options for this plugin.
    *
-   * @see \Drupal\views\Plugin\views\PluginBase::defineOptions().
+   * @see \Drupal\views\Plugin\views\PluginBase::defineOptions()
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $description_top = t('The handler for this item is broken or missing. The following details are available:');
@@ -84,7 +84,7 @@ trait BrokenHandlerTrait {
    *
    * This means it's a placeholder used when a handler can't be found.
    *
-   * @see \Drupal\views\Plugin\views\HandlerBase::broken().
+   * @see \Drupal\views\Plugin\views\HandlerBase::broken()
    */
   public function broken() {
     return TRUE;
@@ -95,7 +95,7 @@ trait BrokenHandlerTrait {
    *
    * @return array
    *
-   * @see \Drupal\views\Plugin\views\PluginBase::calculateDependencies().
+   * @see \Drupal\views\Plugin\views\PluginBase::calculateDependencies()
    */
   public function calculateDependencies() {
     return [];

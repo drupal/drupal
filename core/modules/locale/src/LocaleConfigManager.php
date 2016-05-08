@@ -204,7 +204,6 @@ class LocaleConfigManager {
    *   The translatable array structure. A nested array matching the exact
    *   structure under of the default configuration for $name with only the
    *   elements that are translatable wrapped into a TranslatableMarkup.
-   *   @see self::getTranslatableData().
    * @param string $langcode
    *   The language code to process the array with.
    *
@@ -212,6 +211,8 @@ class LocaleConfigManager {
    *   Processed translatable data array. Will only contain translations
    *   different from source strings or in case of untranslatable English, the
    *   source strings themselves.
+   *
+   * @see self::getTranslatableData()
    */
   protected function processTranslatableData($name, array $active, array $translatable, $langcode) {
     $translated = array();

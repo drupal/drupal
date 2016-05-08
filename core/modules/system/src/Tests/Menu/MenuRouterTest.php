@@ -205,7 +205,7 @@ class MenuRouterTest extends WebTestBase {
   /**
    * Make sure the maintenance mode can be bypassed using an EventSubscriber.
    *
-   * @see \Drupal\menu_test\EventSubscriber\MaintenanceModeSubscriber::onKernelRequestMaintenance().
+   * @see \Drupal\menu_test\EventSubscriber\MaintenanceModeSubscriber::onKernelRequestMaintenance()
    */
   public function testMaintenanceModeLoginPaths() {
     $this->container->get('state')->set('system.maintenance_mode', TRUE);

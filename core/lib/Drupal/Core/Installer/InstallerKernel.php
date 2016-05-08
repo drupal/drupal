@@ -27,7 +27,7 @@ class InstallerKernel extends DrupalKernel {
    * re-instantiated during a single install request. Most drivers will not
    * need this method.
    *
-   * @see \Drupal\Core\Database\Install\Tasks::runTasks().
+   * @see \Drupal\Core\Database\Install\Tasks::runTasks()
    */
   public function resetConfigStorage() {
     $this->configStorage = NULL;
