@@ -295,6 +295,30 @@ class DateTimePlus {
   }
 
   /**
+   * Returns the difference between two DateTimePlus objects.
+   *
+   * @param \Drupal\Component\Datetime\DateTimePlus|\DateTime $datetime2
+   *    The date to compare to.
+   * @param bool $absolute
+   *    Should the interval be forced to be positive?
+   *
+   * @return \DateInterval
+   *    A DateInterval object representing the difference between the two dates.
+   *
+   * @throws \BadMethodCallException
+   *    If the input isn't a DateTime or DateTimePlus object.
+   */
+  public function diff($datetime2, $absolute = FALSE) {
+    if ($datetime2 instanceof DateTimePlus) {
+      $datetime2 = $datetime2->dateTimeObject;
+    }
+    if (!($datetime2 instanceof \DateTime)) {
+      throw new \BadMethodCallException(sprintf('Method %s expects parameter 1 to be a \DateTime or \Drupal\Component\Datetime\DateTimePlus object', __METHOD__));
+    }
+    return $this->dateTimeObject->diff($datetime2, $absolute);
+  }
+
+  /**
    * Implements the magic __callStatic method.
    *
    * Passes through all unknown static calls onto the DateTime object.
