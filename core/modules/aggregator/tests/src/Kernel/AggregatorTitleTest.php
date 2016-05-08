@@ -43,7 +43,7 @@ class AggregatorTitleTest extends KernelTestBase {
     $this->fieldName = 'title';
   }
 
-  /*
+  /**
    * Tests the formatter output.
    */
   public function testStringFormatter() {

@@ -129,7 +129,7 @@ abstract class SearchPluginBase extends PluginBase implements ContainerFactoryPl
     return $this->t('Search');
   }
 
-  /*
+  /**
    * {@inheritdoc}
    */
   public function buildSearchUrlQuery(FormStateInterface $form_state) {
@@ -140,7 +140,7 @@ abstract class SearchPluginBase extends PluginBase implements ContainerFactoryPl
     return $query;
   }
 
-  /*
+  /**
    * {@inheritdoc}
    */
   public function getHelp() {

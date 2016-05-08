@@ -41,7 +41,7 @@ class TourTest extends UnitTestCase {
     $tour->resetKeyedRoutes();
   }
 
-  /*
+  /**
    * Provides sample routes for testing.
    */
   public function routeProvider() {

@@ -17,7 +17,7 @@ interface ContextHandlerInterface {
    *
    * @param \Drupal\Component\Plugin\Context\ContextInterface[] $contexts
    *   An array of contexts.
-   * @param array $definitions .
+   * @param array $definitions
    *   An array of plugin definitions.
    *
    * @return array

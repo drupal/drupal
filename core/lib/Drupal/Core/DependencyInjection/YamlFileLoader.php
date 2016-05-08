@@ -52,7 +52,8 @@ class YamlFileLoader
     /**
      * Loads a Yaml file.
      *
-     * @param mixed  $file The resource
+     * @param mixed $file
+     *   The resource
      */
     public function load($file)
     {
@@ -99,7 +100,7 @@ class YamlFileLoader
     /**
      * Parses definitions
      *
-     * @param array  $content
+     * @param array $content
      * @param string $file
      */
     private function parseDefinitions($content, $file)
@@ -121,7 +122,7 @@ class YamlFileLoader
      * Parses a definition.
      *
      * @param string $id
-     * @param array  $service
+     * @param array $service
      * @param string $file
      *
      * @throws InvalidArgumentException When tags are invalid
@@ -336,7 +337,7 @@ class YamlFileLoader
     /**
      * Validates a YAML file.
      *
-     * @param mixed  $content
+     * @param mixed $content
      * @param string $file
      *
      * @return array

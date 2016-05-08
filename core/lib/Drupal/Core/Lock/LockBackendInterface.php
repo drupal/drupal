@@ -68,8 +68,8 @@ interface LockBackendInterface {
    *
    * @param string $name
    *   Lock name. Limit of name's length is 255 characters.
-   * @param float $timeout = 30.0
-   *   (optional) Lock lifetime in seconds.
+   * @param float $timeout
+   *   (optional) Lock lifetime in seconds. Defaults to 30.0.
    *
    * @return bool
    */
@@ -95,8 +95,8 @@ interface LockBackendInterface {
    *
    * @param string $name
    *   Lock name currently being locked.
-   * @param int $delay = 30
-   *   Milliseconds to wait for.
+   * @param int $delay
+   *   Milliseconds to wait for. Defaults to 30.
    *
    * @return bool
    *   TRUE if the lock holds, FALSE if it may be available. You still need to

@@ -21,7 +21,7 @@ class CountryManager implements CountryManagerInterface {
    */
   protected $countries;
 
-  /*
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler

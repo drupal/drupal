@@ -36,7 +36,7 @@ class SerializationTestNormalizer implements NormalizerInterface {
   /**
    * Checks whether format is supported by this normalizer.
    *
-   * @param mixed  $data
+   * @param mixed $data
    *   Data to normalize.
    * @param string $format
    *   Format the normalization result will be encoded as.

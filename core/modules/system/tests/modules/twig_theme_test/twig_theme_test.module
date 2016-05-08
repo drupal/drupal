@@ -76,7 +76,7 @@ function twig_theme_test_theme($existing, $type, $theme, $path) {
   return $items;
 }
 
-/*
+/**
  * Helper function to test PHP variables in the Twig engine.
  */
 function _test_theme_twig_php_values() {

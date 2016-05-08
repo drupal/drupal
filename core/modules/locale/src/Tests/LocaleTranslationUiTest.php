@@ -205,7 +205,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->assertNoText(t('No strings available.'), 'The translation has been removed');
   }
 
-  /*
+  /**
    * Adds a language and checks that the JavaScript translation files are
    * properly created and rebuilt on deletion.
    */

@@ -181,7 +181,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    */
   public function view($display_options = array());
 
-  /*
+  /**
    * Populates a specified number of field items with valid sample data.
    *
    * @param int $count
