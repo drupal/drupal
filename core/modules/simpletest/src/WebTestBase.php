@@ -2631,7 +2631,7 @@ abstract class WebTestBase extends TestBase {
    * @param $override_server_vars
    *   An array of server variables to override.
    *
-   * @return $request
+   * @return \Symfony\Component\HttpFoundation\Request
    *   The mocked request object.
    */
   protected function prepareRequestForGenerator($clean_urls = TRUE, $override_server_vars = array()) {
