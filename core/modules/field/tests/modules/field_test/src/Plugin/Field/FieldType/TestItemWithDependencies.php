@@ -21,7 +21,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
  *   }
  * )
  */
-
 class TestItemWithDependencies extends TestItem {
 
   /**

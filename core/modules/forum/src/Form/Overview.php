@@ -10,7 +10,7 @@ use Drupal\taxonomy\Form\OverviewTerms;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/*
+/**
  * Provides forum overview form for the forum vocabulary.
  */
 class Overview extends OverviewTerms {
