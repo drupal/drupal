@@ -45,4 +45,5 @@ trait EntityChangedTrait {
     $this->set('changed', $timestamp);
     return $this;
   }
+
 }

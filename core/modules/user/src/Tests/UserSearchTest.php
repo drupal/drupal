@@ -115,4 +115,5 @@ class UserSearchTest extends WebTestBase {
     $this->assertResponse('403', 'User without search permission cannot search');
     $this->drupalLogout();
   }
+
 }

@@ -46,4 +46,5 @@ class CloseDialogCommand implements CommandInterface {
       'persist' => $this->persist,
     );
   }
+
 }

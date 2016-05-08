@@ -28,4 +28,5 @@ class FileTransferException extends \RuntimeException {
     parent::__construct($message, $code);
     $this->arguments = $arguments;
   }
+
 }

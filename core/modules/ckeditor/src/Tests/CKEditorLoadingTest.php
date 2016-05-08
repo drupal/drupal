@@ -211,4 +211,5 @@ class CKEditorLoadingTest extends WebTestBase {
       $this->xpath('//select[contains(@class, "filter-list")]'),
     );
   }
+
 }

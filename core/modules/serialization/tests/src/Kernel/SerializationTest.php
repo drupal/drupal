@@ -51,4 +51,5 @@ class SerializationTest extends KernelTestBase {
       $this->pass('The serializer threw an exception for an unsupported format.');
     }
   }
+
 }

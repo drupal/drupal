@@ -106,4 +106,5 @@ interface QueueInterface {
    * Deletes a queue and every item in the queue.
    */
   public function deleteQueue();
+
 }

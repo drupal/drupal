@@ -281,4 +281,5 @@ class TestSearchPage extends SearchPage {
   public function label($langcode = NULL) {
     return $this->label;
   }
+
 }

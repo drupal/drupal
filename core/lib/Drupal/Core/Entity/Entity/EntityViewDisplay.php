@@ -301,4 +301,5 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
       'formatters' => new EntityDisplayPluginCollection($this->pluginManager, $configurations)
     );
   }
+
 }

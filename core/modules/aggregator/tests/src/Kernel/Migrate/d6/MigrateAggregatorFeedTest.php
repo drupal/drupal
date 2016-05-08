@@ -44,4 +44,5 @@ class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('"213cc1365b96c310e92053c5551f0504"', $feed->etag->value);
     $this->assertIdentical('0', $feed->modified->value);
   }
+
 }

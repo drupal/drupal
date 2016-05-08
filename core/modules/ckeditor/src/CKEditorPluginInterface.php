@@ -95,4 +95,5 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
    *   A keyed array, whose keys will end up as keys under CKEDITOR.config.
    */
   public function getConfig(Editor $editor);
+
 }

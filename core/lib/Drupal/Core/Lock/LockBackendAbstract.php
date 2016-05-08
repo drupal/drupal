@@ -71,4 +71,5 @@ abstract class LockBackendAbstract implements LockBackendInterface {
     }
     return $this->lockId;
   }
+
 }

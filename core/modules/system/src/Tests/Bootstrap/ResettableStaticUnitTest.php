@@ -37,4 +37,5 @@ class ResettableStaticUnitTest extends KernelTestBase {
     drupal_static_reset();
     $this->assertEqual($var, 'foo', 'Variable was reset after second invocation of global reset.');
   }
+
 }

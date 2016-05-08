@@ -319,4 +319,5 @@ class ViewsData {
     $this->fullyLoaded = FALSE;
     Cache::invalidateTags(array('views_data'));
   }
+
 }

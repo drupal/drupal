@@ -64,4 +64,5 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     );
     $this->assertRaw($test_element, 'File field RSS enclosure is displayed when viewing the RSS feed.');
   }
+
 }

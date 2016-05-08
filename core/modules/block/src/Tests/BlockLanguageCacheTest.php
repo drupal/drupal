@@ -73,4 +73,5 @@ class BlockLanguageCacheTest extends WebTestBase {
       $this->assertText($edit['label']);
     }
   }
+
 }

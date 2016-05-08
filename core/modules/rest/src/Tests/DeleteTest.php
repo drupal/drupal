@@ -72,4 +72,5 @@ class DeleteTest extends RESTTestBase {
     $this->assertEqual($account->id(), $user->id(), 'User still exists in the database.');
     $this->assertResponse(405);
   }
+
 }

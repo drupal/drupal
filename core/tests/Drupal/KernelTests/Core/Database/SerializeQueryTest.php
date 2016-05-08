@@ -21,4 +21,5 @@ class SerializeQueryTest extends DatabaseTestBase {
     $results = $query->execute()->fetchCol();
     $this->assertEqual($results[0], 28, 'Query properly executed after unserialization.');
   }
+
 }

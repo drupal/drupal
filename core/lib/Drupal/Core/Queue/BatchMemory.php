@@ -46,4 +46,5 @@ class BatchMemory extends Memory {
     }
     return $result;
   }
+
 }

@@ -784,6 +784,7 @@ class TestEntityFieldManager extends EntityFieldManager {
     $this->fieldDefinitions = [];
     $this->fieldStorageDefinitions = [];
   }
+
 }
 
 /**

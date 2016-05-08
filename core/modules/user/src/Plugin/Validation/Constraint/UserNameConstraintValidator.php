@@ -57,4 +57,5 @@ class UserNameConstraintValidator extends ConstraintValidator {
       $this->context->addViolation($constraint->tooLongMessage, array('%name' => $name, '%max' => USERNAME_MAX_LENGTH));
     }
   }
+
 }

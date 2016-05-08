@@ -77,4 +77,5 @@ class PathLanguageUiTest extends PathTestBase {
     $this->drupalGet('fr/' . $name);
     $this->assertText(t('Filter aliases'), 'Foreign URL alias works');
   }
+
 }

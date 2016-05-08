@@ -130,4 +130,5 @@ class QueryFactoryTest extends UnitTestCase {
       ->getMock();
     return $config->setName($name);
   }
+
 }

@@ -58,4 +58,5 @@ class FilterSettingsTest extends KernelTestBase {
       )));
     }
   }
+
 }

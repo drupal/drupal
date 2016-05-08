@@ -90,4 +90,5 @@ class DependencySerializationTestDummy implements ContainerAwareInterface {
   public function getServiceIds() {
     return $this->_serviceIds;
   }
+
 }

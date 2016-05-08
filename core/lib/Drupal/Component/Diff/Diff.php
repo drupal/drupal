@@ -168,4 +168,5 @@ class Diff {
   public function getEdits() {
     return $this->edits;
   }
+
 }

@@ -156,6 +156,7 @@ EOS;
 
     return $expected_string;
   }
+
 }
 
 class TestServiceNoMethod {

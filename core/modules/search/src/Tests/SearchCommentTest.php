@@ -350,4 +350,5 @@ class SearchCommentTest extends SearchTestBase {
     $this->assertText($node->label(), 'Search for keyword worked');
     $this->assertNoText(t('Add new comment'));
   }
+
 }

@@ -68,4 +68,5 @@ class NodeValidationTest extends EntityKernelTestBase {
     $this->assertEqual($violations[0]->getPropertyPath(), '');
     $this->assertEqual($violations[0]->getMessage(), 'The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
   }
+
 }

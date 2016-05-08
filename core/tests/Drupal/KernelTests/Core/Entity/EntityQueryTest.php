@@ -862,4 +862,5 @@ class EntityQueryTest extends EntityKernelTestBase {
       $this->pass('SQL Injection attempt in Entity Query condition in operator should result in an exception.');
     }
   }
+
 }

@@ -40,4 +40,5 @@ class CompatibilityFixTest extends KernelTestBase {
     $themes = $extension_config->get('theme');
     $this->assertFalse(in_array('incompatible_theme', array_keys($themes)), 'Fixed themes compatibility.');
   }
+
 }

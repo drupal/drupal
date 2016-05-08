@@ -28,4 +28,5 @@ class PersistentDatabaseLockBackend extends DatabaseLockBackend {
     // @see \Drupal\Core\Lock\LockBackendInterface::getLockId()
     $this->lockId = 'persistent';
   }
+
 }

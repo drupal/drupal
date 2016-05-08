@@ -63,4 +63,5 @@ class UserLanguageTest extends WebTestBase {
 
     $this->drupalLogout();
   }
+
 }

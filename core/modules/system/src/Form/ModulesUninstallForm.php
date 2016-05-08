@@ -187,4 +187,5 @@ class ModulesUninstallForm extends FormBase {
     // Redirect to the confirm form.
     $form_state->setRedirect('system.modules_uninstall_confirm');
   }
+
 }

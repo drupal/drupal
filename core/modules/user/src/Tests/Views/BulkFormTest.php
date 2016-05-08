@@ -135,4 +135,5 @@ class BulkFormTest extends UserTestBase {
     $errors = $view->validate();
     $this->assertEqual(reset($errors['default']), t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', array('%field' => 'User: Bulk update', '%filter' => 'Global: Combine fields filter')));
   }
+
 }

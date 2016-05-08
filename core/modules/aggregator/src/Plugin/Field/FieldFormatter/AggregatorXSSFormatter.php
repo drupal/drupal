@@ -35,4 +35,5 @@ class AggregatorXSSFormatter extends FormatterBase {
     }
     return $elements;
   }
+
 }

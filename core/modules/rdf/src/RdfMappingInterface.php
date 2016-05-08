@@ -103,4 +103,5 @@ interface RdfMappingInterface extends ConfigEntityInterface {
    *   The RdfMapping object.
    */
   public function setFieldMapping($field_name, array $mapping = array());
+
 }

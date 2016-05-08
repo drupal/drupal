@@ -70,4 +70,5 @@ class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
     $this->assertEqual($view->get('base_table'), 'views_test_data');
     $this->assertEqual($view->get('langcode'), 'it');
   }
+
 }

@@ -24,4 +24,5 @@ class NullBackendTest extends UnitTestCase {
     $null_cache->set($key, $value);
     $this->assertFalse($null_cache->get($key));
   }
+
 }

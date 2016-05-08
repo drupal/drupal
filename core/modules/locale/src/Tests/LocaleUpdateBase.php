@@ -301,4 +301,5 @@ EOF;
     $db_translation = $db_translation == FALSE ? '' : $db_translation;
     $this->assertEqual($translation, $db_translation, $message ? $message : format_string('Correct translation of %source (%language)', array('%source' => $source, '%language' => $langcode)));
   }
+
 }

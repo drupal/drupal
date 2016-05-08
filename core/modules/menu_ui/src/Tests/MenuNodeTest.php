@@ -337,4 +337,5 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalGet($url);
     $this->assertFieldById('edit-menu-title', $translated_node_title);
   }
+
 }

@@ -156,4 +156,5 @@ class StringFormatterTest extends KernelTestBase {
     $this->assertLink($value, 0);
     $this->assertLinkByHref('/entity_test_rev/' . $entity_new_revision->id() . '/revision/' . $entity_new_revision->getRevisionId() . '/view');
   }
+
 }

@@ -116,4 +116,5 @@ class FileTranslation extends StaticTranslation {
     }
     return $writer->getData();
   }
+
 }

@@ -149,6 +149,7 @@ class StubReflectionFactory extends ReflectionFactory {
     // Return the class name from the plugin definition.
     return $plugin_definition[$plugin_id]['class'];
   }
+
 }
 
 /**

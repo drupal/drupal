@@ -764,4 +764,5 @@ class Registry implements DestructableInterface {
   protected function getPath($module) {
     return drupal_get_path('module', $module);
   }
+
 }

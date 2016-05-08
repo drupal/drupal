@@ -500,5 +500,6 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
     );
     $this->renderer->render($css_group);
   }
+
 }
 }

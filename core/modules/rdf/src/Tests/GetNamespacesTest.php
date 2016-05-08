@@ -46,4 +46,5 @@ class GetNamespacesTest extends WebTestBase {
     ));
     $this->assertTrue(!empty($element), 'When a prefix has conflicting namespaces, the first declared one is used.');
   }
+
 }

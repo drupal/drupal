@@ -101,4 +101,5 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
     $redirected_cid = $this->createCacheId($expected_block_cache_keys, Cache::mergeContexts($expected_block_cache_contexts, $expected_entity_cache_contexts));
     $this->verifyRenderCache($cid, Cache::mergeTags($expected_block_cache_tags, $expected_entity_cache_tags), ($cid !== $redirected_cid) ? $redirected_cid : NULL);
   }
+
 }

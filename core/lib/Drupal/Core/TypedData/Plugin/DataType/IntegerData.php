@@ -24,4 +24,5 @@ class IntegerData extends PrimitiveBase implements IntegerInterface {
   public function getCastedValue() {
     return (int) $this->value;
   }
+
 }

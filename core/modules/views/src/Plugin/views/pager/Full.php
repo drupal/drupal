@@ -95,5 +95,4 @@ class Full extends SqlBase {
     );
   }
 
-
 }

@@ -49,4 +49,5 @@ class ResourceResponse extends Response implements CacheableResponseInterface {
   public function getResponseData() {
     return $this->responseData;
   }
+
 }

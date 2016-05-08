@@ -16,4 +16,5 @@ class MockComplexContextBlock extends ContextAwarePluginBase {
     $node = $this->getContextValue('node');
     return $user->label() . ' -- ' . $node->label();
   }
+
 }

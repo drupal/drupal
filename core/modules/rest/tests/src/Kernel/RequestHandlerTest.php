@@ -133,4 +133,5 @@ class StubRequestHandlerResourcePlugin extends ResourceBase {
 
   function get() {}
   function patch() {}
+
 }

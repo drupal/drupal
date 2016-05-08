@@ -118,4 +118,5 @@ class FormatDateTest extends WebTestBase {
     $this->assertIdentical($formatter->format($timestamp, 'custom', '\<\s\c\r\i\p\t\>\a\l\e\r\t\(\'Y\'\)\;\<\/\s\c\r\i\p\t\>'), "<script>alert('2007');</script>", 'Script tags not removed from dates.');
     $this->assertIdentical($formatter->format($timestamp, 'custom', '\<\e\m\>Y\<\/\e\m\>'), '<em>2007</em>', 'Em tags are not removed from dates.');
   }
+
 }

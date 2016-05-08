@@ -35,4 +35,5 @@ class TestPluginManager extends PluginManagerBase {
     // so we provide it the discovery object.
     $this->factory = new DefaultFactory($this->discovery);
   }
+
 }

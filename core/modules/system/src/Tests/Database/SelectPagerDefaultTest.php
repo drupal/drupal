@@ -164,4 +164,5 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
     $this->assertEqual($name, 'John', 'Pager query #3 with a generated element ID returned the correct results.');
 
   }
+
 }

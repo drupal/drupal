@@ -187,4 +187,5 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->rebuildContainer();
     $this->assertTrue(entity_load('config_test', 'other_module_test_with_dependency'), 'The config_test.dynamic.other_module_test_with_dependency configuration has been created during install.');
   }
+
 }

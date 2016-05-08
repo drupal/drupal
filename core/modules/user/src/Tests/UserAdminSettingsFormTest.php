@@ -44,4 +44,5 @@ class UserAdminSettingsFormTest extends SystemConfigFormTestBase {
       ),
     );
   }
+
 }

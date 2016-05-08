@@ -47,4 +47,5 @@ class ClassLoaderTest extends WebTestBase {
       $this->assertNoText($this->expected, 'Autoloader does not load classes from a disabled module.');
     }
   }
+
 }

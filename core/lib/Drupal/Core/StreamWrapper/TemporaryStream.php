@@ -47,4 +47,5 @@ class TemporaryStream extends LocalStream {
     $path = str_replace('\\', '/', $this->getTarget());
     return Url::fromRoute('system.temporary', [], ['absolute' => TRUE, 'query' => ['file' => $path]])->toString();
   }
+
 }

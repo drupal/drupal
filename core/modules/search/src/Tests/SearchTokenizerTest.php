@@ -147,4 +147,5 @@ class SearchTokenizerTest extends SearchTestBase {
 
     return '';
   }
+
 }

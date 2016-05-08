@@ -115,4 +115,5 @@ class FieldImportCreateTest extends FieldKernelTestBase {
     $field = FieldConfig::load($field_id_2b);
     $this->assertTrue($field, 'Test import field 2b from sync exists');
   }
+
 }

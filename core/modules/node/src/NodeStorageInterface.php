@@ -64,4 +64,5 @@ interface NodeStorageInterface extends ContentEntityStorageInterface {
    *   The language object.
    */
   public function clearRevisionsLanguage(LanguageInterface $language);
+
 }

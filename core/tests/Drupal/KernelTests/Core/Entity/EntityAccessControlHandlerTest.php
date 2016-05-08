@@ -222,4 +222,5 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
     $this->assertEqual($state->get('entity_test_entity_access'), TRUE);
     $this->assertEqual($state->get('entity_test_entity_test_access'), TRUE);
   }
+
 }

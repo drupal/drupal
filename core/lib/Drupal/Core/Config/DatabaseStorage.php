@@ -325,5 +325,4 @@ class DatabaseStorage implements StorageInterface {
     }
   }
 
-
 }

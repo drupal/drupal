@@ -249,6 +249,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     );
     return $domain_configuration;
   }
+
 }
 
 }

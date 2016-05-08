@@ -351,4 +351,5 @@ class Condition implements ConditionInterface, \Countable {
   public function orConditionGroup() {
     return $this->conditionGroupFactory('OR');
   }
+
 }

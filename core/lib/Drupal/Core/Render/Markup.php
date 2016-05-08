@@ -22,4 +22,5 @@ use Drupal\Component\Render\MarkupTrait;
  */
 final class Markup implements MarkupInterface, \Countable {
   use MarkupTrait;
+
 }

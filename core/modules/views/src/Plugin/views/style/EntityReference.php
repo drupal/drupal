@@ -100,4 +100,5 @@ class EntityReference extends StylePluginBase {
   public function evenEmpty() {
     return TRUE;
   }
+
 }

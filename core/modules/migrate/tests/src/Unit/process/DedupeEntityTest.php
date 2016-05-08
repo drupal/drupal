@@ -160,4 +160,5 @@ class DedupeEntityTest extends MigrateProcessTestCase {
       ->method('execute')
       ->will($this->returnCallback(function () use (&$count) { return $count--;}));
   }
+
 }

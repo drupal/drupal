@@ -170,4 +170,5 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
     $events[KernelEvents::REQUEST][] = array('sanitizeDestination', 100);
     return $events;
   }
+
 }

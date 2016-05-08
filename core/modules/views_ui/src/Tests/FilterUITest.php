@@ -119,4 +119,5 @@ class FilterUITest extends ViewTestBase {
     $this->drupalPostForm($path, $edit, t('Apply'));
     $this->assertText('This identifier has illegal characters.');
   }
+
 }

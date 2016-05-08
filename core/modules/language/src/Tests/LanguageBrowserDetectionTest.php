@@ -86,4 +86,5 @@ class LanguageBrowserDetectionTest extends WebTestBase {
     $this->assertField('edit-mappings-xx-browser-langcode', 'xx', 'Browser language code found.');
     $this->assertField('edit-mappings-xx-drupal-langcode', 'zh-hans', 'Drupal language code found.');
   }
+
 }

@@ -103,4 +103,5 @@ class DrupalTranslator implements TranslatorInterface {
     $locale = isset($locale) ? $locale : $this->locale;
     return array('langcode' => $locale);
   }
+
 }

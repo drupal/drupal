@@ -102,4 +102,5 @@ class ContextPluginTest extends KernelTestBase {
     // Test the title method for the complex context plugin.
     $this->assertEqual($user->label() . ' -- ' . $node->label(), $complex_plugin->getTitle());
   }
+
 }

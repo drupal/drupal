@@ -56,4 +56,5 @@ class EntityRouteAlterSubscriber implements EventSubscriberInterface {
     $events[RoutingEvents::ALTER][] = array('onRoutingRouteAlterSetType', -150);
     return $events;
   }
+
 }

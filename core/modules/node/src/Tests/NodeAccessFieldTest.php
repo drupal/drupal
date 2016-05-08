@@ -109,4 +109,5 @@ class NodeAccessFieldTest extends NodeTestBase {
     $this->drupalGet('node/add/page');
     $this->assertRaw($default, 'The updated default value is displayed when creating a new node.');
   }
+
 }

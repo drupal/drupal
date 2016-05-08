@@ -131,4 +131,5 @@ class RequestHandler implements ContainerAwareInterface {
   public function csrfToken() {
     return new Response(\Drupal::csrfToken()->get('rest'), 200, array('Content-Type' => 'text/plain'));
   }
+
 }

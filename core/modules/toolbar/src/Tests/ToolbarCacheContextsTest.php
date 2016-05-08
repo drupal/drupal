@@ -143,5 +143,4 @@ class ToolbarCacheContextsTest extends WebTestBase {
     $this->container->get('router.builder')->rebuildIfNeeded();
   }
 
-
 }

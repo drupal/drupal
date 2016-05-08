@@ -30,4 +30,5 @@ class CronAccessCheck implements AccessInterface {
     }
     return AccessResult::allowed()->setCacheMaxAge(0);
   }
+
 }

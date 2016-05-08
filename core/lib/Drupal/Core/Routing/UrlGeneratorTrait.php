@@ -88,4 +88,5 @@ trait UrlGeneratorTrait {
 
     return $this;
   }
+
 }

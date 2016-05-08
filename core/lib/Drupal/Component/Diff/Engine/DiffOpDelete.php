@@ -18,4 +18,5 @@ class DiffOpDelete extends DiffOp {
   public function reverse() {
     return new DiffOpAdd($this->orig);
   }
+
 }

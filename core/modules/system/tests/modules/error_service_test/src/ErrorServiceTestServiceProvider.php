@@ -20,4 +20,5 @@ class ErrorServiceTestServiceProvider implements ServiceModifierInterface {
   public function alter(ContainerBuilder $container) {
     static::$containerBuilder = $container;
   }
+
 }

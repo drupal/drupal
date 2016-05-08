@@ -478,4 +478,5 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     }
     return $dependent_ids;
   }
+
 }

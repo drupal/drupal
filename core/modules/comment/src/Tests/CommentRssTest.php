@@ -75,4 +75,5 @@ class CommentRssTest extends CommentTestBase {
     $this->drupalGet('rss.xml');
     $this->assertNoRaw($raw, 'Hidden comments is not a part of RSS feed.');
   }
+
 }

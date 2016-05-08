@@ -321,4 +321,5 @@ class TestLocalTaskDefault extends LocalTaskDefault {
     $this->routeProvider = $route_provider;
     return $this;
   }
+
 }

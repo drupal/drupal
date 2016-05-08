@@ -82,4 +82,5 @@ abstract class CacheTestBase extends WebTestBase {
     $cached = \Drupal::cache($bin)->get($cid);
     $this->assertFalse($cached, $message);
   }
+
 }

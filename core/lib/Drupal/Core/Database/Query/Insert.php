@@ -170,4 +170,5 @@ class Insert extends Query implements \Countable {
     }
     return TRUE;
   }
+
 }

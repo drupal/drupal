@@ -153,4 +153,5 @@ class ValidatorTest extends FileManagedUnitTestBase {
     $errors = file_validate_size($file, 1, 1);
     $this->assertEqual(count($errors), 2, 'Errors for both the file and their limit.', 'File');
   }
+
 }

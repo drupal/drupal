@@ -40,4 +40,5 @@ class FeedFetcherPluginTest extends AggregatorTestBase {
     // Fetch should fail due to feed name.
     $this->assertTrue(empty($feed->items));
   }
+
 }

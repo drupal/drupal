@@ -157,4 +157,5 @@ class ConfigImportAllTest extends ModuleTestBase {
       $this->assertConfigSchema($typed_config, $name, $config->get());
     }
   }
+
 }

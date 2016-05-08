@@ -412,4 +412,5 @@ class EntityAdapterUnitTest extends UnitTestCase {
     $this->entityAdapter->setValue(NULL);
     $this->assertEquals(new \ArrayIterator([]), $this->entityAdapter->getIterator());
   }
+
 }

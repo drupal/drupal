@@ -19,4 +19,5 @@ interface PlaceholderInterface {
    *   The next available placeholder ID as an integer.
    */
   public function nextPlaceholder();
+
 }

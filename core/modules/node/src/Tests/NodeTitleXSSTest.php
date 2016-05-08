@@ -38,4 +38,5 @@ class NodeTitleXSSTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertNoRaw($xss, 'Harmful tags are escaped when editing a node.');
   }
+
 }

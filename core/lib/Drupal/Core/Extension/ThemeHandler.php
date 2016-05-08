@@ -495,4 +495,5 @@ class ThemeHandler implements ThemeHandlerInterface {
     }
     return FALSE;
   }
+
 }

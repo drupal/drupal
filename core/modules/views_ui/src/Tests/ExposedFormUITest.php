@@ -169,4 +169,5 @@ class ExposedFormUITest extends UITestBase {
     $this->assertEqual($display['display_options']['sorts']['created']['expose'], ['label' => $edit['options[expose][label]']]);
     $this->assertEqual($display['display_options']['sorts']['created']['order'], 'DESC');
   }
+
 }

@@ -74,4 +74,5 @@ class MailCaptureTest extends WebTestBase {
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test_4'));
     $this->assertEqual(count($captured_emails), 2, 'All emails with the same id are returned when filtering by id.', 'Email');
   }
+
 }

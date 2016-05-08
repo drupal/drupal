@@ -60,4 +60,5 @@ class CommentTitleTest extends CommentTestBase {
     // Tests that markup is created for comment with heading.
     $this->assertPattern('|<h3[^>]*><a[^>]*>' . $subject_text . '</a></h3>|', 'Comment title is rendered in h3 when title populated.');
   }
+
 }

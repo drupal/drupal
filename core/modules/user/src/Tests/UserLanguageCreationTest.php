@@ -99,4 +99,5 @@ class UserLanguageCreationTest extends WebTestBase {
     $this->drupalGet($user_edit);
     $this->assertOptionSelected("edit-preferred-langcode", $langcode, 'Language selector is accessible and correct language is selected.');
   }
+
 }

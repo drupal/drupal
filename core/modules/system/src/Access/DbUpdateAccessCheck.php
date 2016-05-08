@@ -34,4 +34,5 @@ class DbUpdateAccessCheck implements AccessInterface {
       return AccessResult::forbidden()->cachePerPermissions();
     }
   }
+
 }

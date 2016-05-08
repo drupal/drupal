@@ -94,4 +94,5 @@ class LinkViewsTokensTest extends ViewTestBase {
       $this->assertRaw("Raw options: .");
     }
   }
+
 }

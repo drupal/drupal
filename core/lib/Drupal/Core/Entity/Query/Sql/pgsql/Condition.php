@@ -33,4 +33,5 @@ class Condition extends BaseCondition {
     }
     parent::translateCondition($condition, $sql_query, $case_sensitive);
   }
+
 }

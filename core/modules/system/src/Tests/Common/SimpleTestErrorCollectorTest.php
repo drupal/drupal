@@ -90,4 +90,5 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
       $this->assertEqual($error['message'], $message, format_string("Message was %message", array('%message' => $message)));
     }
   }
+
 }

@@ -59,4 +59,5 @@ abstract class AjaxTestBase extends WebTestBase {
     }
     $this->assertTrue($found, $message);
   }
+
 }

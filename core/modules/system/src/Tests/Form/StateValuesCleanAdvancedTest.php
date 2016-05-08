@@ -47,4 +47,5 @@ class StateValuesCleanAdvancedTest extends WebTestBase {
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
     $this->assertRaw(t('You WIN!'), 'Found the success message.');
   }
+
 }

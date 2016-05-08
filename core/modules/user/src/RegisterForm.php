@@ -135,4 +135,5 @@ class RegisterForm extends AccountForm {
       $form_state->setRedirect('<front>');
     }
   }
+
 }

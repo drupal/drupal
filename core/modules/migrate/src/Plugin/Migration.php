@@ -712,4 +712,5 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   public function getDestinationIds() {
     $this->destinationIds;
   }
+
 }

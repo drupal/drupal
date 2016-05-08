@@ -21,4 +21,5 @@ class DiffOpCopy extends DiffOp {
   public function reverse() {
     return new DiffOpCopy($this->closing, $this->orig);
   }
+
 }

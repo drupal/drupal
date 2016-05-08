@@ -54,4 +54,5 @@ class EventSubscriber implements EventSubscriberInterface {
     $events[ConfigEvents::RENAME][] = array('configEventRecorder');
     return $events;
   }
+
 }

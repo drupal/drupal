@@ -296,4 +296,5 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
   protected function getRequestTime() {
     return defined('REQUEST_TIME') ? REQUEST_TIME : (int) $_SERVER['REQUEST_TIME'];
   }
+
 }

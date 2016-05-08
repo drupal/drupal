@@ -23,4 +23,5 @@ interface FileStorageInterface extends ContentEntityStorageInterface {
    *   An integer containing the number of bytes used.
    */
   public function spaceUsed($uid = NULL, $status = FILE_STATUS_PERMANENT);
+
 }

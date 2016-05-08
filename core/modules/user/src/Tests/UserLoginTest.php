@@ -174,4 +174,5 @@ class UserLoginTest extends WebTestBase {
       $this->assertText(t('Unrecognized username or password. Have you forgotten your password?'));
     }
   }
+
 }

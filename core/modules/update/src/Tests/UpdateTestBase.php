@@ -78,4 +78,5 @@ abstract class UpdateTestBase extends WebTestBase {
     $this->assertRaw(\Drupal::l(t('Drupal'), Url::fromUri('http://example.com/project/drupal')), 'Link to the Drupal project appears.');
     $this->assertNoText(t('No available releases found'));
   }
+
 }

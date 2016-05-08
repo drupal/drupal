@@ -102,4 +102,5 @@ class Local extends FileTransfer implements ChmodInterface {
       throw new FileTransferException('Cannot chmod %path.', NULL, array('%path' => $path));
     }
   }
+
 }

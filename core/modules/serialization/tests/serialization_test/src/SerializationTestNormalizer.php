@@ -47,4 +47,5 @@ class SerializationTestNormalizer implements NormalizerInterface {
   public function supportsNormalization($data, $format = NULL) {
     return static::$format === $format;
   }
+
 }

@@ -125,6 +125,7 @@ class Drupal6SqlBaseTest extends MigrateTestCase {
     // Test non-default.
     $this->assertSame(TRUE, $this->base->variableGetWrapper('my_variable', FALSE));
   }
+
 }
 
 namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
@@ -217,4 +218,5 @@ class TestDrupal6SqlBase extends DrupalSqlBase {
   public function getIds() {
     return array();
   }
+
 }

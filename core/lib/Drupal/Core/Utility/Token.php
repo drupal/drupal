@@ -405,4 +405,5 @@ class Token {
     $this->tokenInfo = NULL;
     $this->cacheTagsInvalidator->invalidateTags([static::TOKEN_INFO_CACHE_TAG]);
   }
+
 }

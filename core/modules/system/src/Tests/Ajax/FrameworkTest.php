@@ -211,4 +211,5 @@ class FrameworkTest extends AjaxTestBase {
     // cache control.
     $this->assertNoText('js.module.css?', 'Ajax lazy loading does not add overridden CSS files.');
   }
+
 }

@@ -72,4 +72,5 @@ interface ConditionInterface {
    *   The query object this conditional clause belongs to.
    */
   public function compile($query);
+
 }

@@ -170,4 +170,5 @@ class EntityApiTest extends EntityKernelTestBase {
       $this->assertNotEqual($e->getCode(), 2, 'Entity predelete EntityStorageException thrown.');
     }
   }
+
 }

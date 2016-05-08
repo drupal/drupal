@@ -24,4 +24,5 @@ class BooleanData extends PrimitiveBase implements BooleanInterface {
   public function getCastedValue() {
     return (bool) $this->value;
   }
+
 }

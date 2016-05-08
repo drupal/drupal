@@ -138,4 +138,5 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
     // and only clear it when the fields cache is cleared.
     $this->cache->set('rest:links:relations', $data, Cache::PERMANENT, array('entity_field_info'));
   }
+
 }

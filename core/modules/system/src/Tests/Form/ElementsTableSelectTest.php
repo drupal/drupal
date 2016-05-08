@@ -254,4 +254,5 @@ class ElementsTableSelectTest extends WebTestBase {
     // to allow the caller lowlevel access to the form.
     return array($form, $form_state, $errors);
   }
+
 }

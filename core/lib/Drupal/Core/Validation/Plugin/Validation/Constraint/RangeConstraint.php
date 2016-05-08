@@ -28,4 +28,5 @@ class RangeConstraint extends Range {
   public function validatedBy() {
     return '\Symfony\Component\Validator\Constraints\RangeValidator';
   }
+
 }

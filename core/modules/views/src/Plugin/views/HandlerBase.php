@@ -815,4 +815,5 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     // Write to cache
     $view->cacheSet();
   }
+
 }

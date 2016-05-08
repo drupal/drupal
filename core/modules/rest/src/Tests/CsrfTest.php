@@ -114,4 +114,5 @@ class CsrfTest extends RESTTestBase {
       ),
     );
   }
+
 }

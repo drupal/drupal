@@ -61,4 +61,5 @@ interface CheckProviderInterface {
    * @return array
    */
   public function getChecksNeedRequest();
+
 }

@@ -54,4 +54,5 @@ class DependencyOrderingTest extends WebTestBase {
     $second_dependency_satisfied = array_search('update_test_3_update_8001', $update_order) < array_search('update_test_2_update_8002', $update_order);
     $this->assertTrue($second_dependency_satisfied, 'The dependency of the first module on the second module is respected by the update function order.');
   }
+
 }

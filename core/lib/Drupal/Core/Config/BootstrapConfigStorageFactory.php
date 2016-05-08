@@ -56,4 +56,5 @@ class BootstrapConfigStorageFactory {
   public static function getFileStorage() {
     return new FileStorage(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY));
   }
+
 }

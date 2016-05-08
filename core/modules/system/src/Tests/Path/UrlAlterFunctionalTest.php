@@ -107,4 +107,5 @@ class UrlAlterFunctionalTest extends WebTestBase {
     $result = $this->container->get('path.alias_manager')->getPathByAlias($original);
     return $this->assertIdentical($result, $final, format_string('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
   }
+
 }

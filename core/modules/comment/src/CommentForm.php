@@ -389,4 +389,5 @@ class CommentForm extends ContentEntityForm {
     }
     $form_state->setRedirectUrl($uri);
   }
+
 }

@@ -82,4 +82,5 @@ class PathTaxonomyTermTest extends PathTestBase {
     $this->assertNoText($description, 'Old URL alias has been removed after altering.');
     $this->assertResponse(404, 'Old URL alias returns 404.');
   }
+
 }

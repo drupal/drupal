@@ -48,4 +48,5 @@ class FieldImportChangeTest extends FieldKernelTestBase {
     $field = FieldConfig::load($field_id);
     $this->assertEqual($field->getLabel(), $new_label, 'field label updated');
   }
+
 }

@@ -630,4 +630,5 @@ class TypedDataTest extends KernelTestBase {
     $this->assertEqual($violations[0]->getInvalidValue(), 'string');
     $this->assertIdentical($violations[0]->getPropertyPath(), '0.value');
   }
+
 }

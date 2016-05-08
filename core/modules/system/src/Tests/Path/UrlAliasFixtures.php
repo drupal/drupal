@@ -93,4 +93,5 @@ class UrlAliasFixtures {
 
     return $tables;
   }
+
 }

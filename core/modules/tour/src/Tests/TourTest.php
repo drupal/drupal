@@ -184,4 +184,5 @@ class TourTest extends TourTestBasic {
     ));
     $this->assertEqual(count($elements), 0, 'Did not find English variant of tip 1.');
   }
+
 }

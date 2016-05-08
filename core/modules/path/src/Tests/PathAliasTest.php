@@ -345,4 +345,5 @@ class PathAliasTest extends PathTestBase {
     $this->assertText(t('The alias is already in use.'));
     $this->assertFieldByXPath("//input[@name='path[0][alias]' and contains(@class, 'error')]", $edit['path[0][alias]'], 'Textfield exists and has the error class.');
   }
+
 }

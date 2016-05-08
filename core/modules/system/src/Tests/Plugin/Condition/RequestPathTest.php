@@ -137,4 +137,5 @@ class RequestPathTest extends KernelTestBase {
     $this->assertEqual($condition->summary(), 'Return true on the following pages: /my/pass/*', 'The condition summary matches for a wildcard path');
 
   }
+
 }

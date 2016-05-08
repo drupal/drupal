@@ -68,4 +68,5 @@ class DeleteTest extends FileManagedUnitTestBase {
     $this->assertFalse(file_exists($file->getFileUri()), 'File has been deleted after its last usage was removed.');
     $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
   }
+
 }

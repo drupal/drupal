@@ -141,4 +141,5 @@ class ScanDirectoryTest extends FileTestBase {
     $files = file_scan_directory($this->path, '/^javascript-/', array('min_depth' => 1));
     $this->assertTrue(empty($files), 'Minimum-depth of 1 successfully excludes files from current directory.');
   }
+
 }

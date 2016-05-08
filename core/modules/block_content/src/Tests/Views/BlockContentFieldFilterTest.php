@@ -105,4 +105,5 @@ class BlockContentFieldFilterTest extends BlockContentTestBase {
       $this->assertEqual(substr_count($text, $this->blockContentInfos[$langcode]), $count, 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
     }
   }
+
 }

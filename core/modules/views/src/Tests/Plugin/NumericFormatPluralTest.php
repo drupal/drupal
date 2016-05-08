@@ -156,4 +156,5 @@ class NumericFormatPluralTest extends ViewTestBase {
 
     return $file;
   }
+
 }

@@ -107,4 +107,5 @@ class SitesDirectoryHardeningTest extends WebTestBase {
     $settings_file = $site_path . '/settings.php';
     return $settings_file;
   }
+
 }

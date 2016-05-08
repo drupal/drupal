@@ -52,4 +52,5 @@ class VersionTest extends ModuleTestBase {
       $this->assertEqual(!empty($checkbox[0]['disabled']), $i % 2, $dependencies[$i]);
     }
   }
+
 }

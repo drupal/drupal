@@ -90,4 +90,5 @@ class NodeAttributesTest extends NodeTestBase {
     );
     $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/created', $expected_value), 'Node date found in RDF output (dc:created).');
   }
+
 }

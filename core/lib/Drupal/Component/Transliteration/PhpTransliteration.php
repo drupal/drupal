@@ -280,4 +280,5 @@ class PhpTransliteration implements TransliterationInterface {
     // Save this data.
     $this->genericMap[$bank] = $base;
   }
+
 }

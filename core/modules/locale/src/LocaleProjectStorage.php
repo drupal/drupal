@@ -165,4 +165,5 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
     }
     return $this->cache;
   }
+
 }

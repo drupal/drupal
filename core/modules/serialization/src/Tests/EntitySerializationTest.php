@@ -222,4 +222,5 @@ class EntitySerializationTest extends NormalizerTestBase {
       $this->assertIdentical($denormalized->uuid(), $this->entity->uuid(), 'Expected entity UUID found.');
     }
   }
+
 }

@@ -23,4 +23,5 @@ class HookRequirementsTest extends ModuleTestBase {
     $this->assertText(t('Requirements 1 Test failed requirements'), 'Modules status has been updated.');
     $this->assertModules(array('requirements1_test'), FALSE);
   }
+
 }

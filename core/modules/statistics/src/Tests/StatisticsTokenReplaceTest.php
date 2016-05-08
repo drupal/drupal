@@ -48,4 +48,5 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
       $this->assertEqual($output, $expected, format_string('Statistics token %token replaced.', array('%token' => $input)));
     }
   }
+
 }

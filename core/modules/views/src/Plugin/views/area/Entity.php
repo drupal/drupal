@@ -194,4 +194,5 @@ class Entity extends TokenizeAreaPluginBase {
 
     return $dependencies;
   }
+
 }

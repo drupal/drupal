@@ -343,4 +343,5 @@ class Xss {
   public static function getHtmlTagList() {
     return static::$htmlTags;
   }
+
 }

@@ -61,4 +61,5 @@ class TestFileTransfer extends FileTransfer {
   function chmodJailed($path, $mode, $recursive) {
     return;
   }
+
 }

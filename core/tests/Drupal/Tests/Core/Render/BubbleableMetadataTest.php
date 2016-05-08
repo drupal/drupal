@@ -691,4 +691,5 @@ class BubbleableMetadataTest extends UnitTestCase {
       ],
     ];
   }
+
 }

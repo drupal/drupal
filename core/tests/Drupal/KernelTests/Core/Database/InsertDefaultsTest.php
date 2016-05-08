@@ -57,4 +57,5 @@ class InsertDefaultsTest extends DatabaseTestBase {
     $job = db_query('SELECT job FROM {test} WHERE id = :id', array(':id' => $id))->fetchField();
     $this->assertEqual($job, $schema['fields']['job']['default'], 'Default field value is set.');
   }
+
 }

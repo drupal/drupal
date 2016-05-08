@@ -133,6 +133,7 @@ EOD;
       $request->server->set('SCRIPT_NAME', '/index.php');
       $this->assertEquals('sites/example', DrupalKernel::findSitePath($request));
     }
+
   }
 
 }

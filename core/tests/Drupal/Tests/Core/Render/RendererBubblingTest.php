@@ -587,6 +587,7 @@ class RendererBubblingTest extends RendererTestBase {
     ];
     $this->renderer->renderRoot($data);
   }
+
 }
 
 

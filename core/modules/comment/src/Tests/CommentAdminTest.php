@@ -214,4 +214,5 @@ class CommentAdminTest extends CommentTestBase {
     $this->drupalGet('comment/' . $anonymous_comment->id() . '/edit');
     $this->assertFieldById('edit-mail', $anonymous_comment->getAuthorEmail());
   }
+
 }

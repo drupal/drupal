@@ -82,4 +82,5 @@ class PathProcessorFrontTest extends UnitTestCase {
       ['/user', '/user'],
     ];
   }
+
 }

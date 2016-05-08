@@ -18,4 +18,5 @@ class BrokenToolkit extends TestToolkit {
   public static function isAvailable() {
     return FALSE;
   }
+
 }

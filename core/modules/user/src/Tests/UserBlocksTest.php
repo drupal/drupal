@@ -130,4 +130,5 @@ class UserBlocksTest extends WebTestBase {
       ->fields(array('access' => $access))
       ->execute();
   }
+
 }

@@ -176,4 +176,5 @@ class ForumBlockTest extends WebTestBase {
 
     return $topics;
   }
+
 }

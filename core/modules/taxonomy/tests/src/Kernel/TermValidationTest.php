@@ -64,4 +64,5 @@ class TermValidationTest extends EntityKernelTestBase {
     $violations = $term->validate();
     $this->assertEqual(count($violations), 0, 'No violations for parent id 0.');
   }
+
 }

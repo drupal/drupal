@@ -196,4 +196,5 @@ class UserAdminTest extends WebTestBase {
     ));
     $this->assertTrue(count($user_mail), 'New user mail to user is sent from configured Notification Email address');
   }
+
 }

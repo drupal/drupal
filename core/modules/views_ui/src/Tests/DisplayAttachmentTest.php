@@ -57,4 +57,5 @@ class DisplayAttachmentTest extends UITestBase {
     $view->initDisplay();
     $this->assertEqual(array_keys($view->displayHandlers->get('attachment_1')->getOption('displays')), array('default', 'page_1'), 'The attached displays got saved as expected');
   }
+
 }

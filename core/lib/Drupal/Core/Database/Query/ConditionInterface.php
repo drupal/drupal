@@ -191,4 +191,5 @@ interface ConditionInterface {
    * @return \Drupal\Core\Database\Query\ConditionInterface
    */
   public function orConditionGroup();
+
 }

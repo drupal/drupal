@@ -27,4 +27,5 @@ class TestMailCollector extends PhpMail implements MailInterface {
 
     return TRUE;
   }
+
 }

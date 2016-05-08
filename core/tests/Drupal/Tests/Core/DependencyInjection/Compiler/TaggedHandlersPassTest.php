@@ -359,10 +359,12 @@ class ValidConsumer {
   }
   public function addWithId(HandlerInterface $instance, $id, $priority = 0) {
   }
+
 }
 class InvalidConsumer {
   public function addHandler($instance, $priority = 0) {
   }
+
 }
 class ValidConsumerWithExtraArguments {
   public function addHandler(HandlerInterface $instance, $priority = 0, $extra1 = '', $extra2 = '') {
@@ -373,6 +375,7 @@ class ValidConsumerWithExtraArguments {
   }
   public function addWithDifferentOrder(HandlerInterface $instance, $extra1, $priority = 0, $extra2 = 'default2', $extra3 = 'default3') {
   }
+
 }
 class ValidHandler implements HandlerInterface {
 }

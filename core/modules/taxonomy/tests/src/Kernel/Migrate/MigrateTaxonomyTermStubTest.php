@@ -82,4 +82,5 @@ class MigrateTaxonomyTermStubTest extends MigrateDrupalTestBase {
       $this->assertIdentical(count($stub_entity->validate()), 0, 'Stub is a valid entity');
     }
   }
+
 }

@@ -85,4 +85,5 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     // Remove the temporary directory.
     drupal_rmdir($dir);
   }
+
 }

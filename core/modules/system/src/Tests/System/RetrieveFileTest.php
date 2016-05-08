@@ -45,4 +45,5 @@ class RetrieveFileTest extends WebTestBase {
     file_unmanaged_delete_recursive($sourcedir);
     file_unmanaged_delete_recursive($targetdir);
   }
+
 }

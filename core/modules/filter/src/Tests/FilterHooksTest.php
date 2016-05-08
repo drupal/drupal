@@ -68,4 +68,5 @@ class FilterHooksTest extends WebTestBase {
     $this->assertRaw(t('Disabled text format %format.', array('%format' => $name)));
     $this->assertText('hook_filter_format_disable invoked.');
   }
+
 }

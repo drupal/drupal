@@ -65,4 +65,5 @@ class TelephoneFieldRdfaTest extends FieldRdfaTestBase {
     // Tests the telephone link formatter with custom title.
     $this->assertFormatterRdfa($formatter, 'http://schema.org/telephone', $expected_rdf_value);
   }
+
 }

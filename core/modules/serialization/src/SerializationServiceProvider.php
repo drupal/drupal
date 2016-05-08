@@ -19,4 +19,5 @@ class SerializationServiceProvider implements ServiceProviderInterface {
     // Add a compiler pass for adding concrete Resolvers to chain Resolver.
     $container->addCompilerPass(new RegisterEntityResolversCompilerPass());
   }
+
 }

@@ -15,4 +15,5 @@ class MockUserNameBlock extends ContextAwarePluginBase {
     $user = $this->getContextValue('user');
     return $user->label();
   }
+
 }

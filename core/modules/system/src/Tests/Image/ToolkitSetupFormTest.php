@@ -70,4 +70,5 @@ class ToolkitSetupFormTest extends WebTestBase {
     $this->drupalGet('admin/config/media/image-toolkit');
     $this->assertResponse(403);
   }
+
 }

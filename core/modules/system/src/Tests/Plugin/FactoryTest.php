@@ -71,4 +71,5 @@ class FactoryTest extends PluginTestBase {
       }
     }
   }
+
 }

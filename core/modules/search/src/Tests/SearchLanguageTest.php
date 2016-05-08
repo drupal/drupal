@@ -133,4 +133,5 @@ class SearchLanguageTest extends SearchTestBase {
     $this->assertNoFieldChecked('edit-site-default-language-en', 'Default language updated.');
     $this->drupalPostForm('admin/config/regional/language/delete/en', array(), t('Delete'));
   }
+
 }

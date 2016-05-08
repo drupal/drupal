@@ -74,4 +74,5 @@ class IpAddressBlockingTest extends WebTestBase {
     // $this->drupalPostForm('admin/config/people/ban', $edit, t('Save'));
     // $this->assertText(t('You may not ban your own IP address.'));
   }
+
 }

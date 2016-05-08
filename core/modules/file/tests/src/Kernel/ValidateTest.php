@@ -34,4 +34,5 @@ class ValidateTest extends FileManagedUnitTestBase {
     $this->assertEqual(file_validate($file, $failing), array('Failed', 'Badly', 'Epic fail'), 'Validating returns errors.');
     $this->assertFileHooksCalled(array('validate'));
   }
+
 }

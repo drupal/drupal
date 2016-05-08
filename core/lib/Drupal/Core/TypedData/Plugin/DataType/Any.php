@@ -24,4 +24,5 @@ class Any extends TypedData {
    * @var mixed
    */
   protected $value;
+
 }

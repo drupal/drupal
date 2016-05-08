@@ -38,4 +38,5 @@ class QueueDatabaseFactory {
   public function get($name) {
     return new DatabaseQueue($name, $this->connection);
   }
+
 }

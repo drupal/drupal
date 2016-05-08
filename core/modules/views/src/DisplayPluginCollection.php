@@ -105,5 +105,4 @@ class DisplayPluginCollection extends DefaultLazyPluginCollection {
     parent::remove($instance_id);
   }
 
-
 }

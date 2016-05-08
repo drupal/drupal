@@ -29,4 +29,5 @@ class RevisionLinkRevert extends RevisionLink {
   protected function getDefaultLabel() {
     return $this->t('Revert');
   }
+
 }

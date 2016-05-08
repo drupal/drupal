@@ -42,4 +42,5 @@ class Query extends QueryBase implements QueryInterface, QueryAggregateInterface
   public function conditionAggregateGroupFactory($conjunction = 'AND') {
     return new ConditionAggregate($conjunction, $this);
   }
+
 }

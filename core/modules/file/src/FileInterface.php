@@ -113,4 +113,5 @@ interface FileInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   Creation timestamp of the file entity.
    */
   public function getCreatedTime();
+
 }

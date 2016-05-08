@@ -710,4 +710,5 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   public static function getDefaultOwnerId() {
     return \Drupal::currentUser()->id();
   }
+
 }

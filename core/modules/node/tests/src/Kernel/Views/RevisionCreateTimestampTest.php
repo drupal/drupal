@@ -71,5 +71,4 @@ class RevisionCreateTimestampTest extends ViewsKernelTestBase {
     ], ['vid' => 'vid', 'revision_timestamp' => 'revision_timestamp']);
   }
 
-
 }

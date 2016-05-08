@@ -111,4 +111,5 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Hidden');
     $this->assertNoText(t('1 comment'), 'Non-empty comment count does not display for nodes with comment status set to Hidden');
   }
+
 }

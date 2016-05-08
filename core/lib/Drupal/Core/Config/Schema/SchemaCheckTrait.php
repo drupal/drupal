@@ -133,4 +133,5 @@ trait SchemaCheckTrait {
     // No errors found.
     return array();
   }
+
 }

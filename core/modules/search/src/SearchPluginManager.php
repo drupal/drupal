@@ -27,4 +27,5 @@ class SearchPluginManager extends DefaultPluginManager {
     $this->setCacheBackend($cache_backend, 'search_plugins');
     $this->alterInfo('search_plugin');
   }
+
 }

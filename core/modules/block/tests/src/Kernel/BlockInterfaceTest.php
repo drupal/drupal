@@ -99,4 +99,5 @@ class BlockInterfaceTest extends KernelTestBase {
     // testing BlockBase's implementation, not the interface itself.
     $this->assertIdentical($display_block->getMachineNameSuggestion(), 'displaymessage', 'The plugin returned the expected machine name suggestion.');
   }
+
 }

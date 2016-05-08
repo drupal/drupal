@@ -70,4 +70,5 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('The second comment.', $comment->subject->value);
     $this->assertIdentical('0', $comment->pid->target_id);
   }
+
 }

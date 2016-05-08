@@ -75,4 +75,5 @@ class SearchExactTest extends SearchTestBase {
     $this->assertNoText(format_date($node->getChangedTime(), 'short'), 'Basic page node does not display post date when post settings are off.');
 
   }
+
 }

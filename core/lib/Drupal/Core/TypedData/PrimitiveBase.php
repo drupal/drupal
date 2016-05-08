@@ -31,4 +31,5 @@ abstract class PrimitiveBase extends TypedData implements PrimitiveInterface {
       $this->parent->onChange($this->name);
     }
   }
+
 }

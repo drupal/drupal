@@ -511,4 +511,5 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->moduleHandler->addModule('module', 'place');
     $this->assertEquals(array('module' => $this->root . '/place'), $this->moduleHandler->getModuleDirectories());
   }
+
 }

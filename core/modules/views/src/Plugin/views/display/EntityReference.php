@@ -175,4 +175,5 @@ class EntityReference extends DisplayPluginBase {
     }
     return $errors;
   }
+
 }

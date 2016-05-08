@@ -113,4 +113,5 @@ class LanguageSelectElementTest extends WebTestBase {
     }
     $this->assertEqual($count, count($options), format_string('The number of languages and the number of options shown by the language element are the same: @languages languages, @number options', array('@languages' => count($options), '@number' => $count)));
   }
+
 }

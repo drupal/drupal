@@ -73,4 +73,5 @@ class NodeHelpTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertText($this->testText);
   }
+
 }

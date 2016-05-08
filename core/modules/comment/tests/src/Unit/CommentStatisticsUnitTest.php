@@ -120,4 +120,5 @@ class CommentStatisticsUnitTest extends UnitTestCase {
         break;
     }
   }
+
 }

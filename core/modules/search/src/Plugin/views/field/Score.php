@@ -43,4 +43,5 @@ class Score extends NumericField {
       return parent::render($values);
     }
   }
+
 }

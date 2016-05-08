@@ -91,4 +91,5 @@ class MockAliasManager implements AliasManagerInterface {
   public function cacheClear($source = NULL) {
     // Not needed.
   }
+
 }

@@ -278,14 +278,17 @@ class MockContainerInjection implements ContainerInjectionInterface {
   public function getResult() {
     return $this->result;
   }
+
 }
 class MockContainerAware extends ContainerAware {
   public function getResult() {
     return 'This is container aware.';
   }
+
 }
 class MockInvokeController {
   public function __invoke() {
     return 'This used __invoke().';
   }
+
 }

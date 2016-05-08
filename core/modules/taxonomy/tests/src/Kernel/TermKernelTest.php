@@ -148,4 +148,5 @@ class TermKernelTest extends KernelTestBase {
     $ancestors = $storage->loadAllParents($term[3]->id());
     $this->assertEqual(5, count($ancestors), 'The term has five ancestors including the term itself.');
   }
+
 }

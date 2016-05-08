@@ -41,4 +41,5 @@ class UserCreateFailMailTest extends WebTestBase {
     $this->assertText(t('Unable to send email. Contact the site administrator if the problem persists.'));
     $this->assertNoText(t('A welcome message with further instructions has been emailed to the new user @name.', array('@name' => $edit['name'])));
   }
+
 }

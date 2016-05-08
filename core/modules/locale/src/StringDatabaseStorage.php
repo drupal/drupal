@@ -536,4 +536,5 @@ class StringDatabaseStorage implements StringStorageInterface {
   protected function dbExecute($query, array $args = array()) {
     return $this->connection->query($query, $args, $this->options);
   }
+
 }

@@ -70,4 +70,5 @@ class MainContentFallbackTest extends WebTestBase {
     $this->rebuildContainer();
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block'), 'Block module re-enabled.');
   }
+
 }

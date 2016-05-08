@@ -52,4 +52,5 @@ class MappedDiff extends Diff {
       }
     }
   }
+
 }

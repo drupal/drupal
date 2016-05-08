@@ -115,4 +115,5 @@ class RebuildTest extends WebTestBase {
     $url = parse_url($forms[0]['action'])['path'];
     $this->assertEqual(Url::fromRoute('node.add', ['node_type' => 'page'])->toString(), $url);
   }
+
 }

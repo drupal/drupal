@@ -14,4 +14,5 @@ use Drupal\Tests\RandomGeneratorTrait as BaseGeneratorTrait;
  */
 trait RandomGeneratorTrait {
   use BaseGeneratorTrait;
+
 }

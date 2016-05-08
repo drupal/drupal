@@ -111,4 +111,5 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet($file_url);
     $this->assertResponse(403, 'Confirmed that access is denied for another user to the temporary file.');
   }
+
 }

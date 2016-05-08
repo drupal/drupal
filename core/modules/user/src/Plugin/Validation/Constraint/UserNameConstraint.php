@@ -20,4 +20,5 @@ class UserNameConstraint extends Constraint {
   public $multipleSpacesMessage = 'The username cannot contain multiple spaces in a row.';
   public $illegalMessage = 'The username contains an illegal character.';
   public $tooLongMessage = 'The username %name is too long: it must be %max characters or less.';
+
 }

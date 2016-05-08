@@ -320,4 +320,5 @@ class HtmlTest extends UnitTestCase {
     $result = Html::serialize($document);
     $this->assertSame('', $result);
   }
+
 }

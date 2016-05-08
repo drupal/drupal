@@ -69,4 +69,5 @@ trait LinkGeneratorTrait {
 
     return $this;
   }
+
 }

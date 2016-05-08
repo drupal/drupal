@@ -205,4 +205,5 @@ class LanguageListTest extends WebTestBase {
     $conf_languages = $this->container->get('language_manager')->getLanguages();
     $this->assertEqual(array_diff_key($expected_conf_languages, $conf_languages), array(), 'Configurable languages loaded correctly.');
   }
+
 }

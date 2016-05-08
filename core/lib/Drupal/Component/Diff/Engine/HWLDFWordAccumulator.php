@@ -75,4 +75,5 @@ class HWLDFWordAccumulator {
     $this->_flushLine('~done');
     return $this->lines;
   }
+
 }

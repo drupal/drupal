@@ -22,4 +22,5 @@ class EntityShortcutSet extends EntityConfigBase {
     $entity->setSyncing(TRUE);
     return $entity;
   }
+
 }

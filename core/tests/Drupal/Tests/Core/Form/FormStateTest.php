@@ -583,6 +583,7 @@ class FormStateTest extends UnitTestCase {
     $form_state->setValue('value_to_keep', 'magic_ponies');
     $this->assertSame($form_state->cleanValues()->getValues(), ['value_to_keep' => 'magic_ponies']);
   }
+
 }
 
 /**
@@ -596,4 +597,5 @@ class PrepareCallbackTestForm implements FormInterface {
   public function buildForm(array $form, FormStateInterface $form_state) {}
   public function validateForm(array &$form, FormStateInterface $form_state) { }
   public function submitForm(array &$form, FormStateInterface $form_state) { }
+
 }

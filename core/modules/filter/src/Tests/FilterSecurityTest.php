@@ -86,4 +86,5 @@ class FilterSecurityTest extends WebTestBase {
     $this->assertEqual(check_markup($text, 'filtered_html', '', array()), $expected_filtered_text, 'Expected filter result.');
     $this->assertEqual(check_markup($text, 'filtered_html', '', array(FilterInterface::TYPE_HTML_RESTRICTOR)), $expected_filtered_text, 'Expected filter result, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.');
   }
+
 }
