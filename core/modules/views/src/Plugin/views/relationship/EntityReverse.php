@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsRelationship("entity_reverse")
  */
-class EntityReverse extends RelationshipPluginBase  {
+class EntityReverse extends RelationshipPluginBase {
 
   /**
    * Constructs an EntityReverse object.

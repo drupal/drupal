@@ -18,7 +18,7 @@ use Drupal\user\Entity\User;
  *
  * @group Entity
  */
-class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
+class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
 
   /**
    * Asserts entity access correctly grants or denies access.

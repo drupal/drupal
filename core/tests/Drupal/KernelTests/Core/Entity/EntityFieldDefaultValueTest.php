@@ -10,7 +10,7 @@ use Drupal\Component\Utility\SafeMarkup;
  *
  * @group Entity
  */
-class EntityFieldDefaultValueTest extends EntityKernelTestBase  {
+class EntityFieldDefaultValueTest extends EntityKernelTestBase {
 
   /**
    * The UUID object to be used for generating UUIDs.

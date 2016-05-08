@@ -23,7 +23,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @group Entity
  */
-class EntityFieldTest extends EntityKernelTestBase  {
+class EntityFieldTest extends EntityKernelTestBase {
 
   /**
    * Modules to enable.

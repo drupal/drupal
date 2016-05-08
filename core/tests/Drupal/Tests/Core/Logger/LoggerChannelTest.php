@@ -147,7 +147,7 @@ class LoggerChannelTest extends UnitTestCase {
 
 }
 
-class NaughtyRecursiveLogger implements LoggerInterface  {
+class NaughtyRecursiveLogger implements LoggerInterface {
   use LoggerTrait;
 
   protected $channel;

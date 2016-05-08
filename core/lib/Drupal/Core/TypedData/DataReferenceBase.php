@@ -14,7 +14,7 @@ namespace Drupal\Core\TypedData;
  *
  * @see \Drupal\Core\TypedData\DataReferenceDefinition
  */
-abstract class DataReferenceBase extends TypedData implements DataReferenceInterface  {
+abstract class DataReferenceBase extends TypedData implements DataReferenceInterface {
 
   /**
    * The referenced data.

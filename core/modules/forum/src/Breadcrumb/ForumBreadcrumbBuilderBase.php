@@ -17,7 +17,7 @@ use Drupal\forum\ForumManagerInterface;
  * This just holds the dependency-injected config, entity manager, and forum
  * manager objects.
  */
-abstract class ForumBreadcrumbBuilderBase  implements BreadcrumbBuilderInterface {
+abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
 
   /**

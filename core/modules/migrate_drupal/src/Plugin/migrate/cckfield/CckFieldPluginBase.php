@@ -17,7 +17,7 @@ use Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface;
  *
  * @ingroup migration
  */
-abstract class CckFieldPluginBase extends PluginBase implements MigrateCckFieldInterface  {
+abstract class CckFieldPluginBase extends PluginBase implements MigrateCckFieldInterface {
 
   /**
    * {@inheritdoc}

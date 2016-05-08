@@ -5,7 +5,7 @@ namespace Drupal\Core\Extension;
 /**
  * Interface for classes that parses Drupal's info.yml files.
  */
-interface InfoParserInterface  {
+interface InfoParserInterface {
 
   /**
    * Parses Drupal module, theme and profile .info.yml files.

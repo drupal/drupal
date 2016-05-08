@@ -7,7 +7,7 @@ namespace Drupal\KernelTests\Core\Entity;
  *
  * @group Entity
  */
-class EntityBundleFieldTest extends EntityKernelTestBase  {
+class EntityBundleFieldTest extends EntityKernelTestBase {
 
   /**
    * Modules to enable.

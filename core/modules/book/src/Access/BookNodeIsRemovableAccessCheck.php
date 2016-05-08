@@ -10,7 +10,7 @@ use Drupal\node\NodeInterface;
 /**
  * Determines whether the requested node can be removed from its book.
  */
-class BookNodeIsRemovableAccessCheck implements AccessInterface{
+class BookNodeIsRemovableAccessCheck implements AccessInterface {
 
   /**
    * Book Manager Service.

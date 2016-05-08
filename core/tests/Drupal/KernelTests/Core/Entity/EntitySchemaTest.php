@@ -9,7 +9,7 @@ use Drupal\Component\Utility\SafeMarkup;
  *
  * @group system
  */
-class EntitySchemaTest extends EntityKernelTestBase  {
+class EntitySchemaTest extends EntityKernelTestBase {
 
   /**
    * The database connection used.
