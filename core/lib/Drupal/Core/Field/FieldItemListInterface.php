@@ -44,7 +44,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   /**
    * Gets the langcode of the field values held in the object.
    *
-   * @return $langcode
+   * @return string
    *   The langcode.
    */
   public function getLangcode();
