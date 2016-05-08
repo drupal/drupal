@@ -9,7 +9,7 @@ namespace Drupal\Core\TypedData;
  *
  * @ingroup typed_data
  */
-interface ComplexDataDefinitionInterface extends DataDefinitionInterface  {
+interface ComplexDataDefinitionInterface extends DataDefinitionInterface {
 
   /**
    * Gets the definition of a contained property.

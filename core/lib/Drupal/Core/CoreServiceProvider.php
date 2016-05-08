@@ -40,7 +40,7 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
  *
  * @ingroup container
  */
-class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierInterface  {
+class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierInterface {
 
   /**
    * {@inheritdoc}

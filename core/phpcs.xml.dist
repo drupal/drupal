@@ -13,13 +13,7 @@
   <!-- Only include specific sniffs that pass. This ensures that, if new sniffs are added, HEAD does not fail.-->
   <!-- Drupal sniffs -->
   <rule ref="Drupal.Classes.ClassCreateInstance"/>
-  <rule ref="Drupal.Classes.ClassDeclaration">
-    <exclude name="Drupal.Classes.ClassDeclaration.BraceOnNewLine"/>
-    <exclude name="Drupal.Classes.ClassDeclaration.SpaceAfterName"/>
-    <exclude name="Drupal.Classes.ClassDeclaration.SpaceBeforeBrace"/>
-    <exclude name="Drupal.Classes.ClassDeclaration.SpaceBeforeExtends"/>
-    <exclude name="Drupal.Classes.ClassDeclaration.SpaceBeforeImplements"/>
-  </rule>
+  <rule ref="Drupal.Classes.ClassDeclaration"/>
   <rule ref="Drupal.Classes.FullyQualifiedNamespace"/>
   <rule ref="Drupal.Classes.UnusedUseStatement"/>
   <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>

@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormState;
 /**
  * Controller for block_test module
  */
-class TestMultipleFormController  extends ControllerBase {
+class TestMultipleFormController extends ControllerBase {
 
   public function testMultipleForms() {
     $form_state = new FormState();

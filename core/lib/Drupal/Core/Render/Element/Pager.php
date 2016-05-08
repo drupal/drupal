@@ -30,7 +30,7 @@ namespace Drupal\Core\Render\Element;
  *
  * @RenderElement("pager")
  */
-class Pager extends RenderElement{
+class Pager extends RenderElement {
 
   /**
    * {@inheritdoc}

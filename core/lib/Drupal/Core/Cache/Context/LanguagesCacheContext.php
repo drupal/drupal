@@ -8,7 +8,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 /**
  * Defines the LanguagesCacheContext service, for "per language" caching.
  */
-class LanguagesCacheContext implements CalculatedCacheContextInterface  {
+class LanguagesCacheContext implements CalculatedCacheContextInterface {
 
   /**
    * The language manager.

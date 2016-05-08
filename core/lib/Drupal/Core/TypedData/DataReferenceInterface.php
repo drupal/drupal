@@ -7,7 +7,7 @@ namespace Drupal\Core\TypedData;
  *
  * @see \Drupal\Core\TypedData\DataReferenceDefinitionInterface
  */
-interface DataReferenceInterface  {
+interface DataReferenceInterface {
 
   /**
    * Gets the referenced data.

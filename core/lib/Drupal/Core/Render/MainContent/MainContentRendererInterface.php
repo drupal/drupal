@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
  * (HTML, JSON …) and/or in a certain decorated manner (e.g. in the case of the
  * default HTML main content renderer: with a page display variant applied).
  */
-interface MainContentRendererInterface  {
+interface MainContentRendererInterface {
 
   /**
    * Renders the main content render array into a response.

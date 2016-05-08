@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsRelationship("node_term_data")
  */
-class NodeTermData extends RelationshipPluginBase  {
+class NodeTermData extends RelationshipPluginBase {
 
   /**
    * The vocabulary storage.

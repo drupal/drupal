@@ -18,7 +18,7 @@ namespace Drupal\Core\TypedData;
  *
  * @ingroup typed_data
  */
-interface ComplexDataInterface extends TraversableTypedDataInterface  {
+interface ComplexDataInterface extends TraversableTypedDataInterface {
 
   /**
    * Gets the data definition.
