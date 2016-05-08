@@ -19,7 +19,6 @@ namespace Drupal\Core\Cache;
  *
  * @ingroup cache
  */
-
 class BackendChain implements CacheBackendInterface, CacheTagsInvalidatorInterface {
 
   /**
