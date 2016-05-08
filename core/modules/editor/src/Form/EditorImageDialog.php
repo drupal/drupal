@@ -85,8 +85,8 @@ class EditorImageDialog extends FormBase {
 
     // Construct strings to use in the upload validators.
     $image_upload = $editor->getImageUploadSettings();
-    if (!empty($image_upload['dimensions'])) {
-      $max_dimensions = $image_upload['dimensions']['max_width'] . '×' . $image_upload['dimensions']['max_height'];
+    if (!empty($image_upload['max_dimensions']['width']) || !empty($image_upload['max_dimensions']['height'])) {
+      $max_dimensions = $image_upload['max_dimensions']['width'] . 'x' . $image_upload['max_dimensions']['height'];
     }
     else {
       $max_dimensions = 0;
