@@ -171,4 +171,27 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->assertRaw('The file referenced by the Managed <em>file &amp; butter</em> field does not exist.');
   }
 
+  /**
+   * Ensure a file entity can be saved when the file does not exist on disk.
+   */
+  public function testFileRemovedFromDisk() {
+    $this->drupalGet('file/test/1/0/1');
+    $test_file = $this->getTestFile('text');
+    $file_field_name = 'files[nested_file][]';
+
+    $edit = [$file_field_name => drupal_realpath($test_file->getFileUri())];
+    $this->drupalPostForm(NULL, $edit, t('Upload'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
+
+    $fid = $this->getLastFileId();
+    /** @var $file \Drupal\file\FileInterface */
+    $file = $this->container->get('entity_type.manager')->getStorage('file')->load($fid);
+    $file->setPermanent();
+    $file->save();
+    $this->assertTrue(file_unmanaged_delete($file->getFileUri()));
+    $file->save();
+    $this->assertTrue($file->isPermanent());
+    $file->delete();
+  }
+
 }
