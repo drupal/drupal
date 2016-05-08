@@ -311,6 +311,31 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
   }
 
   /**
+   * Tests ID input is handled correctly.
+   *
+   * E.g. This can happen with GET form parameters.
+   */
+  public function testEntityAutocompleteIdInput() {
+    /** @var \Drupal\Core\Form\FormBuilderInterface $form_builder */
+    $form_builder = $this->container->get('form_builder');
+    //$form = $form_builder->getForm($this);
+    $form_state = (new FormState())
+      ->setMethod('GET')
+      ->setValues([
+        'single' => [['target_id' => $this->referencedEntities[0]->id()]],
+        'single_no_validate' => [['target_id' => $this->referencedEntities[0]->id()]],
+      ]);
+
+    $form_builder->submitForm($this, $form_state);
+
+    $form = $form_state->getCompleteForm();
+
+    $expected_label = $this->getAutocompleteInput($this->referencedEntities[0]);
+    $this->assertSame($expected_label, $form['single']['#value']);
+    $this->assertSame($expected_label, $form['single_no_validate']['#value']);
+  }
+
+  /**
    * Returns an entity label in the format needed by the EntityAutocomplete
    * element.
    *
