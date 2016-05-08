@@ -144,35 +144,20 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Custom block ID'))
-      ->setDescription(t('The custom block ID.'))
-      ->setReadOnly(TRUE)
-      ->setSetting('unsigned', TRUE);
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
+    $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['uuid'] = BaseFieldDefinition::create('uuid')
-      ->setLabel(t('UUID'))
-      ->setDescription(t('The custom block UUID.'))
-      ->setReadOnly(TRUE);
+    $fields['id']->setLabel(t('Custom block ID'))
+      ->setDescription(t('The custom block ID.'));
 
-    $fields['revision_id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Revision ID'))
-      ->setDescription(t('The revision ID.'))
-      ->setReadOnly(TRUE)
-      ->setSetting('unsigned', TRUE);
+    $fields['uuid']->setDescription(t('The custom block UUID.'));
 
-    $fields['langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Language'))
-      ->setDescription(t('The custom block language code.'))
-      ->setTranslatable(TRUE)
-      ->setRevisionable(TRUE)
-      ->setDisplayOptions('view', array(
-        'type' => 'hidden',
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'language_select',
-        'weight' => 2,
-      ));
+    $fields['revision_id']->setDescription(t('The revision ID.'));
+
+    $fields['langcode']->setDescription(t('The custom block language code.'));
+
+    $fields['type']->setLabel(t('Block type'))
+      ->setDescription(t('The block type.'));
 
     $fields['info'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Block description'))
@@ -186,12 +171,6 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->addConstraint('UniqueField', []);
-
-
-    $fields['type'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Block type'))
-      ->setDescription(t('The block type.'))
-      ->setSetting('target_type', 'block_content_type');
 
     $fields['revision_log'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Revision log message'))
