@@ -286,7 +286,7 @@ class DateTimePlusTest extends UnitTestCase {
    *   An array of arrays, each containing the input parameters for
    *   DateTimePlusTest::testDates().
    *
-   * @see DateTimePlusTest::testDates().
+   * @see DateTimePlusTest::testDates()
    */
   public function providerTestDates() {
     return array(
@@ -313,7 +313,7 @@ class DateTimePlusTest extends UnitTestCase {
    *   An array of arrays, each containing the input parameters for
    *   DateTimePlusTest::testDates().
    *
-   * @see DateTimePlusTest::testDates().
+   * @see DateTimePlusTest::testDates()
    */
   public function providerTestDateArrays() {
     return array(

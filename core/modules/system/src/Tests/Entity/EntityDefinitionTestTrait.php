@@ -199,7 +199,7 @@ trait EntityDefinitionTestTrait {
   /**
    * Adds an index to the 'entity_test_update' entity type's base table.
    *
-   * @see \Drupal\entity_test\EntityTestStorageSchema::getEntitySchema().
+   * @see \Drupal\entity_test\EntityTestStorageSchema::getEntitySchema()
    */
   protected function addEntityIndex() {
     $indexes = array(

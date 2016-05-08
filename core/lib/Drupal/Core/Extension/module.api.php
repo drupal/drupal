@@ -81,7 +81,7 @@ use Drupal\Core\Utility\UpdateException;
  *
  * See system_hook_info() for all hook groups defined by Drupal core.
  *
- * @see hook_hook_info_alter().
+ * @see hook_hook_info_alter()
  */
 function hook_hook_info() {
   $hooks['token_info'] = array(

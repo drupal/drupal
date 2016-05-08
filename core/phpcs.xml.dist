@@ -60,8 +60,6 @@
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentNotCapital"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamNameNoMatch"/>
     <exclude name="Drupal.Commenting.FunctionComment.ReturnCommentIndentation"/>
-    <exclude name="Drupal.Commenting.FunctionComment.SeeAdditionalText"/>
-    <exclude name="Drupal.Commenting.FunctionComment.SeePunctuation"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
     <exclude name="Drupal.Commenting.FunctionComment.VoidReturn"/>
   </rule>

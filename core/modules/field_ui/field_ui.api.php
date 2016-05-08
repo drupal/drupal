@@ -27,7 +27,7 @@
  * @return array
  *   Returns the form array to be built.
  *
- * @see \Drupal\field_ui\DisplayOverView.
+ * @see \Drupal\field_ui\DisplayOverView
  */
 function hook_field_formatter_third_party_settings_form(\Drupal\Core\Field\FormatterInterface $plugin, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, $view_mode, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
   $element = array();
@@ -60,7 +60,7 @@ function hook_field_formatter_third_party_settings_form(\Drupal\Core\Field\Forma
  * @return array
  *   Returns the form array to be built.
  *
- * @see \Drupal\field_ui\FormDisplayOverView.
+ * @see \Drupal\field_ui\FormDisplayOverView
  */
 function hook_field_widget_third_party_settings_form(\Drupal\Core\Field\WidgetInterface $plugin, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, $form_mode, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
   $element = array();
@@ -87,7 +87,7 @@ function hook_field_widget_third_party_settings_form(\Drupal\Core\Field\WidgetIn
  *   - field_definition: The field definition.
  *   - view_mode: The view mode being configured.
  *
- * @see \Drupal\field_ui\DisplayOverView.
+ * @see \Drupal\field_ui\DisplayOverView
  */
 function hook_field_formatter_settings_summary_alter(&$summary, $context) {
   // Append a message to the summary when an instance of foo_formatter has
@@ -110,7 +110,7 @@ function hook_field_formatter_settings_summary_alter(&$summary, $context) {
  *   - field_definition: The field definition.
  *   - form_mode: The form mode being configured.
  *
- * @see \Drupal\field_ui\FormDisplayOverView.
+ * @see \Drupal\field_ui\FormDisplayOverView
  */
 function hook_field_widget_settings_summary_alter(&$summary, $context) {
   // Append a message to the summary when an instance of foo_widget has

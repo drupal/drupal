@@ -31,7 +31,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
   /**
    * Provides data for the JS asset cleaning test.
    *
-   * @see \Drupal\Core\Asset\JsOptimizer::clean().
+   * @see \Drupal\Core\Asset\JsOptimizer::clean()
    *
    * @returns array
    *   An array of test data.
@@ -78,7 +78,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
   /**
    * Provides data for the JS asset optimize test.
    *
-   * @see \Drupal\Core\Asset\JsOptimizer::optimize().
+   * @see \Drupal\Core\Asset\JsOptimizer::optimize()
    *
    * @returns array
    *   An array of test data.

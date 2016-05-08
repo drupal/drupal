@@ -82,7 +82,7 @@ function menu_test_menu_name($new_name = '') {
  * @return string
  *   A string containing the title and case number.
  *
- * @see menu_test_menu().
+ * @see menu_test_menu()
  */
 function menu_test_title_callback($title, $case_number = 3) {
   return t($title) . ' - Case ' . $case_number;

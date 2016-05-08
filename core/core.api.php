@@ -2095,7 +2095,7 @@ function hook_mail_backend_info_alter(&$info) {
  * @param $countries
  *   The associative array of countries keyed by two-letter country code.
  *
- * @see \Drupal\Core\Locale\CountryManager::getList().
+ * @see \Drupal\Core\Locale\CountryManager::getList()
  */
 function hook_countries_alter(&$countries) {
   // Elbonia is now independent, so add it to the country list.

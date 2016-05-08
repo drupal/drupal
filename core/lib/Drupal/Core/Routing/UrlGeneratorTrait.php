@@ -27,14 +27,16 @@ trait UrlGeneratorTrait {
   /**
    * Generates a URL or path for a specific route based on the given parameters.
    *
-   * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
-   *   details on the arguments, usage, and possible exceptions.
+   * For details on the arguments, usage, and possible exceptions see
+   * \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute().
    *
    * @return string
    *   The generated URL for the given route.
    *
    * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
    *   Use \Drupal\Core\Url instead.
+   *
+   * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    */
   protected function url($route_name, $route_parameters = array(), $options = array()) {
     return $this->getUrlGenerator()->generateFromRoute($route_name, $route_parameters, $options);

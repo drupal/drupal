@@ -28,11 +28,11 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
   /**
    * {@inheritdoc}
    *
-   * @see \Drupal\Core\Entity\ContentEntityStorageInterface.
-   *
    * @throws \InvalidArgumentException
    *   If the provided class does not implement
    *   \Drupal\Core\Entity\ContentEntityStorageInterface.
+   *
+   * @see \Drupal\Core\Entity\ContentEntityStorageInterface
    */
   protected function checkStorageClass($class) {
     $required_interface = ContentEntityStorageInterface::class;

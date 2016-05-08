@@ -206,10 +206,11 @@ class TwigExtension extends \Twig_Extension {
    * @param array $options
    *   (optional) An associative array of additional options. The 'absolute'
    *   option is forced to be FALSE.
-   *   @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute().
    *
    * @return string
    *   The generated URL path (relative URL) for the given route.
+   *
+   * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    */
   public function getPath($name, $parameters = array(), $options = array()) {
     $options['absolute'] = FALSE;

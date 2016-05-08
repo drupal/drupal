@@ -193,7 +193,7 @@ class BasicTest extends WizardTestBase {
   /**
    * Tests default plugin values are populated from the wizard form.
    *
-   * @see \Drupal\views\Plugin\views\display\DisplayPluginBase::mergeDefaults().
+   * @see \Drupal\views\Plugin\views\display\DisplayPluginBase::mergeDefaults()
    */
   public function testWizardDefaultValues() {
     $random_id = strtolower($this->randomMachineName(16));

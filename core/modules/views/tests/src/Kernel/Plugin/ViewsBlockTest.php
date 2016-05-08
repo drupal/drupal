@@ -39,7 +39,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
   /**
    * Tests that ViewsBlock::getMachineNameSuggestion() produces the right value.
    *
-   * @see \Drupal\views\Plugin\Block::getmachineNameSuggestion().
+   * @see \Drupal\views\Plugin\Block::getmachineNameSuggestion()
    */
   public function testMachineNameSuggestion() {
     $plugin_definition = array(

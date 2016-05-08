@@ -362,13 +362,14 @@ function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
  * Checks whether this token represents a scalar or NULL.
  *
  * @param int $type
- *   The token type
- *   @see token_name().
+ *   The token type.
  * @param string $value
  *   The value of the token.
  *
  * @return bool
  *   TRUE if this token represents a scalar or NULL.
+ *
+ * @see token_name()
  */
 function _drupal_rewrite_settings_is_simple($type, $value) {
   $is_integer = $type == T_LNUMBER;
@@ -386,11 +387,12 @@ function _drupal_rewrite_settings_is_simple($type, $value) {
  * string.
  *
  * @param int $type
- *   The token type
- *   @see token_name().
+ *   The token type.
  *
  * @return bool
  *   TRUE if this token represents a number or a string.
+ *
+ * @see token_name()
  */
 function _drupal_rewrite_settings_is_array_index($type) {
   $is_integer = $type == T_LNUMBER;

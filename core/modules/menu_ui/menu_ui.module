@@ -389,8 +389,8 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
  *
  * Adds menu options to the node type form.
  *
- * @see NodeTypeForm::form().
- * @see menu_ui_form_node_type_form_submit().
+ * @see NodeTypeForm::form()
+ * @see menu_ui_form_node_type_form_submit()
  */
 function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
@@ -437,7 +437,7 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
 /**
  * Submit handler for forms with menu options.
  *
- * @see menu_ui_form_node_type_form_alter().
+ * @see menu_ui_form_node_type_form_alter()
  */
 function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_state) {
   $available_menus = array_filter($form_state->getValue('menu_options'));
@@ -457,7 +457,7 @@ function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_s
 /**
  * Entity builder for the node type form with menu options.
  *
- * @see menu_ui_form_node_type_form_alter().
+ * @see menu_ui_form_node_type_form_alter()
  */
 function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state) {
   $type->setThirdPartySetting('menu_ui', 'available_menus', array_values(array_filter($form_state->getValue('menu_options'))));
