@@ -99,8 +99,8 @@ class OpmlFeedAdd extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // If both fields are empty or filled, cancel.
-    $file_upload = $this->getRequest()->files->get('files[upload]', NULL, TRUE);
-    if ($form_state->isValueEmpty('remote') == empty($file_upload)) {
+    $all_files = $this->getRequest()->files->get('files', []);
+    if ($form_state->isValueEmpty('remote') == empty($all_files['upload'])) {
       $form_state->setErrorByName('remote', $this->t('<em>Either</em> upload a file or enter a URL.'));
     }
   }

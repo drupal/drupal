@@ -709,11 +709,12 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
   $user = \Drupal::currentUser();
   static $upload_cache;
 
-  $file_upload = \Drupal::request()->files->get("files[$form_field_name]", NULL, TRUE);
+  $all_files = \Drupal::request()->files->get('files', array());
   // Make sure there's an upload to process.
-  if (empty($file_upload)) {
+  if (empty($all_files[$form_field_name])) {
     return NULL;
   }
+  $file_upload = $all_files[$form_field_name];
 
   // Return cached objects without processing since the file will have
   // already been processed and the paths in $_FILES will be invalid.
@@ -1168,10 +1169,11 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
  */
 function file_managed_file_save_upload($element, FormStateInterface $form_state) {
   $upload_name = implode('_', $element['#parents']);
-  $file_upload = \Drupal::request()->files->get("files[$upload_name]", NULL, TRUE);
-  if (empty($file_upload)) {
+  $all_files = \Drupal::request()->files->get('files', array());
+  if (empty($all_files[$upload_name])) {
     return FALSE;
   }
+  $file_upload = $all_files[$upload_name];
 
   $destination = isset($element['#upload_location']) ? $element['#upload_location'] : NULL;
   if (isset($destination) && !file_prepare_directory($destination, FILE_CREATE_DIRECTORY)) {
