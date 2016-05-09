@@ -482,7 +482,6 @@ services:
     arguments: ['@app.root', '@module_handler', '@kernel', '@config.factory', '@config.installer', '@plugin.cache_clearer', '@router.builder', '@stream_wrapper_manager', '@theme_handler', '@logger.channel.system', '@config.manager', '@keyvalue']
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['@app.root', '@module_handler', '@kernel', '@router.builder']
     lazy: true
   content_uninstall_validator:
     class: Drupal\Core\Entity\ContentUninstallValidator
