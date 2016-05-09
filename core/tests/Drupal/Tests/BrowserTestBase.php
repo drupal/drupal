@@ -23,7 +23,7 @@ use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -1447,7 +1447,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   Optional message to show alongside the assertion.
    */
   protected function assertElementPresent($css_selector, $message = '') {
-    $this->assertNotEmpty($this->getSession()->getDriver()->find(CssSelector::toXPath($css_selector)), $message);
+    $this->assertNotEmpty($this->getSession()->getDriver()->find($this->cssSelectToXpath($css_selector)), $message);
   }
 
   /**
@@ -1459,7 +1459,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   Optional message to show alongside the assertion.
    */
   protected function assertElementNotPresent($css_selector, $message = '') {
-    $this->assertEmpty($this->getSession()->getDriver()->find(CssSelector::toXPath($css_selector)), $message);
+    $this->assertEmpty($this->getSession()->getDriver()->find($this->cssSelectToXpath($css_selector)), $message);
   }
 
   /**
@@ -1469,7 +1469,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   The CSS selector identifying the element to click.
    */
   protected function click($css_selector) {
-    $this->getSession()->getDriver()->click(CssSelector::toXPath($css_selector));
+    $this->getSession()->getDriver()->click($this->cssSelectToXpath($css_selector));
   }
 
   /**
@@ -1527,6 +1527,25 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       }
     }, $this->getSession()->getResponseHeaders());
     return '<hr />Headers: <pre>' . Html::escape(var_export($headers, TRUE)) . '</pre>';
+  }
+
+  /**
+   * Translates a CSS expression to its XPath equivalent.
+   *
+   * The search is relative to the root element (HTML tag normally) of the page.
+   *
+   * @param string $selector
+   *   CSS selector to use in the search.
+   * @param bool $html
+   *   (optional) Enables HTML support. Disable it for XML documents.
+   * @param string $prefix
+   *   (optional) The prefix for the XPath expression.
+   *
+   * @return string
+   *   The equivalent XPath of a CSS expression.
+   */
+  protected function cssSelectToXpath($selector, $html = TRUE, $prefix = 'descendant-or-self::') {
+    return (new CssSelectorConverter($html))->toXPath($selector, $prefix);
   }
 
 }

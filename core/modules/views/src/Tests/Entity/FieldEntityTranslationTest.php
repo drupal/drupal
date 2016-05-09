@@ -7,7 +7,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\ViewTestBase;
-use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Tests the rendering of fields (base fields) and their translations.
@@ -171,8 +171,8 @@ class FieldEntityTranslationTest extends ViewTestBase {
     $rows = $this->cssSelect('div.views-row');
     foreach ($rows as $row) {
       $actual[] = [
-        'title' => (string) $row->xpath(CssSelector::toXPath('.views-field-title span.field-content a'))[0],
-        'sticky' => (string) $row->xpath(CssSelector::toXPath('.views-field-sticky span.field-content'))[0],
+        'title' => (string) $row->xpath((new CssSelectorConverter())->toXPath('.views-field-title span.field-content a'))[0],
+        'sticky' => (string) $row->xpath((new CssSelectorConverter())->toXPath('.views-field-sticky span.field-content'))[0],
       ];
     }
     $this->assertEqual($actual, $expected);
