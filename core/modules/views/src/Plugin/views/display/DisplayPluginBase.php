@@ -2216,6 +2216,10 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $return = array();
     foreach ($this->getHandlers($area) as $key => $area_handler) {
       if ($area_render = $area_handler->render($empty)) {
+        if (isset($area_handler->position)) {
+          // Fix weight of area.
+          $area_render['#weight'] = $area_handler->position;
+        }
         $return[$key] = $area_render;
       }
     }
