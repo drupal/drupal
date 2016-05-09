@@ -56,4 +56,5 @@ class UpdateDependenciesTraitTestClass {
   public function updateDependenciesPublic(ContainerInterface $container) {
     $this->updateDependencies($container);
   }
+
 }
