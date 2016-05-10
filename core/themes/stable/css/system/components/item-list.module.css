@@ -14,6 +14,73 @@
 .item-list__comma-list li:after {
   content: ", ";
 }
+.item-list__comma-list li:nth-last-child(2):after {
+  content: " & ";
+}
 .item-list__comma-list li:last-child:after {
-  content: "";
+  content: ".";
+}
+/* tamil */
+[lang="ta"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " மற்றும் ";
+}
+/* spanish */
+[lang="es"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " y ";
+}
+/* sinhala */
+[lang="si"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " සහ ";
+}
+/* sindhi */
+[lang="sd"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " ۽ ";
+}
+/* persian */
+[lang="fa"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " و ";
+}
+/* nepali */
+[lang="ne"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " र ";
+}
+/* marathi */
+[lang="mr"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " आणि ";
+}
+/* latvian */
+[lang="lv"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " ແລະ ";
+}
+/* kyrgyz */
+[lang="ky"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " 및 ";
+}
+/* khmer */
+[lang="km"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " និង ";
+}
+/* hindi */
+[lang="hi"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " और ";
+}
+/* gujarati */
+[lang="gu"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " અને ";
+}
+/* georgian */
+[lang="ka"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " და ";
+}
+/* estonian */
+[lang="et"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " ja ";
+}
+/* catalan */
+[lang="ca"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " i ";
+}
+/* arabic */
+[lang="ar"] .item-list__comma-list li:nth-last-child(2):after {
+  content: " و ";
 }
