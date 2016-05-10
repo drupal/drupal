@@ -11,6 +11,12 @@ use Drupal\comment\CommentTypeInterface;
  * @ConfigEntityType(
  *   id = "comment_type",
  *   label = @Translation("Comment type"),
+ *   label_singular = @Translation("comment type"),
+ *   label_plural = @Translation("comment types"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count comment type",
+ *     plural = "@count comment types",
+ *   ),
  *   handlers = {
  *     "form" = {
  *       "default" = "Drupal\comment\CommentTypeForm",
