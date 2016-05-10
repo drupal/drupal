@@ -108,7 +108,8 @@ class Name extends InOperator {
     $this->valueOptions = array();
 
     if ($this->value) {
-      $result = entity_load_multiple_by_properties('user', array('uid' => $this->value));
+      $result = \Drupal::entityTypeManager()->getStorage('user')
+        ->loadByProperties(['uid' => $this->value]);
       foreach ($result as $account) {
         if ($account->id()) {
           $this->valueOptions[$account->id()] = $account->label();

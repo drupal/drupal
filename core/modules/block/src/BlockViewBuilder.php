@@ -2,6 +2,7 @@
 
 namespace Drupal\block;
 
+use Drupal\block\Entity\Block;
 use Drupal\Core\Block\MainContentBlockPluginInterface;
 use Drupal\Core\Block\TitleBlockPluginInterface;
 use Drupal\Core\Cache\Cache;
@@ -186,7 +187,8 @@ class BlockViewBuilder extends EntityViewBuilder {
    *   A render array with a #pre_render callback to render the block.
    */
   public static function lazyBuilder($entity_id, $view_mode) {
-    return static::buildPreRenderableBlock(entity_load('block', $entity_id), \Drupal::service('module_handler'));
+    return static::buildPreRenderableBlock(Block::load($entity_id),
+      \Drupal::service('module_handler'));
   }
 
   /**

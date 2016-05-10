@@ -415,7 +415,7 @@ function node_type_update_nodes($old_id, $new_id) {
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
  *   Use \Drupal\node\Entity\Node::loadMultiple().
  *
- * @see entity_load_multiple()
+ * @see \Drupal\Core\Entity\EntityStorageInterface
  * @see \Drupal\Core\Entity\Query\EntityQueryInterface
  */
 function node_load_multiple(array $nids = NULL, $reset = FALSE) {

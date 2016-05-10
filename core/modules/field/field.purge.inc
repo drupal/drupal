@@ -80,7 +80,8 @@ function field_purge_batch($batch_size, $field_storage_uuid = NULL) {
   if ($field_storage_uuid) {
     $properties['field_storage_uuid'] = $field_storage_uuid;
   }
-  $fields = entity_load_multiple_by_properties('field_config', $properties);
+  $fields = \Drupal::entityTypeManager()->getStorage('field_config')
+    ->loadByProperties($properties);
 
   $info = \Drupal::entityManager()->getDefinitions();
   foreach ($fields as $field) {
@@ -121,7 +122,9 @@ function field_purge_batch($batch_size, $field_storage_uuid = NULL) {
       continue;
     }
 
-    $fields = entity_load_multiple_by_properties('field_config', array('field_storage_uuid' => $field_storage->uuid(), 'include_deleted' => TRUE));
+    $fields = \Drupal::entityTypeManager()->getStorage('field_config')
+      ->loadByProperties(['field_storage_uuid' => $field_storage->uuid(),
+        'include_deleted' => TRUE]);
     if (empty($fields)) {
       field_purge_field_storage($field_storage);
     }
@@ -159,7 +162,8 @@ function field_purge_field(FieldConfigInterface $field) {
  * @throws Drupal\field\FieldException
  */
 function field_purge_field_storage(FieldStorageConfigInterface $field_storage) {
-  $fields = entity_load_multiple_by_properties('field_config', array('field_storage_uuid' => $field_storage->uuid(), 'include_deleted' => TRUE));
+  $fields = \Drupal::entityTypeManager()->getStorage('field_config')
+    ->loadByProperties(['field_storage_uuid' => $field_storage->uuid(), 'include_deleted' => TRUE]);
   if (count($fields) > 0) {
     throw new FieldException(t('Attempt to purge a field storage @field_name that still has fields.', array('@field_name' => $field_storage->getName())));
   }

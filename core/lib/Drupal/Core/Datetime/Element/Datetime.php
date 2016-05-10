@@ -150,7 +150,7 @@ class Datetime extends DateElementBase {
    *     list of the possible formats and HTML5 standards for the HTML5
    *     requirements. Defaults to the right HTML5 format for the chosen element
    *     if a HTML5 element is used, otherwise defaults to
-   *     entity_load('date_format', 'html_date')->getPattern().
+   *     DateFormat::load('html_date')->getPattern().
    *   - #date_date_element: The date element. Options are:
    *     - datetime: Use the HTML5 datetime element type.
    *     - datetime-local: Use the HTML5 datetime-local element type.
@@ -170,7 +170,7 @@ class Datetime extends DateElementBase {
    *     a list of the possible formats and HTML5 standards for the HTML5
    *     requirements. Defaults to the right HTML5 format for the chosen element
    *     if a HTML5 element is used, otherwise defaults to
-   *     entity_load('date_format', 'html_time')->getPattern().
+   *     DateFormat::load('html_time')->getPattern().
    *   - #date_time_callbacks: An array of optional callbacks for the time
    *     element. Can be used to add a jQuery timepicker or an 'All day' checkbox.
    *   - #date_year_range: A description of the range of years to allow, like

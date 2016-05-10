@@ -179,7 +179,7 @@ function user_entity_extra_field_info() {
  * @return array
  *   An array of user objects, indexed by uid.
  *
- * @see entity_load_multiple()
+ * @see \Drupal\Core\Entity\EntityStorageInterface
  * @see \Drupal\user\Entity\User::load()
  * @see user_load_by_mail()
  * @see user_load_by_name()
@@ -232,7 +232,8 @@ function user_load($uid, $reset = FALSE) {
  * @see \Drupal\user\Entity\User::loadMultiple()
  */
 function user_load_by_mail($mail) {
-  $users = entity_load_multiple_by_properties('user', array('mail' => $mail));
+  $users = \Drupal::entityTypeManager()->getStorage('user')
+    ->loadByProperties(['mail' => $mail]);
   return $users ? reset($users) : FALSE;
 }
 
@@ -248,7 +249,8 @@ function user_load_by_mail($mail) {
  * @see \Drupal\user\Entity\User::loadMultiple()
  */
 function user_load_by_name($name) {
-  $users = entity_load_multiple_by_properties('user', array('name' => $name));
+  $users = \Drupal::entityTypeManager()->getStorage('user')
+    ->loadByProperties(['name' => $name]);
   return $users ? reset($users) : FALSE;
 }
 
@@ -984,7 +986,7 @@ function user_user_role_insert(RoleInterface $role) {
   }
 
   $add_id = 'user_add_role_action.' . $role->id();
-  if (!entity_load('action', $add_id)) {
+  if (!Action::load($add_id)) {
     $action = Action::create(array(
       'id' => $add_id,
       'type' => 'user',
@@ -997,7 +999,7 @@ function user_user_role_insert(RoleInterface $role) {
     $action->trustData()->save();
   }
   $remove_id = 'user_remove_role_action.' . $role->id();
-  if (!entity_load('action', $remove_id)) {
+  if (!Action::load($remove_id)) {
     $action = Action::create(array(
       'id' => $remove_id,
       'type' => 'user',
@@ -1024,7 +1026,7 @@ function user_user_role_delete(RoleInterface $role) {
     return;
   }
 
-  $actions = entity_load_multiple('action', array(
+  $actions = Action::loadMultiple(array(
     'user_add_role_action.' . $role->id(),
     'user_remove_role_action.' . $role->id(),
   ));

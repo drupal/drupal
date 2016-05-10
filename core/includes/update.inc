@@ -713,7 +713,7 @@ function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
     $default = \Drupal::languageManager()->getDefaultLanguage();
     if (\Drupal::languageManager()->isMultilingual() || \Drupal::moduleHandler()->moduleExists('language')) {
       // Use language module configuration if available. We can not use
-      // entity_load_multiple() because this breaks during updates.
+      // EntityStorage::loadMultiple() because this breaks during updates.
       $language_entities = \Drupal::configFactory()->listAll('language.entity.');
 
       // Initialize default property so callers have an easy reference and can

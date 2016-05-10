@@ -249,7 +249,7 @@ function editor_load($format_id) {
   // than one editor will be needed on a page (such as having multiple text
   // formats for administrators). Loading a small number of editors all at once
   // is more efficient than loading multiple editors individually.
-  $editors = entity_load_multiple('editor');
+  $editors = Editor::loadMultiple();
   return isset($editors[$format_id]) ? $editors[$format_id] : NULL;
 }
 

@@ -592,7 +592,8 @@ function template_preprocess_form_element_label(&$variables) {
  *   //   1 (or no value explicitly set) means the operation is finished
  *   //   and the batch processing can continue to the next operation.
  *
- *   $nodes = entity_load_multiple_by_properties('node', array('uid' => $uid, 'type' => $type));
+ *   $nodes = \Drupal::entityTypeManager()->getStorage('node')
+ *     ->loadByProperties(['uid' => $uid, 'type' => $type]);
  *   $node = reset($nodes);
  *   $context['results'][] = $node->id() . ' : ' . SafeMarkup::checkPlain($node->label());
  *   $context['message'] = SafeMarkup::checkPlain($node->label());
