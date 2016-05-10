@@ -223,6 +223,12 @@ class Cron implements CronInterface {
       Timer::stop('cron_' . $module);
       $module_previous = $module;
     }
+    if ($module_previous) {
+      $this->logger->notice('Execution of @module_previous_cron() took @time.', [
+        '@module_previous' => $module_previous,
+        '@time' => Timer::read('cron_' . $module_previous) . 'ms',
+      ]);
+    }
   }
 
 }

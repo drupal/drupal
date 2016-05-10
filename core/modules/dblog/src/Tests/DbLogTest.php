@@ -163,7 +163,7 @@ class DbLogTest extends WebTestBase {
     $module_count = count($list);
 
     $count = $current_id - $last_id;
-    $this->assertTrue(($current_id - $last_id) == $module_count + 1, format_string('Cron added @count of @expected new log entries', array('@count' => $count, '@expected' => $module_count + 1)));
+    $this->assertTrue(($current_id - $last_id) == $module_count + 2, format_string('Cron added @count of @expected new log entries', array('@count' => $count, '@expected' => $module_count + 2)));
   }
 
   /**
