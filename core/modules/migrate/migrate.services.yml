@@ -17,6 +17,12 @@ services:
   plugin.manager.migrate.id_map:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [id_map, '@container.namespaces', '@cache.discovery', '@module_handler']
+  cache.discovery_migration:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin, default_backend: cache.backend.memory }
+    factory: cache_factory:get
+    arguments: [discovery_migration]
   plugin.manager.migration:
     class: Drupal\migrate\Plugin\MigrationPluginManager
-    arguments: ['@module_handler', '@cache.discovery', '@language_manager']
+    arguments: ['@module_handler', '@cache.discovery_migration', '@language_manager']
