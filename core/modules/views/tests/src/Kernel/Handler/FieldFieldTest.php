@@ -10,6 +10,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\field\Field;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
 /**
@@ -62,11 +63,14 @@ class FieldFieldTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE) {
-    parent::setUp();
+    // First setup the needed entity types before installing the views.
+    parent::setUp(FALSE);
 
-    $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
+    $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_rev');
+
+    ViewTestData::createTestViews(get_class($this), array('views_test_config'));
 
     // Bypass any field access.
     $this->adminUser = User::create(['name' => $this->randomString()]);
@@ -544,6 +548,62 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $executable->execute();
 
     $this->assertEqual('', $executable->getStyle()->getField(6, 'field_test'));
+  }
+
+  /**
+   * Tests \Drupal\views\Plugin\views\field\Field::getValue
+   */
+  public function testGetValueMethod() {
+    $bundle = 'test_bundle';
+    entity_test_create_bundle($bundle);
+
+    $field_multiple = FieldConfig::create([
+      'field_name' => 'field_test_multiple',
+      'entity_type' => 'entity_test',
+      'bundle' => 'test_bundle',
+    ]);
+    $field_multiple->save();
+
+    foreach ($this->entities as $entity) {
+      $entity->delete();
+    }
+
+    $this->entities = [];
+    $this->entities[] = $entity = EntityTest::create([
+      'type' => 'entity_test',
+      'name' => 'test name',
+      'user_id' => $this->testUsers[0]->id(),
+    ]);
+    $entity->save();
+    $this->entities[] = $entity = EntityTest::create([
+      'type' => 'entity_test',
+      'name' => 'test name 2',
+      'user_id' => $this->testUsers[0]->id(),
+    ]);
+    $entity->save();
+
+    $this->entities[] = $entity = EntityTest::create([
+      'type' => $bundle,
+      'name' => 'test name 3',
+      'user_id' => $this->testUsers[0]->id(),
+      'field_test_multiple' => [1, 2, 3],
+    ]);
+    $entity->save();
+
+    $executable = Views::getView('test_field_field_test');
+    $executable->execute();
+
+    $field_normal = $executable->field['field_test'];
+    $field_entity_reference = $executable->field['user_id'];
+    $field_multi_cardinality = $executable->field['field_test_multiple'];
+
+    $this->assertEquals($this->entities[0]->field_test->value, $field_normal->getValue($executable->result[0]));
+    $this->assertEquals($this->entities[0]->user_id->target_id, $field_entity_reference->getValue($executable->result[0]));
+    $this->assertEquals($this->entities[1]->field_test->value, $field_normal->getValue($executable->result[1]));
+    $this->assertEquals($this->entities[1]->user_id->target_id, $field_entity_reference->getValue($executable->result[1]));
+    $this->assertEquals([], $field_multi_cardinality->getValue($executable->result[0]));
+    $this->assertEquals([], $field_multi_cardinality->getValue($executable->result[1]));
+    $this->assertEquals([1, 2, 3], $field_multi_cardinality->getValue($executable->result[2]));
   }
 
 }

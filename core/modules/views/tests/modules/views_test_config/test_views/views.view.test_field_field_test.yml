@@ -23,6 +23,13 @@ display:
           plugin_id: field
           entity_type: entity_test
           entity_field: id
+        field_test_multiple:
+          id: field_test_multiple
+          table: entity_test__field_test_multiple
+          field: field_test_multiple
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: field_test_multiple
         field_test:
           id: field_test
           table: entity_test__field_test
@@ -30,6 +37,13 @@ display:
           plugin_id: field
           entity_type: entity_test
           entity_field: field_test
+        user_id:
+          id: user_id
+          table: entity_test
+          field: user_id
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: user_id
       style:
         type: html_list
       sorts:

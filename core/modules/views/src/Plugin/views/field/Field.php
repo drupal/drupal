@@ -1030,15 +1030,27 @@ class Field extends FieldPluginBase implements CacheableDependencyInterface, Mul
 
     $field_item_definition = $field_item_list->getFieldDefinition();
 
-    if ($field_item_definition->getFieldStorageDefinition()->getCardinality() == 1) {
-      return $field ? $field_item_list->$field : $field_item_list->value;
-    }
-
     $values = [];
     foreach ($field_item_list as $field_item) {
-      $values[] = $field ? $field_item->$field : $field_item->value;
+      /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
+      if ($field) {
+        $values[] = $field_item->$field;
+      }
+      // Find the value using the main property of the field. If no main
+      // property is provided fall back to 'value'.
+      elseif ($main_property_name = $field_item->mainPropertyName()) {
+        $values[] = $field_item->{$main_property_name};
+      }
+      else {
+        $values[] = $field_item->value;
+      }
     }
-    return $values;
+    if ($field_item_definition->getFieldStorageDefinition()->getCardinality() == 1) {
+      return reset($values);
+    }
+    else {
+      return $values;
+    }
   }
 
 }
