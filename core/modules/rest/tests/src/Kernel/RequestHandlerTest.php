@@ -55,7 +55,7 @@ class RequestHandlerTest extends KernelTestBase {
 
     // Setup stub plugin manager that will return our plugin.
     $stub = $this->prophesize(ResourcePluginManager::class);
-    $stub->getInstance(['id' => 'restplugin'])
+    $stub->createInstance('restplugin')
       ->willReturn($resource->reveal());
     $this->container->set('plugin.manager.rest', $stub->reveal());
 
@@ -95,7 +95,7 @@ class RequestHandlerTest extends KernelTestBase {
 
     // Setup stub plugin manager that will return our plugin.
     $stub = $this->prophesize(ResourcePluginManager::class);
-    $stub->getInstance(['id' => 'restplugin'])
+    $stub->createInstance('restplugin')
       ->willReturn($resource->reveal());
     $this->container->set('plugin.manager.rest', $stub->reveal());
 

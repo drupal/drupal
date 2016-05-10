@@ -36,6 +36,10 @@ class ResourcePluginManager extends DefaultPluginManager {
 
   /**
    * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.2.0.
+   *   Use Drupal\rest\Plugin\Type\ResourcePluginManager::createInstance()
+   *   instead.
    */
   public function getInstance(array $options){
     if (isset($options['id'])) {

@@ -55,8 +55,8 @@ class RestPermissions implements ContainerInjectionInterface {
     $permissions = [];
     $resources = $this->configFactory->get('rest.settings')->get('resources');
     if ($resources && $enabled = array_intersect_key($this->restPluginManager->getDefinitions(), $resources)) {
-      foreach ($enabled as $key => $resource) {
-        $plugin = $this->restPluginManager->getInstance(['id' => $key]);
+      foreach ($enabled as $id => $resource) {
+        $plugin = $this->restPluginManager->createInstance($id);
         $permissions = array_merge($permissions, $plugin->permissions());
       }
     }

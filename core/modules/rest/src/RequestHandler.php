@@ -38,7 +38,7 @@ class RequestHandler implements ContainerAwareInterface {
 
     $resource = $this->container
       ->get('plugin.manager.rest')
-      ->getInstance(array('id' => $plugin));
+      ->createInstance($plugin);
 
     // Deserialize incoming data if available.
     $serializer = $this->container->get('serializer');

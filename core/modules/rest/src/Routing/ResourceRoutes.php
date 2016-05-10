@@ -73,8 +73,7 @@ class ResourceRoutes extends RouteSubscriberBase {
 
     // Iterate over all enabled resource plugins.
     foreach ($enabled_resources as $id => $enabled_methods) {
-      $plugin = $this->manager->getInstance(array('id' => $id));
-
+      $plugin = $this->manager->createInstance($id);
       foreach ($plugin->routes() as $name => $route) {
         // @todo: Are multiple methods possible here?
         $methods = $route->getMethods();
