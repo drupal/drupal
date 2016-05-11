@@ -10,6 +10,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\simpletest\TestBase;
+use Drupal\Core\Test\TestDatabase;
 use Drupal\simpletest\TestDiscovery;
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -212,7 +213,7 @@ function simpletest_process_phpunit_results($phpunit_results) {
   // Insert the results of the PHPUnit test run into the database so the results
   // are displayed along with Simpletest's results.
   if (!empty($phpunit_results)) {
-    $query = TestBase::getDatabaseConnection()
+    $query = TestDatabase::getConnection()
       ->insert('simpletest')
       ->fields(array_keys($phpunit_results[0]));
     foreach ($phpunit_results as $result) {
@@ -428,12 +429,12 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  *   that ran.
  */
 function simpletest_last_test_get($test_id) {
-  $last_prefix = TestBase::getDatabaseConnection()
+  $last_prefix = TestDatabase::getConnection()
     ->queryRange('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', 0, 1, array(
       ':test_id' => $test_id,
     ))
     ->fetchField();
-  $last_test_class = TestBase::getDatabaseConnection()
+  $last_test_class = TestDatabase::getConnection()
     ->queryRange('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', 0, 1, array(
       ':test_id' => $test_id,
     ))
@@ -643,7 +644,7 @@ function simpletest_clean_temporary_directories() {
  */
 function simpletest_clean_results_table($test_id = NULL) {
   if (\Drupal::config('simpletest.settings')->get('clear_results')) {
-    $connection = TestBase::getDatabaseConnection();
+    $connection = TestDatabase::getConnection();
     if ($test_id) {
       $count = $connection->query('SELECT COUNT(test_id) FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id))->fetchField();
 
