@@ -204,8 +204,11 @@ class LanguageConfigurationTest extends WebTestBase {
   protected function getHighestConfigurableLanguageWeight(){
     $max_weight = 0;
 
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage('configurable_language');
+    $storage->resetCache();
     /* @var $languages \Drupal\Core\Language\LanguageInterface[] */
-    $languages = entity_load_multiple('configurable_language', NULL, TRUE);
+    $languages = $storage->loadMultiple();
     foreach ($languages as $language) {
       if (!$language->isLocked()) {
         $max_weight = max($max_weight, $language->getWeight());
