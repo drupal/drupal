@@ -4,6 +4,7 @@ namespace Drupal\action\Tests;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\simpletest\WebTestBase;
+use Drupal\system\Entity\Action;
 
 /**
  * Tests complex actions configuration by adding, editing, and deleting a
@@ -81,7 +82,7 @@ class ConfigurationTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertNoText($new_action_label, "Make sure the action label does not appear on the overview page after we've deleted the action.");
 
-    $action = entity_load('action', $aid);
+    $action = Action::load($aid);
     $this->assertFalse($action, 'Make sure the action is gone after being deleted.');
   }
 

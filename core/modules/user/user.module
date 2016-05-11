@@ -984,7 +984,7 @@ function user_user_role_insert(RoleInterface $role) {
   }
 
   $add_id = 'user_add_role_action.' . $role->id();
-  if (!entity_load('action', $add_id)) {
+  if (!Action::load($add_id)) {
     $action = Action::create(array(
       'id' => $add_id,
       'type' => 'user',
@@ -997,7 +997,7 @@ function user_user_role_insert(RoleInterface $role) {
     $action->trustData()->save();
   }
   $remove_id = 'user_remove_role_action.' . $role->id();
-  if (!entity_load('action', $remove_id)) {
+  if (!Action::load($remove_id)) {
     $action = Action::create(array(
       'id' => $remove_id,
       'type' => 'user',
@@ -1024,10 +1024,10 @@ function user_user_role_delete(RoleInterface $role) {
     return;
   }
 
-  $actions = entity_load_multiple('action', array(
+  $actions = Action::loadMultiple([
     'user_add_role_action.' . $role->id(),
     'user_remove_role_action.' . $role->id(),
-  ));
+  ]);
   foreach ($actions as $action) {
     $action->delete();
   }
