@@ -5,18 +5,9 @@ namespace Drupal\Core\Extension;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\ConfigInstallerInterface;
-use Drupal\Core\Config\ConfigManagerInterface;
-use Drupal\Core\DependencyInjection\UpdateDependenciesTrait;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\Core\Plugin\CachedDiscoveryClearerInterface;
-use Drupal\Core\Routing\RouteBuilderInterface;
-use Drupal\Core\StreamWrapper\StreamWrapperManager;
-use Psr\Log\LoggerInterface;
 
 /**
  * Default implementation of the module installer.
@@ -25,8 +16,6 @@ use Psr\Log\LoggerInterface;
  * installs the schema, updates the Drupal kernel and more.
  */
 class ModuleInstaller implements ModuleInstallerInterface {
-
-  use UpdateDependenciesTrait;
 
   /**
    * The module handler.
@@ -57,69 +46,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
   protected $uninstallValidators;
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The config installer.
-   *
-   * @var \Drupal\Core\Config\ConfigInstallerInterface
-   */
-  protected $configInstaller;
-
-  /**
-   * The plugin cache clearer.
-   *
-   * @var \Drupal\Core\Plugin\CachedDiscoveryClearerInterface
-   */
-  protected $pluginCacheClearer;
-
-  /**
-   * The route builder.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
-   * The stream wrapper manager.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManager
-   */
-  protected $streamWrapperManager;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * The logger.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The config manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * The key value factory.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
-   */
-  protected $keyValueFactory;
-
-  /**
    * Constructs a new ModuleInstaller instance.
    *
    * @param string $root
@@ -128,41 +54,14 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The module handler.
    * @param \Drupal\Core\DrupalKernelInterface $kernel
    *   The drupal kernel.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
-   * @param \Drupal\Core\Config\ConfigInstallerInterface $config_installer
-   *   The config installer.
-   * @param \Drupal\Core\Plugin\CachedDiscoveryClearerInterface $plugin_cache_clearer
-   *   The plugin cache clearer.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
-   *   The route builder.
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManager $stream_wrapper_manager
-   *   The stream wrapper manager.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   The logger.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
-   *   The config manager.
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
-   *   The key value factory.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, CachedDiscoveryClearerInterface $plugin_cache_clearer, RouteBuilderInterface $route_builder, StreamWrapperManager $stream_wrapper_manager, ThemeHandlerInterface $theme_handler, LoggerInterface $logger, ConfigManagerInterface $config_manager, KeyValueFactoryInterface $key_value_factory) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
-    $this->configFactory = $config_factory;
-    $this->configInstaller = $config_installer;
-    $this->pluginCacheClearer = $plugin_cache_clearer;
-    $this->routeBuilder = $route_builder;
-    $this->streamWrapperManager = $stream_wrapper_manager;
-    $this->themeHandler = $theme_handler;
-    $this->logger = $logger;
-    $this->configManager = $config_manager;
-    $this->keyValueFactory = $key_value_factory;
   }
 
   /**
@@ -176,7 +75,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * {@inheritdoc}
    */
   public function install(array $module_list, $enable_dependencies = TRUE) {
-    $extension_config = $this->configFactory->getEditable('core.extension');
+    $extension_config = \Drupal::configFactory()->getEditable('core.extension');
     if ($enable_dependencies) {
       // Get all module data so we can find dependencies and sort.
       $module_data = system_rebuild_module_data();
@@ -222,9 +121,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // Required for module installation checks.
     include_once $this->root . '/core/includes/install.inc';
 
-    $sync_status = $this->configInstaller->isSyncing();
+    /** @var \Drupal\Core\Config\ConfigInstaller $config_installer */
+    $config_installer = \Drupal::service('config.installer');
+    $sync_status = $config_installer->isSyncing();
     if ($sync_status) {
-      $source_storage = $this->configInstaller->getSourceStorage();
+      $source_storage = $config_installer->getSourceStorage();
     }
     $modules_installed = array();
     foreach ($module_list as $module) {
@@ -237,7 +138,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
         // Check the validity of the default configuration. This will throw
         // exceptions if the configuration is not valid.
-        $this->configInstaller->checkConfigurationToInstall('module', $module);
+        $config_installer->checkConfigurationToInstall('module', $module);
 
         // Save this data without checking schema. This is a performance
         // improvement for module installation.
@@ -296,7 +197,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         drupal_install_schema($module);
 
         // Clear plugin manager caches.
-        $this->pluginCacheClearer->clearCachedDefinitions();
+        \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 
         // Set the schema version to the number of the last update provided by
         // the module, or the minimum core schema version.
@@ -338,12 +239,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
         }
 
         // Install default configuration of the module.
+        $config_installer = \Drupal::service('config.installer');
         if ($sync_status) {
-          $this->configInstaller
+          $config_installer
             ->setSyncing(TRUE)
             ->setSourceStorage($source_storage);
         }
-        $this->configInstaller->installDefaultConfig('module', $module);
+        \Drupal::service('config.installer')->installDefaultConfig('module', $module);
 
         // If the module has no current updates, but has some that were
         // previously removed, set the version to the value of
@@ -366,13 +268,16 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // particular, this happens when installing Drupal via Drush, as the
         // 'translations' stream wrapper is provided by Interface Translation
         // module and is later used to import translations.
-        $this->streamWrapperManager->register();
+        \Drupal::service('stream_wrapper_manager')->register();
 
         // Update the theme registry to include it.
         drupal_theme_rebuild();
 
         // Modules can alter theme info, so refresh theme data.
-        $this->themeHandler->refreshInfo();
+        // @todo ThemeHandler cannot be injected into ModuleHandler, since that
+        //   causes a circular service dependency.
+        // @see https://www.drupal.org/node/2208429
+        \Drupal::service('theme_handler')->refreshInfo();
 
         // In order to make uninstalling transactional if anything uses routes.
         \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));
@@ -382,7 +287,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $this->moduleHandler->invoke($module, 'install');
 
         // Record the fact that it was installed.
-        $this->logger->info('%module module installed.', array('%module' => $module));
+        \Drupal::logger('system')->info('%module module installed.', array('%module' => $module));
       }
     }
 
@@ -415,7 +320,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       return FALSE;
     }
 
-    $extension_config = $this->configFactory->getEditable('core.extension');
+    $extension_config = \Drupal::configFactory()->getEditable('core.extension');
     $installed_modules = $extension_config->get('module') ?: array();
     if (!$module_list = array_intersect_key($module_list, $installed_modules)) {
       // Nothing to do. All modules already uninstalled.
@@ -483,7 +388,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $this->moduleHandler->invoke($module, 'uninstall');
 
       // Remove all configuration belonging to the module.
-      $this->configManager->uninstall('module', $module);
+      \Drupal::service('config.manager')->uninstall('module', $module);
 
       // In order to make uninstalling transactional if anything uses routes.
       \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));
@@ -520,7 +425,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       // Remove the module's entry from the config. Don't check schema when
       // uninstalling a module since we are only clearing a key.
-      $this->configFactory->getEditable('core.extension')->clear("module.$module")->save(TRUE);
+      \Drupal::configFactory()->getEditable('core.extension')->clear("module.$module")->save(TRUE);
 
       // Update the module handler to remove the module.
       // The current ModuleHandler instance is obsolete with the kernel rebuild
@@ -538,7 +443,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       drupal_static_reset('system_rebuild_module_data');
 
       // Clear plugin manager caches.
-      $this->pluginCacheClearer->clearCachedDefinitions();
+      \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 
       // Update the kernel to exclude the uninstalled modules.
       $this->updateKernel($module_filenames);
@@ -547,11 +452,15 @@ class ModuleInstaller implements ModuleInstallerInterface {
       drupal_theme_rebuild();
 
       // Modules can alter theme info, so refresh theme data.
-      $this->themeHandler->refreshInfo();
+      // @todo ThemeHandler cannot be injected into ModuleHandler, since that
+      //   causes a circular service dependency.
+      // @see https://www.drupal.org/node/2208429
+      \Drupal::service('theme_handler')->refreshInfo();
 
-      $this->logger->info('%module module uninstalled.', array('%module' => $module));
+      \Drupal::logger('system')->info('%module module uninstalled.', array('%module' => $module));
 
-      $this->keyValueFactory->get('system.schema')->delete($module);
+      $schema_store = \Drupal::keyValue('system.schema');
+      $schema_store->delete($module);
 
       /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
       $post_update_registry = \Drupal::service('update.post_update_registry');
@@ -561,7 +470,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
     // fastCGI which executes ::destruct() after the Module uninstallation page
     // was sent already.
-    $this->routeBuilder->rebuild();
+    \Drupal::service('router.builder')->rebuild();
     drupal_get_installed_schema_version(NULL, TRUE);
 
     // Let other modules react.
@@ -631,7 +540,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $this->kernel->updateModules($module_filenames, $module_filenames);
     // After rebuilding the container we need to update the injected
     // dependencies.
-    $this->updateDependencies($this->kernel->getContainer());
+    $container = $this->kernel->getContainer();
+    $this->moduleHandler = $container->get('module_handler');
   }
 
   /**
