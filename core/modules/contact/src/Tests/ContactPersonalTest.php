@@ -77,12 +77,12 @@ class ContactPersonalTest extends WebTestBase {
     $variables = array(
       '@site-name' => $this->config('system.site')->get('name'),
       '@subject' => $message['subject[0][value]'],
-      '@recipient-name' => $this->contactUser->getUsername(),
+      '@recipient-name' => $this->contactUser->getDisplayName(),
     );
     $subject = PlainTextOutput::renderFromHtml(t('[@site-name] @subject', $variables));
     $this->assertEqual($mail['subject'], $subject, 'Subject is in sent message.');
     $this->assertTrue(strpos($mail['body'], 'Hello ' . $variables['@recipient-name']) !== FALSE, 'Recipient name is in sent message.');
-    $this->assertTrue(strpos($mail['body'], $this->webUser->getUsername()) !== FALSE, 'Sender name is in sent message.');
+    $this->assertTrue(strpos($mail['body'], $this->webUser->getDisplayName()) !== FALSE, 'Sender name is in sent message.');
     $this->assertTrue(strpos($mail['body'], $message['message[0][value]']) !== FALSE, 'Message body is in sent message.');
 
     // Check there was no problems raised during sending.
@@ -109,7 +109,7 @@ class ContactPersonalTest extends WebTestBase {
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
     $this->assertResponse(200);
     // Check the page title is properly displayed.
-    $this->assertRaw(t('Contact @username', array('@username' => $this->adminUser->getUsername())));
+    $this->assertRaw(t('Contact @username', array('@username' => $this->adminUser->getDisplayName())));
 
     // Test denied access to admin user's own contact form.
     $this->drupalLogout();

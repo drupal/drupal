@@ -121,9 +121,9 @@ class MessageForm extends ContentEntityForm {
     // prevent the impersonation of other users.
     else {
       $form['name']['#type'] = 'item';
-      $form['name']['#value'] = $user->getUsername();
+      $form['name']['#value'] = $user->getDisplayName();
       $form['name']['#required'] = FALSE;
-      $form['name']['#plain_text'] = $user->getUsername();
+      $form['name']['#plain_text'] = $user->getDisplayName();
 
       $form['mail']['#type'] = 'item';
       $form['mail']['#value'] = $user->getEmail();
