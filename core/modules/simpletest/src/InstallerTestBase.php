@@ -93,9 +93,10 @@ abstract class InstallerTestBase extends WebTestBase {
     // @see WebTestBase::translatePostValues()
     $this->parameters = $this->installParameters();
 
-    // Set up a minimal container (required by WebTestBase).
+    // Set up a minimal container (required by WebTestBase). Set cookie and
+    // server information so that XDebug works.
     // @see install_begin_request()
-    $request = Request::create($GLOBALS['base_url'] . '/core/install.php');
+    $request = Request::create($GLOBALS['base_url'] . '/core/install.php', 'GET', [], $_COOKIE, [], $_SERVER);
     $this->container = new ContainerBuilder();
     $request_stack = new RequestStack();
     $request_stack->push($request);
