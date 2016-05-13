@@ -42,6 +42,8 @@ class NodeRevisionsTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // Enable additional languages.
+    ConfigurableLanguage::createFromLangcode('de')->save();
     ConfigurableLanguage::createFromLangcode('it')->save();
 
     $field_storage_definition = array(
@@ -70,6 +72,7 @@ class NodeRevisionsTest extends NodeTestBase {
         'edit any page content',
         'delete any page content',
         'translate any entity',
+        'administer content types',
       )
     );
 
@@ -211,6 +214,60 @@ class NodeRevisionsTest extends NodeTestBase {
       ->fetchCol();
     $default_revision_vid = $default_revision[0];
     $this->assertTrue($new_node_revision->getRevisionId() > $default_revision_vid, 'Revision vid is greater than default revision vid.');
+
+    // Create an 'EN' node with a revision log message.
+    $node = $this->drupalCreateNode();
+    $node->title = 'Node title in EN';
+    $node->revision_log = 'Simple revision message (EN)';
+    $node->save();
+
+    $this->drupalGet("node/" . $node->id() . "/revisions");
+    $this->assertResponse(403);
+
+    // Create a new revision and new log message.
+    $node = Node::load($node->id());
+    $node->body->value = 'New text (EN)';
+    $node->revision_log = 'New revision message (EN)';
+    $node->setNewRevision();
+    $node->save();
+
+    // Check both revisions are shown on the node revisions overview page.
+    $this->drupalGet("node/" . $node->id() . "/revisions");
+    $this->assertText('Simple revision message (EN)');
+    $this->assertText('New revision message (EN)');
+
+    // Create an 'EN' node with a revision log message.
+    $node = $this->drupalCreateNode();
+    $node->langcode = 'en';
+    $node->title = 'Node title in EN';
+    $node->revision_log = 'Simple revision message (EN)';
+    $node->save();
+
+    $this->drupalGet("node/" . $node->id() . "/revisions");
+    $this->assertResponse(403);
+
+    // Add a translation in 'DE' and create a new revision and new log message.
+    $translation = $node->addTranslation('de');
+    $translation->title->value = 'Node title in DE';
+    $translation->body->value = 'New text (DE)';
+    $translation->revision_log = 'New revision message (DE)';
+    $translation->setNewRevision();
+    $translation->save();
+
+    // View the revision UI in 'IT', only the original node revision is shown.
+    $this->drupalGet("it/node/" . $node->id() . "/revisions");
+    $this->assertText('Simple revision message (EN)');
+    $this->assertNoText('New revision message (DE)');
+
+    // View the revision UI in 'DE', only the translated node revision is shown.
+    $this->drupalGet("de/node/" . $node->id() . "/revisions");
+    $this->assertNoText('Simple revision message (EN)');
+    $this->assertText('New revision message (DE)');
+
+    // View the revision UI in 'EN', only the original node revision is shown.
+    $this->drupalGet("node/" . $node->id() . "/revisions");
+    $this->assertText('Simple revision message (EN)');
+    $this->assertNoText('New revision message (DE)');
   }
 
   /**
