@@ -1,0 +1,9 @@
+name: 'Book test views'
+type: module
+description: 'Provides default views for views book tests.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+ - book
+ - views
