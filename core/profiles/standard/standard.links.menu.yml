@@ -2,3 +2,8 @@ standard.front_page:
   title: 'Home'
   route_name: '<front>'
   menu_name: main
+contact.site_page:
+  title: Contact
+  route_name: contact.site_page
+  menu_name: footer
+  enabled: 0

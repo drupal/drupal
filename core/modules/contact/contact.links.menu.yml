@@ -3,8 +3,3 @@ entity.contact_form.collection:
   parent: system.admin_structure
   description: 'Create and manage contact forms.'
   route_name: entity.contact_form.collection
-contact.site_page:
-  title: Contact
-  route_name: contact.site_page
-  menu_name: footer
-  enabled: 0
