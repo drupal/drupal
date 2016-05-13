@@ -27,7 +27,11 @@
     float: right;
   }
 }
-
+@media screen and (max-width: 460px) {
+  .region-header {
+    padding-bottom: 0.357em;
+  }
+}
 /* Region header blocks. */
 .region-header .block:not(.site-branding) {
   font-size: 0.857em;
