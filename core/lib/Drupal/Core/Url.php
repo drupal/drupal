@@ -494,7 +494,7 @@ class Url {
   }
 
   /**
-   * Generates a URI string that represents tha data in the Url object.
+   * Generates a URI string that represents the data in the Url object.
    *
    * The URI will typically have the scheme of route: even if the object was
    * constructed using an entity: or internal: scheme. A internal: URI that
