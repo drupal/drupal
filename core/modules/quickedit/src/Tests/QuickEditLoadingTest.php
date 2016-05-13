@@ -67,6 +67,12 @@ class QuickEditLoadingTest extends WebTestBase {
       'name' => 'Article',
     ));
 
+    // Set the node type to initially not have revisions.
+    // Testing with revisions will be done later.
+    $node_type = NodeType::load('article');
+    $node_type->setNewRevision(FALSE);
+    $node_type->save();
+
     // Create one node of the above node type using the above text format.
     $this->drupalCreateNode(array(
       'type' => 'article',

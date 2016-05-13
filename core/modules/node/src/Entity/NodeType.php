@@ -83,7 +83,7 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
    *
    * @var bool
    */
-  protected $new_revision = FALSE;
+  protected $new_revision = TRUE;
 
   /**
    * The preview mode.

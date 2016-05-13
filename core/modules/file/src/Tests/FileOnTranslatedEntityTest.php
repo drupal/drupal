@@ -166,10 +166,6 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $file = File::load($replaced_second_fid);
     $this->assertTrue($file->isPermanent());
 
-    // Ensure the file status of the old second file is now temporary.
-    $file = File::load($second_fid);
-    $this->assertTrue($file->isTemporary());
-
     // Delete the third translation.
     $this->drupalPostForm('nl/node/' . $default_language_node->id() . '/delete', array(), t('Delete Dutch translation'));
 
