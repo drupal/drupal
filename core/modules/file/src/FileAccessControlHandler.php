@@ -6,6 +6,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -43,6 +45,16 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
       }
     }
 
+    if ($operation == 'delete' || $operation == 'update') {
+      $account = $this->prepareUser($account);
+      $file_uid = $entity->get('uid')->getValue();
+      // Only the file owner can delete and update the file entity.
+      if ($account->id() == $file_uid[0]['target_id']) {
+        return AccessResult::allowed();
+      }
+      return AccessResult::forbidden();
+    }
+
     // No opinion.
     return AccessResult::neutral();
   }
@@ -61,6 +73,32 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function getFileReferences(FileInterface $file) {
     return file_get_file_references($file, NULL, EntityStorageInterface::FIELD_LOAD_REVISION, NULL);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+    // No user can edit the status of a file. Prevents saving a new file as
+    // persistent before even validating it.
+    if ($field_definition->getName() === 'status' && $operation === 'edit') {
+      return AccessResult::forbidden();
+    }
+    return parent::checkFieldAccess($operation, $field_definition, $account, $items);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    // The file entity has no "create" permission because by default Drupal core
+    // does not allow creating file entities independently. It allows you to
+    // create file entities that are referenced from another entity
+    // (e.g. an image for a article). A contributed module is free to alter
+    // this to allow file entities to be created directly.
+    // @todo Update comment to mention REST module when
+    //   https://www.drupal.org/node/1927648 is fixed.
+    return AccessResult::neutral();
   }
 
 }
