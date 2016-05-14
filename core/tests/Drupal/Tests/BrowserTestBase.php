@@ -732,7 +732,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       // Grant the specified permissions to the role, if any.
       if (!empty($permissions)) {
         user_role_grant_permissions($role->id(), $permissions);
-        $assigned_permissions = entity_load('user_role', $role->id())->getPermissions();
+        $assigned_permissions = Role::load($role->id())->getPermissions();
         $missing_permissions = array_diff($permissions, $assigned_permissions);
         if ($missing_permissions) {
           $this->fail(SafeMarkup::format('Failed to create permissions: @perms', array('@perms' => implode(', ', $missing_permissions))));
