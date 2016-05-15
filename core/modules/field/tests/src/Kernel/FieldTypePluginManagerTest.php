@@ -3,6 +3,7 @@
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
 
@@ -82,6 +83,43 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
     $this->assertEqual($field_name, $instance->getName(), SafeMarkup::format('Instance name is @name', array('@name' => $field_name)));
     $this->assertEqual($instance->getFieldDefinition()->getLabel(), 'Jenny', 'Instance label is Jenny');
     $this->assertEqual($instance->getFieldDefinition()->getDefaultValue($entity), [['value' => 8675309]], 'Instance default_value is 8675309');
+  }
+
+  /**
+   * Tests all field items provide an existing main property.
+   */
+  public function testMainProperty() {
+    // Let's enable all Drupal modules in Drupal core, so we test any field
+    // type plugin.
+    $this->enableAllCoreModules();
+
+    /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    foreach ($field_type_manager->getDefinitions() as $plugin_id => $definition) {
+      $class = $definition['class'];
+      $property = $class::mainPropertyName();
+      $storage_definition = BaseFieldDefinition::create($plugin_id);
+      $property_definitions = $class::propertyDefinitions($storage_definition);
+      $properties = implode(', ', array_keys($property_definitions));
+      if (!empty($property_definitions)) {
+        $message = sprintf("%s property %s found in %s", $plugin_id, $property, $properties);
+        $this->assertArrayHasKey($property, $class::propertyDefinitions($storage_definition), $message);
+      }
+    }
+  }
+
+  /**
+   * Enable all core modules.
+   */
+  protected function enableAllCoreModules() {
+    $listing = new ExtensionDiscovery(\Drupal::root());
+    $module_list = $listing->scan('module', FALSE);
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
+    $module_handler = $this->container->get('module_handler');
+    $module_list = array_filter(array_keys($module_list), function ($module) use ($module_handler, $module_list) {
+      return !$module_handler->moduleExists($module) && substr($module_list[$module]->getPath(), 0, 4) === 'core';
+    });
+    $this->enableModules($module_list);
   }
 
 }
