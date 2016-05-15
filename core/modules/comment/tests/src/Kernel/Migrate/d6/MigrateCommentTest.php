@@ -56,7 +56,7 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('The first comment.', $comment->getSubject());
     $this->assertIdentical('The first comment body.', $comment->comment_body->value);
     $this->assertIdentical('filtered_html', $comment->comment_body->format);
-    $this->assertIdentical('0', $comment->pid->target_id);
+    $this->assertIdentical(NULL, $comment->pid->target_id);
     $this->assertIdentical('1', $comment->getCommentedEntityId());
     $this->assertIdentical('node', $comment->getCommentedEntityTypeId());
     $this->assertIdentical('en', $comment->language()->getId());
@@ -68,7 +68,7 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
 
     $comment = $comment_storage->load(3);
     $this->assertIdentical('The second comment.', $comment->subject->value);
-    $this->assertIdentical('0', $comment->pid->target_id);
+    $this->assertIdentical(NULL, $comment->pid->target_id);
   }
 
 }
