@@ -8,6 +8,7 @@ use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use Drupal\views\Entity\View;
 
 /**
  * Tests exposed forms functionality.
@@ -241,7 +242,7 @@ class ExposedFormTest extends ViewTestBase {
    * Test the input required exposed form type.
    */
   public function testInputRequired() {
-    $view = entity_load('view', 'test_exposed_form_buttons');
+    $view = View::load('test_exposed_form_buttons');
     $display = &$view->getDisplay('default');
     $display['display_options']['exposed_form']['type'] = 'input_required';
     $view->save();

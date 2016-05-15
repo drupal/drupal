@@ -2,6 +2,8 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Entity\View;
+
 /**
  * Tests the table style views plugin.
  *
@@ -44,7 +46,7 @@ class StyleTableTest extends PluginTestBase {
     $this->assertEqual(trim((string) $result[0]), 'description-text');
 
     // Remove the caption and ensure the caption is not displayed anymore.
-    $view = entity_load('view', 'test_table');
+    $view = View::load('test_table');
     $display = &$view->getDisplay('default');
     $display['display_options']['style']['options']['caption'] = '';
     $view->save();
@@ -88,7 +90,7 @@ class StyleTableTest extends PluginTestBase {
     $this->assertTrue(count($result), 'Ensure there is a td with the class views-field-job-1');
 
     // Combine the second job-column with the first one, with ', ' as separator.
-    $view = entity_load('view', 'test_table');
+    $view = View::load('test_table');
     $display = &$view->getDisplay('default');
     $display['display_options']['style']['options']['columns']['job_1'] = 'job';
     $display['display_options']['style']['options']['info']['job']['separator'] = ', ';
