@@ -5,6 +5,7 @@ namespace Drupal\datetime\Tests;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -132,8 +133,8 @@ class DateTimeFieldTest extends WebTestBase {
     $date->setTimezone(timezone_open(drupal_get_user_timezone()));
 
     // Submit a valid date and ensure it is accepted.
-    $date_format = entity_load('date_format', 'html_date')->getPattern();
-    $time_format = entity_load('date_format', 'html_time')->getPattern();
+    $date_format = DateFormat::load('html_date')->getPattern();
+    $time_format = DateFormat::load('html_time')->getPattern();
 
     $edit = array(
       "{$field_name}[0][value][date]" => $date->format($date_format),
@@ -261,8 +262,8 @@ class DateTimeFieldTest extends WebTestBase {
     $date->setTimezone(timezone_open(drupal_get_user_timezone()));
 
     // Submit a valid date and ensure it is accepted.
-    $date_format = entity_load('date_format', 'html_date')->getPattern();
-    $time_format = entity_load('date_format', 'html_time')->getPattern();
+    $date_format = DateFormat::load('html_date')->getPattern();
+    $time_format = DateFormat::load('html_time')->getPattern();
 
     $edit = array(
       "{$field_name}[0][value][date]" => $date->format($date_format),

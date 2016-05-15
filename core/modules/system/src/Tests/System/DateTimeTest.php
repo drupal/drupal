@@ -45,7 +45,7 @@ class DateTimeTest extends WebTestBase {
       ->set('timezone.default', 'Pacific/Honolulu')
       ->set('timezone.user.configurable', 0)
       ->save();
-    entity_load('date_format', 'medium')
+    DateFormat::load('medium')
       ->setPattern('Y-m-d H:i:s O')
       ->save();
 
@@ -120,7 +120,7 @@ class DateTimeTest extends WebTestBase {
     $this->assertRaw(t('The date format %format has been deleted.', array('%format' => $name)), 'Custom date format removed.');
 
     // Make sure the date does not exist in config.
-    $date_format = entity_load('date_format', $date_format_id);
+    $date_format = DateFormat::load($date_format_id);
     $this->assertFalse($date_format);
 
     // Add a new date format with an existing format.

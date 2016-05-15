@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -27,7 +28,7 @@ class UserTimeZoneTest extends WebTestBase {
       ->set('timezone.user.configurable', 1)
       ->set('timezone.default', 'America/Los_Angeles')
       ->save();
-    entity_load('date_format', 'medium')
+    DateFormat::load('medium')
       ->setPattern('Y-m-d H:i T')
       ->save();
 
