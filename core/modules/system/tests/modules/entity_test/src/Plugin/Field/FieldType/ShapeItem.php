@@ -77,4 +77,11 @@ class ShapeItem extends FieldItemBase {
     return empty($item['shape']) && empty($item['color']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function mainPropertyName() {
+    return 'shape';
+  }
+
 }
