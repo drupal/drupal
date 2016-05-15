@@ -39,7 +39,6 @@ trait ContentTypeCreationTrait {
     $type = NodeType::create($values);
     $status = $type->save();
     node_add_body_field($type);
-    \Drupal::service('router.builder')->rebuild();
 
     if ($this instanceof \PHPUnit_Framework_TestCase) {
       $this->assertSame($status, SAVED_NEW, (new FormattableMarkup('Created content type %type.', array('%type' => $type->id())))->__toString());
