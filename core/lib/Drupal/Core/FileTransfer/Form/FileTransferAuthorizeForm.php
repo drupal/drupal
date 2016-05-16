@@ -64,9 +64,8 @@ class FileTransferAuthorizeForm extends FormBase {
     }
 
     // Decide on a default backend.
-    if ($authorize_filetransfer_default = $form_state->getValue(array('connection_settings', 'authorize_filetransfer_default')));
-    elseif ($authorize_filetransfer_default = $this->config('system.authorize')->get('filetransfer_default'));
-    else {
+    $authorize_filetransfer_default = $form_state->getValue(array('connection_settings', 'authorize_filetransfer_default'));
+    if (!$authorize_filetransfer_default) {
       $authorize_filetransfer_default = key($available_backends);
     }
 
@@ -198,27 +197,6 @@ class FileTransferAuthorizeForm extends FormBase {
         // likely) be called during the installation process, before the
         // database is set up.
         try {
-          $connection_settings = array();
-          foreach ($form_connection_settings[$filetransfer_backend] as $key => $value) {
-            // We do *not* want to store passwords in the database, unless the
-            // backend explicitly says so via the magic #filetransfer_save form
-            // property. Otherwise, we store everything that's not explicitly
-            // marked with #filetransfer_save set to FALSE.
-            if (!isset($form['connection_settings'][$filetransfer_backend][$key]['#filetransfer_save'])) {
-              if ($form['connection_settings'][$filetransfer_backend][$key]['#type'] != 'password') {
-                $connection_settings[$key] = $value;
-              }
-            }
-            // The attribute is defined, so only save if set to TRUE.
-            elseif ($form['connection_settings'][$filetransfer_backend][$key]['#filetransfer_save']) {
-              $connection_settings[$key] = $value;
-            }
-          }
-          // Set this one as the default authorize method.
-          $this->config('system.authorize')->set('filetransfer_default', $filetransfer_backend);
-          // Save the connection settings minus the password.
-          $this->config('system.authorize')->set('filetransfer_connection_settings_' . $filetransfer_backend, $connection_settings);
-
           $filetransfer = $this->getFiletransfer($filetransfer_backend, $form_connection_settings[$filetransfer_backend]);
 
           // Now run the operation.
@@ -280,8 +258,7 @@ class FileTransferAuthorizeForm extends FormBase {
    * @see hook_filetransfer_backends()
    */
   protected function addConnectionSettings($backend) {
-    $auth_connection_config = $this->config('system.authorize')->get('filetransfer_connection_settings_' . $backend);
-    $defaults = $auth_connection_config ? $auth_connection_config : array();
+    $defaults = array();
     $form = array();
 
     // Create an instance of the file transfer class to get its settings form.
@@ -342,7 +319,7 @@ class FileTransferAuthorizeForm extends FormBase {
     $operation = $_SESSION['authorize_operation'];
     unset($_SESSION['authorize_operation']);
 
-    require_once $this->root . '/' . $operation['file'];
+    require_once $operation['file'];
     return call_user_func_array($operation['callback'], array_merge(array($filetransfer), $operation['arguments']));
   }
 

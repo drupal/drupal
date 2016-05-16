@@ -21,6 +21,7 @@
  */
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -169,7 +170,13 @@ if ($is_allowed) {
     }
     elseif (!$batch = batch_get()) {
       // We have a batch to process, show the filetransfer form.
-      $content = \Drupal::formBuilder()->getForm('Drupal\Core\FileTransfer\Form\FileTransferAuthorizeForm');
+      try {
+        $content = \Drupal::formBuilder()->getForm('Drupal\Core\FileTransfer\Form\FileTransferAuthorizeForm');
+      }
+      catch (EnforcedResponseException $e) {
+        $e->getResponse()->send();
+        exit;
+      }
     }
   }
   // We defer the display of messages until all operations are done.
