@@ -40,7 +40,7 @@ class MigrationPluginManagerTest extends UnitTestCase {
   public function testDependencyBuilding($migrations_data, $result_ids) {
     $migrations = [];
     foreach ($migrations_data as $migration_id => $migration_data) {
-      $migrations[$migration_id] = new TestMigration($migration_id, $migration_data['dependencies']);
+      $migrations[$migration_id] = new TestMigrationMock($migration_id, $migration_data['dependencies']);
     }
 
     $ordered_migrations = $this->pluginManager->buildDependencyMigration($migrations, []);
@@ -179,7 +179,7 @@ class MigrationPluginManagerTest extends UnitTestCase {
  * array with mocks in it. PHPUnit mocks are really complex, and if PHP tries
  * to compare them it will die with "Nesting level too deep".
  */
-class TestMigration extends Migration {
+class TestMigrationMock extends Migration {
   /**
    * The values passed into set().
    *
@@ -188,7 +188,7 @@ class TestMigration extends Migration {
   public $set = [];
 
   /**
-   * TestMigration constructor.
+   * TestMigrationMock constructor.
    */
   public function __construct($id, $dependencies) {
     // Intentionally ignore parent constructor.
