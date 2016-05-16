@@ -4,7 +4,10 @@ namespace Drupal\Core\Template;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Render\AttachmentsInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -411,6 +414,8 @@ class TwigExtension extends \Twig_Extension {
       return NULL;
     }
 
+    $this->bubbleArgMetadata($arg);
+
     // Keep Twig_Markup objects intact to support autoescaping.
     if ($autoescape && ($arg instanceof \Twig_Markup || $arg instanceof MarkupInterface)) {
       return $arg;
@@ -464,6 +469,37 @@ class TwigExtension extends \Twig_Extension {
   }
 
   /**
+   * Bubbles Twig template argument's cacheability & attachment metadata.
+   *
+   * For example: a generated link or generated URL object is passed as a Twig
+   * template argument, and its bubbleable metadata must be bubbled.
+   *
+   * @see \Drupal\Core\GeneratedLink
+   * @see \Drupal\Core\GeneratedUrl
+   *
+   * @param mixed $arg
+   *   A Twig template argument that is about to be printed.
+   *
+   * @see \Drupal\Core\Theme\ThemeManager::render()
+   * @see \Drupal\Core\Render\RendererInterface::render()
+   */
+  protected function bubbleArgMetadata($arg) {
+    // If it's a renderable, then it'll be up to the generated render array it
+    // returns to contain the necessary cacheability & attachment metadata. If
+    // it doesn't implement CacheableDependencyInterface or AttachmentsInterface
+    // then there is nothing to do here.
+    if ($arg instanceof RenderableInterface || !($arg instanceof CacheableDependencyInterface || $arg instanceof AttachmentsInterface)) {
+      return;
+    }
+
+    $arg_bubbleable = [];
+    BubbleableMetadata::createFromObject($arg)
+      ->applyTo($arg_bubbleable);
+
+    $this->renderer->render($arg_bubbleable);
+  }
+
+  /**
    * Wrapper around render() for twig printed output.
    *
    * If an object is passed which does not implement __toString(),
@@ -505,6 +541,7 @@ class TwigExtension extends \Twig_Extension {
     }
 
     if (is_object($arg)) {
+      $this->bubbleArgMetadata($arg);
       if ($arg instanceof RenderableInterface) {
         $arg = $arg->toRenderable();
       }

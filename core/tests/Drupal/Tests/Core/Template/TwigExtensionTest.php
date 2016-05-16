@@ -7,8 +7,10 @@
 
 namespace Drupal\Tests\Core\Template;
 
+use Drupal\Core\GeneratedLink;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Core\Template\TwigEnvironment;
@@ -238,6 +240,63 @@ class TwigExtensionTest extends UnitTestCase {
     $data['renderable'] = [$render_array, $renderable->reveal()];
 
     return $data;
+  }
+
+  /**
+   * @covers ::escapeFilter
+   * @covers ::bubbleArgMetadata
+   */
+  public function testEscapeWithGeneratedLink() {
+    $renderer = $this->prophesize(RendererInterface::class);
+    $twig = new \Twig_Environment(NULL, [
+        'debug' => TRUE,
+        'cache' => FALSE,
+        'autoescape' => 'html',
+        'optimizations' => 0,
+      ]
+    );
+
+    $twig_extension = new TwigExtension($renderer->reveal());
+    $twig->addExtension($twig_extension->setUrlGenerator($this->prophesize(UrlGeneratorInterface::class)->reveal()));
+    $link = new GeneratedLink();
+    $link->setGeneratedLink('<a href="http://example.com"></a>');
+    $link->addCacheTags(['foo']);
+    $link->addAttachments(['library' => ['system/base']]);
+
+    $result = $twig_extension->escapeFilter($twig, $link, 'html', NULL, TRUE);
+    $renderer->render([
+      "#cache" => [
+        "contexts" => [],
+        "tags" => ["foo"],
+        "max-age" => -1
+      ],
+      "#attached" => ['library' => ['system/base']],
+    ])->shouldHaveBeenCalled();
+    $this->assertEquals('<a href="http://example.com"></a>', $result);
+  }
+
+  /**
+   * @covers ::renderVar
+   * @covers ::bubbleArgMetadata
+   */
+  public function testRenderVarWithGeneratedLink() {
+    $renderer = $this->prophesize(RendererInterface::class);
+    $twig_extension = new TwigExtension($renderer->reveal());
+    $link = new GeneratedLink();
+    $link->setGeneratedLink('<a href="http://example.com"></a>');
+    $link->addCacheTags(['foo']);
+    $link->addAttachments(['library' => ['system/base']]);
+
+    $result = $twig_extension->renderVar($link);
+    $renderer->render([
+      "#cache" => [
+        "contexts" => [],
+        "tags" => ["foo"],
+        "max-age" => -1
+      ],
+      "#attached" => ['library' => ['system/base']],
+    ])->shouldHaveBeenCalled();
+    $this->assertEquals('<a href="http://example.com"></a>', $result);
   }
 
 }

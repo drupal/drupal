@@ -8,9 +8,11 @@
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\GeneratedLink;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -85,6 +87,50 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
    */
   public function testThemeEscapeAndRenderNotPrintable() {
     theme_render_and_autoescape(new NonPrintable());
+  }
+
+  /**
+   * Ensure cache metadata is bubbled when using theme_render_and_autoescape().
+   */
+  public function testBubblingMetadata() {
+    $link = new GeneratedLink();
+    $link->setGeneratedLink('<a href="http://example.com"></a>');
+    $link->addCacheTags(['foo']);
+    $link->addAttachments(['library' => ['system/base']]);
+
+    $context = new RenderContext();
+    // Use a closure here since we need to render with a render context.
+    $theme_render_and_autoescape = function () use ($link) {
+      return theme_render_and_autoescape($link);
+    };
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+    $output = $renderer->executeInRenderContext($context, $theme_render_and_autoescape);
+    $this->assertEquals('<a href="http://example.com"></a>', $output);
+    /** @var \Drupal\Core\Render\BubbleableMetadata $metadata */
+    $metadata = $context->pop();
+    $this->assertEquals(['foo'], $metadata->getCacheTags());
+    $this->assertEquals(['library' => ['system/base']], $metadata->getAttachments());
+  }
+
+  /**
+   * Ensure cache metadata is bubbled when using theme_render_and_autoescape().
+   */
+  public function testBubblingMetadataWithRenderable() {
+    $link = new Link('', Url::fromRoute('<current>'));
+
+    $context = new RenderContext();
+    // Use a closure here since we need to render with a render context.
+    $theme_render_and_autoescape = function () use ($link) {
+      return theme_render_and_autoescape($link);
+    };
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+    $output = $renderer->executeInRenderContext($context, $theme_render_and_autoescape);
+    $this->assertEquals('<a href="/' . urlencode('<none>') . '"></a>', $output);
+    /** @var \Drupal\Core\Render\BubbleableMetadata $metadata */
+    $metadata = $context->pop();
+    $this->assertEquals(['route'], $metadata->getCacheContexts());
   }
 
 }
