@@ -219,12 +219,17 @@ class UpdateManagerInstall extends FormBase {
       'local_url' => $project_real_location,
     );
 
+    // This process is inherently difficult to test therefore use a state flag.
+    $test_authorize = FALSE;
+    if (drupal_valid_test_ua()) {
+      $test_authorize = \Drupal::state()->get('test_uploaders_via_prompt', FALSE);
+    }
     // If the owner of the directory we extracted is the same as the owner of
     // our configuration directory (e.g. sites/default) where we're trying to
     // install the code, there's no need to prompt for FTP/SSH credentials.
     // Instead, we instantiate a Drupal\Core\FileTransfer\Local and invoke
     // update_authorize_run_install() directly.
-    if (fileowner($project_real_location) == fileowner($this->sitePath)) {
+    if (fileowner($project_real_location) == fileowner($this->sitePath) && !$test_authorize) {
       $this->moduleHandler->loadInclude('update', 'inc', 'update.authorize');
       $filetransfer = new Local($this->root);
       $response = call_user_func_array('update_authorize_run_install', array_merge(array($filetransfer), $arguments));
