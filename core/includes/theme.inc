@@ -13,8 +13,11 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
+use Drupal\Core\Render\AttachmentsInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ThemeSettings;
@@ -399,6 +402,17 @@ function theme_get_setting($setting_name, $theme = NULL) {
  *   https://www.drupal.org/node/2575065
  */
 function theme_render_and_autoescape($arg) {
+  // If it's a renderable, then it'll be up to the generated render array it
+  // returns to contain the necessary cacheability & attachment metadata. If
+  // it doesn't implement CacheableDependencyInterface or AttachmentsInterface
+  // then there is nothing to do here.
+  if (!($arg instanceof RenderableInterface) && ($arg instanceof CacheableDependencyInterface || $arg instanceof AttachmentsInterface)) {
+    $arg_bubbleable = [];
+    BubbleableMetadata::createFromObject($arg)
+      ->applyTo($arg_bubbleable);
+    \Drupal::service('renderer')->render($arg_bubbleable);
+  }
+
   if ($arg instanceof MarkupInterface) {
     return (string) $arg;
   }
