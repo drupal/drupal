@@ -517,16 +517,56 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * {@inheritdoc}
    */
   public function lookupDestinationId(array $source_id_values) {
+    $results = $this->lookupDestinationIds($source_id_values);
+    return $results ? reset($results) : array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function lookupDestinationIds(array $source_id_values) {
     if (empty($source_id_values)) {
       return array();
     }
-    $query = $this->getDatabase()->select($this->mapTableName(), 'map')
-              ->fields('map', $this->destinationIdFields());
 
-    $query->condition(static::SOURCE_IDS_HASH, $this->getSourceIDsHash($source_id_values));
-    $result = $query->execute();
-    $destination_id = $result->fetchAssoc();
-    return array_values($destination_id ?: array());
+    // Canonicalize the keys into a hash of DB-field => value.
+    $is_associative = !isset($source_id_values[0]);
+    $conditions = [];
+    foreach ($this->sourceIdFields() as $field_name => $db_field) {
+      if ($is_associative) {
+        // Associative $source_id_values can have fields out of order.
+        if (isset($source_id_values[$field_name])) {
+          $conditions[$db_field] = $source_id_values[$field_name];
+          unset($source_id_values[$field_name]);
+        }
+      }
+      else {
+        // For non-associative $source_id_values, we assume they're the first
+        // few fields.
+        if (empty($source_id_values)) {
+          break;
+        }
+        $conditions[$db_field] = array_shift($source_id_values);
+      }
+    }
+
+    if (!empty($source_id_values)) {
+      throw new MigrateException("Extra unknown items in source IDs");
+    }
+
+    $query = $this->getDatabase()->select($this->mapTableName(), 'map')
+      ->fields('map', $this->destinationIdFields());
+    if (count($this->sourceIdFields()) === count($conditions)) {
+      // Optimization: Use the primary key.
+      $query->condition(self::SOURCE_IDS_HASH, $this->getSourceIDsHash(array_values($conditions)));
+    }
+    else {
+      foreach ($conditions as $db_field => $value) {
+        $query->condition($db_field, $value);
+      }
+    }
+
+    return $query->execute()->fetchAll(\PDO::FETCH_NUM);
   }
 
   /**

@@ -431,6 +431,123 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   }
 
   /**
+   * Setup a database with the given rows.
+   *
+   * @param array $source_keys
+   *   The source keys for the ID map table.
+   * @param array $dest_keys
+   *   The destination keys for the ID map table.
+   * @param array $rows
+   *   An array of source and destination value arrays for the ID map table.
+   *
+   * @return \Drupal\Tests\migrate\Unit\TestSqlIdMap
+   *   An ID map instance for testing.
+   */
+  protected function setupRows($source_keys, $dest_keys, $rows) {
+    $this->database = $this->getDatabase([]);
+    $this->sourceIds = array_fill_keys($source_keys, []);
+    $this->destinationIds = array_fill_keys($dest_keys, []);
+
+    $db_keys = [];
+    foreach (array_keys($source_keys) as $i) {
+      $db_keys[] = 'sourceid' . ($i + 1);
+    }
+    foreach (array_keys($dest_keys) as $i) {
+      $db_keys[] = 'destid' . ($i + 1);
+    }
+    foreach ($rows as $row) {
+      $values = array_combine($db_keys, $row);
+      $source_values = array_slice($row, 0, count($source_keys));
+      $values['source_ids_hash'] = $this->getIdMap()->getSourceIDsHash($source_values);
+      $this->saveMap($values);
+    }
+
+    return $this->getIdMap();
+  }
+
+  /**
+   * Tests lookupDestinationIds().
+   */
+  public function testLookupDestinationIds() {
+    // Simple map with one source and one destination ID.
+    $id_map = $this->setupRows(['nid'], ['nid'], [
+      [1, 101],
+      [2, 102],
+      [3, 103],
+    ]);
+
+    // Lookup nothing, gives nothing.
+    $this->assertEquals([], $id_map->lookupDestinationIds([]));
+    // Lookup by complete non-associative list.
+    $this->assertEquals([[101]], $id_map->lookupDestinationIds([1]));
+    $this->assertEquals([[102]], $id_map->lookupDestinationIds([2]));
+    $this->assertEquals([], $id_map->lookupDestinationIds([99]));
+    // Lookup by complete associative list.
+    $this->assertEquals([[101]], $id_map->lookupDestinationIds(['nid' => 1]));
+    $this->assertEquals([[102]], $id_map->lookupDestinationIds(['nid' => 2]));
+    $this->assertEquals([], $id_map->lookupDestinationIds(['nid' => 99]));
+
+    // Map with multiple source and destination IDs.
+    $id_map = $this->setupRows(['nid', 'language'], ['nid', 'langcode'], [
+      [1, 'en', 101, 'en'],
+      [1, 'fr', 101, 'fr'],
+      [1, 'de', 101, 'de'],
+      [2, 'en', 102, 'en'],
+    ]);
+
+    // Lookup nothing, gives nothing.
+    $this->assertEquals([], $id_map->lookupDestinationIds([]));
+    // Lookup by complete non-associative list.
+    $this->assertEquals([[101, 'en']], $id_map->lookupDestinationIds([1, 'en']));
+    $this->assertEquals([[101, 'fr']], $id_map->lookupDestinationIds([1, 'fr']));
+    $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds([2, 'en']));
+    $this->assertEquals([], $id_map->lookupDestinationIds([2, 'fr']));
+    $this->assertEquals([], $id_map->lookupDestinationIds([99, 'en']));
+    // Lookup by complete associative list.
+    $this->assertEquals([[101, 'en']], $id_map->lookupDestinationIds(['nid' => 1, 'language' => 'en']));
+    $this->assertEquals([[101, 'fr']], $id_map->lookupDestinationIds(['nid' => 1, 'language' => 'fr']));
+    $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds(['nid' => 2, 'language' => 'en']));
+    $this->assertEquals([], $id_map->lookupDestinationIds(['nid' => 2, 'language' => 'fr']));
+    $this->assertEquals([], $id_map->lookupDestinationIds(['nid' => 99, 'language' => 'en']));
+    // Lookup by partial non-associative list.
+    $this->assertEquals([[101, 'en'], [101, 'fr'], [101, 'de']], $id_map->lookupDestinationIds([1]));
+    $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds([2]));
+    $this->assertEquals([], $id_map->lookupDestinationIds([99]));
+    // Lookup by partial associative list.
+    $this->assertEquals([[101, 'en'], [101, 'fr'], [101, 'de']], $id_map->lookupDestinationIds(['nid' => 1]));
+    $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds(['nid' => 2]));
+    $this->assertEquals([], $id_map->lookupDestinationIds(['nid' => 99]));
+    // Out-of-order partial associative list.
+    $this->assertEquals([[101, 'en'], [102, 'en']], $id_map->lookupDestinationIds(['language' => 'en']));
+    $this->assertEquals([[101, 'fr']], $id_map->lookupDestinationIds(['language' => 'fr']));
+    $this->assertEquals([], $id_map->lookupDestinationIds(['language' => 'zh']));
+    // Error conditions.
+    try {
+      $id_map->lookupDestinationIds([1, 2, 3]);
+      $this->fail('Too many source IDs should throw');
+    }
+    catch (MigrateException $e) {
+      $this->assertEquals("Extra unknown items in source IDs", $e->getMessage());
+    }
+    try {
+      $id_map->lookupDestinationIds(['nid' => 1, 'aaa' => '2']);
+      $this->fail('Unknown source ID key should throw');
+    }
+    catch (MigrateException $e) {
+      $this->assertEquals("Extra unknown items in source IDs", $e->getMessage());
+    }
+
+    // Verify that we are looking up by source_id_hash when all source IDs are
+    // passed in.
+    $id_map->getDatabase()->update($id_map->mapTableName())
+      ->condition('sourceid1', 1)
+      ->condition('sourceid2', 'en')
+      ->fields([TestSqlIdMap::SOURCE_IDS_HASH => uniqid()])
+      ->execute();
+    $this->assertNotEquals([[101, 'en']], $id_map->lookupDestinationIds([1, 'en']));
+  }
+
+  /**
    * Tests the getRowByDestination method.
    */
   public function testGetRowByDestination() {
