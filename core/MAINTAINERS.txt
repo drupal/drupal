@@ -110,7 +110,6 @@ Extension system
 
 Field system
 - Yves Chedemois 'yched' https://www.drupal.org/u/yched
-- Kristof De Jaeger 'swentel' https://www.drupal.org/u/swentel
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 
 File system
@@ -329,7 +328,6 @@ Editor module
 
 Field UI module
 - Yves Chedemois 'yched' https://www.drupal.org/u/yched
-- Kristof De Jaeger 'swentel' https://www.drupal.org/u/swentel
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 
 File module
@@ -385,7 +383,7 @@ Node module
 - David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
 
 Number module
-- Kristof De Jaeger 'swentel' https://www.drupal.org/u/swentel
+- ?
 
 Options module
 - Yves Chedemois 'yched' https://www.drupal.org/u/yched
