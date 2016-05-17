@@ -88,7 +88,7 @@ class BlockContentForm extends ContentEntityForm {
     // Set up default values, if required.
     $block_type = $this->blockContentTypeStorage->load($block->bundle());
     if (!$block->isNew()) {
-      $block->setRevisionLog(NULL);
+      $block->setRevisionLogMessage(NULL);
     }
     // Always use the default revision setting.
     $block->setNewRevision($block_type->shouldCreateNewRevision());
@@ -170,6 +170,9 @@ class BlockContentForm extends ContentEntityForm {
     // Save as a new revision if requested to do so.
     if (!$form_state->isValueEmpty('revision')) {
       $block->setNewRevision();
+      // If a new revision is created, save the current user as revision author.
+      $block->setRevisionCreationTime(REQUEST_TIME);
+      $block->setRevisionUserId(\Drupal::currentUser()->id());
     }
 
     $insert = $block->isNew();

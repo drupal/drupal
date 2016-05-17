@@ -7,4 +7,5 @@ core: 8.x
 dependencies:
   - block
   - text
+  - user
 configure: entity.block_content.collection

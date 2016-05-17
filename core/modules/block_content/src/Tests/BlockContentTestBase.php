@@ -19,7 +19,7 @@ abstract class BlockContentTestBase extends WebTestBase {
   /**
    * Admin user
    *
-   * @var object
+   * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
 

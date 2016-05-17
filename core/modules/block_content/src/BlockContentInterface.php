@@ -4,17 +4,21 @@ namespace Drupal\block_content;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
+use Drupal\Core\Entity\RevisionLogInterface;
 
 /**
  * Provides an interface defining a custom block entity.
  */
-interface BlockContentInterface extends ContentEntityInterface, EntityChangedInterface {
+interface BlockContentInterface extends ContentEntityInterface, EntityChangedInterface, RevisionLogInterface {
 
   /**
    * Returns the block revision log message.
    *
    * @return string
    *   The revision log message.
+   *
+   * @deprecated in Drupal 8.2.0, will be removed before Drupal 9.0.0. Use
+   *   \Drupal\Core\Entity\RevisionLogInterface::getRevisionLogMessage() instead.
    */
   public function getRevisionLog();
 
@@ -37,6 +41,9 @@ interface BlockContentInterface extends ContentEntityInterface, EntityChangedInt
    *
    * @return \Drupal\block_content\BlockContentInterface
    *   The class instance that this method is called on.
+   *
+   * @deprecated in Drupal 8.2.0, will be removed before Drupal 9.0.0. Use
+   *   \Drupal\Core\Entity\RevisionLogInterface::setRevisionLogMessage() instead.
    */
   public function setRevisionLog($revision_log);
 

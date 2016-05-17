@@ -39,3 +39,25 @@ function block_content_update_8002() {
   // are stable.
   // @see https://www.drupal.org/node/2569469
 }
+
+/**
+ * Add 'revision_created' and 'revision_user' fields to 'block_content' entities.
+ */
+function block_content_update_8003() {
+  $revision_created = BaseFieldDefinition::create('created')
+    ->setLabel(t('Revision create time'))
+    ->setDescription(t('The time that the current revision was created.'))
+    ->setRevisionable(TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('revision_created', 'block_content', 'block_content', $revision_created);
+
+  $revision_user = BaseFieldDefinition::create('entity_reference')
+    ->setLabel(t('Revision user'))
+    ->setDescription(t('The user ID of the author of the current revision.'))
+    ->setSetting('target_type', 'user')
+    ->setRevisionable(TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('revision_user', 'block_content', 'block_content', $revision_user);
+}

@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\block_content\BlockContentInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the custom block entity class.
@@ -126,7 +127,7 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
       // If we are updating an existing block_content without adding a new
       // revision and the user did not supply a revision log, keep the existing
       // one.
-      $record->revision_log = $this->original->getRevisionLog();
+      $record->revision_log = $this->original->getRevisionLogMessage();
     }
   }
 
@@ -183,6 +184,17 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE);
 
+    $fields['revision_created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Revision create time'))
+      ->setDescription(t('The time that the current revision was created.'))
+      ->setRevisionable(TRUE);
+
+    $fields['revision_user'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Revision user'))
+      ->setDescription(t('The user ID of the author of the current revision.'))
+      ->setSetting('target_type', 'user')
+      ->setRevisionable(TRUE);
+
     $fields['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Revision translation affected'))
       ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
@@ -197,7 +209,7 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
    * {@inheritdoc}
    */
   public function getRevisionLog() {
-    return $this->get('revision_log')->value;
+    return $this->getRevisionLogMessage();
   }
 
   /**
@@ -212,7 +224,63 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
    * {@inheritdoc}
    */
   public function setRevisionLog($revision_log) {
-    $this->set('revision_log', $revision_log);
+    return $this->setRevisionLogMessage($revision_log);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionCreationTime() {
+    return $this->get('revision_created')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionCreationTime($timestamp) {
+    $this->set('revision_created', $timestamp);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionUser() {
+    return $this->get('revision_user')->entity;
+  }
+
+  public function setRevisionUser(UserInterface $account) {
+    $this->set('revision_user', $account);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionUserId() {
+    return $this->get('revision_user')->entity->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionUserId($user_id) {
+    $this->set('revision_user', $user_id);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionLogMessage() {
+    return $this->get('revision_log')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionLogMessage($revision_log_message) {
+    $this->set('revision_log', $revision_log_message);
     return $this;
   }
 
