@@ -3,6 +3,7 @@
 namespace Drupal\search\Tests;
 
 use Drupal\Core\Url;
+use Drupal\search\Entity\SearchPage;
 
 /**
  * Verify the search config settings form.
@@ -145,7 +146,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     );
     $plugins = array_keys($plugin_info);
     /** @var $entities \Drupal\search\SearchPageInterface[] */
-    $entities = entity_load_multiple('search_page');
+    $entities = SearchPage::loadMultiple();
     // Disable all of the search pages.
     foreach ($entities as $entity) {
       $entity->disable()->save();
