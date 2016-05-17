@@ -100,7 +100,7 @@ class CKEditorLoadingTest extends WebTestBase {
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $ckeditor_plugin = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
-    $editor = entity_load('editor', 'filtered_html');
+    $editor = Editor::load('filtered_html');
     $expected = array('formats' => array('filtered_html' => array(
       'format' => 'filtered_html',
       'editor' => 'ckeditor',

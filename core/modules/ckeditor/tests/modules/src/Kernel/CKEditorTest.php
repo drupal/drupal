@@ -69,7 +69,7 @@ class CKEditorTest extends KernelTestBase {
    * Tests CKEditor::getJSSettings().
    */
   function testGetJSSettings() {
-    $editor = entity_load('editor', 'filtered_html');
+    $editor = Editor::load('filtered_html');
 
     // Default toolbar.
     $expected_config = $this->getDefaultInternalConfig() + array(
@@ -217,7 +217,7 @@ class CKEditorTest extends KernelTestBase {
    * Tests CKEditor::buildToolbarJSSetting().
    */
   function testBuildToolbarJSSetting() {
-    $editor = entity_load('editor', 'filtered_html');
+    $editor = Editor::load('filtered_html');
 
     // Default toolbar.
     $expected = $this->getDefaultToolbarConfig();
@@ -248,7 +248,7 @@ class CKEditorTest extends KernelTestBase {
    * Tests CKEditor::buildContentsCssJSSetting().
    */
   function testBuildContentsCssJSSetting() {
-    $editor = entity_load('editor', 'filtered_html');
+    $editor = Editor::load('filtered_html');
 
     // Default toolbar.
     $expected = $this->getDefaultContentsCssConfig();
@@ -285,7 +285,7 @@ class CKEditorTest extends KernelTestBase {
    * Tests Internal::getConfig().
    */
   function testInternalGetConfig() {
-    $editor = entity_load('editor', 'filtered_html');
+    $editor = Editor::load('filtered_html');
     $internal_plugin = $this->container->get('plugin.manager.ckeditor.plugin')->createInstance('internal');
 
     // Default toolbar.
@@ -306,7 +306,7 @@ class CKEditorTest extends KernelTestBase {
    * Tests StylesCombo::getConfig().
    */
   function testStylesComboGetConfig() {
-    $editor = entity_load('editor', 'filtered_html');
+    $editor = Editor::load('filtered_html');
     $stylescombo_plugin = $this->container->get('plugin.manager.ckeditor.plugin')->createInstance('stylescombo');
 
     // Styles dropdown/button enabled: new setting should be present.
