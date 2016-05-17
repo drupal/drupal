@@ -314,7 +314,7 @@ class EntityDisplayTest extends KernelTestBase {
     $type->delete();
     $display = entity_load('entity_view_display', 'node.article.default');
     $this->assertFalse((bool) $display);
-    $form_display = entity_load('entity_form_display', 'node.article.default');
+    $form_display = EntityFormDisplay::load('node.article.default');
     $this->assertFalse((bool) $form_display);
   }
 
