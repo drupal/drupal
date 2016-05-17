@@ -70,7 +70,7 @@ function rdf_help($route_name, RouteMatchInterface $route_match) {
  */
 function rdf_get_mapping($entity_type, $bundle) {
   // Try loading the mapping from configuration.
-  $mapping = entity_load('rdf_mapping', $entity_type . '.' . $bundle);
+  $mapping = RdfMapping::load($entity_type . '.' . $bundle);
 
   // If not found, create a fresh mapping object.
   if (!$mapping) {
