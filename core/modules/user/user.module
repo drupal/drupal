@@ -232,7 +232,8 @@ function user_load($uid, $reset = FALSE) {
  * @see \Drupal\user\Entity\User::loadMultiple()
  */
 function user_load_by_mail($mail) {
-  $users = entity_load_multiple_by_properties('user', array('mail' => $mail));
+  $users = \Drupal::entityTypeManager()->getStorage('user')
+    ->loadByProperties(['mail' => $mail]);
   return $users ? reset($users) : FALSE;
 }
 
@@ -248,7 +249,8 @@ function user_load_by_mail($mail) {
  * @see \Drupal\user\Entity\User::loadMultiple()
  */
 function user_load_by_name($name) {
-  $users = entity_load_multiple_by_properties('user', array('name' => $name));
+  $users = \Drupal::entityTypeManager()->getStorage('user')
+    ->loadByProperties(['name' => $name]);
   return $users ? reset($users) : FALSE;
 }
 

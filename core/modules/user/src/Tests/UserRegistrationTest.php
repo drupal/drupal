@@ -40,7 +40,10 @@ class UserRegistrationTest extends WebTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->assertText(t('A welcome message with further instructions has been sent to your email address.'), 'User registered successfully.');
-    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
+
+    /** @var EntityStorageInterface $storage */
+    $storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $accounts = $storage->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertTrue($new_user->isActive(), 'New account is active after registration.');
     $resetURL = user_pass_reset_url($new_user);
@@ -54,7 +57,7 @@ class UserRegistrationTest extends WebTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->container->get('entity.manager')->getStorage('user')->resetCache();
-    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
+    $accounts = $storage->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertFalse($new_user->isActive(), 'New account is blocked until approved by an administrator.');
   }
@@ -83,7 +86,8 @@ class UserRegistrationTest extends WebTestBase {
     $edit['pass[pass2]'] = $new_pass;
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->container->get('entity.manager')->getStorage('user')->resetCache();
-    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
+    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+      ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertNotNull($new_user, 'New account successfully created with matching passwords.');
     $this->assertText(t('Registration successful. You are now logged in.'), 'Users are logged in after registering.');
@@ -108,7 +112,8 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertText(t('The username @name has not been activated or is blocked.', array('@name' => $name)), 'User cannot log in yet.');
 
     // Activate the new account.
-    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
+    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+      ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin_user);
@@ -248,7 +253,8 @@ class UserRegistrationTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
 
     // Check user fields.
-    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
+    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+      ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertEqual($new_user->getUsername(), $name, 'Username matches.');
     $this->assertEqual($new_user->getEmail(), $mail, 'Email address matches.');
@@ -338,7 +344,8 @@ class UserRegistrationTest extends WebTestBase {
     $edit['test_user_field[0][value]'] = $value;
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
     // Check user fields.
-    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
+    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+      ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertEqual($new_user->test_user_field->value, $value, 'The field value was correctly saved.');
 
@@ -367,7 +374,8 @@ class UserRegistrationTest extends WebTestBase {
       $edit['mail'] = $mail = $edit['name'] . '@example.com';
       $this->drupalPostForm(NULL, $edit, t('Create new account'));
       // Check user fields.
-      $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
+      $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+        ->loadByProperties(array('name' => $name, 'mail' => $mail));
       $new_user = reset($accounts);
       $this->assertEqual($new_user->test_user_field[0]->value, $value, format_string('@js : The field value was correctly saved.', array('@js' => $js)));
       $this->assertEqual($new_user->test_user_field[1]->value, $value + 1, format_string('@js : The field value was correctly saved.', array('@js' => $js)));
