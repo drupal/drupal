@@ -59,7 +59,7 @@ class TestItemTest extends FieldKernelTestBase {
 
     // Verify entity has been created properly.
     $id = $entity->id();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$this->fieldName} instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->{$this->fieldName}[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->{$this->fieldName}->value, $value);
@@ -72,7 +72,7 @@ class TestItemTest extends FieldKernelTestBase {
 
     // Read changed entity and assert changed values.
     $entity->save();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$this->fieldName}->value, $new_value);
 
     // Test the schema for this field type.

@@ -112,7 +112,9 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
     // Load commented entity so comment_count gets computed.
     // @todo Remove the $reset = TRUE parameter after
     //   https://www.drupal.org/node/597236 lands. It's a temporary work-around.
-    $commented_entity = entity_load('entity_test', $commented_entity->id(), TRUE);
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
+    $storage->resetCache([$commented_entity->id()]);
+    $commented_entity = $storage->load($commented_entity->id());
 
     // Verify cache tags on the rendered entity when it has comments.
     $build = \Drupal::entityManager()

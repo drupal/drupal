@@ -37,7 +37,9 @@ class EditorSelectionTest extends QuickEditTestBase {
    * Returns the in-place editor that Quick Edit selects.
    */
   protected function getSelectedEditor($entity_id, $field_name, $view_mode = 'default') {
-    $entity = entity_load('entity_test', $entity_id, TRUE);
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
+    $storage->resetCache([$entity_id]);
+    $entity = $storage->load($entity_id);
     $items = $entity->get($field_name);
     $options = entity_get_display('entity_test', 'entity_test', $view_mode)->getComponent($field_name);
     return $this->editorSelector->getEditor($options['type'], $items);

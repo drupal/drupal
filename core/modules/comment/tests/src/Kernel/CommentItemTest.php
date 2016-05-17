@@ -43,7 +43,9 @@ class CommentItemTest extends FieldKernelTestBase {
 
     // Verify entity has been created properly.
     $id = $entity->id();
-    $entity = entity_load('entity_test', $id, TRUE);
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
+    $storage->resetCache([$id]);
+    $entity = $storage->load($id);
     $this->assertTrue($entity->comment instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->comment[0] instanceof CommentItemInterface, 'Field item implements interface.');
 

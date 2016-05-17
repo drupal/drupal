@@ -116,7 +116,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity->name->value = $this->randomMachineName();
     $entity->save();
 
-    $entity = entity_load('entity_test', $entity->id());
+    $entity = EntityTest::load($entity->id());
     $this->assertTrue($entity->field_test_taxonomy_term instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_test_taxonomy_term[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_test_taxonomy_term->target_id, $tid);
@@ -212,7 +212,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity->name->value = $this->randomMachineName();
     $entity->save();
 
-    $entity = entity_load('entity_test', $entity->id());
+    $entity = EntityTest::load($entity->id());
     $this->assertTrue($entity->field_test_taxonomy_vocabulary instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_test_taxonomy_vocabulary[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->target_id, $referenced_entity_id);

@@ -247,7 +247,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition("$greetings.value", 'merhaba')
       ->sort('id')
       ->execute();
-    $entities = entity_load_multiple('entity_test_mulrev', $ids);
+    $entities = EntityTestMulRev::loadMultiple($ids);
     $first_entity = reset($entities);
     $old_name = $first_entity->name->value;
     foreach ($entities as $entity) {

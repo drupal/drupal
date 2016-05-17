@@ -195,7 +195,7 @@ class TextFieldTest extends StringFieldTest {
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
 
     // Display the entity.
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
     $this->setRawContent($renderer->renderRoot($content));
@@ -234,7 +234,7 @@ class TextFieldTest extends StringFieldTest {
 
     // Display the entity.
     $this->container->get('entity.manager')->getStorage('entity_test')->resetCache(array($id));
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
     $this->setRawContent($renderer->renderRoot($content));

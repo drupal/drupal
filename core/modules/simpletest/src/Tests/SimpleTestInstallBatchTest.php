@@ -2,6 +2,7 @@
 
 namespace Drupal\simpletest\Tests;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -25,9 +26,9 @@ class SimpleTestInstallBatchTest extends WebTestBase {
    * Tests loading entities created in a batch in simpletest_test_install().
    */
   public function testLoadingEntitiesCreatedInBatch() {
-    $entity1 = entity_load('entity_test', 1);
+    $entity1 = EntityTest::load(1);
     $this->assertNotNull($entity1, 'Successfully loaded entity 1.');
-    $entity2 = entity_load('entity_test', 2);
+    $entity2 = EntityTest::load(2);
     $this->assertNotNull($entity2, 'Successfully loaded entity 2.');
   }
 

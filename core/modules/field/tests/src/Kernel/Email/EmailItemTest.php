@@ -52,7 +52,7 @@ class EmailItemTest extends FieldKernelTestBase {
 
     // Verify entity has been created properly.
     $id = $entity->id();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertTrue($entity->field_email instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_email[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_email->value, $value);
@@ -65,7 +65,7 @@ class EmailItemTest extends FieldKernelTestBase {
 
     // Read changed entity and assert changed values.
     $entity->save();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->field_email->value, $new_value);
 
     // Test sample item generation.

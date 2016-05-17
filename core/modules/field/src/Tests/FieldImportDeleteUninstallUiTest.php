@@ -73,7 +73,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
 
     // Verify entity has been created properly.
     $id = $entity->id();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->field_tel->value, $value);
     $this->assertEqual($entity->field_tel[0]->value, $value);
 

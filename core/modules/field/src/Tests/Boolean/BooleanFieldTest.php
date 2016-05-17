@@ -3,6 +3,7 @@
 namespace Drupal\field\Tests\Boolean;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
@@ -106,7 +107,7 @@ class BooleanFieldTest extends WebTestBase {
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
 
     // Verify that boolean value is displayed.
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
     $this->setRawContent(\Drupal::service('renderer')->renderRoot($content));

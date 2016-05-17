@@ -61,7 +61,7 @@ class NumberItemTest extends FieldKernelTestBase {
 
     // Verify entity has been created properly.
     $id = $entity->id();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertTrue($entity->field_integer instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_integer[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_integer->value, $integer);
@@ -88,7 +88,7 @@ class NumberItemTest extends FieldKernelTestBase {
 
     // Read changed entity and assert changed values.
     $entity->save();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->field_integer->value, $new_integer);
     $this->assertEqual($entity->field_float->value, $new_float);
     $this->assertEqual($entity->field_decimal->value, $new_decimal);

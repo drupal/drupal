@@ -7,6 +7,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
@@ -197,7 +198,7 @@ class DateTimeFieldTest extends WebTestBase {
     // interval will use this, force the test date to use UTC and not the local
     // or user timezome.
     $timestamp = REQUEST_TIME - 87654321;
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $field_name = $this->fieldStorage->getName();
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
     $entity->{$field_name}->value = $date->format($date_format);
@@ -224,7 +225,7 @@ class DateTimeFieldTest extends WebTestBase {
     // interval will use this, force the test date to use UTC and not the local
     // or user timezome.
     $timestamp = REQUEST_TIME + 87654321;
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $field_name = $this->fieldStorage->getName();
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
     $entity->{$field_name}->value = $date->format($date_format);
@@ -337,7 +338,7 @@ class DateTimeFieldTest extends WebTestBase {
     // interval will use this, force the test date to use UTC and not the local
     // or user timezome.
     $timestamp = REQUEST_TIME - 87654321;
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $field_name = $this->fieldStorage->getName();
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
     $entity->{$field_name}->value = $date->format(DATETIME_DATETIME_STORAGE_FORMAT);
@@ -364,7 +365,7 @@ class DateTimeFieldTest extends WebTestBase {
     // interval will use this, force the test date to use UTC and not the local
     // or user timezome.
     $timestamp = REQUEST_TIME + 87654321;
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $field_name = $this->fieldStorage->getName();
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
     $entity->{$field_name}->value = $date->format(DATETIME_DATETIME_STORAGE_FORMAT);
@@ -859,7 +860,7 @@ class DateTimeFieldTest extends WebTestBase {
     if ($reset) {
       \Drupal::entityManager()->getStorage('entity_test')->resetCache(array($id));
     }
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
     $build = $display->build($entity);
     $output = \Drupal::service('renderer')->renderRoot($build);

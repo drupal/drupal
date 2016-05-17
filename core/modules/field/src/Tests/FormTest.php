@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestBaseFieldDisplay;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -130,7 +131,7 @@ class FormTest extends FieldTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was saved');
 
     // Display edit form.
@@ -146,7 +147,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)), 'Entity was updated');
     $this->container->get('entity.manager')->getStorage('entity_test')->resetCache(array($id));
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
 
     // Empty the field.
@@ -157,7 +158,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)), 'Entity was updated');
     $this->container->get('entity.manager')->getStorage('entity_test')->resetCache(array($id));
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field was emptied');
   }
 
@@ -189,7 +190,7 @@ class FormTest extends FieldTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created.');
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field is now empty.');
   }
 
@@ -218,7 +219,7 @@ class FormTest extends FieldTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was saved');
 
     // Edit with missing required value.
@@ -299,7 +300,7 @@ class FormTest extends FieldTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     ksort($field_values);
     $field_values = array_values($field_values);
     $this->assertIdentical($entity->{$field_name}->getValue(), $field_values, 'Field values were saved in the correct order');
@@ -474,7 +475,7 @@ class FormTest extends FieldTestBase {
     $id = $match[1];
 
     // Check that the values were saved.
-    $entity_init = entity_load('entity_test', $id);
+    $entity_init = EntityTest::load($id);
     $this->assertFieldValues($entity_init, $field_name, array(1, 2, 3));
 
     // Display the form, check that the values are correctly filled in.

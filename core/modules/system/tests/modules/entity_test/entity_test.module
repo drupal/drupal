@@ -320,7 +320,11 @@ function entity_test_form_node_form_alter(&$form, FormStateInterface $form_state
  *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
 function entity_test_load($id, $reset = FALSE) {
-  return entity_load('entity_test', $id, $reset);
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_test');
+  if ($reset) {
+    $storage->resetCache([$id]);
+  }
+  return $storage->load($id);
 }
 
 /**
@@ -335,7 +339,11 @@ function entity_test_load($id, $reset = FALSE) {
  *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
 function entity_test_rev_load($id, $reset = FALSE) {
-  return entity_load('entity_test_rev', $id, $reset);
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_test_rev');
+  if ($reset) {
+    $storage->resetCache([$id]);
+  }
+  return $storage->load($id);
 }
 
 /**
@@ -350,7 +358,11 @@ function entity_test_rev_load($id, $reset = FALSE) {
  *   The loaded entity object, or FALSE if the entity cannot be loaded.
  */
 function entity_test_mul_load($id, $reset = FALSE) {
-  return entity_load('entity_test_mul', $id, $reset);
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_test_mul');
+  if ($reset) {
+    $storage->resetCache([$id]);
+  }
+  return $storage->load($id);
 }
 
 /**
@@ -365,7 +377,11 @@ function entity_test_mul_load($id, $reset = FALSE) {
  *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
 function entity_test_mulrev_load($id, $reset = FALSE) {
-  return entity_load('entity_test_mulrev', $id, $reset);
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_test_mulrev');
+  if ($reset) {
+    $storage->resetCache([$id]);
+  }
+  return $storage->load($id);
 }
 
 /**

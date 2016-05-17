@@ -57,7 +57,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
 
     // Verify entity has been created properly.
     $id = $entity->id();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertTrue($entity->field_datetime instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_datetime[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_datetime->value, $value);
@@ -70,7 +70,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
 
     // Read changed entity and assert changed values.
     $entity->save();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->field_datetime->value, $new_value);
 
     // Test the generateSampleValue() method.
@@ -90,7 +90,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
     $entity->save();
     // Load the entity and ensure the field was saved correctly.
     $id = $entity->id();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->field_datetime[0]->value, $value, 'DateTimeItem::setValue() works with string value.');
 
     // Test DateTimeItem::setValue() using property array.
@@ -100,7 +100,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
     $entity->save();
     // Load the entity and ensure the field was saved correctly.
     $id = $entity->id();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->field_datetime[0]->value, $value, 'DateTimeItem::setValue() works with array value.');
   }
 
@@ -116,7 +116,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
     $entity->save();
     // Load the entity and ensure the field was saved correctly.
     $id = $entity->id();
-    $entity = entity_load('entity_test', $id);
+    $entity = EntityTest::load($id);
     $this->assertEqual($entity->field_datetime[0]->value, $value, '"Value" property can be set directly.');
   }
 
