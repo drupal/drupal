@@ -109,12 +109,12 @@ function block_themes_installed($theme_list) {
  */
 function block_theme_initialize($theme) {
   // Initialize theme's blocks if none already registered.
-  $has_blocks = entity_load_multiple_by_properties('block', array('theme' => $theme));
+  $has_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(array('theme' => $theme));
   if (!$has_blocks) {
     $default_theme = \Drupal::config('system.theme')->get('default');
     // Apply only to new theme's visible regions.
     $regions = system_region_list($theme, REGIONS_VISIBLE);
-    $default_theme_blocks = entity_load_multiple_by_properties('block', array('theme' => $default_theme));
+    $default_theme_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(array('theme' => $default_theme));
     foreach ($default_theme_blocks as $default_theme_block_id => $default_theme_block) {
       if (strpos($default_theme_block_id, $default_theme . '_') === 0) {
         $id = str_replace($default_theme, $theme, $default_theme_block_id);
@@ -141,7 +141,7 @@ function block_rebuild() {
     if ($data->status) {
       $regions = system_region_list($theme);
       /** @var \Drupal\block\BlockInterface[] $blocks */
-      $blocks = entity_load_multiple_by_properties('block', ['theme' => $theme]);
+      $blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $theme]);
       foreach ($blocks as $block_id => $block) {
         // Disable blocks in invalid regions.
         $region = $block->getRegion();

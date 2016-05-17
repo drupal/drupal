@@ -14,6 +14,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
+use Drupal\block\Entity\Block;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -186,7 +187,7 @@ class BlockViewBuilder extends EntityViewBuilder {
    *   A render array with a #pre_render callback to render the block.
    */
   public static function lazyBuilder($entity_id, $view_mode) {
-    return static::buildPreRenderableBlock(entity_load('block', $entity_id), \Drupal::service('module_handler'));
+    return static::buildPreRenderableBlock(Block::load($entity_id), \Drupal::service('module_handler'));
   }
 
   /**

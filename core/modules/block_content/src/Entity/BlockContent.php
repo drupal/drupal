@@ -113,7 +113,7 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
    * {@inheritdoc}
    */
   public function getInstances() {
-    return entity_load_multiple_by_properties('block', array('plugin' => 'block_content:' . $this->uuid()));
+    return \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(array('plugin' => 'block_content:' . $this->uuid()));
   }
 
   /**
