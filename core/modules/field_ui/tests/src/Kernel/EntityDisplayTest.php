@@ -67,7 +67,7 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Check that the display can be properly saved and read back.
     $display->save();
-    $display = entity_load('entity_view_display', $display->id());
+    $display = EntityViewDisplay::load($display->id());
     foreach (array('component_1', 'component_2', 'component_3') as $name) {
       $this->assertEqual($display->getComponent($name), $expected[$name]);
     }
@@ -95,7 +95,7 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Check that the removal is correctly persisted.
     $display->save();
-    $display = entity_load('entity_view_display', $display->id());
+    $display = EntityViewDisplay::load($display->id());
     $this->assertNULL($display->getComponent('component_3'));
 
     // Check that createCopy() creates a new component that can be correctly
@@ -103,7 +103,7 @@ class EntityDisplayTest extends KernelTestBase {
     EntityViewMode::create(array('id' => $display->getTargetEntityTypeId() . '.other_view_mode', 'targetEntityType' => $display->getTargetEntityTypeId()))->save();
     $new_display = $display->createCopy('other_view_mode');
     $new_display->save();
-    $new_display = entity_load('entity_view_display', $new_display->id());
+    $new_display = EntityViewDisplay::load($new_display->id());
     $dependencies = $new_display->calculateDependencies()->getDependencies();
     $this->assertEqual(array('config' => array('core.entity_view_mode.entity_test.other_view_mode'), 'module' => array('entity_test')), $dependencies);
     $this->assertEqual($new_display->getTargetEntityTypeId(), $display->getTargetEntityTypeId());
@@ -283,7 +283,7 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertFalse(isset($data['hidden']['test_display_non_configurable']));
 
     // Check that defaults are correctly filled when loading the display.
-    $display = entity_load('entity_view_display', $display->id());
+    $display = EntityViewDisplay::load($display->id());
     foreach ($expected as $field_name => $options) {
       $this->assertEqual($display->getComponent($field_name), $options);
     }
@@ -293,7 +293,7 @@ class EntityDisplayTest extends KernelTestBase {
     $data['content']['test_display_non_configurable'] = $expected['test_display_non_configurable'];
     $data['content']['test_display_non_configurable']['weight']++;
     $config->setData($data)->save();
-    $display = entity_load('entity_view_display', $display->id());
+    $display = EntityViewDisplay::load($display->id());
     foreach ($expected as $field_name => $options) {
       $this->assertEqual($display->getComponent($field_name), $options);
     }
@@ -312,7 +312,7 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Delete the bundle.
     $type->delete();
-    $display = entity_load('entity_view_display', 'node.article.default');
+    $display = EntityViewDisplay::load('node.article.default');
     $this->assertFalse((bool) $display);
     $form_display = EntityFormDisplay::load('node.article.default');
     $this->assertFalse((bool) $form_display);

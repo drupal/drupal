@@ -135,7 +135,10 @@ class ManageDisplayTest extends WebTestBase {
     $this->drupalPostForm(NULL, array(), t('Save'));
 
     \Drupal::entityManager()->clearCachedFieldDefinitions();
-    $display = entity_load('entity_view_display', 'node.' . $this->type . '.default', TRUE);
+    $id = 'node.' . $this->type . '.default';
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_view_display');
+    $storage->resetCache([$id]);
+    $display = $storage->load($id);
     $this->assertEqual($display->getRenderer('field_test')->getThirdPartySetting('field_third_party_test', 'field_test_field_formatter_third_party_settings_form'), 'foo');
     $this->assertTrue(in_array('field_third_party_test', $display->calculateDependencies()->getDependencies()['module']), 'The display has a dependency on field_third_party_test module.');
 

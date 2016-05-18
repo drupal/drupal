@@ -4,7 +4,6 @@ namespace Drupal\image\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Routing\RequestHelper;
@@ -17,7 +16,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 /**
  * Defines an image style configuration entity.
  *
@@ -138,7 +137,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     if ($style->id() != $style->getOriginalId()) {
       // Loop through all entity displays looking for formatters / widgets using
       // the image style.
-      foreach (entity_load_multiple('entity_view_display') as $display) {
+      foreach (EntityViewDisplay::loadMultiple() as $display) {
         foreach ($display->getComponents() as $name => $options) {
           if (isset($options['type']) && $options['type'] == 'image' && $options['settings']['image_style'] == $style->getOriginalId()) {
             $options['settings']['image_style'] = $style->id();
@@ -147,7 +146,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
           }
         }
       }
-      foreach (EntityFormDisplay::loadMultiple() as $display) {
+      foreach (EntityViewDisplay::loadMultiple() as $display) {
         foreach ($display->getComponents() as $name => $options) {
           if (isset($options['type']) && $options['type'] == 'image_image' && $options['settings']['preview_image_style'] == $style->getOriginalId()) {
             $options['settings']['preview_image_style'] = $style->id();
