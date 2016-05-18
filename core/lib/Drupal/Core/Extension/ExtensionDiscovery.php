@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  * To also discover test modules, add
  * @code
  * $settings['extension_discovery_scan_tests'] = TRUE;
- * @encode
+ * @endcode
  * to your settings.php.
  */
 class ExtensionDiscovery {
