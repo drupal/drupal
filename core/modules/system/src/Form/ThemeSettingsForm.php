@@ -379,6 +379,16 @@ class ThemeSettingsForm extends ConfigFormBase {
         }
       }
 
+      // When intending to use the default logo, unset the logo_path.
+      if ($form_state->getValue('default_logo')) {
+        $form_state->unsetValue('logo_path');
+      }
+
+      // When intending to use the default favicon, unset the favicon_path.
+      if ($form_state->getValue('default_favicon')) {
+        $form_state->unsetValue('favicon_path');
+      }
+
       // If the user provided a path for a logo or favicon file, make sure a file
       // exists at that path.
       if ($form_state->getValue('logo_path')) {
