@@ -201,6 +201,18 @@ class ThemeTest extends WebTestBase {
     $this->assertLink($theme_handler->getName('stable'));
     $this->drupalGet('admin/appearance/settings/stable');
     $this->assertResponse(200, 'The theme settings form URL for a hidden theme that is the admin theme is available.');
+
+    // Ensure default logo and favicons are not triggering custom path
+    // validation errors if their custom paths are set on the form.
+    $edit = [
+      'default_logo' => TRUE,
+      'logo_path' => 'public://whatever.png',
+      'default_favicon' => TRUE,
+      'favicon_path' => 'public://whatever.ico',
+    ];
+    $this->drupalPostForm('admin/appearance/settings', $edit, 'Save configuration');
+    $this->assertNoText('The custom logo path is invalid.');
+    $this->assertNoText('The custom favicon path is invalid.');
   }
 
   /**
