@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 function _batch_page(Request $request) {
   $batch = &batch_get();
 
-  if (!($request_id = $request->get('id'))) {
+  if (!($request_id = $request->query->get('id'))) {
     return FALSE;
   }
 
@@ -61,7 +61,7 @@ function _batch_page(Request $request) {
     }
   }
 
-  $op = $request->get('op', '');
+  $op = $request->query->get('op', '');
   switch ($op) {
     case 'start':
     case 'do_nojs':
