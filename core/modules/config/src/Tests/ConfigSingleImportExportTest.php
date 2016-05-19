@@ -37,6 +37,16 @@ class ConfigSingleImportExportTest extends WebTestBase {
     $uuid = \Drupal::service('uuid');
 
     $this->drupalLogin($this->drupalCreateUser(array('import configuration')));
+
+    // Attempt an import with invalid YAML.
+    $edit = [
+      'config_type' => 'action',
+      'import' => '{{{',
+    ];
+
+    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
+    $this->assertText('The import failed with the following message: Malformed inline YAML string ({{{) at line 1 (near &quot;{{{&quot;)');
+
     $import = <<<EOD
 label: First
 weight: 0
