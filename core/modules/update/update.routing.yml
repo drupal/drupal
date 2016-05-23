@@ -21,6 +21,7 @@ update.manual_status:
     _controller: '\Drupal\update\Controller\UpdateController::updateStatusManually'
   requirements:
     _permission: 'administer site configuration'
+    _csrf_token: 'TRUE'
 
 update.report_install:
   path: '/admin/reports/updates/install'

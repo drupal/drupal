@@ -67,7 +67,8 @@ abstract class UpdateTestBase extends WebTestBase {
     // Save the map for UpdateTestController::updateTest() to use.
     $this->config('update_test.settings')->set('xml_map', $xml_map)->save();
     // Manually check the update status.
-    $this->drupalGet('admin/reports/updates/check');
+    $this->drupalGet('admin/reports/updates');
+    $this->clickLink(t('Check manually'));
   }
 
   /**
