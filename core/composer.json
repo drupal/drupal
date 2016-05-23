@@ -22,7 +22,7 @@
         "doctrine/common": "2.5.*",
         "doctrine/annotations": "1.2.*",
         "guzzlehttp/guzzle": "~6.1",
-        "symfony-cmf/routing": "1.3.*",
+        "symfony-cmf/routing": "~1.4",
         "easyrdf/easyrdf": "0.9.*",
         "zendframework/zend-feed": "~2.4",
         "stack/builder": "1.0.*",
