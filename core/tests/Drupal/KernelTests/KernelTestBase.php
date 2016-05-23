@@ -261,18 +261,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       $this->databasePrefix = 'simpletest' . $suffix;
     } while (is_dir($this->root . '/' . $this->siteDirectory));
 
-    $this->vfsRoot = vfsStream::setup('root', NULL, array(
-      'sites' => array(
-        'simpletest' => array(
-          $suffix => array(),
-        ),
-      ),
-    ));
-    $this->siteDirectory = vfsStream::url('root/sites/simpletest/' . $suffix);
-
-    mkdir($this->siteDirectory . '/files', 0775);
-    mkdir($this->siteDirectory . '/files/config/' . CONFIG_SYNC_DIRECTORY, 0775, TRUE);
-
     // Ensure that all code that relies on drupal_valid_test_ua() can still be
     // safely executed. This primarily affects the (test) site directory
     // resolution (used by e.g. LocalStream and PhpStorage).
@@ -288,14 +276,38 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     );
     new Settings($settings);
 
-    $GLOBALS['config_directories'] = array(
-      CONFIG_SYNC_DIRECTORY => $this->siteDirectory . '/files/config/sync',
-    );
+    $this->setUpFilesystem();
 
     foreach (Database::getAllConnectionInfo() as $key => $targets) {
       Database::removeConnection($key);
     }
     Database::addConnectionInfo('default', 'default', $this->getDatabaseConnectionInfo()['default']);
+  }
+
+  /**
+   * Sets up the filesystem, so things like the file directory.
+   */
+  protected function setUpFilesystem() {
+    $suffix = str_replace('simpletest', '', $this->databasePrefix);
+    $this->vfsRoot = vfsStream::setup('root', NULL, array(
+      'sites' => array(
+        'simpletest' => array(
+          $suffix => array(),
+        ),
+      ),
+    ));
+    $this->siteDirectory = vfsStream::url('root/sites/simpletest/' . $suffix);
+
+    mkdir($this->siteDirectory . '/files', 0775);
+    mkdir($this->siteDirectory . '/files/config/' . CONFIG_SYNC_DIRECTORY, 0775, TRUE);
+
+    $settings = Settings::getInstance() ? Settings::getAll() : [];
+    $settings['file_public_path'] = $this->siteDirectory . '/files';
+    new Settings($settings);
+
+    $GLOBALS['config_directories'] = array(
+      CONFIG_SYNC_DIRECTORY => $this->siteDirectory . '/files/config/sync',
+    );
   }
 
   /**
@@ -663,7 +675,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     }
 
     // Shut down the kernel (if bootKernel() was called).
-    // @see \Drupal\system\Tests\DrupalKernel\DrupalKernelTest
+    // @see \Drupal\KernelTests\Core\DrupalKernel\DrupalKernelTest
     if ($this->container) {
       $this->container->get('kernel')->shutdown();
     }
@@ -998,7 +1010,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    *   \Drupal\Core\Site\Settings::get() to perform custom merges.
    */
   protected function setSetting($name, $value) {
-    $settings = Settings::getAll();
+    $settings = Settings::getInstance() ? Settings::getAll() : [];
     $settings[$name] = $value;
     new Settings($settings);
   }

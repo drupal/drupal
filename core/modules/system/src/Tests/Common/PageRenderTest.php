@@ -2,7 +2,7 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\simpletest\KernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Test page rendering hooks.

@@ -3,7 +3,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\simpletest\KernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests scanning system directories in drupal_system_listing().
