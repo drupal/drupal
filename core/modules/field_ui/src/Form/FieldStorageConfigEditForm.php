@@ -148,9 +148,26 @@ class FieldStorageConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($this->entity->getTargetEntityTypeId());
+
     // Validate field cardinality.
     if ($form_state->getValue('cardinality') === 'number' && !$form_state->getValue('cardinality_number')) {
       $form_state->setErrorByName('cardinality_number', $this->t('Number of values is required.'));
+    }
+    // If a specific cardinality is used, validate that there are no entities
+    // with a higher delta.
+    elseif (!$this->entity->isNew() && isset($field_storage_definitions[$this->entity->getName()]) && $form_state->getValue('cardinality') != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+
+      // Get a count of entities that have a value in a delta higher than the
+      // one selected. Deltas start with 0, so the selected value does not
+      // need to be incremented.
+      $entities_with_higher_delta = \Drupal::entityQuery($this->entity->getTargetEntityTypeId())
+        ->condition($this->entity->getName() . '.%delta', $form_state->getValue('cardinality'))
+        ->count()
+        ->execute();
+      if ($entities_with_higher_delta) {
+        $form_state->setErrorByName('cardinality_number', $this->formatPlural($entities_with_higher_delta, 'There is @count entity with @delta or more values in this field.', 'There are @count entities with @delta or more values in this field.', ['@delta' => $form_state->getValue('cardinality') + 1]));
+      }
     }
   }
 
