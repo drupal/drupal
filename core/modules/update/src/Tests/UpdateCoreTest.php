@@ -65,11 +65,17 @@ class UpdateCoreTest extends UpdateTestBase {
    */
   function testNormalUpdateAvailable() {
     $this->setSystemInfo('8.0.0');
+
+    // Ensure that the update check requires a token.
+    $this->drupalGet('admin/reports/updates/check');
+    $this->assertResponse(403, 'Accessing admin/reports/updates/check without a CSRF token results in access denied.');
+
     foreach (array(0, 1) as $minor_version) {
       foreach (array('-alpha1', '-beta1', '') as $extra_version) {
         $this->refreshUpdateStatus(array('drupal' => "$minor_version.1" . $extra_version));
         $this->standardTests();
-        $this->drupalGet('admin/reports/updates/check');
+        $this->drupalGet('admin/reports/updates');
+        $this->clickLink(t('Check manually'));
         $this->assertNoText(t('Security update required!'));
         $this->assertRaw(\Drupal::l("8.$minor_version.1" . $extra_version, Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version-release")), 'Link to release appears.');
         $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version.tar.gz")), 'Link to download appears.');
@@ -131,7 +137,8 @@ class UpdateCoreTest extends UpdateTestBase {
           $this->setSystemInfo("8.$minor_version.$patch_version" . $extra_version);
           $this->refreshUpdateStatus(array('drupal' => '9'));
           $this->standardTests();
-          $this->drupalGet('admin/reports/updates/check');
+          $this->drupalGet('admin/reports/updates');
+          $this->clickLink(t('Check manually'));
           $this->assertNoText(t('Security update required!'));
           $this->assertRaw(\Drupal::l('9.0.0', Url::fromUri("http://example.com/drupal-9-0-0-release")), 'Link to release appears.');
           $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-9-0-0.tar.gz")), 'Link to download appears.');

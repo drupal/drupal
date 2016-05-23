@@ -148,3 +148,20 @@ function _update_requirement_check($project, $type) {
   $requirement['value'] = \Drupal::l($requirement_label, new Url(_update_manager_access() ? 'update.report_update' : 'update.status'));
   return $requirement;
 }
+
+/**
+ * @addtogroup updates-8.1.x
+ * @{
+ */
+
+/**
+ * Rebuild the router to ensure admin/reports/updates/check has CSRF protection.
+ */
+function update_update_8001() {
+  // Empty update forces a call to drupal_flush_all_caches() which rebuilds the
+  // router.
+}
+
+/**
+ * @} End of "addtogroup updates-8.1.x".
+ */

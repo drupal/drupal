@@ -30,6 +30,9 @@ class UpdateUploadTest extends UpdateTestBase {
    * Tests upload, extraction, and update of a module.
    */
   public function testUploadModule() {
+    // Ensure that the update information is correct before testing.
+    update_get_available(TRUE);
+
     // Images are not valid archives, so get one and try to install it. We
     // need an extra variable to store the result of drupalGetTestFiles()
     // since reset() takes an argument by reference and passing in a constant
