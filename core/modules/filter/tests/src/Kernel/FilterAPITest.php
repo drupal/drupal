@@ -100,7 +100,7 @@ class FilterAPITest extends EntityKernelTestBase {
    */
   function testFilterFormatAPI() {
     // Test on filtered_html.
-    $filtered_html_format = entity_load('filter_format', 'filtered_html');
+    $filtered_html_format = FilterFormat::load('filtered_html');
     $this->assertIdentical(
       $filtered_html_format->getHtmlRestrictions(),
       array(
@@ -121,7 +121,7 @@ class FilterAPITest extends EntityKernelTestBase {
     );
 
     // Test on full_html.
-    $full_html_format = entity_load('filter_format', 'full_html');
+    $full_html_format = FilterFormat::load('full_html');
     $this->assertIdentical(
       $full_html_format->getHtmlRestrictions(),
       FALSE, // Every tag is allowed.
@@ -334,7 +334,7 @@ class FilterAPITest extends EntityKernelTestBase {
     $this->assertTrue($data instanceof OptionsProviderInterface, 'Typed data object implements \Drupal\Core\TypedData\OptionsProviderInterface');
 
     $filtered_html_user = $this->createUser(array('uid' => 2), array(
-      entity_load('filter_format', 'filtered_html')->getPermissionName(),
+      FilterFormat::load('filtered_html')->getPermissionName(),
     ));
 
     // Test with anonymous user.
