@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Implements hook_help().
@@ -80,7 +81,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
 
   // Retrieve the filters of the specified text format, if any.
   if (isset($format)) {
-    $filters = entity_load('filter_format', $format)->filters();
+    $filters = FilterFormat::load($format)->filters();
     // If the specified format does not exist, return nothing. $text is already
     // filtered text, but the remainder of this function will not be able to
     // ensure a sane and secure summary.

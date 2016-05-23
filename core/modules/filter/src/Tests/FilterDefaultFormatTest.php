@@ -3,6 +3,7 @@
 namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -35,7 +36,7 @@ class FilterDefaultFormatTest extends WebTestBase {
       );
       $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();
-      $formats[] = entity_load('filter_format', $edit['format']);
+      $formats[] = FilterFormat::load($edit['format']);
     }
     list($first_format, $second_format) = $formats;
     $second_format_permission = $second_format->getPermissionName();

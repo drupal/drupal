@@ -10,6 +10,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
@@ -77,11 +78,11 @@ class ConfigTranslationUiTest extends WebTestBase {
     ];
 
     /** @var \Drupal\filter\FilterFormatInterface $filter_test_format */
-    $filter_test_format = entity_load('filter_format', 'filter_test');
+    $filter_test_format = FilterFormat::load('filter_test');
     /** @var \Drupal\filter\FilterFormatInterface $filtered_html_format */
-    $filtered_html_format = entity_load('filter_format', 'filtered_html');
+    $filtered_html_format = FilterFormat::load('filtered_html');
     /** @var \Drupal\filter\FilterFormatInterface $full_html_format */
-    $full_html_format = entity_load('filter_format', 'full_html');
+    $full_html_format = FilterFormat::load('full_html');
 
     $admin_permissions = array_merge(
       $translator_permissions,
