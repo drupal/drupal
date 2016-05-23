@@ -7,7 +7,6 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\String\StringFieldTest;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests the creation of text fields.
@@ -212,7 +211,7 @@ class TextFieldTest extends StringFieldTest {
     );
     $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     filter_formats_reset();
-    $format = FilterFormat::load($edit['format']);
+    $format = entity_load('filter_format', $edit['format']);
     $format_id = $format->id();
     $permission = $format->getPermissionName();
     $roles = $this->webUser->getRoles();

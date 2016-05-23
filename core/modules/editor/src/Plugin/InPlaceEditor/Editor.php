@@ -4,7 +4,6 @@ namespace Drupal\editor\Plugin\InPlaceEditor;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\filter\Entity\FilterFormat;
 use Drupal\quickedit\Plugin\InPlaceEditorInterface;
 use Drupal\filter\Plugin\FilterInterface;
 
@@ -62,7 +61,7 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
    * @return bool
    */
   protected function textFormatHasTransformationFilters($format_id) {
-    $format = FilterFormat::load($format_id);
+    $format = entity_load('filter_format', $format_id);
     return (bool) count(array_intersect(array(FilterInterface::TYPE_TRANSFORM_REVERSIBLE, FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE), $format->getFiltertypes()));
   }
 

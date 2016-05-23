@@ -245,7 +245,7 @@ class CKEditorAdminTest extends WebTestBase {
       'editor[editor]' => 'ckeditor',
     );
     $this->drupalPostAjaxForm(NULL, $edit, 'editor_configure');
-    $filter_format = FilterFormat::load('amazing_format');
+    $filter_format = entity_load('filter_format', 'amazing_format');
     $this->assertFalse($filter_format, 'No FilterFormat config entity exists yet.');
     $editor = Editor::load('amazing_format');
     $this->assertFalse($editor, 'No Editor config entity exists yet.');
@@ -270,7 +270,7 @@ class CKEditorAdminTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
 
     // Ensure a FilterFormat object exists now.
-    $filter_format = FilterFormat::load('amazing_format');
+    $filter_format = entity_load('filter_format', 'amazing_format');
     $this->assertTrue($filter_format instanceof FilterFormatInterface, 'A FilterFormat config entity exists now.');
 
     // Ensure an Editor object exists now, with the proper settings.

@@ -52,11 +52,11 @@ class NodeFormSaveChangedTimeTest extends WebTestBase {
    * Test the changed time after API and FORM save without changes.
    */
   public function testChangedTimeAfterSaveWithoutChanges() {
-    $storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $storage->resetCache([1]);
-    $node = $storage->load(1);
+    $node = entity_load('node', 1);
     $changed_timestamp = $node->getChangedTime();
+
     $node->save();
+    $node = entity_load('node', 1, TRUE);
     $this->assertEqual($changed_timestamp, $node->getChangedTime(), "The entity's changed time wasn't updated after API save without changes.");
 
     // Ensure different save timestamps.
@@ -65,8 +65,7 @@ class NodeFormSaveChangedTimeTest extends WebTestBase {
     // Save the node on the regular node edit form.
     $this->drupalPostForm('node/1/edit', array(), t('Save'));
 
-    $storage->resetCache([1]);
-    $node = $storage->load(1);
+    $node = entity_load('node', 1, TRUE);
     $this->assertNotEqual($changed_timestamp, $node->getChangedTime(), "The entity's changed time was updated after form save without changes.");
   }
 

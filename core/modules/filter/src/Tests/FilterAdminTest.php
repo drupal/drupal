@@ -202,7 +202,7 @@ class FilterAdminTest extends WebTestBase {
     $this->assertResponse(403, 'The fallback format cannot be disabled.');
 
     // Verify access permissions to Full HTML format.
-    $full_format = FilterFormat::load($full);
+    $full_format = entity_load('filter_format', $full);
     $this->assertTrue($full_format->access('use', $this->adminUser), 'Admin user may use Full HTML.');
     $this->assertFalse($full_format->access('use', $this->webUser), 'Web user may not use Full HTML.');
 
@@ -236,7 +236,7 @@ class FilterAdminTest extends WebTestBase {
     ));
     $this->assertTrue(!empty($elements), 'Reorder confirmed in admin interface.');
 
-    $filter_format = FilterFormat::load($restricted);
+    $filter_format = entity_load('filter_format', $restricted);
     foreach ($filter_format->filters() as $filter_name => $filter) {
       if ($filter_name == $second_filter || $filter_name == $first_filter) {
         $filters[] = $filter_name;
@@ -257,7 +257,7 @@ class FilterAdminTest extends WebTestBase {
     $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), 'New filter created.');
 
     filter_formats_reset();
-    $format = FilterFormat::load($edit['format']);
+    $format = entity_load('filter_format', $edit['format']);
     $this->assertNotNull($format, 'Format found in database.');
     $this->drupalGet('admin/config/content/formats/manage/' . $format->id());
     $this->assertFieldByName('roles[' . RoleInterface::AUTHENTICATED_ID . ']', '', 'Role found.');
@@ -270,7 +270,7 @@ class FilterAdminTest extends WebTestBase {
     $this->assertRaw(t('Disabled text format %format.', array('%format' => $edit['name'])), 'Format successfully disabled.');
 
     // Allow authenticated users on full HTML.
-    $format = FilterFormat::load($full);
+    $format = entity_load('filter_format', $full);
     $edit = array();
     $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 0;
     $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
