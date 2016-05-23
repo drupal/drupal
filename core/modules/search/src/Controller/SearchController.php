@@ -79,7 +79,7 @@ class SearchController extends ControllerBase {
     // and we don't want to build the results based on last time's request.
     $build['#cache']['contexts'][] = 'url.query_args:keys';
     if ($request->query->has('keys')) {
-      $keys = trim($request->get('keys'));
+      $keys = trim($request->query->get('keys'));
       $plugin->setSearch($keys, $request->query->all(), $request->attributes->all());
     }
 

@@ -46,7 +46,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    */
   public function testAjaxIframeUpload() {
     $request = new Request();
-    $request->attributes->set('ajax_iframe_upload', '1');
+    $request->request->set('ajax_iframe_upload', '1');
 
     $this->assertSame('iframeupload', $this->contentNegotiation->getContentType($request));
   }
@@ -101,9 +101,11 @@ class NegotiationMiddlewareTest extends UnitTestCase {
     $request->setRequestFormat('html')->shouldBeCalled();
 
     // Some getContentType calls we don't really care about but have to mock.
-    $request->get('ajax_iframe_upload', FALSE)->shouldBeCalled();
+    $request_data = $this->prophesize(ParameterBag::class);
+    $request_data->get('ajax_iframe_upload', FALSE)->shouldBeCalled();
     $request_mock = $request->reveal();
     $request_mock->query = new ParameterBag([]);
+    $request_mock->request = $request_data->reveal();
 
     // Calling kernel app with default arguments.
     $this->app->handle($request_mock, HttpKernelInterface::MASTER_REQUEST, TRUE)
@@ -126,9 +128,11 @@ class NegotiationMiddlewareTest extends UnitTestCase {
 
     // Some calls we don't care about.
     $request->setRequestFormat('html')->shouldBeCalled();
-    $request->get('ajax_iframe_upload', FALSE)->shouldBeCalled();
+    $request_data = $this->prophesize(ParameterBag::class);
+    $request_data->get('ajax_iframe_upload', FALSE)->shouldBeCalled();
     $request_mock = $request->reveal();
     $request_mock->query = new ParameterBag([]);
+    $request_mock->request = $request_data->reveal();
 
     // Trigger handle.
     $this->contentNegotiation->registerFormat('david', 'geeky/david');
