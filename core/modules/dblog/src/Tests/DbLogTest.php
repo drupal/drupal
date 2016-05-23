@@ -769,6 +769,13 @@ class DbLogTest extends WebTestBase {
     // Make sure HTML tags are filtered out.
     $this->assertRaw('title="alert(&#039;foo&#039;);Lorem ipsum dolor sit amet, consectetur adipiscing &amp; elit. Entry #0">&lt;script&gt;alert(&#039;foo&#039;);&lt;/script&gt;Lorem ipsum dolor sit…</a>');
     $this->assertNoRaw("<script>alert('foo');</script>");
+
+    // Make sure HTML tags are filtered out in admin/reports/dblog/event/ too.
+    $this->generateLogEntries(1, ['message' => "<script>alert('foo');</script> <strong>Lorem ipsum</strong>"]);
+    $wid = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+    $this->assertNoRaw("<script>alert('foo');</script>");
+    $this->assertRaw("alert('foo'); <strong>Lorem ipsum</strong>");
   }
 
 }
