@@ -199,7 +199,7 @@ INSTALLATION
 
 5. Change file system storage settings (optional).
 
-   The files directory created in step 4 is the default file system path used to
+   The files directory created in step 3 is the default file system path used to
    store all uploaded files, as well as some temporary files created by
    Drupal. After installation, you can modify the file system path to store
    uploaded files in a different location.
@@ -226,11 +226,19 @@ INSTALLATION
         mkdir uploads
         chmod a+w uploads
 
-   b. Navigate to Administration > Configuration > Media > File system, and
-      enter the desired path. Note that if you want to use private file storage,
-      you need to first enter the path for private files and save the
-      configuration, and then change the "Default download method" setting and
-      save again.
+   b. Open your settings.php in a plain-text editor, and uncomment (remove the #
+      at the start of line) this line:
+
+        # $settings['file_public_path'] = 'sites/default/files';
+
+      Enter the desired path and save the file.
+
+      If you want to use private file storage, you need to uncomment (remove
+      the # at the start of line) the following line in settings.php:
+
+        # $settings['file_private_path'] = '';
+
+      Enter the path for private files and save the file.
 
    Changing the file system path after files have been uploaded may cause
    unexpected problems on an existing site. If you modify the file system path
