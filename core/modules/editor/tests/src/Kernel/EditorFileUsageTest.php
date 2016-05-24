@@ -177,6 +177,28 @@ class EditorFileUsageTest extends EntityKernelTestBase {
       $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
+    // Populate both the body and summary. Because this will be the same
+    // revision of the same node, it will record only one usage.
+    foreach ($original_values as $key => $original_value) {
+      $node->body[$key]->value = $original_value;
+      $node->body[$key]->summary = $original_value;
+    }
+    $node->save();
+    foreach ($image_entities as $key => $image_entity) {
+      $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+    }
+
+    // Empty out the body value, but keep the summary. The number of usages
+    // should not change.
+    foreach ($original_values as $key => $original_value) {
+      $node->body[$key]->value = '';
+      $node->body[$key]->summary = $original_value;
+    }
+    $node->save();
+    foreach ($image_entities as $key => $image_entity) {
+      $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+    }
+
     // Test editor_entity_delete().
     $node->delete();
     foreach ($image_entities as $key => $image_entity) {
