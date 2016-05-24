@@ -471,6 +471,9 @@ function _editor_get_file_uuids_by_field(EntityInterface $entity) {
     $field_items = $entity->get($formatted_text_field);
     foreach ($field_items as $field_item) {
       $text .= $field_item->value;
+      if ($field_item->getFieldDefinition()->getType() == 'text_with_summary') {
+        $text .= $field_item->summary;
+      }
     }
     $uuids[$formatted_text_field] = _editor_parse_file_uuids($text);
   }
