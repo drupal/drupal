@@ -13,6 +13,8 @@ use Drupal\user\UserInterface;
 /**
  * Defines the file entity class.
  *
+ * @ingroup file
+ *
  * @ContentEntityType(
  *   id = "file",
  *   label = @Translation("File"),
