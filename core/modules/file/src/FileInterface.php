@@ -8,6 +8,8 @@ use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Defines getter and setter methods for file entity base fields.
+ *
+ * @ingroup file
  */
 interface FileInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 

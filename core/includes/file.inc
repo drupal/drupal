@@ -33,23 +33,6 @@ const FILE_CHMOD_FILE = FileSystem::CHMOD_FILE;
  * @defgroup file File interface
  * @{
  * Common file handling functions.
- *
- * Fields on the file entity:
- * - fid: File ID
- * - uid: The {users}.uid of the user who is associated with the file.
- * - filename: Name of the file with no path components. This may differ from
- *   the basename of the filepath if the file is renamed to avoid overwriting
- *   an existing file.
- * - uri: URI of the file.
- * - filemime: The file's MIME type.
- * - filesize: The size of the file in bytes.
- * - status: A bitmapped field indicating the status of the file. The first 8
- *   bits are reserved for Drupal core. The least significant bit indicates
- *   temporary (0) or permanent (1). Temporary files will be removed during
- *   cron runs if they are older than the configuration value
- *   "system.file.temporary_maximum_age", and if clean-up is enabled. Permanent
- *   files will not be removed.
- * - timestamp: UNIX timestamp for the date the file was added to the database.
  */
 
 /**
