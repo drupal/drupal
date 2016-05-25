@@ -2,7 +2,7 @@
 
 namespace Drupal\simpletest\Tests;
 
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * This test should not load since it requires a module that is not found.
