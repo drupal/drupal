@@ -3,7 +3,6 @@
 namespace Drupal\node\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
@@ -14,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Contains a form for switching the view mode of a node during preview.
  */
-class NodePreviewForm extends FormBase implements ContainerInjectionInterface {
+class NodePreviewForm extends FormBase {
 
   /**
    * The entity manager service.
