@@ -56,11 +56,12 @@
  */
 function callback_batch_operation($MULTIPLE_PARAMS, &$context) {
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $database = \Drupal::database();
 
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['current_node'] = 0;
-    $context['sandbox']['max'] = db_query('SELECT COUNT(DISTINCT nid) FROM {node}')->fetchField();
+    $context['sandbox']['max'] = $database->query('SELECT COUNT(DISTINCT nid) FROM {node}')->fetchField();
   }
 
   // For this example, we decide that we can safely process
@@ -68,8 +69,8 @@ function callback_batch_operation($MULTIPLE_PARAMS, &$context) {
   $limit = 5;
 
   // With each pass through the callback, retrieve the next group of nids.
-  $result = db_query_range("SELECT nid FROM {node} WHERE nid > %d ORDER BY nid ASC", $context['sandbox']['current_node'], 0, $limit);
-  while ($row = db_fetch_array($result)) {
+  $result = $database->queryRange("SELECT nid FROM {node} WHERE nid > :nid ORDER BY nid ASC", 0, $limit, [':nid' => $context['sandbox']['current_node']]);
+  foreach ($result as $row) {
 
     // Here we actually perform our processing on the current node.
     $node_storage->resetCache(array($row['nid']));
