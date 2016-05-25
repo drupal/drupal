@@ -27,8 +27,17 @@ class QueryArgsCacheContext extends RequestStackCacheContextBase implements Calc
     if ($query_arg === NULL) {
       return $this->requestStack->getCurrentRequest()->getQueryString();
     }
+    elseif ($this->requestStack->getCurrentRequest()->query->has($query_arg)) {
+      $value = $this->requestStack->getCurrentRequest()->query->get($query_arg);
+      if ($value !== '') {
+        return $value;
+      }
+      else {
+        return '?valueless?';
+      }
+    }
     else {
-      return $this->requestStack->getCurrentRequest()->query->get($query_arg);
+      return NULL;
     }
   }
 
