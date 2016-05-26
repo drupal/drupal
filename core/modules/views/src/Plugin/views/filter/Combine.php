@@ -99,21 +99,26 @@ class Combine extends StringFilter {
    */
   public function validate() {
     $errors = parent::validate();
-    $fields = $this->view->display_handler->getHandlers('field');
-    foreach ($this->options['fields'] as $id) {
-      if (!isset($fields[$id])) {
-        // Combined field filter only works with fields that are in the field
-        // settings.
-        $errors[] = $this->t('Field %field set in %filter is not set in this display.', array('%field' => $id, '%filter' => $this->adminLabel()));
-        break;
+    if ($this->displayHandler->usesFields()) {
+      $fields = $this->displayHandler->getHandlers('field');
+      foreach ($this->options['fields'] as $id) {
+        if (!isset($fields[$id])) {
+          // Combined field filter only works with fields that are in the field
+          // settings.
+          $errors[] = $this->t('Field %field set in %filter is not set in display %display.', array('%field' => $id, '%filter' => $this->adminLabel(), '%display' => $this->displayHandler->display['display_title']));
+          break;
+        }
+        elseif (!$fields[$id]->clickSortable()) {
+          // Combined field filter only works with simple fields. If the field
+          // is not click sortable we can assume it is not a simple field.
+          // @todo change this check to isComputed. See
+          // https://www.drupal.org/node/2349465
+          $errors[] = $this->t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', array('%field' => $fields[$id]->adminLabel(), '%filter' => $this->adminLabel()));
+        }
       }
-      elseif (!$fields[$id]->clickSortable()) {
-        // Combined field filter only works with simple fields. If the field is
-        // not click sortable we can assume it is not a simple field.
-        // @todo change this check to isComputed. See
-        // https://www.drupal.org/node/2349465
-        $errors[] = $this->t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', array('%field' => $fields[$id]->adminLabel(), '%filter' => $this->adminLabel()));
-      }
+    }
+    else {
+      $errors[] = $this->t('%display: %filter can only be used on displays that use fields. Set the style or row format for that display to one using fields to use the combine field filter.', array('%display' => $this->displayHandler->display['display_title'], '%filter' => $this->adminLabel()));
     }
     return $errors;
   }
