@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
+use Drupal\rest\ModifiedResourceResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -34,7 +35,7 @@ class EntityResource extends ResourceBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    *
-   * @return \Drupal\rest\ResourceResponse
+   * @return \Drupal\rest\ModifiedResourceResponse
    *   The response containing the entity with its accessible fields.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
@@ -108,11 +109,10 @@ class EntityResource extends ResourceBase {
       $this->logger->notice('Created entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
 
       // 201 Created responses return the newly created entity in the response
-      // body.
+      // body. These responses are not cacheable, so we add no cacheability
+      // metadata here.
       $url = $entity->urlInfo('canonical', ['absolute' => TRUE])->toString(TRUE);
-      $response = new ResourceResponse($entity, 201, ['Location' => $url->getGeneratedUrl()]);
-      // Responses after creating an entity are not cacheable, so we add no
-      // cacheability metadata here.
+      $response = new ModifiedResourceResponse($entity, 201, ['Location' => $url->getGeneratedUrl()]);
       return $response;
     }
     catch (EntityStorageException $e) {
@@ -168,7 +168,7 @@ class EntityResource extends ResourceBase {
       $this->logger->notice('Updated entity %type with ID %id.', array('%type' => $original_entity->getEntityTypeId(), '%id' => $original_entity->id()));
 
       // Update responses have an empty body.
-      return new ResourceResponse(NULL, 204);
+      return new ModifiedResourceResponse(NULL, 204);
     }
     catch (EntityStorageException $e) {
       throw new HttpException(500, 'Internal Server Error', $e);
@@ -195,7 +195,7 @@ class EntityResource extends ResourceBase {
       $this->logger->notice('Deleted entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
 
       // Delete responses have an empty body.
-      return new ResourceResponse(NULL, 204);
+      return new ModifiedResourceResponse(NULL, 204);
     }
     catch (EntityStorageException $e) {
       throw new HttpException(500, 'Internal Server Error', $e);

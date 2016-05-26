@@ -2,6 +2,7 @@
 
 namespace Drupal\rest;
 
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -98,7 +99,7 @@ class RequestHandler implements ContainerAwareInterface {
       return new Response($content, $e->getStatusCode(), $headers);
     }
 
-    return $response instanceof ResourceResponse ?
+    return $response instanceof ResourceResponseInterface ?
       $this->renderResponse($request, $response, $serializer, $format) :
       $response;
   }
@@ -124,7 +125,7 @@ class RequestHandler implements ContainerAwareInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
-   * @param \Drupal\rest\ResourceResponse $response
+   * @param \Drupal\rest\ResourceResponseInterface $response
    *   The response from the REST resource.
    * @param \Symfony\Component\Serializer\SerializerInterface $serializer
    *   The serializer to use.
@@ -137,22 +138,29 @@ class RequestHandler implements ContainerAwareInterface {
    * @todo Add test coverage for language negotiation contexts in
    *   https://www.drupal.org/node/2135829.
    */
-  protected function renderResponse(Request $request, ResourceResponse $response, SerializerInterface $serializer, $format) {
+  protected function renderResponse(Request $request, ResourceResponseInterface $response, SerializerInterface $serializer, $format) {
     $data = $response->getResponseData();
-    $context = new RenderContext();
-    $output = $this->container->get('renderer')
-      ->executeInRenderContext($context, function () use ($serializer, $data, $format) {
-        return $serializer->serialize($data, $format);
-      });
-    $response->setContent($output);
-    if (!$context->isEmpty()) {
-      $response->addCacheableDependency($context->pop());
-    }
 
+    if ($response instanceof CacheableResponseInterface) {
+      $context = new RenderContext();
+      $output = $this->container->get('renderer')
+        ->executeInRenderContext($context, function () use ($serializer, $data, $format) {
+          return $serializer->serialize($data, $format);
+        });
+
+      if (!$context->isEmpty()) {
+        $response->addCacheableDependency($context->pop());
+      }
+
+      // Add rest settings config's cache tags.
+      $response->addCacheableDependency($this->container->get('config.factory')
+        ->get('rest.settings'));
+    }
+    else {
+      $output = $serializer->serialize($data, $format);
+    }
+    $response->setContent($output);
     $response->headers->set('Content-Type', $request->getMimeType($format));
-    // Add rest settings config's cache tags.
-    $response->addCacheableDependency($this->container->get('config.factory')
-      ->get('rest.settings'));
 
     return $response;
   }
