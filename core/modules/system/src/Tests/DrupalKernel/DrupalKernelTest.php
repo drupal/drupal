@@ -146,6 +146,11 @@ class DrupalKernelTest extends KernelTestBase {
       'pathname' => drupal_get_filename('module', 'service_provider_test'),
       'filename' => NULL,
     ));
+
+    // Check that the container itself is not among the persist IDs because it
+    // does not make sense to persist the container itself.
+    $persist_ids = $container->getParameter('persist_ids');
+    $this->assertIdentical(FALSE, array_search('service_container', $persist_ids));
   }
 
   /**
