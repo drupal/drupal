@@ -237,8 +237,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       $route_path = RouteCompiler::getPathWithoutDefaults($route);
       $route_path = RouteCompiler::getPatternOutline($route_path);
       // Ensure that we don't override a route which is already controlled by
-      // views.
-      if (!$route->hasDefault('view_id') && ('/' . $view_path == $route_path)) {
+      // views. Also ensure that we don't override for example REST routes.
+      if (!$route->hasDefault('view_id') && ('/' . $view_path == $route_path) && (!$route->getMethods() || in_array('GET', $route->getMethods()))) {
         $parameters = $route->compile()->getPathVariables();
 
         // @todo Figure out whether we need to merge some settings (like

@@ -261,6 +261,44 @@ class PathPluginBaseTest extends UnitTestCase {
   }
 
   /**
+   * Tests the altering of a REST route.
+   */
+  public function testAlterRestRoute() {
+    $collection = new RouteCollection();
+    $route = new Route('test_route', ['_controller' => 'Drupal\Tests\Core\Controller\TestController::content']);
+    $route->setMethods(['POST']);
+    $collection->add('test_route', $route);
+
+    list($view) = $this->setupViewExecutableAccessPlugin();
+
+    $display = [];
+    $display['display_plugin'] = 'page';
+    $display['id'] = 'page_1';
+    $display['display_options'] = [
+      'path' => 'test_route',
+    ];
+    $this->pathPlugin->initDisplay($view, $display);
+
+    $this->pathPlugin->collectRoutes($collection);
+    $view_route_names = $this->pathPlugin->alterRoutes($collection);
+    $this->assertEquals([], $view_route_names);
+
+    // Ensure that the test_route is not overridden.
+    $this->assertCount(2, $collection);
+    $route = $collection->get('test_route');
+    $this->assertTrue($route instanceof Route);
+    $this->assertFalse($route->hasDefault('view_id'));
+    $this->assertFalse($route->hasDefault('display_id'));
+    $this->assertSame($collection->get('test_route'), $route);
+
+    $route = $collection->get('view.test_id.page_1');
+    $this->assertTrue($route instanceof Route);
+    $this->assertEquals('test_id', $route->getDefault('view_id'));
+    $this->assertEquals('page_1', $route->getDefault('display_id'));
+    $this->assertEquals('my views title', $route->getDefault('_title'));
+  }
+
+  /**
    * Tests the alter route method with preexisting title callback.
    */
   public function testAlterRouteWithAlterCallback() {
