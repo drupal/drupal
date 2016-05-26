@@ -1227,8 +1227,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // be automatically reinstantiated. Also include services tagged to persist.
     $persist_ids = array();
     foreach ($container->getDefinitions() as $id => $definition) {
-      // It does not make sense to persist the container itself, exclude it.
-      if ($id !== 'service_container' && ($definition->isSynthetic() || $definition->getTag('persist'))) {
+      if ($definition->isSynthetic() || $definition->getTag('persist')) {
         $persist_ids[] = $id;
       }
     }
