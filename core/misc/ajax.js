@@ -1035,11 +1035,11 @@
       // been sufficiently tested whether attachBehaviors() can be successfully
       // called with a context object that includes top-level text nodes.
       // However, to give developers full control of the HTML appearing in the
-      // page, and to enable Ajax content to be inserted in places where DIV
-      // elements are not allowed (e.g., within TABLE, TR, and SPAN parents),
-      // we check if the new content satisfies the requirement of a single
-      // top-level element, and only use the container DIV created above when
-      // it doesn't. For more information, please see
+      // page, and to enable Ajax content to be inserted in places where <div>
+      // elements are not allowed (e.g., within <table>, <tr>, and <span>
+      // parents), we check if the new content satisfies the requirement
+      // of a single top-level element, and only use the container <div> created
+      // above when it doesn't. For more information, please see
       // https://www.drupal.org/node/736066.
       if ($new_content.length !== 1 || $new_content.get(0).nodeType !== 1) {
         $new_content = $new_content_wrapped;

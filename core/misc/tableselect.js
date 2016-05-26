@@ -101,7 +101,7 @@
       // range. Also make sure that we are actually checking checkboxes
       // over a range and that a checkbox has been checked or unchecked before.
       if (e.shiftKey && lastChecked && lastChecked !== e.target) {
-        // We use the checkbox's parent TR to do our range searching.
+        // We use the checkbox's parent <tr> to do our range searching.
         Drupal.tableSelectRange($(e.target).closest('tr')[0], $(lastChecked).closest('tr')[0], e.target.checked);
       }
 
