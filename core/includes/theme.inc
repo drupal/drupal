@@ -596,7 +596,7 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *
  * Unfortunately links templates duplicate the "active" class handling of l()
  * and LinkGenerator::generate() because it needs to be able to set the "active"
- * class not on the links themselves ("a" tags), but on the list items ("li"
+ * class not on the links themselves (<a> tags), but on the list items (<li>
  * tags) that contain the links. This is necessary for CSS to be able to style
  * list items differently when the link is active, since CSS does not yet allow
  * one to style list items only if it contains a certain element with a certain
@@ -656,7 +656,7 @@ function template_preprocess_links(&$variables) {
   if (!empty($links)) {
     // Prepend the heading to the list, if any.
     if (!empty($heading)) {
-      // Convert a string heading into an array, using a H2 tag by default.
+      // Convert a string heading into an array, using a <h2> tag by default.
       if (is_string($heading)) {
         $heading = array('text' => $heading);
       }
@@ -858,28 +858,28 @@ function template_preprocess_image(&$variables) {
  *   - colgroups: An array of column groups. Each element of the array can be
  *     either:
  *     - An array of columns, each of which is an associative array of HTML
- *       attributes applied to the COL element.
- *     - An array of attributes applied to the COLGROUP element, which must
- *       include a "data" attribute. To add attributes to COL elements, set the
- *       "data" attribute with an array of columns, each of which is an
+ *       attributes applied to the <col> element.
+ *     - An array of attributes applied to the <colgroup> element, which must
+ *       include a "data" attribute. To add attributes to <col> elements,
+ *       set the "data" attribute with an array of columns, each of which is an
  *       associative array of HTML attributes.
  *     Here's an example for $colgroup:
  *     @code
  *     $colgroup = array(
- *       // COLGROUP with one COL element.
+ *       // <colgroup> with one <col> element.
  *       array(
  *         array(
- *           'class' => array('funky'), // Attribute for the COL element.
+ *           'class' => array('funky'), // Attribute for the <col> element.
  *         ),
  *       ),
- *       // Colgroup with attributes and inner COL elements.
+ *       // <colgroup> with attributes and inner <col> elements.
  *       array(
  *         'data' => array(
  *           array(
- *             'class' => array('funky'), // Attribute for the COL element.
+ *             'class' => array('funky'), // Attribute for the <col> element.
  *           ),
  *         ),
- *         'class' => array('jazzy'), // Attribute for the COLGROUP element.
+ *         'class' => array('jazzy'), // Attribute for the <colgroup> element.
  *       ),
  *     );
  *     @endcode
@@ -1157,7 +1157,7 @@ function template_preprocess_container(&$variables) {
  *   An associative array containing:
  *   - items: An associative array of maintenance tasks.
  *     It's the caller's responsibility to ensure this array's items contain no
- *     dangerous HTML such as SCRIPT tags.
+ *     dangerous HTML such as <script> tags.
  *   - active: The key for the currently active maintenance task.
  */
 function template_preprocess_maintenance_task_list(&$variables) {
@@ -1267,7 +1267,7 @@ function template_preprocess_html(&$variables) {
 
   $variables['html_attributes'] = new Attribute();
 
-  // HTML element attributes.
+  // <html> element attributes.
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
   $variables['html_attributes']['lang'] = $language_interface->getId();
   $variables['html_attributes']['dir'] = $language_interface->getDirection();
