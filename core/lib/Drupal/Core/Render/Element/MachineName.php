@@ -22,7 +22,10 @@ use Drupal\Core\Language\LanguageInterface;
  * Properties:
  * - #machine_name: An associative array containing:
  *   - exists: A callable to invoke for checking whether a submitted machine
- *     name value already exists. The submitted value is passed as an argument.
+ *     name value already exists. The arguments passed to the callback will be:
+ *     - The submitted value.
+ *     - The element array.
+ *     - The form state object.
  *     In most cases, an existing API or menu argument loader function can be
  *     re-used. The callback is only invoked if the submitted value differs from
  *     the element's #default_value.
