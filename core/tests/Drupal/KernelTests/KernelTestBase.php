@@ -850,7 +850,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * To install test modules outside of the testing environment, add
    * @code
    * $settings['extension_discovery_scan_tests'] = TRUE;
-   * @encode
+   * @endcode
    * to your settings.php.
    *
    * @param string[] $modules
