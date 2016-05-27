@@ -41,7 +41,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
   /**
    * Constructs a MimeTypeGuesser object.
    *
-   * @param StreamWrapperManagerInterface $streamWrapperManager
+   * @param StreamWrapperManagerInterface $stream_wrapper_manager
    *   The stream wrapper manager.
    */
   public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager) {
