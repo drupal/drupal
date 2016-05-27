@@ -363,3 +363,19 @@ function views_update_8005() {
 /**
  * @} End of "addtogroup updates-8.1.0".
  */
+
+/**
+ * @addtogroup updates-8.2.0
+ * @{
+ */
+
+/**
+ * Rebuild the container to add a new container parameter.
+ */
+function views_update_8006() {
+  // Empty update to cause a cache rebuild so that the container is rebuilt.
+}
+
+/**
+ * @} End of "addtogroup updates-8.2.0".
+ */

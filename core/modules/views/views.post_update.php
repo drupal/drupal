@@ -182,3 +182,26 @@ function views_post_update_taxonomy_index_tid() {
 /**
  * @} End of "addtogroup updates-8.1.x".
  */
+
+/**
+ * @addtogroup updates-8.2.x
+ * @{
+ */
+
+/**
+ * Fix views with serializer dependencies.
+ */
+function views_post_update_serializer_dependencies() {
+  $views = View::loadMultiple();
+  array_walk($views, function(View $view) {
+    $old_dependencies = $view->getDependencies();
+    $new_dependencies = $view->calculateDependencies()->getDependencies();
+    if ($old_dependencies !== $new_dependencies) {
+      $view->save();
+    }
+  });
+}
+
+/**
+ * @} End of "addtogroup updates-8.2.x".
+ */
