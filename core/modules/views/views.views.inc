@@ -295,6 +295,12 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
   if (!$field_storage->getBundles()) {
     return $data;
   }
+
+  // Ignore custom storage too.
+  if ($field_storage->hasCustomStorage()) {
+    return $data;
+  }
+
   // Check whether the entity type storage is supported.
   $storage = _views_field_get_entity_type_storage($field_storage);
   if (!$storage) {

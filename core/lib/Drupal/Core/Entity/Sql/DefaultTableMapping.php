@@ -185,7 +185,7 @@ class DefaultTableMapping implements TableMappingInterface {
   public function getColumnNames($field_name) {
     if (!isset($this->columnMapping[$field_name])) {
       $this->columnMapping[$field_name] = array();
-      if (isset($this->fieldStorageDefinitions[$field_name])) {
+      if (isset($this->fieldStorageDefinitions[$field_name]) && !$this->fieldStorageDefinitions[$field_name]->hasCustomStorage()) {
         foreach (array_keys($this->fieldStorageDefinitions[$field_name]->getColumns()) as $property_name) {
           $this->columnMapping[$field_name][$property_name] = $this->getFieldColumnName($this->fieldStorageDefinitions[$field_name], $property_name);
         }
