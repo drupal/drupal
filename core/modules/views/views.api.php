@@ -833,12 +833,12 @@ function hook_views_pre_render(ViewExecutable $view) {
  * primary field will be a nid, you can do something like this:
  * @code
  *   <!--post-FIELD-NID-->
- * @encode
+ * @endcode
  * And then in the post-render, create an array with the text that should
  * go there:
  * @code
  *   strtr($output, array('<!--post-FIELD-1-->' => 'output for FIELD of nid 1');
- * @encode
+ * @endcode
  * All of the cached result data will be available in $view->result, as well,
  * so all ids used in the query should be discoverable.
  *

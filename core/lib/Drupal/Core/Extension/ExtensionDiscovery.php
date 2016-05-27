@@ -138,7 +138,7 @@ class ExtensionDiscovery {
    * To also find test modules, add
    * @code
    * $settings['extension_discovery_scan_tests'] = TRUE;
-   * @encode
+   * @endcode
    * to your settings.php.
    *
    * The information is returned in an associative array, keyed by the extension
