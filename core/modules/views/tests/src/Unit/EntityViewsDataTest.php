@@ -18,6 +18,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\LanguageItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\UriItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\UuidItem;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\text\Plugin\Field\FieldType\TextLongItem;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
@@ -83,9 +84,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->getMock();
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
 
-    $typed_data_manager = $this->getMockBuilder('Drupal\Core\TypedData\TypedDataManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $typed_data_manager = $this->getMock(TypedDataManagerInterface::class);
     $typed_data_manager->expects($this->any())
         ->method('createDataDefinition')
         ->willReturn($this->getMock('Drupal\Core\TypedData\DataDefinitionInterface'));

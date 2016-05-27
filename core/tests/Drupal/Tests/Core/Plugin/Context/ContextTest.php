@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\Plugin\Context;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -46,10 +47,7 @@ class ContextTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->typedDataManager = $this->getMockBuilder('Drupal\Core\TypedData\TypedDataManager')
-      ->disableOriginalConstructor()
-      ->setMethods(array('create'))
-      ->getMock();
+    $this->typedDataManager = $this->getMock(TypedDataManagerInterface::class);
   }
 
   /**

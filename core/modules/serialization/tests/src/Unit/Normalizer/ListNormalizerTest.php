@@ -3,6 +3,7 @@
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\Normalizer\ListNormalizer;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
@@ -37,10 +38,7 @@ class ListNormalizerTest extends UnitTestCase {
   protected function setUp() {
     // Mock the TypedDataManager to return a TypedDataInterface mock.
     $typed_data = $this->getMock('Drupal\Core\TypedData\TypedDataInterface');
-    $typed_data_manager = $this->getMockBuilder('Drupal\Core\TypedData\TypedDataManager')
-      ->disableOriginalConstructor()
-      ->setMethods(array('getPropertyInstance'))
-      ->getMock();
+    $typed_data_manager = $this->getMock(TypedDataManagerInterface::class);
     $typed_data_manager->expects($this->any())
       ->method('getPropertyInstance')
       ->will($this->returnValue($typed_data));
