@@ -82,11 +82,11 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
    * {@inheritdoc}
    */
   public function setConfiguration($configuration) {
+    $this->configuration = $configuration;
     $plugin = $this->get($this->instanceId);
     if ($plugin instanceof ConfigurablePluginInterface) {
       $plugin->setConfiguration($configuration);
     }
-    $this->configuration = $configuration;
     return $this;
   }
 
@@ -94,6 +94,7 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
    * {@inheritdoc}
    */
   public function addInstanceId($id, $configuration = NULL) {
+    $this->instanceId = $id;
     parent::addInstanceId($id, $configuration);
     if ($configuration !== NULL) {
       $this->setConfiguration($configuration);
