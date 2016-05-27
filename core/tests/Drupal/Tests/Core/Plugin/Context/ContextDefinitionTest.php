@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Plugin\Context;
 
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -61,10 +62,7 @@ class ContextDefinitionTest extends UnitTestCase {
     if ($is_multiple) {
       $create_definition_method = 'createListDataDefinition';
     }
-    $mock_data_manager = $this->getMockBuilder('\Drupal\Core\TypedData\TypedDataManager')
-      ->disableOriginalConstructor()
-      ->setMethods(array($create_definition_method))
-      ->getMock();
+    $mock_data_manager = $this->getMock(TypedDataManagerInterface::class);
     // Our mocked data manager will return our mocked data definition for a
     // valid data type.
     $mock_data_manager->expects($this->once())
@@ -127,10 +125,7 @@ class ContextDefinitionTest extends UnitTestCase {
     if ($is_multiple) {
       $create_definition_method = 'createListDataDefinition';
     }
-    $mock_data_manager = $this->getMockBuilder('\Drupal\Core\TypedData\TypedDataManager')
-      ->disableOriginalConstructor()
-      ->setMethods(array($create_definition_method))
-      ->getMock();
+    $mock_data_manager = $this->getMock(TypedDataManagerInterface::class);
     // Our mocked data manager will return NULL for a non-valid data type. This
     // will eventually cause getDataDefinition() to throw an exception.
     $mock_data_manager->expects($this->once())
