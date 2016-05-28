@@ -32,7 +32,7 @@ class ImageFieldTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('image');
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles'));
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles', 'administer fields'));
     $this->drupalLogin($this->admin_user);
   }
 

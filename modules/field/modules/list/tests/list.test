@@ -212,7 +212,7 @@ class ListFieldUITestCase extends FieldTestCase {
     parent::setUp('field_test', 'field_ui');
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy', 'administer fields'));
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.

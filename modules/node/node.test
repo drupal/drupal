@@ -1518,7 +1518,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
    * Tests editing a node type using the UI.
    */
   function testNodeTypeEditing() {
-    $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types'));
+    $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types', 'administer fields'));
     $this->drupalLogin($web_user);
 
     $instance = field_info_instance('node', 'body', 'page');
@@ -2768,8 +2768,8 @@ class NodeAccessFieldTestCase extends NodeWebTestCase {
     node_access_rebuild();
 
     // Create some users.
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'bypass node access'));
-    $this->content_admin_user = $this->drupalCreateUser(array('access content', 'administer content types'));
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'bypass node access', 'administer fields'));
+    $this->content_admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer fields'));
 
     // Add a custom field to the page content type.
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');

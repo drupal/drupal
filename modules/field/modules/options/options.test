@@ -54,7 +54,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     $this->bool = field_create_field($this->bool);
 
     // Create a web user.
-    $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
+    $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content', 'administer fields'));
     $this->drupalLogin($this->web_user);
   }
 
@@ -460,7 +460,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     $this->assertNoFieldChecked("edit-bool-$langcode");
 
     // Create admin user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy', 'administer fields'));
     $this->drupalLogin($admin_user);
 
     // Create a test field instance.

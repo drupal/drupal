@@ -424,6 +424,7 @@ class TextTranslationTestCase extends DrupalWebTestCase {
       'administer content types',
       'access administration pages',
       'bypass node access',
+      'administer fields',
       filter_permission_name($full_html_format),
     ));
     $this->translator = $this->drupalCreateUser(array('create article content', 'edit own article content', 'translate content'));

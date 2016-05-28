@@ -106,8 +106,18 @@ function field_ui_menu() {
           $access = array_intersect_key($bundle_info['admin'], drupal_map_assoc(array('access callback', 'access arguments')));
           $access += array(
             'access callback' => 'user_access',
-            'access arguments' => array('administer site configuration'),
+            'access arguments' => array('administer fields'),
           );
+
+          // Add the "administer fields" permission on top of the access
+          // restriction because the field UI should only be accessible to
+          // trusted users.
+          if ($access['access callback'] != 'user_access' || $access['access arguments'] != array('administer fields')) {
+            $access = array(
+              'access callback' => 'field_ui_admin_access',
+              'access arguments' => array($access['access callback'], $access['access arguments']),
+            );
+          }
 
           $items["$path/fields"] = array(
             'title' => 'Manage fields',
@@ -391,4 +401,14 @@ function field_ui_form_node_type_form_submit($form, &$form_state) {
   if ($form_state['triggering_element']['#parents'][0] === 'save_continue') {
     $form_state['redirect'] = _field_ui_bundle_admin_path('node', $form_state['values']['type']) .'/fields';
   }
+}
+
+/**
+ * Access callback to determine if a user is allowed to use the field UI.
+ *
+ * Only grant access if the user has both the "administer fields" permission and
+ * is granted access by the entity specific restrictions.
+ */
+function field_ui_admin_access($access_callback, $access_arguments) {
+  return user_access('administer fields') && call_user_func_array($access_callback, $access_arguments);
 }

@@ -468,5 +468,26 @@ function field_update_7003() {
 }
 
 /**
+ * Grant the new "administer fields" permission to trusted users.
+ */
+function field_update_7004() {
+  // Assign the permission to anyone that already has a trusted core permission
+  // that would have previously let them administer fields on an entity type.
+  $rids = array();
+  $permissions = array(
+    'administer site configuration',
+    'administer content types',
+    'administer users',
+  );
+  foreach ($permissions as $permission) {
+    $rids = array_merge($rids, array_keys(user_roles(FALSE, $permission)));
+  }
+  $rids = array_unique($rids);
+  foreach ($rids as $rid) {
+    _update_7000_user_role_grant_permissions($rid, array('administer fields'), 'field');
+  }
+}
+
+/**
  * @} End of "addtogroup updates-7.x-extra".
  */

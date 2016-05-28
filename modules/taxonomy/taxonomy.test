@@ -1025,7 +1025,7 @@ class TaxonomyRSSTestCase extends TaxonomyWebTestCase {
 
   function setUp() {
     parent::setUp('taxonomy');
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access', 'administer content types'));
+    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access', 'administer content types', 'administer fields'));
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
 

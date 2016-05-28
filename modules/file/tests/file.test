@@ -22,7 +22,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
     $modules[] = 'file';
     $modules[] = 'file_module_test';
     parent::setUp($modules);
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer permissions', 'administer content types', 'administer nodes', 'bypass node access'));
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer permissions', 'administer content types', 'administer nodes', 'bypass node access', 'administer fields'));
     $this->drupalLogin($this->admin_user);
   }
 

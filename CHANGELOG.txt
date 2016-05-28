@@ -1,6 +1,9 @@
 
 Drupal 7.44, xxxx-xx-xx (development version)
 -----------------------
+- Added a new "administer fields" permission for trusted users, which is
+  required in addition to other permissions to use the field UI
+  (https://www.drupal.org/node/2483307).
 - Changed wording on the Update Manager settings page to clarify that the
   option to check for disabled module updates also applies to uninstalled
   modules (administrative-facing translatable string change).

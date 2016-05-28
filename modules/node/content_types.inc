@@ -11,7 +11,7 @@
 function node_overview_types() {
   $types = node_type_get_types();
   $names = node_type_get_names();
-  $field_ui = module_exists('field_ui');
+  $field_ui = module_exists('field_ui') && user_access('administer fields');
   $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => $field_ui ? '4' : '2'));
   $rows = array();
 
