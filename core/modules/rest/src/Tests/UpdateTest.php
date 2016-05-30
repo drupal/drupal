@@ -2,7 +2,12 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\comment\Entity\Comment;
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Tests the update of resources.
@@ -11,12 +16,22 @@ use Drupal\Component\Serialization\Json;
  */
 class UpdateTest extends RESTTestBase {
 
+  use CommentTestTrait;
+
   /**
    * Modules to install.
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'entity_test');
+  public static $modules = ['hal', 'rest', 'entity_test', 'comment'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->addDefaultCommentField('entity_test', 'entity_test');
+  }
 
   /**
    * Tests several valid and invalid partial update requests on test entities.
@@ -220,7 +235,129 @@ class UpdateTest extends RESTTestBase {
     // Verify that we can log in with the new password.
     $account->pass_raw = $new_password;
     $this->drupalLogin($account);
+  }
 
+  /**
+   * Test patching a comment using both HAL+JSON and JSON.
+   */
+  public function testUpdateComment() {
+    $entity_type = 'comment';
+    // Enables the REST service for 'comment' entity type.
+    $this->enableService('entity:' . $entity_type, 'PATCH', ['hal_json', 'json']);
+    $permissions = $this->entityPermissions($entity_type, 'update');
+    $permissions[] = 'restful patch entity:' . $entity_type;
+    $account = $this->drupalCreateUser($permissions);
+    $account->set('mail', 'old-email@example.com');
+    $this->drupalLogin($account);
+
+    // Create & save an entity to comment on, plus a comment.
+    $entity_test = EntityTest::create();
+    $entity_test->save();
+    $entity_values = $this->entityValues($entity_type);
+    $entity_values['entity_id'] = $entity_test->id();
+    $entity_values['uid'] = $account->id();
+    $comment = Comment::create($entity_values);
+    $comment->save();
+
+    $this->pass('Test case 1: PATCH comment using HAL+JSON.');
+    $comment->setSubject('Initial subject')->save();
+    $read_only_fields = [
+      'name',
+      'created',
+      'changed',
+      'status',
+      'thread',
+      'entity_type',
+      'field_name',
+      'entity_id',
+      'uid',
+    ];
+    $this->assertNotEqual('Updated subject', $comment->getSubject());
+    $comment->setSubject('Updated subject');
+    $this->patchEntity($comment, $read_only_fields, $account, 'hal_json', 'application/hal+json');
+    $comment = Comment::load($comment->id());
+    $this->assertEqual('Updated subject', $comment->getSubject());
+
+    $this->pass('Test case 1: PATCH comment using JSON.');
+    $comment->setSubject('Initial subject')->save();
+    $read_only_fields = [
+      'pid', // Extra compared to HAL+JSON.
+      'entity_id',
+      'uid',
+      'name',
+      'homepage', // Extra compared to HAL+JSON.
+      'created',
+      'changed',
+      'status',
+      'thread',
+      'entity_type',
+      'field_name',
+    ];
+    $this->assertNotEqual('Updated subject', $comment->getSubject());
+    $comment->setSubject('Updated subject');
+    $this->patchEntity($comment, $read_only_fields, $account, 'json', 'application/json');
+    $comment = Comment::load($comment->id());
+    $this->assertEqual('Updated subject', $comment->getSubject());
+  }
+
+  /**
+   * Patches an existing entity using the passed in (modified) entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The updated entity to send.
+   * @param string[] $read_only_fields
+   *   Names of the fields that are read-only, in validation order.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account to use for serialization.
+   * @param string $format
+   *   A serialization format.
+   * @param string $mime_type
+   *   The MIME type corresponding to the specified serialization format.
+   */
+  protected function patchEntity(EntityInterface $entity, array $read_only_fields, AccountInterface $account, $format, $mime_type) {
+    $serializer = $this->container->get('serializer');
+
+    $url = $entity->toUrl();
+    $context = ['account' => $account];
+    // Certain fields are always read-only, others this user simply is not
+    // allowed to modify. For all of them, ensure they are not serialized, else
+    // we'll get a 403 plus an error message.
+    for ($i = 0; $i < count($read_only_fields); $i++) {
+      $field = $read_only_fields[$i];
+
+      $normalized = $serializer->normalize($entity, $format, $context);
+      if ($format !== 'hal_json') {
+        // The default normalizer always keeps fields, even if they are unset
+        // here because they should be omitted during a PATCH request. Therefore
+        // manually strip them
+        // @see \Drupal\Core\Entity\ContentEntityBase::__unset()
+        // @see \Drupal\serialization\Normalizer\EntityNormalizer::normalize()
+        // @see \Drupal\hal\Normalizer\ContentEntityNormalizer::normalize()
+        $read_only_fields_so_far = array_slice($read_only_fields, 0, $i);
+        $normalized = array_diff_key($normalized, array_flip($read_only_fields_so_far));
+      }
+      $serialized = $serializer->serialize($normalized, $format, $context);
+
+      $this->httpRequest($url, 'PATCH', $serialized, $mime_type);
+      $this->assertResponse(403);
+      $this->assertResponseBody('{"error":"Access denied on updating field \'' . $field . '\'."}');
+
+      if ($format === 'hal_json') {
+        // We've just tried with this read-only field, now unset it.
+        $entity->set($field, NULL);
+      }
+    }
+
+    // Finally, with all read-only fields unset, the request should succeed.
+    $normalized = $serializer->normalize($entity, $format, $context);
+    if ($format !== 'hal_json') {
+      $normalized = array_diff_key($normalized, array_combine($read_only_fields, $read_only_fields));
+    }
+    $serialized = $serializer->serialize($normalized, $format, $context);
+
+    $this->httpRequest($url, 'PATCH', $serialized, $mime_type);
+    $this->assertResponse(204);
+    $this->assertResponseBody('');
   }
 
 }

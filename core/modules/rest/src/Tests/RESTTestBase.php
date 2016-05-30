@@ -250,8 +250,8 @@ abstract class RESTTestBase extends WebTestBase {
    *   resource types.
    * @param string $method
    *   The HTTP method to enable, e.g. GET, POST etc.
-   * @param string $format
-   *   (Optional) The serialization format, e.g. hal_json.
+   * @param string|array $format
+   *   (Optional) The serialization format, e.g. hal_json, or a list of formats.
    * @param array $auth
    *   (Optional) The list of valid authentication methods.
    */
@@ -261,10 +261,15 @@ abstract class RESTTestBase extends WebTestBase {
     $settings = array();
 
     if ($resource_type) {
-      if ($format == NULL) {
-        $format = $this->defaultFormat;
+      if (is_array($format)) {
+        $settings[$resource_type][$method]['supported_formats'] = $format;
       }
-      $settings[$resource_type][$method]['supported_formats'][] = $format;
+      else {
+        if ($format == NULL) {
+          $format = $this->defaultFormat;
+        }
+        $settings[$resource_type][$method]['supported_formats'][] = $format;
+      }
 
       if ($auth == NULL) {
         $auth = $this->defaultAuth;
