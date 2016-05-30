@@ -146,13 +146,24 @@ class EntityResource extends ResourceBase {
     }
 
     // Overwrite the received properties.
-    $langcode_key = $entity->getEntityType()->getKey('langcode');
+    $entity_keys = $entity->getEntityType()->getKeys();
     foreach ($entity->_restSubmittedFields as $field_name) {
       $field = $entity->get($field_name);
-      // It is not possible to set the language to NULL as it is automatically
-      // re-initialized. As it must not be empty, skip it if it is.
-      if ($field_name == $langcode_key && $field->isEmpty()) {
-        continue;
+
+      // Entity key fields need special treatment: together they uniquely
+      // identify the entity. Therefore it does not make sense to modify any of
+      // them. However, rather than throwing an error, we just ignore them as
+      // long as their specified values match their current values.
+      if (in_array($field_name, $entity_keys, TRUE)) {
+        // Unchanged values for entity keys don't need access checking.
+        if ($original_entity->get($field_name)->getValue() === $entity->get($field_name)->getValue()) {
+          continue;
+        }
+        // It is not possible to set the language to NULL as it is automatically
+        // re-initialized. As it must not be empty, skip it if it is.
+        elseif (isset($entity_keys['langcode']) && $field_name === $entity_keys['langcode'] && $field->isEmpty()) {
+          continue;
+        }
       }
 
       if (!$original_entity->get($field_name)->access('edit')) {
