@@ -1261,7 +1261,7 @@ function drupal_page_header() {
 
   $default_headers = array(
     'Expires' => 'Sun, 19 Nov 1978 05:00:00 GMT',
-    'Cache-Control' => 'no-cache, must-revalidate, post-check=0, pre-check=0',
+    'Cache-Control' => 'no-cache, must-revalidate',
     // Prevent browsers from sniffing a response and picking a MIME type
     // different from the declared content-type, since that can lead to
     // XSS and other vulnerabilities.

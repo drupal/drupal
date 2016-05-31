@@ -1,6 +1,8 @@
 
 Drupal 7.44, xxxx-xx-xx (development version)
 -----------------------
+- Removed meaningless post-check=0 and pre-check=0 cache control headers from
+  Drupal HTTP responses.
 - Added clickjacking protection to Drupal core by setting the X-Frame-Options
   header to SAMEORIGIN by default (https://www.drupal.org/node/2735873).
 - Added a new "administer fields" permission for trusted users, which is
