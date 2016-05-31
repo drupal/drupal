@@ -191,10 +191,10 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
         $taxonomy = array();
         foreach ($node->getFieldDefinitions() as $field) {
           if ($field->getType() == 'entity_reference' && $field->getSetting('target_type') == 'taxonomy_term') {
-            foreach ($node->get($field->getName()) as $item) {
-              if (($handler_settings = $field->getSetting('handler_settings')) && isset($handler_settings['target_bundles'])) {
-                $taxonomy[$item->target_id] = reset($handler_settings['target_bundles']);
-              }
+            $taxonomy_terms = $node->{$field->getName()}->referencedEntities();
+            /** @var \Drupal\taxonomy\TermInterface $taxonomy_term */
+            foreach ($taxonomy_terms as $taxonomy_term) {
+              $taxonomy[$taxonomy_term->id()] = $taxonomy_term->getVocabularyId();
             }
           }
         }
