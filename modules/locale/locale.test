@@ -2237,6 +2237,37 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
 
     $this->drupalLogout();
   }
+
+  /**
+   * Verifies that nodes may be created with different languages.
+   */
+  function testNodeCreationWithLanguage() {
+    // Create an admin user and log them in.
+    $perms = array(
+      // Standard node permissions.
+      'create page content',
+      'administer content types',
+      'administer nodes',
+      'bypass node access',
+      // Locale.
+      'administer languages',
+    );
+    $web_user = $this->drupalCreateUser($perms);
+    $this->drupalLogin($web_user);
+
+    // Create some test nodes using different langcodes.
+    foreach (array(LANGUAGE_NONE, 'en', 'fr') as $langcode) {
+      $node_args = array(
+        'type' => 'page',
+        'promote' => 1,
+        'language' => $langcode,
+      );
+      $node = $this->drupalCreateNode($node_args);
+      $node_reloaded = node_load($node->nid, NULL, TRUE);
+      $this->assertEqual($node_reloaded->language, $langcode, format_string('The language code of the node was successfully set to @langcode.', array('@langcode' => $langcode)));
+    }
+  }
+
 }
 
 /**
