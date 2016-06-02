@@ -89,10 +89,12 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
     $cid = 'rest:links:types';
     $cache = $this->cache->get($cid);
     if (!$cache) {
-      $this->writeCache($context);
-      $cache = $this->cache->get($cid);
+      $data = $this->writeCache($context);
     }
-    return $cache->data;
+    else {
+      $data = $cache->data;
+    }
+    return $data;
   }
 
   /**
@@ -100,6 +102,10 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
    *
    * @param array $context
    *   Context from the normalizer/serializer operation.
+   *
+   * @return array
+   *   An array of typed data ids (entity_type and bundle) keyed by
+   *   corresponding type URI.
    */
   protected function writeCache($context = array()) {
     $data = array();
@@ -125,6 +131,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
     // These URIs only change when entity info changes, so cache it permanently
     // and only clear it when entity_info is cleared.
     $this->cache->set('rest:links:types', $data, Cache::PERMANENT, array('entity_types'));
+    return $data;
   }
 
 }
