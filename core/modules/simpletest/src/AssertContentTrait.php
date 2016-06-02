@@ -1242,6 +1242,24 @@ trait AssertContentTrait {
   }
 
   /**
+   * Asserts that a select option with the visible text exists.
+   *
+   * @param string $id
+   *   The ID of the select field to assert.
+   * @param string $text
+   *   The text for the option tag to assert.
+   * @param string $message
+   *   (optional) A message to display with the assertion.
+   *
+   * @return bool
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertOptionByText($id, $text, $message = '') {
+    $options = $this->xpath('//select[@id=:id]//option[normalize-space(text())=:text]', [':id' => $id, ':text' => $text]);
+    return $this->assertTrue(isset($options[0]), $message ?: 'Option with text label ' . $text . ' for select field ' . $id . ' exits.');
+  }
+
+  /**
    * Asserts that a select option in the current page exists.
    *
    * @param string $drupal_selector
