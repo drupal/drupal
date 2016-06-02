@@ -72,14 +72,14 @@ use Drupal\Core\Utility\UpdateException;
  * frequently called should be left in the main module file so that they are
  * always available.
  *
+ * See system_hook_info() for all hook groups defined by Drupal core.
+ *
  * @return
  *   An associative array whose keys are hook names and whose values are an
  *   associative array containing:
  *   - group: A string defining the group to which the hook belongs. The module
  *     system will determine whether a file with the name $module.$group.inc
  *     exists, and automatically load it when required.
- *
- * See system_hook_info() for all hook groups defined by Drupal core.
  *
  * @see hook_hook_info_alter()
  */

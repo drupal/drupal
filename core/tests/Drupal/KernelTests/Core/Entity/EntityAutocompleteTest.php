@@ -146,7 +146,7 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
    *   The label of the entity to query by.
    *
    * @return mixed
-   *  The JSON value encoded in its appropriate PHP type.
+   *   The JSON value encoded in its appropriate PHP type.
    */
   protected function getAutocompleteResult($input) {
     $request = Request::create('entity_reference_autocomplete/' . $this->entityType . '/default');

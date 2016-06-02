@@ -148,7 +148,7 @@ class FileListingTest extends FileFieldTestBase {
    * Creates and saves a test file.
    *
    * @return \Drupal\Core\Entity\EntityInterface
-   *  A file entity.
+   *   A file entity.
    */
   protected function createFile() {
     // Create a new file entity.

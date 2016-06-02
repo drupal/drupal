@@ -377,7 +377,7 @@ function taxonomy_term_load_multiple(array $tids = NULL) {
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  *
  * @return array
- *  An array of vocabulary objects, indexed by vid.
+ *   An array of vocabulary objects, indexed by vid.
  */
 function taxonomy_vocabulary_load_multiple(array $vids = NULL) {
   return Vocabulary::loadMultiple($vids);

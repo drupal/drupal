@@ -93,28 +93,28 @@ interface StorageInterface {
   /**
    * Encodes configuration data into the storage-specific format.
    *
+   * This is a publicly accessible static method to allow for alternative
+   * usages in data conversion scripts and also tests.
+   *
    * @param array $data
    *   The configuration data to encode.
    *
    * @return string
    *   The encoded configuration data.
-   *
-   * This is a publicly accessible static method to allow for alternative
-   * usages in data conversion scripts and also tests.
    */
   public function encode($data);
 
   /**
    * Decodes configuration data from the storage-specific format.
    *
+   * This is a publicly accessible static method to allow for alternative
+   * usages in data conversion scripts and also tests.
+   *
    * @param string $raw
    *   The raw configuration data string to decode.
    *
    * @return array
    *   The decoded configuration data as an associative array.
-   *
-   * This is a publicly accessible static method to allow for alternative
-   * usages in data conversion scripts and also tests.
    */
   public function decode($raw);
 

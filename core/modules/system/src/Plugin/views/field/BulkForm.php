@@ -394,7 +394,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    * Returns the message to be displayed when there are no selected items.
    *
    * @return string
-   *  Message displayed when no items are selected.
+   *   Message displayed when no items are selected.
    */
   protected function emptySelectedMessage() {
     return $this->t('No items selected.');

@@ -115,8 +115,8 @@ function drupal_install_profile_distribution_name() {
  * Loads the installation profile, extracting its defined version.
  *
  * @return string Distribution version defined in the profile's .info.yml file.
- * Defaults to \Drupal::VERSION if no version is explicitly provided
- * by the installation profile.
+ *   Defaults to \Drupal::VERSION if no version is explicitly provided
+ *   by the installation profile.
  *
  * @see install_profile_info()
  */
@@ -139,7 +139,7 @@ function drupal_install_profile_distribution_version() {
  * Detects all supported databases that are compiled into PHP.
  *
  * @return
- *  An array of database types compiled into PHP.
+ *   An array of database types compiled into PHP.
  */
 function drupal_detect_database_types() {
   $databases = drupal_get_database_types();
@@ -724,7 +724,7 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file') {
  *   (optional) Whether to output messages. Defaults to TRUE.
  *
  * @return
- *  TRUE/FALSE whether or not the directory was successfully created.
+ *   TRUE/FALSE whether or not the directory was successfully created.
  */
 function drupal_install_mkdir($file, $mask, $message = TRUE) {
   $mod = 0;
@@ -773,7 +773,7 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
  *   (optional) Whether to output messages. Defaults to TRUE.
  *
  * @return
- *  TRUE/FALSE whether or not we were able to fix the file's permissions.
+ *   TRUE/FALSE whether or not we were able to fix the file's permissions.
  */
 function drupal_install_fix_file($file, $mask, $message = TRUE) {
   // If $file does not exist, fileperms() issues a PHP warning.

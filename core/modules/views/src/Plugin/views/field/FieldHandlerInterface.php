@@ -140,7 +140,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * by in the style settings.
    *
    * @return bool
-   *  TRUE if this field handler is groupable, otherwise FALSE.
+   *   TRUE if this field handler is groupable, otherwise FALSE.
    */
   public function useStringGroupBy();
 
@@ -215,7 +215,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    *   Whether or not to use empty() to check the value.
    *
    * @return bool
-   * TRUE if the value is considered empty, FALSE otherwise.
+   *   TRUE if the value is considered empty, FALSE otherwise.
    */
   public function isValueEmpty($value, $empty_zero, $no_skip_empty = TRUE);
 

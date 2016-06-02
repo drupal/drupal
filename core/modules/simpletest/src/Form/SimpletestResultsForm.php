@@ -214,7 +214,7 @@ class SimpletestResultsForm extends FormBase {
    *   The test_id to retrieve results of.
    *
    * @return array
-   *  Array of results grouped by test_class.
+   *   Array of results grouped by test_class.
    */
   protected function getResults($test_id) {
     return $this->database->select('simpletest')

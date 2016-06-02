@@ -149,7 +149,7 @@ class Cache {
    * Gets all cache bin services.
    *
    * @return array
-   *  An array of cache backend objects keyed by cache bins.
+   *   An array of cache backend objects keyed by cache bins.
    */
   public static function getBins() {
     $bins = array();
