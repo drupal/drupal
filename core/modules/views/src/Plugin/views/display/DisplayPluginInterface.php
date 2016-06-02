@@ -568,7 +568,7 @@ interface DisplayPluginInterface {
    * Renders the exposed form as block.
    *
    * @return string|null
-   *  The rendered exposed form as string or NULL otherwise.
+   *   The rendered exposed form as string or NULL otherwise.
    */
   public function viewExposedFormBlocks();
 

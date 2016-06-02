@@ -40,7 +40,7 @@ class DefaultLanguageItem extends LanguageItem {
    *   The entity whose language code to be loaded.
    *
    * @return string
-   *  A string language code.
+   *   A string language code.
    */
   public function getDefaultLangcode(EntityInterface $entity) {
     return language_get_default_langcode($entity->getEntityTypeId(), $entity->bundle());

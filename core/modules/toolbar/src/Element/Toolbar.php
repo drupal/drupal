@@ -59,7 +59,7 @@ class Toolbar extends RenderElement {
    *   A renderable array.
    *
    * @return array
-   *  A renderable array.
+   *   A renderable array.
    *
    * @see toolbar_page_top()
    */

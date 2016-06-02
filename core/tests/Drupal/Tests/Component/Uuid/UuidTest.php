@@ -77,7 +77,7 @@ class UuidTest extends UnitTestCase {
    * Dataprovider for UUID instance tests.
    *
    * @return array
-   *  An array of arrays containing
+   *   An array of arrays containing
    *   - The Uuid to check against.
    *   - (bool) Whether or not the Uuid is valid.
    *   - Failure message.

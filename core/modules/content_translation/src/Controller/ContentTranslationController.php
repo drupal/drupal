@@ -77,8 +77,8 @@ class ContentTranslationController extends ControllerBase {
    *   The route match.
    * @param string $entity_type_id
    *   (optional) The entity type ID.
-   * @return array Array of page elements to render.
-   * Array of page elements to render.
+   * @return array
+   *   Array of page elements to render.
    */
   public function overview(RouteMatchInterface $route_match, $entity_type_id = NULL) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */

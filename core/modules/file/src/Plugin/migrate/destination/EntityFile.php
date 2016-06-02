@@ -147,7 +147,7 @@ class EntityFile extends EntityContentBase {
    *   (optional) FILE_EXISTS_REPLACE (default) or FILE_EXISTS_RENAME.
    *
    * @return bool
-   *  TRUE on success, FALSE on failure.
+   *   TRUE on success, FALSE on failure.
    */
   protected function writeFile($source, $destination, $replace = FILE_EXISTS_REPLACE) {
     if ($this->configuration['move']) {
@@ -190,8 +190,8 @@ class EntityFile extends EntityContentBase {
    *   The URI or path.
    *
    * @return string|false
-   *  The directory component of the path or URI, or FALSE if it could not
-   *  be determined.
+   *   The directory component of the path or URI, or FALSE if it could not
+   *   be determined.
    */
   protected function getDirectory($uri) {
     $dir = $this->fileSystem->dirname($uri);
@@ -213,8 +213,8 @@ class EntityFile extends EntityContentBase {
    *   The destination URI.
    *
    * @return bool
-   *  TRUE if the source and destination URIs refer to the same physical path,
-   *  otherwise FALSE.
+   *   TRUE if the source and destination URIs refer to the same physical path,
+   *   otherwise FALSE.
    */
   protected function isLocationUnchanged($source, $destination) {
     if ($this->isLocalUri($source) && $this->isLocalUri($destination)) {

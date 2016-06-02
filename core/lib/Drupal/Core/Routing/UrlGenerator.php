@@ -253,7 +253,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    *   $parameters merged in.
    *
    * @return string
-   *  The url path corresponding to the route, without the base path.
+   *   The url path corresponding to the route, without the base path.
    */
   protected function getInternalPathFromRoute($name, SymfonyRoute $route, $parameters = array(), $query_params = array()) {
     // The Route has a cache of its own and is not recompiled as long as it does

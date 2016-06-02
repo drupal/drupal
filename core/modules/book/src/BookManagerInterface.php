@@ -18,6 +18,8 @@ interface BookManagerInterface {
    * Since this can be the full tree including hidden items, the data returned
    * may be used for generating an an admin interface or a select.
    *
+   * Note: based on menu_tree_all_data().
+   *
    * @param int $bid
    *   The Book ID to find links for.
    * @param array|null $link
@@ -31,8 +33,6 @@ interface BookManagerInterface {
    *
    * @return array
    *   An tree of menu links in an array, in the order they should be rendered.
-   *
-   * Note: based on menu_tree_all_data().
    */
   public function bookTreeAllData($bid, $link = NULL, $max_depth = NULL);
 

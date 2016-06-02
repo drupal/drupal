@@ -65,7 +65,7 @@ function update_check_incompatibility($name, $type = 'module') {
  * Returns whether the minimum schema requirement has been satisfied.
  *
  * @return array
- *  A requirements info array.
+ *   A requirements info array.
  */
 function update_system_schema_requirements() {
   $requirements = array();

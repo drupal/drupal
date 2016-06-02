@@ -259,7 +259,7 @@ function simpletest_phpunit_configuration_filepath() {
  *   this variable.
  *
  * @return string
- *  The results as returned by exec().
+ *   The results as returned by exec().
  */
 function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpunit_file, &$status = NULL) {
   // Setup an environment variable containing the database connection so that

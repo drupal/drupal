@@ -295,8 +295,8 @@ class Views {
    *   If TRUE, the list of views is sorted ascending.
    *
    * @return array
-   *  an associative array for use in select.
-   *  - key: view name and display id separated by ':', or the view name only
+   *   An associative array for use in select.
+   *   - key: view name and display id separated by ':', or the view name only.
    */
   public static function getViewsAsOptions($views_only = FALSE, $filter = 'all', $exclude_view = NULL, $optgroup = FALSE, $sort = FALSE) {
 

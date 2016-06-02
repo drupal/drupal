@@ -1084,7 +1084,7 @@ function install_verify_completed_task() {
  *   The site path.
  *
  * @return bool
- *  TRUE if there are no database errors.
+ *   TRUE if there are no database errors.
  */
 function install_verify_database_settings($site_path) {
   if ($database = Database::getConnectionInfo()) {

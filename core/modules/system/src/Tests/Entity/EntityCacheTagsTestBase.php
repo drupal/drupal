@@ -229,7 +229,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    *   The entity that the referencing entity should reference.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
-   *  An array containing a referencing entity and a non-referencing entity.
+   *   An array containing a referencing entity and a non-referencing entity.
    */
   protected function createReferenceTestEntities($referenced_entity) {
     // All referencing entities should be of the type 'entity_test'.

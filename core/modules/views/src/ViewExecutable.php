@@ -2374,7 +2374,7 @@ class ViewExecutable implements \Serializable {
    * Returns whether admin links should be rendered on the view.
    *
    * @return bool
-   *  TRUE if admin links should be rendered, else FALSE.
+   *   TRUE if admin links should be rendered, else FALSE.
    */
   public function getShowAdminLinks() {
     if (!isset($this->showAdminLinks)) {
