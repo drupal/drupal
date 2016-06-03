@@ -662,7 +662,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function getMigrationDependencies() {
-    return $this->migration_dependencies + ['required' => [], 'optional' => []];
+    return ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
   }
 
   /**
