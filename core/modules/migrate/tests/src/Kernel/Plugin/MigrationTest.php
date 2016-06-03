@@ -27,4 +27,16 @@ class MigrationTest extends KernelTestBase {
     $this->assertEquals([], $migration->getProcessPlugins([]));
   }
 
+  /**
+   * Tests Migration::getMigrationDependencies()
+   *
+   * @covers ::getMigrationDependencies
+   */
+  public function testGetMigrationDependencies() {
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([
+        'migration_dependencies' => NULL
+    ]);
+    $this->assertNotEmpty($migration->getMigrationDependencies(), 'Migration dependencies is not empty');
+  }
+
 }
