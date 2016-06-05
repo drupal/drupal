@@ -214,7 +214,7 @@ interface ModuleHandlerInterface {
    *   The name of the module (without the .module extension).
    * @param string $hook
    *   The name of the hook to invoke.
-   * @param ...
+   * @param array $args
    *   Arguments to pass to the hook implementation.
    *
    * @return mixed
