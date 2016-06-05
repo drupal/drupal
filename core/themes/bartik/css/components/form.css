@@ -15,6 +15,18 @@ form {
 }
 fieldset {
   margin: 1em 0;
+  min-width: 0;
+}
+/**
+ * We've temporarily added this Firefox specific rule here to fix fieldset
+ * widths.
+ * @todo remove once this Mozilla bug is fixed.
+ * See https://bugzilla.mozilla.org/show_bug.cgi?id=504622
+ */
+@-moz-document url-prefix() {
+  fieldset {
+    display: table-cell;
+  }
 }
 details,
 fieldset,

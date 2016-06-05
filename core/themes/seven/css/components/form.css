@@ -10,7 +10,19 @@ fieldset:not(.fieldgroup) {
   border-radius: 2px;
   margin: 1em 0;
   padding: 30px 18px 18px;
+  min-width: 0;
   position: relative;
+}
+/**
+ * We've temporarily added this Firefox specific rule here to fix fieldset
+ * widths.
+ * @todo remove once this Mozilla bug is fixed.
+ * See https://bugzilla.mozilla.org/show_bug.cgi?id=504622
+ */
+@-moz-document url-prefix() {
+  fieldset:not(.fieldgroup) {
+    display: table-cell;
+  }
 }
 fieldset:not(.fieldgroup) > legend {
   font-size: 1em;
@@ -23,6 +35,12 @@ fieldset:not(.fieldgroup) > legend {
 .fieldgroup {
   min-width: 0;
 }
+/**
+ * We've temporarily added this Firefox specific rule here to fix fieldset
+ * widths.
+ * @todo remove once this Mozilla bug is fixed.
+ * See https://bugzilla.mozilla.org/show_bug.cgi?id=504622
+ */
 @-moz-document url-prefix() {
   .fieldgroup {
     display: table-cell;
