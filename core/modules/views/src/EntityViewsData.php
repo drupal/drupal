@@ -58,6 +58,13 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   protected $fieldStorageDefinitions;
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
    * Constructs an EntityViewsData object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -112,6 +119,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     $data = [];
 
     $base_table = $this->entityType->getBaseTable() ?: $this->entityType->id();
+    $views_revision_base_table = NULL;
     $revisionable = $this->entityType->isRevisionable();
     $base_field = $this->entityType->getKey('id');
 
@@ -235,6 +243,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     // Load all typed data definitions of all fields. This should cover each of
     // the entity base, revision, data tables.
     $field_definitions = $this->entityManager->getBaseFieldDefinitions($this->entityType->id());
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     if ($table_mapping = $this->storage->getTableMapping($field_definitions)) {
       // Fetch all fields that can appear in both the base table and the data
       // table.
@@ -255,6 +264,36 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
             continue;
           }
           $this->mapFieldDefinition($table, $field_name, $field_definitions[$field_name], $table_mapping, $data[$table]);
+        }
+      }
+
+      foreach ($field_definitions as $field_definition) {
+        if ($table_mapping->requiresDedicatedTableStorage($field_definition->getFieldStorageDefinition())) {
+          $table = $table_mapping->getDedicatedDataTableName($field_definition->getFieldStorageDefinition());
+
+          $data[$table]['table']['group'] = $this->entityType->getLabel();
+          $data[$table]['table']['provider'] = $this->entityType->getProvider();
+          $data[$table]['table']['join'][$views_base_table] = [
+            'left_field' => $base_field,
+            'field' => 'entity_id',
+            'extra' => [
+              ['field' => 'deleted', 'value' => 0, 'numeric' => TRUE],
+            ],
+          ];
+
+          if ($revisionable) {
+            $revision_table = $table_mapping->getDedicatedRevisionTableName($field_definition->getFieldStorageDefinition());
+
+            $data[$revision_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
+            $data[$revision_table]['table']['provider'] = $this->entityType->getProvider();
+            $data[$revision_table]['table']['join'][$views_revision_base_table] = [
+              'left_field' => $revision_field,
+              'field' => 'entity_id',
+              'extra' => [
+                ['field' => 'deleted', 'value' => 0, 'numeric' => TRUE],
+              ],
+            ];
+          }
         }
       }
     }
