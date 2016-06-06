@@ -55,6 +55,16 @@ class PluginBaseTest extends KernelTestBase {
     });
 
     $this->assertIdentical($result, 'first comes before second');
+
+    // Test tokens with numeric indexes.
+    $text = '{{ argument.0.first }} comes before {{ argument.1.second }}';
+    $tokens = ['{{ argument.0.first }}' => 'first', '{{ argument.1.second }}' => 'second'];
+
+    $result = \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), function () use ($text, $tokens) {
+      return $this->testPluginBase->viewsTokenReplace($text, $tokens);
+    });
+
+    $this->assertIdentical($result, 'first comes before second');
   }
 
   /**
