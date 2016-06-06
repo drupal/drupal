@@ -504,10 +504,13 @@ services:
   theme_installer:
     class: Drupal\Core\Extension\ThemeInstaller
     arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state']
+  # @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Use the other
+  #   entity* services instead.
   entity.manager:
+    # We cannot set the deprecated property here because many test cases still
+    # rely on this service and they would fail with deprecation warnings.
     class: Drupal\Core\Entity\EntityManager
     parent: container.trait
-    deprecated: '%service_id%-no-warning'
     # @todo Remove this tag in https://www.drupal.org/node/2549143.
     tags:
       - { name: plugin_manager_cache_clear }
