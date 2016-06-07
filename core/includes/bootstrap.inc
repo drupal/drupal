@@ -153,6 +153,7 @@ function config_get_config_directory($type) {
   if (!empty($config_directories[$type])) {
     return $config_directories[$type];
   }
+  // @todo https://www.drupal.org/node/2696103 Throw a more specific exception.
   throw new \Exception("The configuration directory type '$type' does not exist");
 }
 

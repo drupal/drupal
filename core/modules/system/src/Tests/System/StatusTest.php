@@ -24,6 +24,16 @@ class StatusTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // Unset the sync directory in settings.php to trigger $config_directories
+    // error.
+    $settings['config_directories']  = array(
+      CONFIG_SYNC_DIRECTORY => (object) array(
+        'value' => '',
+        'required' => TRUE,
+      ),
+    );
+    $this->writeSettings($settings);
+
     $admin_user = $this->drupalCreateUser(array(
       'administer site configuration',
     ));
@@ -59,6 +69,9 @@ class StatusTest extends WebTestBase {
 
     // If a module is fully installed no pending updates exists.
     $this->assertNoText(t('Out of date'));
+
+    // The global $config_directories is not properly formed.
+    $this->assertRaw(t('Your %file file must define the $config_directories variable as an array containing the names of directories in which configuration files can be found. It must contain a %sync_key key.', array('%file' => $this->siteDirectory . '/settings.php', '%sync_key' => CONFIG_SYNC_DIRECTORY)));
 
     // Set the schema version of update_test_postupdate to a lower version, so
     // update_test_postupdate_update_8001() needs to be executed.

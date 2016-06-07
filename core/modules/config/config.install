@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the config module.
+ */
+
+/**
+* Implements hook_requirements().
+*/
+function config_requirements($phase) {
+  $requirements = [];
+  try {
+    $directory = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
+  }
+  catch (\Exception $e) {
+    // system_requirements() guarantees that the CONFIG_SYNC_DIRECTORY exists
+    // as the config.storage.staging service relies on it.
+    $directory = FALSE;
+  }
+  // Ensure the configuration sync directory is writable. This is only a warning
+  // because only configuration import from a tarball requires the folder to be
+  // web writable.
+  if ($phase !== 'install' && !is_writable($directory)) {
+    $requirements['config directory ' . CONFIG_SYNC_DIRECTORY] = [
+      'title' => t('Configuration directory: %type', ['%type' => CONFIG_SYNC_DIRECTORY]),
+      'description' => t('The directory %directory is not writable.', ['%directory' => $directory]),
+      'severity' => REQUIREMENT_WARNING,
+    ];
+  }
+  return $requirements;
+}

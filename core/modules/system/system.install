@@ -549,15 +549,22 @@ function system_requirements($phase) {
   // defined, the installer will create a valid config directory later, but
   // during runtime we must always display an error.
   if (!empty($GLOBALS['config_directories'])) {
-    foreach ($GLOBALS['config_directories'] as $type => $directory) {
-      $directories[] = config_get_config_directory($type);
+    foreach (array_keys(array_filter($GLOBALS['config_directories'])) as $type) {
+      $directory = config_get_config_directory($type);
+      if (!is_dir($directory)) {
+        $requirements['config directory ' . $type] = array(
+          'title' => t('Configuration directory: %type', ['%type' => $type]),
+          'description' => t('The directory %directory does not exist.', array('%directory' => $directory)),
+          'severity' => REQUIREMENT_ERROR,
+        );
+      }
     }
   }
-  elseif ($phase != 'install') {
+  if ($phase != 'install' && (empty($GLOBALS['config_directories']) || empty($GLOBALS['config_directories'][CONFIG_SYNC_DIRECTORY]) )) {
     $requirements['config directories'] = array(
       'title' => t('Configuration directories'),
       'value' => t('Not present'),
-      'description' => t('Your %file file must define the $config_directories variable as an array containing the name of a directories in which configuration files can be written.', array('%file' => $site_path . '/settings.php')),
+      'description' => t('Your %file file must define the $config_directories variable as an array containing the names of directories in which configuration files can be found. It must contain a %sync_key key.', array('%file' => $site_path . '/settings.php', '%sync_key' => CONFIG_SYNC_DIRECTORY)),
       'severity' => REQUIREMENT_ERROR,
     );
   }
