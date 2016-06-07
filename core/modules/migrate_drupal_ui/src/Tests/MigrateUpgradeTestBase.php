@@ -4,14 +4,14 @@ namespace Drupal\migrate_drupal_ui\Tests;
 
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\migrate_drupal\MigrationCreationTrait;
+use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Provides a base class for testing migration upgrades in the UI.
  */
 abstract class MigrateUpgradeTestBase extends WebTestBase {
-  use MigrationCreationTrait;
+  use MigrationConfigurationTrait;
 
   /**
    * Use the Standard profile to test help implementations of many core modules.
