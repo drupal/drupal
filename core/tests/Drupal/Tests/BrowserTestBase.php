@@ -12,6 +12,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
@@ -50,7 +51,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   /**
    * Class loader.
    *
-   * @var \Composer\Autoload\ClassLoader
+   * @var object
    */
   protected $classLoader;
 
@@ -174,11 +175,11 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    */
   protected $customTranslations;
 
-  /**
+  /*
    * Mink class for the default driver to use.
    *
    * Shoud be a fully qualified class name that implements
-   * \Behat\Mink\Driver\DriverInterface.
+   * Behat\Mink\Driver\DriverInterface.
    *
    * Value can be overridden using the environment variable MINK_DRIVER_CLASS.
    *
@@ -186,7 +187,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    */
   protected $minkDefaultDriverClass = GoutteDriver::class;
 
-  /**
+  /*
    * Mink default driver params.
    *
    * If it's an array its contents are used as constructor params when default
@@ -321,7 +322,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   /**
    * Gets an instance of the default Mink driver.
    *
-   * @return \Behat\Mink\Driver\DriverInterface
+   * @return Behat\Mink\Driver\DriverInterface
    *   Instance of default Mink driver.
    *
    * @throws \InvalidArgumentException
@@ -344,7 +345,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     }
 
     if (is_array($this->minkDefaultDriverArgs)) {
-      // Use ReflectionClass to instantiate class with received params.
+       // Use ReflectionClass to instantiate class with received params.
       $reflector = new \ReflectionClass($this->minkDefaultDriverClass);
       $driver = $reflector->newInstanceArgs($this->minkDefaultDriverArgs);
     }
@@ -806,12 +807,12 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   $account->passRaw = $pass_raw;
    * @endcode
    *
-   * @param \Drupal\user\UserInterface $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   User object representing the user to log in.
    *
    * @see drupalCreateUser()
    */
-  protected function drupalLogin(UserInterface $account) {
+  protected function drupalLogin(AccountInterface $account) {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }
@@ -819,7 +820,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     $this->drupalGet('user');
     $this->assertSession()->statusCodeEquals(200);
     $this->submitForm(array(
-      'name' => $account->getAccountName(),
+      'name' => $account->getUsername(),
       'pass' => $account->passRaw,
     ), t('Log in'));
 
@@ -1590,7 +1591,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   HTML output headers.
    */
   protected function getHtmlOutputHeaders() {
-    $headers = array_map(function ($headers) {
+    $headers = array_map(function($headers) {
       if (is_array($headers)) {
         return implode(';', array_map('trim', $headers));
       }
