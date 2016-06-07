@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\standard\Tests;
+namespace Drupal\Tests\standard\Functional;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Url;
 use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\user\Entity\Role;
  *
  * @group standard
  */
-class StandardTest extends WebTestBase {
+class StandardTest extends BrowserTestBase {
 
   use SchemaCheckTestTrait;
 
