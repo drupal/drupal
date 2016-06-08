@@ -1,4 +1,3 @@
 administer views:
   title: 'Administer views'
-  description: 'Access the views administration pages.'
   restrict access: true
