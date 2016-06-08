@@ -30,8 +30,8 @@ trait DiscoveryTrait {
    * @param string $plugin_id
    *   A plugin id.
    * @param bool $exception_on_invalid
-   *   (optional) If TRUE, an invalid plugin ID will throw an exception.
-   *   Defaults to FALSE.
+   *   If TRUE, an invalid plugin ID will cause an exception to be thrown; if
+   *   FALSE, NULL will be returned.
    *
    * @return array|null
    *   A plugin definition, or NULL if the plugin ID is invalid and
