@@ -336,7 +336,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * @param $tokens
    *   Array of token => replacement_value items.
    *
-   * @return String
+   * @return string
    */
   protected function viewsTokenReplace($text, $tokens) {
     if (!strlen($text)) {

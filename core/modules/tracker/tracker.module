@@ -155,7 +155,7 @@ function _tracker_myrecent_access(AccountInterface $account) {
  * @param int $account
  *   The user account ID to track.
  *
- * @return boolean
+ * @return bool
  *   TRUE if a user has permission to access the account for $account and
  *   has permission to access the content.
  *

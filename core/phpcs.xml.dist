@@ -46,7 +46,6 @@
   <rule ref="Drupal.Commenting.FunctionComment">
     <exclude name="Drupal.Commenting.FunctionComment.IncorrectTypeHint"/>
     <exclude name="Drupal.Commenting.FunctionComment.InvalidNoReturn"/>
-    <exclude name="Drupal.Commenting.FunctionComment.InvalidReturn"/>
     <exclude name="Drupal.Commenting.FunctionComment.InvalidReturnNotVoid"/>
     <exclude name="Drupal.Commenting.FunctionComment.InvalidTypeHint"/>
     <exclude name="Drupal.Commenting.FunctionComment.Missing"/>
@@ -60,7 +59,6 @@
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentNotCapital"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamNameNoMatch"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
-    <exclude name="Drupal.Commenting.FunctionComment.VoidReturn"/>
   </rule>
   <rule ref="Drupal.ControlStructures.ElseIf"/>
   <rule ref="Drupal.ControlStructures.ControlSignature"/>
