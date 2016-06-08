@@ -343,7 +343,7 @@ class ImageItem extends FileItem {
         $image = File::create();
         $image->setFileUri($path);
         $image->setOwnerId(\Drupal::currentUser()->id());
-        $image->setMimeType('image/' . pathinfo($path, PATHINFO_EXTENSION));
+        $image->setMimeType(\Drupal::service('file.mime_type.guesser')->guess($path));
         $image->setFileName(drupal_basename($path));
         $destination_dir = static::doGetUploadLocation($settings);
         file_prepare_directory($destination_dir, FILE_CREATE_DIRECTORY);
