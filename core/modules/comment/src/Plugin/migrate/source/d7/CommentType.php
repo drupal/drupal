@@ -30,7 +30,7 @@ class CommentType extends DrupalSqlBase {
     return $this->select('field_config_instance', 'fci')
       ->distinct()
       ->fields('fci', array('bundle'))
-      ->condition('entity_type', 'comment');
+      ->condition('fci.entity_type', 'comment');
   }
 
   /**

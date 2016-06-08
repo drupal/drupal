@@ -31,10 +31,10 @@ class FieldInstance extends DrupalSqlBase {
 
     // Optionally filter by entity type and bundle.
     if (isset($this->configuration['entity_type'])) {
-      $query->condition('entity_type', $this->configuration['entity_type']);
+      $query->condition('fci.entity_type', $this->configuration['entity_type']);
 
       if (isset($this->configuration['bundle'])) {
-        $query->condition('bundle', $this->configuration['bundle']);
+        $query->condition('fci.bundle', $this->configuration['bundle']);
       }
     }
 

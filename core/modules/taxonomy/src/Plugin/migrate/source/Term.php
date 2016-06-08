@@ -47,10 +47,10 @@ class Term extends DrupalSqlBase {
     $query = $this->select($this->termDataTable, 'td')
       ->fields('td')
       ->distinct()
-      ->orderBy('tid');
+      ->orderBy('td.tid');
 
     if (isset($this->configuration['vocabulary'])) {
-      $query->condition('vid', $this->configuration['vocabulary'], 'IN');
+      $query->condition('td.vid', $this->configuration['vocabulary'], 'IN');
     }
 
     return $query;

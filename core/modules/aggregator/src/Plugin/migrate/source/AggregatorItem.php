@@ -20,7 +20,7 @@ class AggregatorItem extends DrupalSqlBase {
   public function query() {
     return $this->select('aggregator_item', 'ai')
       ->fields('ai')
-      ->orderBy('iid');
+      ->orderBy('ai.iid');
   }
 
   /**

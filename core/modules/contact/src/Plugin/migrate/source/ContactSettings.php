@@ -18,7 +18,7 @@ class ContactSettings extends Variable {
   protected function initializeIterator() {
     $default_category = $this->select('contact', 'c')
       ->fields('c', ['cid'])
-      ->condition('selected', 1)
+      ->condition('c.selected', 1)
       ->execute()
       ->fetchField();
     return new \ArrayIterator([$this->values() + ['default_category' => $default_category]]);

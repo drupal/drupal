@@ -45,7 +45,7 @@ class File extends DrupalSqlBase {
       // If two or more files have the same timestamp, they'll end up in a
       // non-deterministic order. Ordering by fid (or any other unique field)
       // will prevent this.
-      ->orderBy('fid');
+      ->orderBy('f.fid');
   }
 
   /**
