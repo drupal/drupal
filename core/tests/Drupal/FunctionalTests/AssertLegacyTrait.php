@@ -145,7 +145,7 @@ trait AssertLegacyTrait {
    * @param int $index
    *   Link position counting from zero.
    */
-  public function assertLink($label, $index = 0) {
+  protected function assertLink($label, $index = 0) {
     return $this->assertSession()->linkExists($label, $index);
   }
 
