@@ -42,7 +42,7 @@ class File extends DrupalSqlBase {
   public function query() {
     $query = $this->select('file_managed', 'f')
       ->fields('f')
-      ->orderBy('timestamp');
+      ->orderBy('f.timestamp');
 
     // Filter by scheme(s), if configured.
     if (isset($this->configuration['scheme'])) {

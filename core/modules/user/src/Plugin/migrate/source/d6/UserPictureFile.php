@@ -33,7 +33,7 @@ class UserPictureFile extends DrupalSqlBase {
    */
   public function query() {
     $query = $this->select('users', 'u')
-      ->condition('picture', '', '<>')
+      ->condition('u.picture', '', '<>')
       ->fields('u', array('uid', 'picture'));
     return $query;
   }

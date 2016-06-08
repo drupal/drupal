@@ -23,7 +23,7 @@ class Book extends DrupalSqlBase {
     for ($i = 1; $i <= 9; $i++) {
       $field = "p$i";
       $ml_fields[] = $field;
-      $query->orderBy($field);
+      $query->orderBy('ml.' . $field);
     }
     $query->fields('ml', $ml_fields);
     return $query;

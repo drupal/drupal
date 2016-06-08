@@ -33,7 +33,7 @@ class UploadInstance extends DrupalSqlBase {
     $return = array();
     $values = $this->select('variable', 'v')
       ->fields('v', ['name', 'value'])
-      ->condition('name', $variables, 'IN')
+      ->condition('v.name', $variables, 'IN')
       ->execute()
       ->fetchAllKeyed();
     foreach ($node_types as $node_type) {

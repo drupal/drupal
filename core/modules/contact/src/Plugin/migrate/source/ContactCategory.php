@@ -29,7 +29,7 @@ class ContactCategory extends DrupalSqlBase {
         'selected',
       )
     );
-    $query->orderBy('cid');
+    $query->orderBy('c.cid');
     return $query;
   }
 

@@ -50,7 +50,7 @@ class Node extends FieldableEntity {
     $query->innerJoin('node', 'n', static::JOIN);
 
     if (isset($this->configuration['node_type'])) {
-      $query->condition('type', $this->configuration['node_type']);
+      $query->condition('n.type', $this->configuration['node_type']);
     }
 
     return $query;

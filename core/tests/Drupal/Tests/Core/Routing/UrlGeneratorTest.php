@@ -300,7 +300,7 @@ class UrlGeneratorTest extends UnitTestCase {
     // No cacheability to test; UrlGenerator::generate() doesn't support
     // collecting cacheability metadata.
 
-    $this->routeProcessorManager->expects($this->exactly(7))
+    $this->routeProcessorManager->expects($this->any())
       ->method('processOutbound')
       ->with($this->anything());
 
@@ -316,6 +316,10 @@ class UrlGeneratorTest extends UnitTestCase {
 
     $path = $this->generator->getPathFromRoute('test_2', array('narf' => '5'));
     $this->assertEquals('test/two/5', $path);
+
+    // Specify a query parameter with NULL.
+    $options = ['query' => ['page' => NULL], 'fragment' => 'bottom'];
+    $this->assertGenerateFromRoute('test_2', ['narf' => 5], $options, '/goodbye/cruel/world?page#bottom', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
   }
 
   /**
