@@ -42,8 +42,6 @@ interface UserDataInterface {
    *   The name of the data key.
    * @param mixed $value
    *   The value to store. Non-scalar values are serialized automatically.
-   *
-   * @return void
    */
   public function set($module, $uid, $name, $value);
 
@@ -60,8 +58,6 @@ interface UserDataInterface {
    * @param string $name
    *   (optional) The name of the data key. If omitted, all data associated with
    *   $module and $uid is deleted.
-   *
-   * @return void
    */
   public function delete($module = NULL, $uid = NULL, $name = NULL);
 

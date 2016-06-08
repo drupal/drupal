@@ -139,8 +139,6 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to save.
-   *
-   * @return void
    */
   protected function entityValidateAndSave(EntityInterface $entity) {
     $violations = $entity->validate();

@@ -41,7 +41,7 @@ class ImageStyleTest extends UnitTestCase {
    * @param \Drupal\image\ImageEffectInterface|\PHPUnit_Framework_MockObject_MockObject $image_effect
    *   The image effect used for testing.
    *
-   * @return \Drupal\image\ImageStyleInterface|\Drupal\image\ImageStyleInterface
+   * @return \Drupal\image\ImageStyleInterface
    *   The mocked image style.
    */
   protected function getImageStyleMock($image_effect_id, $image_effect, $stubs = array()) {
