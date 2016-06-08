@@ -379,7 +379,7 @@ function views_update_8100() {
 /**
  * Rebuild the container to add a new container parameter.
  */
-function views_update_8006() {
+function views_update_8200() {
   // Empty update to cause a cache rebuild so that the container is rebuilt.
 }
 
