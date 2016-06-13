@@ -66,9 +66,6 @@ services:
     arguments: ['@current_user', '@entity.manager']
     tags:
       - { name: 'context_provider' }
-  password_migrate:
-    class: Drupal\user\MigratePassword
-    arguments: ['@password_original']
 
 parameters:
   user.tempstore.expire: 604800

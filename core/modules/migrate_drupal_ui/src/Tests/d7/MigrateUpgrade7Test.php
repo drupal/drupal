@@ -3,6 +3,7 @@
 namespace Drupal\migrate_drupal_ui\Tests\d7;
 
 use Drupal\migrate_drupal_ui\Tests\MigrateUpgradeTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests Drupal 7 upgrade using the migrate UI.
@@ -68,6 +69,18 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
       'entity_view_mode' => 10,
       'base_field_override' => 7,
     ];
+  }
+
+  /**
+   * Executes all steps of migrations upgrade.
+   */
+  protected function testMigrateUpgrade() {
+    parent::testMigrateUpgrade();
+
+    // Ensure migrated users can log in.
+    $user = User::load(2);
+    $user->pass_raw = 'a password';
+    $this->drupalLogin($user);
   }
 
 }

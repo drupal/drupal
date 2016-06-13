@@ -44,6 +44,8 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
    *   The username.
    * @param string $mail
    *   The user's email address.
+   * @param string $password
+   *   The password for this user.
    * @param int $access
    *   The last access time.
    * @param int $login
@@ -59,7 +61,7 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
    * @param bool $has_picture
    *   Whether the user is expected to have a picture attached.
    */
-  protected function assertEntity($id, $label, $mail, $access, $login, $blocked, $langcode, $init, array $roles = [RoleInterface::AUTHENTICATED_ID], $has_picture = FALSE) {
+  protected function assertEntity($id, $label, $mail, $password, $access, $login, $blocked, $langcode, $init, array $roles = [RoleInterface::AUTHENTICATED_ID], $has_picture = FALSE) {
     /** @var \Drupal\user\UserInterface $user */
     $user = User::load($id);
     $this->assertTrue($user instanceof UserInterface);
@@ -77,13 +79,29 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
     $this->assertIdentical($init, $user->getInitialEmail());
     $this->assertIdentical($roles, $user->getRoles());
     $this->assertIdentical($has_picture, !$user->user_picture->isEmpty());
+    $this->assertIdentical($password, $user->getPassword());
   }
 
   /**
    * Tests the Drupal 7 user to Drupal 8 migration.
    */
   public function testUser() {
-    $this->assertEntity(2, 'Odo', 'odo@local.host', '0', '0', FALSE, '', 'odo@local.host');
+    $password = '$S$DGFZUE.FhrXbe4y52eC7p0ZVRGD/gOPtVctDlmC89qkujnBokAlJ';
+    $this->assertEntity(2, 'Odo', 'odo@local.host', $password, '0', '0', FALSE, '', 'odo@local.host');
+
+    // Ensure that the user can authenticate.
+    $this->assertEquals(2, \Drupal::service('user.auth')->authenticate('Odo', 'a password'));
+    // After authenticating the password will be rehashed because the password
+    // stretching iteration count has changed from 15 in Drupal 7 to 16 in
+    // Drupal 8.
+    $user = User::load(2);
+    $rehash = $user->getPassword();
+    $this->assertNotEquals($password, $rehash);
+
+    // Authenticate again and there should be no re-hash.
+    $this->assertEquals(2, \Drupal::service('user.auth')->authenticate('Odo', 'a password'));
+    $user = User::load(2);
+    $this->assertEquals($rehash, $user->getPassword());
   }
 
 }
