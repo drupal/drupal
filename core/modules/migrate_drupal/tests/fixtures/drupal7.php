@@ -40789,7 +40789,7 @@ $connection->insert('users')
 ->values(array(
   'uid' => '2',
   'name' => 'Odo',
-  'pass' => '$S$DZ4P7zZOh92vgrgZDBbv8Pu6lQB337OJ1wsOy21602G4A5F7.M9K',
+  'pass' => '$S$DGFZUE.FhrXbe4y52eC7p0ZVRGD/gOPtVctDlmC89qkujnBokAlJ',
   'mail' => 'odo@local.host',
   'theme' => '',
   'signature' => '',

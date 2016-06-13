@@ -3,14 +3,13 @@
 namespace Drupal\user\Plugin\migrate\destination;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\MigrateException;
-use Drupal\user\MigratePassword;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -55,9 +54,7 @@ class EntityUser extends EntityContentBase {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, PasswordInterface $password) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_manager, $field_type_manager);
-    if (isset($configuration['md5_passwords'])) {
-      $this->password = $password;
-    }
+    $this->password = $password;
   }
 
   /**
@@ -83,24 +80,29 @@ class EntityUser extends EntityContentBase {
    * @throws \Drupal\migrate\MigrateException
    */
   public function import(Row $row, array $old_destination_id_values = array()) {
-    if ($this->password) {
-      if ($this->password instanceof MigratePassword) {
-        $this->password->enableMd5Prefixing();
-      }
-      else {
-        throw new MigrateException('Password service has been altered by another module, aborting.');
-      }
-    }
     // Do not overwrite the root account password.
     if ($row->getDestinationProperty('uid') == 1) {
       $row->removeDestinationProperty('pass');
     }
-    $ids = parent::import($row, $old_destination_id_values);
-    if ($this->password) {
-      $this->password->disableMd5Prefixing();
-    }
+    return parent::import($row, $old_destination_id_values);
+  }
 
-    return $ids;
+  /**
+   * {@inheritdoc}
+   */
+  protected function save(ContentEntityInterface $entity, array $old_destination_id_values = array()) {
+    // Do not overwrite the root account password.
+    if ($entity->id() != 1) {
+      // Set the pre_hashed password so that the PasswordItem field does not hash
+      // already hashed passwords. If the md5_passwords configuration option is
+      // set we need to rehash the password and prefix with a U.
+      // @see \Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem::preSave()
+      $entity->pass->pre_hashed = TRUE;
+      if (isset($this->configuration['md5_passwords'])) {
+        $entity->pass->value = 'U' . $this->password->hash($entity->pass->value);
+      }
+    }
+    return parent::save($entity, $old_destination_id_values);
   }
 
   /**
