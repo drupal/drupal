@@ -2,9 +2,6 @@ drupal.file:
   version: VERSION
   js:
     file.js: {}
-  css:
-    theme:
-      css/file.admin.css: {}
   dependencies:
     - core/jquery
     - core/jquery.once
