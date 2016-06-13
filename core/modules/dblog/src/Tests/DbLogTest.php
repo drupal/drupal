@@ -221,6 +221,32 @@ class DbLogTest extends WebTestBase {
   }
 
   /**
+   * Clear the entry logs by clicking on 'Clear log messages' button.
+   */
+  protected function clearLogsEntries() {
+    $this->drupalGet(Url::fromRoute('dblog.confirm'));
+  }
+
+  /**
+   * Filters the logs according to the specific severity and log entry type.
+   *
+   * @param string $type
+   *   (optional) The log entry type.
+   * @param string $severity
+   *   (optional) The log entry severity.
+  */
+  protected function filterLogsEntries($type = NULL, $severity = NULL) {
+     $edit = array();
+     if (!is_null($type)) {
+       $edit['type[]'] = $type;
+     }
+     if (!is_null($severity)) {
+       $edit['severity[]'] = $severity;
+     }
+     $this->drupalPostForm(NULL, $edit, t('Filter'));
+  }
+
+  /**
    * Confirms that database log reports are displayed at the correct paths.
    *
    * @param int $response
@@ -547,7 +573,7 @@ class DbLogTest extends WebTestBase {
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
     // Post in order to clear the database table.
-    $this->drupalPostForm('admin/reports/dblog', array(), t('Clear log messages'));
+    $this->clearLogsEntries();
     // Confirm that the logs should be cleared.
     $this->drupalPostForm(NULL, array(), 'Confirm');
     // Count the rows in watchdog that previously related to the deleted user.
@@ -595,10 +621,7 @@ class DbLogTest extends WebTestBase {
     // Filter by each type and confirm that entries with various severities are
     // displayed.
     foreach ($type_names as $type_name) {
-      $edit = array(
-        'type[]' => array($type_name),
-      );
-      $this->drupalPostForm(NULL, $edit, t('Filter'));
+      $this->filterLogsEntries($type_name);
 
       // Count the number of entries of this type.
       $type_count = 0;
@@ -615,11 +638,7 @@ class DbLogTest extends WebTestBase {
     // Set the filter to match each of the two filter-type attributes and
     // confirm the correct number of entries are displayed.
     foreach ($types as $type) {
-      $edit = array(
-        'type[]' => array($type['type']),
-        'severity[]' => array($type['severity']),
-      );
-      $this->drupalPostForm(NULL, $edit, t('Filter'));
+      $this->filterLogsEntries($type['type'], $type['severity']);
 
       $count = $this->getTypeCount($types);
       $this->assertEqual(array_sum($count), $type['count'], 'Count matched');
@@ -630,7 +649,7 @@ class DbLogTest extends WebTestBase {
     $this->assertText(t('Operations'), 'Operations text found');
 
     // Clear all logs and make sure the confirmation message is found.
-    $this->drupalPostForm('admin/reports/dblog', array(), t('Clear log messages'));
+    $this->clearLogsEntries();
     // Confirm that the logs should be cleared.
     $this->drupalPostForm(NULL, array(), 'Confirm');
     $this->assertText(t('Database log cleared.'), 'Confirmation message found');
@@ -648,7 +667,7 @@ class DbLogTest extends WebTestBase {
    */
   protected function getLogEntries() {
     $entries = array();
-    if ($table = $this->xpath('.//table[@id="admin-dblog"]')) {
+    if ($table = $this->getLogsEntriesTable()) {
       $table = array_shift($table);
       foreach ($table->tbody->tr as $row) {
         $entries[] = array(
@@ -660,6 +679,16 @@ class DbLogTest extends WebTestBase {
       }
     }
     return $entries;
+  }
+
+  /**
+   * Find the Logs table in the DOM.
+   *
+   * @return \SimpleXMLElement[]
+   *   The return value of a xpath search.
+   */
+  protected function getLogsEntriesTable() {
+    return $this->xpath('.//table[@id="admin-dblog"]');
   }
 
   /**

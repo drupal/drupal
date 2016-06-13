@@ -128,7 +128,6 @@ class DbLogController extends ControllerBase {
     $this->moduleHandler->loadInclude('dblog', 'admin.inc');
 
     $build['dblog_filter_form'] = $this->formBuilder->getForm('Drupal\dblog\Form\DblogFilterForm');
-    $build['dblog_clear_log_form'] = $this->formBuilder->getForm('Drupal\dblog\Form\DblogClearLogForm');
 
     $header = array(
       // Icon column.
