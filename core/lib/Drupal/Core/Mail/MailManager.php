@@ -8,6 +8,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
@@ -37,6 +39,13 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
   protected $loggerFactory;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * List of already instantiated mail plugins.
    *
    * @var array
@@ -59,14 +68,17 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    *   The logger channel factory.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, TranslationInterface $string_translation) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, TranslationInterface $string_translation, RendererInterface $renderer) {
     parent::__construct('Plugin/Mail', $namespaces, $module_handler, 'Drupal\Core\Mail\MailInterface', 'Drupal\Core\Annotation\Mail');
     $this->alterInfo('mail_backend_info');
     $this->setCacheBackend($cache_backend, 'mail_backend_plugins');
     $this->configFactory = $config_factory;
     $this->loggerFactory = $logger_factory;
     $this->stringTranslation = $string_translation;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -152,6 +164,58 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    * {@inheritdoc}
    */
   public function mail($module, $key, $to, $langcode, $params = array(), $reply = NULL, $send = TRUE) {
+    // Mailing can invoke rendering (e.g., generating URLs, replacing tokens),
+    // but e-mails are not HTTP responses: they're not cached, they don't have
+    // attachments. Therefore we perform mailing inside its own render context,
+    // to ensure it doesn't leak into the render context for the HTTP response
+    // to the current request.
+    return $this->renderer->executeInRenderContext(new RenderContext(), function() use ($module, $key, $to, $langcode, $params, $reply, $send) {
+      return $this->doMail($module, $key, $to, $langcode, $params, $reply, $send);
+    });
+  }
+
+  /**
+   * Composes and optionally sends an email message.
+   *
+   * @param string $module
+   *   A module name to invoke hook_mail() on. The {$module}_mail() hook will be
+   *   called to complete the $message structure which will already contain
+   *   common defaults.
+   * @param string $key
+   *   A key to identify the email sent. The final message ID for email altering
+   *   will be {$module}_{$key}.
+   * @param string $to
+   *   The email address or addresses where the message will be sent to. The
+   *   formatting of this string will be validated with the
+   *   @link http://php.net/manual/filter.filters.validate.php PHP email validation filter. @endlink
+   *   Some examples are:
+   *   - user@example.com
+   *   - user@example.com, anotheruser@example.com
+   *   - User <user@example.com>
+   *   - User <user@example.com>, Another User <anotheruser@example.com>
+   * @param string $langcode
+   *   Language code to use to compose the email.
+   * @param array $params
+   *   (optional) Parameters to build the email.
+   * @param string|null $reply
+   *   Optional email address to be used to answer.
+   * @param bool $send
+   *   If TRUE, call an implementation of
+   *   \Drupal\Core\Mail\MailInterface->mail() to deliver the message, and
+   *   store the result in $message['result']. Modules implementing
+   *   hook_mail_alter() may cancel sending by setting $message['send'] to
+   *   FALSE.
+   *
+   * @return array
+   *   The $message array structure containing all details of the message. If
+   *   already sent ($send = TRUE), then the 'result' element will contain the
+   *   success indicator of the email, failure being already written to the
+   *   watchdog. (Success means nothing more than the message being accepted at
+   *   php-level, which still doesn't guarantee it to be delivered.)
+   *
+   * @see \Drupal\Core\Mail\MailManagerInterface::mail()
+   */
+  public function doMail($module, $key, $to, $langcode, $params = array(), $reply = NULL, $send = TRUE) {
     $site_config = $this->configFactory->get('system.site');
     $site_mail = $site_config->get('mail');
     if (empty($site_mail)) {

@@ -6,6 +6,8 @@
 
 namespace Drupal\Tests\Core\Mail;
 
+use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Mail\MailManager;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
@@ -43,6 +45,13 @@ class MailManagerTest extends UnitTestCase {
    * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $discovery;
+
+  /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $renderer;
 
   /**
    * The mail manager under test.
@@ -96,8 +105,9 @@ class MailManagerTest extends UnitTestCase {
     ));
     $logger_factory = $this->getMock('\Drupal\Core\Logger\LoggerChannelFactoryInterface');
     $string_translation = $this->getStringTranslationStub();
+    $this->renderer = $this->getMock(RendererInterface::class);
     // Construct the manager object and override its discovery.
-    $this->mailManager = new TestMailManager(new \ArrayObject(), $this->cache, $this->moduleHandler, $this->configFactory, $logger_factory, $string_translation);
+    $this->mailManager = new TestMailManager(new \ArrayObject(), $this->cache, $this->moduleHandler, $this->configFactory, $logger_factory, $string_translation, $this->renderer);
     $this->mailManager->setDiscovery($this->discovery);
   }
 
@@ -109,7 +119,7 @@ class MailManagerTest extends UnitTestCase {
   public function testGetInstance() {
     $interface = array(
       'default' => 'php_mail',
-      'example_testkey' => 'test_mail_collector',
+      'default' => 'test_mail_collector',
     );
     $this->setUpMailManager($interface);
 
@@ -122,6 +132,28 @@ class MailManagerTest extends UnitTestCase {
     $options = array('module' => 'example', 'key' => 'testkey');
     $instance = $this->mailManager->getInstance($options);
     $this->assertInstanceOf('Drupal\Core\Mail\Plugin\Mail\TestMailCollector', $instance);
+  }
+
+
+  /**
+   * Tests that mails are sent in a separate render context.
+   *
+   * @covers ::mail
+   */
+  public function testMailInRenderContext() {
+    $interface = array(
+      'default' => 'php_mail',
+      'example_testkey' => 'test_mail_collector',
+    );
+    $this->setUpMailManager($interface);
+
+    $this->renderer->expects($this->exactly(1))
+      ->method('executeInRenderContext')
+      ->willReturnCallback(function (RenderContext $render_context, $callback) {
+        $message = $callback();
+        $this->assertEquals('example', $message['module']);
+      });
+    $this->mailManager->mail('example', 'key', 'to@example.org', 'en');
   }
 
 }
@@ -138,6 +170,28 @@ class TestMailManager extends MailManager {
    */
   public function setDiscovery(DiscoveryInterface $discovery) {
     $this->discovery = $discovery;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function doMail($module, $key, $to, $langcode, $params = array(), $reply = NULL, $send = TRUE) {
+    // Build a simplified message array and return it.
+    $message = array(
+      'id' => $module . '_' . $key,
+      'module' => $module,
+      'key' => $key,
+      'to' => $to,
+      'from' => 'from@example.org',
+      'reply-to' => $reply,
+      'langcode' => $langcode,
+      'params' => $params,
+      'send' => TRUE,
+      'subject' => '',
+      'body' => array(),
+    );
+
+    return $message;
   }
 
 }
