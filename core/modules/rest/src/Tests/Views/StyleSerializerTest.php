@@ -3,6 +3,7 @@
 namespace Drupal\rest\Tests\Views;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
@@ -500,8 +501,7 @@ class StyleSerializerTest extends PluginTestBase {
   public function testLivePreview() {
     // We set up a request so it looks like an request in the live preview.
     $request = new Request();
-    $request->setFormat('drupal_ajax', 'application/vnd.drupal-ajax');
-    $request->headers->set('Accept', 'application/vnd.drupal-ajax');
+    $request->query->add([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']);
       /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = \Drupal::service('request_stack');
     $request_stack->push($request);

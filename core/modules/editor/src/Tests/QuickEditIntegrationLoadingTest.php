@@ -102,7 +102,7 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
     // Ensure the text is transformed.
     $this->assertRaw('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
 
-    $response = $this->drupalPost('editor/' . 'node/1/body/en/full', 'application/vnd.drupal-ajax', array());
+    $response = $this->drupalPost('editor/' . 'node/1/body/en/full', '', [], ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
     $this->assertResponse(200);
     $ajax_commands = Json::decode($response);
     $this->assertIdentical(1, count($ajax_commands), 'The untransformed text POST request results in one AJAX command.');
