@@ -23,6 +23,10 @@ class FilterBooleanWebTest extends UITestBase {
   public function testFilterBooleanUI() {
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_view/default/filter', array('name[views_test_data.status]' => TRUE), t('Add and configure @handler', array('@handler' => t('filter criteria'))));
 
+    // Check the field widget label. 'title' should be used as a fallback.
+    $result = $this->cssSelect('#edit-options-value--wrapper legend span');
+    $this->assertEqual((string) $result[0], 'Status');
+
     $this->drupalPostForm(NULL, array(), t('Expose filter'));
     $this->drupalPostForm(NULL, array(), t('Grouped filters'));
 
