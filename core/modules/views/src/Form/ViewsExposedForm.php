@@ -5,6 +5,7 @@ namespace Drupal\views\Form;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element\Checkboxes;
 use Drupal\Core\Url;
 use Drupal\views\ExposedFormCache;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -146,26 +147,46 @@ class ViewsExposedForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    // Form input keys that will not be included in $view->exposed_raw_data.
+    $exclude = array('submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', 'reset');
+    $values = $form_state->getValues();
     foreach (array('field', 'filter') as $type) {
       /** @var \Drupal\views\Plugin\views\ViewsHandlerInterface[] $handlers */
       $handlers = &$form_state->get('view')->$type;
       foreach ($handlers as $key => $info) {
-        $handlers[$key]->submitExposed($form, $form_state);
+        if ($handlers[$key]->acceptExposedInput($values)) {
+          $handlers[$key]->submitExposed($form, $form_state);
+        }
+        else {
+          // The input from the form did not validate, exclude it from the
+          // stored raw data.
+          $exclude[] = $key;
+        }
       }
     }
 
     $view = $form_state->get('view');
-    $view->exposed_data = $form_state->getValues();
+    $view->exposed_data = $values;
     $view->exposed_raw_input = [];
 
     $exclude = array('submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', 'reset');
-    /** @var \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginInterface $exposed_form_plugin */
+    /** @var \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase $exposed_form_plugin */
     $exposed_form_plugin = $view->display_handler->getPlugin('exposed_form');
     $exposed_form_plugin->exposedFormSubmit($form, $form_state, $exclude);
-
-    foreach ($form_state->getValues() as $key => $value) {
-      if (!in_array($key, $exclude)) {
-        $view->exposed_raw_input[$key] = $value;
+    foreach ($values as $key => $value) {
+      if (!empty($key) && !in_array($key, $exclude)) {
+        if (is_array($value)) {
+          // Handle checkboxes, we only want to include the checked options.
+          // @todo: revisit the need for this when
+          //   https://www.drupal.org/node/342316 is resolved.
+          $checked = Checkboxes::getCheckedCheckboxes($value);
+          foreach ($checked as $option_id) {
+            $view->exposed_raw_input[$option_id] = $value[$option_id];
+          }
+        }
+        else {
+          $view->exposed_raw_input[$key] = $value;
+        }
       }
     }
   }

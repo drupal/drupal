@@ -207,6 +207,48 @@ class ExposedFormTest extends ViewTestBase {
   }
 
   /**
+   * Tests overriding the default render option with checkboxes.
+   */
+  public function testExposedFormRenderCheckboxes() {
+    // Make sure we have at least two options for node type.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->drupalCreateNode(['type' => 'page']);
+
+    // Use a test theme to convert multi-select elements into checkboxes.
+    \Drupal::service('theme_handler')->install(array('views_test_checkboxes_theme'));
+    $this->config('system.theme')
+      ->set('default', 'views_test_checkboxes_theme')
+      ->save();
+
+    // Set the "type" filter to multi-select.
+    $view = Views::getView('test_exposed_form_buttons');
+    $filter = $view->getHandler('page_1', 'filter', 'type');
+    $filter['expose']['multiple'] = TRUE;
+    $view->setHandler('page_1', 'filter', 'type', $filter);
+
+    // Only display 5 items per page so we can test that paging works.
+    $display = &$view->storage->getDisplay('default');
+    $display['display_options']['pager']['options']['items_per_page'] = 5;
+
+    $view->save();
+    $this->drupalGet('test_exposed_form_buttons');
+
+    $actual = $this->xpath('//form//input[@type="checkbox" and @name="type[article]"]');
+    $this->assertEqual(count($actual), 1, 'Article option renders as a checkbox.');
+    $actual = $this->xpath('//form//input[@type="checkbox" and @name="type[page]"]');
+    $this->assertEqual(count($actual), 1, 'Page option renders as a checkbox');
+
+    // Ensure that all results are displayed.
+    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
+    $this->assertEqual(count($rows), 5, '5 rows are displayed by default on the first page when no options are checked.');
+
+    $this->clickLink('Page 2');
+    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
+    $this->assertEqual(count($rows), 1, '1 row is displayed by default on the second page when no options are checked.');
+    $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
+  }
+
+  /**
    * Tests the exposed block functionality.
    */
   public function testExposedBlock() {

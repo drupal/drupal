@@ -122,4 +122,40 @@ class Checkboxes extends FormElement {
     }
   }
 
+  /**
+   * Determines which checkboxes were checked when a form is submitted.
+   *
+   * @param array $input
+   *   An array returned by the FormAPI for a set of checkboxes.
+   *
+   * @return array
+   *   An array of keys that were checked.
+   */
+  public static function getCheckedCheckboxes(array $input) {
+    // Browsers do not include unchecked options in a form submission. The
+    // FormAPI tries to normalize this to keep checkboxes consistent with other
+    // form elements. Checkboxes show up as an array in the form of option_id =>
+    // option_id|0, where integer 0 is an unchecked option.
+    //
+    // @see \Drupal\Core\Render\Element\Checkboxes::valueCallback()
+    // @see https://www.w3.org/TR/html401/interact/forms.html#checkbox
+    $checked = array_filter($input, function($value) {
+      return $value !== 0;
+    });
+    return array_keys($checked);
+  }
+
+  /**
+   * Determines if all checkboxes in a set are unchecked.
+   *
+   * @param array $input
+   *   An array returned by the FormAPI for a set of checkboxes.
+   *
+   * @return bool
+   *   TRUE if all options are unchecked. FALSE otherwise.
+   */
+  public static function detectEmptyCheckboxes(array $input) {
+    return empty(static::getCheckedCheckboxes($input));
+  }
+
 }

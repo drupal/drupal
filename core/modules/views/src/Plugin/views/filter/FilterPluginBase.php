@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\Checkboxes;
 use Drupal\user\RoleInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Component\Utility\Html;
@@ -1332,14 +1333,19 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Check to see if input from the exposed filters should change
-   * the behavior of this filter.
+   * Determines if the input from a filter should change the generated query.
+   *
+   * @param array $input
+   *   The exposed data for this view.
+   *
+   * @return bool
+   *   TRUE if the input for this filter should be included in the view query.
+   *   FALSE otherwise.
    */
   public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {
       return TRUE;
     }
-
 
     if (!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id']) && isset($input[$this->options['expose']['operator_id']])) {
       $this->operator = $input[$this->options['expose']['operator_id']];
@@ -1356,6 +1362,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
         if ($this->operator != 'empty' && $this->operator != 'not empty') {
           if ($value == 'All' || $value === array()) {
+            return FALSE;
+          }
+
+          // If checkboxes are used to render this filter, do not include the
+          // filter if no options are checked.
+          if (is_array($value) && Checkboxes::detectEmptyCheckboxes($value)) {
             return FALSE;
           }
         }

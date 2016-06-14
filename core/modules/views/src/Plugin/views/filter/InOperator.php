@@ -282,15 +282,17 @@ class InOperator extends FilterPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function acceptExposedInput($input) {
-    // A very special override because the All state for this type of
-    // filter could have a default:
     if (empty($this->options['exposed'])) {
       return TRUE;
     }
 
-    // If this is non-multiple and non-required, then this filter will
-    // participate, but using the default settings, *if* 'limit is true.
+    // The "All" state for this type of filter could have a default value. If
+    // this is a non-multiple and non-required option, then this filter will
+    // participate by using the default settings *if* 'limit' is true.
     if (empty($this->options['expose']['multiple']) && empty($this->options['expose']['required']) && !empty($this->options['expose']['limit'])) {
       $identifier = $this->options['expose']['identifier'];
       if ($input[$identifier] == 'All') {
