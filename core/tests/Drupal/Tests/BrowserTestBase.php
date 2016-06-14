@@ -523,8 +523,10 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     }
 
     // Restore original shutdown callbacks.
-    $callbacks = &drupal_register_shutdown_function();
-    $callbacks = $this->originalShutdownCallbacks;
+    if (function_exists('drupal_register_shutdown_function')) {
+      $callbacks = &drupal_register_shutdown_function();
+      $callbacks = $this->originalShutdownCallbacks;
+    }
   }
 
   /**
