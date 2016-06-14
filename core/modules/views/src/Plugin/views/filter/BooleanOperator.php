@@ -93,9 +93,14 @@ class BooleanOperator extends FilterPluginBase {
     parent::init($view, $display, $options);
 
     $this->value_value = $this->t('True');
+
     if (isset($this->definition['label'])) {
       $this->value_value = $this->definition['label'];
     }
+    elseif (isset($this->definition['title'])) {
+      $this->value_value = $this->definition['title'];
+    }
+
     if (isset($this->definition['accept null'])) {
       $this->accept_null = (bool) $this->definition['accept null'];
     }
