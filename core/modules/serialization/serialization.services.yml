@@ -64,3 +64,13 @@ services:
     class: Drupal\serialization\EntityResolver\TargetIdResolver
     tags:
       - { name: entity_resolver}
+  serialization.exception.default:
+    class: Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@serializer', '%serializer.formats%']
+  serialization.user_route_alter_subscriber:
+    class: Drupal\serialization\EventSubscriber\UserRouteAlterSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@serializer', '%serializer.formats%']
