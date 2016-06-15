@@ -463,14 +463,11 @@ function node_revision_load($vid = NULL) {
 /**
  * Deletes a node revision.
  *
- * @param $revision_id
+ * @param int $revision_id
  *   The revision ID to delete.
- *
- * @return bool
- *   TRUE if the revision deletion was successful; otherwise, FALSE.
  */
 function node_revision_delete($revision_id) {
-  entity_revision_delete('node', $revision_id);
+  \Drupal::entityTypeManager()->getStorage('node')->deleteRevision($revision_id);
 }
 
 /**
