@@ -1,4 +1,8 @@
 
+Drupal 7.44, 2016-06-15
+-----------------------
+- Fixed security issues (privilege escalation). See SA-CORE-2016-002.
+
 Drupal 7.43, 2016-02-24
 -----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2016-001.
