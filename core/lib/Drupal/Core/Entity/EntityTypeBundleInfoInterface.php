@@ -11,7 +11,10 @@ interface EntityTypeBundleInfoInterface {
    * Get the bundle info of all entity types.
    *
    * @return array
-   *   An array of all bundle information.
+   *   An array of bundle information where the outer array is keyed by entity
+   *   type. The next level is keyed by the bundle name. The inner arrays are
+   *   associative arrays of bundle information, such as the label for the
+   *   bundle.
    */
   public function getAllBundleInfo();
 
@@ -22,7 +25,10 @@ interface EntityTypeBundleInfoInterface {
    *   The entity type.
    *
    * @return array
-   *   Returns the bundle information for the specified entity type.
+   *   An array of bundle information where the outer array is keyed by the
+   *   bundle name, or the entity type name if the entity does not have bundles.
+   *   The inner arrays are associative arrays of bundle information, such as
+   *   the label for the bundle.
    */
   public function getBundleInfo($entity_type);
 
