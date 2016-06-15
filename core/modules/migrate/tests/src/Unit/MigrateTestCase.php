@@ -199,9 +199,11 @@ abstract class MigrateTestCase extends UnitTestCase {
    */
   protected function retrievalAssertHelper($expected_value, $actual_value, $message) {
     if (is_array($expected_value)) {
-      foreach ($expected_value as $k => $v) {
-        $this->retrievalAssertHelper($v, $actual_value[$k], $message . '[' . $k . ']');
+      // If the expected and actual values are empty, no need to array compare.
+      if (empty($expected_value && $actual_value)) {
+        return;
       }
+      $this->assertArrayEquals($expected_value, $actual_value, $message);
     }
     else {
       $this->assertSame((string) $expected_value, (string) $actual_value, $message);

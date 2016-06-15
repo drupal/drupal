@@ -44,6 +44,13 @@ class Block extends DrupalSqlBase {
   protected $blockRoleTable;
 
   /**
+   * Table listing user roles.
+   *
+   * @var string
+   */
+  protected $userRoleTable;
+
+  /**
    * {@inheritdoc}
    */
   public function query() {
@@ -55,6 +62,9 @@ class Block extends DrupalSqlBase {
       $this->blockTable = 'blocks';
       $this->blockRoleTable = 'blocks_roles';
     }
+    // Drupal 6 & 7 both use the same name for the user roles table.
+    $this->userRoleTable = 'role';
+
     return $this->select($this->blockTable, 'b')->fields('b');
   }
 
@@ -106,11 +116,12 @@ class Block extends DrupalSqlBase {
     $module = $row->getSourceProperty('module');
     $delta = $row->getSourceProperty('delta');
 
-    $roles = $this->select($this->blockRoleTable, 'br')
+    $query = $this->select($this->blockRoleTable, 'br')
       ->fields('br', array('rid'))
       ->condition('module', $module)
-      ->condition('delta', $delta)
-      ->execute()
+      ->condition('delta', $delta);
+    $query->join($this->userRoleTable, 'ur', 'br.rid = ur.rid');
+    $roles = $query->execute()
       ->fetchCol();
     $row->setSourceProperty('roles', $roles);
 

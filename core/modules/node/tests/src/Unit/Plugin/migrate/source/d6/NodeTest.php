@@ -92,7 +92,10 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'timestamp' => 1279308993,
       'format' => 1,
       'field_test_four' => array(
-        array('value' => '3.14159'),
+        array(
+          'value' => '3.14159',
+          'delta' => 0,
+        ),
       ),
     ),
   );

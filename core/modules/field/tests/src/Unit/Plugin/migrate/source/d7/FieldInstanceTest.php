@@ -27,7 +27,13 @@ class FieldInstanceTest extends MigrateSqlSourceTestCase {
       'bundle' => 'page',
       'label' => 'Body',
       'widget_settings' => array(
+        'module' => 'text',
+        'settings' => array(
+          'rows' => 20,
+          'summary_rows' => 5,
+        ),
         'type' => 'text_textarea_with_summary',
+        'weight' => -4,
       ),
       'display_settings' => array(
       ),
