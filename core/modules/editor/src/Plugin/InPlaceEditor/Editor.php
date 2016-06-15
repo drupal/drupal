@@ -12,8 +12,7 @@ use Drupal\filter\Plugin\FilterInterface;
  * Defines the formatted text in-place editor.
  *
  * @InPlaceEditor(
- *   id = "editor",
- *   alternativeTo = {"plain_text"}
+ *   id = "editor"
  * )
  */
 class Editor extends PluginBase implements InPlaceEditorInterface {
@@ -31,16 +30,14 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
     // This editor is compatible with formatted ("rich") text fields; but only
     // if there is a currently active text format, that text format has an
     // associated editor and that editor supports inline editing.
-    elseif (in_array($field_definition->getType(), array('text', 'text_long', 'text_with_summary'), TRUE)) {
-      if ($editor = editor_load($items[0]->format)) {
-        $definition = \Drupal::service('plugin.manager.editor')->getDefinition($editor->getEditor());
-        if ($definition['supports_inline_editing'] === TRUE) {
-          return TRUE;
-        }
+    elseif ($editor = editor_load($items[0]->format)) {
+      $definition = \Drupal::service('plugin.manager.editor')->getDefinition($editor->getEditor());
+      if ($definition['supports_inline_editing'] === TRUE) {
+        return TRUE;
       }
-
-      return FALSE;
     }
+
+    return FALSE;
   }
 
   /**

@@ -50,21 +50,8 @@ class EditorSelector implements EditorSelectorInterface {
    * {@inheritdoc}
    */
   public function getEditor($formatter_type, FieldItemListInterface $items) {
-    // Build a static cache of the editors that have registered themselves as
-    // alternatives to a certain editor.
-    if (!isset($this->alternatives)) {
-      $editors = $this->editorManager->getDefinitions();
-      foreach ($editors as $alternative_editor_id => $editor) {
-        if (isset($editor['alternativeTo'])) {
-          foreach ($editor['alternativeTo'] as $original_editor_id) {
-            $this->alternatives[$original_editor_id][] = $alternative_editor_id;
-          }
-        }
-      }
-    }
-
     // Check if the formatter defines an appropriate in-place editor. For
-    // example, text formatters displaying untrimmed text can choose to use the
+    // example, text formatters displaying plain text can choose to use the
     // 'plain_text' editor. If the formatter doesn't specify, fall back to the
     // 'form' editor, since that can work for any field. Formatter definitions
     // can use 'disabled' to explicitly opt out of in-place editing.
