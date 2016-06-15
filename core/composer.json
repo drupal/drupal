@@ -66,6 +66,7 @@
         "drupal/core-annotation": "self.version",
         "drupal/core-bridge": "self.version",
         "drupal/core-datetime": "self.version",
+        "drupal/core-dependency-injection": "self.version",
         "drupal/core-diff": "self.version",
         "drupal/core-discovery": "self.version",
         "drupal/core-event-dispatcher": "self.version",

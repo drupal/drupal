@@ -48,6 +48,7 @@ class ComposerIntegrationTest extends UnitTestCase {
       $this->root . '/core/lib/Drupal/Component/Assertion',
       $this->root . '/core/lib/Drupal/Component/Bridge',
       $this->root . '/core/lib/Drupal/Component/Datetime',
+      $this->root . '/core/lib/Drupal/Component/DependencyInjection',
       $this->root . '/core/lib/Drupal/Component/Diff',
       $this->root . '/core/lib/Drupal/Component/Discovery',
       $this->root . '/core/lib/Drupal/Component/EventDispatcher',
