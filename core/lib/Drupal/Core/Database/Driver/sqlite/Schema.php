@@ -420,8 +420,12 @@ class Schema extends DatabaseSchema {
    *
    * @param $table
    *   Name of the table.
+   *
    * @return
    *   An array representing the schema, from drupal_get_schema().
+   *
+   * @throws \Exception
+   *   If a column of the table could not be parsed.
    */
   protected function introspectSchema($table) {
     $mapped_fields = array_flip($this->getFieldTypeMap());
@@ -459,7 +463,7 @@ class Schema extends DatabaseSchema {
         }
       }
       else {
-        new \Exception("Unable to parse the column type " . $row->type);
+        throw new \Exception("Unable to parse the column type " . $row->type);
       }
     }
     $indexes = array();
