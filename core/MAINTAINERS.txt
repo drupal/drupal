@@ -200,7 +200,6 @@ Transliteration system
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 - Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
 - Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
-- Jennifer Hodgdon 'jhodgdon' https://www.drupal.org/u/jhodgdon
 
 Typed data system
 - Wolfgang Ziegler 'fago' https://www.drupal.org/u/fago
@@ -213,7 +212,7 @@ Accessibility
 - Jesse Renée Beach 'jessebeach' https://www.drupal.org/u/jessebeach
 
 Documentation
-- Jennifer Hodgdon 'jhodgdon' https://www.drupal.org/u/jhodgdon
+- ?
 
 Performance
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
@@ -413,7 +412,6 @@ Responsive Image module
 - Jelle Sebreghts 'Jelle_S' https://www.drupal.org/u/jelle_s
 
 Search module
-- Jennifer Hodgdon 'jhodgdon' https://www.drupal.org/u/jhodgdon
 - Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
 
 Serialization module
