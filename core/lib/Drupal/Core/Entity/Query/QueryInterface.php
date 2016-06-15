@@ -28,8 +28,8 @@ interface QueryInterface extends AlterableInterface {
    * and the Polish 'siema' within a 'greetings' text field:
    * @code
    *   $entity_ids = \Drupal::entityQuery($entity_type)
-   *     ->condition('greetings', 'merhaba', '=', 'tr');
-   *     ->condition('greetings.value', 'siema', '=', 'pl');
+   *     ->condition('greetings', 'merhaba', '=', 'tr')
+   *     ->condition('greetings.value', 'siema', '=', 'pl')
    *     ->execute();
    *   $entity_ids = $query->execute();
    * @endcode
