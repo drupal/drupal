@@ -3,6 +3,7 @@
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait;
@@ -20,7 +21,7 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
  *
  * @ingroup plugin_api
  */
-class DefaultPluginManager extends PluginManagerBase implements PluginManagerInterface, CachedDiscoveryInterface {
+class DefaultPluginManager extends PluginManagerBase implements PluginManagerInterface, CachedDiscoveryInterface, CacheableDependencyInterface {
 
   use DiscoveryCachedTrait;
   use UseCacheBackendTrait;
@@ -311,6 +312,27 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    */
   protected function providerExists($provider) {
     return $this->moduleHandler->moduleExists($provider);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return $this->cacheTags;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return CACHE::PERMANENT;
   }
 
 }

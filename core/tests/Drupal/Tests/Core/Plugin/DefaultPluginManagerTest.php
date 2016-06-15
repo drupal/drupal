@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Plugin;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -299,6 +300,42 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler, NULL);
     $this->assertInternalType('array', $plugin_manager->getDefinitions());
+  }
+
+  /**
+   * @covers ::getCacheContexts
+   */
+  public function testGetCacheContexts() {
+    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
+    $cache_contexts = $plugin_manager->getCacheContexts();
+    $this->assertInternalType('array', $cache_contexts);
+    array_map(function ($cache_context) {
+      $this->assertInternalType('string', $cache_context);
+    }, $cache_contexts);
+  }
+
+  /**
+   * @covers ::getCacheTags
+   */
+  public function testGetCacheTags() {
+    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
+    $cache_tags = $plugin_manager->getCacheTags();
+    $this->assertInternalType('array', $cache_tags);
+    array_map(function ($cache_tag) {
+      $this->assertInternalType('string', $cache_tag);
+    }, $cache_tags);
+  }
+
+  /**
+   * @covers ::getCacheMaxAge
+   */
+  public function testGetCacheMaxAge() {
+    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
+    $cache_max_age = $plugin_manager->getCacheMaxAge();
+    $this->assertInternalType('int', $cache_max_age);
   }
 
 }
