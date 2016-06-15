@@ -20,8 +20,7 @@ use Drupal\Tests\SessionTestTrait;
 /**
  * Base class for Drupal tests.
  *
- * Do not extend this class directly; use either
- * \Drupal\simpletest\WebTestBase or \Drupal\simpletest\KernelTestBase.
+ * Do not extend this class directly; use \Drupal\simpletest\WebTestBase.
  */
 abstract class TestBase {
 

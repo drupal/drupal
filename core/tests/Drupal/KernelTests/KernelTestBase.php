@@ -1191,7 +1191,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       'kernel',
       // @see \Drupal\simpletest\TestBase::prepareEnvironment()
       'generatedTestFiles',
-      // @see \Drupal\simpletest\KernelTestBase::containerBuild()
+      // Properties from the old KernelTestBase class that has been removed.
       'keyValueFactory',
     );
     if (in_array($name, $denied) || strpos($name, 'original') === 0) {

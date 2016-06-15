@@ -5,11 +5,11 @@
  * Contains \Drupal\views\Tests\Plugin\PluginBaseTest.
  */
 
-namespace Drupal\views\Tests\Plugin;
+namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Markup;
-use Drupal\simpletest\KernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\views\Plugin\views\PluginBase;
 
 /**

@@ -1,10 +1,9 @@
 <?php
 
-namespace Drupal\system\Tests\DrupalKernel;
+namespace Drupal\KernelTests\Core\DrupalKernel;
 
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Site\Settings;
-use Drupal\simpletest\KernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -14,29 +13,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DrupalKernelTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     // DrupalKernel relies on global $config_directories and requires those
     // directories to exist. Therefore, create the directories, but do not
     // invoke KernelTestBase::setUp(), since that would set up further
     // environment aspects, which would distort this test, because it tests
     // the DrupalKernel (re-)building itself.
-    $this->prepareConfigDirectories();
-
-    $this->settingsSet('php_storage', array('service_container' => array(
-      'bin' => 'service_container',
-      'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',
-      'directory' => DRUPAL_ROOT . '/' . $this->publicFilesDirectory . '/php',
-      'secret' => Settings::getHashSalt(),
-    )));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function prepareConfigDirectories() {
-    \Drupal::setContainer($this->originalContainer);
-    parent::prepareConfigDirectories();
-    \Drupal::unsetContainer();
+    $this->root = static::getDrupalRoot();
+    $this->bootEnvironment();
   }
 
   /**
@@ -56,10 +43,10 @@ class DrupalKernelTest extends KernelTestBase {
    */
   protected function getTestKernel(Request $request, array $modules_enabled = NULL) {
     // Manually create kernel to avoid replacing settings.
-    $class_loader = require DRUPAL_ROOT . '/autoload.php';
+    $class_loader = require $this->root . '/autoload.php';
     $kernel = DrupalKernel::createFromRequest($request, $class_loader, 'testing');
-    $this->settingsSet('container_yamls', []);
-    $this->settingsSet('hash_salt', $this->databasePrefix);
+    $this->setSetting('container_yamls', []);
+    $this->setSetting('hash_salt', $this->databasePrefix);
     if (isset($modules_enabled)) {
       $kernel->updateModules($modules_enabled);
     }
@@ -158,7 +145,7 @@ class DrupalKernelTest extends KernelTestBase {
    */
   public function testRepeatedBootWithDifferentEnvironment() {
     $request = Request::createFromGlobals();
-    $class_loader = require DRUPAL_ROOT . '/autoload.php';
+    $class_loader = require $this->root . '/autoload.php';
 
     $environments = [
       'testing1',
@@ -169,8 +156,8 @@ class DrupalKernelTest extends KernelTestBase {
 
     foreach ($environments as $environment) {
       $kernel = DrupalKernel::createFromRequest($request, $class_loader, $environment);
-      $this->settingsSet('container_yamls', []);
-      $this->settingsSet('hash_salt', $this->databasePrefix);
+      $this->setSetting('container_yamls', []);
+      $this->setSetting('hash_salt', $this->databasePrefix);
       $kernel->boot();
     }
 
