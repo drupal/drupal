@@ -37,6 +37,39 @@ class BlockTest extends MigrateSqlSourceTestCase {
       'pages' => '',
       'title' => 'Test Title 01',
       'cache' => -1,
+      'roles' => [2]
+    ),
+    array(
+      'bid' => 2,
+      'module' => 'block',
+      'delta' => '2',
+      'theme' => 'garland',
+      'status' => 1,
+      'weight' => 5,
+      'region' => 'right',
+      'visibility' => 0,
+      'pages' => '<front>',
+      'title' => 'Test Title 02',
+      'cache' => -1,
+      'roles' => [2]
+    ),
+  );
+  /**
+   * Sample block table.
+   */
+  protected $expectedBlocks = array(
+    array(
+      'bid' => 1,
+      'module' => 'block',
+      'delta' => '1',
+      'theme' => 'garland',
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'left',
+      'visibility' => 0,
+      'pages' => '',
+      'title' => 'Test Title 01',
+      'cache' => -1,
     ),
     array(
       'bid' => 2,
@@ -62,14 +95,35 @@ class BlockTest extends MigrateSqlSourceTestCase {
       'delta' => 1,
       'rid' => 2,
     ),
+    array(
+      'module' => 'block',
+      'delta' => 2,
+      'rid' => 2,
+    ),
+    array(
+      'module' => 'block',
+      'delta' => 2,
+      'rid' => 100,
+    ),
+  );
+
+  /**
+   * Sample role table.
+   */
+  protected $expectedRole = array(
+    array(
+      'rid' => 2,
+      'name' => 'authenticated user',
+    ),
   );
 
   /**
    * Prepopulate database contents.
    */
   protected function setUp() {
-    $this->databaseContents['blocks'] = $this->expectedResults;
+    $this->databaseContents['blocks'] = $this->expectedBlocks;
     $this->databaseContents['blocks_roles'] = $this->expectedBlocksRoles;
+    $this->databaseContents['role'] = $this->expectedRole;
     $this->databaseContents['system'] = array(
       array(
         'filename' => 'modules/system/system.module',
