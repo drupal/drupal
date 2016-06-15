@@ -1,5 +1,5 @@
 
-Drupal 7.44, xxxx-xx-xx (development version)
+Drupal 7.45, xxxx-xx-xx (development version)
 -----------------------
 - Removed meaningless post-check=0 and pre-check=0 cache control headers from
   Drupal HTTP responses.
@@ -17,6 +17,10 @@ Drupal 7.44, xxxx-xx-xx (development version)
 - Fixed a regression introduced in Drupal 7.43 that allowed files uploaded by
   anonymous users to be lost after form validation errors, and that also caused
   regressions with certain contributed modules.
+
+Drupal 7.44, 2016-06-15
+-----------------------
+- Fixed security issues (privilege escalation). See SA-CORE-2016-002.
 
 Drupal 7.43, 2016-02-24
 -----------------------
