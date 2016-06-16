@@ -148,7 +148,7 @@ class ViewsDataTest extends UnitTestCase {
    */
   public function testFetchBaseTables() {
     $this->setupMockedModuleHandler();
-    $data = $this->viewsData->get();
+    $data = $this->viewsData->getAll();
 
     $base_tables = $this->viewsData->fetchBaseTables();
 
@@ -198,7 +198,7 @@ class ViewsDataTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
 
     $expected_views_data = $this->viewsDataWithProvider();
-    $views_data = $this->viewsData->get();
+    $views_data = $this->viewsData->getAll();
     $this->assertSame($expected_views_data, $views_data);
   }
 
@@ -271,7 +271,7 @@ class ViewsDataTest extends UnitTestCase {
       ->method('set')
       ->with("views_data:$random_table_name:en", array());
 
-    $views_data = $this->viewsData->get();
+    $views_data = $this->viewsData->getAll();
     $this->assertSame($expected_views_data, $views_data);
 
     // Request a specific table should be static cached.
@@ -288,7 +288,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->viewsData->clear();
 
     // Get the views data again.
-    $this->viewsData->get();
+    $this->viewsData->getAll();
     $this->viewsData->get($table_name);
     $this->viewsData->get($table_name_2);
     $this->viewsData->get($random_table_name);
@@ -312,10 +312,10 @@ class ViewsDataTest extends UnitTestCase {
       ->with("views_data:en")
       ->will($this->returnValue(FALSE));
 
-    $views_data = $this->viewsData->get();
+    $views_data = $this->viewsData->getAll();
     $this->assertSame($expected_views_data, $views_data);
 
-    $views_data = $this->viewsData->get();
+    $views_data = $this->viewsData->getAll();
     $this->assertSame($expected_views_data, $views_data);
   }
 
@@ -349,7 +349,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->assertSame($expected_views_data[$table_name], $views_data, 'Make sure fetching cached views data by table works as expected.');
 
     // Test that this data is present if all views data is returned.
-    $views_data = $this->viewsData->get();
+    $views_data = $this->viewsData->getAll();
 
     $this->assertArrayHasKey($table_name, $views_data, 'Make sure the views_test_data info appears in the total views data.');
     $this->assertSame($expected_views_data[$table_name], $views_data[$table_name], 'Make sure the views_test_data has the expected values.');
@@ -568,7 +568,7 @@ class ViewsDataTest extends UnitTestCase {
     // Initialize the views data cache and repeat with no specified table. This
     // should only load the cache entry for all tables.
     for ($i = 0; $i < 5; $i++) {
-      $views_data = $this->viewsData->get();
+      $views_data = $this->viewsData->getAll();
       $this->assertSame($expected_views_data, $views_data);
     }
   }
@@ -595,7 +595,7 @@ class ViewsDataTest extends UnitTestCase {
     // Initialize the views data cache and repeat with no specified table. This
     // should only load the cache entry for all tables.
     for ($i = 0; $i < 5; $i++) {
-      $views_data = $this->viewsData->get();
+      $views_data = $this->viewsData->getAll();
       $this->assertSame($expected_views_data, $views_data);
     }
   }
@@ -636,6 +636,32 @@ class ViewsDataTest extends UnitTestCase {
     // Should only be invoked the first time.
     $this->assertSame($expected_views_data[$table_name], $this->viewsData->get($table_name));
     $this->assertSame($expected_views_data[$table_name_2], $this->viewsData->get($table_name_2));
+  }
+
+  /**
+   * Tests that getting all data has same results as getting data with NULL
+   * logic.
+   *
+   * @covers ::getAll
+   */
+  public function testGetAllEqualsToGetNull() {
+    $expected_views_data = $this->viewsDataWithProvider();
+    $this->setupMockedModuleHandler();
+
+    // Setup a warm cache backend for a single table.
+    $this->cacheBackend->expects($this->once())
+      ->method('get')
+      ->with("views_data:en");
+    $this->cacheBackend->expects($this->once())
+      ->method('set')
+      ->with('views_data:en', $expected_views_data);
+
+    // Initialize the views data cache and repeat with no specified table. This
+    // should only load the cache entry for all tables.
+    for ($i = 0; $i < 5; $i++) {
+      $this->assertSame($expected_views_data, $this->viewsData->getAll());
+      $this->assertSame($expected_views_data, $this->viewsData->get());
+    }
   }
 
 }
