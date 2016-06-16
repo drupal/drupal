@@ -1,6 +1,6 @@
 services:
   plugin.manager.migrate.cckfield:
-    class: Drupal\migrate\Plugin\MigratePluginManager
+    class: Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManager
     arguments:
       - cckfield
       - '@container.namespaces'
