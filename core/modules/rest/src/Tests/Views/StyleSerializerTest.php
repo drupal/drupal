@@ -183,6 +183,22 @@ class StyleSerializerTest extends PluginTestBase {
   }
 
   /**
+   * Verifies site maintenance mode functionality.
+   */
+  protected function testSiteMaintenance() {
+    $view = Views::getView('test_serializer_display_field');
+    $view->initDisplay();
+    $this->executeView($view);
+
+    // Set the site to maintenance mode.
+    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+
+    $this->drupalGetWithFormat('test/serialize/entity', 'json');
+    // Verify that the endpoint is unavailable for anonymous users.
+    $this->assertResponse(503);
+  }
+
+  /**
    * Sets up a request on the request stack with a specified format.
    *
    * @param string $format
