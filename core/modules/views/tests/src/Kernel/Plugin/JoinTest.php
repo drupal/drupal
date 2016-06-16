@@ -172,7 +172,8 @@ class JoinTest extends RelationshipJoinTestBase {
     $join_info = $tables['users4'];
     $this->assertTrue(strpos($join_info['condition'], "views_test_data.uid = users4.uid") !== FALSE, 'Make sure the join condition appears in the query.');
     $this->assertTrue(strpos($join_info['condition'], "users4.name = :views_join_condition_2") !== FALSE, 'Make sure the first extra join condition appears in the query.');
-    $this->assertTrue(strpos($join_info['condition'], "users4.name IN ( :views_join_condition_3, :views_join_condition_4, :views_join_condition_5 )") !== FALSE, 'The IN condition for the join is properly formed.');
+    $this->assertTrue(strpos($join_info['condition'], "users4.name IN ( :views_join_condition_3[] )") !== FALSE, 'The IN condition for the join is properly formed.');
+    $this->assertEqual($join_info['arguments'][':views_join_condition_3[]'], array($random_name_2, $random_name_3, $random_name_4), 'Make sure the IN arguments are still part of an array.');
 
     // Test that all the conditions are properly built.
     $configuration['extra'] = array(
@@ -197,8 +198,8 @@ class JoinTest extends RelationshipJoinTestBase {
     $tables = $query->getTables();
     $join_info = $tables['users5'];
     $this->assertTrue(strpos($join_info['condition'], "views_test_data.uid = users5.uid") !== FALSE, 'Make sure the join condition appears in the query.');
-    $this->assertTrue(strpos($join_info['condition'], "users5.langcode = :views_join_condition_6") !== FALSE, 'Make sure the first extra join condition appears in the query.');
-    $this->assertTrue(strpos($join_info['condition'], "views_test_data.status = :views_join_condition_7") !== FALSE, 'Make sure the second extra join condition appears in the query.');
+    $this->assertTrue(strpos($join_info['condition'], "users5.langcode = :views_join_condition_4") !== FALSE, 'Make sure the first extra join condition appears in the query.');
+    $this->assertTrue(strpos($join_info['condition'], "views_test_data.status = :views_join_condition_5") !== FALSE, 'Make sure the second extra join condition appears in the query.');
     $this->assertTrue(strpos($join_info['condition'], "users5.name = views_test_data.name") !== FALSE, 'Make sure the third extra join condition appears in the query.');
     $this->assertEqual(array_values($join_info['arguments']), array('en', 0), 'Make sure the arguments are in the right order');
   }
