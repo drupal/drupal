@@ -199,7 +199,6 @@ class SimpletestTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    global $base_url;
     // Test discovery does not run upon form submission.
     simpletest_classloader_register();
 
@@ -217,20 +216,8 @@ class SimpletestTestForm extends FormBase {
       $form_state->setValue('tests', $user_input['tests']);
     }
 
-    $tests_list = array();
-    foreach ($form_state->getValue('tests') as $class_name => $value) {
-      if ($value === $class_name) {
-        if (is_subclass_of($class_name, 'PHPUnit_Framework_TestCase')) {
-          $test_type = 'phpunit';
-        }
-        else {
-          $test_type = 'simpletest';
-        }
-        $tests_list[$test_type][] = $class_name;
-      }
-    }
+    $tests_list = array_filter($form_state->getValue('tests'));
     if (!empty($tests_list)) {
-      putenv('SIMPLETEST_BASE_URL=' . $base_url);
       $test_id = simpletest_run_tests($tests_list, 'drupal');
       $form_state->setRedirect(
         'simpletest.result_form',
