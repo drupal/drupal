@@ -111,7 +111,7 @@ class D6NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
             $field_type = $info['type'];
             if ($this->cckPluginManager->hasDefinition($info['type'])) {
               if (!isset($this->cckPluginCache[$field_type])) {
-                $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($field_type, [], $migration);
+                $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($field_type, ['core' => 6], $migration);
               }
               $this->cckPluginCache[$field_type]
                 ->processCckFieldValues($migration, $field_name, $info);

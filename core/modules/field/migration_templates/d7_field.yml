@@ -2,6 +2,8 @@ id: d7_field
 label: Field configuration
 migration_tags:
   - Drupal 7
+class: Drupal\migrate_drupal\Plugin\migrate\CckMigration
+cck_plugin_method: processField
 source:
   plugin: d7_field
   constants:
@@ -13,7 +15,7 @@ process:
   langcode: 'constants/langcode'
   field_name: field_name
   type:
-    plugin: static_map
+    plugin: field_type
     source: type
     map:
       date: datetime
@@ -30,8 +32,6 @@ process:
       number_decimal: decimal
       number_float: float
       phone: telephone
-      taxonomy_term_reference: entity_reference
-      text: text
       text_long: text_long
       text_with_summary: text_with_summary
   translatable: translatable

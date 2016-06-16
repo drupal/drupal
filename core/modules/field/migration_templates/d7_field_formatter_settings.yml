@@ -2,6 +2,8 @@ id: d7_field_formatter_settings
 label: Field formatter configuration
 migration_tags:
   - Drupal 7
+class: Drupal\migrate_drupal\Plugin\migrate\CckMigration
+cck_plugin_method: processFieldFormatter
 source:
   plugin: d7_field_instance_per_view_mode
   constants:
