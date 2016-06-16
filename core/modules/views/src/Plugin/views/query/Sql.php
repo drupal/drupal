@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\query;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
@@ -13,6 +14,7 @@ use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Views query plugin for an SQL query.
@@ -105,6 +107,40 @@ class Sql extends QueryPluginBase {
    * @var bool
    */
   protected $noDistinct;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a Sql object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -1482,63 +1518,97 @@ class Sql extends QueryPluginBase {
     foreach ($entity_information as $info) {
       $entity_type = $info['entity_type'];
       if (!isset($entity_types[$entity_type])) {
-        $entity_types[$entity_type] = \Drupal::entityManager()->getDefinition($entity_type);
+        $entity_types[$entity_type] = $this->entityTypeManager->getDefinition($entity_type);
       }
     }
 
     // Assemble a list of entities to load.
-    $ids_by_type = array();
+    $entity_ids_by_type = [];
+    $revision_ids_by_type = [];
     foreach ($entity_information as $info) {
       $relationship_id = $info['relationship_id'];
       $entity_type = $info['entity_type'];
+      /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_info */
       $entity_info = $entity_types[$entity_type];
-      $id_key = !$info['revision'] ? $entity_info->getKey('id') : $entity_info->getKey('revision');
+      $revision = $info['revision'];
+      $id_key = !$revision ? $entity_info->getKey('id') : $entity_info->getKey('revision');
       $id_alias = $this->getFieldAlias($info['alias'], $id_key);
 
       foreach ($results as $index => $result) {
         // Store the entity id if it was found.
         if (isset($result->{$id_alias}) && $result->{$id_alias} != '') {
-          $ids_by_type[$entity_type][$index][$relationship_id] = $result->$id_alias;
+          if ($revision) {
+            $revision_ids_by_type[$entity_type][$index][$relationship_id] = $result->$id_alias;
+          }
+          else {
+            $entity_ids_by_type[$entity_type][$index][$relationship_id] = $result->$id_alias;
+          }
         }
       }
     }
 
     // Load all entities and assign them to the correct result row.
-    foreach ($ids_by_type as $entity_type => $ids) {
+    foreach ($entity_ids_by_type as $entity_type => $ids) {
+      $entity_storage = $this->entityTypeManager->getStorage($entity_type);
       $flat_ids = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($ids)), FALSE);
 
-      // Drupal core currently has no way to load multiple revisions. Sad.
-      if (isset($entity_information[$entity_type]['revision']) && $entity_information[$entity_type]['revision'] === TRUE) {
-        $entities = array();
-        foreach ($flat_ids as $revision_id) {
-          $entity = entity_revision_load($entity_type, $revision_id);
-          if ($entity) {
-            $entities[$revision_id] = $entity;
-          }
+      $entities = $entity_storage->loadMultiple(array_unique($flat_ids));
+      $results = $this->_assignEntitiesToResult($ids, $entities, $results);
+    }
+
+    // Now load all revisions.
+    foreach ($revision_ids_by_type as $entity_type => $revision_ids) {
+      $entity_storage = $this->entityTypeManager->getStorage($entity_type);
+      $entities = [];
+
+      foreach ($revision_ids as $index => $revision_id_by_relationship) {
+        foreach ($revision_id_by_relationship as $revision => $revision_id) {
+          // Drupal core currently has no way to load multiple revisions.
+          $entity = $entity_storage->loadRevision($revision_id);
+          $entities[$revision_id] = $entity;
         }
       }
-      else {
-        $entities = entity_load_multiple($entity_type, $flat_ids);
-      }
 
-      foreach ($ids as $index => $relationships) {
-        foreach ($relationships as $relationship_id => $entity_id) {
-          if (isset($entities[$entity_id])) {
-            $entity = $entities[$entity_id];
-          }
-          else {
-            $entity = NULL;
-          }
+      $results = $this->_assignEntitiesToResult($revision_ids, $entities, $results);
+    }
+  }
 
-          if ($relationship_id == 'none') {
-            $results[$index]->_entity = $entity;
-          }
-          else {
-            $results[$index]->_relationship_entities[$relationship_id] = $entity;
-          }
+  /**
+   * Sets entities onto the view result row objects.
+   *
+   * This method takes into account the relationship in which the entity was
+   * needed in the first place.
+   *
+   * @param mixed[][] $ids
+   *   A two dimensional array of identifiers (entity ID / revision ID) keyed by
+   *   relationship.
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
+   *   An array of entities keyed by their identified (entity ID / revision ID).
+   * @param \Drupal\views\ResultRow[] $results
+   *   The entire views result.
+   *
+   * @return \Drupal\views\ResultRow[]
+   *   The changed views results.
+   */
+  protected function _assignEntitiesToResult($ids, array $entities, array $results) {
+    foreach ($ids as $index => $relationships) {
+      foreach ($relationships as $relationship_id => $id) {
+        if (isset($entities[$id])) {
+          $entity = $entities[$id];
+        }
+        else {
+          $entity = NULL;
+        }
+
+        if ($relationship_id == 'none') {
+          $results[$index]->_entity = $entity;
+        }
+        else {
+          $results[$index]->_relationship_entities[$relationship_id] = $entity;
         }
       }
     }
+    return $results;
   }
 
   /**
