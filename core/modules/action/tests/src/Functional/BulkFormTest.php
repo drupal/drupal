@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\action\Tests;
+namespace Drupal\Tests\action\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\views\Views;
 
 /**
@@ -11,7 +11,7 @@ use Drupal\views\Views;
  * @group action
  * @see \Drupal\action\Plugin\views\field\BulkForm
  */
-class BulkFormTest extends WebTestBase {
+class BulkFormTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -123,7 +123,7 @@ class BulkFormTest extends WebTestBase {
     // Check the default title.
     $this->drupalGet('test_bulk_form');
     $result = $this->xpath('//label[@for="edit-action"]');
-    $this->assertEqual('With selection', (string) $result[0]);
+    $this->assertEqual('With selection', $result[0]->getText());
 
     // Setup up a different bulk form title.
     $view = Views::getView('test_bulk_form');
@@ -133,7 +133,7 @@ class BulkFormTest extends WebTestBase {
 
     $this->drupalGet('test_bulk_form');
     $result = $this->xpath('//label[@for="edit-action"]');
-    $this->assertEqual('Test title', (string) $result[0]);
+    $this->assertEqual('Test title', $result[0]->getText());
 
     $this->drupalGet('test_bulk_form');
     // Call the node delete action.

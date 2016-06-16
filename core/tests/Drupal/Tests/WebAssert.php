@@ -6,12 +6,49 @@ use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\WebAssert as MinkWebAssert;
 use Behat\Mink\Element\TraversableElement;
 use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Session;
 use Drupal\Component\Utility\Html;
 
 /**
  * Defines a class with methods for asserting presence of elements during tests.
  */
 class WebAssert extends MinkWebAssert {
+
+  /**
+   * The absolute URL of the site under test.
+   *
+   * @var string
+   */
+  protected $baseUrl = '';
+
+  /**
+   * Constructor.
+   *
+   * @param \Behat\Mink\Session $session
+   *   The Behat session object;
+   * @param string $base_url
+   *   The base URL of the site under test.
+   */
+  public function __construct(Session $session, $base_url = '') {
+    parent::__construct($session);
+    $this->baseUrl = $base_url;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function cleanUrl($url) {
+    // Strip the base URL from the beginning for absolute URLs.
+    if ($this->baseUrl !== '' && strpos($url, $this->baseUrl) === 0) {
+      $url = substr($url, strlen($this->baseUrl));
+    }
+    // Make sure there is a forward slash at the beginning of relative URLs for
+    // consistency.
+    if (parse_url($url, PHP_URL_HOST) === NULL && strpos($url, '/') !== 0) {
+      $url = "/$url";
+    }
+    return parent::cleanUrl($url);
+  }
 
   /**
    * Checks that specific button exists on the current page.
@@ -64,6 +101,71 @@ class WebAssert extends MinkWebAssert {
     }
 
     return $node;
+  }
+
+  /**
+   * Checks that specific option in a select field exists on the current page.
+   *
+   * @param string $select
+   *   One of id|name|label|value for the select field.
+   * @param string $option
+   *   The option value.
+   * @param \Behat\Mink\Element\TraversableElement $container
+   *   (optional) The document to check against. Defaults to the current page.
+   *
+   * @return \Behat\Mink\Element\NodeElement
+   *   The matching option element
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   *   When the element doesn't exist.
+   */
+  public function optionExists($select, $option, TraversableElement $container = NULL) {
+    $container = $container ?: $this->session->getPage();
+    $select_field = $container->find('named', array(
+      'select',
+      $this->session->getSelectorsHandler()->xpathLiteral($select),
+    ));
+
+    if ($select_field === NULL) {
+      throw new ElementNotFoundException($this->session, 'select', 'id|name|label|value', $select);
+    }
+
+    $option_field = $select_field->find('named', array('option', $option));
+
+    if ($option_field === NULL) {
+      throw new ElementNotFoundException($this->session, 'select', 'id|name|label|value', $option);
+    }
+
+    return $option_field;
+  }
+
+  /**
+   * Checks that an option in a select field does NOT exist on the current page.
+   *
+   * @param string $select
+   *   One of id|name|label|value for the select field.
+   * @param string $option
+   *   The option value that shoulkd not exist.
+   * @param \Behat\Mink\Element\TraversableElement $container
+   *   (optional) The document to check against. Defaults to the current page.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   *   When the select element doesn't exist.
+   */
+  public function optionNotExists($select, $option, TraversableElement $container = NULL) {
+    $container = $container ?: $this->session->getPage();
+    $select_field = $container->find('named', array(
+      'select',
+      $this->session->getSelectorsHandler()->xpathLiteral($select),
+    ));
+
+    if ($select_field === NULL) {
+      throw new ElementNotFoundException($this->session, 'select', 'id|name|label|value', $select);
+    }
+
+    $option_field = $select_field->find('named', array('option', $option));
+
+    $this->assert($option_field === NULL, sprintf('An option "%s" exists in select "%s", but it should not.', $option, $select));
   }
 
   /**

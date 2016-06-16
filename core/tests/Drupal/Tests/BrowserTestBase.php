@@ -22,6 +22,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\simpletest\AssertHelperTrait;
+use Drupal\simpletest\ContentTypeCreationTrait;
 use Drupal\simpletest\BlockCreationTrait;
 use Drupal\simpletest\NodeCreationTrait;
 use Drupal\user\Entity\Role;
@@ -46,6 +47,9 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   use SessionTestTrait;
   use NodeCreationTrait {
     createNode as drupalCreateNode;
+  }
+  use ContentTypeCreationTrait {
+    createContentType as drupalCreateContentType;
   }
 
   /**
@@ -552,7 +556,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   A new web-assert option for asserting the presence of elements with.
    */
   public function assertSession($name = NULL) {
-    return new WebAssert($this->getSession($name));
+    return new WebAssert($this->getSession($name), $this->baseUrl);
   }
 
   /**
@@ -1761,6 +1765,16 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    */
   protected function drupalGetHeader($name) {
     return $this->getSession()->getResponseHeader($name);
+  }
+
+  /**
+   * Get the current URL from the browser.
+   *
+   * @return string
+   *   The current URL.
+   */
+  protected function getUrl() {
+    return $this->getSession()->getCurrentUrl();
   }
 
   /**

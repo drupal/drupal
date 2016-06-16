@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\action\Tests;
+namespace Drupal\Tests\action\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that uninstalling actions does not remove other module's actions.
@@ -10,7 +10,7 @@ use Drupal\simpletest\WebTestBase;
  * @group action
  * @see \Drupal\action\Plugin\views\field\BulkForm
  */
-class ActionUninstallTest extends WebTestBase {
+class ActionUninstallTest extends BrowserTestBase {
 
   /**
    * Modules to install.

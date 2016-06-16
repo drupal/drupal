@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\action\Tests;
+namespace Drupal\Tests\action\Functional;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\simpletest\WebTestBase;
 use Drupal\system\Entity\Action;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests complex actions configuration by adding, editing, and deleting a
@@ -12,7 +12,7 @@ use Drupal\system\Entity\Action;
  *
  * @group action
  */
-class ConfigurationTest extends WebTestBase {
+class ConfigurationTest extends BrowserTestBase {
 
   /**
    * Modules to install.
