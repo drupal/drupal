@@ -122,22 +122,22 @@ function _simpletest_format_summary_line($summary) {
  *   The test ID.
  */
 function simpletest_run_tests($test_list) {
+  // We used to separate PHPUnit and Simpletest tests for a performance
+  // optimization. In order to support backwards compatibility check if these
+  // keys are set and create a single test list.
+  // @todo https://www.drupal.org/node/2748967 Remove BC support in Drupal 9.
+  if (isset($test_list['simpletest'])) {
+    $test_list = array_merge($test_list, $test_list['simpletest']);
+    unset($test_list['simpletest']);
+  }
+  if (isset($test_list['phpunit'])) {
+    $test_list = array_merge($test_list, $test_list['phpunit']);
+    unset($test_list['phpunit']);
+  }
+
   $test_id = db_insert('simpletest_test_id')
     ->useDefaults(array('test_id'))
     ->execute();
-
-  if (!empty($test_list['phpunit'])) {
-    $phpunit_results = simpletest_run_phpunit_tests($test_id, $test_list['phpunit']);
-    simpletest_process_phpunit_results($phpunit_results);
-  }
-
-  // Early return if there are no further tests to run.
-  if (empty($test_list['simpletest'])) {
-    return $test_id;
-  }
-
-  // Continue with SimpleTests only.
-  $test_list = $test_list['simpletest'];
 
   // Clear out the previous verbose files.
   file_unmanaged_delete_recursive('public://simpletest/verbose');
@@ -190,7 +190,7 @@ function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames
     // Something broke during the execution of phpunit.
     // Return an error record of all failed classes.
     $rows[] = [
-      'test_id' => '1',
+      'test_id' => $test_id,
       'test_class' => implode(",", $unescaped_test_classnames),
       'status' => 'fail',
       'message' => 'PHPunit Test failed to complete',
@@ -221,6 +221,48 @@ function simpletest_process_phpunit_results($phpunit_results) {
     }
     $query->execute();
   }
+}
+
+/**
+ * Maps phpunit results to a data structure for batch messages and run-tests.sh.
+ *
+ * @param array $results
+ *   The output from simpletest_run_phpunit_tests().
+ *
+ * @return array
+ *   The test result summary. A row per test class.
+ */
+function simpletest_summarize_phpunit_result($results) {
+  $summaries = [];
+  foreach ($results as $result) {
+    if (!isset($summaries[$result['test_class']])) {
+      $summaries[$result['test_class']] = array(
+        '#pass' => 0,
+        '#fail' => 0,
+        '#exception' => 0,
+        '#debug' => 0,
+      );
+    }
+
+    switch ($result['status']) {
+      case 'pass':
+        $summaries[$result['test_class']]['#pass']++;
+        break;
+
+      case 'fail':
+        $summaries[$result['test_class']]['#fail']++;
+        break;
+
+      case 'exception':
+        $summaries[$result['test_class']]['#exception']++;
+        break;
+
+      case 'debug':
+        $summaries[$result['test_class']]['#debug']++;
+        break;
+    }
+  }
+  return $summaries;
 }
 
 /**
@@ -262,9 +304,18 @@ function simpletest_phpunit_configuration_filepath() {
  *   The results as returned by exec().
  */
 function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpunit_file, &$status = NULL) {
+  global $base_url;
   // Setup an environment variable containing the database connection so that
   // functional tests can connect to the database.
   putenv('SIMPLETEST_DB=' . Database::getConnectionInfoAsUrl());
+
+  // Setup an environment variable containing the base URL, if it is available.
+  // This allows functional tests to browse the site under test. When running
+  // tests via CLI, core/phpunit.xml.dist or core/scripts/run-tests.sh can set
+  // this variable.
+  if ($base_url) {
+    putenv('SIMPLETEST_BASE_URL=' . $base_url);
+  }
   $phpunit_bin = simpletest_phpunit_command();
 
   $command = array(
@@ -302,6 +353,9 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
 
   chdir($old_cwd);
   putenv('SIMPLETEST_DB=');
+  if ($base_url) {
+    putenv('SIMPLETEST_BASE_URL=');
+  }
   return $ret;
 }
 
@@ -352,15 +406,21 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
 
   // Perform the next test.
   $test_class = array_shift($test_list);
-  $test = new $test_class($test_id);
-  $test->run();
+  if (is_subclass_of($test_class, \PHPUnit_Framework_TestCase::class)) {
+    $phpunit_results = simpletest_run_phpunit_tests($test_id, [$test_class]);
+    simpletest_process_phpunit_results($phpunit_results);
+    $test_results[$test_class] = simpletest_summarize_phpunit_result($phpunit_results)[$test_class];
+  }
+  else {
+    $test = new $test_class($test_id);
+    $test->run();
+    \Drupal::moduleHandler()->invokeAll('test_finished', array($test->results));
+    $test_results[$test_class] = $test->results;
+  }
   $size = count($test_list);
   $info = TestDiscovery::getTestInfo($test_class);
 
-  \Drupal::moduleHandler()->invokeAll('test_finished', array($test->results));
-
   // Gather results and compose the report.
-  $test_results[$test_class] = $test->results;
   foreach ($test_results[$test_class] as $key => $value) {
     $test_results[$key] += $value;
   }
