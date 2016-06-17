@@ -74,4 +74,14 @@ class InstallerTest extends InstallerTestBase {
     parent::setUpSite();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function visitInstaller() {
+    parent::visitInstaller();
+
+    // Assert the title is correct and has the title suffix.
+    $this->assertTitle('Choose language | Drupal');
+  }
+
 }
