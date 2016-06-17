@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\ban\Tests;
+namespace Drupal\Tests\ban\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests IP address banning.
  *
  * @group ban
  */
-class IpAddressBlockingTest extends WebTestBase {
+class IpAddressBlockingTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -61,7 +61,7 @@ class IpAddressBlockingTest extends WebTestBase {
 
     // Pass an IP address as a URL parameter and submit it.
     $submit_ip = '1.2.3.4';
-    $this->drupalPostForm('admin/config/people/ban/' . $submit_ip, NULL, t('Add'));
+    $this->drupalPostForm('admin/config/people/ban/' . $submit_ip, array(), t('Add'));
     $ip = db_query("SELECT iid from {ban_ip} WHERE ip = :ip", array(':ip' => $submit_ip))->fetchField();
     $this->assertTrue($ip, 'IP address found in database');
     $this->assertRaw(t('The IP address %ip has been banned.', array('%ip' => $submit_ip)), 'IP address was banned.');
