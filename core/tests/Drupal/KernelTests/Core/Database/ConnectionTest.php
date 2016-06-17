@@ -97,6 +97,8 @@ class ConnectionTest extends DatabaseTestBase {
     // Set up identical replica and confirm connection options are identical.
     Database::addConnectionInfo('default', 'replica', $connection_info['default']);
     $db2 = Database::getConnection('replica', 'default');
+    // Getting a driver class ensures the namespace option is set.
+    $this->assertEquals($db->getDriverClass('select'), $db2->getDriverClass('select'));
     $connectionOptions2 = $db2->getConnectionOptions();
 
     // Get a fresh copy of the default connection options.
