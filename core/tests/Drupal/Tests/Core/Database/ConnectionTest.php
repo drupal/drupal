@@ -150,19 +150,16 @@ class ConnectionTest extends UnitTestCase {
     return array(
       array(
         'nonexistent_class',
-        'stub',
         '\\',
         'nonexistent_class',
       ),
       array(
-        'Drupal\\Core\\Database\\Driver\\mysql\\Select',
-        'mysql',
+        'Drupal\Tests\Core\Database\Stub\Select',
         NULL,
         'Select',
       ),
       array(
         'Drupal\\Tests\\Core\\Database\\Stub\\Driver\\Schema',
-        'stub',
         'Drupal\\Tests\\Core\\Database\\Stub\\Driver',
         'Schema',
       ),
@@ -174,11 +171,10 @@ class ConnectionTest extends UnitTestCase {
    *
    * @dataProvider providerGetDriverClass
    */
-  public function testGetDriverClass($expected, $driver, $namespace, $class) {
+  public function testGetDriverClass($expected, $namespace, $class) {
     $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, array('namespace' => $namespace));
     // Set the driver using our stub class' public property.
-    $connection->driver = $driver;
     $this->assertEquals($expected, $connection->getDriverClass($class));
   }
 
