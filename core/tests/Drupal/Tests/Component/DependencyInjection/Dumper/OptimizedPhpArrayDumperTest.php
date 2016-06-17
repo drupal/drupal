@@ -494,6 +494,60 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     }
 
     /**
+     * Tests that references to aliases work correctly.
+     *
+     * @covers ::getReferenceCall
+     *
+     * @dataProvider publicPrivateDataProvider
+     */
+    public function testGetServiceDefinitionWithReferenceToAlias($public) {
+      $bar_definition = new Definition('\stdClass');
+      $bar_definition_php_array = array(
+        'class' => '\stdClass',
+      );
+      if (!$public) {
+        $bar_definition->setPublic(FALSE);
+        $bar_definition_php_array['public'] = FALSE;
+      }
+      $bar_definition_php_array['arguments_count'] = 0;
+
+      $services['bar'] = $bar_definition;
+
+      $aliases['bar.alias'] = 'bar';
+
+      $foo = new Definition('\stdClass');
+      $foo->addArgument(new Reference('bar.alias'));
+
+      $services['foo'] = $foo;
+
+      $this->containerBuilder->getAliases()->willReturn($aliases);
+      $this->containerBuilder->getDefinitions()->willReturn($services);
+      $this->containerBuilder->getDefinition('bar')->willReturn($bar_definition);
+      $dump = $this->dumper->getArray();
+      if ($public) {
+        $service_definition = $this->getServiceCall('bar');
+      }
+      else {
+        $service_definition = $this->getPrivateServiceCall('bar', $bar_definition_php_array, TRUE);
+      }
+      $data = array(
+         'class' => '\stdClass',
+         'arguments' => $this->getCollection(array(
+           $service_definition,
+         )),
+         'arguments_count' => 1,
+      );
+      $this->assertEquals($this->serializeDefinition($data), $dump['services']['foo'], 'Expected definition matches dump.');
+    }
+
+    public function publicPrivateDataProvider() {
+      return array(
+        array(TRUE),
+        array(FALSE),
+      );
+    }
+
+    /**
      * Tests that getDecoratedService() is unsupported.
      *
      * Tests that the correct InvalidArgumentException is thrown for

@@ -60,6 +60,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    */
   public function getArray() {
     $definition = array();
+    $this->aliases = $this->getAliases();
     $definition['aliases'] = $this->getAliases();
     $definition['parameters'] = $this->getParameters();
     $definition['services'] = $this->getServiceDefinitions();
@@ -454,6 +455,9 @@ class OptimizedPhpArrayDumper extends Dumper {
     }
 
     // Private shared service.
+    if (isset($this->aliases[$id])) {
+      $id = $this->aliases[$id];
+    }
     $definition = $this->container->getDefinition($id);
     if (!$definition->isPublic()) {
       // The ContainerBuilder does not share a private service, but this means a
