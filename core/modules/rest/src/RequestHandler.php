@@ -42,6 +42,7 @@ class RequestHandler implements ContainerAwareInterface {
       ->createInstance($plugin);
 
     // Deserialize incoming data if available.
+    /** @var \Symfony\Component\Serializer\SerializerInterface $serializer */
     $serializer = $this->container->get('serializer');
     $received = $request->getContent();
     $unserialized = NULL;

@@ -2,6 +2,7 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -200,14 +201,14 @@ abstract class RESTTestBase extends WebTestBase {
    * Required properties differ from entity type to entity type, so we keep a
    * minimum mapping here.
    *
-   * @param string $entity_type
-   *   The type of the entity that should be created.
+   * @param string $entity_type_id
+   *   The ID of the type of entity that should be created.
    *
    * @return array
    *   An array of values keyed by property name.
    */
-  protected function entityValues($entity_type) {
-    switch ($entity_type) {
+  protected function entityValues($entity_type_id) {
+    switch ($entity_type_id) {
       case 'entity_test':
         return array(
           'name' => $this->randomMachineName(),
@@ -217,6 +218,11 @@ abstract class RESTTestBase extends WebTestBase {
             'format' => 'plain_text',
           )),
         );
+      case 'config_test':
+        return [
+          'id' => $this->randomMachineName(),
+          'label' => 'Test label',
+        ];
       case 'node':
         return array('title' => $this->randomString(), 'type' => 'resttest');
       case 'node_type':
@@ -236,8 +242,15 @@ abstract class RESTTestBase extends WebTestBase {
           'entity_id' => 'invalid',
           'field_name' => 'comment',
         ];
-
+      case 'taxonomy_vocabulary':
+        return [
+          'vid' => 'tags',
+          'name' => $this->randomMachineName(),
+        ];
       default:
+        if ($this->isConfigEntity($entity_type_id)) {
+          return $this->configEntityValues($entity_type_id);
+        }
         return array();
     }
   }
@@ -311,7 +324,7 @@ abstract class RESTTestBase extends WebTestBase {
   /**
    * Provides the necessary user permissions for entity operations.
    *
-   * @param string $entity_type
+   * @param string $entity_type_id
    *   The entity type.
    * @param string $operation
    *   The operation, one of 'view', 'create', 'update' or 'delete'.
@@ -319,8 +332,8 @@ abstract class RESTTestBase extends WebTestBase {
    * @return array
    *   The set of user permission strings.
    */
-  protected function entityPermissions($entity_type, $operation) {
-    switch ($entity_type) {
+  protected function entityPermissions($entity_type_id, $operation) {
+    switch ($entity_type_id) {
       case 'entity_test':
         switch ($operation) {
           case 'view':
@@ -365,9 +378,17 @@ abstract class RESTTestBase extends WebTestBase {
 
           default:
             return ['administer users'];
+        }
 
+      default:
+        if ($this->isConfigEntity($entity_type_id)) {
+          $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+          if ($admin_permission = $entity_type->getAdminPermission()) {
+            return [$admin_permission];
+          }
         }
     }
+    return [];
   }
 
   /**
@@ -429,6 +450,51 @@ abstract class RESTTestBase extends WebTestBase {
    */
   protected function assertResponseBody($expected, $message = '', $group = 'REST Response') {
     return $this->assertIdentical($expected, $this->responseBody, $message ? $message : strtr('Response body @expected (expected) is equal to @response (actual).', array('@expected' => var_export($expected, TRUE), '@response' => var_export($this->responseBody, TRUE))), $group);
+  }
+
+  /**
+   * Checks if an entity type id is for a Config Entity.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID to check.
+   *
+   * @return bool
+   *   TRUE if the entity is a Config Entity, FALSE otherwise.
+   */
+  protected function isConfigEntity($entity_type_id) {
+    return \Drupal::entityTypeManager()->getDefinition($entity_type_id) instanceof ConfigEntityType;
+  }
+
+  /**
+   * Provides an array of suitable property values for a config entity type.
+   *
+   * Config entities have some common keys that need to be created. Required
+   * properties differ among config entity types, so we keep a minimum mapping
+   * here.
+   *
+   * @param string $entity_type_id
+   *   The ID of the type of entity that should be created.
+   *
+   * @return array
+   *   An array of values keyed by property name.
+   */
+  protected function configEntityValues($entity_type_id) {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+    $keys = $entity_type->getKeys();
+    $values = [];
+    // Fill out known key values that are shared across entity types.
+    foreach ($keys as $key) {
+      if ($key === 'id' || $key === 'label') {
+        $values[$key] = $this->randomMachineName();
+      }
+    }
+    // Add extra values for particular entity types.
+    switch ($entity_type_id) {
+      case 'block':
+        $values['plugin'] = 'system_powered_by_block';
+        break;
+    }
+    return $values;
   }
 
 }

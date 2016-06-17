@@ -2,11 +2,16 @@
 
 namespace Drupal\rest\Plugin\rest\resource;
 
+use Drupal\Core\Config\Entity\ConfigEntityType;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Drupal\rest\ModifiedResourceResponse;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -30,6 +35,48 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class EntityResource extends ResourceBase {
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a Drupal\rest\Plugin\rest\resource\EntityResource object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param array $serializer_formats
+   *   The available serialization formats.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->getParameter('serializer.formats'),
+      $container->get('logger.factory')->get('rest'),
+      $container->get('entity_type.manager')
+    );
+  }
+
+  /**
    * Responds to entity GET requests.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -49,13 +96,16 @@ class EntityResource extends ResourceBase {
     $response = new ResourceResponse($entity, 200);
     $response->addCacheableDependency($entity);
     $response->addCacheableDependency($entity_access);
-    foreach ($entity as $field_name => $field) {
-      /** @var \Drupal\Core\Field\FieldItemListInterface $field */
-      $field_access = $field->access('view', NULL, TRUE);
-      $response->addCacheableDependency($field_access);
 
-      if (!$field_access->isAllowed()) {
-        $entity->set($field_name, NULL);
+    if ($entity instanceof FieldableEntityInterface) {
+      foreach ($entity as $field_name => $field) {
+        /** @var \Drupal\Core\Field\FieldItemListInterface $field */
+        $field_access = $field->access('view', NULL, TRUE);
+        $response->addCacheableDependency($field_access);
+
+        if (!$field_access->isAllowed()) {
+          $entity->set($field_name, NULL);
+        }
       }
     }
 
@@ -223,6 +273,10 @@ class EntityResource extends ResourceBase {
    *   If validation errors are found.
    */
   protected function validate(EntityInterface $entity) {
+    // @todo Remove when https://www.drupal.org/node/2164373 is committed.
+    if (!$entity instanceof FieldableEntityInterface) {
+      return;
+    }
     $violations = $entity->validate();
 
     // Remove violations of inaccessible fields as they cannot stem from our
@@ -254,6 +308,31 @@ class EntityResource extends ResourceBase {
     $route->setOption('parameters', $parameters);
 
     return $route;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function availableMethods() {
+    $methods = parent::availableMethods();
+    if ($this->isConfigEntityResource()) {
+      // Currently only GET is supported for Config Entities.
+      // @todo Remove when supported https://www.drupal.org/node/2300677
+      $unsupported_methods = ['POST', 'PUT', 'DELETE', 'PATCH'];
+      $methods = array_diff($methods, $unsupported_methods);
+    }
+    return $methods;
+  }
+
+  /**
+   * Checks if this resource is for a Config Entity.
+   *
+   * @return bool
+   *   TRUE if the entity is a Config Entity, FALSE otherwise.
+   */
+  protected function isConfigEntityResource() {
+    $entity_type_id = $this->getPluginDefinition()['entity_type'];
+    return $this->entityTypeManager->getDefinition($entity_type_id) instanceof ConfigEntityType;
   }
 
 }
