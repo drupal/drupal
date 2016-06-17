@@ -8,6 +8,7 @@ process:
   format: format
   name: name
   cache: cache
+  weight: weight
   filters:
     plugin: iterator
     source: filters

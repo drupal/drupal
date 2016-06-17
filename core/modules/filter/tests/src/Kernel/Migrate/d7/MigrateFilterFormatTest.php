@@ -36,24 +36,27 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
    *   The expected label of the format.
    * @param array $enabled_filters
    *   The expected filters in the format, keyed by ID.
+   * @param array $weight
+   *   The weight of the filter.
    */
-  protected function assertEntity($id, $label, array $enabled_filters) {
+  protected function assertEntity($id, $label, array $enabled_filters, $weight) {
     /** @var \Drupal\filter\FilterFormatInterface $entity */
     $entity = FilterFormat::load($id);
     $this->assertTrue($entity instanceof FilterFormatInterface);
     $this->assertIdentical($label, $entity->label());
     // get('filters') will return enabled filters only, not all of them.
     $this->assertIdentical($enabled_filters, array_keys($entity->get('filters')));
+    $this->assertIdentical($weight, $entity->get('weight'));
   }
 
   /**
    * Tests the Drupal 7 filter format to Drupal 8 migration.
    */
   public function testFilterFormat() {
-    $this->assertEntity('custom_text_format', 'Custom Text format', ['filter_autop', 'filter_html']);
-    $this->assertEntity('filtered_html', 'Filtered HTML', ['filter_autop', 'filter_html', 'filter_htmlcorrector', 'filter_url']);
-    $this->assertEntity('full_html', 'Full HTML', ['filter_autop', 'filter_htmlcorrector', 'filter_url']);
-    $this->assertEntity('plain_text', 'Plain text', ['filter_html_escape', 'filter_url', 'filter_autop']);
+    $this->assertEntity('custom_text_format', 'Custom Text format', ['filter_autop', 'filter_html'], 0);
+    $this->assertEntity('filtered_html', 'Filtered HTML', ['filter_autop', 'filter_html', 'filter_htmlcorrector', 'filter_url'], 0);
+    $this->assertEntity('full_html', 'Full HTML', ['filter_autop', 'filter_htmlcorrector', 'filter_url'], 1);
+    $this->assertEntity('plain_text', 'Plain text', ['filter_html_escape', 'filter_url', 'filter_autop'], 10);
     // This assertion covers issue #2555089. Drupal 7 formats are identified
     // by machine names, so migrated formats should be merged into existing
     // ones.
