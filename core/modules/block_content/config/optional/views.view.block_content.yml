@@ -392,7 +392,7 @@ display:
           plugin_id: string
         type:
           id: type
-          table: block_content
+          table: block_content_field_data
           field: type
           relationship: none
           group_type: group
