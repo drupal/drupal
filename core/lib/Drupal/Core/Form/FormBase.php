@@ -15,7 +15,29 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Provides a base class for forms.
  *
+ * This class exists as a mid-point between dependency injection through
+ * ContainerInjectionInterface, and a less-structured use of traits which
+ * default to using the \Drupal accessor for service discovery.
+ *
+ * To properly inject services, override create() and use the setters provided
+ * by the traits to inject the needed services.
+ *
+ * @code
+ * public static function create($container) {
+ *   $form = new static();
+ *   // In this example we only need string translation so we use the
+ *   // setStringTranslation() method provided by StringTranslationTrait.
+ *   $form->setStringTranslation($container->get('string_translation'));
+ *   return $form;
+ * }
+ * @endcode
+ *
+ * Alternately, do not use FormBase. A class can implement FormInterface, use
+ * the traits it needs, and inject services from the container as required.
+ *
  * @ingroup form_api
+ *
+ * @see \Drupal\Core\DependencyInjection\ContainerInjectionInterface
  */
 abstract class FormBase implements FormInterface, ContainerInjectionInterface {
 
