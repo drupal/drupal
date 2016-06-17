@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\help\Tests;
+namespace Drupal\Tests\help\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Verify no help is displayed for modules not providing any help.
  *
  * @group help
  */
-class NoHelpTest extends WebTestBase {
+class NoHelpTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

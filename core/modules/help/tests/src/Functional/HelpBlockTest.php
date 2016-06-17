@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\help\Tests;
+namespace Drupal\Tests\help\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests display of help block.
  *
  * @group help
  */
-class HelpBlockTest extends WebTestBase {
+class HelpBlockTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}

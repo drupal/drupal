@@ -229,4 +229,19 @@ trait AssertLegacyTrait {
     $this->assertSession()->addressEquals($path);
   }
 
+  /**
+   * Passes if the raw text IS NOT found escaped on the loaded page.
+   *
+   * Raw text refers to the raw HTML that the page generated.
+   *
+   * @param string $raw
+   *   Raw (HTML) string to look for.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->assertNoEscaped() instead.
+   */
+  public function assertNoEscaped($raw) {
+    $this->assertSession()->assertNoEscaped($raw);
+  }
+
 }
