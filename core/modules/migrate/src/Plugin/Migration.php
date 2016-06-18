@@ -703,14 +703,14 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function getTrackLastImported() {
-    $this->trackLastImported;
+    return $this->trackLastImported;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDestinationIds() {
-    $this->destinationIds;
+    return $this->destinationIds;
   }
 
 }
