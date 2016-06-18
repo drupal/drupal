@@ -26,5 +26,6 @@ process:
       status:
         plugin: default_value
         default_value: true
+      weight: weight
 destination:
   plugin: entity:filter_format

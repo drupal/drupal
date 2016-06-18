@@ -35,8 +35,8 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
    * @param string $label
    *   The expected label of the format.
    * @param array $enabled_filters
-   *   The expected filters in the format, keyed by ID.
-   * @param array $weight
+   *   The expected filters in the format, keyed by ID with weight as values.
+   * @param int $weight
    *   The weight of the filter.
    */
   protected function assertEntity($id, $label, array $enabled_filters, $weight) {
@@ -45,18 +45,21 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
     $this->assertTrue($entity instanceof FilterFormatInterface);
     $this->assertIdentical($label, $entity->label());
     // get('filters') will return enabled filters only, not all of them.
-    $this->assertIdentical($enabled_filters, array_keys($entity->get('filters')));
+    $this->assertIdentical(array_keys($enabled_filters), array_keys($entity->get('filters')));
     $this->assertIdentical($weight, $entity->get('weight'));
+    foreach ($entity->get('filters') as $filter_id => $filter) {
+      $this->assertIdentical($filter['weight'], $enabled_filters[$filter_id]);
+    }
   }
 
   /**
    * Tests the Drupal 7 filter format to Drupal 8 migration.
    */
   public function testFilterFormat() {
-    $this->assertEntity('custom_text_format', 'Custom Text format', ['filter_autop', 'filter_html'], 0);
-    $this->assertEntity('filtered_html', 'Filtered HTML', ['filter_autop', 'filter_html', 'filter_htmlcorrector', 'filter_url'], 0);
-    $this->assertEntity('full_html', 'Full HTML', ['filter_autop', 'filter_htmlcorrector', 'filter_url'], 1);
-    $this->assertEntity('plain_text', 'Plain text', ['filter_html_escape', 'filter_url', 'filter_autop'], 10);
+    $this->assertEntity('custom_text_format', 'Custom Text format', ['filter_autop' => 0, 'filter_html' => -10], 0);
+    $this->assertEntity('filtered_html', 'Filtered HTML', ['filter_autop' => 2, 'filter_html' => 1, 'filter_htmlcorrector' => 10, 'filter_url' => 0], 0);
+    $this->assertEntity('full_html', 'Full HTML', ['filter_autop' => 1, 'filter_htmlcorrector' => 10, 'filter_url' => 0], 1);
+    $this->assertEntity('plain_text', 'Plain text', ['filter_html_escape' => 0, 'filter_url' => 1, 'filter_autop' => 2], 10);
     // This assertion covers issue #2555089. Drupal 7 formats are identified
     // by machine names, so migrated formats should be merged into existing
     // ones.
