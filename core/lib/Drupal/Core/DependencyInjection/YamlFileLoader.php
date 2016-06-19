@@ -58,8 +58,6 @@ class YamlFileLoader
     public function load($file)
     {
         // Load from the file cache, fall back to loading the file.
-        // @todo Refactor this to cache parsed definition objects in
-        //   https://www.drupal.org/node/2464053
         $content = $this->fileCache->get($file);
         if (!$content) {
             $content = $this->loadFile($file);
