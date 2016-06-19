@@ -246,6 +246,9 @@ class Tasks extends InstallTasks {
     // concurrency issues, when both try to update at the same time.
     try {
       $connection = Database::getConnection();
+      // When testing, two installs might try to run the CREATE FUNCTION queries
+      // at the same time. Do not let that happen.
+      $connection->query('SELECT pg_advisory_lock(1)');
       // Don't use {} around pg_proc table.
       if (!$connection->query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'rand'")->fetchField()) {
         $connection->query('CREATE OR REPLACE FUNCTION "rand"() RETURNS float AS
@@ -264,6 +267,7 @@ class Tasks extends InstallTasks {
           [ 'allow_delimiter_in_query' => TRUE ]
         );
       }
+      $connection->query('SELECT pg_advisory_unlock(1)');
 
       $this->pass(t('PostgreSQL has initialized itself.'));
     }
