@@ -2,11 +2,14 @@
 
 namespace Drupal\rest;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -17,9 +20,33 @@ use Symfony\Component\Serializer\SerializerInterface;
 /**
  * Acts as intermediate request forwarder for resource plugins.
  */
-class RequestHandler implements ContainerAwareInterface {
+class RequestHandler implements ContainerAwareInterface, ContainerInjectionInterface {
 
   use ContainerAwareTrait;
+
+  /**
+   * The resource configuration storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $resourceStorage;
+
+  /**
+   * Creates a new RequestHandler instance.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
+   *   The resource configuration storage.
+   */
+  public function __construct(EntityStorageInterface $entity_storage) {
+    $this->resourceStorage = $entity_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('entity_type.manager')->getStorage('rest_resource_config'));
+  }
 
   /**
    * Handles a web API request.
@@ -33,13 +60,12 @@ class RequestHandler implements ContainerAwareInterface {
    *   The response object.
    */
   public function handle(RouteMatchInterface $route_match, Request $request) {
-
-    $plugin = $route_match->getRouteObject()->getDefault('_plugin');
     $method = strtolower($request->getMethod());
 
-    $resource = $this->container
-      ->get('plugin.manager.rest')
-      ->createInstance($plugin);
+    $resource_config_id = $route_match->getRouteObject()->getDefault('_rest_resource_config');
+    /** @var \Drupal\rest\RestResourceConfigInterface $resource_config */
+    $resource_config = $this->resourceStorage->load($resource_config_id);
+    $resource = $resource_config->getResourcePlugin();
 
     // Deserialize incoming data if available.
     /** @var \Symfony\Component\Serializer\SerializerInterface $serializer */
@@ -53,9 +79,8 @@ class RequestHandler implements ContainerAwareInterface {
       // formats are configured allow all and hope that the serializer knows the
       // format. If the serializer cannot handle it an exception will be thrown
       // that bubbles up to the client.
-      $config = $this->container->get('config.factory')->get('rest.settings')->get('resources');
-      $method_settings = $config[$plugin][$request->getMethod()];
-      if (empty($method_settings['supported_formats']) || in_array($format, $method_settings['supported_formats'])) {
+      $request_method = $request->getMethod();
+      if (in_array($format, $resource_config->getFormats($request_method))) {
         $definition = $resource->getPluginDefinition();
         $class = $definition['serialization_class'];
         try {
@@ -101,7 +126,7 @@ class RequestHandler implements ContainerAwareInterface {
     }
 
     return $response instanceof ResourceResponseInterface ?
-      $this->renderResponse($request, $response, $serializer, $format) :
+      $this->renderResponse($request, $response, $serializer, $format, $resource_config) :
       $response;
   }
 
@@ -132,6 +157,8 @@ class RequestHandler implements ContainerAwareInterface {
    *   The serializer to use.
    * @param string $format
    *   The response format.
+   * @param \Drupal\rest\RestResourceConfigInterface $resource_config
+   *   The resource config.
    *
    * @return \Drupal\rest\ResourceResponse
    *   The altered response.
@@ -139,7 +166,7 @@ class RequestHandler implements ContainerAwareInterface {
    * @todo Add test coverage for language negotiation contexts in
    *   https://www.drupal.org/node/2135829.
    */
-  protected function renderResponse(Request $request, ResourceResponseInterface $response, SerializerInterface $serializer, $format) {
+  protected function renderResponse(Request $request, ResourceResponseInterface $response, SerializerInterface $serializer, $format, RestResourceConfigInterface $resource_config) {
     $data = $response->getResponseData();
 
     if ($response instanceof CacheableResponseInterface) {
@@ -153,9 +180,8 @@ class RequestHandler implements ContainerAwareInterface {
         $response->addCacheableDependency($context->pop());
       }
 
-      // Add rest settings config's cache tags.
-      $response->addCacheableDependency($this->container->get('config.factory')
-        ->get('rest.settings'));
+      // Add rest config's cache tags.
+      $response->addCacheableDependency($resource_config);
     }
     else {
       $output = $serializer->serialize($data, $format);

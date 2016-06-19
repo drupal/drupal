@@ -265,7 +265,15 @@ abstract class UpdatePathTestBase extends WebTestBase {
     }
 
     // Ensure that the update hooks updated all entity schema.
-    $this->assertFalse(\Drupal::service('entity.definition_update_manager')->needsUpdates(), 'After all updates ran, entity schema is up to date.');
+    $needs_updates = \Drupal::entityDefinitionUpdateManager()->needsUpdates();
+    $this->assertFalse($needs_updates, 'After all updates ran, entity schema is up to date.');
+    if ($needs_updates) {
+      foreach (\Drupal::entityDefinitionUpdateManager()->getChangeSummary() as $entity_type_id => $summary) {
+        foreach ($summary as $message) {
+          $this->fail($message);
+        }
+      }
+    }
   }
 
   /**

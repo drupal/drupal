@@ -23,7 +23,7 @@ class CreateTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'entity_test', 'comment');
+  public static $modules = array('hal', 'rest', 'entity_test', 'comment', 'node');
 
   /**
    * The 'serializer' service.

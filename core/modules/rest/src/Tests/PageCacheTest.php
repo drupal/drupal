@@ -76,7 +76,7 @@ class PageCacheTest extends RESTTestBase {
     $this->httpRequest($url, 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(200, 'HTTP response code is correct.');
     $this->assertHeader('x-drupal-cache', 'MISS');
-    $this->assertCacheTag('config:rest.settings');
+    $this->assertCacheTag('config:rest.resource.entity.entity_test');
     $this->assertCacheTag('entity_test:1');
     $this->assertCacheTag('entity_test_access:field_test_text');
 
@@ -84,17 +84,17 @@ class PageCacheTest extends RESTTestBase {
     $this->httpRequest($url, 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(200, 'HTTP response code is correct.');
     $this->assertHeader('x-drupal-cache', 'HIT');
-    $this->assertCacheTag('config:rest.settings');
+    $this->assertCacheTag('config:rest.resource.entity.entity_test');
     $this->assertCacheTag('entity_test:1');
     $this->assertCacheTag('entity_test_access:field_test_text');
 
-    // Trigger a config save which should clear the page cache, so we should get
-    // a cache miss now for the same request.
-    $this->config('rest.settings')->save();
+    // Trigger a resource config save which should clear the page cache, so we
+    // should get a cache miss now for the same request.
+    $this->resourceConfigStorage->load('entity.entity_test')->save();
     $this->httpRequest($url, 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(200, 'HTTP response code is correct.');
     $this->assertHeader('x-drupal-cache', 'MISS');
-    $this->assertCacheTag('config:rest.settings');
+    $this->assertCacheTag('config:rest.resource.entity.entity_test');
     $this->assertCacheTag('entity_test:1');
     $this->assertCacheTag('entity_test_access:field_test_text');
 

@@ -23,7 +23,7 @@ class UpdateTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = ['hal', 'rest', 'entity_test', 'comment'];
+  public static $modules = ['hal', 'rest', 'entity_test', 'node', 'comment'];
 
   /**
    * {@inheritdoc}

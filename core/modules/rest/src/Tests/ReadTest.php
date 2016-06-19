@@ -22,6 +22,7 @@ class ReadTest extends RESTTestBase {
   public static $modules = [
     'hal',
     'rest',
+    'node',
     'entity_test',
     'config_test',
     'taxonomy',

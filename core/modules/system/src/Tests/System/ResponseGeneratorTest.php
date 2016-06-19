@@ -16,7 +16,7 @@ class ResponseGeneratorTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'node');
+  public static $modules = array('hal', 'rest', 'node', 'basic_auth');
 
   /**
    * {@inheritdoc}

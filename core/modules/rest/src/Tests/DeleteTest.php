@@ -16,7 +16,7 @@ class DeleteTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'entity_test');
+  public static $modules = array('hal', 'rest', 'entity_test', 'node');
 
   /**
    * Tests several valid and invalid delete requests on all entity types.

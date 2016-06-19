@@ -4,6 +4,7 @@ namespace Drupal\Core;
 
 use Drupal\Core\Cache\Context\CacheContextsPass;
 use Drupal\Core\Cache\ListCacheBinsPass;
+use Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\GuzzleMiddlewarePass;
 use Drupal\Core\DependencyInjection\Compiler\ContextProvidersPass;
@@ -90,6 +91,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new ListCacheBinsPass());
     $container->addCompilerPass(new CacheContextsPass());
     $container->addCompilerPass(new ContextProvidersPass());
+    $container->addCompilerPass(new AuthenticationProviderPass());
 
     // Register plugin managers.
     $container->addCompilerPass(new PluginManagerPass());

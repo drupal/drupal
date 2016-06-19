@@ -1,20 +1,15 @@
 # Schema for the configuration files of the REST module.
-
 rest.settings:
   type: config_object
   label: 'REST settings'
   mapping:
-    resources:
-      type: sequence
-      label: 'Resources'
-      sequence:
-        type: rest_resource
-        label: 'Resource'
     link_domain:
       type: string
       label: 'Domain of the relation'
 
-rest_resource:
+# Method-level granularity of REST resource configuration.
+# @todo Add resource-level granularity in https://www.drupal.org/node/2721595.
+rest_resource.method:
   type: mapping
   mapping:
     GET:
@@ -45,3 +40,20 @@ rest_request:
       sequence:
         type: string
         label: 'Authentication'
+
+rest.resource.*:
+  type: config_entity
+  label: 'REST resource config'
+  mapping:
+    id:
+      type: string
+      label: 'REST resource config ID'
+    plugin_id:
+      type: string
+      label: 'REST resource plugin id'
+    granularity:
+      type: string
+      label: 'REST resource configuration granularity'
+    configuration:
+      type: rest_resource.[%parent.granularity]
+      label: 'REST resource configuration'

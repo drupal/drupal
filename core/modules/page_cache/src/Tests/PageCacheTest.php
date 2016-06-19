@@ -131,7 +131,7 @@ class PageCacheTest extends WebTestBase {
     $this->assertRaw('{"content":"oh hai this is json"}', 'The correct Json response was returned.');
 
     // Enable REST support for nodes and hal+json.
-    \Drupal::service('module_installer')->install(['node', 'rest', 'hal']);
+    \Drupal::service('module_installer')->install(['node', 'rest', 'hal', 'basic_auth']);
     $this->drupalCreateContentType(['type' => 'article']);
     $node = $this->drupalCreateNode(['type' => 'article']);
     $node_uri = $node->urlInfo();

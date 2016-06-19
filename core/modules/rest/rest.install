@@ -21,3 +21,24 @@ function rest_requirements($phase) {
   }
   return $requirements;
 }
+
+/**
+ * @defgroup updates-8.1.x-to-8.2.x
+ * @{
+ * Update functions from 8.1.x to 8.2.x.
+ */
+
+/**
+ * Install the REST config entity type and fix old settings-based config.
+ */
+function rest_update_8201() {
+  \Drupal::entityDefinitionUpdateManager()->installEntityType(\Drupal::entityTypeManager()->getDefinition('rest_resource_config'));
+  \Drupal::state()->set('rest_update_8201_resources', \Drupal::config('rest.settings')->get('resources'));
+  \Drupal::configFactory()->getEditable('rest.settings')
+    ->clear('resources')
+    ->save();
+}
+
+/**
+ * @} End of "defgroup updates-8.1.x-to-8.2.x".
+ */

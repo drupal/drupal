@@ -14,7 +14,7 @@ class RestLinkManagerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rest', 'rest_test', 'system'];
+  public static $modules = ['serialization', 'rest', 'rest_test', 'system'];
 
   /**
    * {@inheritdoc}

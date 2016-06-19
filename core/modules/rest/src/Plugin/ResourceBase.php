@@ -194,8 +194,6 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
 
     $route = new Route($canonical_path, array(
       '_controller' => 'Drupal\rest\RequestHandler::handle',
-      // Pass the resource plugin ID along as default property.
-      '_plugin' => $this->pluginId,
     ), array(
       '_permission' => "restful $lower_method $this->pluginId",
     ),

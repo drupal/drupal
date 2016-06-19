@@ -4,12 +4,20 @@ namespace Drupal\rest\Tests;
 
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\node\NodeInterface;
+use Drupal\rest\RestResourceConfigInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Test helper class that provides a REST client method to send HTTP requests.
  */
 abstract class RESTTestBase extends WebTestBase {
+
+  /**
+   * The REST resource config storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $resourceConfigStorage;
 
   /**
    * The default serialization format to use for testing REST operations.
@@ -52,15 +60,18 @@ abstract class RESTTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('rest', 'entity_test', 'node');
+  public static $modules = array('rest', 'entity_test');
 
   protected function setUp() {
     parent::setUp();
     $this->defaultFormat = 'hal_json';
     $this->defaultMimeType = 'application/hal+json';
     $this->defaultAuth = array('cookie');
+    $this->resourceConfigStorage = $this->container->get('entity_type.manager')->getStorage('rest_resource_config');
     // Create a test content type for node testing.
-    $this->drupalCreateContentType(array('name' => 'resttest', 'type' => 'resttest'));
+    if (in_array('node', static::$modules)) {
+      $this->drupalCreateContentType(array('name' => 'resttest', 'type' => 'resttest'));
+    }
   }
 
   /**
@@ -268,29 +279,49 @@ abstract class RESTTestBase extends WebTestBase {
    * @param array $auth
    *   (Optional) The list of valid authentication methods.
    */
-  protected function enableService($resource_type, $method = 'GET', $format = NULL, $auth = NULL) {
-    // Enable REST API for this entity type.
-    $config = $this->config('rest.settings');
-    $settings = array();
-
+  protected function enableService($resource_type, $method = 'GET', $format = NULL, array $auth = []) {
     if ($resource_type) {
+      // Enable REST API for this entity type.
+      $resource_config_id = str_replace(':', '.', $resource_type);
+      // get entity by id
+      /** @var \Drupal\rest\RestResourceConfigInterface $resource_config */
+      $resource_config = $this->resourceConfigStorage->load($resource_config_id);
+      if (!$resource_config) {
+        $resource_config = $this->resourceConfigStorage->create([
+          'id' => $resource_config_id,
+          'granularity' => RestResourceConfigInterface::METHOD_GRANULARITY,
+          'configuration' => []
+        ]);
+      }
+      $configuration = $resource_config->get('configuration');
+
       if (is_array($format)) {
-        $settings[$resource_type][$method]['supported_formats'] = $format;
+        for ($i = 0; $i < count($format); $i++) {
+          $configuration[$method]['supported_formats'][] = $format[$i];
+        }
       }
       else {
         if ($format == NULL) {
           $format = $this->defaultFormat;
         }
-        $settings[$resource_type][$method]['supported_formats'][] = $format;
+        $configuration[$method]['supported_formats'][] = $format;
       }
 
-      if ($auth == NULL) {
+      if (!is_array($auth) || empty($auth)) {
         $auth = $this->defaultAuth;
       }
-      $settings[$resource_type][$method]['supported_auth'] = $auth;
+      foreach ($auth as $auth_provider) {
+        $configuration[$method]['supported_auth'][] = $auth_provider;
+      }
+
+      $resource_config->set('configuration', $configuration);
+      $resource_config->save();
     }
-    $config->set('resources', $settings);
-    $config->save();
+    else {
+      foreach ($this->resourceConfigStorage->loadMultiple() as $resource_config) {
+        $resource_config->delete();
+      }
+    }
     $this->rebuildCache();
   }
 

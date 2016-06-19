@@ -16,7 +16,7 @@ class AuthTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('basic_auth', 'hal', 'rest', 'entity_test', 'comment');
+  public static $modules = array('basic_auth', 'hal', 'rest', 'entity_test');
 
   /**
    * Tests reading from an authenticated resource.

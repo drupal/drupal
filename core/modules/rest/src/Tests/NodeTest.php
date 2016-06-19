@@ -19,7 +19,7 @@ class NodeTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'comment');
+  public static $modules = array('hal', 'rest', 'comment', 'node');
 
   /**
    * Enables node specific REST API configuration and authentication.

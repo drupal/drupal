@@ -1138,7 +1138,11 @@ function system_update_8004() {
   $manager = \Drupal::entityDefinitionUpdateManager();
   foreach (array_keys(\Drupal::entityManager()
     ->getDefinitions()) as $entity_type_id) {
-    $manager->updateEntityType($manager->getEntityType($entity_type_id));
+    // Only update the entity type if it already exists. This condition is
+    // needed in case new entity types are introduced after this update.
+    if ($entity_type = $manager->getEntityType($entity_type_id)) {
+      $manager->updateEntityType($entity_type);
+    }
   }
 }
 

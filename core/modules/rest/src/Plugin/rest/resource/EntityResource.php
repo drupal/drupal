@@ -2,6 +2,7 @@
 
 namespace Drupal\rest\Plugin\rest\resource;
 
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -9,9 +10,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
-use Drupal\rest\ModifiedResourceResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\rest\ModifiedResourceResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -32,14 +33,14 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *   }
  * )
  */
-class EntityResource extends ResourceBase {
+class EntityResource extends ResourceBase implements DependentPluginInterface {
 
   /**
-   * The entity type manager.
+   * The entity type targeted by this resource.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entityTypeManager;
+  protected $entityType;
 
   /**
    * Constructs a Drupal\rest\Plugin\rest\resource\EntityResource object.
@@ -50,16 +51,16 @@ class EntityResource extends ResourceBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager
    * @param array $serializer_formats
    *   The available serialization formats.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, $serializer_formats, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
-    $this->entityTypeManager = $entity_type_manager;
+    $this->entityType = $entity_type_manager->getDefinition($plugin_definition['entity_type']);
   }
 
   /**
@@ -70,9 +71,9 @@ class EntityResource extends ResourceBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('entity_type.manager'),
       $container->getParameter('serializer.formats'),
-      $container->get('logger.factory')->get('rest'),
-      $container->get('entity_type.manager')
+      $container->get('logger.factory')->get('rest')
     );
   }
 
@@ -331,8 +332,16 @@ class EntityResource extends ResourceBase {
    *   TRUE if the entity is a Config Entity, FALSE otherwise.
    */
   protected function isConfigEntityResource() {
-    $entity_type_id = $this->getPluginDefinition()['entity_type'];
-    return $this->entityTypeManager->getDefinition($entity_type_id) instanceof ConfigEntityType;
+    return $this->entityType instanceof ConfigEntityType;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    if (isset($this->entityType)) {
+      return ['module' => [$this->entityType->getProvider()]];
+    }
   }
 
 }
