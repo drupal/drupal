@@ -1,0 +1,14 @@
+id: d6_i18n_system_maintenance
+label: Maintenance page configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: i18n_variable
+  variables:
+    - site_offline_message
+process:
+  langcode: language
+  message: site_offline_message
+destination:
+  plugin: config
+  config_name: system.maintenance
