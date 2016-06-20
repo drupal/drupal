@@ -223,6 +223,17 @@ class ContainerTest extends \PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Tests that Container::has() for aliased services works properly.
+   *
+   * @covers ::has
+   */
+  public function testHasForAliasedService() {
+    $service = $this->container->has('service.provider');
+    $aliased_service = $this->container->has('service.provider_alias');
+    $this->assertSame($service, $aliased_service);
+  }
+
+  /**
    * Tests that Container::get() for circular dependencies works properly.
    * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
    * @covers ::get

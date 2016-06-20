@@ -373,7 +373,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
    * {@inheritdoc}
    */
   public function has($id) {
-    return isset($this->services[$id]) || isset($this->serviceDefinitions[$id]);
+    return isset($this->aliases[$id]) || isset($this->services[$id]) || isset($this->serviceDefinitions[$id]);
   }
 
   /**
