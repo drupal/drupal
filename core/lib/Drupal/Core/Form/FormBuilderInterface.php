@@ -137,9 +137,9 @@ interface FormBuilderInterface {
    * by calling $form_state->getErrors().
    *
    * @param \Drupal\Core\Form\FormInterface|string $form_arg
-   *   A form object to use to build the form, or the unique string identifying
-   *   the desired form. If $form_arg is a string and a function with that
-   *   name exists, it is called to build the form array.
+   *   The value must be one of the following:
+   *   - The name of a class that implements \Drupal\Core\Form\FormInterface.
+   *   - An instance of a class that implements \Drupal\Core\Form\FormInterface.
    * @param $form_state
    *   The current state of the form. Most important is the
    *   $form_state->getValues() collection, a tree of data used to simulate the
