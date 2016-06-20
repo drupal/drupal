@@ -174,6 +174,13 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $requirements = [];
 
   /**
+   * An optional list of tags, used by the plugin manager for filtering.
+   *
+   * @var array
+   */
+  protected $migration_tags = [];
+
+  /**
    * These migrations, if run, must be executed before this migration.
    *
    * These are different from the configuration dependencies. Migration
@@ -711,6 +718,13 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function getDestinationIds() {
     return $this->destinationIds;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMigrationTags() {
+    return $this->migration_tags;
   }
 
 }

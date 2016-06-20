@@ -374,4 +374,12 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    */
   public function getDestinationIds();
 
+  /**
+   * The migration tags.
+   *
+   * @return array
+   *   Migration tags.
+   */
+  public function getMigrationTags();
+
 }
