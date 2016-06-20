@@ -27,11 +27,14 @@ class TableFormatter extends FileFormatterBase {
       $header = array(t('Attachment'), t('Size'));
       $rows = array();
       foreach ($files as $delta => $file) {
+        #new code
+        $item = $file->_referringItem;
         $rows[] = array(
           array(
             'data' => array(
               '#theme' => 'file_link',
               '#file' => $file,
+              '#description'=> $item->description, #new code
               '#cache' => array(
                 'tags' => $file->getCacheTags(),
               ),
