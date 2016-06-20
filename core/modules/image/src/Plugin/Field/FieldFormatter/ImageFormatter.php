@@ -188,14 +188,14 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
     $image_style_setting = $this->getSetting('image_style');
 
     // Collect cache tags to be added for each item in the field.
-    $cache_tags = array();
+    $base_cache_tags = [];
     if (!empty($image_style_setting)) {
       $image_style = $this->imageStyleStorage->load($image_style_setting);
-      $cache_tags = $image_style->getCacheTags();
+      $base_cache_tags = $image_style->getCacheTags();
     }
 
     foreach ($files as $delta => $file) {
-      $cache_contexts = array();
+      $cache_contexts = [];
       if (isset($link_file)) {
         $image_uri = $file->getFileUri();
         // @todo Wrap in file_url_transform_relative(). This is currently
@@ -206,7 +206,7 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
         $url = Url::fromUri(file_create_url($image_uri));
         $cache_contexts[] = 'url.site';
       }
-      $cache_tags = Cache::mergeTags($cache_tags, $file->getCacheTags());
+      $cache_tags = Cache::mergeTags($base_cache_tags, $file->getCacheTags());
 
       // Extract field item attributes for the theme function, and unset them
       // from the $item so that the field template does not re-render them.
