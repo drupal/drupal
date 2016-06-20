@@ -15,7 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group filter
  */
-class FilterUnitTest extends KernelTestBase {
+class FilterKernelTest extends KernelTestBase {
 
   /**
    * Modules to enable.
