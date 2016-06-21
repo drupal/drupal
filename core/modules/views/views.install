@@ -368,6 +368,28 @@ function views_update_8100() {
 }
 
 /**
+ * Set default values for enabled/expanded flag on page displays.
+ */
+function views_update_8101() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('views.view.') as $view_config_name) {
+    $view = $config_factory->getEditable($view_config_name);
+    $save = FALSE;
+    foreach ($view->get('display') as $display_id => $display) {
+      if ($display['display_plugin'] == 'page') {
+        $display['display_options']['menu']['enabled'] = TRUE;
+        $display['display_options']['menu']['expanded'] = FALSE;
+        $view->set("display.$display_id", $display);
+        $save = TRUE;
+      }
+    }
+    if ($save) {
+      $view->save();
+    }
+  }
+}
+
+/**
  * @} End of "addtogroup updates-8.1.0".
  */
 
