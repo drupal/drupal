@@ -397,7 +397,7 @@ function file_valid_uri($uri) {
 }
 
 /**
- * Copies a file to a new location without invoking the file API.
+ * Copies a file to a new location without database changes or hook invocation.
  *
  * This is a powerful function that in many ways performs like an advanced
  * version of copy().
@@ -407,10 +407,9 @@ function file_valid_uri($uri) {
  * - If the $source and $destination are equal, the behavior depends on the
  *   $replace parameter. FILE_EXISTS_REPLACE will error out. FILE_EXISTS_RENAME
  *   will rename the file until the $destination is unique.
- * - Provides a fallback using realpaths if the move fails using stream
- *   wrappers. This can occur because PHP's copy() function does not properly
- *   support streams if open_basedir is enabled. See
- *   https://bugs.php.net/bug.php?id=60456
+ * - Works around a PHP bug where copy() does not properly support streams if
+ *   safe_mode or open_basedir are enabled.
+ *   @see https://bugs.php.net/bug.php?id=60456
  *
  * @param $source
  *   A string specifying the filepath or URI of the source file.
@@ -431,18 +430,66 @@ function file_valid_uri($uri) {
  * @see file_copy()
  */
 function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
+  if (!file_unmanaged_prepare($source, $destination, $replace)) {
+    return FALSE;
+  }
+  // Attempt to resolve the URIs. This is necessary in certain configurations
+  // (see above).
+  $real_source = drupal_realpath($source) ?: $source;
+  $real_destination = drupal_realpath($destination) ?: $destination;
+  // Perform the copy operation.
+  if (!@copy($real_source, $real_destination)) {
+    \Drupal::logger('file')->error('The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination));
+    return FALSE;
+  }
+  // Set the permissions on the new file.
+  drupal_chmod($destination);
+  return $destination;
+}
+
+/**
+ * Internal function that prepares the destination for a file_unmanaged_copy or
+ * file_unmanaged_move operation.
+ *
+ * - Checks if $source and $destination are valid and readable/writable.
+ * - Checks that $source is not equal to $destination; if they are an error
+ *   is reported.
+ * - If file already exists in $destination either the call will error out,
+ *   replace the file or rename the file based on the $replace parameter.
+ *
+ * @param $source
+ *   A string specifying the filepath or URI of the source file.
+ * @param $destination
+ *   A URI containing the destination that $source should be moved/copied to.
+ *   The URI may be a bare filepath (without a scheme) and in that case the
+ *   default scheme (file://) will be used. If this value is omitted, Drupal's
+ *   default files scheme will be used, usually "public://".
+ * @param $replace
+ *   Replace behavior when the destination file already exists:
+ *   - FILE_EXISTS_REPLACE - Replace the existing file.
+ *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
+ *       unique.
+ *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ *
+ * @return
+ *   TRUE, or FALSE in the event of an error.
+ *
+ * @see file_unmanaged_copy()
+ * @see file_unmanaged_move()
+ */
+function file_unmanaged_prepare($source, &$destination = NULL, $replace = FILE_EXISTS_RENAME) {
   $original_source = $source;
   $logger = \Drupal::logger('file');
 
   // Assert that the source file actually exists.
   if (!file_exists($source)) {
     // @todo Replace drupal_set_message() calls with exceptions instead.
-    drupal_set_message(t('The specified file %file could not be copied because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $original_source)), 'error');
+    drupal_set_message(t('The specified file %file could not be moved/copied because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $original_source)), 'error');
     if (($realpath = drupal_realpath($original_source)) !== FALSE) {
-      $logger->notice('File %file (%realpath) could not be copied because it does not exist.', array('%file' => $original_source, '%realpath' => $realpath));
+      $logger->notice('File %file (%realpath) could not be moved/copied because it does not exist.', array('%file' => $original_source, '%realpath' => $realpath));
     }
     else {
-      $logger->notice('File %file could not be copied because it does not exist.', array('%file' => $original_source));
+      $logger->notice('File %file could not be moved/copied because it does not exist.', array('%file' => $original_source));
     }
     return FALSE;
   }
@@ -463,8 +510,8 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
     $dirname = drupal_dirname($destination);
     if (!file_prepare_directory($dirname)) {
       // The destination is not valid.
-      $logger->notice('File %file could not be copied because the destination directory %destination is not configured correctly.', array('%file' => $original_source, '%destination' => $dirname));
-      drupal_set_message(t('The specified file %file could not be copied because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions. More information is available in the system log.', array('%file' => $original_source)), 'error');
+      $logger->notice('File %file could not be moved/copied because the destination directory %destination is not configured correctly.', array('%file' => $original_source, '%destination' => $dirname));
+      drupal_set_message(t('The specified file %file could not be moved/copied because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions. More information is available in the system log.', array('%file' => $original_source)), 'error');
       return FALSE;
     }
   }
@@ -472,8 +519,8 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   // Determine whether we can perform this operation based on overwrite rules.
   $destination = file_destination($destination, $replace);
   if ($destination === FALSE) {
-    drupal_set_message(t('The file %file could not be copied because a file by that name already exists in the destination directory.', array('%file' => $original_source)), 'error');
-    $logger->notice('File %file could not be copied because a file by that name already exists in the destination directory (%destination)', array('%file' => $original_source, '%destination' => $destination));
+    drupal_set_message(t('The file %file could not be moved/copied because a file by that name already exists in the destination directory.', array('%file' => $original_source)), 'error');
+    $logger->notice('File %file could not be moved/copied because a file by that name already exists in the destination directory (%destination)', array('%file' => $original_source, '%destination' => $destination));
     return FALSE;
   }
 
@@ -481,26 +528,13 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   $real_source = drupal_realpath($source);
   $real_destination = drupal_realpath($destination);
   if ($source == $destination || ($real_source !== FALSE) && ($real_source == $real_destination)) {
-    drupal_set_message(t('The specified file %file was not copied because it would overwrite itself.', array('%file' => $source)), 'error');
-    $logger->notice('File %file could not be copied because it would overwrite itself.', array('%file' => $source));
+    drupal_set_message(t('The specified file %file was not moved/copied because it would overwrite itself.', array('%file' => $source)), 'error');
+    $logger->notice('File %file could not be moved/copied because it would overwrite itself.', array('%file' => $source));
     return FALSE;
   }
   // Make sure the .htaccess files are present.
   file_ensure_htaccess();
-  // Perform the copy operation.
-  if (!@copy($source, $destination)) {
-    // If the copy failed and realpaths exist, retry the operation using them
-    // instead.
-    if ($real_source === FALSE || $real_destination === FALSE || !@copy($real_source, $real_destination)) {
-      $logger->error('The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination));
-      return FALSE;
-    }
-  }
-
-  // Set the permissions on the new file.
-  drupal_chmod($destination);
-
-  return $destination;
+  return TRUE;
 }
 
 /**
@@ -551,12 +585,24 @@ function file_destination($destination, $replace) {
 /**
  * Moves a file to a new location without database changes or hook invocation.
  *
+ * This is a powerful function that in many ways performs like an advanced
+ * version of rename().
+ * - Checks if $source and $destination are valid and readable/writable.
+ * - Checks that $source is not equal to $destination; if they are an error
+ *   is reported.
+ * - If file already exists in $destination either the call will error out,
+ *   replace the file or rename the file based on the $replace parameter.
+ * - Works around a PHP bug where rename() does not properly support streams if
+ *   safe_mode or open_basedir are enabled.
+ *   @see https://bugs.php.net/bug.php?id=60456
+ *
  * @param $source
- *   A string specifying the filepath or URI of the original file.
+ *   A string specifying the filepath or URI of the source file.
  * @param $destination
- *   A string containing the destination that $source should be moved to.
- *   This must be a stream wrapper URI. If this value is omitted, Drupal's
- *   default files scheme will be used, usually "public://".
+ *   A URI containing the destination that $source should be moved to. The
+ *   URI may be a bare filepath (without a scheme) and in that case the default
+ *   scheme (file://) will be used. If this value is omitted, Drupal's default
+ *   files scheme will be used, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
@@ -565,16 +611,37 @@ function file_destination($destination, $replace) {
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  *
  * @return
- *   The URI of the moved file, or FALSE in the event of an error.
+ *   The path to the new file, or FALSE in the event of an error.
  *
  * @see file_move()
  */
 function file_unmanaged_move($source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
-  $filepath = file_unmanaged_copy($source, $destination, $replace);
-  if ($filepath == FALSE || file_unmanaged_delete($source) == FALSE) {
+  if (!file_unmanaged_prepare($source, $destination, $replace)) {
     return FALSE;
   }
-  return $filepath;
+  // Ensure compatibility with Windows.
+  // @see drupal_unlink()
+  if ((substr(PHP_OS, 0, 3) == 'WIN') && (!file_stream_wrapper_valid_scheme(file_uri_scheme($source)))) {
+    chmod($source, 0600);
+  }
+  // Attempt to resolve the URIs. This is necessary in certain configurations
+  // (see above) and can also permit fast moves across local schemes.
+  $real_source = drupal_realpath($source) ?: $source;
+  $real_destination = drupal_realpath($destination) ?: $destination;
+  // Perform the move operation.
+  if (!@rename($real_source, $real_destination)) {
+    // Fall back to slow copy and unlink procedure. This is necessary for
+    // renames across schemes that are not local, or where rename() has not been
+    // implemented. It's not necessary to use drupal_unlink() as the Windows
+    // issue has already been resolved above.
+    if (!@copy($real_source, $real_destination) || !@unlink($real_source)) {
+      \Drupal::logger('file')->error('The specified file %file could not be moved to %destination.', array('%file' => $source, '%destination' => $destination));
+      return FALSE;
+    }
+  }
+  // Set the permissions on the new file.
+  drupal_chmod($destination);
+  return $destination;
 }
 
 /**

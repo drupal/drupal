@@ -134,7 +134,8 @@ function drupal_theme_rebuild() {
  */
 function drupal_find_theme_functions($cache, $prefixes) {
   $implementations = [];
-  $grouped_functions = \Drupal::service('theme.registry')->getPrefixGroupedUserFunctions();
+  $functions = get_defined_functions();
+  $theme_functions = preg_grep('/^(' . implode(')|(', $prefixes) . ')_/', $functions['user']);
 
   foreach ($cache as $hook => $info) {
     foreach ($prefixes as $prefix) {
@@ -150,10 +151,8 @@ function drupal_find_theme_functions($cache, $prefixes) {
       // are found using the base hook's pattern, not a pattern from an
       // intermediary suggestion.
       $pattern = isset($info['pattern']) ? $info['pattern'] : ($hook . '__');
-      // Grep only the functions which are within the prefix group.
-      list($first_prefix,) = explode('_', $prefix, 2);
-      if (!isset($info['base hook']) && !empty($pattern) && isset($grouped_functions[$first_prefix])) {
-        $matches = preg_grep('/^' . $prefix . '_' . $pattern . '/', $grouped_functions[$first_prefix]);
+      if (!isset($info['base hook']) && !empty($pattern)) {
+        $matches = preg_grep('/^' . $prefix . '_' . $pattern . '/', $theme_functions);
         if ($matches) {
           foreach ($matches as $match) {
             $new_hook = substr($match, strlen($prefix) + 1);
