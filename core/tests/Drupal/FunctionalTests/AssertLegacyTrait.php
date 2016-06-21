@@ -240,7 +240,7 @@ trait AssertLegacyTrait {
    * @deprecated Scheduled for removal in Drupal 9.0.0.
    *   Use $this->assertSession()->assertNoEscaped() instead.
    */
-  public function assertNoEscaped($raw) {
+  protected function assertNoEscaped($raw) {
     $this->assertSession()->assertNoEscaped($raw);
   }
 
