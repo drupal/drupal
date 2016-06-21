@@ -34,6 +34,21 @@ class ChainedFastBackendTest extends UnitTestCase {
   protected $bin;
 
   /**
+   * Tests that chained fast backend cannot be constructed with two instances of
+   * the same service.
+   */
+  public function testConsistentAndFastBackendCannotBeTheSameService() {
+    // ToDo: It should throw a proper exception. See https://www.drupal.org/node/2751847.
+    $this->setExpectedException(\PHPUnit_Framework_Error::class, 'Consistent cache backend and fast cache backend cannot use the same service.');
+    $cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $chained_fast_backend = new ChainedFastBackend(
+      $cache,
+      $cache,
+      'foo'
+    );
+  }
+
+  /**
    * Tests a get() on the fast backend, with no hit on the consistent backend.
    */
   public function testGetDoesntHitConsistentBackend() {
