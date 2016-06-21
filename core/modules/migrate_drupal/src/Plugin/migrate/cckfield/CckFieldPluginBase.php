@@ -10,7 +10,7 @@ use Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface;
 /**
  * The base class for all cck field plugins.
  *
- * @see \Drupal\migrate_drupal\Plugin\MigratePluginManager
+ * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate_drupal\Annotation\MigrateCckField
  * @see \Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface
  * @see plugin_api
