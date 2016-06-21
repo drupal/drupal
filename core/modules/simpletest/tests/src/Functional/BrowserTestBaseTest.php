@@ -33,6 +33,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // Test page contains some text.
     $this->assertSession()->pageTextContains('Test page text.');
 
+    // Response includes cache tags that we can assert.
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'rendered');
+
     // Test drupalGet with a url object.
     $url = Url::fromRoute('test_page_test.render_title');
     $this->drupalGet($url);
