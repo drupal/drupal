@@ -185,8 +185,6 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
 /**
  * Moves a file to a new location and update the file's database entry.
  *
- * Moving a file is performed by copying the file to the new location and then
- * deleting the original.
  * - Checks if $source and $destination are valid and readable/writable.
  * - Performs a file move if $source is not equal to $destination.
  * - If file already exists in $destination either the call will error out,
