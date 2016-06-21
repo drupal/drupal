@@ -45534,6 +45534,14 @@ $connection->insert('variable')
   'value' => 's:1:"2";',
 ))
 ->values(array(
+  'name' => 'language_content_type_employee',
+  'value' => 's:1:"2";',
+))
+->values(array(
+  'name' => 'i18n_lock_node_article',
+  'value' => 'i:1;',
+))
+->values(array(
   'name' => 'language_count',
   'value' => 'i:11;',
 ))

@@ -1,0 +1,44 @@
+id: d7_language_content_settings
+label: Drupal 7 language content settings
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_language_content_settings
+  constants:
+    target_type: 'node'
+process:
+# Ignore i18n_node_options_[node_type] options not available in Drupal 8,
+# i18n_required_node and i18n_newnode_current
+  target_bundle: type
+  target_entity_type_id: 'constants/target_type'
+  default_langcode:
+    -
+      plugin: static_map
+      source: language_content_type
+      map:
+        0: NULL
+        1: 'current_interface'
+        2: 'current_interface'
+    -
+      plugin: skip_on_empty
+      method: row
+  language_alterable:
+    plugin: static_map
+    source: i18n_lock_node
+    map:
+      0: true
+      1: false
+  'third_party_settings/content_translation/enabled':
+    plugin: static_map
+    source: language_content_type
+    map:
+      # In the case of being 0, it will be skipped. We are not actually setting
+      # a null value.
+      0: NULL
+      1: false
+      2: true
+destination:
+  plugin: entity:language_content_settings
+migration_dependencies:
+  required:
+    - d7_node_type

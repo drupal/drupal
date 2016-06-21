@@ -41323,6 +41323,10 @@ $connection->insert('variable')
   'value' => 's:1:"0";',
 ))
 ->values(array(
+  'name' => 'i18n_node_options_blog',
+  'value' => 'a:2:{i:0;s:8:"required";i:1;s:4:"lock";}',
+))
+->values(array(
   'name' => 'language_count',
   'value' => 'i:2;',
 ))
