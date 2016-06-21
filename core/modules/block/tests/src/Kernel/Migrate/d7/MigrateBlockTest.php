@@ -108,7 +108,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
     $this->assertEntity('bartik_system_main', 'system_main_block', [], '', 'content', 'bartik', 0, '', '0');
     $this->assertEntity('bartik_search_form', 'search_form_block', [], '', 'sidebar_first', 'bartik', -1, '', '0');
     $this->assertEntity('bartik_user_login', 'user_login_block', [], '', 'sidebar_first', 'bartik', 0, '', '0');
-    $this->assertEntity('bartik_system_powered-by', 'system_powered_by_block', [], '', 'footer', 'bartik', 10, '', '0');
+    $this->assertEntity('bartik_system_powered_by', 'system_powered_by_block', [], '', 'footer', 'bartik', 10, '', '0');
     $this->assertEntity('seven_system_main', 'system_main_block', [], '', 'content', 'seven', 0, '', '0');
     $this->assertEntity('seven_user_login', 'user_login_block', [], '', 'content', 'seven', 10, '', '0');
 
