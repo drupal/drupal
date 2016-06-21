@@ -11,7 +11,8 @@ process:
     migration: d7_taxonomy_vocabulary
     source: vid
   name: name
-  description: description
+  'description/value': description
+  'description/format': format
   weight: weight
   parent:
     plugin: migration
