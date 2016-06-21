@@ -6,6 +6,8 @@ use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
+use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
@@ -1075,11 +1077,14 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       // testing specific overrides.
       file_put_contents($directory . '/settings.php', "\n\$test_class = '" . get_class($this) . "';\n" . 'include DRUPAL_ROOT . \'/\' . $site_path . \'/settings.testing.php\';' . "\n", FILE_APPEND);
     }
+
     $settings_services_file = DRUPAL_ROOT . '/' . $this->originalSiteDirectory . '/testing.services.yml';
-    if (file_exists($settings_services_file)) {
-      // Copy the testing-specific service overrides in place.
-      copy($settings_services_file, $directory . '/services.yml');
+    if (!file_exists($settings_services_file)) {
+      // Otherwise, use the default services as a starting point for overrides.
+      $settings_services_file = DRUPAL_ROOT . '/sites/default/default.services.yml';
     }
+    // Copy the testing-specific service overrides in place.
+    copy($settings_services_file, $directory . '/services.yml');
 
     // Since Drupal is bootstrapped already, install_begin_request() will not
     // bootstrap into DRUPAL_BOOTSTRAP_CONFIGURATION (again). Hence, we have to
@@ -1103,6 +1108,10 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // TestBase::restoreEnvironment() will delete the entire site directory. Not
     // using File API; a potential error must trigger a PHP warning.
     chmod($directory, 0777);
+
+    // During tests, cacheable responses should get the debugging cacheability
+    // headers by default.
+    $this->setContainerParameter('http.response.debug_cacheability_headers', TRUE);
 
     $request = \Drupal::request();
     $this->kernel = DrupalKernel::createFromRequest($request, $this->classLoader, 'prod', TRUE);
@@ -1505,6 +1514,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    */
   protected function refreshVariables() {
     // Clear the tag cache.
+    $this->container->get('cache_tags.invalidator')->resetChecksums();
     // @todo Replace drupal_static() usage within classes and provide a
     //   proper interface for invoking reset() on a cache backend:
     //   https://www.drupal.org/node/2311945.
@@ -1787,6 +1797,27 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     $expected = static::castSafeStrings($expected);
     $actual = static::castSafeStrings($actual);
     parent::assertEquals($expected, $actual, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
+  }
+
+  /**
+   * Changes parameters in the services.yml file.
+   *
+   * @param string $name
+   *   The name of the parameter.
+   * @param mixed $value
+   *   The value of the parameter.
+   */
+  protected function setContainerParameter($name, $value) {
+    $filename = $this->siteDirectory . '/services.yml';
+    chmod($filename, 0666);
+
+    $services = Yaml::decode(file_get_contents($filename));
+    $services['parameters'][$name] = $value;
+    file_put_contents($filename, Yaml::encode($services));
+
+    // Ensure that the cache is deleted for the yaml file loader.
+    $file_cache = FileCacheFactory::get('container_yaml_loader');
+    $file_cache->delete($filename);
   }
 
 }
