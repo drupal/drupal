@@ -2,8 +2,6 @@ views.ajax:
   path: '/views/ajax'
   defaults:
     _controller: '\Drupal\views\Controller\ViewAjaxController::ajaxView'
-  options:
-    _theme: ajax_base_page
   requirements:
     _access: 'TRUE'
 

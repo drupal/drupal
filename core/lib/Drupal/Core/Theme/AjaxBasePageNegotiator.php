@@ -21,8 +21,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * be displayed in either theme, but the Ajax response to the Field module's
  * "Add another item" button should be rendered using the same theme as the rest
  * of the page.
- *
- * Therefore specify '_theme: ajax_base_page' as part of the router options.
  */
 class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
 
@@ -67,28 +65,25 @@ class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match) {
-    // Check whether the route was configured to use the base page theme.
-    return ($route = $route_match->getRouteObject())
-      && $route->hasOption('_theme')
-      && $route->getOption('_theme') == 'ajax_base_page';
+    $ajax_page_state = $this->requestStack->getCurrentRequest()->request->get('ajax_page_state');
+    return !empty($ajax_page_state['theme']) && isset($ajax_page_state['theme_token']);
   }
 
   /**
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    if (($ajax_page_state = $this->requestStack->getCurrentRequest()->request->get('ajax_page_state'))  && !empty($ajax_page_state['theme']) && !empty($ajax_page_state['theme_token'])) {
-      $theme = $ajax_page_state['theme'];
-      $token = $ajax_page_state['theme_token'];
+    $ajax_page_state = $this->requestStack->getCurrentRequest()->request->get('ajax_page_state');
+    $theme = $ajax_page_state['theme'];
+    $token = $ajax_page_state['theme_token'];
 
-      // Prevent a request forgery from giving a person access to a theme they
-      // shouldn't be otherwise allowed to see. However, since everyone is
-      // allowed to see the default theme, token validation isn't required for
-      // that, and bypassing it allows most use-cases to work even when accessed
-      // from the page cache.
-      if ($theme === $this->configFactory->get('system.theme')->get('default') || $this->csrfGenerator->validate($token, $theme)) {
-        return $theme;
-      }
+    // Prevent a request forgery from giving a person access to a theme they
+    // shouldn't be otherwise allowed to see. However, since everyone is
+    // allowed to see the default theme, token validation isn't required for
+    // that, and bypassing it allows most use-cases to work even when accessed
+    // from the page cache.
+    if ($theme === $this->configFactory->get('system.theme')->get('default') || $this->csrfGenerator->validate($token, $theme)) {
+      return $theme;
     }
   }
 

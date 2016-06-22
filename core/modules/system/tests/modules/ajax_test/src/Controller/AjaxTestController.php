@@ -62,6 +62,15 @@ class AjaxTestController {
   }
 
   /**
+   * Returns the used theme.
+   */
+  public function theme() {
+    return [
+      '#markup' => 'Current theme: ' . \Drupal::theme()->getActiveTheme()->getName(),
+    ];
+  }
+
+  /**
    * Returns an AjaxResponse; settings command set last.
    *
    * Helps verifying AjaxResponse reorders commands to ensure correct execution.
@@ -184,6 +193,17 @@ class AjaxTestController {
             ))
           ),
         ),
+        'link8' => [
+          'title' => 'Link 8 (ajax)',
+          'url' => Url::fromRoute('ajax_test.admin.theme'),
+          'attributes' => [
+            'class' => ['use-ajax'],
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => json_encode([
+              'width' => 400,
+            ]),
+          ],
+        ],
       ),
     );
 
