@@ -1,6 +1,6 @@
 type: module
 name: Inline Form Errors
-description: 'Adds WCAG 2.0 accessibility compliance for web form errors. Some form functionality may not work with this experimental module.'
+description: 'Adds WCAG 2.0 accessibility compliance for web form errors, but some functionality might not work.'
 version: VERSION
 core: 8.x
 package: Core (Experimental)
