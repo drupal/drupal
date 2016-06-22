@@ -42,6 +42,7 @@ class ViewsHandlerManagerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
+    parent::setUp();
     $this->viewsData = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();

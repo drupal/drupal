@@ -58,6 +58,8 @@ class ElementInfoManagerTest extends UnitTestCase {
    * @covers ::__construct
    */
   protected function setUp() {
+    parent::setUp();
+
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');

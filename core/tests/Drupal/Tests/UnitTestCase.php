@@ -43,6 +43,8 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     // Ensure that the NullFileCache implementation is used for the FileCache as
     // unit tests should not be relying on caches implicitly.
     FileCacheFactory::setConfiguration(['default' => ['class' => '\Drupal\Component\FileCache\NullFileCache']]);
+    // Ensure that FileCacheFactory has a prefix.
+    FileCacheFactory::setPrefix('prefix');
 
     $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
   }
