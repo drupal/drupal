@@ -34,6 +34,24 @@ abstract class JavascriptTestBase extends BrowserTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function tearDown() {
+    // Wait for all requests to finish. It is possible that an AJAX request is
+    // still on-going.
+    $result = $this->getSession()->wait(5000, '(typeof(jQuery)=="undefined" || (0 === jQuery.active && 0 === jQuery(\':animated\').length))');
+    if (!$result) {
+      // If the wait is unsuccessful, there may still be an AJAX request in
+      // progress. If we tear down now, then this AJAX request may fail with
+      // missing database tables, because tear down will have removed them. Rather
+      // than allow it to fail, throw an explicit exception now explaining what
+      // the problem is.
+      throw new \RuntimeException('Unfinished AJAX requests whilst tearing down a test');
+    }
+    parent::tearDown();
+  }
+
+  /**
    * Asserts that the element with the given CSS selector is visible.
    *
    * @param string $css_selector
