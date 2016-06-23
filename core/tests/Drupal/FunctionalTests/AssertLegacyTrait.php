@@ -53,10 +53,19 @@ trait AssertLegacyTrait {
    *   Plain text to look for.
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
-   *   Use $this->assertSession()->responseContains() instead.
+   *   Use $this->assertSession()->pageTextContains() or
+   *   $this->assertSession()->responseContains() instead.
    */
   protected function assertText($text) {
-    $this->assertSession()->responseContains($text);
+    $content_type = $this->getSession()->getResponseHeader('Content-type');
+    // In case of a Non-HTML response (example: XML) check the original
+    // response.
+    if (strpos($content_type, 'html') === FALSE) {
+      $this->assertSession()->responseContains($text);
+    }
+    else {
+      $this->assertSession()->pageTextContains($text);
+    }
   }
 
   /**
@@ -69,10 +78,19 @@ trait AssertLegacyTrait {
    *   Plain text to look for.
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
-   *   Use $this->assertSession()->responseNotContains() instead.
+   *   Use $this->assertSession()->pageTextNotContains() or
+   *   $this->assertSession()->responseNotContains() instead.
    */
   protected function assertNoText($text) {
-    $this->assertSession()->responseNotContains($text);
+    $content_type = $this->getSession()->getResponseHeader('Content-type');
+    // In case of a Non-HTML response (example: XML) check the original
+    // response.
+    if (strpos($content_type, 'html') === FALSE) {
+      $this->assertSession()->responseNotContains($text);
+    }
+    else {
+      $this->assertSession()->pageTextNotContains($text);
+    }
   }
 
   /**
@@ -108,6 +126,25 @@ trait AssertLegacyTrait {
     if ($value !== NULL) {
       $this->assertSession()->fieldValueEquals($name, $value);
     }
+  }
+
+  /**
+   * Asserts that a field exists with the given ID and value.
+   *
+   * @param string $id
+   *   ID of field to assert.
+   * @param string|\Drupal\Component\Render\MarkupInterface $value
+   *   (optional) Value for the field to assert. You may pass in NULL to skip
+   *   checking the value, while still checking that the field exists.
+   *   However, the default value ('') asserts that the field value is an empty
+   *   string.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->fieldExists() or
+   *   $this->assertSession()->fieldValueEquals() instead.
+   */
+  protected function assertFieldById($id, $value = NULL) {
+    $this->assertFieldByName($id, $value);
   }
 
   /**
@@ -147,6 +184,49 @@ trait AssertLegacyTrait {
    */
   protected function assertLink($label, $index = 0) {
     return $this->assertSession()->linkExists($label, $index);
+  }
+
+  /**
+   * Asserts that a select option in the current page exists.
+   *
+   * @param string $id
+   *   ID of select field to assert.
+   * @param string $option
+   *   Option to assert.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->optionExists() instead.
+   */
+  protected function assertOption($id, $option) {
+    return $this->assertSession()->optionExists($id, $option);
+  }
+
+  /**
+   * Asserts that a select option does NOT exist in the current page.
+   *
+   * @param string $id
+   *   ID of select field to assert.
+   * @param string $option
+   *   Option to assert.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->optionNotExists() instead.
+   */
+  protected function assertNoOption($id, $option) {
+    return $this->assertSession()->optionNotExists($id, $option);
+  }
+
+  /**
+   * Passes if the internal browser's URL matches the given path.
+   *
+   * @param string $path
+   *   The expected system path.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->addressEquals() instead.
+   */
+  protected function assertUrl($path) {
+    $this->assertSession()->addressEquals($path);
   }
 
 }
