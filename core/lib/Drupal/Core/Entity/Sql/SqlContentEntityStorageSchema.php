@@ -1837,6 +1837,24 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
     }
 
+    // Add unique keys.
+    foreach ($schema['unique keys'] as $index_name => $columns) {
+      $real_name = $this->getFieldIndexName($storage_definition, $index_name);
+      foreach ($columns as $column_name) {
+        // Unique keys can be specified as either a column name or an array with
+        // column name and length. Allow for either case.
+        if (is_array($column_name)) {
+          $data_schema['unique keys'][$real_name][] = array(
+            $table_mapping->getFieldColumnName($storage_definition, $column_name[0]),
+            $column_name[1],
+          );
+        }
+        else {
+          $data_schema['unique keys'][$real_name][] = $table_mapping->getFieldColumnName($storage_definition, $column_name);
+        }
+      }
+    }
+
     // Add foreign keys.
     foreach ($schema['foreign keys'] as $specifier => $specification) {
       $real_name = $this->getFieldIndexName($storage_definition, $specifier);
