@@ -26,7 +26,7 @@ class BasicTest extends WizardTestBase {
 
     // Check if we can access the main views admin page.
     $this->drupalGet('admin/structure/views');
-    $this->assertText(t('Add new view'));
+    $this->assertText(t('Add view'));
 
     // Create a simple and not at all useful view.
     $view1 = array();
