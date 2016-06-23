@@ -95,7 +95,8 @@ class BooleanFieldTest extends WebTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[value]", '', 'Widget found.');
-    $this->assertRaw($on);
+    $this->assertText($this->field->label(), 'Uses field label by default.');
+    $this->assertNoRaw($on, 'Does not use the "On" label.');
 
     // Submit and ensure it is accepted.
     $edit = array(
@@ -113,6 +114,21 @@ class BooleanFieldTest extends WebTestBase {
     $this->setRawContent(\Drupal::service('renderer')->renderRoot($content));
     $this->assertRaw('<div class="field__item">' . $on . '</div>');
 
+    // Test with "On" label option.
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($field_name, array(
+        'type' => 'boolean_checkbox',
+        'settings' => array(
+          'display_label' => FALSE,
+        )
+      ))
+      ->save();
+
+    $this->drupalGet('entity_test/add');
+    $this->assertFieldByName("{$field_name}[value]", '', 'Widget found.');
+    $this->assertRaw($on);
+    $this->assertNoText($this->field->label());
+
     // Test if we can change the on label.
     $on = $this->randomMachineName();
     $edit = array(
@@ -122,21 +138,6 @@ class BooleanFieldTest extends WebTestBase {
     // Check if we see the updated labels in the creation form.
     $this->drupalGet('entity_test/add');
     $this->assertRaw($on);
-
-    // Test the display_label option.
-    entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($field_name, array(
-        'type' => 'boolean_checkbox',
-        'settings' => array(
-          'display_label' => TRUE,
-        )
-      ))
-      ->save();
-
-    $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[value]", '', 'Widget found.');
-    $this->assertNoRaw($on);
-    $this->assertText($this->field->label());
 
     // Go to the form display page and check if the default settings works as
     // expected.
