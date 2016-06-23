@@ -81,6 +81,16 @@ class FieldUITest extends FieldTestBase {
     $this->assertEqual($view->field['field_name_0']->options['type'], 'text_trimmed');
     $this->assertEqual($view->field['field_name_0']->options['settings']['trim_length'], $random_number);
 
+    // Now change the formatter back to 'default' which doesn't have any
+    // settings. We want to ensure that the settings are empty then.
+    $edit['options[type]'] = 'text_default';
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_view_fieldapi/default/field/field_name_0', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/view/test_view_fieldapi', [], t('Save'));
+    $view = Views::getView('test_view_fieldapi');
+    $view->initHandlers();
+    $this->assertEqual($view->field['field_name_0']->options['type'], 'text_default');
+    $this->assertEqual($view->field['field_name_0']->options['settings'], []);
+
     // Ensure that the view depends on the field storage.
     $dependencies = \Drupal::service('config.manager')->findConfigEntityDependents('config', [$this->fieldStorages[0]->getConfigDependencyName()]);
     $this->assertTrue(isset($dependencies['views.view.test_view_fieldapi']), 'The view is dependent on the field storage.');

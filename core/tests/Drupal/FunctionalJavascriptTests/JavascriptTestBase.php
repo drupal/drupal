@@ -102,4 +102,11 @@ abstract class JavascriptTestBase extends BrowserTestBase {
     $this->assertTrue($result, $message);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function assertSession($name = NULL) {
+    return new JSWebAssert($this->getSession($name), $this->baseUrl);
+  }
+
 }
