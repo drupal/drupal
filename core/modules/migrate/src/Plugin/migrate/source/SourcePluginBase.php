@@ -143,7 +143,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
     // Set up some defaults based on the source configuration.
     $this->cacheCounts = !empty($configuration['cache_counts']);
     $this->skipCount = !empty($configuration['skip_count']);
-    $this->cacheKey = !empty($configuration['cache_key']) ? !empty($configuration['cache_key']) : NULL;
+    $this->cacheKey = !empty($configuration['cache_key']) ? $configuration['cache_key'] : NULL;
     $this->trackChanges = !empty($configuration['track_changes']) ? $configuration['track_changes'] : FALSE;
     $this->idMap = $this->migration->getIdMap();
 
