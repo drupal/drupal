@@ -1,0 +1,11 @@
+drupal.block_place:
+  version: VERSION
+  css:
+    theme:
+      css/block-place.css: {}
+
+drupal.block_place.icons:
+  version: VERSION
+  css:
+    theme:
+      css/block-place.icons.theme.css: {}

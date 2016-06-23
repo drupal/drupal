@@ -52,6 +52,7 @@
         "drupal/big_pipe": "self.version",
         "drupal/block": "self.version",
         "drupal/block_content": "self.version",
+        "drupal/block_place": "self.version",
         "drupal/book": "self.version",
         "drupal/breakpoint": "self.version",
         "drupal/ckeditor": "self.version",

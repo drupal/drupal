@@ -1,0 +1,24 @@
+/**
+ * @file
+ * Styling for block_place module regions and buttons during block placement.
+ */
+
+/* Borrows styling from Bartik's demo-block.css. */
+.block-place-region {
+  background: #ffff66;
+  border: 1px dotted #9f9e00;
+  font: 90% "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+  text-shadow: none;
+}
+
+.block-place-region a.button {
+  white-space: nowrap;
+  color: #3a3a3a;
+}
+
+.region:hover {
+  outline: 1px dashed #9f9e00;
+}
