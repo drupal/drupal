@@ -82,9 +82,15 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
       $request_method = $request->getMethod();
       if (in_array($format, $resource_config->getFormats($request_method))) {
         $definition = $resource->getPluginDefinition();
-        $class = $definition['serialization_class'];
         try {
-          $unserialized = $serializer->deserialize($received, $class, $format, array('request_method' => $method));
+          if (!empty($definition['serialization_class'])) {
+            $unserialized = $serializer->deserialize($received, $definition['serialization_class'], $format, array('request_method' => $method));
+          }
+          // If the plugin does not specify a serialization class just decode
+          // the received data.
+          else {
+            $unserialized = $serializer->decode($received, $format, array('request_method' => $method));
+          }
         }
         catch (UnexpectedValueException $e) {
           $error['error'] = $e->getMessage();

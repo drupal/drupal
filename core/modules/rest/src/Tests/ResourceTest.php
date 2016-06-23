@@ -5,6 +5,7 @@ namespace Drupal\rest\Tests;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\rest\RestResourceConfigInterface;
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the structure of a REST resource.
@@ -18,7 +19,7 @@ class ResourceTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'entity_test');
+  public static $modules = array('hal', 'rest', 'entity_test', 'rest_test');
 
   /**
    * The entity.
@@ -93,6 +94,22 @@ class ResourceTest extends RESTTestBase {
     // application/hal+json, so it returns a 406.
     $this->assertResponse('406', 'HTTP response code is 406 when the resource does not define formats, because it falls back to the canonical, non-REST route.');
     $this->curlClose();
+  }
+
+  /**
+   * Tests that serialization_class is optional.
+   */
+  public function testSerializationClassIsOptional() {
+    $this->enableService('serialization_test', 'POST', 'json');
+
+    Role::load(RoleInterface::ANONYMOUS_ID)
+      ->grantPermission('restful post serialization_test')
+      ->save();
+
+    $serialized = $this->container->get('serializer')->serialize(['foo', 'bar'], 'json');
+    $this->httpRequest('serialization_test', 'POST', $serialized, 'application/json');
+    $this->assertResponse(200);
+    $this->assertResponseBody('["foo","bar"]');
   }
 
   /**
