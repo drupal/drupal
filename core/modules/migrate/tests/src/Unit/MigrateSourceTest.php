@@ -170,6 +170,25 @@ class MigrateSourceTest extends MigrateTestCase {
     $this->assertEquals(-1, $source->count());
   }
 
+   /**
+   * Test that the key can be set for the count cache.
+   *
+   * @covers ::count
+   */
+  public function testCountCacheKey() {
+    // Mock the cache to validate set() receives appropriate arguments.
+    $container = new ContainerBuilder();
+    $cache = $this->getMock(CacheBackendInterface::class);
+    $cache->expects($this->any())->method('set')
+        ->with('test_key', $this->isType('int'), $this->isType('int'));
+    $container->set('cache.migrate', $cache);
+    \Drupal::setContainer($container);
+
+    // Test caching the count with a configured key works.
+    $source = $this->getSource(['cache_counts' => TRUE, 'cache_key' => 'test_key']);
+    $this->assertEquals(1, $source->count());
+  }
+
   /**
    * Test that we don't get a row if prepareRow() is false.
    */
