@@ -532,7 +532,11 @@ function taxonomy_build_node_index($node) {
  * Implements hook_ENTITY_TYPE_update() for node entities.
  */
 function taxonomy_node_update(EntityInterface $node) {
-  // Always rebuild the node's taxonomy index entries on node save.
+  // If we're not dealing with the default revision of the node, do not make any
+  // change to the taxonomy index.
+  if (!$node->isDefaultRevision()) {
+    return;
+  }
   taxonomy_delete_node_index($node);
   taxonomy_build_node_index($node);
 }
