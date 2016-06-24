@@ -16,24 +16,7 @@ namespace Drupal\Core\StreamWrapper;
 abstract class LocalReadOnlyStream extends LocalStream {
 
   /**
-   * Support for fopen(), file_get_contents(), etc.
-   *
-   * Any write modes will be rejected, as this is a read-only stream wrapper.
-   *
-   * @param string $uri
-   *   A string containing the URI to the file to open.
-   * @param int $mode
-   *   The file mode, only strict readonly modes are supported.
-   * @param int $options
-   *   A bit mask of STREAM_USE_PATH and STREAM_REPORT_ERRORS.
-   * @param string $opened_path
-   *   A string containing the path actually opened.
-   *
-   * @return bool
-   *   TRUE if $mode denotes a readonly mode and the file was opened
-   *   successfully, FALSE otherwise.
-   *
-   * @see http://php.net/manual/streamwrapper.stream-open.php
+   * {@inheritdoc}
    */
   public function stream_open($uri, $mode, $options, &$opened_path) {
     if (!in_array($mode, array('r', 'rb', 'rt'))) {
@@ -42,15 +25,7 @@ abstract class LocalReadOnlyStream extends LocalStream {
       }
       return FALSE;
     }
-
-    $this->uri = $uri;
-    $path = $this->getLocalPath();
-    $this->handle = ($options & STREAM_REPORT_ERRORS) ? fopen($path, $mode) : @fopen($path, $mode);
-    if ($this->handle !== FALSE && ($options & STREAM_USE_PATH)) {
-      $opened_path = $path;
-    }
-
-    return (bool) $this->handle;
+    return parent::stream_open($uri, $mode, $options, $opened_path);
   }
 
   /**
