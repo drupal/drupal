@@ -22,26 +22,6 @@ class NodePreviewController extends EntityViewController {
     // Don't render cache previews.
     unset($build['#cache']);
 
-    foreach ($node_preview->uriRelationships() as $rel) {
-      // Set the node path as the canonical URL to prevent duplicate content.
-      $build['#attached']['html_head_link'][] = array(
-        array(
-        'rel' => $rel,
-        'href' => $node_preview->url($rel),
-        )
-        , TRUE);
-
-      if ($rel == 'canonical') {
-        // Set the non-aliased canonical path as a default shortlink.
-        $build['#attached']['html_head_link'][] = array(
-          array(
-            'rel' => 'shortlink',
-            'href' => $node_preview->url($rel, array('alias' => TRUE)),
-          )
-        , TRUE);
-      }
-    }
-
     return $build;
   }
 
