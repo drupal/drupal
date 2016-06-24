@@ -9,7 +9,7 @@ use Drupal\Tests\BrowserTestBase as BaseBrowserTestBase;
  *
  * Tests extending BrowserTestBase must exist in the
  * Drupal\Tests\yourmodule\Functional namespace and live in the
- * modules/yourmodule/Tests/Functional directory.
+ * modules/yourmodule/tests/src/Functional directory.
  *
  * @ingroup testing
  *
