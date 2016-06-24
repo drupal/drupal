@@ -135,7 +135,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save order'),
+      '#value' => t('Save'),
       '#button_type' => 'primary',
     );
 
