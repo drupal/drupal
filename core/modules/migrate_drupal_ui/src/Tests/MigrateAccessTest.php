@@ -25,13 +25,13 @@ class MigrateAccessTest extends WebTestBase {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('upgrade');
     $this->assertResponse(200);
-    $this->assertText(t('Drupal Upgrade'));
+    $this->assertText(t('Upgrade'));
 
     $user = $this->createUser(['administer software updates']);
     $this->drupalLogin($user);
     $this->drupalGet('upgrade');
     $this->assertResponse(403);
-    $this->assertNoText(t('Drupal Upgrade'));
+    $this->assertNoText(t('Upgrade'));
   }
 
 }
