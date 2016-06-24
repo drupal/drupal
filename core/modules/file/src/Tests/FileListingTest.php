@@ -4,6 +4,7 @@ namespace Drupal\file\Tests;
 
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
+use Drupal\entity_test\Entity\EntityTestConstraints;
 
 /**
  * Tests file listing page functionality.
@@ -17,7 +18,7 @@ class FileListingTest extends FileFieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('views', 'file', 'image');
+  public static $modules = array('views', 'file', 'image', 'entity_test');
 
   /**
    * An authenticated user.
@@ -142,6 +143,55 @@ class FileListingTest extends FileFieldTestBase {
       }
       $this->assertLinkByHref('node/' . $node->id(), 0, 'Link to registering entity found on usage page.');
     }
+  }
+
+  /**
+   * Tests file listing usage page for entities with no canonical link template.
+   */
+  function testFileListingUsageNoLink() {
+    // Login with user with right permissions and test listing.
+    $this->drupalLogin($this->adminUser);
+
+    // Create a bundle and attach a File field to the bundle.
+    $bundle = $this->randomMachineName();
+    entity_test_create_bundle($bundle, NULL, 'entity_test_constraints');
+    $this->createFileField('field_test_file', 'entity_test_constraints', $bundle, array(), array('file_extensions' => 'txt png'));
+
+    // Create file to attach to entity.
+    $file = File::create([
+      'filename' => 'druplicon.txt',
+      'uri' => 'public://druplicon.txt',
+      'filemime' => 'text/plain',
+    ]);
+    $file->setPermanent();
+    file_put_contents($file->getFileUri(), 'hello world');
+    $file->save();
+
+    // Create entity and attach the created file.
+    $entity_name = $this->randomMachineName();
+    $entity = EntityTestConstraints::create(array(
+      'uid' => 1,
+      'name' => $entity_name,
+      'type' => $bundle,
+      'field_test_file' => array(
+        'target_id' => $file->id(),
+      ),
+    ));
+    $entity->save();
+
+    // Create node entity and attach the created file.
+    $node = $this->drupalCreateNode(array('type' => 'article', 'file' => $file));
+    $node->save();
+
+    // Load the file usage page for the created and attached file.
+    $this->drupalGet('admin/content/files/usage/' . $file->id());
+
+    $this->assertResponse(200);
+    // Entity name should be displayed, but not linked if Entity::toUrl
+    // throws an exception
+    $this->assertText($entity_name, 'Entity name is added to file usage listing.');
+    $this->assertNoLink($entity_name, 'Linked entity name not added to file usage listing.');
+    $this->assertLink($node->getTitle());
   }
 
   /**
