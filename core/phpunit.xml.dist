@@ -28,48 +28,16 @@
   </php>
   <testsuites>
     <testsuite name="unit">
-      <directory>./tests/Drupal/Tests</directory>
-      <directory>./modules/*/tests/src/Unit</directory>
-      <directory>../modules/*/tests/src/Unit</directory>
-      <directory>../profiles/*/tests/src/Unit</directory>
-      <directory>../sites/*/modules/*/tests/src/Unit</directory>
-      <!-- Exclude Composer's vendor directory so we don't run tests there. -->
-      <exclude>./vendor</exclude>
-      <!-- Exclude Drush tests. -->
-      <exclude>./drush/tests</exclude>
+      <file>./tests/TestSuites/UnitTestSuite.php</file>
     </testsuite>
     <testsuite name="kernel">
-      <directory>./tests/Drupal/KernelTests</directory>
-      <directory>./modules/*/tests/src/Kernel</directory>
-      <directory>../modules/*/tests/src/Kernel</directory>
-      <directory>../profiles/*/tests/src/Kernel</directory>
-      <directory>../sites/*/modules/*/tests/src/Kernel</directory>
-      <!-- Exclude Composer's vendor directory so we don't run tests there. -->
-      <exclude>./vendor</exclude>
-      <!-- Exclude Drush tests. -->
-      <exclude>./drush/tests</exclude>
+      <file>./tests/TestSuites/KernelTestSuite.php</file>
     </testsuite>
     <testsuite name="functional">
-      <directory>./tests/Drupal/FunctionalTests</directory>
-      <directory>./modules/*/tests/src/Functional</directory>
-      <directory>../modules/*/tests/src/Functional</directory>
-      <directory>../profiles/*/tests/src/Functional</directory>
-      <directory>../sites/*/modules/*/tests/src/Functional</directory>
-      <!-- Exclude Composer's vendor directory so we don't run tests there. -->
-      <exclude>./vendor</exclude>
-      <!-- Exclude Drush tests. -->
-      <exclude>./drush/tests</exclude>
+      <file>./tests/TestSuites/FunctionalTestSuite.php</file>
     </testsuite>
     <testsuite name="functional-javascript">
-      <directory>./tests/Drupal/FunctionalJavascriptTests</directory>
-      <directory>./modules/*/tests/src/FunctionalJavascript</directory>
-      <directory>../modules/*/tests/src/FunctionalJavascript</directory>
-      <directory>../profiles/*/tests/src/FunctionalJavascript</directory>
-      <directory>../sites/*/modules/*/tests/src/FunctionalJavascript</directory>
-      <!-- Exclude Composer's vendor directory so we don't run tests there. -->
-      <exclude>./vendor</exclude>
-      <!-- Exclude Drush tests. -->
-      <exclude>./drush/tests</exclude>
+      <file>./tests/TestSuites/FunctionalJavascriptTestSuite.php</file>
     </testsuite>
   </testsuites>
   <listeners>

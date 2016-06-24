@@ -11,7 +11,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Defines a base class for Views kernel testing.
  */
-class ViewsKernelTestBase extends KernelTestBase {
+abstract class ViewsKernelTestBase extends KernelTestBase {
 
   use ViewResultAssertionTrait;
 
