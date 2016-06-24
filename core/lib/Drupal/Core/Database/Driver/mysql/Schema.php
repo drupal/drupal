@@ -411,6 +411,11 @@ class Schema extends DatabaseSchema {
         ->fields(array($field => $spec['initial']))
         ->execute();
     }
+    if (isset($spec['initial_from_field'])) {
+      $this->connection->update($table)
+        ->expression($field, $spec['initial_from_field'])
+        ->execute();
+    }
     if ($fixnull) {
       $spec['not null'] = TRUE;
       $this->changeField($table, $field, $field, $spec);

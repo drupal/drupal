@@ -316,6 +316,11 @@ class Schema extends DatabaseSchema {
           ->fields(array($field => $specification['initial']))
           ->execute();
       }
+      if (isset($specification['initial_from_field'])) {
+        $this->connection->update($table)
+          ->expression($field, $specification['initial_from_field'])
+          ->execute();
+      }
     }
     else {
       // We cannot add the field directly. Use the slower table alteration
@@ -333,6 +338,13 @@ class Schema extends DatabaseSchema {
         $mapping[$field] = array(
           'expression' => ':newfieldinitial',
           'arguments' => array(':newfieldinitial' => $specification['initial']),
+        );
+      }
+      elseif (isset($specification['initial_from_field'])) {
+        // If we have a initial value, copy it over.
+        $mapping[$field] = array(
+          'expression' => $specification['initial_from_field'],
+          'arguments' => [],
         );
       }
       else {
