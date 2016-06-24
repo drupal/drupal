@@ -130,7 +130,7 @@ class FilterAdminTest extends WebTestBase {
     $edit = array(
       "formats[$format_id][weight]" => 5,
     );
-    $this->drupalPostForm('admin/config/content/formats', $edit, t('Save changes'));
+    $this->drupalPostForm('admin/config/content/formats', $edit, t('Save'));
     $this->assertFieldByName("formats[$format_id][weight]", 5, 'Text format weight was saved.');
 
     // Edit text format.

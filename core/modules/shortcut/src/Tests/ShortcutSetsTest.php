@@ -88,7 +88,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
       $weight--;
     }
 
-    $this->drupalPostForm(NULL, $edit, t('Save changes'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('The shortcut set has been updated.'));
 
     \Drupal::entityManager()->getStorage('shortcut')->resetCache();
