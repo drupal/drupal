@@ -2,7 +2,9 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
@@ -105,8 +107,16 @@ class EntityLabel extends FieldPluginBase {
     $entity = $this->loadedReferencers[$type][$value];
 
     if (!empty($this->options['link_to_entity'])) {
-      $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['url'] = $entity->urlInfo();
+      try {
+        $this->options['alter']['url'] = $entity->toUrl();
+        $this->options['alter']['make_link'] = TRUE;
+      }
+      catch (UndefinedLinkTemplateException $e) {
+        $this->options['alter']['make_link'] = FALSE;
+      }
+      catch (EntityMalformedException $e) {
+        $this->options['alter']['make_link'] = FALSE;
+      }
     }
 
     return $this->sanitizeValue($entity->label());
