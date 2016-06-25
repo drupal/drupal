@@ -27,7 +27,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'access content'
+          perm: 'administer views'
       cache:
         type: tag
       query:
@@ -149,3 +149,24 @@ display:
         type: serializer
       row:
         type: data_field
+
+  rest_export_2:
+    display_plugin: rest_export
+    id: rest_export_2
+    display_title: 'REST export 2'
+    position: 2
+    display_options:
+      display_extenders: {  }
+      auth:
+        basic_auth: basic_auth
+      path: test/serialize/auth_with_perm
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - request_format
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.storage.node.body'

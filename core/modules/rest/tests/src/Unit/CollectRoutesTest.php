@@ -67,6 +67,8 @@ class CollectRoutesTest extends UnitTestCase {
       ->getMock();
     $container->set('router.route_provider', $route_provider);
 
+    $container->setParameter('authentication_providers', ['basic_auth' => 'basic_auth']);
+
     $state = $this->getMock('\Drupal\Core\State\StateInterface');
     $container->set('state', $state);
 
@@ -75,6 +77,12 @@ class CollectRoutesTest extends UnitTestCase {
       ->getMock();
     $container->set('plugin.manager.views.style', $style_manager);
     $container->set('renderer', $this->getMock('Drupal\Core\Render\RendererInterface'));
+
+    $authentication_collector = $this->getMock('\Drupal\Core\Authentication\AuthenticationCollectorInterface');
+    $container->set('authentication_collector', $authentication_collector);
+    $authentication_collector->expects($this->any())
+      ->method('getSortedProviders')
+      ->will($this->returnValue(['basic_auth' => 'data', 'cookie' => 'data']));
 
     \Drupal::setContainer($container);
 
@@ -86,6 +94,9 @@ class CollectRoutesTest extends UnitTestCase {
 
     // Set the style option.
     $this->restExport->setOption('style', array('type' => 'serializer'));
+
+    // Set the auth option.
+    $this->restExport->setOption('auth', ['basic_auth']);
 
     $display_manager->expects($this->once())
       ->method('getDefinition')
@@ -132,6 +143,11 @@ class CollectRoutesTest extends UnitTestCase {
 
     $this->assertEquals(count($requirements_1), 0, 'First route has no requirement.');
     $this->assertEquals(count($requirements_2), 2, 'Views route with rest export had the format and method requirements added.');
+
+    // Check auth options.
+    $auth = $this->routes->get('view.test_view.page_1')->getOption('_auth');
+    $this->assertEquals(count($auth), 1, 'View route with rest export has an auth option added');
+    $this->assertEquals($auth[0], 'basic_auth', 'View route with rest export has the correct auth option added');
   }
 
 }

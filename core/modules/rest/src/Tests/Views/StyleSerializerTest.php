@@ -40,7 +40,7 @@ class StyleSerializerTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $modules = array('views_ui', 'entity_test', 'hal', 'rest_test_views', 'node', 'text', 'field', 'language');
+  public static $modules = array('views_ui', 'entity_test', 'hal', 'rest_test_views', 'node', 'text', 'field', 'language', 'basic_auth');
 
   /**
    * Views used by this test.
@@ -67,6 +67,39 @@ class StyleSerializerTest extends PluginTestBase {
     }
 
     $this->enableViewsTestModule();
+  }
+
+  /**
+   * Checks that the auth options restricts access to a REST views display.
+   */
+  public function testRestViewsAuthentication() {
+    // Assume the view is hidden behind a permission.
+    $this->drupalGetWithFormat('test/serialize/auth_with_perm', 'json');
+    $this->assertResponse(401);
+
+    // Not even logging in would make it possible to see the view, because then
+    // we are denied based on authentication method (cookie).
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGetWithFormat('test/serialize/auth_with_perm', 'json');
+    $this->assertResponse(403);
+    $this->drupalLogout();
+
+    // But if we use the basic auth authentication strategy, we should be able
+    // to see the page.
+    $url = $this->buildUrl('test/serialize/auth_with_perm');
+    $response = \Drupal::httpClient()->get($url, [
+      'auth' => [$this->adminUser->getUsername(), $this->adminUser->pass_raw],
+    ]);
+
+    // Ensure that any changes to variables in the other thread are picked up.
+    $this->refreshVariables();
+
+    $headers = $response->getHeaders();
+    $this->verbose('GET request to: ' . $url .
+      '<hr />Code: ' . curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE) .
+      '<hr />Response headers: ' . nl2br(print_r($headers, TRUE)) .
+      '<hr />Response body: ' . (string) $response->getBody());
+    $this->assertResponse(200);
   }
 
   /**
