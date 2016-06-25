@@ -5,11 +5,8 @@ migration_tags:
   - Drupal 7
 source:
   plugin: menu_link
-  constants:
-    bundle: menu_link_content
 process:
   id: mlid
-  bundle: 'constants/bundle'
   title: link_title
   description: description
   menu_name:
@@ -49,6 +46,7 @@ process:
   changed: updated
 destination:
   plugin: entity:menu_link_content
+  default_bundle: menu_link_content
   no_stub: true
 migration_dependencies:
   required:
