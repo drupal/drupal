@@ -65,6 +65,7 @@
         "drupal/content_translation": "self.version",
         "drupal/contextual": "self.version",
         "drupal/core-annotation": "self.version",
+        "drupal/core-assertion": "self.version",
         "drupal/core-bridge": "self.version",
         "drupal/core-datetime": "self.version",
         "drupal/core-dependency-injection": "self.version",
