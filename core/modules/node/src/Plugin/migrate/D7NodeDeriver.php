@@ -92,6 +92,7 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
           '@type' => $row->getSourceProperty('name'),
         ]);
         $values['source']['node_type'] = $node_type;
+        $values['destination']['default_bundle'] = $node_type;
 
         $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($values);
         if (isset($fields[$node_type])) {

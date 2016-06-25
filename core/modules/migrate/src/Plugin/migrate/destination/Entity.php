@@ -89,6 +89,21 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
   }
 
   /**
+   * Gets the bundle for the row taking into account the default.
+   *
+   * @param \Drupal\migrate\Row $row
+   *   The current row we're importing.
+   *
+   * @return string
+   *   The bundle for this row.
+   */
+  public function getBundle(Row $row) {
+    $default_bundle = isset($this->configuration['default_bundle']) ? $this->configuration['default_bundle'] : '';
+    $bundle_key = $this->getKey('bundle');
+    return $row->getDestinationProperty($bundle_key) ?: $default_bundle;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function fields(MigrationInterface $migration = NULL) {
@@ -112,6 +127,11 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
       $this->updateEntity($entity, $row);
     }
     else {
+      // Attempt to ensure we always have a bundle.
+      if ($bundle = $this->getBundle($row)) {
+        $row->setDestinationProperty($this->getKey('bundle'), $bundle);
+      }
+
       // Stubs might need some required fields filled in.
       if ($row->isStub()) {
         $this->processStubRow($row);

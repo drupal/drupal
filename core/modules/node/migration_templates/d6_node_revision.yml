@@ -8,7 +8,6 @@ source:
 process:
   nid: nid
   vid: vid
-  type: type
   langcode:
     plugin: default_value
     source: language
