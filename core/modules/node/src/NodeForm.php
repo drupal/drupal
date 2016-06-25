@@ -356,7 +356,7 @@ class NodeForm extends ContentEntityForm {
     $node->save();
     $node_link = $node->link($this->t('View'));
     $context = array('@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link);
-    $t_args = array('@type' => node_get_type_label($node), '%title' => $node->label());
+    $t_args = array('@type' => node_get_type_label($node), '%title' => $node->link($node->label()));
 
     if ($insert) {
       $this->logger('content')->notice('@type: added %title.', $context);

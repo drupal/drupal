@@ -118,7 +118,11 @@ class LocaleContentTest extends WebTestBase {
       'langcode[0][value]' => 'en',
     );
     $this->drupalPostForm($path, $edit, t('Save'));
-    $this->assertRaw(t('%title has been updated.', array('%title' => $node_title)));
+    $this->assertText(t('@title has been updated.', array('@title' => $node_title)));
+
+    // Verify that the creation message contains a link to a node.
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'node/' . $node->id()));
+    $this->assert(isset($view_link), 'The message area contains the link to the edited node');
 
     $this->drupalLogout();
   }

@@ -61,7 +61,11 @@ abstract class AggregatorTestBase extends WebTestBase {
   public function createFeed($feed_url = NULL, array $edit = array()) {
     $edit = $this->getFeedEditArray($feed_url, $edit);
     $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
-    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title[0][value]'])), format_string('The feed @name has been added.', array('@name' => $edit['title[0][value]'])));
+    $this->assertText(t('The feed @name has been added.', array('@name' => $edit['title[0][value]'])), format_string('The feed @name has been added.', array('@name' => $edit['title[0][value]'])));
+
+    // Verify that the creation message contains a link to a feed.
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'aggregator/sources/'));
+    $this->assert(isset($view_link), 'The message area contains a link to a feed');
 
     $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title[0][value]'], ':url' => $edit['url[0][value]']))->fetchField();
     $this->assertTrue(!empty($fid), 'The feed found in database.');

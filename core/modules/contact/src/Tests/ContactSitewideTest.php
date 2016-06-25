@@ -127,11 +127,19 @@ class ContactSitewideTest extends WebTestBase {
     $this->addContactForm($id = Unicode::strtolower($this->randomMachineName($max_length_exceeded)), $label = $this->randomMachineName($max_length_exceeded), implode(',', array($recipients[0])), '', TRUE);
     $this->assertText(format_string('Machine-readable name cannot be longer than @max characters but is currently @exceeded characters long.', array('@max' => $max_length, '@exceeded' => $max_length_exceeded)));
     $this->addContactForm($id = Unicode::strtolower($this->randomMachineName($max_length)), $label = $this->randomMachineName($max_length), implode(',', array($recipients[0])), '', TRUE);
-    $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
+    $this->assertText(t('Contact form @label has been added.', array('@label' => $label)));
+
+    // Verify that the creation message contains a link to a contact form.
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'contact/'));
+    $this->assert(isset($view_link), 'The message area contains a link to a contact form.');
 
     // Create first valid form.
     $this->addContactForm($id = Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0])), '', TRUE);
-    $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
+    $this->assertText(t('Contact form @label has been added.', array('@label' => $label)));
+
+    // Verify that the creation message contains a link to a contact form.
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'contact/'));
+    $this->assert(isset($view_link), 'The message area contains a link to a contact form.');
 
     // Check that the form was created in site default language.
     $langcode = $this->config('contact.form.' . $id)->get('langcode');
@@ -152,7 +160,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertEqual($config['recipients'], array($recipients[0], $recipients[1]));
     $this->assertEqual($config['reply'], $reply);
     $this->assertNotEqual($id, $this->config('contact.settings')->get('default_form'));
-    $this->assertRaw(t('Contact form %label has been updated.', array('%label' => $label)));
+    $this->assertText(t('Contact form @label has been updated.', array('@label' => $label)));
     // Ensure the label is displayed on the contact page for this form.
     $this->drupalGet('contact/' . $id);
     $this->assertText($label);
@@ -170,14 +178,14 @@ class ContactSitewideTest extends WebTestBase {
 
     // Add more forms.
     $this->addContactForm(Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
-    $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
+    $this->assertText(t('Contact form @label has been added.', array('@label' => $label)));
 
     $this->addContactForm($name = Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
-    $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
+    $this->assertText(t('Contact form @label has been added.', array('@label' => $label)));
 
     // Try adding a form that already exists.
     $this->addContactForm($name, $label, '', '', FALSE);
-    $this->assertNoRaw(t('Contact form %label has been added.', array('%label' => $label)));
+    $this->assertNoText(t('Contact form @label has been added.', array('@label' => $label)));
     $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
 
     $this->drupalLogout();

@@ -415,13 +415,17 @@ class ForumTest extends WebTestBase {
     $this->drupalPostForm('admin/structure/forum/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
     $type = ($type == 'container') ? 'forum container' : 'forum';
-    $this->assertRaw(
+    $this->assertText(
       t(
-        'Created new @type %term.',
-        array('%term' => $name, '@type' => t($type))
+        'Created new @type @term.',
+        array('@term' => $name, '@type' => t($type))
       ),
       format_string('@type was created', array('@type' => ucfirst($type)))
     );
+
+    // Verify that the creation message contains a link to a term.
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'term/'));
+    $this->assert(isset($view_link), 'The message area contains a link to a term');
 
     // Verify forum.
     $term = db_query("SELECT * FROM {taxonomy_term_field_data} t WHERE t.vid = :vid AND t.name = :name AND t.description__value = :desc AND t.default_langcode = 1", array(':vid' => $this->config('forum.settings')->get('vocabulary'), ':name' => $name, ':desc' => $description))->fetchAssoc();
@@ -540,13 +544,17 @@ class ForumTest extends WebTestBase {
 
     $type = t('Forum topic');
     if ($container) {
-      $this->assertNoRaw(t('@type %title has been created.', array('@type' => $type, '%title' => $title)), 'Forum topic was not created');
+      $this->assertNoText(t('@type @title has been created.', array('@type' => $type, '@title' => $title)), 'Forum topic was not created');
       $this->assertRaw(t('The item %title is a forum container, not a forum.', array('%title' => $forum['name'])), 'Error message was shown');
       return;
     }
     else {
-      $this->assertRaw(t('@type %title has been created.', array('@type' => $type, '%title' => $title)), 'Forum topic was created');
+      $this->assertText(t('@type @title has been created.', array('@type' => $type, '@title' => $title)), 'Forum topic was created');
       $this->assertNoRaw(t('The item %title is a forum container, not a forum.', array('%title' => $forum['name'])), 'No error message was shown');
+
+      // Verify that the creation message contains a link to a term.
+      $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'term/'));
+      $this->assert(isset($view_link), 'The message area contains a link to a term');
     }
 
     // Retrieve node object, ensure that the topic was created and in the proper forum.
@@ -622,7 +630,7 @@ class ForumTest extends WebTestBase {
       $edit['taxonomy_forums'] = $this->rootForum['tid'];
       $edit['shadow'] = TRUE;
       $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-      $this->assertRaw(t('Forum topic %title has been updated.', array('%title' => $edit['title[0][value]'])), 'Forum node was edited');
+      $this->assertText(t('Forum topic @title has been updated.', array('@title' => $edit['title[0][value]'])), 'Forum node was edited');
 
       // Verify topic was moved to a different forum.
       $forum_tid = db_query("SELECT tid FROM {forum} WHERE nid = :nid AND vid = :vid", array(

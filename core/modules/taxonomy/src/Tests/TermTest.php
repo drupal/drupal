@@ -255,7 +255,12 @@ class TermTest extends TaxonomyTestBase {
 
     // Save, creating the terms.
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
-    $this->assertRaw(t('@type %title has been created.', array('@type' => t('Article'), '%title' => $edit['title[0][value]'])), 'The node was created successfully.');
+    $this->assertText(t('@type @title has been created.', array('@type' => t('Article'), '@title' => $edit['title[0][value]'])), 'The node was created successfully.');
+
+    // Verify that the creation message contains a link to a node.
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'node/'));
+    $this->assert(isset($view_link), 'The message area contains a link to a node');
+
     foreach ($terms as $term) {
       $this->assertText($term, 'The term was saved and appears on the node page.');
     }

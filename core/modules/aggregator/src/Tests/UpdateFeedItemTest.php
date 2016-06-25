@@ -35,7 +35,11 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $this->assertResponse(200);
 
     $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
-    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title[0][value]'])), format_string('The feed @name has been added.', array('@name' => $edit['title[0][value]'])));
+    $this->assertText(t('The feed @name has been added.', array('@name' => $edit['title[0][value]'])), format_string('The feed @name has been added.', array('@name' => $edit['title[0][value]'])));
+
+    // Verify that the creation message contains a link to a feed.
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'aggregator/sources/'));
+    $this->assert(isset($view_link), 'The message area contains a link to a feed');
 
     $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url[0][value]']))->fetchField();
     $feed = Feed::load($fid);

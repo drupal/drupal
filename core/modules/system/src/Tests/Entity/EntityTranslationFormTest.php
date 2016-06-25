@@ -86,7 +86,11 @@ class EntityTranslationFormTest extends WebTestBase {
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $edit['langcode[0][value]'] = $langcode;
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit['title[0][value]'])), 'Basic page created.');
+    $this->assertText(t('Basic page @title has been created.', array('@title' => $edit['title[0][value]'])), 'Basic page created.');
+
+    // Verify that the creation message contains a link to a node.
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'node/'));
+    $this->assert(isset($view_link), 'The message area contains a link to a node');
 
     // Check to make sure the node was created.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);

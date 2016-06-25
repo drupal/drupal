@@ -130,12 +130,13 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
     $contact_settings = $this->config('contact.settings');
 
     $edit_link = $this->entity->link($this->t('Edit'));
+    $view_link = $contact_form->link($contact_form->label(), 'canonical');
     if ($status == SAVED_UPDATED) {
-      drupal_set_message($this->t('Contact form %label has been updated.', array('%label' => $contact_form->label())));
+      drupal_set_message($this->t('Contact form %label has been updated.', array('%label' => $view_link)));
       $this->logger('contact')->notice('Contact form %label has been updated.', array('%label' => $contact_form->label(), 'link' => $edit_link));
     }
     else {
-      drupal_set_message($this->t('Contact form %label has been added.', array('%label' => $contact_form->label())));
+      drupal_set_message($this->t('Contact form %label has been added.', array('%label' => $view_link)));
       $this->logger('contact')->notice('Contact form %label has been added.', array('%label' => $contact_form->label(), 'link' => $edit_link));
     }
 
