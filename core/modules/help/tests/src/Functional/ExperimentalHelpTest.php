@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\help\Tests;
+namespace Drupal\Tests\help\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Verifies help for experimental modules.
  *
  * @group help
  */
-class ExperimentalHelpTest extends WebTestBase {
+class ExperimentalHelpTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

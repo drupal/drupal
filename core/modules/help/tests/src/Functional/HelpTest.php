@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\help\Tests;
+namespace Drupal\Tests\help\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Verify help display and user access to help based on permissions.
  *
  * @group help
  */
-class HelpTest extends WebTestBase {
+class HelpTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -39,8 +39,6 @@ class HelpTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-
-    $this->getModuleList();
 
     // Create users.
     $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer permissions'));
@@ -122,7 +120,7 @@ class HelpTest extends WebTestBase {
       $this->assertResponse($response);
       if ($response == 200) {
         $this->assertTitle($name . ' | Drupal', format_string('%module title was displayed', array('%module' => $module)));
-        $this->assertEqual($this->cssSelect('h1.page-title')[0], t($name), format_string('%module heading was displayed', array('%module' => $module)));
+        $this->assertEquals($name, $this->cssSelect('h1.page-title')[0]->getText(), "$module heading was displayed");
         $admin_tasks = system_get_module_admin_tasks($module, system_get_info('module', $module));
         if (!empty($admin_tasks)) {
           $this->assertText(t('@module administration pages', array('@module' => $name)));
