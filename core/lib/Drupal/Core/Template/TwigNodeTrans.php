@@ -169,6 +169,9 @@ class TwigNodeTrans extends \Twig_Node {
         }
       }
     }
+    elseif (!$body->hasAttribute('data')) {
+      throw new \Twig_Error_Syntax('{% trans %} tag cannot be empty');
+    }
     else {
       $text = $body->getAttribute('data');
     }
