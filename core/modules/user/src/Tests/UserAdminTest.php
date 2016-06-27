@@ -100,7 +100,7 @@ class UserAdminTest extends WebTestBase {
     $config
       ->set('notify.status_blocked', TRUE)
       ->save();
-    $this->drupalPostForm('admin/people', $edit, t('Apply'), array(
+    $this->drupalPostForm('admin/people', $edit, t('Apply to selected items'), array(
       // Sort the table by username so that we know reliably which user will be
       // targeted with the blocking action.
       'query' => array('order' => 'name', 'sort' => 'asc')
@@ -121,7 +121,7 @@ class UserAdminTest extends WebTestBase {
     $editunblock = array();
     $editunblock['action'] = 'user_unblock_user_action';
     $editunblock['user_bulk_form[4]'] = TRUE;
-    $this->drupalPostForm('admin/people', $editunblock, t('Apply'), array(
+    $this->drupalPostForm('admin/people', $editunblock, t('Apply to selected items'), array(
       // Sort the table by username so that we know reliably which user will be
       // targeted with the blocking action.
       'query' => array('order' => 'name', 'sort' => 'asc')

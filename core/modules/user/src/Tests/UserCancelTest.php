@@ -124,7 +124,7 @@ class UserCancelTest extends WebTestBase {
       'action' => 'user_cancel_user_action',
       'user_bulk_form[0]' => TRUE,
     );
-    $this->drupalPostForm('admin/people', $edit, t('Apply'));
+    $this->drupalPostForm('admin/people', $edit, t('Apply to selected items'));
 
     // Verify that uid 1's account was not cancelled.
     $user_storage->resetCache(array(1));
@@ -567,7 +567,7 @@ class UserCancelTest extends WebTestBase {
     for ($i = 0; $i <= 4; $i++) {
       $edit['user_bulk_form[' . $i . ']'] = TRUE;
     }
-    $this->drupalPostForm('admin/people', $edit, t('Apply'));
+    $this->drupalPostForm('admin/people', $edit, t('Apply to selected items'));
     $this->assertText(t('Are you sure you want to cancel these user accounts?'), 'Confirmation form to cancel accounts displayed.');
     $this->assertText(t('When cancelling these accounts'), 'Allows to select account cancellation method.');
     $this->assertText(t('Require email confirmation to cancel account'), 'Allows to send confirmation mail.');

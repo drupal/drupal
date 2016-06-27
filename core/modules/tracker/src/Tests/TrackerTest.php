@@ -412,7 +412,7 @@ class TrackerTest extends WebTestBase {
       'action' => 'node_unpublish_action',
       'node_bulk_form[0]' => $node->id(),
     );
-    $this->drupalPostForm('admin/content', $edit, t('Apply'));
+    $this->drupalPostForm('admin/content', $edit, t('Apply to selected items'));
 
     $this->drupalGet('activity');
     $this->assertText(t('No content available.'), 'A node is displayed on the tracker listing pages.');

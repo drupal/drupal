@@ -87,7 +87,7 @@ class BulkFormAccessTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpublish_action',
     );
-    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply'));
+    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
     $this->assertRaw(SafeMarkup::format('No access to execute %action on the @entity_type_label %entity_label.', [
       '%action' => 'Unpublish content',
       '@entity_type_label' => 'Content',
@@ -115,7 +115,7 @@ class BulkFormAccessTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpublish_action',
     );
-    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply'));
+    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
     // Re-load the node and check the status.
     $node = Node::load($node->id());
     $this->assertTrue($node->isPublished(), 'The node is still published.');
@@ -160,7 +160,7 @@ class BulkFormAccessTest extends NodeTestBase {
       'node_bulk_form[1]' => TRUE,
       'action' => 'node_delete_action',
     );
-    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply'));
+    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
     $this->drupalPostForm(NULL, array(), t('Delete'));
     // Ensure the private node still exists.
     $private_node = Node::load($private_node->id());
