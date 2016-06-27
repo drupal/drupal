@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
+use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
@@ -245,6 +246,20 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
       );
     }
     return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+    $style_id = $this->getSetting('responsive_image_style');
+    /** @var \Drupal\responsive_image\ResponsiveImageStyleInterface $style */
+    if ($style_id && $style = ResponsiveImageStyle::load($style_id)) {
+      // Add the responsive image style as dependency.
+      $dependencies[$style->getConfigDependencyKey()][] = $style->getConfigDependencyName();
+    }
+    return $dependencies;
   }
 
 }
