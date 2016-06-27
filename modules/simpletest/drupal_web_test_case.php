@@ -2765,7 +2765,7 @@ class DrupalWebTestCase extends DrupalTestCase {
         $path = substr($path, $length);
       }
       // Ensure that we have an absolute path.
-      if ($path[0] !== '/') {
+      if (empty($path) || $path[0] !== '/') {
         $path = '/' . $path;
       }
       // Finally, prepend the $base_url.
