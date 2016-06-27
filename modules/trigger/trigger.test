@@ -85,7 +85,7 @@ class TriggerContentTestCase extends TriggerWebTestCase {
       $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), 'Make sure the Basic page has actually been created');
       // Action should have been fired.
       $loaded_node = $this->drupalGetNodeByTitle($edit["title"]);
-      $this->assertTrue($loaded_node->$info['property'] == $info['expected'], format_string('Make sure the @action action fired.', array('@action' => $info['name'])));
+      $this->assertTrue($loaded_node->{$info['property']} == $info['expected'], format_string('Make sure the @action action fired.', array('@action' => $info['name'])));
       // Leave action assigned for next test
 
       // There should be an error when the action is assigned to the trigger
