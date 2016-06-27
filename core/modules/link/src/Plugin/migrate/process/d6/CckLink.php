@@ -37,6 +37,32 @@ class CckLink extends ProcessPluginBase implements ContainerFactoryPluginInterfa
   }
 
   /**
+   * Turn a Drupal 6 URI into a Drupal 8-compatible format.
+   *
+   * @param string $uri
+   *   The 'url' value from Drupal 6.
+   *
+   * @return string
+   *   The Drupal 8-compatible URI.
+   *
+   * @see \Drupal\link\Plugin\Field\FieldWidget\LinkWidget::getUserEnteredStringAsUri()
+   */
+  protected function canonicalizeUri($uri) {
+    // If we already have a scheme, we're fine.
+    if (empty($uri) || !is_null(parse_url($uri, PHP_URL_SCHEME))) {
+      return $uri;
+    }
+
+    // Remove the <front> component of the URL.
+    if (strpos($uri, '<front>') === 0) {
+      $uri = substr($uri, strlen('<front>'));
+    }
+
+    // Add the internal: scheme and ensure a leading slash.
+    return 'internal:/' . ltrim($uri, '/');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
@@ -51,7 +77,7 @@ class CckLink extends ProcessPluginBase implements ContainerFactoryPluginInterfa
     }
 
     // Massage the values into the correct form for the link.
-    $route['uri'] = $value['url'];
+    $route['uri'] = $this->canonicalizeUri($value['url']);
     $route['options']['attributes'] = $attributes;
     $route['title'] = $value['title'];
     return $route;
