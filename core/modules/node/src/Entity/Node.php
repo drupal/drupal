@@ -178,13 +178,8 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
-    if ($operation == 'create') {
-      return parent::access($operation, $account, $return_as_object);
-    }
-
-    return \Drupal::entityManager()
-      ->getAccessControlHandler($this->entityTypeId)
-      ->access($this, $operation, $account, $return_as_object);
+    // This override exists to set the operation to the default value "view".
+    return parent::access($operation, $account, $return_as_object);
   }
 
   /**
