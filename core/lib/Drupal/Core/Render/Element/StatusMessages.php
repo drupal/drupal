@@ -12,7 +12,7 @@ namespace Drupal\Core\Render\Element;
  * $build['status_messages'] = [
  *   '#type' => 'status_messages',
  * ];
- * @end
+ * @endcode
  *
  * @RenderElement("status_messages")
  */
