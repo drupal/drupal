@@ -127,6 +127,7 @@ class EntityUrlTest extends UnitTestCase {
     $test_cases['version-history'] = ['version-history', 'entity.test_entity.version_history'];
     $test_cases['edit-form'] = ['edit-form', 'entity.test_entity.edit_form'];
     $test_cases['delete-form'] = ['delete-form', 'entity.test_entity.delete_form'];
+    $test_cases['revision'] = ['revision', 'entity.test_entity.revision'];
 
     return $test_cases;
   }
