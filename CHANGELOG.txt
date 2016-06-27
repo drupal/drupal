@@ -17,6 +17,7 @@ Drupal 7.45, xxxx-xx-xx (development version)
 - Fixed a regression introduced in Drupal 7.43 that allowed files uploaded by
   anonymous users to be lost after form validation errors, and that also caused
   regressions with certain contributed modules.
+- Numerous API documentation improvements.
 
 Drupal 7.44, 2016-06-15
 -----------------------
