@@ -760,7 +760,8 @@ function drupal_access_denied() {
  *   - headers: An array containing request headers to send as name/value pairs.
  *   - method: A string containing the request method. Defaults to 'GET'.
  *   - data: A string containing the request body, formatted as
- *     'param=value&param=value&...'. Defaults to NULL.
+ *     'param=value&param=value&...'; to generate this, use http_build_query().
+ *     Defaults to NULL.
  *   - max_redirects: An integer representing how many times a redirect
  *     may be followed. Defaults to 3.
  *   - timeout: A float representing the maximum number of seconds the function
@@ -785,6 +786,8 @@ function drupal_access_denied() {
  *     HTTP header names are case-insensitive (RFC 2616, section 4.2), so for
  *     easy access the array keys are returned in lower case.
  *   - data: A string containing the response body that was received.
+ *
+ * @see http_build_query()
  */
 function drupal_http_request($url, array $options = array()) {
   // Allow an alternate HTTP client library to replace Drupal's default
