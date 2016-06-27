@@ -2680,7 +2680,7 @@ abstract class WebTestBase extends TestBase {
    *   Options to be passed to Url::fromUri().
    *
    * @return string
-   *   An absolute URL stsring.
+   *   An absolute URL string.
    */
   protected function buildUrl($path, array $options = array()) {
     if ($path instanceof Url) {
