@@ -6,12 +6,12 @@ services:
       - { name: backend_overridable }
   forum.breadcrumb.node:
     class: Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder
-    arguments: ['@entity.manager', '@config.factory', '@forum_manager']
+    arguments: ['@entity.manager', '@config.factory', '@forum_manager', '@string_translation']
     tags:
       - { name: breadcrumb_builder, priority: 1001 }
   forum.breadcrumb.listing:
     class: Drupal\forum\Breadcrumb\ForumListingBreadcrumbBuilder
-    arguments: ['@entity.manager', '@config.factory', '@forum_manager']
+    arguments: ['@entity.manager', '@config.factory', '@forum_manager', '@string_translation']
     tags:
       - { name: breadcrumb_builder, priority: 1001 }
   forum.index_storage:

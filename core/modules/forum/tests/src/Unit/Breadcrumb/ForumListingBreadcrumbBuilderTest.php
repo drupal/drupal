@@ -46,6 +46,7 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $config_factory = $this->getConfigFactoryStub(array());
     $forum_manager = $this->getMock('Drupal\forum\ForumManagerInterface');
+    $translation_manager = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
 
     // Make an object to test.
     $builder = $this->getMockBuilder('Drupal\forum\Breadcrumb\ForumListingBreadcrumbBuilder')
@@ -53,6 +54,7 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
         $entity_manager,
         $config_factory,
         $forum_manager,
+        $translation_manager,
       ))
       ->setMethods(NULL)
       ->getMock();
@@ -116,6 +118,10 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
    */
   public function testBuild() {
     // Build all our dependencies, backwards.
+    $translation_manager = $this->getMockBuilder('Drupal\Core\StringTranslation\TranslationInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+
     $prophecy = $this->prophesize('Drupal\taxonomy\Entity\Term');
     $prophecy->label()->willReturn('Something');
     $prophecy->id()->willReturn(1);
@@ -177,6 +183,7 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
         $entity_manager,
         $config_factory,
         $forum_manager,
+        $translation_manager,
       )
     );
 

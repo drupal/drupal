@@ -42,6 +42,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
       )
     );
     $forum_manager = $this->getMock('Drupal\forum\ForumManagerInterface');
+    $translation_manager = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
 
     // Make an object to test.
     $builder = $this->getMockForAbstractClass(
@@ -51,6 +52,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
         $entity_manager,
         $config_factory,
         $forum_manager,
+        $translation_manager,
       )
     );
 
@@ -58,6 +60,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
     $property_names = array(
       'entityManager' => $entity_manager,
       'forumManager' => $forum_manager,
+      'stringTranslation' => $translation_manager,
     );
     foreach ($property_names as $property_name => $property_value) {
       $this->assertAttributeEquals(
@@ -82,6 +85,10 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
    */
   public function testBuild() {
     // Build all our dependencies, backwards.
+    $translation_manager = $this->getMockBuilder('Drupal\Core\StringTranslation\TranslationInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+
     $forum_manager = $this->getMockBuilder('Drupal\forum\ForumManagerInterface')
       ->disableOriginalConstructor()
       ->getMock();
@@ -125,6 +132,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
         $entity_manager,
         $config_factory,
         $forum_manager,
+        $translation_manager,
       )
     );
 
