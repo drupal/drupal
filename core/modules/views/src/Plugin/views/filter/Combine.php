@@ -138,6 +138,38 @@ class Combine extends StringFilter {
     $this->query->addWhereExpression($this->options['group'], "$expression LIKE $placeholder", array($placeholder => '%' . db_like($this->value) . '%'));
   }
 
+  /**
+   * Filters by one or more words.
+   *
+   * By default opContainsWord uses add_where, that doesn't support complex
+   * expressions.
+   *
+   * @param string $expression
+   */
+  protected function opContainsWord($expression) {
+    $placeholder = $this->placeholder();
+
+    // Don't filter on empty strings.
+    if (empty($this->value)) {
+      return;
+    }
+
+    // Match all words separated by spaces or sentences when encapsulated by
+    // double quotes.
+    preg_match_all('/ (-?)("[^"]+"|[^" ]+)/i', ' ' . $this->value, $matches, PREG_SET_ORDER);
+
+    // Switch between the 'word' and 'allwords' operator.
+    $type = $this->operator == 'word' ? 'OR' : 'AND';
+    $group = $this->query->setWhereGroup($type);
+
+    foreach ($matches as $match_key => $match) {
+      $temp_placeholder = $placeholder . '_' . $match_key;
+      // Clean up the user input and remove the sentence delimiters.
+      $word = trim($match[2], ',?!();:-"');
+      $this->query->addWhereExpression($group, "$expression LIKE $temp_placeholder", array($temp_placeholder => '%' . db_like($word) . '%'));
+    }
+  }
+
   protected function opStartsWith($expression) {
     $placeholder = $this->placeholder();
     $this->query->addWhereExpression($this->options['group'], "$expression LIKE $placeholder", array($placeholder => db_like($this->value) . '%'));

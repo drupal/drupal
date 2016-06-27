@@ -96,6 +96,101 @@ class FilterCombineTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Tests the Combine field filter with the 'word' operator.
+   */
+  public function testFilterCombineWord() {
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+
+    $fields = $view->displayHandlers->get('default')->getOption('fields');
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + array(
+        'job' => array(
+          'id' => 'job',
+          'table' => 'views_test_data',
+          'field' => 'job',
+          'relationship' => 'none',
+        ),
+      ));
+
+    // Change the filtering.
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
+      'age' => array(
+        'id' => 'combine',
+        'table' => 'views',
+        'field' => 'combine',
+        'relationship' => 'none',
+        'operator' => 'word',
+        'fields' => array(
+          'name',
+          'job',
+        ),
+        'value' => 'singer ringo',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'John',
+        'job' => 'Singer',
+      ),
+      array(
+        'name' => 'George',
+        'job' => 'Singer',
+      ),
+      array(
+        'name' => 'Ringo',
+        'job' => 'Drummer',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
+  }
+
+  /**
+   * Tests the Combine field filter with the 'allwords' operator.
+   */
+  public function testFilterCombineAllWords() {
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+
+    $fields = $view->displayHandlers->get('default')->getOption('fields');
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + array(
+        'job' => array(
+          'id' => 'job',
+          'table' => 'views_test_data',
+          'field' => 'job',
+          'relationship' => 'none',
+        ),
+      ));
+
+    // Set the filtering to allwords and simulate searching for a phrase.
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
+      'age' => array(
+        'id' => 'combine',
+        'table' => 'views',
+        'field' => 'combine',
+        'relationship' => 'none',
+        'operator' => 'allwords',
+        'fields' => array(
+          'name',
+          'job',
+          'age',
+        ),
+        'value' => '25 "john   singer"',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'John',
+        'job' => 'Singer',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
+  }
+
+  /**
    * Tests if the filter can handle removed fields.
    *
    * Tests the combined filter handler when a field overwrite is done
