@@ -39,13 +39,17 @@ class Select extends Query implements SelectInterface {
    *   'type' => $join_type (one of INNER, LEFT OUTER, RIGHT OUTER),
    *   'table' => $table,
    *   'alias' => $alias_of_the_table,
-   *   'condition' => $condition_clause_on_which_to_join,
+   *   'condition' => $join_condition (string or Condition object),
    *   'arguments' => $array_of_arguments_for_placeholders_in_the condition.
    *   'all_fields' => TRUE to SELECT $alias.*, FALSE or NULL otherwise.
    * )
    *
    * If $table is a string, it is taken as the name of a table. If it is
    * a Select query object, it is taken as a subquery.
+   *
+   * If $join_condition is a Condition object, any arguments should be
+   * incorporated into the object; a separate array of arguments does not
+   * need to be provided.
    *
    * @var array
    */
@@ -196,6 +200,10 @@ class Select extends Query implements SelectInterface {
       if ($table['table'] instanceof SelectInterface) {
         $args += $table['table']->arguments();
       }
+      // If the join condition is an object, grab its arguments recursively.
+      if (!empty($table['condition']) && $table['condition'] instanceof ConditionInterface) {
+        $args += $table['condition']->arguments();
+      }
     }
 
     foreach ($this->expressions as $expression) {
@@ -225,6 +233,10 @@ class Select extends Query implements SelectInterface {
       if ($table['table'] instanceof SelectInterface) {
         $table['table']->compile($connection, $queryPlaceholder);
       }
+      // Make sure join conditions are also compiled.
+      if (!empty($table['condition']) && $table['condition'] instanceof ConditionInterface) {
+        $table['condition']->compile($connection, $queryPlaceholder);
+      }
     }
 
     // If there are any dependent queries to UNION, compile it recursively.
@@ -245,6 +257,11 @@ class Select extends Query implements SelectInterface {
       // If this table is a subquery, check its status recursively.
       if ($table['table'] instanceof SelectInterface) {
         if (!$table['table']->compiled()) {
+          return FALSE;
+        }
+      }
+      if (!empty($table['condition']) && $table['condition'] instanceof ConditionInterface) {
+        if (!$table['condition']->compiled()) {
           return FALSE;
         }
       }
@@ -822,7 +839,7 @@ class Select extends Query implements SelectInterface {
       $query .= $table_string . ' ' . $this->connection->escapeTable($table['alias']);
 
       if (!empty($table['condition'])) {
-        $query .= ' ON ' . $table['condition'];
+        $query .= ' ON ' . (string) $table['condition'];
       }
     }
 
