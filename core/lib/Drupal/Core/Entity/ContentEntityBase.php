@@ -1012,12 +1012,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       // adapter object.
       $this->typedData = NULL;
       $definitions = $this->getFieldDefinitions();
-
-      // Ensure the fields array is actually cloned by overwriting the original
-      // reference with one pointing to a copy of the array.
-      $fields = $this->fields;
-      $this->fields = &$fields;
-
       foreach ($this->fields as $name => $values) {
         $this->fields[$name] = array();
         // Untranslatable fields may have multiple references for the same field
