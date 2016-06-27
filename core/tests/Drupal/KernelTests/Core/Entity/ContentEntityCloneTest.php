@@ -62,49 +62,4 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     }
   }
 
-  /**
-   * Tests if the entity fields are properly cloned.
-   */
-  public function testClonedEntityFields() {
-    $user = $this->createUser();
-
-    // Create a test entity.
-    $entity = EntityTestMul::create([
-      'name' => $this->randomString(),
-      'user_id' => $user->id(),
-      'language' => 'en',
-    ]);
-
-    $entity->addTranslation('de');
-    $entity->save();
-    $fields = array_keys($entity->getFieldDefinitions());
-
-    // Reload the entity, clone it and check that both entity objects reference
-    // different field instances.
-    $entity = $this->reloadEntity($entity);
-    $clone = clone $entity;
-
-    $different_references = TRUE;
-    foreach ($fields as $field_name) {
-      if ($entity->get($field_name) === $clone->get($field_name)) {
-        $different_references = FALSE;
-      }
-    }
-    $this->assertTrue($different_references, 'The entity object and the cloned entity object reference different field item list objects.');
-
-    // Reload the entity, initialize one translation, clone it and check that
-    // both entity objects reference different field instances.
-    $entity = $this->reloadEntity($entity);
-    $entity->getTranslation('de');
-    $clone = clone $entity;
-
-    $different_references = TRUE;
-    foreach ($fields as $field_name) {
-      if ($entity->get($field_name) === $clone->get($field_name)) {
-        $different_references = FALSE;
-      }
-    }
-    $this->assertTrue($different_references, 'The entity object and the cloned entity object reference different field item list objects if the entity is cloned after an entity translation has been initialized.');
-  }
-
 }
