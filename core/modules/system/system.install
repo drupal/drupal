@@ -1663,3 +1663,19 @@ function system_update_8014() {
 /**
  * @} End of "addtogroup updates-8.0.0-rc".
  */
+
+/**
+ * @addtogroup updates-8.2.0
+ * @{
+ */
+
+/**
+ * The simple presence of this update function clears cached entity definitions.
+ */
+function system_update_8200() {
+  // Many core entity-types now have a UUID link template and route.
+}
+
+/**
+ * @} End of "addtogroup updates-8.2.0".
+ */

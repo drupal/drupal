@@ -33,6 +33,7 @@ use Drupal\entity_test\FieldStorageDefinition;
  *   },
  *   links = {
  *     "canonical" = "/entity_test_base_field_display/{entity_test_base_field_display}/edit",
+ *     "uuid" = "/entity_test_base_field_display/{entity_test_base_field_display}/edit",
  *     "add-form" = "/entity_test_base_field_display/add",
  *     "edit-form" = "/entity_test_base_field_display/manage/{entity_test_base_field_display}",
  *     "delete-form" = "/entity_test/delete/entity_test_base_field_display/{entity_test_base_field_display}/edit",

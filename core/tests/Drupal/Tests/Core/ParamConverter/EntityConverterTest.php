@@ -89,6 +89,12 @@ class EntityConverterTest extends UnitTestCase {
         ['valid_id', (object) ['id' => 'valid_id']],
         ['invalid_id', NULL],
       ]);
+    $entity_storage->expects($this->any())
+      ->method('loadByProperties')
+      ->willReturnMap([
+        [['uuid' => 'invalid_id'], NULL],
+        [['uuid' => $value], [(object) ['uuid' => $value, 'id' => 'valid_id']]],
+      ]);
 
     $this->assertEquals($expected_result, $this->entityConverter->convert($value, $definition, 'foo', $defaults));
   }
@@ -104,6 +110,8 @@ class EntityConverterTest extends UnitTestCase {
     $data[] = ['invalid_id', ['type' => 'entity:entity_test'], ['foo' => 'invalid_id'], NULL];
     // Entity type placeholder.
     $data[] = ['valid_id', ['type' => 'entity:{entity_type}'], ['foo' => 'valid_id', 'entity_type' => 'entity_test'], (object) ['id' => 'valid_id']];
+    // UUID.
+    $data[] = ['1c5217f4-553c-40d8-8389-a3cc3529d79c', ['type' => 'entity:entity_test'], ['foo' => '1c5217f4-553c-40d8-8389-a3cc3529d79c'], (object) ['uuid' => '1c5217f4-553c-40d8-8389-a3cc3529d79c', 'id' => 'valid_id']];
 
     return $data;
   }

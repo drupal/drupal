@@ -201,8 +201,13 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
     // Give priority to the default menu
     $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', array('main'));
     if (in_array($menu_name, $type_menus)) {
-      $query = \Drupal::entityQuery('menu_link_content')
-        ->condition('link.uri', 'node/' . $node->id())
+      $query = \Drupal::entityQuery('menu_link_content');
+      $group = $query->orConditionGroup()
+        ->condition('link.uri', 'entity:node/' . $node->id())
+        ->condition('link.uri', 'entity:node/' . $node->uuid())
+        ->condition('link.uri', 'internal:/node/' . $node->id())
+        ->condition('link.uri', 'internal:/node/' . $node->uuid());
+      $query->condition($group)
         ->condition('menu_name', $menu_name)
         ->sort('id', 'ASC')
         ->range(0, 1);
@@ -212,8 +217,13 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
     }
     // Check all allowed menus if a link does not exist in the default menu.
     if (!$id && !empty($type_menus)) {
-      $query = \Drupal::entityQuery('menu_link_content')
+      $query = \Drupal::entityQuery('menu_link_content');
+      $group = $query->orConditionGroup()
         ->condition('link.uri', 'entity:node/' . $node->id())
+        ->condition('link.uri', 'entity:node/' . $node->uuid())
+        ->condition('link.uri', 'internal:/node/' . $node->id())
+        ->condition('link.uri', 'internal:/node/' . $node->uuid());
+      $query->condition($group)
         ->condition('menu_name', array_values($type_menus), 'IN')
         ->sort('id', 'ASC')
         ->range(0, 1);

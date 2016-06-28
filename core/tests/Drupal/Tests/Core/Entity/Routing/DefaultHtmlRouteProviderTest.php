@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity\Routing;
 
+use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -253,6 +254,59 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getUuidRoute
+   * @dataProvider providerTestGetUuidRoute
+   */
+  public function testGetUuidRoute(EntityTypeInterface $entity_type, Route $expected = NULL) {
+    $route = $this->routeProvider->getUuidRoute($entity_type);
+    $this->assertEquals($expected, $route);
+  }
+
+  public function providerTestGetUuidRoute() {
+    $data = [];
+
+    $entity_type1 = $this->getEntityType();
+    $entity_type1->getKey('uuid')->willReturn(FALSE);
+    $data['no_canonical_link_template'] = [$entity_type1->reveal()];
+
+    $entity_type2 = $this->getEntityType();;
+    $entity_type2->getKey('uuid')->willReturn(TRUE);
+    $entity_type2->hasViewBuilderClass()->willReturn(FALSE);
+    $data['no_view_builder'] = [$entity_type2->reveal()];
+
+    $entity_type3 = $this->getEntityType($entity_type2);;
+    $entity_type3->hasViewBuilderClass()->willReturn(TRUE);
+    $entity_type3->hasLinkTemplate('uuid')->willReturn(FALSE);
+    $data['no_uuid_link_template'] = [$entity_type2->reveal()];
+
+    $entity_type4 = $this->getEntityType($entity_type2);
+    $entity_type4->hasViewBuilderClass()->willReturn(TRUE);
+    $entity_type4->id()->willReturn('the_entity_type_id');
+    $entity_type4->getKey('uuid')->willReturn(TRUE);
+    $entity_type4->hasLinkTemplate('uuid')->willReturn(TRUE);
+    $entity_type4->getLinkTemplate('uuid')->willReturn('/the_entity_type_id/{the_entity_type_id}');
+    $entity_type4->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE);
+    $route = (new Route('/the_entity_type_id/{the_entity_type_id}'))
+      ->setDefaults([
+        '_entity_view' => 'the_entity_type_id.full',
+        '_title_callback' => '\Drupal\Core\Entity\Controller\EntityController::title',
+      ])
+      ->setRequirements([
+        '_entity_access' => 'the_entity_type_id.view',
+        'the_entity_type_id' => '^' . Uuid::VALID_PATTERN . '$',
+      ])
+      ->setOptions([
+        'parameters' => [
+          'the_entity_type_id' => [
+            'type' => 'entity:the_entity_type_id',
+          ],
+        ],
+      ]);
+    $data['has_uuid_route'] = [$entity_type4->reveal(), $route];
+    return $data;
+  }
+
+  /**
    * @covers ::getEntityTypeIdKeyType
    */
   public function testGetEntityTypeIdKeyType() {
@@ -312,6 +366,9 @@ class TestDefaultHtmlRouteProvider extends DefaultHtmlRouteProvider {
   }
   public function getCanonicalRoute(EntityTypeInterface $entity_type) {
     return parent::getCanonicalRoute($entity_type);
+  }
+  public function getUuidRoute(EntityTypeInterface $entity_type) {
+    return parent::getUuidRoute($entity_type);
   }
 
 }

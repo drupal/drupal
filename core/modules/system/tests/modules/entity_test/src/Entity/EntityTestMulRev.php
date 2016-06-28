@@ -38,6 +38,7 @@ namespace Drupal\entity_test\Entity;
  *   links = {
  *     "add-form" = "/entity_test_mulrev/add",
  *     "canonical" = "/entity_test_mulrev/manage/{entity_test_mulrev}",
+ *     "uuid" = "/entity_test_mulrev/manage/{entity_test_mulrev}",
  *     "delete-form" = "/entity_test/delete/entity_test_mulrev/{entity_test_mulrev}",
  *     "edit-form" = "/entity_test_mulrev/manage/{entity_test_mulrev}/edit",
  *     "revision" = "/entity_test_mulrev/{entity_test_mulrev}/revision/{entity_test_mulrev_revision}/view",

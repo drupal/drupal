@@ -31,6 +31,7 @@ use Drupal\aggregator\FeedInterface;
  *   },
  *   links = {
  *     "canonical" = "/aggregator/sources/{aggregator_feed}",
+ *     "uuid" = "/aggregator/sources/{aggregator_feed}",
  *     "edit-form" = "/aggregator/sources/{aggregator_feed}/configure",
  *     "delete-form" = "/aggregator/sources/{aggregator_feed}/delete",
  *   },

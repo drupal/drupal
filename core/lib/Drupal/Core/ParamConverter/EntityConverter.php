@@ -2,13 +2,14 @@
 
 namespace Drupal\Core\ParamConverter;
 
+use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Parameter converter for upcasting entity IDs to full objects.
+ * Parameter converter for upcasting entity IDs or UUIDs to full objects.
  *
  * This is useful in cases where the dynamic elements of the path can't be
  * auto-determined; for example, if your path refers to multiple of the same
@@ -57,11 +58,19 @@ class EntityConverter implements ParamConverterInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * The value here can be either a serial entity ID, or the entity UUID.
    */
   public function convert($value, $definition, $name, array $defaults) {
     $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
     if ($storage = $this->entityManager->getStorage($entity_type_id)) {
       $entity = $storage->load($value);
+      // If there is no entity loadable by ID, try to load by UUID.
+      if (!$entity && Uuid::isValid($value)) {
+        if ($entities = $storage->loadByProperties(['uuid' => $value])) {
+          $entity = reset($entities);
+        }
+      }
       // If the entity type is translatable, ensure we return the proper
       // translation object for the current context.
       if ($entity instanceof EntityInterface && $entity instanceof TranslatableInterface) {

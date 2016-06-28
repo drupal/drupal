@@ -37,6 +37,7 @@ use Drupal\Core\Entity\RevisionableContentEntityBase;
  *   },
  *   links = {
  *     "canonical" = "/entity_test_revlog/manage/{entity_test_revlog}",
+ *     "uuid" = "/entity_test_revlog/manage/{entity_test_revlog}",
  *     "delete-form" = "/entity_test/delete/entity_test_revlog/{entity_test_revlog}",
  *     "edit-form" = "/entity_test_revlog/manage/{entity_test_revlog}/edit",
  *     "revision" = "/entity_test_revlog/{entity_test_revlog}/revision/{entity_test_revlog_revision}/view",

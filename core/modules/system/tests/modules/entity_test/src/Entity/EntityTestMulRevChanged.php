@@ -40,6 +40,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   links = {
  *     "add-form" = "/entity_test_mulrev_changed/add",
  *     "canonical" = "/entity_test_mulrev_changed/manage/{entity_test_mulrev_changed}",
+ *     "uuid" = "/entity_test_mulrev_changed/manage/{entity_test_mulrev_changed}",
  *     "delete-form" = "/entity_test/delete/entity_test_mulrev_changed/{entity_test_mulrev_changed}",
  *     "edit-form" = "/entity_test_mulrev_changed/manage/{entity_test_mulrev_changed}/edit",
  *     "revision" = "/entity_test_mulrev_changed/{entity_test_mulrev_changed}/revision/{entity_test_mulrev_changed_revision}/view",

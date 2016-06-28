@@ -132,10 +132,14 @@ class DefaultMenuLinkTreeManipulators {
     $node_links = array();
     $this->collectNodeLinks($tree, $node_links);
     if ($node_links) {
-      $nids = array_keys($node_links);
+      // These could be serial node IDs or UUIDs.
+      $node_identifiers = array_keys($node_links);
 
       $query = $this->queryFactory->get('node');
-      $query->condition('nid', $nids, 'IN');
+      $group = $query->orConditionGroup()
+        ->condition('nid', $node_identifiers, 'IN')
+        ->condition('uuid', $node_identifiers, 'IN');
+      $query->condition($group);
 
       // Allows admins to view all nodes, by both disabling node_access
       // query rewrite as well as not checking for the node status. The
@@ -150,10 +154,13 @@ class DefaultMenuLinkTreeManipulators {
         $query->condition('status', NODE_PUBLISHED);
       }
 
-      $nids = $query->execute();
+      // Cast to an array so we can loop, even if there are no results.
+      $nids = (array) $query->execute();
       foreach ($nids as $nid) {
-        foreach ($node_links[$nid] as $key => $link) {
-          $node_links[$nid][$key]->access = $access_result;
+        if (isset($node_links[$nid])) {
+          foreach ($node_links[$nid] as $key => $link) {
+            $node_links[$nid][$key]->access = $access_result;
+          }
         }
       }
     }
@@ -174,7 +181,7 @@ class DefaultMenuLinkTreeManipulators {
    */
   protected function collectNodeLinks(array &$tree, array &$node_links) {
     foreach ($tree as $key => &$element) {
-      if ($element->link->getRouteName() == 'entity.node.canonical') {
+      if (in_array($element->link->getRouteName(), ['entity.node.canonical', 'entity.node.uuid'], TRUE)) {
         $nid = $element->link->getRouteParameters()['node'];
         $node_links[$nid][$key] = $element;
         // Deny access by default. checkNodeAccess() will re-add it.

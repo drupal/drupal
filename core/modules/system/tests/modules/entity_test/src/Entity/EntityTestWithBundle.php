@@ -37,6 +37,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   bundle_entity_type = "entity_test_bundle",
  *   links = {
  *     "canonical" = "/entity_test_with_bundle/{entity_test_with_bundle}",
+ *     "uuid" = "/entity_test_with_bundle/{entity_test_with_bundle}",
  *     "add-page" = "/entity_test_with_bundle/add",
  *     "add-form" = "/entity_test_with_bundle/add/{entity_test_bundle}",
  *     "edit-form" = "/entity_test_with_bundle/{entity_test_with_bundle}/edit",

@@ -48,6 +48,7 @@ use Drupal\user\UserInterface;
  *   },
  *   links = {
  *     "canonical" = "/user/{user}",
+ *     "uuid" = "/user/{user}",
  *     "edit-form" = "/user/{user}/edit",
  *     "cancel-form" = "/user/{user}/cancel",
  *     "collection" = "/admin/people",

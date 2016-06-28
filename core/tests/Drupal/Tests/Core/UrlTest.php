@@ -582,6 +582,14 @@ class UrlTest extends UnitTestCase {
         ['page' => '1', 'foo' => 'yes', 'focus' => 'no'],
         'top',
       ],
+      [
+        'entity:test_entity/d44a0040-2844-4cca-b0b5-20c6c96c4d8c',
+        ['fragment' => ''],
+        'entity.test_entity.uuid',
+        ['test_entity' => 'd44a0040-2844-4cca-b0b5-20c6c96c4d8c'],
+        NULL,
+        NULL,
+      ],
 
     ];
   }
