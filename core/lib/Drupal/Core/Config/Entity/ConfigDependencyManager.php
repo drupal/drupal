@@ -173,7 +173,9 @@ class ConfigDependencyManager {
     // dependent is at the top. For example, this ensures that fields are
     // always after field storages. This is because field storages need to be
     // created before a field.
-    return array_reverse(array_intersect_key($this->graph, $dependencies));
+    $graph = $this->getGraph();
+    uasort($graph, array($this, 'sortGraph'));
+    return array_replace(array_intersect_key($graph, $dependencies), $dependencies);
   }
 
   /**
@@ -188,7 +190,8 @@ class ConfigDependencyManager {
     // Sort by reverse weight and alphabetically. The most dependent entities
     // are last and entities with the same weight are alphabetically ordered.
     uasort($graph, array($this, 'sortGraph'));
-    return array_keys($graph);
+    // Use array_intersect_key() to exclude modules and themes from the list.
+    return array_reverse(array_keys(array_intersect_key($graph, $this->data)));
   }
 
   /**
@@ -228,9 +231,11 @@ class ConfigDependencyManager {
     $graph = $this->getGraph();
 
     foreach ($entities_to_check as $entity) {
-      if (isset($graph[$entity]) && !empty($graph[$entity]['reverse_paths'])) {
-        foreach ($graph[$entity]['reverse_paths'] as $dependency => $value) {
-          $dependent_entities[$dependency] = $this->data[$dependency];
+      if (isset($graph[$entity]) && !empty($graph[$entity]['paths'])) {
+        foreach ($graph[$entity]['paths'] as $dependency => $value) {
+          if (isset($this->data[$dependency])) {
+            $dependent_entities[$dependency] = $this->data[$dependency];
+          }
         }
       }
     }
@@ -248,12 +253,13 @@ class ConfigDependencyManager {
       $graph = array();
       foreach ($this->data as $entity) {
         $graph_key = $entity->getConfigDependencyName();
-        $graph[$graph_key]['edges'] = array();
-        $dependencies = $entity->getDependencies('config');
-        if (!empty($dependencies)) {
-          foreach ($dependencies as $dependency) {
-            $graph[$graph_key]['edges'][$dependency] = TRUE;
-          }
+        if (!isset($graph[$graph_key])) {
+          $graph[$graph_key]['edges'] = [];
+        }
+        // Include all dependencies in the graph so that topographical sorting
+        // works.
+        foreach (array_merge($entity->getDependencies('config'), $entity->getDependencies('module'), $entity->getDependencies('theme')) as $dependency) {
+          $graph[$dependency]['edges'][$graph_key] = TRUE;
         }
       }
       $graph_object = new Graph($graph);

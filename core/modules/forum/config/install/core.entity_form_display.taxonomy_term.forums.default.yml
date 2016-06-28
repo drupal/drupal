@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.forums.forum_container
     - taxonomy.vocabulary.forums
   module:
     - text
