@@ -28,8 +28,12 @@ Provisional membership:
 - Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
 
 Drupal 7
+- Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
+  (Framework Manager)
 - David Rothstein 'David_Rothstein' https://www.drupal.org/u/david_rothstein
   (Release Manager, Framework Manager, Product Manager)
+- Stefan Ruijsenaars 'stefan.r' https://www.drupal.org/u/stefanr-0
+  (Release Manager, Product Manager)
 
 Provisional membership: None at this time.
 
