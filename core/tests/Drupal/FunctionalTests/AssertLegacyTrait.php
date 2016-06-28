@@ -124,7 +124,7 @@ trait AssertLegacyTrait {
   protected function assertFieldByName($name, $value = NULL) {
     $this->assertSession()->fieldExists($name);
     if ($value !== NULL) {
-      $this->assertSession()->fieldValueEquals($name, $value);
+      $this->assertSession()->fieldValueEquals($name, (string) $value);
     }
   }
 
@@ -148,6 +148,32 @@ trait AssertLegacyTrait {
   }
 
   /**
+   * Asserts that a field exists with the given name or ID.
+   *
+   * @param string $field
+   *   Name or ID of field to assert.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->fieldExists() instead.
+   */
+  protected function assertField($field) {
+    $this->assertSession()->fieldExists($field);
+  }
+
+  /**
+   * Asserts that a field exists with the given name or ID does NOT exist.
+   *
+   * @param string $field
+   *   Name or ID of field to assert.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->fieldNotExists() instead.
+   */
+  protected function assertNoField($field) {
+    $this->assertSession()->fieldNotExists($field);
+  }
+
+  /**
    * Passes if the raw text IS found on the loaded page, fail otherwise.
    *
    * Raw text refers to the raw HTML that the page generated.
@@ -163,12 +189,32 @@ trait AssertLegacyTrait {
   }
 
   /**
+   * Passes if the raw text IS not found on the loaded page, fail otherwise.
+   *
+   * Raw text refers to the raw HTML that the page generated.
+   *
+   * @param string $raw
+   *   Raw (HTML) string to look for.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->responseNotContains() instead.
+   */
+  protected function assertNoRaw($raw) {
+    $this->assertSession()->responseNotContains($raw);
+  }
+
+  /**
    * Pass if the page title is the given string.
    *
    * @param string $expected_title
    *   The string the page title should be.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->titleEquals() instead.
    */
   protected function assertTitle($expected_title) {
+    // Cast MarkupInterface to string.
+    $expected_title = (string) $expected_title;
     return $this->assertSession()->titleEquals($expected_title);
   }
 
@@ -181,9 +227,90 @@ trait AssertLegacyTrait {
    *   Text between the anchor tags.
    * @param int $index
    *   Link position counting from zero.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->linkExists() instead.
    */
   protected function assertLink($label, $index = 0) {
     return $this->assertSession()->linkExists($label, $index);
+  }
+
+  /**
+   * Passes if a link with the specified label is not found.
+   *
+   * @param string|\Drupal\Component\Render\MarkupInterface $label
+   *   Text between the anchor tags.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->linkNotExists() instead.
+   */
+  protected function assertNoLink($label) {
+    return $this->assertSession()->linkNotExists($label);
+  }
+
+  /**
+   * Passes if a link containing a given href (part) is found.
+   *
+   * @param string $href
+   *   The full or partial value of the 'href' attribute of the anchor tag.
+   * @param int $index
+   *   Link position counting from zero.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->linkByHref() instead.
+   */
+  protected function assertLinkByHref($href, $index = 0) {
+    $this->assertSession()->linkByHrefExists($href, $index);
+  }
+
+  /**
+   * Passes if a link containing a given href (part) is not found.
+   *
+   * @param string $href
+   *   The full or partial value of the 'href' attribute of the anchor tag.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->linkByHrefNotExists() instead.
+   */
+  protected function assertNoLinkByHref($href) {
+    $this->assertSession()->linkByHrefNotExists($href);
+  }
+
+  /**
+   * Asserts that a field does not exist with the given ID and value.
+   *
+   * @param string $id
+   *   ID of field to assert.
+   * @param string $value
+   *   (optional) Value for the field, to assert that the field's value on the
+   *   page doesn't match it. You may pass in NULL to skip checking the value,
+   *   while still checking that the field doesn't exist. However, the default
+   *   value ('') asserts that the field value is not an empty string.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->fieldNotExists() or
+   *   $this->assertSession()->fieldValueNotEquals() instead.
+   */
+  protected function assertNoFieldById($id, $value = '') {
+    if ($this->getSession()->getPage()->findField($id)) {
+      $this->assertSession()->fieldValueNotEquals($id, (string) $value);
+    }
+    else {
+      $this->assertSession()->fieldNotExists($id);
+    }
+  }
+
+  /**
+   * Passes if the internal browser's URL matches the given path.
+   *
+   * @param \Drupal\Core\Url|string $path
+   *   The expected system path or URL.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->addressEquals() instead.
+   */
+  protected function assertUrl($path) {
+    $this->assertSession()->addressEquals($path);
   }
 
   /**
@@ -217,20 +344,22 @@ trait AssertLegacyTrait {
   }
 
   /**
-   * Passes if the internal browser's URL matches the given path.
+   * Passes if the raw text IS found escaped on the loaded page, fail otherwise.
    *
-   * @param string $path
-   *   The expected system path.
+   * Raw text refers to the raw HTML that the page generated.
+   *
+   * @param string $raw
+   *   Raw (HTML) string to look for.
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
-   *   Use $this->assertSession()->addressEquals() instead.
+   *   Use $this->assertSession()->assertEscaped() instead.
    */
-  protected function assertUrl($path) {
-    $this->assertSession()->addressEquals($path);
+  protected function assertEscaped($raw) {
+    $this->assertSession()->assertEscaped($raw);
   }
 
   /**
-   * Passes if the raw text IS NOT found escaped on the loaded page.
+   * Passes if the raw text is not found escaped on the loaded page.
    *
    * Raw text refers to the raw HTML that the page generated.
    *
@@ -242,6 +371,57 @@ trait AssertLegacyTrait {
    */
   protected function assertNoEscaped($raw) {
     $this->assertSession()->assertNoEscaped($raw);
+  }
+
+  /**
+   * Asserts whether an expected cache tag was present in the last response.
+   *
+   * @param string $expected_cache_tag
+   *   The expected cache tag.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->responseHeaderContains() instead.
+   */
+  protected function assertCacheTag($expected_cache_tag) {
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $expected_cache_tag);
+  }
+
+  /**
+   * Returns WebAssert object.
+   *
+   * @param string $name
+   *   (optional) Name of the session. Defaults to the active session.
+   *
+   * @return \Drupal\Tests\WebAssert
+   *   A new web-assert option for asserting the presence of elements with.
+   */
+  abstract public function assertSession($name = NULL);
+
+  /**
+   * Builds an XPath query.
+   *
+   * Builds an XPath query by replacing placeholders in the query by the value
+   * of the arguments.
+   *
+   * XPath 1.0 (the version supported by libxml2, the underlying XML library
+   * used by PHP) doesn't support any form of quotation. This function
+   * simplifies the building of XPath expression.
+   *
+   * @param string $xpath
+   *   An XPath query, possibly with placeholders in the form ':name'.
+   * @param array $args
+   *   An array of arguments with keys in the form ':name' matching the
+   *   placeholders in the query. The values may be either strings or numeric
+   *   values.
+   *
+   * @return string
+   *   An XPath query with arguments replaced.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->buildXPathQuery() instead.
+   */
+  public function buildXPathQuery($xpath, array $args = array()) {
+    return $this->assertSession()->buildXPathQuery($xpath, $args);
   }
 
 }

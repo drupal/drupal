@@ -8,6 +8,7 @@ use Behat\Mink\Element\TraversableElement;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
 
 /**
  * Defines a class with methods for asserting presence of elements during tests.
@@ -38,6 +39,9 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   protected function cleanUrl($url) {
+    if ($url instanceof Url) {
+      $url = $url->setAbsolute()->toString();
+    }
     // Strip the base URL from the beginning for absolute URLs.
     if ($this->baseUrl !== '' && strpos($url, $this->baseUrl) === 0) {
       $url = substr($url, strlen($this->baseUrl));
@@ -73,6 +77,24 @@ class WebAssert extends MinkWebAssert {
     }
 
     return $node;
+  }
+
+  /**
+   * Checks that the specific button does NOT exist on the current page.
+   *
+   * @param string $button
+   *   One of id|name|label|value for the button.
+   * @param \Behat\Mink\Element\TraversableElement $container
+   *   (optional) The document to check against. Defaults to the current page.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   When the button exists.
+   */
+  public function buttonNotExists($button, TraversableElement $container = NULL) {
+    $container = $container ?: $this->session->getPage();
+    $node = $container->findButton($button);
+
+    $this->assert(NULL === $node, sprintf('A button "%s" appears on this page, but it should not.', $button));
   }
 
   /**
@@ -191,7 +213,7 @@ class WebAssert extends MinkWebAssert {
    *
    * An optional link index may be passed.
    *
-   * @param string|\Drupal\Component\Render\MarkupInterface $label
+   * @param string $label
    *   Text between the anchor tags.
    * @param int $index
    *   Link position counting from zero.
@@ -204,14 +226,126 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkExists($label, $index = 0, $message = '') {
-    // Cast MarkupInterface objects to string.
-    $label = (string) $label;
     $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named', ['link', $label]);
-    if (empty($links[$index])) {
-      throw new ExpectationException($message);
+    $this->assert(!empty($links[$index]), $message);
+  }
+
+  /**
+   * Passes if a link with the specified label is not found.
+   *
+   * An optional link index may be passed.
+   *
+   * @param string $label
+   *   Text between the anchor tags.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use strtr() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   Thrown when element doesn't exist, or the link label is a different one.
+   */
+  public function linkNotExists($label, $message = '') {
+    $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
+    $links = $this->session->getPage()->findAll('named', ['link', $label]);
+    $this->assert(empty($links), $message);
+  }
+
+  /**
+   * Passes if a link containing a given href (part) is found.
+   *
+   * @param string $href
+   *   The full or partial value of the 'href' attribute of the anchor tag.
+   * @param int $index
+   *   Link position counting from zero.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
+   *   variables in the message text, not t(). If left blank, a default message
+   *   will be displayed.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   Thrown when element doesn't exist, or the link label is a different one.
+   */
+  public function linkByHrefExists($href, $index = 0, $message = '') {
+    $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
+    $message = ($message ? $message : strtr('Link containing href %href found.', ['%href' => $href]));
+    $links = $this->session->getPage()->findAll('xpath', $xpath);
+    $this->assert(!empty($links[$index]), $message);
+  }
+
+  /**
+   * Passes if a link containing a given href (part) is not found.
+   *
+   * @param string $href
+   *   The full or partial value of the 'href' attribute of the anchor tag.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
+   *   variables in the message text, not t(). If left blank, a default message
+   *   will be displayed.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   Thrown when element doesn't exist, or the link label is a different one.
+   */
+  public function linkByHrefNotExists($href, $message = '') {
+    $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
+    $message = ($message ? $message : strtr('Link containing href %href found.', ['%href' => $href]));
+    $links = $this->session->getPage()->findAll('xpath', $xpath);
+    $this->assert(empty($links), $message);
+  }
+
+  /**
+   * Builds an XPath query.
+   *
+   * Builds an XPath query by replacing placeholders in the query by the value
+   * of the arguments.
+   *
+   * XPath 1.0 (the version supported by libxml2, the underlying XML library
+   * used by PHP) doesn't support any form of quotation. This function
+   * simplifies the building of XPath expression.
+   *
+   * @param string $xpath
+   *   An XPath query, possibly with placeholders in the form ':name'.
+   * @param array $args
+   *   An array of arguments with keys in the form ':name' matching the
+   *   placeholders in the query. The values may be either strings or numeric
+   *   values.
+   *
+   * @return string
+   *   An XPath query with arguments replaced.
+   */
+  public function buildXPathQuery($xpath, array $args = array()) {
+    // Replace placeholders.
+    foreach ($args as $placeholder => $value) {
+      if (is_object($value)) {
+        throw new \InvalidArgumentException('Just pass in scalar values.');
+      }
+      // XPath 1.0 doesn't support a way to escape single or double quotes in a
+      // string literal. We split double quotes out of the string, and encode
+      // them separately.
+      if (is_string($value)) {
+        // Explode the text at the quote characters.
+        $parts = explode('"', $value);
+
+        // Quote the parts.
+        foreach ($parts as &$part) {
+          $part = '"' . $part . '"';
+        }
+
+        // Return the string.
+        $value = count($parts) > 1 ? 'concat(' . implode(', \'"\', ', $parts) . ')' : $parts[0];
+      }
+
+      // Use preg_replace_callback() instead of preg_replace() to prevent the
+      // regular expression engine from trying to substitute backreferences.
+      $replacement = function ($matches) use ($value) {
+        return $value;
+      };
+      $xpath = preg_replace_callback('/' . preg_quote($placeholder) . '\b/', $replacement, $xpath);
     }
-    $this->assert($links[$index] !== NULL, $message);
+    return $xpath;
   }
 
   /**
@@ -223,7 +357,19 @@ class WebAssert extends MinkWebAssert {
    *   Raw (HTML) string to look for.
    */
   public function assertNoEscaped($raw) {
-    $this->pageTextNotContains(Html::escape($raw));
+    $this->responseNotContains(Html::escape($raw));
+  }
+
+  /**
+   * Passes if the raw text IS found escaped on the loaded page.
+   *
+   * Raw text refers to the raw HTML that the page generated.
+   *
+   * @param string $raw
+   *   Raw (HTML) string to look for.
+   */
+  public function assertEscaped($raw) {
+    $this->responseContains(Html::escape($raw));
   }
 
   /**
@@ -245,6 +391,35 @@ class WebAssert extends MinkWebAssert {
     }
 
     throw new ExpectationException($message, $this->session->getDriver());
+  }
+
+  /**
+   * Checks that a given form field element is disabled.
+   *
+   * @param string $field
+   *   One of id|name|label|value for the field.
+   * @param \Behat\Mink\Element\TraversableElement $container
+   *   (optional) The document to check against. Defaults to the current page.
+   *
+   * @return \Behat\Mink\Element\NodeElement
+   *   The matching element.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function fieldDisabled($field, TraversableElement $container = NULL)  {
+    $container = $container ?: $this->session->getPage();
+    $node = $container->findField($field);
+
+    if ($node === NULL) {
+      throw new ElementNotFoundException($this->session->getDriver(), 'field', 'id|name|label|value', $field);
+    }
+
+    if (!$node->hasAttribute('disabled')) {
+      throw new ExpectationException("Field $field is disabled", $this->session->getDriver());
+    }
+
+    return $node;
   }
 
 }
