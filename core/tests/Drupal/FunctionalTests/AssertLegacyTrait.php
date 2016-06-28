@@ -420,7 +420,7 @@ trait AssertLegacyTrait {
    * @deprecated Scheduled for removal in Drupal 9.0.0.
    *   Use $this->assertSession()->buildXPathQuery() instead.
    */
-  public function buildXPathQuery($xpath, array $args = array()) {
+  protected function buildXPathQuery($xpath, array $args = array()) {
     return $this->assertSession()->buildXPathQuery($xpath, $args);
   }
 
