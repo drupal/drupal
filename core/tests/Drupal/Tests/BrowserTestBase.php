@@ -43,11 +43,14 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   use AssertHelperTrait;
-  use BlockCreationTrait;
+  use BlockCreationTrait {
+    placeBlock as drupalPlaceBlock;
+  }
   use AssertLegacyTrait;
   use RandomGeneratorTrait;
   use SessionTestTrait;
   use NodeCreationTrait {
+    getNodeByTitle as drupalGetNodeByTitle;
     createNode as drupalCreateNode;
   }
   use ContentTypeCreationTrait {
@@ -575,6 +578,46 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Builds an a absolute URL from a system path or a URL object.
+   *
+   * @param string|\Drupal\Core\Url $path
+   *   A system path or a URL.
+   * @param array $options
+   *   Options to be passed to Url::fromUri().
+   *
+   * @return string
+   *   An absolute URL stsring.
+   */
+  protected function buildUrl($path, array $options = array()) {
+    if ($path instanceof Url) {
+      $url_options = $path->getOptions();
+      $options = $url_options + $options;
+      $path->setOptions($options);
+      return $path->setAbsolute()->toString();
+    }
+    // The URL generator service is not necessarily available yet; e.g., in
+    // interactive installer tests.
+    elseif ($this->container->has('url_generator')) {
+      $force_internal = isset($options['external']) && $options['external'] == FALSE;
+      if (!$force_internal && UrlHelper::isExternal($path)) {
+        return Url::fromUri($path, $options)->toString();
+      }
+      else {
+        $uri = $path === '<front>' ? 'base:/' : 'base:/' . $path;
+        // Path processing is needed for language prefixing.  Skip it when a
+        // path that may look like an external URL is being used as internal.
+        $options['path_processing'] = !$force_internal;
+        return Url::fromUri($uri, $options)
+          ->setAbsolute()
+          ->toString();
+      }
+    }
+    else {
+      return $this->getAbsoluteUrl($path);
+    }
+  }
+
+  /**
    * Retrieves a Drupal path or an absolute path.
    *
    * @param string|\Drupal\Core\Url $path
@@ -587,28 +630,8 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    */
   protected function drupalGet($path, array $options = array()) {
     $options['absolute'] = TRUE;
+    $url = $this->buildUrl($path, $options);
 
-    if ($path instanceof Url) {
-      $url_options = $path->getOptions();
-      $options = $url_options + $options;
-      $path->setOptions($options);
-      $url = $path->setAbsolute()->toString();
-    }
-    // The URL generator service is not necessarily available yet; e.g., in
-    // interactive installer tests.
-    elseif ($this->container->has('url_generator')) {
-      if (UrlHelper::isExternal($path)) {
-        $url = Url::fromUri($path, $options)->toString();
-      }
-      else {
-        // This is needed for language prefixing.
-        $options['path_processing'] = TRUE;
-        $url = Url::fromUri('base:/' . $path, $options)->toString();
-      }
-    }
-    else {
-      $url = $this->getAbsoluteUrl($path);
-    }
     $session = $this->getSession();
 
     $this->prepareRequest();
@@ -902,6 +925,16 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // Edit the form values.
     foreach ($edit as $name => $value) {
       $field = $assert_session->fieldExists($name, $form);
+
+      // Provide support for the values '1' and '0' for checkboxes instead of
+      // TRUE and FALSE.
+      // @todo Get rid of supporting 1/0 by converting all tests cases using
+      // this to boolean values.
+      $field_type = $field->getAttribute('type');
+      if ($field_type === 'checkbox') {
+        $value = (bool) $value;
+      }
+
       $field->setValue($value);
     }
 
@@ -1690,61 +1723,8 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   The list of elements matching the xpath expression.
    */
   protected function xpath($xpath, array $arguments = []) {
-    $xpath = $this->buildXPathQuery($xpath, $arguments);
+    $xpath = $this->assertSession()->buildXPathQuery($xpath, $arguments);
     return $this->getSession()->getPage()->findAll('xpath', $xpath);
-  }
-
-  /**
-   * Builds an XPath query.
-   *
-   * Builds an XPath query by replacing placeholders in the query by the value
-   * of the arguments.
-   *
-   * XPath 1.0 (the version supported by libxml2, the underlying XML library
-   * used by PHP) doesn't support any form of quotation. This function
-   * simplifies the building of XPath expression.
-   *
-   * @param string $xpath
-   *   An XPath query, possibly with placeholders in the form ':name'.
-   * @param array $args
-   *   An array of arguments with keys in the form ':name' matching the
-   *   placeholders in the query. The values may be either strings or numeric
-   *   values.
-   *
-   * @return string
-   *   An XPath query with arguments replaced.
-   */
-  protected function buildXPathQuery($xpath, array $args = array()) {
-    // Replace placeholders.
-    foreach ($args as $placeholder => $value) {
-      // Cast MarkupInterface objects to string.
-      if (is_object($value)) {
-        $value = (string) $value;
-      }
-      // XPath 1.0 doesn't support a way to escape single or double quotes in a
-      // string literal. We split double quotes out of the string, and encode
-      // them separately.
-      if (is_string($value)) {
-        // Explode the text at the quote characters.
-        $parts = explode('"', $value);
-
-        // Quote the parts.
-        foreach ($parts as &$part) {
-          $part = '"' . $part . '"';
-        }
-
-        // Return the string.
-        $value = count($parts) > 1 ? 'concat(' . implode(', \'"\', ', $parts) . ')' : $parts[0];
-      }
-
-      // Use preg_replace_callback() instead of preg_replace() to prevent the
-      // regular expression engine from trying to substitute backreferences.
-      $replacement = function ($matches) use ($value) {
-        return $value;
-      };
-      $xpath = preg_replace_callback('/' . preg_quote($placeholder) . '\b/', $replacement, $xpath);
-    }
-    return $xpath;
   }
 
   /**
