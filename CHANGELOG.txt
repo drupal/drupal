@@ -20,6 +20,7 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Fixed the locale safety check that is used to ensure that translations are
   safe to allow for tokens in the href/src attributes of translated strings.
 - Implemented various fixes for automated test failures on PHP 5.4+.
+- Improved performance of queries on authmap table.
 - Numerous API documentation improvements.
 
 Drupal 7.44, 2016-06-15
