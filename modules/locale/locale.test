@@ -3172,3 +3172,46 @@ class LocaleCSSAlterTest extends DrupalWebTestCase {
     $this->assertRaw('@import url("' . $base_url . '/modules/system/system.messages.css' . $query_string . '");' . "\n" . '@import url("' . $base_url . '/modules/system/system.messages-rtl.css' . $query_string . '");' . "\n", 'CSS: system.messages-rtl.css is added directly after system.messages.css.');
   }
 }
+
+/**
+ * Tests locale translation safe string handling.
+ */
+class LocaleStringIsSafeTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Test if a string is safe',
+      'description' => 'Tests locale translation safe string handling.',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale');
+  }
+
+  /**
+   * Tests for locale_string_is_safe().
+   */
+  public function testLocaleStringIsSafe() {
+    // Check a translatable string without HTML.
+    $string = 'Hello world!';
+    $result = locale_string_is_safe($string);
+    $this->assertTrue($result);
+
+    // Check a translatable string which includes trustable HTML.
+    $string = 'Hello <strong>world</strong>!';
+    $result = locale_string_is_safe($string);
+    $this->assertTrue($result);
+
+    // Check an untranslatable string which includes untrustable HTML (according
+    // to the locale_string_is_safe() function definition).
+    $string = 'Hello <img src="world.png" alt="world" />!';
+    $result = locale_string_is_safe($string);
+    $this->assertFalse($result);
+
+    // Check a translatable string which includes a token in an href attribute.
+    $string = 'Hi <a href="[current-user:url]">user</a>';
+    $result = locale_string_is_safe($string);
+    $this->assertTrue($result);
+  }
+}

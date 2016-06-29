@@ -1,5 +1,5 @@
 
-Drupal 7.45, xxxx-xx-xx (development version)
+Drupal 7.50, xxxx-xx-xx (development version)
 -----------------------
 - Removed meaningless post-check=0 and pre-check=0 cache control headers from
   Drupal HTTP responses.
@@ -17,6 +17,8 @@ Drupal 7.45, xxxx-xx-xx (development version)
 - Fixed a regression introduced in Drupal 7.43 that allowed files uploaded by
   anonymous users to be lost after form validation errors, and that also caused
   regressions with certain contributed modules.
+- Fixed the locale safety check that is used to ensure that translations are
+  safe to allow for tokens in the href/src attributes of translated strings.
 - Numerous API documentation improvements.
 
 Drupal 7.44, 2016-06-15

@@ -523,6 +523,27 @@ function locale_language_url_rewrite_session(&$path, &$options) {
  * possible attack vector (img).
  */
 function locale_string_is_safe($string) {
+  // Some strings have tokens in them. For tokens in the first part of href or
+  // src HTML attributes, filter_xss() removes part of the token, the part
+  // before the first colon.  filter_xss() assumes it could be an attempt to
+  // inject javascript. When filter_xss removes part of tokens, it causes the
+  // string to not be translatable when it should be translatable.
+  // @see LocaleConfigurationTest::testLocaleStringIsSafe()
+  //
+  // We can recognize tokens since they are wrapped with brackets and are only
+  // composed of alphanumeric characters, colon, underscore, and dashes. We can
+  // be sure these strings are safe to strip out before the string is checked in
+  // filter_xss() because no dangerous javascript will match that pattern.
+  //
+  // Strings with tokens should not be assumed to be dangerous because even if
+  // we evaluate them to be safe here, later replacing the token inside the
+  // string will automatically mark it as unsafe as it is not the same string
+  // anymore.
+  //
+  // @todo Do not strip out the token. Fix filter_xss to not incorrectly alter
+  // the string. https://www.drupal.org/node/2372127
+  $string = preg_replace('/\[[a-z0-9_-]+(:[a-z0-9_-]+)+\]/i', '', $string);
+
   return decode_entities($string) == decode_entities(filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'b', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'ins', 'kbd', 'li', 'ol', 'p', 'pre', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'tt', 'ul', 'var')));
 }
 
