@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Test fixture for \Drupal\views\Tests\Update\RestExportAuthUpdateTest.
+ * Test fixture for \Drupal\rest\Tests\Update\RestExportAuthUpdateTest.
  */
 
 use Drupal\Component\Serialization\Yaml;
@@ -56,7 +56,7 @@ $data = $connection->insert('config')
   ->fields([
     'name' => 'rest.settings',
     'data' => serialize($config),
-    'collection' => ''
+    'collection' => '',
   ])
   ->execute();
 
@@ -70,6 +70,6 @@ $connection->merge('config')
   ->condition('name', 'views.view.rest_export_with_authorization')
   ->condition('collection', '')
   ->fields([
-    'data' => serialize(Yaml::decode(file_get_contents('core/modules/views/tests/modules/views_test_config/test_views/views.view.rest_export_with_authorization.yml')))
+    'data' => serialize(Yaml::decode(file_get_contents('core/modules/views/tests/modules/views_test_config/test_views/views.view.rest_export_with_authorization.yml'))),
   ])
   ->execute();

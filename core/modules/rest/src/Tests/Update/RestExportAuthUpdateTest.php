@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\views\Tests\Update;
+namespace Drupal\rest\Tests\Update;
 
 use Drupal\system\Tests\Update\UpdatePathTestBase;
 
@@ -22,7 +22,7 @@ class RestExportAuthUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Ensures that update hook is run for views module.
+   * Ensures that update hook is run for rest module.
    */
   public function testUpdate() {
     $this->runUpdates();
