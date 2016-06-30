@@ -8,6 +8,11 @@ namespace Drupal\Component\FileCache;
 class FileCacheFactory {
 
   /**
+   * The configuration key to disable FileCache completely.
+   */
+  const DISABLE_CACHE = 'file_cache_disable';
+
+  /**
    * The configuration used to create FileCache objects.
    *
    * @var array $configuration
@@ -34,6 +39,11 @@ class FileCacheFactory {
    *   The initialized FileCache object.
    */
   public static function get($collection, $default_configuration = []) {
+    // If there is a special key in the configuration, disable FileCache completely.
+    if (!empty(static::$configuration[static::DISABLE_CACHE])) {
+      return new NullFileCache('', '');
+    }
+
     $default_configuration += [
       'class' => '\Drupal\Component\FileCache\FileCache',
       'collection' => $collection,

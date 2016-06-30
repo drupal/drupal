@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\Component\FileCache;
 
+use Drupal\Component\FileCache\FileCache;
+use Drupal\Component\FileCache\NullFileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Tests\UnitTestCase;
 
@@ -17,18 +19,15 @@ class FileCacheFactoryTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $settings = [
-      'collection' => 'test-23',
-      'cache_backend_class' => '\Drupal\Tests\Component\FileCache\StaticFileCacheBackend',
-      'cache_backend_configuration' => [
-        'bin' => 'dog',
+    $configuration = [
+      'test_foo_settings' => [
+        'collection' => 'test-23',
+        'cache_backend_class' => '\Drupal\Tests\Component\FileCache\StaticFileCacheBackend',
+        'cache_backend_configuration' => [
+          'bin' => 'dog',
+        ],
       ],
     ];
-    $configuration = FileCacheFactory::getConfiguration();
-    if (!$configuration) {
-      $configuration = [];
-    }
-    $configuration += [ 'test_foo_settings' => $settings ];
     FileCacheFactory::setConfiguration($configuration);
     FileCacheFactory::setPrefix('prefix');
   }
@@ -64,6 +63,24 @@ class FileCacheFactoryTest extends UnitTestCase {
     FileCacheFactory::setPrefix(NULL);
     FileCacheFactory::get('test_foo_settings', []);
   }
+
+  /**
+   * @covers ::get
+   */
+  public function testGetDisabledFileCache() {
+    // Ensure the returned FileCache is an instance of FileCache::class.
+    $file_cache = FileCacheFactory::get('test_foo_settings', []);
+    $this->assertInstanceOf(FileCache::class, $file_cache);
+
+    $configuration = FileCacheFactory::getConfiguration();
+    $configuration[FileCacheFactory::DISABLE_CACHE] = TRUE;
+    FileCacheFactory::setConfiguration($configuration);
+
+    // Ensure the returned FileCache is now an instance of NullFileCache::class.
+    $file_cache = FileCacheFactory::get('test_foo_settings', []);
+    $this->assertInstanceOf(NullFileCache::class, $file_cache);
+  }
+
 
   /**
    * @covers ::getConfiguration
