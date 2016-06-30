@@ -671,7 +671,7 @@ function system_requirements($phase) {
         ];
       }
 
-      $entity_update_issues = \Drupal::service('renderer')->render($build);
+      $entity_update_issues = \Drupal::service('renderer')->renderPlain($build);
       $requirements['entity_update']['severity'] = REQUIREMENT_ERROR;
       $requirements['entity_update']['value'] = t('Mismatched entity and/or field definitions');
       $requirements['entity_update']['description'] = t('The following changes were detected in the entity type and field definitions. @updates', ['@updates' => $entity_update_issues]);
