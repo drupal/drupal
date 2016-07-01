@@ -158,8 +158,8 @@ class StorageComparerTest extends UnitTestCase {
     $this->storageComparer->createChangelist();
     $expected = array(
       'field.storage.node.body',
-      'views.view.test_view',
       'field.field.node.article.body',
+      'views.view.test_view',
     );
     $this->assertEquals($expected, $this->storageComparer->getChangelist('create'));
     $this->assertEmpty($this->storageComparer->getChangelist('delete'));
@@ -196,8 +196,8 @@ class StorageComparerTest extends UnitTestCase {
 
     $this->storageComparer->createChangelist();
     $expected = array(
-      'field.field.node.article.body',
       'views.view.test_view',
+      'field.field.node.article.body',
       'field.storage.node.body',
     );
     $this->assertEquals($expected, $this->storageComparer->getChangelist('delete'));
@@ -236,8 +236,8 @@ class StorageComparerTest extends UnitTestCase {
     $this->storageComparer->createChangelist();
     $expected = array(
       'field.storage.node.body',
-      'system.site',
       'field.field.node.article.body',
+      'system.site',
     );
     $this->assertEquals($expected, $this->storageComparer->getChangelist('update'));
     $this->assertEmpty($this->storageComparer->getChangelist('create'));

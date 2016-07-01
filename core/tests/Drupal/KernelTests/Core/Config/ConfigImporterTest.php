@@ -348,8 +348,8 @@ class ConfigImporterTest extends KernelTestBase {
     $updates = $this->configImporter->reset()->getStorageComparer()->getChangelist('update');
     $expected = array(
       $name_deleter,
-      $name_other,
       $name_deletee,
+      $name_other,
     );
     $this->assertIdentical($expected, $updates);
 
