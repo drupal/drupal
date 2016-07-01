@@ -24,7 +24,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Numerous small bugfixes.
 - Numerous API documentation improvements.
 - Fixed that following a password reset link while logged in leaves users unable
-  to change their password
+  to change their password.
+- Added a .editorconfig file to auto-configure editors that support it.
 
 Drupal 7.44, 2016-06-15
 -----------------------
