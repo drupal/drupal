@@ -23,6 +23,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Improved performance of queries on authmap table.
 - Numerous small bugfixes.
 - Numerous API documentation improvements.
+- Fixed that following a password reset link while logged in leaves users unable
+  to change their password
 
 Drupal 7.44, 2016-06-15
 -----------------------

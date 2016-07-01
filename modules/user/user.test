@@ -481,6 +481,34 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test user password reset while logged in.
+   */
+  function testUserPasswordResetLoggedIn() {
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+    // Make sure the test account has a valid password.
+    user_save($account, array('pass' => user_password()));
+
+    // Generate one time login link.
+    $reset_url = user_pass_reset_url($account);
+    $this->drupalGet($reset_url);
+
+    $this->assertText('Reset password');
+    $this->drupalPost(NULL, NULL, t('Log in'));
+
+    $this->assertText('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please change your password.');
+
+    $pass = user_password();
+    $edit = array(
+      'pass[pass1]' => $pass,
+      'pass[pass2]' => $pass,
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    $this->assertText('The changes have been saved.');
+  }
+
+  /**
    * Attempts login using an expired password reset link.
    */
   function testUserPasswordResetExpired() {
