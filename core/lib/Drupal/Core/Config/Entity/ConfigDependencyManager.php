@@ -187,11 +187,32 @@ class ConfigDependencyManager {
    */
   public function sortAll() {
     $graph = $this->getGraph();
-    // Sort by reverse weight and alphabetically. The most dependent entities
+    // Sort by weight and alphabetically. The most dependent entities
     // are last and entities with the same weight are alphabetically ordered.
-    uasort($graph, array($this, 'sortGraph'));
+    uasort($graph, array($this, 'sortGraphByWeight'));
     // Use array_intersect_key() to exclude modules and themes from the list.
-    return array_reverse(array_keys(array_intersect_key($graph, $this->data)));
+    return array_keys(array_intersect_key($graph, $this->data));
+  }
+
+  /**
+   * Sorts the dependency graph by weight and alphabetically.
+   *
+   * @param array $a
+   *   First item for comparison. The compared items should be associative
+   *   arrays that include a 'weight' and a 'name' key.
+   * @param array $b
+   *   Second item for comparison.
+   *
+   * @return int
+   *   The comparison result for uasort().
+   */
+  protected function sortGraphByWeight(array $a, array $b) {
+    $weight_cmp = SortArray::sortByKeyInt($a, $b, 'weight');
+
+    if ($weight_cmp === 0) {
+      return SortArray::sortByKeyString($a, $b, 'name');
+    }
+    return $weight_cmp;
   }
 
   /**
@@ -199,7 +220,7 @@ class ConfigDependencyManager {
    *
    * @param array $a
    *   First item for comparison. The compared items should be associative
-   *   arrays that include a 'weight' and a 'component' key.
+   *   arrays that include a 'weight' and a 'name' key.
    * @param array $b
    *   Second item for comparison.
    *
@@ -210,7 +231,7 @@ class ConfigDependencyManager {
     $weight_cmp = SortArray::sortByKeyInt($a, $b, 'weight') * -1;
 
     if ($weight_cmp === 0) {
-      return SortArray::sortByKeyString($a, $b, 'component');
+      return SortArray::sortByKeyString($a, $b, 'name');
     }
     return $weight_cmp;
   }
@@ -254,14 +275,20 @@ class ConfigDependencyManager {
       foreach ($this->data as $entity) {
         $graph_key = $entity->getConfigDependencyName();
         if (!isset($graph[$graph_key])) {
-          $graph[$graph_key]['edges'] = [];
+          $graph[$graph_key] = [
+            'edges' => [],
+            'name' => $graph_key,
+          ];
         }
         // Include all dependencies in the graph so that topographical sorting
         // works.
         foreach (array_merge($entity->getDependencies('config'), $entity->getDependencies('module'), $entity->getDependencies('theme')) as $dependency) {
           $graph[$dependency]['edges'][$graph_key] = TRUE;
+          $graph[$dependency]['name'] = $dependency;
         }
       }
+      // Ensure that order of the graph is consistent.
+      krsort($graph);
       $graph_object = new Graph($graph);
       $this->graph = $graph_object->searchAndSort();
     }
