@@ -322,6 +322,14 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
  * Test internal testing framework browser.
  */
 class SimpleTestBrowserTestCase extends DrupalWebTestCase {
+
+  /**
+   * A flag indicating whether a cookie has been set in a test.
+   *
+   * @var bool
+   */
+  protected static $cookieSet = FALSE;
+
   public static function getInfo() {
     return array(
       'name' => 'SimpleTest browser',
@@ -380,6 +388,46 @@ EOF;
     $urls = $this->xpath('//a[text()=:text]', array(':text' => 'A second "even more weird" link, in memory of George O\'Malley'));
     $this->assertEqual($urls[0]['href'], 'link2', 'Match with mixed single and double quotes.');
   }
+
+  /**
+   * Tests that cookies set during a request are available for testing.
+   */
+  public function testCookies() {
+    // Check that the $this->cookies property is populated when a user logs in.
+    $user = $this->drupalCreateUser();
+    $edit = array('name' => $user->name, 'pass' => $user->pass_raw);
+    $this->drupalPost('<front>', $edit, t('Log in'));
+    $this->assertEqual(count($this->cookies), 1, 'A cookie is set when the user logs in.');
+
+    // Check that the name and value of the cookie match the request data.
+    $cookie_header = $this->drupalGetHeader('set-cookie', TRUE);
+
+    // The name and value are located at the start of the string, separated by
+    // an equals sign and ending in a semicolon.
+    preg_match('/^([^=]+)=([^;]+)/', $cookie_header, $matches);
+    $name = $matches[1];
+    $value = $matches[2];
+
+    $this->assertTrue(array_key_exists($name, $this->cookies), 'The cookie name is correct.');
+    $this->assertEqual($value, $this->cookies[$name]['value'], 'The cookie value is correct.');
+
+    // Set a flag indicating that a cookie has been set in this test.
+    // @see SimpleTestBrowserTestCase::testCookieDoesNotBleed().
+    self::$cookieSet = TRUE;
+  }
+
+  /**
+   * Tests that the cookies from a previous test do not bleed into a new test.
+   *
+   * @see SimpleTestBrowserTestCase::testCookies().
+   */
+  public function testCookieDoesNotBleed() {
+    // In order for this test to be effective it should always run after the
+    // testCookies() test.
+    $this->assertTrue(self::$cookieSet, 'Tests have been executed in the expected order.');
+    $this->assertEqual(count($this->cookies), 0, 'No cookies are present at the start of a new test.');
+  }
+
 }
 
 class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {

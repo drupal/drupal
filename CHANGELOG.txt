@@ -26,6 +26,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Fixed that following a password reset link while logged in leaves users unable
   to change their password.
 - Added a .editorconfig file to auto-configure editors that support it.
+- Fixed that cookies from previous tests are still present when a new test
+  starts in DrupalWebTestCase.
 
 Drupal 7.44, 2016-06-15
 -----------------------
