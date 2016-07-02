@@ -35,6 +35,9 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Fixed robots.txt to allow search engines to access CSS, JavaScript and image
   files.
 - Fixed handling of missing files and functions inside the registry.
+- Fixed various PHP 5.4 test failures.
+- Fixed various PHP 7 test failures.
+- Fixed various PHP 7 problems.
 
 Drupal 7.44, 2016-06-15
 -----------------------
