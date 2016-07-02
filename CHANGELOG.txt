@@ -28,6 +28,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Added a .editorconfig file to auto-configure editors that support it.
 - Fixed that cookies from previous tests are still present when a new test
   starts in DrupalWebTestCase.
+- Added --directory option to run-tests.sh for easier test discovery of all
+  tests within a project.
 
 Drupal 7.44, 2016-06-15
 -----------------------
