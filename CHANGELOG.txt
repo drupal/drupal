@@ -32,6 +32,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
   tests within a project.
 - Made run-tests.sh exit with a failure code when there are test fails or
   problems running the script.
+- Fixed robots.txt to allow search engines to access CSS, JavaScript and image
+  files.
 
 Drupal 7.44, 2016-06-15
 -----------------------
