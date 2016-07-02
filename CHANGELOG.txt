@@ -30,6 +30,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
   starts in DrupalWebTestCase.
 - Added --directory option to run-tests.sh for easier test discovery of all
   tests within a project.
+- Made run-tests.sh exit with a failure code when there are test fails or
+  problems running the script.
 
 Drupal 7.44, 2016-06-15
 -----------------------

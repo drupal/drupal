@@ -8,12 +8,16 @@ define('SIMPLETEST_SCRIPT_COLOR_PASS', 32); // Green.
 define('SIMPLETEST_SCRIPT_COLOR_FAIL', 31); // Red.
 define('SIMPLETEST_SCRIPT_COLOR_EXCEPTION', 33); // Brown.
 
+define('SIMPLETEST_SCRIPT_EXIT_SUCCESS', 0);
+define('SIMPLETEST_SCRIPT_EXIT_FAILURE', 1);
+define('SIMPLETEST_SCRIPT_EXIT_EXCEPTION', 2);
+
 // Set defaults and get overrides.
 list($args, $count) = simpletest_script_parse_args();
 
 if ($args['help'] || $count == 0) {
   simpletest_script_help();
-  exit;
+  exit(($count == 0) ? SIMPLETEST_SCRIPT_EXIT_FAILURE : SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
 
 if ($args['execute-test']) {
@@ -30,7 +34,7 @@ else {
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 if (!module_exists('simpletest')) {
   simpletest_script_print_error("The simpletest module must be enabled before this script can run.");
-  exit;
+  exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
 }
 
 if ($args['clean']) {
@@ -43,7 +47,7 @@ if ($args['clean']) {
   foreach ($messages as $text) {
     echo " - " . $text . "\n";
   }
-  exit;
+  exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
 
 // Load SimpleTest files.
@@ -64,7 +68,7 @@ if ($args['list']) {
       echo " - " . $info['name'] . ' (' . $class . ')' . "\n";
     }
   }
-  exit;
+  exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
 
 $test_list = simpletest_script_get_test_list();
@@ -78,7 +82,7 @@ simpletest_script_reporter_init();
 $test_id = db_insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
 
 // Execute tests.
-simpletest_script_execute_batch($test_id, simpletest_script_get_test_list());
+$status = simpletest_script_execute_batch($test_id, simpletest_script_get_test_list());
 
 // Retrieve the last database prefix used for testing and the last test class
 // that was run from. Use the information to read the lgo file in case any
@@ -100,7 +104,7 @@ if ($args['xml']) {
 simpletest_clean_results_table($test_id);
 
 // Test complete, exit.
-exit;
+exit($status);
 
 /**
  * Print help text.
@@ -225,7 +229,7 @@ function simpletest_script_parse_args() {
       else {
         // Argument not found in list.
         simpletest_script_print_error("Unknown argument '$arg'.");
-        exit;
+        exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
       }
     }
     else {
@@ -238,7 +242,7 @@ function simpletest_script_parse_args() {
   // Validate the concurrency argument
   if (!is_numeric($args['concurrency']) || $args['concurrency'] <= 0) {
     simpletest_script_print_error("--concurrency must be a strictly positive integer.");
-    exit;
+    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
 
   return array($args, $count);
@@ -268,7 +272,7 @@ function simpletest_script_init($server_software) {
   else {
     simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Supply the --php command line argument.');
     simpletest_script_help();
-    exit();
+    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
 
   // Get URL from arguments.
@@ -313,6 +317,8 @@ function simpletest_script_init($server_software) {
 function simpletest_script_execute_batch($test_id, $test_classes) {
   global $args;
 
+  $total_status = SIMPLETEST_SCRIPT_EXIT_SUCCESS;
+
   // Multi-process execution.
   $children = array();
   while (!empty($test_classes) || !empty($children)) {
@@ -328,7 +334,7 @@ function simpletest_script_execute_batch($test_id, $test_classes) {
 
       if (!is_resource($process)) {
         echo "Unable to fork test process. Aborting.\n";
-        exit;
+        exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
       }
 
       // Register our new child.
@@ -348,13 +354,22 @@ function simpletest_script_execute_batch($test_id, $test_classes) {
       if (empty($status['running'])) {
         // The child exited, unregister it.
         proc_close($child['process']);
-        if ($status['exitcode']) {
+        if ($status['exitcode'] == SIMPLETEST_SCRIPT_EXIT_FAILURE) {
+          if ($status['exitcode'] > $total_status) {
+            $total_status = $status['exitcode'];
+          }
+        }
+        elseif ($status['exitcode']) {
+          $total_status = $status['exitcode'];
           echo 'FATAL ' . $test_class . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').' . "\n";
         }
+
+        // Remove this child.
         unset($children[$cid]);
       }
     }
   }
+  return $total_status;
 }
 
 /**
@@ -377,11 +392,14 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     simpletest_script_print($info['name'] . ' ' . _simpletest_format_summary_line($test->results) . "\n", simpletest_script_color_code($status));
 
     // Finished, kill this runner.
-    exit(0);
+    if ($had_fails || $had_exceptions) {
+      exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+    }
+    exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
   }
   catch (Exception $e) {
     echo (string) $e;
-    exit(1);
+    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
   }
 }
 
@@ -435,7 +453,7 @@ function simpletest_script_get_test_list() {
           }
           simpletest_script_print_error('Test class not found: ' . $test_class);
           simpletest_script_print_alternatives($test_class, $all_classes, 6);
-          exit(1);
+          exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
         }
       }
     }
@@ -508,7 +526,7 @@ function simpletest_script_get_test_list() {
         else {
           simpletest_script_print_error('Test group not found: ' . $group_name);
           simpletest_script_print_alternatives($group_name, array_keys($groups));
-          exit(1);
+          exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
         }
       }
     }
@@ -516,7 +534,7 @@ function simpletest_script_get_test_list() {
 
   if (empty($test_list)) {
     simpletest_script_print_error('No valid tests were specified.');
-    exit;
+    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
   return $test_list;
 }
