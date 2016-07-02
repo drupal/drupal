@@ -34,6 +34,7 @@ Drupal 7.50, xxxx-xx-xx (development version)
   problems running the script.
 - Fixed robots.txt to allow search engines to access CSS, JavaScript and image
   files.
+- Fixed handling of missing files and functions inside the registry.
 
 Drupal 7.44, 2016-06-15
 -----------------------
