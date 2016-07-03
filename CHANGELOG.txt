@@ -41,6 +41,10 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Changed the {history} table's node ID field to be an unsigned integer, to
   match the same field in the {node} table and to prevent errors with very
   large node IDs.
+- Added an explicit page callback to the "admin/people/create" menu item in the
+  User module (minor data structure change). Previously this automatically
+  inherited the page callback from the parent "admin/people" menu item, which
+  broke contributed modules that override the "admin/people" page.
 
 Drupal 7.44, 2016-06-15
 -----------------------

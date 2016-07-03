@@ -1755,9 +1755,11 @@ function user_menu() {
 
   $items['admin/people/create'] = array(
     'title' => 'Add user',
+    'page callback' => 'user_admin',
     'page arguments' => array('create'),
     'access arguments' => array('administer users'),
     'type' => MENU_LOCAL_ACTION,
+    'file' => 'user.admin.inc',
   );
 
   // Administration pages.
