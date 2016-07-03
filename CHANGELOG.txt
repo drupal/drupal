@@ -19,7 +19,7 @@ Drupal 7.50, xxxx-xx-xx (development version)
   regressions with certain contributed modules.
 - Fixed the locale safety check that is used to ensure that translations are
   safe to allow for tokens in the href/src attributes of translated strings.
-- Implemented various fixes for automated test failures on PHP 5.4+.
+- Implemented various fixes for automated test failures on PHP 5.4+ and PHP 7.
 - Improved performance of queries on authmap table.
 - Numerous small bugfixes.
 - Numerous API documentation improvements.
@@ -35,9 +35,9 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Fixed robots.txt to allow search engines to access CSS, JavaScript and image
   files.
 - Fixed handling of missing files and functions inside the registry.
-- Fixed various PHP 5.4 test failures.
-- Fixed various PHP 7 test failures.
 - Fixed various PHP 7 problems.
+- Fixed various bugs with PHP 5.5 imagerotate(), including when incorrect color
+  indices are passed in.
 
 Drupal 7.44, 2016-06-15
 -----------------------
