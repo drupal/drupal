@@ -50,6 +50,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Made method="get" forms work inside the administrative overlay. The fix adds
   a new hidden field to these forms when they appear inside the overlay (minor
   data structure change).
+- Increased maxlength of menu link title input fields in the node form and
+  menu link form from 128 to 255 characters.
 
 Drupal 7.44, 2016-06-15
 -----------------------

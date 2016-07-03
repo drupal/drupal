@@ -281,6 +281,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
   $form['link_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Menu link title'),
+    '#maxlength' => 255,
     '#default_value' => $item['link_title'],
     '#description' => t('The text to be used for this link in the menu.'),
     '#required' => TRUE,

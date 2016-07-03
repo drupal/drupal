@@ -674,6 +674,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
   $form['menu']['link']['link_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Menu link title'),
+    '#maxlength' => 255,
     '#default_value' => $link['link_title'],
   );
 
