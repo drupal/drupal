@@ -152,7 +152,7 @@ function blog_menu_local_tasks_alter(&$data, $router_item, $root_path) {
     }
   }
   // Provide a helper action link to the author on the 'blog/%' page.
-  elseif ($root_path == 'blog/%' && $router_item['page_arguments'][0]->uid == $user->uid) {
+  elseif ($root_path == 'blog/%' && isset($router_item['page_arguments'][0]->uid) && $router_item['page_arguments'][0]->uid == $user->uid) {
     $data['actions']['output']['blog'] = array(
       '#theme' => 'menu_local_action',
     );
