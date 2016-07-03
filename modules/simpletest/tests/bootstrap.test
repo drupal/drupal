@@ -70,6 +70,15 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
       'Proxy forwarding with trusted proxy got forwarded IP address.'
     );
 
+    // Proxy forwarding on and proxy address trusted and visiting from proxy.
+    $_SERVER['REMOTE_ADDR'] = $this->proxy_ip;
+    $_SERVER['HTTP_X_FORWARDED_FOR'] = $this->proxy_ip;
+    drupal_static_reset('ip_address');
+    $this->assertTrue(
+      ip_address() == $this->proxy_ip,
+      'Visiting from trusted proxy got proxy IP address.'
+    );
+
     // Multi-tier architecture with comma separated values in header.
     $_SERVER['REMOTE_ADDR'] = $this->proxy_ip;
     $_SERVER['HTTP_X_FORWARDED_FOR'] = implode(', ', array($this->untrusted_ip, $this->forwarded_ip, $this->proxy2_ip));

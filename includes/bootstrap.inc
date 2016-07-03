@@ -2963,8 +2963,15 @@ function ip_address() {
         // Eliminate all trusted IPs.
         $untrusted = array_diff($forwarded, $reverse_proxy_addresses);
 
-        // The right-most IP is the most specific we can trust.
-        $ip_address = array_pop($untrusted);
+        if (!empty($untrusted)) {
+          // The right-most IP is the most specific we can trust.
+          $ip_address = array_pop($untrusted);
+        }
+        else {
+          // All IP addresses in the forwarded array are configured proxy IPs
+          // (and thus trusted). We take the leftmost IP.
+          $ip_address = array_shift($forwarded);
+        }
       }
     }
   }

@@ -45,6 +45,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
   User module (minor data structure change). Previously this automatically
   inherited the page callback from the parent "admin/people" menu item, which
   broke contributed modules that override the "admin/people" page.
+- Fixed a bug which caused ip_address() to return nothing when the client IP
+  address and proxy IP address are the same.
 
 Drupal 7.44, 2016-06-15
 -----------------------
