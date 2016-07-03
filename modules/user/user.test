@@ -1989,6 +1989,55 @@ class UserEditTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Tests editing a user account with and without a form rebuild.
+ */
+class UserEditRebuildTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'User edit with form rebuild',
+      'description' => 'Test user edit page when a form rebuild is triggered.',
+      'group' => 'User',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('user_form_test');
+  }
+
+  /**
+   * Test user edit page when the form is set to rebuild.
+   */
+  function testUserEditFormRebuild() {
+    $user1 = $this->drupalCreateUser(array('change own username'));
+    $this->drupalLogin($user1);
+
+    $roles = array_keys($user1->roles);
+    // Save the user form twice.
+    $edit = array();
+    $edit['current_pass'] = $user1->pass_raw;
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t("The changes have been saved."));
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertRaw(t("The changes have been saved."));
+    $saved_user1 = entity_load_unchanged('user', $user1->uid);
+    $this->assertEqual(count($roles), count($saved_user1->roles), 'Count of user roles in database matches original count.');
+    $diff = array_diff(array_keys($saved_user1->roles), $roles);
+    $this->assertTrue(empty($diff), format_string('User roles in database match original: @roles', array('@roles' => implode(', ', $saved_user1->roles))));
+    // Set variable that causes the form to be rebuilt in user_form_test.module.
+    variable_set('user_form_test_user_profile_form_rebuild', TRUE);
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t("The changes have been saved."));
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertRaw(t("The changes have been saved."));
+    $saved_user1 = entity_load_unchanged('user', $user1->uid);
+    $this->assertEqual(count($roles), count($saved_user1->roles), 'Count of user roles in database matches original count.');
+    $diff = array_diff(array_keys($saved_user1->roles), $roles);
+    $this->assertTrue(empty($diff), format_string('User roles in database match original: @roles', array('@roles' => implode(', ', $saved_user1->roles))));
+  }
+}
+
+/**
  * Test case for user signatures.
  */
 class UserSignatureTestCase extends DrupalWebTestCase {

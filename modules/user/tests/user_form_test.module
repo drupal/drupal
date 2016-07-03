@@ -62,3 +62,21 @@ function user_form_test_current_password($form, &$form_state, $account) {
 function user_form_test_current_password_submit($form, &$form_state) {
   drupal_set_message(t('The password has been validated and the form submitted successfully.'));
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function user_form_test_form_user_profile_form_alter(&$form, &$form_state) {
+  if (variable_get('user_form_test_user_profile_form_rebuild', FALSE)) {
+    $form['#submit'][] = 'user_form_test_user_account_submit';
+  }
+}
+
+/**
+ * Submit function for user_profile_form().
+ */
+function user_form_test_user_account_submit($form, &$form_state) {
+  // Rebuild the form instead of letting the process end. This allows us to
+  // test for bugs that can be triggered in contributed modules.
+  $form_state['rebuild'] = TRUE;
+}
