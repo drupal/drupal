@@ -38,6 +38,9 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Fixed various PHP 7 problems.
 - Fixed various bugs with PHP 5.5 imagerotate(), including when incorrect color
   indices are passed in.
+- Changed the {history} table's node ID field to be an unsigned integer, to
+  match the same field in the {node} table and to prevent errors with very
+  large node IDs.
 
 Drupal 7.44, 2016-06-15
 -----------------------

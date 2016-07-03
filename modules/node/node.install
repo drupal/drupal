@@ -410,6 +410,7 @@ function node_schema() {
       'nid' => array(
         'description' => 'The {node}.nid that was read.',
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -941,6 +942,23 @@ function node_update_7015() {
     ->fields(array('disabled' => 0))
     ->condition('base', 'node_content')
     ->execute();
+}
+
+/**
+ * Change {history}.nid to an unsigned int in order to match {node}.nid.
+ */
+function node_update_7016() {
+  db_drop_primary_key('history');
+  db_drop_index('history', 'nid');
+  db_change_field('history', 'nid', 'nid', array(
+    'description' => 'The {node}.nid that was read.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ));
+  db_add_primary_key('history', array('uid', 'nid'));
+  db_add_index('history', 'nid', array('nid'));
 }
 
 /**
