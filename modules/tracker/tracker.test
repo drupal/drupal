@@ -151,7 +151,6 @@ class TrackerTest extends DrupalWebTestCase {
 
     $node = $this->drupalCreateNode(array(
       'comment' => 2,
-      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
     ));
 
     // Add a comment to the page.
