@@ -222,6 +222,8 @@ function number_field_formatter_settings_form($field, $instance, $view_mode, $fo
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
 
+  $element = array();
+
   if ($display['type'] == 'number_decimal' || $display['type'] == 'number_integer') {
     $options = array(
       ''  => t('<none>'),
