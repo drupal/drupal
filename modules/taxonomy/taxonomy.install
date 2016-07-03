@@ -492,6 +492,7 @@ function taxonomy_update_7004() {
       'bundle' => $bundle->type,
       'settings' => array(),
       'description' => 'Debris left over after upgrade from Drupal 6',
+      'required' => FALSE,
       'widget' => array(
         'type' => 'taxonomy_autocomplete',
         'module' => 'taxonomy',
@@ -557,7 +558,7 @@ function taxonomy_update_7005(&$sandbox) {
   // of term references stored so far for the current revision, which
   // provides the delta value for each term reference data insert. The
   // deltas are reset for each new revision.
-  
+
   $conditions = array(
     'type' => 'taxonomy_term_reference',
     'deleted' => 0,
