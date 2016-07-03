@@ -1877,6 +1877,19 @@ class UserCreateTestCase extends DrupalWebTestCase {
       $this->drupalGet('admin/people');
       $this->assertText($edit['name'], 'User found in list of users');
     }
+
+    // Test that the password '0' is considered a password.
+    $name = $this->randomName();
+    $edit = array(
+      'name' => $name,
+      'mail' => $name . '@example.com',
+      'pass[pass1]' => 0,
+      'pass[pass2]' => 0,
+      'notify' => FALSE,
+    );
+    $this->drupalPost('admin/people/create', $edit, t('Create new account'));
+    $this->assertText(t('Created a new user account for @name. No e-mail has been sent.', array('@name' => $edit['name'])), 'User created with password 0');
+    $this->assertNoText('Password field is required');
   }
 }
 
@@ -1951,6 +1964,25 @@ class UserEditTestCase extends DrupalWebTestCase {
     // Make sure the user can log in with their new password.
     $this->drupalLogout();
     $user1->pass_raw = $new_pass;
+    $this->drupalLogin($user1);
+    $this->drupalLogout();
+  }
+
+  /**
+   * Tests setting the password to "0".
+   */
+  public function testUserWith0Password() {
+    $admin = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($admin);
+    // Create a regular user.
+    $user1 = $this->drupalCreateUser(array());
+
+    $edit = array('pass[pass1]' => '0', 'pass[pass2]' => '0');
+    $this->drupalPost("user/" . $user1->uid . "/edit", $edit, t('Save'));
+    $this->assertRaw(t("The changes have been saved."));
+
+    $this->drupalLogout();
+    $user1->pass_raw = '0';
     $this->drupalLogin($user1);
     $this->drupalLogout();
   }

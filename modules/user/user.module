@@ -424,7 +424,7 @@ function user_load_by_name($name) {
 function user_save($account, $edit = array(), $category = 'account') {
   $transaction = db_transaction();
   try {
-    if (!empty($edit['pass'])) {
+    if (isset($edit['pass']) && strlen(trim($edit['pass'])) > 0) {
       // Allow alternate password hashing schemes.
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
       $edit['pass'] = user_hash_password(trim($edit['pass']));
@@ -1232,7 +1232,7 @@ function user_validate_current_pass(&$form, &$form_state) {
     // that prevent them from being empty if they are changed.
     if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $account->$key)) {
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
-      $current_pass_failed = empty($form_state['values']['current_pass']) || !user_check_password($form_state['values']['current_pass'], $account);
+      $current_pass_failed = strlen(trim($form_state['values']['current_pass'])) == 0 || !user_check_password($form_state['values']['current_pass'], $account);
       if ($current_pass_failed) {
         form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
         form_set_error($key);
@@ -2167,7 +2167,7 @@ function user_login_name_validate($form, &$form_state) {
  */
 function user_login_authenticate_validate($form, &$form_state) {
   $password = trim($form_state['values']['pass']);
-  if (!empty($form_state['values']['name']) && !empty($password)) {
+  if (!empty($form_state['values']['name']) && strlen(trim($password)) > 0) {
     // Do not allow any login from the current user's IP if the limit has been
     // reached. Default is 50 failed attempts allowed in one hour. This is
     // independent of the per-user limit to catch attempts from one IP to log
@@ -2258,7 +2258,7 @@ function user_login_final_validate($form, &$form_state) {
  */
 function user_authenticate($name, $password) {
   $uid = FALSE;
-  if (!empty($name) && !empty($password)) {
+  if (!empty($name) && strlen(trim($password)) > 0) {
     $account = user_load_by_name($name);
     if ($account) {
       // Allow alternate password hashing schemes.
