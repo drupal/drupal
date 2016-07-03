@@ -47,6 +47,9 @@ Drupal 7.50, xxxx-xx-xx (development version)
   broke contributed modules that override the "admin/people" page.
 - Fixed a bug which caused ip_address() to return nothing when the client IP
   address and proxy IP address are the same.
+- Made method="get" forms work inside the administrative overlay. The fix adds
+  a new hidden field to these forms when they appear inside the overlay (minor
+  data structure change).
 
 Drupal 7.44, 2016-06-15
 -----------------------
