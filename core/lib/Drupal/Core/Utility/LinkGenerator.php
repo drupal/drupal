@@ -140,6 +140,7 @@ class LinkGenerator implements LinkGeneratorInterface {
 
     // Allow other modules to modify the structure of the link.
     $this->moduleHandler->alter('link', $variables);
+    $url = $variables['url'];
 
     // Move attributes out of options since generateFromRoute() doesn't need
     // them. Include a placeholder for the href.

@@ -69,7 +69,9 @@ class LinkGeneratorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->urlGenerator = $this->getMock('\Drupal\Core\Routing\UrlGenerator', array(), array(), '', FALSE);
+    $this->urlGenerator = $this->getMockBuilder('\Drupal\Core\Routing\UrlGenerator')
+      ->disableOriginalConstructor()
+      ->getMock();
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
     $this->linkGenerator = new LinkGenerator($this->urlGenerator, $this->moduleHandler, $this->renderer);
@@ -485,6 +487,33 @@ class LinkGeneratorTest extends UnitTestCase {
     $generated_link = $this->linkGenerator->generateFromLink($link);
     $this->assertSame($expected_link_markup, (string) $generated_link->getGeneratedLink());
     $this->assertInstanceOf('\Drupal\Core\Render\BubbleableMetadata', $generated_link);
+  }
+
+  /**
+   * Tests altering the URL object using hook_link_alter().
+   *
+   * @covers ::generate
+   */
+  public function testGenerateWithAlterHook() {
+    $options = ['query' => [], 'language' => NULL, 'set_active_class' => FALSE, 'absolute' => FALSE];
+    $this->urlGenerator->expects($this->any())
+      ->method('generateFromRoute')
+      ->will($this->returnValueMap([
+        ['test_route_1', [], $options, TRUE, (new GeneratedUrl())->setGeneratedUrl('/test-route-1')],
+        ['test_route_2', [], $options, TRUE, (new GeneratedUrl())->setGeneratedUrl('/test-route-2')],
+      ]));
+
+    $url = new Url('test_route_2');
+    $url->setUrlGenerator($this->urlGenerator);
+
+    $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('alter')
+      ->willReturnCallback(function ($hook, &$options) {
+        $options['url'] = (new Url('test_route_1'))->setUrlGenerator($this->urlGenerator);
+      });
+
+    $expected_link_markup = '<a href="/test-route-1">Test</a>';
+    $this->assertEquals($expected_link_markup, (string) $this->linkGenerator->generate('Test', $url)->getGeneratedLink());
   }
 
   /**
