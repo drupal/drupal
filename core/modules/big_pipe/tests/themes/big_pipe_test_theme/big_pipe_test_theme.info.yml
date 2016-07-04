@@ -1,0 +1,5 @@
+name: 'BigPipe test theme'
+type: theme
+description: 'Theme for testing BigPipe edge cases.'
+version: VERSION
+core: 8.x

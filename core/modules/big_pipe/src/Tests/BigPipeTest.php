@@ -269,6 +269,42 @@ class BigPipeTest extends WebTestBase {
     unlink(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
   }
 
+  /**
+   * Tests BigPipe with a multi-occurrence placeholder.
+   */
+  public function testBigPipeMultiOccurrencePlaceholders() {
+    $this->drupalLogin($this->rootUser);
+    $this->assertSessionCookieExists(TRUE);
+    $this->assertBigPipeNoJsCookieExists(FALSE);
+
+    // By not calling performMetaRefresh() here, we simulate JavaScript being
+    // enabled, because as far as the BigPipe module is concerned, JavaScript is
+    // enabled in the browser as long as the BigPipe no-JS cookie is *not* set.
+    // @see setUp()
+    // @see performMetaRefresh()
+
+    $this->drupalGet(Url::fromRoute('big_pipe_test_multi_occurrence'));
+    $big_pipe_placeholder_id = 'callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=a8c34b5e';
+    $expected_placeholder_replacement = '<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="' . $big_pipe_placeholder_id . '">';
+    $this->assertRaw('The count is 1.');
+    $this->assertNoRaw('The count is 2.');
+    $this->assertNoRaw('The count is 3.');
+    $raw_content = $this->getRawContent();
+    $this->assertTrue(substr_count($raw_content, $expected_placeholder_replacement) == 1, 'Only one placeholder replacement was found for the duplicate #lazy_builder arrays.');
+
+    // By calling performMetaRefresh() here, we simulate JavaScript being
+    // disabled, because as far as the BigPipe module is concerned, it is
+    // enabled in the browser when the BigPipe no-JS cookie is set.
+    // @see setUp()
+    // @see performMetaRefresh()
+    $this->performMetaRefresh();
+    $this->assertBigPipeNoJsCookieExists(TRUE);
+    $this->drupalGet(Url::fromRoute('big_pipe_test_multi_occurrence'));
+    $this->assertRaw('The count is 1.');
+    $this->assertNoRaw('The count is 2.');
+    $this->assertNoRaw('The count is 3.');
+  }
+
   protected function assertBigPipeResponseHeadersPresent() {
     $this->pass('Verifying BigPipe response headers…', 'Debug');
     $this->assertTrue(FALSE !== strpos($this->drupalGetHeader('Cache-Control'), 'private'), 'Cache-Control header set to "private".');

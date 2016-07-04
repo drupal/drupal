@@ -15,3 +15,12 @@ no_big_pipe:
     _no_big_pipe: TRUE
   requirements:
     _access: 'TRUE'
+
+big_pipe_test_multi_occurrence:
+  path: '/big_pipe_test_multi_occurrence'
+  defaults:
+    _controller: '\Drupal\big_pipe_test\BigPipeTestController::multiOccurrence'
+    _title: 'BigPipe test multiple occurrences of the same placeholder'
+  requirements:
+    _access: 'TRUE'
+
