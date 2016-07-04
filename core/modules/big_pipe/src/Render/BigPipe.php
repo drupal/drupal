@@ -226,12 +226,28 @@ class BigPipe implements BigPipeInterface {
     $preg_placeholder_strings = array_map($prepare_for_preg_split, array_keys($no_js_placeholders));
     $fragments = preg_split('/' . implode('|', $preg_placeholder_strings) . '/', $html, NULL, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
+    // Determine how many occurrences there are of each no-JS placeholder.
+    $placeholder_occurrences = array_count_values(array_intersect($fragments, array_keys($no_js_placeholders)));
+
+    // Set up a variable to store the content of placeholders that have multiple
+    // occurrences.
+    $multi_occurrence_placeholders_content = [];
+
     foreach ($fragments as $fragment) {
       // If the fragment isn't one of the no-JS placeholders, it is the HTML in
       // between placeholders and it must be printed & flushed immediately. The
       // rest of the logic in the loop handles the placeholders.
       if (!isset($no_js_placeholders[$fragment])) {
         print $fragment;
+        flush();
+        continue;
+      }
+
+      // If there are multiple occurrences of this particular placeholder, and
+      // this is the second occurrence, we can skip all calculations and just
+      // send the same content.
+      if ($placeholder_occurrences[$fragment] > 1 && isset($multi_occurrence_placeholders_content[$fragment])) {
+        print $multi_occurrence_placeholders_content[$fragment];
         flush();
         continue;
       }
@@ -310,6 +326,13 @@ class BigPipe implements BigPipeInterface {
       // they can be sent in ::sendPreBody().
       $cumulative_assets->setAlreadyLoadedLibraries(array_merge($cumulative_assets->getAlreadyLoadedLibraries(), $html_response->getAttachments()['library']));
       $cumulative_assets->setSettings($html_response->getAttachments()['drupalSettings']);
+
+      // If there are multiple occurrences of this particular placeholder, track
+      // the content that was sent, so we can skip all calculations for the next
+      // occurrence.
+      if ($placeholder_occurrences[$fragment] > 1) {
+        $multi_occurrence_placeholders_content[$fragment] = $html_response->getContent();
+      }
     }
   }
 
@@ -508,7 +531,9 @@ EOF;
    *
    * @return array
    *   Indexed array; the order in which the BigPipe placeholders must be sent.
-   *   Values are the BigPipe placeholder IDs.
+   *   Values are the BigPipe placeholder IDs. Note that only unique
+   *   placeholders are kept: if the same placeholder occurs multiple times, we
+   *   only keep the first occurrence.
    */
   protected function getPlaceholderOrder($html) {
     $fragments = explode('<div data-big-pipe-placeholder-id="', $html);
@@ -521,7 +546,7 @@ EOF;
       $order[] = $placeholder;
     }
 
-    return $order;
+    return array_unique($order);
   }
 
 }
