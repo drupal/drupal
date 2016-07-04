@@ -150,7 +150,7 @@ Drupal 7.40, 2015-10-14
   against SQL injection (API change: https://www.drupal.org/node/2463973).
 - Fixed a bug in the Drupal 6 to Drupal 7 upgrade path which caused the upgrade
   to fail when there were multiple file records pointing to the same file.
-- Added a a new option to format_xml_elections() to allow for already encoded
+- Added a a new option to format_xml_elements() to allow for already encoded
   values.
 - Numerous small bug fixes.
 - Numerous API documentation improvements.
