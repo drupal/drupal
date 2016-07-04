@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -106,6 +107,17 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
    */
   protected function getDisplayModeOptions() {
     return $this->entityManager->getViewModeOptions($this->entity->getTargetEntityTypeId());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDisplayModesLink() {;
+    return [
+      '#type' => 'link',
+      '#title' => t('Manage view modes'),
+      '#url' => Url::fromRoute('entity.entity_view_mode.collection'),
+    ];
   }
 
   /**
