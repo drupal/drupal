@@ -795,6 +795,14 @@ function update_fix_d7_requirements() {
 function update_fix_d7_install_profile() {
   $profile = drupal_get_profile();
 
+  // 'Default' profile has been renamed to 'Standard' in D7.
+  // We change the profile here to prevent a broken record in the system table.
+  // See system_update_7049().
+  if ($profile == 'default') {
+    $profile = 'standard';
+    variable_set('install_profile', $profile);
+  }
+
   $results = db_select('system', 's')
     ->fields('s', array('name', 'schema_version'))
     ->condition('name', $profile)

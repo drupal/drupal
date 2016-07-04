@@ -127,6 +127,20 @@ function system_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['system-test/drupal-get-filename'] = array(
+    'title' => 'Test drupal_get_filename()',
+    'page callback' => 'system_test_drupal_get_filename',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/drupal-get-filename-with-schema-rebuild'] = array(
+    'title' => 'Test drupal_get_filename() with a schema rebuild',
+    'page callback' => 'system_test_drupal_get_filename_with_schema_rebuild',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -481,4 +495,77 @@ function system_test_request_destination() {
   // No need to render the whole page, we are just interested in this bit of
   // information.
   exit;
+}
+
+/**
+ * Page callback to run drupal_get_filename() on a particular module.
+ */
+function system_test_drupal_get_filename() {
+  // Prevent SimpleTest from failing as a result of the expected PHP warnings
+  // this function causes. Any warnings will be recorded in the database logs
+  // for examination by the tests.
+  define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+
+  $module_name = variable_get('system_test_drupal_get_filename_test_module_name');
+  drupal_get_filename('module', $module_name);
+
+  return '';
+}
+
+/**
+ * Page callback to run drupal_get_filename() and do a schema rebuild.
+ */
+function system_test_drupal_get_filename_with_schema_rebuild() {
+  // Prevent SimpleTest from failing as a result of the expected PHP warnings
+  // this function causes.
+  define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+
+  // Record the original database tables from drupal_get_schema().
+  variable_set('system_test_drupal_get_filename_with_schema_rebuild_original_tables', array_keys(drupal_get_schema(NULL, TRUE)));
+
+  // Trigger system_test_schema() and system_test_watchdog() to perform an
+  // attempted recursive rebuild when drupal_get_schema() is called. See
+  // BootstrapGetFilenameWebTestCase::testRecursiveRebuilds().
+  variable_set('system_test_drupal_get_filename_attempt_recursive_rebuild', TRUE);
+  drupal_get_schema(NULL, TRUE);
+
+  return '';
+}
+
+/**
+ * Implements hook_watchdog().
+ */
+function system_test_watchdog($log_entry) {
+  // If an attempted recursive schema rebuild has been triggered by
+  // system_test_drupal_get_filename_with_schema_rebuild(), perform the rebuild
+  // in response to the missing file message triggered by system_test_schema().
+  if (!variable_get('system_test_drupal_get_filename_attempt_recursive_rebuild')) {
+    return;
+  }
+  if ($log_entry['type'] != 'php' || $log_entry['severity'] != WATCHDOG_WARNING) {
+    return;
+  }
+  $module_name = variable_get('system_test_drupal_get_filename_test_module_name');
+  if (!isset($log_entry['variables']['!message']) || strpos($log_entry['variables']['!message'], format_string('The following module is missing from the file system: %name', array('%name' => $module_name))) === FALSE) {
+    return;
+  }
+  variable_set('system_test_drupal_get_filename_with_schema_rebuild_final_tables', array_keys(drupal_get_schema()));
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function system_test_module_implements_alter(&$implementations, $hook) {
+  // For BootstrapGetFilenameWebTestCase::testRecursiveRebuilds() to work
+  // correctly, this module's hook_schema() implementation cannot be either the
+  // first implementation (since that would trigger a potential recursive
+  // rebuild before anything is in the drupal_get_schema() cache) or the last
+  // implementation (since that would trigger a potential recursive rebuild
+  // after the cache is already complete). So put it somewhere in the middle.
+  if ($hook == 'schema') {
+    $group = $implementations['system_test'];
+    unset($implementations['system_test']);
+    $count = count($implementations);
+    $implementations = array_merge(array_slice($implementations, 0, $count / 2, TRUE), array('system_test' => $group), array_slice($implementations, $count / 2, NULL, TRUE));
+  }
 }

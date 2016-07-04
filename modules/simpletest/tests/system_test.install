@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the system_test module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function system_test_schema() {
+  // Trigger a search for a module in the filesystem when requested by
+  // system_test_drupal_get_filename_with_schema_rebuild().
+  if (variable_get('system_test_drupal_get_filename_attempt_recursive_rebuild')) {
+    $module_name = variable_get('system_test_drupal_get_filename_test_module_name');
+    drupal_get_filename('module', $module_name);
+  }
+
+  return array();
+}
