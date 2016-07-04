@@ -236,7 +236,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['id'] ->setLabel(t('Entity ID'))
+    $fields['id']->setLabel(t('Entity ID'))
       ->setDescription(t('The entity ID for this menu link content entity.'));
 
     $fields['uuid']->setDescription(t('The content menu link UUID.'));
