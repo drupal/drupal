@@ -1,3 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - hal
+    - node
 id: entity.node
 plugin_id: 'entity:node'
 granularity: method
@@ -22,8 +29,3 @@ configuration:
       - hal_json
     supported_auth:
       - basic_auth
-dependencies:
-  module:
-    - node
-    - basic_auth
-    - hal
