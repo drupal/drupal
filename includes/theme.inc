@@ -1119,7 +1119,7 @@ function theme($hook, $variables = array()) {
     foreach (array('preprocess functions', 'process functions') as $phase) {
       if (!empty($info[$phase])) {
         foreach ($info[$phase] as $processor_function) {
-          if (is_callable($processor_function)) {
+          if (function_exists($processor_function)) {
             // We don't want a poorly behaved process function changing $hook.
             $hook_clone = $hook;
             $processor_function($variables, $hook_clone);
@@ -1157,7 +1157,7 @@ function theme($hook, $variables = array()) {
   // Generate the output using either a function or a template.
   $output = '';
   if (isset($info['function'])) {
-    if (is_callable($info['function'])) {
+    if (function_exists($info['function'])) {
       $output = $info['function']($variables);
     }
   }
