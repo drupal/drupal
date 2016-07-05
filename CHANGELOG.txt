@@ -53,6 +53,7 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Increased maxlength of menu link title input fields in the node form and
   menu link form from 128 to 255 characters.
 - Avoid re-scanning of module directory when a filename or a module is missing.
+- Fixed ajax handling for tableselect form elements that use checkboxes.
 
 Drupal 7.44, 2016-06-15
 -----------------------

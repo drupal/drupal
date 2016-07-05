@@ -589,11 +589,17 @@ function _form_test_tableselect_form_builder($form, $form_state, $element_proper
   $form['tableselect'] = $element_properties;
 
   $form['tableselect'] += array(
+    '#prefix' => '<div id="tableselect-wrapper">',
+    '#suffix' => '</div>',
     '#type' => 'tableselect',
     '#header' => $header,
     '#options' => $options,
     '#multiple' => FALSE,
     '#empty' => t('Empty text.'),
+    '#ajax' => array(
+      'callback' => '_form_test_tableselect_ajax_callback',
+      'wrapper' => 'tableselect-wrapper',
+    ),
   );
 
   $form['submit'] = array(
@@ -695,6 +701,13 @@ function _form_test_vertical_tabs_form($form, &$form_state) {
     '#type' => 'textfield',
   );
   return $form;
+}
+
+/**
+* Ajax callback that returns the form element.
+*/
+function _form_test_tableselect_ajax_callback($form, &$form_state) {
+  return $form['tableselect'];
 }
 
 /**
