@@ -69,6 +69,17 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
       ),
     );
     $terms = Term::loadMultiple(array_keys($expected_results));
+
+    // Find each term in the tree.
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $vids = array_unique(array_column($expected_results, 'vid'));
+    $tree_terms = [];
+    foreach ($vids as $vid) {
+      foreach ($storage->loadTree($vid) as $term) {
+        $tree_terms[$term->tid] = $term;
+      }
+    }
+
     foreach ($expected_results as $tid => $values) {
       /** @var Term $term */
       $term = $terms[$tid];
@@ -86,6 +97,10 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
         }
         $this->assertIdentical($parents, $values['parent']);
       }
+
+      $this->assertArrayHasKey($tid, $tree_terms, "Term $tid exists in vocabulary tree");
+      $tree_term = $tree_terms[$tid];
+      $this->assertEquals($values['parent'], $tree_term->parents, "Term $tid has correct parents in vocabulary tree");
     }
   }
 
