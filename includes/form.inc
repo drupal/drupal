@@ -1718,9 +1718,10 @@ function form_error(&$element, $message = '') {
  * each element). Each of these three pipelines provides ample opportunity for
  * modules to customize what happens. For example, during this function's life
  * cycle, the following functions get called for each element:
- * - $element['#value_callback']: A function that implements how user input is
- *   mapped to an element's #value property. This defaults to a function named
- *   'form_type_TYPE_value' where TYPE is $element['#type'].
+ * - $element['#value_callback']: A function (or as of Drupal 7.50, any kind of
+ *   callback) that implements how user input is mapped to an element's #value
+ *    property. This defaults to a function named 'form_type_TYPE_value' where
+ *    TYPE is $element['#type'].
  * - $element['#process']: An array of functions called after user input has
  *   been mapped to the element's #value property. These functions can be used
  *   to dynamically add child elements: for example, for the 'date' element
@@ -2100,7 +2101,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
       // If we have input for the current element, assign it to the #value
       // property, optionally filtered through $value_callback.
       if ($input_exists) {
-        if (function_exists($value_callback)) {
+        if (is_callable($value_callback)) {
           // Skip all value callbacks except safe ones like text if the CSRF
           // token was invalid.
           if (empty($form_state['invalid_token']) || in_array($value_callback, $safe_core_value_callbacks)) {
@@ -2122,7 +2123,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
     // Load defaults.
     if (!isset($element['#value'])) {
       // Call #type_value without a second argument to request default_value handling.
-      if (function_exists($value_callback)) {
+      if (is_callable($value_callback)) {
         $element['#value'] = $value_callback($element, FALSE, $form_state);
       }
       // Final catch. If we haven't set a value yet, use the explicit default value.
@@ -4702,7 +4703,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
 
       // Redirect for processing.
       $function = $batch['redirect_callback'];
-      if (function_exists($function)) {
+      if (is_callable($function)) {
         $function($batch['url'], array('query' => array('op' => 'start', 'id' => $batch['id'])));
       }
     }
