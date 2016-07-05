@@ -54,6 +54,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
   menu link form from 128 to 255 characters.
 - Avoid re-scanning of module directory when a filename or a module is missing.
 - Fixed ajax handling for tableselect form elements that use checkboxes.
+- Fixed that URL generation only worked on port 80 when using domain based
+  language negotation.
 
 Drupal 7.44, 2016-06-15
 -----------------------

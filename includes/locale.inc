@@ -435,6 +435,13 @@ function locale_language_url_rewrite_url(&$path, &$options) {
     switch (variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX)) {
       case LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN:
         if ($options['language']->domain) {
+          // Save the original base URL. If it contains a port, we need to
+          // retain it below.
+          if (!empty($options['base_url'])) {
+            // The colon in the URL scheme messes up the port checking below.
+            $normalized_base_url = str_replace(array('https://', 'http://'), '', $options['base_url']);
+          }
+
           // Ask for an absolute URL with our modified base_url.
           global $is_https;
           $url_scheme = ($is_https) ? 'https://' : 'http://';
@@ -449,6 +456,19 @@ function locale_language_url_rewrite_url(&$path, &$options) {
 
           // Apply the appropriate protocol to the URL.
           $options['base_url'] = $url_scheme . $host;
+
+          // In case either the original base URL or the HTTP host contains a
+          // port, retain it.
+          $http_host = $_SERVER['HTTP_HOST'];
+          if (isset($normalized_base_url) && strpos($normalized_base_url, ':') !== FALSE) {
+            list($host, $port) = explode(':', $normalized_base_url);
+            $options['base_url'] .= ':' . $port;
+          }
+          elseif (strpos($http_host, ':') !== FALSE) {
+            list($host, $port) = explode(':', $http_host);
+            $options['base_url'] .= ':' . $port;
+          }
+
           if (isset($options['https']) && variable_get('https', FALSE)) {
             if ($options['https'] === TRUE) {
               $options['base_url'] = str_replace('http://', 'https://', $options['base_url']);
