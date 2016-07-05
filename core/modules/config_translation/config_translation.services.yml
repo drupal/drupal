@@ -20,7 +20,7 @@ services:
   plugin.manager.config_translation.mapper:
     class: Drupal\config_translation\ConfigMapperManager
     arguments:
-      - '@cache.default'
+      - '@cache.discovery'
       - '@language_manager'
       - '@module_handler'
       - '@config.typed'

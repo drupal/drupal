@@ -424,7 +424,7 @@ services:
     class: Drupal\Core\Path\AliasWhitelist
     tags:
       - { name: needs_destruction }
-    arguments: [path_alias_whitelist, '@cache.default', '@lock', '@state', '@path.alias_storage']
+    arguments: [path_alias_whitelist, '@cache.bootstrap', '@lock', '@state', '@path.alias_storage']
   path.alias_manager:
     class: Drupal\Core\Path\AliasManager
     arguments: ['@path.alias_storage', '@path.alias_whitelist', '@language_manager', '@cache.data']
@@ -1430,7 +1430,7 @@ services:
     arguments: ['@current_user', '@session_handler.write_safe']
   user_permissions_hash_generator:
     class: Drupal\Core\Session\PermissionsHashGenerator
-    arguments: ['@private_key', '@cache.default', '@cache.static']
+    arguments: ['@private_key', '@cache.bootstrap', '@cache.static']
   current_user:
     class: Drupal\Core\Session\AccountProxy
   session_configuration:

@@ -43,7 +43,7 @@ class PathAliasTest extends PathTestBase {
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     // Check the path alias whitelist cache.
-    $whitelist = \Drupal::cache()->get('path_alias_whitelist');
+    $whitelist = \Drupal::cache('bootstrap')->get('path_alias_whitelist');
     $this->assertTrue($whitelist->data['node']);
     $this->assertFalse($whitelist->data['admin']);
 
