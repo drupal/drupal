@@ -2355,6 +2355,20 @@ class UpdateScriptFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
+   * Tests that there are no pending updates for the first test method.
+   */
+  function testNoPendingUpdates() {
+    // Ensure that for the first test method in a class, there are no pending
+    // updates. This tests a drupal_get_schema_versions() bug that previously
+    // led to the wrong schema version being recorded for the initial install
+    // of a child site during automated testing.
+    $this->drupalLogin($this->update_user);
+    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->drupalPost(NULL, array(), t('Continue'));
+    $this->assertText(t('No pending updates.'), 'End of update process was reached.');
+  }
+
+  /**
    * Tests access to the update script.
    */
   function testUpdateAccess() {

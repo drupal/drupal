@@ -532,6 +532,9 @@ function system_install() {
   module_list(TRUE);
   module_implements('', FALSE, TRUE);
 
+  // Ensure the schema versions are not based on a previous module list.
+  drupal_static_reset('drupal_get_schema_versions');
+
   // Load system theme data appropriately.
   system_rebuild_theme_data();
 
