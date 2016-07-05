@@ -2571,7 +2571,7 @@ function form_type_select_value($element, $input = FALSE) {
  *   for this element. Return nothing to use the default.
  */
 function form_type_textarea_value($element, $input = FALSE) {
-  if ($input !== FALSE) {
+  if ($input !== FALSE && $input !== NULL) {
     // This should be a string, but allow other scalars since they might be
     // valid input in programmatic form submissions.
     return is_scalar($input) ? (string) $input : '';

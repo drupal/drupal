@@ -2119,3 +2119,36 @@ class HTMLIdTestCase extends DrupalWebTestCase {
     $this->assertNoDuplicateIds('There are no duplicate IDs');
   }
 }
+
+/**
+ * Tests for form textarea.
+ */
+class FormTextareaTestCase extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Form textarea',
+      'description' => 'Tests form textarea related functions.',
+      'group' => 'Form API',
+    );
+  }
+
+  /**
+   * Tests that textarea value is properly set.
+   */
+  public function testValueCallback() {
+    $element = array();
+    $form_state = array();
+    $test_cases = array(
+      array(NULL, FALSE),
+      array(NULL, NULL),
+      array('', array('test')),
+      array('test', 'test'),
+      array('123', 123),
+    );
+    foreach ($test_cases as $test_case) {
+      list($expected, $input) = $test_case;
+      $this->assertIdentical($expected, form_type_textarea_value($element, $input, $form_state));
+    }
+  }
+}
