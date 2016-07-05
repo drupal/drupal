@@ -16,6 +16,13 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
   public static $modules = array('taxonomy', 'text');
 
   /**
+   * The cached taxonomy tree items, keyed by vid and tid.
+   *
+   * @var array
+   */
+  protected $treeData = [];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -52,6 +59,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertEquals($expected_format, $entity->getFormat());
     $this->assertEqual($expected_weight, $entity->getWeight());
     $this->assertIdentical($expected_parents, $this->getParentIDs($id));
+    $this->assertHierarchy($expected_vid, $id, $expected_parents);
   }
 
   /**
@@ -79,6 +87,30 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    */
   protected function getParentIDs($tid) {
     return array_keys(\Drupal::entityManager()->getStorage('taxonomy_term')->loadParents($tid));
+  }
+
+  /**
+   * Assert that a term is present in the tree storage, with the right parents.
+   *
+   * @param string $vid
+   *   Vocabular ID.
+   * @param int $tid
+   *   ID of the term to check.
+   * @param array $parent_ids
+   *   The expected parent term IDs.
+   */
+  protected function assertHierarchy($vid, $tid, array $parent_ids) {
+    if (!isset($this->treeData[$vid])) {
+      $tree = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
+      $this->treeData[$vid] = [];
+      foreach ($tree as $item) {
+        $this->treeData[$vid][$item->tid] = $item;
+      }
+    }
+
+    $this->assertArrayHasKey($tid, $this->treeData[$vid], "Term $tid exists in taxonomy tree");
+    $term = $this->treeData[$vid][$tid];
+    $this->assertEquals($parent_ids, array_filter($term->parents), "Term $tid has correct parents in taxonomy tree");
   }
 
 }
