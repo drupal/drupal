@@ -59,6 +59,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Fixed Drupal 7.36 regression: hidden field textarea #default_value is
   ignored.
 - Made it possible to use any callable as an ajax form callback.
+- Made it possible to use any callable as menu access, menu theme, menu title
+  and page delivery callback.
 
 Drupal 7.44, 2016-06-15
 -----------------------
