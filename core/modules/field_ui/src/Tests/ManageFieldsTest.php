@@ -267,6 +267,23 @@ class ManageFieldsTest extends WebTestBase {
     $this->assertLink(t('Field settings'));
     $this->assertLinkByHref($field_edit_path);
 
+    // Add two entries in the body.
+    $edit = ['title[0][value]' => 'Cardinality', 'body[0][value]' => 'Body 1', 'body[1][value]' => 'Body 2'];
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
+
+    // Assert that you can't set the cardinality to a lower number than the
+    // highest delta of this field.
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 1,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
+    $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 2]), 'Correctly failed to set cardinality lower than highest delta.');
+
+    // Create a second entity with three values.
+    $edit = ['title[0][value]' => 'Cardinality 3', 'body[0][value]' => 'Body 1', 'body[1][value]' => 'Body 2', 'body[2][value]' => 'Body 3'];
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
+
     // Set to unlimited.
     $edit = array(
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -276,6 +293,28 @@ class ManageFieldsTest extends WebTestBase {
     $this->drupalGet($field_edit_path);
     $this->assertFieldByXPath("//select[@name='cardinality']", FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $this->assertFieldByXPath("//input[@name='cardinality_number']", 1);
+
+    // Assert that you can't set the cardinality to a lower number then the
+    // highest delta of this field but can set it to the same.
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 1,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
+    $this->assertRaw(t('There are @count entities with @delta or more values in this field.', ['@count' => 2, '@delta' => 2]), 'Correctly failed to set cardinality lower than highest delta.');
+
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 2,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
+    $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 3]), 'Correctly failed to set cardinality lower than highest delta.');
+
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 3,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
   }
 
   /**
