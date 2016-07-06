@@ -58,7 +58,9 @@ Drupal 7.50, xxxx-xx-xx (development version)
   language negotation.
 - Fixed Drupal 7.36 regression: hidden field textarea #default_value is
   ignored.
-- Made it possible to use any callable as an ajax form callback.
+- Made it possible to use any PHP callable in Ajax form callbacks, form API
+  form-building functions, and form API wrapper callbacks (API addition:
+  https://www.drupal.org/node/2761169).
 
 Drupal 7.44, 2016-06-15
 -----------------------
