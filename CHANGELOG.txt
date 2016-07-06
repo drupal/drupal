@@ -57,6 +57,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Made method="get" forms work inside the administrative overlay. The fix adds
   a new hidden field to these forms when they appear inside the overlay (minor
   data structure change).
+- Added a new option to format_xml_elements() to allow for already encoded
+  values.
 - Changed the {history} table's node ID field to be an unsigned integer, to
   match the same field in the {node} table and to prevent errors with very
   large node IDs.
@@ -165,8 +167,6 @@ Drupal 7.40, 2015-10-14
   against SQL injection (API change: https://www.drupal.org/node/2463973).
 - Fixed a bug in the Drupal 6 to Drupal 7 upgrade path which caused the upgrade
   to fail when there were multiple file records pointing to the same file.
-- Added a new option to format_xml_elements() to allow for already encoded
-  values.
 - Numerous small bug fixes.
 - Numerous API documentation improvements.
 - Additional automated test coverage.
