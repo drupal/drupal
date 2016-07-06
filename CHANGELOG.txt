@@ -24,7 +24,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Numerous small bugfixes.
 - Numerous API documentation improvements.
 - Fixed that following a password reset link while logged in leaves users unable
-  to change their password.
+  to change their password (minor user interface change:
+  https://www.drupal.org/node/2759023).
 - Added a .editorconfig file to auto-configure editors that support it.
 - Fixed that cookies from previous tests are still present when a new test
   starts in DrupalWebTestCase.
@@ -52,7 +53,8 @@ Drupal 7.50, xxxx-xx-xx (development version)
   data structure change).
 - Increased maxlength of menu link title input fields in the node form and
   menu link form from 128 to 255 characters.
-- Avoid re-scanning of module directory when a filename or a module is missing.
+- Performance improvement: Avoid re-scanning directories when a file is missing
+  (minor API change: https://www.drupal.org/node/2581445).
 - Fixed ajax handling for tableselect form elements that use checkboxes.
 - Fixed that URL generation only works on port 80 when using domain based
   language negotation.
