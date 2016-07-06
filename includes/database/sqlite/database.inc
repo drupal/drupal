@@ -378,6 +378,14 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     }
   }
 
+  public function utf8mb4IsActive() {
+    return TRUE;
+  }
+
+  public function utf8mb4IsSupported() {
+    return TRUE;
+  }
+
 }
 
 /**

@@ -81,7 +81,8 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     // Provide defaults if needed.
     $table += array(
       'mysql_engine' => 'InnoDB',
-      'mysql_character_set' => 'utf8',
+      // Allow the default charset to be overridden in settings.php.
+      'mysql_character_set' => $this->connection->utf8mb4IsActive() ? 'utf8mb4' : 'utf8',
     );
 
     $sql = "CREATE TABLE {" . $name . "} (\n";
@@ -107,6 +108,13 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     // @see DatabaseConnection_mysql
     if (!empty($info['collation'])) {
       $sql .= ' COLLATE ' . $info['collation'];
+    }
+
+    // The row format needs to be either DYNAMIC or COMPRESSED in order to allow
+    // for the innodb_large_prefix setting to take effect, see
+    // https://dev.mysql.com/doc/refman/5.6/en/create-table.html
+    if ($this->connection->utf8mb4IsActive()) {
+      $sql .= ' ROW_FORMAT=DYNAMIC';
     }
 
     // Add table comment.
