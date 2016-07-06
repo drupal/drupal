@@ -105,8 +105,7 @@
  *   generate the same form (or very similar forms) using different $form_ids
  *   can implement hook_forms(), which maps different $form_id values to the
  *   proper form constructor function. Examples may be found in node_forms(),
- *   and search_forms(). hook_forms() can also be used to define forms in
- *   classes.
+ *   and search_forms().
  * @param ...
  *   Any additional arguments are passed on to the functions called by
  *   drupal_get_form(), including the unique form constructor function. For
@@ -810,7 +809,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
     }
     if (isset($form_definition['callback'])) {
       $callback = $form_definition['callback'];
-      $form_state['build_info']['base_form_id'] = isset($form_definition['base_form_id']) ? $form_definition['base_form_id'] : $callback;
+      $form_state['build_info']['base_form_id'] = $callback;
     }
     // In case $form_state['wrapper_callback'] is not defined already, we also
     // allow hook_forms() to define one.
@@ -831,7 +830,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // the actual form builder function ($callback) expects. This allows for
   // pre-populating a form with common elements for certain forms, such as
   // back/next/save buttons in multi-step form wizards. See drupal_build_form().
-  if (isset($form_state['wrapper_callback']) && is_callable($form_state['wrapper_callback'])) {
+  if (isset($form_state['wrapper_callback']) && function_exists($form_state['wrapper_callback'])) {
     $form = call_user_func_array($form_state['wrapper_callback'], $args);
     // Put the prepopulated $form into $args.
     $args[0] = $form;
