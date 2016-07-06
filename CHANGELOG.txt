@@ -1,44 +1,62 @@
 
 Drupal 7.50, xxxx-xx-xx (development version)
 -----------------------
-- Removed meaningless post-check=0 and pre-check=0 cache control headers from
-  Drupal HTTP responses.
-- Added clickjacking protection to Drupal core by setting the X-Frame-Options
-  header to SAMEORIGIN by default (https://www.drupal.org/node/2735873).
 - Added a new "administer fields" permission for trusted users, which is
   required in addition to other permissions to use the field UI
   (https://www.drupal.org/node/2483307).
+- Added clickjacking protection to Drupal core by setting the X-Frame-Options
+  header to SAMEORIGIN by default (https://www.drupal.org/node/2735873).
+- Added support for full UTF-8 (emojis, Asian symbols, mathematical symbols) on
+  MySQL and other database drivers when the site and database are configured to
+  allow it (https://www.drupal.org/node/2761183).
+- Performance improvement: Avoid re-scanning directories when a file is missing
+  (minor API change: https://www.drupal.org/node/2581445).
+- Made it possible to use any PHP callable in Ajax form callbacks, form API
+  form-building functions, and form API wrapper callbacks (API addition:
+  https://www.drupal.org/node/2761169).
+- Fixed that following a password reset link while logged in leaves users unable
+  to change their password (minor user interface change:
+  https://www.drupal.org/node/2759023).
+- Implemented various fixes for automated test failures on PHP 5.4+ and PHP 7.
+- Fixed various PHP 7 problems.
+- Fixed various bugs with PHP 5.5 imagerotate(), including when incorrect color
+  indices are passed in.
+- Fixed a regression introduced in Drupal 7.43 that allowed files uploaded by
+  anonymous users to be lost after form validation errors, and that also caused
+  regressions with certain contributed modules.
+- Fixed Drupal 7.36 regression: hidden field textarea #default_value is
+  ignored.
+- Fixed robots.txt to allow search engines to access CSS, JavaScript and image
+  files.
+- Removed meaningless post-check=0 and pre-check=0 cache control headers from
+  Drupal HTTP responses.
 - Changed wording on the Update Manager settings page to clarify that the
   option to check for disabled module updates also applies to uninstalled
   modules (administrative-facing translatable string change).
 - Changed the help text when editing menu links and configuring URL redirect
   actions so that it does not reference "Drupal" or the drupal.org website
   (administrative-facing translatable string change).
-- Fixed a regression introduced in Drupal 7.43 that allowed files uploaded by
-  anonymous users to be lost after form validation errors, and that also caused
-  regressions with certain contributed modules.
-- Fixed the locale safety check that is used to ensure that translations are
-  safe to allow for tokens in the href/src attributes of translated strings.
-- Implemented various fixes for automated test failures on PHP 5.4+ and PHP 7.
-- Improved performance of queries on authmap table.
-- Numerous small bugfixes.
-- Numerous API documentation improvements.
-- Fixed that following a password reset link while logged in leaves users unable
-  to change their password (minor user interface change:
-  https://www.drupal.org/node/2759023).
 - Added a .editorconfig file to auto-configure editors that support it.
-- Fixed that cookies from previous tests are still present when a new test
-  starts in DrupalWebTestCase.
+- Increased maxlength of menu link title input fields in the node form and
+  menu link form from 128 to 255 characters.
 - Added --directory option to run-tests.sh for easier test discovery of all
   tests within a project.
 - Made run-tests.sh exit with a failure code when there are test fails or
   problems running the script.
-- Fixed robots.txt to allow search engines to access CSS, JavaScript and image
-  files.
+- Fixed that cookies from previous tests are still present when a new test
+  starts in DrupalWebTestCase.
+- Improved performance of queries on authmap table.
 - Fixed handling of missing files and functions inside the registry.
-- Fixed various PHP 7 problems.
-- Fixed various bugs with PHP 5.5 imagerotate(), including when incorrect color
-  indices are passed in.
+- Fixed ajax handling for tableselect form elements that use checkboxes.
+- Fixed a bug which caused ip_address() to return nothing when the client IP
+  address and proxy IP address are the same.
+- Fixed the locale safety check that is used to ensure that translations are
+  safe to allow for tokens in the href/src attributes of translated strings.
+- Fixed that URL generation only works on port 80 when using domain based
+  language negotation.
+- Made method="get" forms work inside the administrative overlay. The fix adds
+  a new hidden field to these forms when they appear inside the overlay (minor
+  data structure change).
 - Changed the {history} table's node ID field to be an unsigned integer, to
   match the same field in the {node} table and to prevent errors with very
   large node IDs.
@@ -46,26 +64,9 @@ Drupal 7.50, xxxx-xx-xx (development version)
   User module (minor data structure change). Previously this automatically
   inherited the page callback from the parent "admin/people" menu item, which
   broke contributed modules that override the "admin/people" page.
-- Fixed a bug which caused ip_address() to return nothing when the client IP
-  address and proxy IP address are the same.
-- Made method="get" forms work inside the administrative overlay. The fix adds
-  a new hidden field to these forms when they appear inside the overlay (minor
-  data structure change).
-- Increased maxlength of menu link title input fields in the node form and
-  menu link form from 128 to 255 characters.
-- Performance improvement: Avoid re-scanning directories when a file is missing
-  (minor API change: https://www.drupal.org/node/2581445).
-- Fixed ajax handling for tableselect form elements that use checkboxes.
-- Fixed that URL generation only works on port 80 when using domain based
-  language negotation.
-- Fixed Drupal 7.36 regression: hidden field textarea #default_value is
-  ignored.
-- Made it possible to use any PHP callable in Ajax form callbacks, form API
-  form-building functions, and form API wrapper callbacks (API addition:
-  https://www.drupal.org/node/2761169).
-- Added support for full UTF-8 (emojis, Asian symbols, mathematical symbols) on
-  MySQL and other database drivers when the site and database are configured to
-  allow it (https://www.drupal.org/node/2761183).
+- Numerous small bugfixes.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.44, 2016-06-15
 -----------------------
