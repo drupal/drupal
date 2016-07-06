@@ -161,8 +161,6 @@ Drupal 7.40, 2015-10-14
   to fail when there were multiple file records pointing to the same file.
 - Added a new option to format_xml_elements() to allow for already encoded
   values.
-- Added support for the use of callbacks instead of functions in
-  #value_callback.
 - Numerous small bug fixes.
 - Numerous API documentation improvements.
 - Additional automated test coverage.
