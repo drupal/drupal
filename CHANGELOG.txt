@@ -28,17 +28,24 @@ Drupal 7.50, xxxx-xx-xx (development version)
   ignored.
 - Fixed robots.txt to allow search engines to access CSS, JavaScript and image
   files.
-- Removed meaningless post-check=0 and pre-check=0 cache control headers from
-  Drupal HTTP responses.
 - Changed wording on the Update Manager settings page to clarify that the
   option to check for disabled module updates also applies to uninstalled
   modules (administrative-facing translatable string change).
 - Changed the help text when editing menu links and configuring URL redirect
   actions so that it does not reference "Drupal" or the drupal.org website
   (administrative-facing translatable string change).
-- Added a .editorconfig file to auto-configure editors that support it.
+- Fixed the locale safety check that is used to ensure that translations are
+  safe to allow for tokens in the href/src attributes of translated strings.
+- Fixed that URL generation only works on port 80 when using domain based
+  language negotation.
+- Made method="get" forms work inside the administrative overlay. The fix adds
+  a new hidden field to these forms when they appear inside the overlay (minor
+  data structure change).
 - Increased maxlength of menu link title input fields in the node form and
   menu link form from 128 to 255 characters.
+- Removed meaningless post-check=0 and pre-check=0 cache control headers from
+  Drupal HTTP responses.
+- Added a .editorconfig file to auto-configure editors that support it.
 - Added --directory option to run-tests.sh for easier test discovery of all
   tests within a project.
 - Made run-tests.sh exit with a failure code when there are test fails or
@@ -50,13 +57,6 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Fixed ajax handling for tableselect form elements that use checkboxes.
 - Fixed a bug which caused ip_address() to return nothing when the client IP
   address and proxy IP address are the same.
-- Fixed the locale safety check that is used to ensure that translations are
-  safe to allow for tokens in the href/src attributes of translated strings.
-- Fixed that URL generation only works on port 80 when using domain based
-  language negotation.
-- Made method="get" forms work inside the administrative overlay. The fix adds
-  a new hidden field to these forms when they appear inside the overlay (minor
-  data structure change).
 - Added a new option to format_xml_elements() to allow for already encoded
   values.
 - Changed the {history} table's node ID field to be an unsigned integer, to
