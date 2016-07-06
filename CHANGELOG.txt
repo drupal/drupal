@@ -9,8 +9,9 @@ Drupal 7.50, xxxx-xx-xx (development version)
 - Added support for full UTF-8 (emojis, Asian symbols, mathematical symbols) on
   MySQL and other database drivers when the site and database are configured to
   allow it (https://www.drupal.org/node/2761183).
-- Performance improvement: Avoid re-scanning directories when a file is missing
-  (minor API change: https://www.drupal.org/node/2581445).
+- Improved performance by avoiding a re-scan of directories when a file is
+  missing; instead, trigger a PHP warning (minor API change:
+  https://www.drupal.org/node/2581445).
 - Made it possible to use any PHP callable in Ajax form callbacks, form API
   form-building functions, and form API wrapper callbacks (API addition:
   https://www.drupal.org/node/2761169).
@@ -18,14 +19,15 @@ Drupal 7.50, xxxx-xx-xx (development version)
   to change their password (minor user interface change:
   https://www.drupal.org/node/2759023).
 - Implemented various fixes for automated test failures on PHP 5.4+ and PHP 7.
-- Fixed various PHP 7 problems.
-- Fixed various bugs with PHP 5.5 imagerotate(), including when incorrect color
-  indices are passed in.
+  Drupal core automated tests now pass in these environments.
+- Improved support for PHP 7 by fixing various problems.
+- Fixed various bugs with PHP 5.5+ imagerotate(), including when incorrect
+  color indices are passed in.
 - Fixed a regression introduced in Drupal 7.43 that allowed files uploaded by
   anonymous users to be lost after form validation errors, and that also caused
   regressions with certain contributed modules.
-- Fixed Drupal 7.36 regression: hidden field textarea #default_value is
-  ignored.
+- Fixed a regression introduced in Drupal 7.36 which caused the default value
+  of hidden textarea fields to be ignored.
 - Fixed robots.txt to allow search engines to access CSS, JavaScript and image
   files.
 - Changed wording on the Update Manager settings page to clarify that the
@@ -52,9 +54,9 @@ Drupal 7.50, xxxx-xx-xx (development version)
   problems running the script.
 - Fixed that cookies from previous tests are still present when a new test
   starts in DrupalWebTestCase.
-- Improved performance of queries on authmap table.
+- Improved performance of queries on the {authmap} database table.
 - Fixed handling of missing files and functions inside the registry.
-- Fixed ajax handling for tableselect form elements that use checkboxes.
+- Fixed Ajax handling for tableselect form elements that use checkboxes.
 - Fixed a bug which caused ip_address() to return nothing when the client IP
   address and proxy IP address are the same.
 - Added a new option to format_xml_elements() to allow for already encoded
