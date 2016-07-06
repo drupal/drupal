@@ -163,7 +163,7 @@ function _drupal_session_write($sid, $value) {
   try {
     if (!drupal_save_session()) {
       // We don't have anything to do if we are not allowed to save the session.
-      return;
+      return TRUE;
     }
 
     // Check whether $_SESSION has been changed in this request.
