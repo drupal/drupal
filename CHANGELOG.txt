@@ -1,5 +1,5 @@
 
-Drupal 7.50, xxxx-xx-xx (development version)
+Drupal 7.50, 2016-07-07 
 -----------------------
 - Added a new "administer fields" permission for trusted users, which is
   required in addition to other permissions to use the field UI
