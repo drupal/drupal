@@ -68,7 +68,7 @@ Drupal 7.50, xxxx-xx-xx (development version)
   User module (minor data structure change). Previously this automatically
   inherited the page callback from the parent "admin/people" menu item, which
   broke contributed modules that override the "admin/people" page.
-- Numerous small bugfixes.
+- Numerous small bug fixes.
 - Numerous API documentation improvements.
 - Additional automated test coverage.
 
