@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Entity\Routing;
 
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\Controller\EntityController;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -24,7 +23,6 @@ use Symfony\Component\Routing\RouteCollection;
  * - add-form
  * - edit-form
  * - delete-form
- * - uuid
  *
  * @see \Drupal\Core\Entity\Routing\AdminHtmlRouteProvider.
  *
@@ -83,12 +81,6 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
     if ($add_form_route = $this->getAddFormRoute($entity_type)) {
       $collection->add("entity.{$entity_type_id}.add_form", $add_form_route);
-    }
-
-    // This goes before canonical because the UUID pattern must be tested before
-    // non-integer entity IDs.
-    if ($uuid_route = $this->getUuidRoute($entity_type)) {
-      $collection->add("entity.{$entity_type_id}.uuid", $uuid_route);
     }
 
     if ($canonical_route = $this->getCanonicalRoute($entity_type)) {
@@ -233,34 +225,6 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       if ($this->getEntityTypeIdKeyType($entity_type) === 'integer') {
         $route->setRequirement($entity_type_id, '\d+');
       }
-      return $route;
-    }
-  }
-
-  /**
-   * Gets the UUID route.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type.
-   *
-   * @return \Symfony\Component\Routing\Route|null
-   *   The generated route, if available.
-   */
-  protected function getUuidRoute(EntityTypeInterface $entity_type) {
-    if ($entity_type->getKey('uuid') && $entity_type->hasViewBuilderClass() && $entity_type->hasLinkTemplate('uuid')) {
-      $entity_type_id = $entity_type->id();
-      $route = new Route($entity_type->getLinkTemplate('uuid'));
-      $route
-        ->addDefaults([
-          '_entity_view' => $entity_type_id . '.full',
-          '_title_callback' => '\Drupal\Core\Entity\Controller\EntityController::title',
-        ])
-        ->setRequirement('_entity_access', $entity_type_id . '.view')
-        ->setOption('parameters', [
-          $entity_type_id => ['type' => 'entity:' . $entity_type_id],
-        ])
-        // Set requirement for UUID pattern.
-        ->setRequirement($entity_type_id, '^' . Uuid::VALID_PATTERN . '$');
       return $route;
     }
   }

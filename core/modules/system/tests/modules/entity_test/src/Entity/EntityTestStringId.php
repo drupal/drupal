@@ -29,7 +29,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   },
  *   links = {
  *     "canonical" = "/entity_test_string_id/manage/{entity_test_string_id}",
- *     "uuid" = "/entity_test_string_id/manage/{entity_test_string_id}",
  *     "add-form" = "/entity_test_string_id/add",
  *     "edit-form" = "/entity_test_string_id/manage/{entity_test_string_id}",
  *   },

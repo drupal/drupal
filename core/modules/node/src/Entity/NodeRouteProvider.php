@@ -2,7 +2,6 @@
 
 namespace Drupal\node\Entity;
 
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
 use Symfony\Component\Routing\Route;
@@ -18,17 +17,6 @@ class NodeRouteProvider implements EntityRouteProviderInterface {
    */
   public function getRoutes( EntityTypeInterface $entity_type) {
     $route_collection = new RouteCollection();
-
-    $route = (new Route("/node/{node}"))
-      ->addDefaults([
-        '_controller' => '\Drupal\node\Controller\NodeViewController::view',
-        '_title_callback' => '\Drupal\node\Controller\NodeViewController::title',
-      ])
-      // Set requirement for UUID pattern.
-      ->setRequirement('node', '^' . Uuid::VALID_PATTERN . '$')
-      ->setRequirement('_entity_access', 'node.view');
-    $route_collection->add('entity.node.uuid', $route);
-
     $route = (new Route('/node/{node}'))
       ->addDefaults([
         '_controller' => '\Drupal\node\Controller\NodeViewController::view',

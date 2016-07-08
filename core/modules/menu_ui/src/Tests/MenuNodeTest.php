@@ -2,8 +2,7 @@
 
 namespace Drupal\menu_ui\Tests;
 
-use Drupal\Core\Url;
-use Drupal\node\Entity\NodeType;
+use Drupal\simpletest\WebTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\Entity\Node;
@@ -13,7 +12,7 @@ use Drupal\node\Entity\Node;
  *
  * @group menu_ui
  */
-class MenuNodeTest extends MenuWebTestBase {
+class MenuNodeTest extends WebTestBase {
 
   /**
    * An editor user.
@@ -337,40 +336,6 @@ class MenuNodeTest extends MenuWebTestBase {
     $url = $node->toUrl('edit-form', $options);
     $this->drupalGet($url);
     $this->assertFieldById('edit-menu-title', $translated_node_title);
-  }
-
-  /**
-   * Tests adding links to nodes using the /node/{uuid} format.
-   */
-  public function testNodeUuidLink() {
-    /* @var \Drupal\node\NodeTypeInterface $type */
-    $type = NodeType::load('page');
-    // Enable the main menu for this node type..
-    $menu_name = 'main';
-    $type->setThirdPartySetting('menu_ui', 'available_menus', [$menu_name]);
-    $type->save();
-    // Test links using node/{uuid}.
-    $node6 = $this->drupalCreateNode(array('type' => 'page'));
-    $uuid_link = $this->addMenuLink('', '/node/' . $node6->uuid(), $menu_name);
-    $this->verifyMenuLink($uuid_link, $node6);
-    $this->drupalGet($node6->url('edit-form'));
-    $this->assertFieldByName('menu[title]', $uuid_link->label());
-    $this->drupalPostForm(NULL, [], t('Save'));
-    \Drupal::entityManager()->getStorage('menu_link_content')->resetCache([$uuid_link->id()]);
-    /** @var \Drupal\menu_link_content\MenuLinkContentInterface $uuid_link */
-    $uuid_link = MenuLinkContent::load($uuid_link->id());
-    $this->assertEqual($uuid_link->getUrlObject(), Url::fromUri('internal:/node/' . $node6->uuid()));
-    // Test with entity:node/{uuid}.
-    $node7 = $this->drupalCreateNode(array('type' => 'page'));
-    $uuid_link = $this->addMenuLink('', 'entity:node/' . $node7->uuid(), $menu_name);
-    $this->verifyMenuLink($uuid_link, $node7);
-    $this->drupalGet($node7->url('edit-form'));
-    $this->assertFieldByName('menu[title]', $uuid_link->label());
-    $this->drupalPostForm(NULL, [], t('Save'));
-    \Drupal::entityManager()->getStorage('menu_link_content')->resetCache([$uuid_link->id()]);
-    /** @var \Drupal\menu_link_content\MenuLinkContentInterface $uuid_link */
-    $uuid_link = MenuLinkContent::load($uuid_link->id());
-    $this->assertEqual($uuid_link->getUrlObject(), Url::fromUri('entity:node/' . $node7->uuid()));
   }
 
 }

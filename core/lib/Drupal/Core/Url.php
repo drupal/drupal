@@ -3,7 +3,6 @@
 namespace Drupal\Core;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -326,7 +325,7 @@ class Url {
    *
    * @param array $uri_parts
    *   Parts from an URI of the form entity:{entity_type}/{entity_id} as from
-   *   parse_url(). Note that {entity_id} can be both a UUID and a serial ID.
+   *   parse_url().
    * @param array $options
    *   An array of options, see \Drupal\Core\Url::fromUri() for details.
    * @param string $uri
@@ -341,15 +340,10 @@ class Url {
   protected static function fromEntityUri(array $uri_parts, array $options, $uri) {
     list($entity_type_id, $entity_id) = explode('/', $uri_parts['path'], 2);
     if ($uri_parts['scheme'] != 'entity' || $entity_id === '') {
-      throw new \InvalidArgumentException("The entity URI '$uri' is invalid. You must specify the entity id in the URL. e.g., entity:node/1 or entity:node/{uuid} for loading the canonical path to node entity with id 1.");
-    }
-    $route_name = "entity.$entity_type_id.canonical";
-    if (Uuid::isValid($entity_id)) {
-      // UUID instead of entity ID.
-      $route_name = "entity.$entity_type_id.uuid";
+      throw new \InvalidArgumentException("The entity URI '$uri' is invalid. You must specify the entity id in the URL. e.g., entity:node/1 for loading the canonical path to node entity with id 1.");
     }
 
-    return new static($route_name, [$entity_type_id => $entity_id], $options);
+    return new static("entity.$entity_type_id.canonical", [$entity_type_id => $entity_id], $options);
   }
 
   /**

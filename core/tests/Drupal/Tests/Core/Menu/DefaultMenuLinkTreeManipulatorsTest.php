@@ -5,7 +5,6 @@ namespace Drupal\Tests\Core\Menu;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
-use Drupal\Core\Entity\Query\ConditionInterface;
 use Drupal\Core\Menu\DefaultMenuLinkTreeManipulators;
 use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Tests\UnitTestCase;
@@ -275,7 +274,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
       1 => MenuLinkMock::create(array('id' => 'node.1', 'route_name' => 'entity.node.canonical', 'title' => 'foo', 'parent' => '', 'route_parameters' => array('node' => 1))),
       2 => MenuLinkMock::create(array('id' => 'node.2', 'route_name' => 'entity.node.canonical', 'title' => 'bar', 'parent' => '', 'route_parameters' => array('node' => 2))),
       3 => MenuLinkMock::create(array('id' => 'node.3', 'route_name' => 'entity.node.canonical', 'title' => 'baz', 'parent' => 'node.2', 'route_parameters' => array('node' => 3))),
-      4 => MenuLinkMock::create(array('id' => 'node.4', 'route_name' => 'entity.node.uuid', 'title' => 'qux', 'parent' => 'node.3', 'route_parameters' => array('node' => 4))),
+      4 => MenuLinkMock::create(array('id' => 'node.4', 'route_name' => 'entity.node.canonical', 'title' => 'qux', 'parent' => 'node.3', 'route_parameters' => array('node' => 4))),
       5 => MenuLinkMock::create(array('id' => 'test.1', 'route_name' => 'test_route', 'title' => 'qux', 'parent' => '')),
       6 => MenuLinkMock::create(array('id' => 'test.2', 'route_name' => 'test_route', 'title' => 'qux', 'parent' => 'test.1')),
     );
@@ -291,22 +290,10 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     ));
 
     $query = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
-    $condition = $this->getMock(ConditionInterface::class);
     $query->expects($this->at(0))
-      ->method('orConditionGroup')
-      ->willReturn($condition);
-    $condition->expects($this->at(0))
       ->method('condition')
-      ->with('nid', array(1, 2, 3, 4))
-      ->willReturn($condition);
-    $condition->expects($this->at(1))
-      ->method('condition')
-      ->with('uuid', array(1, 2, 3, 4))
-      ->willReturn($condition);
+      ->with('nid', array(1, 2, 3, 4));
     $query->expects($this->at(1))
-      ->method('condition')
-      ->with($condition);
-    $query->expects($this->at(2))
       ->method('condition')
       ->with('status', NODE_PUBLISHED);
     $query->expects($this->once())

@@ -36,7 +36,6 @@ namespace Drupal\entity_test\Entity;
  *   links = {
  *     "add-form" = "/entity_test_mul_langcode_key/add",
  *     "canonical" = "/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}",
- *     "uuid" = "/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}",
  *     "edit-form" = "/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}/edit",
  *     "delete-form" = "/entity_test/delete/entity_test_mul_langcode_key/{entity_test_mul_langcode_key}",
  *   },

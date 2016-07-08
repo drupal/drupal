@@ -63,7 +63,6 @@ use Drupal\user\UserInterface;
  *   permission_granularity = "bundle",
  *   links = {
  *     "canonical" = "/node/{node}",
- *     "uuid" = "/node/{node}",
  *     "delete-form" = "/node/{node}/delete",
  *     "edit-form" = "/node/{node}/edit",
  *     "version-history" = "/node/{node}/revisions",

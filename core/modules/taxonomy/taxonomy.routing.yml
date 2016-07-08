@@ -76,16 +76,6 @@ entity.taxonomy_vocabulary.overview_form:
   requirements:
     _entity_access: 'taxonomy_vocabulary.view'
 
-entity.taxonomy_term.uuid:
-  path: '/taxonomy/term/{taxonomy_term}'
-  defaults:
-    _entity_view: 'taxonomy_term.full'
-    _title: 'Taxonomy term'
-    _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'
-  requirements:
-    _entity_access: 'taxonomy_term.view'
-    taxonomy_term: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-
 entity.taxonomy_term.canonical:
   path: '/taxonomy/term/{taxonomy_term}'
   defaults:

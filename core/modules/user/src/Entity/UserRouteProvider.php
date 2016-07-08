@@ -2,7 +2,6 @@
 
 namespace Drupal\user\Entity;
 
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
 use Symfony\Component\Routing\Route;
@@ -18,17 +17,6 @@ class UserRouteProvider implements EntityRouteProviderInterface {
    */
   public function getRoutes(EntityTypeInterface $entity_type) {
     $route_collection = new RouteCollection();
-
-    $route = (new Route("/user/{user}"))
-      ->addDefaults([
-        '_entity_view' => 'user.full',
-        '_title_callback' => 'Drupal\user\Controller\UserController::userTitle',
-      ])
-      // Set requirement for UUID pattern.
-      ->setRequirement('user', '^' . Uuid::VALID_PATTERN . '$')
-      ->setRequirement('_entity_access', 'user.view');
-    $route_collection->add('entity.user.uuid', $route);
-
     $route = (new Route('/user/{user}'))
       ->setDefaults([
         '_entity_view' => 'user.full',

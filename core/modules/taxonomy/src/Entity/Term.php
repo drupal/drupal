@@ -44,7 +44,6 @@ use Drupal\taxonomy\TermInterface;
  *   common_reference_target = TRUE,
  *   links = {
  *     "canonical" = "/taxonomy/term/{taxonomy_term}",
- *     "uuid" = "/taxonomy/term/{taxonomy_term}",
  *     "delete-form" = "/taxonomy/term/{taxonomy_term}/delete",
  *     "edit-form" = "/taxonomy/term/{taxonomy_term}/edit",
  *   },
