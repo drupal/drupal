@@ -68,13 +68,14 @@ function ckeditor_ckeditor_css_alter(array &$css, Editor $editor) {
 }
 
 /**
- * Retrieves the default theme's CKEditor stylesheets defined in the .info file.
+ * Retrieves the default theme's CKEditor stylesheets.
  *
  * Themes may specify iframe-specific CSS files for use with CKEditor by
- * including a "ckeditor_stylesheets" key in the theme .info file.
+ * including a "ckeditor_stylesheets" key in their .info.yml file.
  *
  * @code
- * ckeditor_stylesheets[] = css/ckeditor-iframe.css
+ * ckeditor_stylesheets:
+ *   - css/ckeditor-iframe.css
  * @endcode
  */
 function _ckeditor_theme_css($theme = NULL) {
