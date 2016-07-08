@@ -206,7 +206,7 @@ class ConfigDependencyManager {
    * @return int
    *   The comparison result for uasort().
    */
-  protected function sortGraphByWeight(array $a, array $b) {
+  protected static function sortGraphByWeight(array $a, array $b) {
     $weight_cmp = SortArray::sortByKeyInt($a, $b, 'weight');
 
     if ($weight_cmp === 0) {
@@ -227,7 +227,7 @@ class ConfigDependencyManager {
    * @return int
    *   The comparison result for uasort().
    */
-  public function sortGraph(array $a, array $b) {
+  public static function sortGraph(array $a, array $b) {
     $weight_cmp = SortArray::sortByKeyInt($a, $b, 'weight') * -1;
 
     if ($weight_cmp === 0) {
