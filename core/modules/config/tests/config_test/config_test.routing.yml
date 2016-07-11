@@ -21,7 +21,7 @@ entity.config_test.edit_form:
   requirements:
     _permission: 'administer site configuration'
 
-entity.config_test.edit_form_config_test_no_status:
+entity.config_test_no_status.edit_form:
   path: '/admin/structure/config_test/manage/{config_test_no_status}'
   defaults:
     _entity_form: config_test_no_status
