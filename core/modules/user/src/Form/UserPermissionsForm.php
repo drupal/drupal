@@ -100,7 +100,6 @@ class UserPermissionsForm extends FormBase {
       '#value' => $role_names,
     );
     // Render role/permission overview:
-    $options = array();
     $hide_descriptions = system_admin_compact_mode();
 
     $form['system_compact_link'] = array(
@@ -145,7 +144,6 @@ class UserPermissionsForm extends FormBase {
           'restrict access' => FALSE,
           'warning' => !empty($perm_item['restrict access']) ? $this->t('Warning: Give to trusted roles only; this permission has security implications.') : '',
         );
-        $options[$perm] = $perm_item['title'];
         $form['permissions'][$perm]['description'] = array(
           '#type' => 'inline_template',
           '#template' => '<div class="permission"><span class="title">{{ title }}</span>{% if description or warning %}<div class="description">{% if warning %}<em class="permission-warning">{{ warning }}</em> {% endif %}{{ description }}</div>{% endif %}</div>',
@@ -158,7 +156,6 @@ class UserPermissionsForm extends FormBase {
           $form['permissions'][$perm]['description']['#context']['description'] = $perm_item['description'];
           $form['permissions'][$perm]['description']['#context']['warning'] = $perm_item['warning'];
         }
-        $options[$perm] = '';
         foreach ($role_names as $rid => $name) {
           $form['permissions'][$perm][$rid] = array(
             '#title' => $name . ': ' . $perm_item['title'],

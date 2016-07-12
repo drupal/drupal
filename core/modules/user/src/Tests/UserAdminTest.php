@@ -174,8 +174,8 @@ class UserAdminTest extends WebTestBase {
       ->save();
     // Register a new user account.
     $edit = array();
-    $edit['name'] = $name = $this->randomMachineName();
-    $edit['mail'] = $mail = $edit['name'] . '@example.com';
+    $edit['name'] = $this->randomMachineName();
+    $edit['mail'] = $edit['name'] . '@example.com';
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $subject = 'Account details for ' . $edit['name'] . ' at ' . $system->get('name') . ' (pending admin approval)';
     // Ensure that admin notification mail is sent to the configured

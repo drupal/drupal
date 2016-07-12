@@ -135,7 +135,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
     $entity = $this->container->get('entity.manager')
       ->getStorage($entity_type)
       ->create($fields);
-    $form_object = $this->container->get('entity.manager')
+    $this->container->get('entity.manager')
       ->getFormObject($entity_type, $operation)
       ->setEntity($entity);
 
