@@ -23,7 +23,9 @@ class NodeTypeTranslationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array(
+    'block',
     'config_translation',
+    'field_ui',
     'node',
   );
 
@@ -53,6 +55,8 @@ class NodeTypeTranslationTest extends WebTestBase {
 
     $admin_permissions = array(
       'administer content types',
+      'administer node fields',
+      'administer languages',
       'administer site configuration',
       'administer themes',
       'translate configuration',
@@ -144,6 +148,29 @@ class NodeTypeTranslationTest extends WebTestBase {
     $this->assertText('Edited title');
     $this->drupalGet("$langcode/node/add/$type");
     $this->assertText('Translated title');
+
+    // Add an e-mail field.
+    $this->drupalPostForm("admin/structure/types/manage/$type/fields/add-field", array('new_storage_type' => 'email', 'label' => 'Email', 'field_name' => 'email'), 'Save and continue');
+    $this->drupalPostForm(NULL, array(), 'Save field settings');
+    $this->drupalPostForm(NULL, array(), 'Save settings');
+
+    $type = Unicode::strtolower($this->randomMachineName(16));
+    $name = $this->randomString();
+    $this->drupalCreateContentType(array('type' => $type, 'name' => $name));
+
+    // Set tabs.
+    $this->drupalPlaceBlock('local_tasks_block', array('primary' => TRUE));
+
+    // Change default language.
+    $this->drupalPostForm('admin/config/regional/language', array('site_default_language' => 'es'), 'Save configuration');
+
+    // Try re-using the email field.
+    $this->drupalGet("es/admin/structure/types/manage/$type/fields/add-field");
+    $this->drupalPostForm(NULL, array('existing_storage_name' => 'field_email', 'existing_storage_label' => 'Email'), 'Save and continue');
+    $this->assertResponse(200);
+    $this->drupalGet("es/admin/structure/types/manage/$type/fields/node.$type.field_email/translate");
+    $this->assertResponse(200);
+    $this->assertText("The configuration objects have different language codes so they cannot be translated");
   }
 
 }
