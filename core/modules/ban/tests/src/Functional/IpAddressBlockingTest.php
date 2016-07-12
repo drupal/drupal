@@ -29,7 +29,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
 
     // Ban a valid IP address.
     $edit = array();
-    $edit['ip'] = '192.168.1.1';
+    $edit['ip'] = '1.2.3.3';
     $this->drupalPostForm('admin/config/people/ban', $edit, t('Add'));
     $ip = db_query("SELECT iid from {ban_ip} WHERE ip = :ip", array(':ip' => $edit['ip']))->fetchField();
     $this->assertTrue($ip, 'IP address found in database.');
@@ -37,7 +37,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
 
     // Try to block an IP address that's already blocked.
     $edit = array();
-    $edit['ip'] = '192.168.1.1';
+    $edit['ip'] = '1.2.3.3';
     $this->drupalPostForm('admin/config/people/ban', $edit, t('Add'));
     $this->assertText(t('This IP address is already banned.'));
 
