@@ -121,4 +121,43 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->assertRaw($nodes[1]->link($date) . ' by ' . $editor . '<p class="revision-log">' . $revision_log . '</p>');
   }
 
+  /**
+   * Checks the Revisions tab.
+   */
+  public function testNodeRevisionsTabWithDefaultRevision() {
+    $this->drupalLogin($this->editor);
+
+    // Create the node.
+    $node = $this->drupalCreateNode();
+
+    $node->setNewRevision(TRUE);
+    $node->save();
+    $node->setNewRevision(TRUE);
+    $node->save();
+    $node->isDefaultRevision(FALSE);
+    $node->setNewRevision(TRUE);
+    $node->save();
+    $node->isDefaultRevision(FALSE);
+    $node->setNewRevision(TRUE);
+    $node->save();
+
+    $node_id = $node->id();
+
+    $this->drupalGet('node/' . $node_id . '/revisions');
+
+    // Verify that the default revision can be an older revision than the latest
+    // one.
+    $this->assertLinkByHref('/node/' . $node_id . '/revisions/5/revert');
+    $this->assertLinkByHref('/node/' . $node_id . '/revisions/4/revert');
+    $this->assertNoLinkByHref('/node/' . $node_id . '/revisions/3/revert');
+    $current_revision_row = $this->xpath("//table[contains(@class, :table_class)]//tbody//tr[3 and contains(@class, :class) and contains(., :text)]", [
+      ':table_class' => 'node-revision-table',
+      ':class' => 'revision-current',
+      ':text' => 'Current revision',
+    ]);
+    $this->assertEqual(count($current_revision_row), 1, 'The default revision can be a revision other than the latest one.');
+    $this->assertLinkByHref('/node/' . $node_id . '/revisions/2/revert');
+    $this->assertLinkByHref('/node/' . $node_id . '/revisions/1/revert');
+  }
+
 }

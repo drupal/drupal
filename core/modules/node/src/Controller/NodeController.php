@@ -173,7 +173,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
 
     $vids = $node_storage->revisionIds($node);
 
-    $latest_revision = TRUE;
+    $default_revision = $node->getRevisionId();
 
     foreach (array_reverse($vids) as $vid) {
       /** @var \Drupal\node\NodeInterface $revision */
@@ -211,7 +211,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
         $this->renderer->addCacheableDependency($column['data'], $username);
         $row[] = $column;
 
-        if ($latest_revision) {
+        if ($vid == $default_revision) {
           $row[] = [
             'data' => [
               '#prefix' => '<em>',
@@ -219,16 +219,17 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
               '#suffix' => '</em>',
             ],
           ];
-          foreach ($row as &$current) {
-            $current['class'] = ['revision-current'];
-          }
-          $latest_revision = FALSE;
+
+          $rows[] = [
+            'data' => $row,
+            'class' => ['revision-current'],
+          ];
         }
         else {
           $links = [];
           if ($revert_permission) {
             $links['revert'] = [
-              'title' => $this->t('Revert'),
+              'title' => $vid < $node->getRevisionId() ? $this->t('Revert') : $this->t('Set as current revision'),
               'url' => $has_translations ?
                 Url::fromRoute('node.revision_revert_translation_confirm', ['node' => $node->id(), 'node_revision' => $vid, 'langcode' => $langcode]) :
                 Url::fromRoute('node.revision_revert_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
@@ -248,9 +249,9 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
               '#links' => $links,
             ],
           ];
-        }
 
-        $rows[] = $row;
+          $rows[] = $row;
+        }
       }
     }
 
@@ -261,6 +262,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       '#attached' => array(
         'library' => array('node/drupal.node.admin'),
       ),
+      '#attributes' => ['class' => 'node-revision-table'],
     );
 
     return $build;
