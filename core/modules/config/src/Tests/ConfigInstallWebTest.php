@@ -180,7 +180,7 @@ class ConfigInstallWebTest extends WebTestBase {
     // not depend on config_test and order is important.
     $this->drupalPostForm('admin/modules', array('modules[Testing][config_test][enable]' => TRUE), t('Install'));
     $this->drupalPostForm('admin/modules', array('modules[Testing][config_install_dependency_test][enable]' => TRUE), t('Install'));
-    $this->assertRaw('Unable to install Config install dependency test, <em class="placeholder">config_test.dynamic.other_module_test_with_dependency</em> has unmet dependencies.');
+    $this->assertRaw('Unable to install Config install dependency test, <em class="placeholder">config_other_module_config_test.weird_simple_config, config_test.dynamic.other_module_test_with_dependency</em> have unmet dependencies.');
 
     $this->drupalPostForm('admin/modules', array('modules[Testing][config_other_module_config_test][enable]' => TRUE), t('Install'));
     $this->drupalPostForm('admin/modules', array('modules[Testing][config_install_dependency_test][enable]' => TRUE), t('Install'));
