@@ -31,9 +31,21 @@ class CronQueueTest extends WebTestBase {
     // Run cron; the worker for this queue should throw an exception and handle
     // it.
     $this->cronRun();
+    $this->assertEqual(\Drupal::state()->get('cron_queue_test_exception'), 1);
 
     // The item should be left in the queue.
     $this->assertEqual($queue->numberOfItems(), 1, 'Failing item still in the queue after throwing an exception.');
+
+    // Garbage collection should set the expire flag back to 0, making the queue
+    // item "claimable" again. We have to wait for 2 seconds because
+    // CronQueueTestException has a "cron" time of 1 second. The test runs so
+    // fast that if we don't wait, the item won't be cleared by Garbage
+    // Collection so it won't become claimable.
+    // @see \Drupal\Core\Cron::processQueues()
+    sleep(2);
+    $this->cronRun();
+    $this->assertEqual(\Drupal::state()->get('cron_queue_test_exception'), 2);
+    $this->assertEqual($queue->numberOfItems(), 0, 'Item was processed and removed from the queue.');
 
     // Get the queue to test the specific SuspendQueueException.
     $queue = $this->container->get('queue')->get('cron_queue_test_broken_queue');
