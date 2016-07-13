@@ -159,7 +159,8 @@ class Cron implements CronInterface {
         $queue_worker = $this->queueManager->createInstance($queue_name);
         $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : 15);
         $queue = $this->queueFactory->get($queue_name);
-        while (time() < $end && ($item = $queue->claimItem())) {
+        $lease_time = isset($info['cron']['time']) ?: NULL;
+        while (time() < $end && ($item = $queue->claimItem($lease_time))) {
           try {
             $queue_worker->processItem($item->data);
             $queue->deleteItem($item);

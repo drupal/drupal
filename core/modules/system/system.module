@@ -1286,8 +1286,15 @@ function system_cron() {
   }
 
   // Clean up any garbage in the queue service.
-  if (\Drupal::service('queue') instanceof QueueGarbageCollectionInterface) {
-    \Drupal::service('queue')->garbageCollection();
+  $queue_worker_manager = \Drupal::service('plugin.manager.queue_worker');
+  $queue_factory = \Drupal::service('queue');
+
+  foreach (array_keys($queue_worker_manager->getDefinitions()) as $queue_name) {
+    $queue = $queue_factory->get($queue_name);
+
+    if ($queue instanceof QueueGarbageCollectionInterface) {
+      $queue->garbageCollection();
+    }
   }
 
   // Clean up PHP storage.
