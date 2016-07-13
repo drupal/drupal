@@ -70,6 +70,14 @@ class ExposedFilterAJAXTest extends JavascriptTestBase {
     $html = $session->getPage()->getHtml();
     $this->assertContains('Page Two', $html);
     $this->assertNotContains('Page One', $html);
+
+    // Reset the form.
+    $this->submitForm([], t('Reset'));
+    $this->assertSession()->assertWaitOnAjaxRequest();
+
+    $this->assertSession()->pageTextContains('Page One');
+    $this->assertSession()->pageTextContains('Page Two');
+    $this->assertFalse($session->getPage()->hasButton('Reset'));
   }
 
 }
