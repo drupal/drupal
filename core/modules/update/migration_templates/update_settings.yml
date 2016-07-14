@@ -20,4 +20,3 @@ process:
 destination:
   plugin: config
   config_name: update.settings
-provider: migrate_drupal

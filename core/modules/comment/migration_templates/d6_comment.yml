@@ -43,4 +43,3 @@ migration_dependencies:
     - d6_comment_entity_form_display
     - d6_user
     - d6_filter_format
-provider: migrate_drupal

@@ -14,4 +14,3 @@ process:
 destination:
   plugin: config
   config_name: taxonomy.settings
-provider: migrate_drupal

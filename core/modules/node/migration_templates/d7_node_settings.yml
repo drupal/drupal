@@ -11,4 +11,3 @@ process:
 destination:
   plugin: config
   config_name: node.settings
-provider: migrate_drupal

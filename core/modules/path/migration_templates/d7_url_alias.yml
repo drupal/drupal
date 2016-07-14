@@ -20,4 +20,3 @@ process:
   langcode: language
 destination:
   plugin: url_alias
-provider: migrate_drupal

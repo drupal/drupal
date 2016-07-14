@@ -29,4 +29,3 @@ process:
       weight: weight
 destination:
   plugin: entity:filter_format
-provider: migrate_drupal

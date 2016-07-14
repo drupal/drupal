@@ -13,4 +13,3 @@ process:
 destination:
   plugin: config
   config_name: system.rss
-provider: migrate_drupal

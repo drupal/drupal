@@ -17,4 +17,3 @@ destination:
 migration_dependencies:
   required:
     - d6_comment_type
-provider: migrate_drupal

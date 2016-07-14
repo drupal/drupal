@@ -24,4 +24,3 @@ destination:
   plugin: entity:file
   source_path_property: filepath
   urlencode: true
-provider: migrate_drupal

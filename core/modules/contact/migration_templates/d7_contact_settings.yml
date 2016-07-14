@@ -26,4 +26,3 @@ dependencies:
   module:
     - contact
     - migrate_drupal
-provider: migrate_drupal

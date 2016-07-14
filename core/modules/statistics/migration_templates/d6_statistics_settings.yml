@@ -15,4 +15,3 @@ process:
 destination:
   plugin: config
   config_name: statistics.settings
-provider: migrate_drupal

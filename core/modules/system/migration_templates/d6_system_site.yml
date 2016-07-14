@@ -39,4 +39,3 @@ process:
 destination:
   plugin: config
   config_name: system.site
-provider: migrate_drupal

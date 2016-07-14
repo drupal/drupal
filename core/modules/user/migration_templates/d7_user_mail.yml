@@ -37,4 +37,3 @@ process:
 destination:
   plugin: config
   config_name: user.mail
-provider: migrate_drupal

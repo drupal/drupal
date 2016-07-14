@@ -25,4 +25,3 @@ migration_dependencies:
     - d6_file
     - d6_node
     - d6_upload_field_instance
-provider: migrate_drupal

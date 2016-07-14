@@ -67,4 +67,3 @@ destination:
 migration_dependencies:
   required:
     - d6_field_instance
-provider: migrate_drupal

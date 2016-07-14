@@ -17,4 +17,3 @@ process:
   weight: weight
 destination:
   plugin: entity:configurable_language
-provider: migrate_drupal

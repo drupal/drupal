@@ -42,4 +42,3 @@ destination:
 migration_dependencies:
   optional:
     - d7_filter_format
-provider: migrate_drupal

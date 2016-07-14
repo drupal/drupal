@@ -19,4 +19,3 @@ process:
   create_body_label: body_label
 destination:
   plugin: entity:node_type
-provider: migrate_drupal

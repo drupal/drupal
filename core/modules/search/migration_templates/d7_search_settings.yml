@@ -30,4 +30,3 @@ process:
 destination:
   plugin: config
   config_name: search.settings
-provider: migrate_drupal
