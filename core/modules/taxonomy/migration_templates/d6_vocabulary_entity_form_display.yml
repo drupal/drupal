@@ -29,3 +29,4 @@ destination:
 migration_dependencies:
   required:
     - d6_vocabulary_field_instance
+provider: migrate_drupal

@@ -11,3 +11,4 @@ process:
 destination:
   plugin: config
   config_name: system.image
+provider: migrate_drupal

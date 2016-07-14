@@ -21,3 +21,4 @@ process:
   weight: weight
 destination:
   plugin: entity:contact_form
+provider: migrate_drupal

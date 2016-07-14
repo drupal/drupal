@@ -22,3 +22,4 @@ destination:
 migration_dependencies:
   required:
     - d6_comment_field_instance
+provider: migrate_drupal

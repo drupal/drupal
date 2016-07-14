@@ -29,3 +29,4 @@ destination:
 migration_dependencies:
   required:
     - user_picture_field
+provider: migrate_drupal

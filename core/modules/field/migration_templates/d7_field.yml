@@ -40,3 +40,4 @@ process:
     plugin: d7_field_settings
 destination:
   plugin: entity:field_storage_config
+provider: migrate_drupal

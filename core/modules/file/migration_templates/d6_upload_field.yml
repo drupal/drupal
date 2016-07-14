@@ -21,3 +21,4 @@ process:
   'settings/display_field': 'constants/display_field'
 destination:
   plugin: md_entity:field_storage_config
+provider: migrate_drupal

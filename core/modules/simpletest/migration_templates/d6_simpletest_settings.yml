@@ -19,3 +19,4 @@ process:
 destination:
   plugin: config
   config_name: simpletest.settings
+provider: migrate_drupal

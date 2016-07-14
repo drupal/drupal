@@ -37,3 +37,4 @@ process:
 
 destination:
   plugin: entity_revision:node
+provider: migrate_drupal

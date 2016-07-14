@@ -20,3 +20,4 @@ destination:
 migration_dependencies:
   required:
     - contact_category
+provider: migrate_drupal

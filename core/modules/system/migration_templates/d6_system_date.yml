@@ -17,3 +17,4 @@ process:
 destination:
   plugin: config
   config_name: system.date
+provider: migrate_drupal

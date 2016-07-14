@@ -24,3 +24,4 @@ migration_dependencies:
   required:
     - d7_shortcut_set
     - menu_links
+provider: migrate_drupal

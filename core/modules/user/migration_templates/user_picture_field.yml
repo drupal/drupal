@@ -19,3 +19,4 @@ process:
   cardinality: 'constants/cardinality'
 destination:
   plugin: md_entity:field_storage_config
+provider: migrate_drupal

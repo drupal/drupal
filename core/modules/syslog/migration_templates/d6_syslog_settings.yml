@@ -13,3 +13,4 @@ process:
 destination:
   plugin: config
   config_name: syslog.settings
+provider: migrate_drupal

@@ -75,3 +75,4 @@ migration_dependencies:
   required:
     - d7_field_instance
     - d7_view_modes
+provider: migrate_drupal

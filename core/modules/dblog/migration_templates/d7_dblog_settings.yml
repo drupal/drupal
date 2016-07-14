@@ -11,3 +11,4 @@ process:
 destination:
   plugin: config
   config_name: dblog.settings
+provider: migrate_drupal

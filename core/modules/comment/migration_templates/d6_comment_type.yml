@@ -13,3 +13,4 @@ process:
   description: description
 destination:
   plugin: entity:comment_type
+provider: migrate_drupal

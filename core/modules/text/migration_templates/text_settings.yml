@@ -12,3 +12,4 @@ process:
 destination:
   plugin: config
   config_name: text.settings
+provider: migrate_drupal

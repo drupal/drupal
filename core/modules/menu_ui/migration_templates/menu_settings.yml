@@ -12,3 +12,4 @@ process:
 destination:
   plugin: config
   config_name: menu_ui.settings
+provider: migrate_drupal

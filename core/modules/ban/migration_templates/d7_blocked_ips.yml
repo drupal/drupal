@@ -8,3 +8,4 @@ process:
   ip: ip
 destination:
   plugin: blocked_ip
+provider: migrate_drupal

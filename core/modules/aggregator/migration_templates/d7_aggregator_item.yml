@@ -21,3 +21,4 @@ destination:
 migration_dependencies:
   required:
     - d7_aggregator_feed
+provider: migrate_drupal

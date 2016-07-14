@@ -11,3 +11,4 @@ process:
   description: description
 destination:
   plugin: entity:menu
+provider: migrate_drupal

@@ -14,3 +14,4 @@ destination:
 migration_dependencies:
   required:
     - d7_user
+provider: migrate_drupal

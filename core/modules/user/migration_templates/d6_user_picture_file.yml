@@ -24,3 +24,4 @@ migration_dependencies:
   # migration as an optional dependency to ensure it runs first.
   optional:
     - d6_file
+provider: migrate_drupal

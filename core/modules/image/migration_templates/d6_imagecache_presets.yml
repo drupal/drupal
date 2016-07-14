@@ -22,3 +22,4 @@ process:
       - data
 destination:
   plugin: entity:image_style
+provider: migrate_drupal
