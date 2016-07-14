@@ -1,0 +1,27 @@
+id: external_translated_test_node_translation
+label: External translated content translations
+source:
+  plugin: migrate_external_translated_test
+  default_lang: false
+  constants:
+    type: external_test
+process:
+  nid:
+    plugin: migration
+    source: name
+    migration: external_translated_test_node
+  type: constants/type
+  title: title
+  langcode:
+    plugin: static_map
+    source: lang
+    map:
+      English: en
+      French: fr
+      Spanish: es
+destination:
+  plugin: entity:node
+  translations: true
+migration_dependencies:
+  required:
+    - external_translated_test_node

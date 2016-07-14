@@ -2,10 +2,13 @@
 
 namespace Drupal\content_translation;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\migrate\Event\MigrateEvents;
+use Drupal\migrate\Event\MigrateImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -75,10 +78,26 @@ class ContentTranslationUpdatesManager implements EventSubscriberInterface {
   }
 
   /**
+   * Listener for migration imports.
+   */
+  public function onMigrateImport(MigrateImportEvent $event) {
+    $migration = $event->getMigration();
+    $configuration = $migration->getDestinationConfiguration();
+    $entity_types = NestedArray::getValue($configuration, ['content_translation_update_definitions']);
+    if ($entity_types) {
+      $entity_types = array_intersect_key($this->entityManager->getDefinitions(), array_flip($entity_types));
+      $this->updateDefinitions($entity_types);
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     $events[ConfigEvents::IMPORT][] = ['onConfigImporterImport', 60];
+    if (class_exists('\Drupal\migrate\Event\MigrateEvents')) {
+      $events[MigrateEvents::POST_IMPORT][] = ['onMigrateImport'];
+    }
     return $events;
   }
 

@@ -4,7 +4,10 @@ namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateMessageInterface;
 use Drupal\user\Entity\User;
+use Prophecy\Argument;
 
 /**
  * @group migrate_drupal
@@ -83,6 +86,42 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
     // This value is not overwritten because it's not listed in
     // overwrite_properties.
     $this->assertIdentical('proto@zo.an', $account->getInitialEmail());
+  }
+
+  /**
+   * Test that translation destination fails for untranslatable entities.
+   */
+  public function testUntranslatable() {
+    $this->enableModules(['language_test']);
+    $this->installEntitySchema('no_language_entity_test');
+
+    /** @var MigrationInterface $migration */
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([
+      'source' => [
+        'plugin' => 'embedded_data',
+        'ids' => ['id' => ['type' => 'integer']],
+        'data_rows' => [['id' => 1]],
+      ],
+      'process' => [
+        'id' => 'id',
+      ],
+      'destination' => [
+        'plugin' => 'entity:no_language_entity_test',
+        'translations' => TRUE,
+      ],
+    ]);
+
+    $message = $this->prophesize(MigrateMessageInterface::class);
+    // Match the expected message. Can't use default argument types, because
+    // we need to convert to string from TranslatableMarkup.
+    $argument = Argument::that(function($msg) {
+      return strpos((string) $msg, "This entity type does not support translation") !== FALSE;
+    });
+    $message->display($argument, Argument::any())
+      ->shouldBeCalled();
+
+    $executable = new MigrateExecutable($migration, $message->reveal());
+    $executable->import();
   }
 
 }

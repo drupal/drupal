@@ -22,7 +22,7 @@ class MigrateTermNodeRevisionTest extends MigrateDrupal6TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installSchema('node', ['node_access']);
-    $this->migrateContent(TRUE);
+    $this->migrateContent(['revisions']);
     $this->migrateTaxonomy();
     $this->executeMigrations(['d6_term_node', 'd6_term_node_revision']);
   }

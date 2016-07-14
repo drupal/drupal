@@ -30,7 +30,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['migrate_drupal_ui', 'telephone'];
+  public static $modules = ['language', 'content_translation', 'migrate_drupal_ui', 'telephone'];
 
   /**
    * {@inheritdoc}

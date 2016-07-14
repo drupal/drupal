@@ -38,25 +38,37 @@ class D6NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
   protected $cckPluginManager;
 
   /**
+   * Whether or not to include translations.
+   *
+   * @var bool
+   */
+  protected $includeTranslations;
+
+  /**
    * D6NodeDeriver constructor.
    *
    * @param string $base_plugin_id
    *   The base plugin ID for the plugin ID.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $cck_manager
    *   The CCK plugin manager.
+   * @param bool $translations
+   *   Whether or not to include translations.
    */
-  public function __construct($base_plugin_id, PluginManagerInterface $cck_manager) {
+  public function __construct($base_plugin_id, PluginManagerInterface $cck_manager, $translations) {
     $this->basePluginId = $base_plugin_id;
     $this->cckPluginManager = $cck_manager;
+    $this->includeTranslations = $translations;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
+    // Translations don't make sense unless we have content_translation.
     return new static(
       $base_plugin_id,
-      $container->get('plugin.manager.migrate.cckfield')
+      $container->get('plugin.manager.migrate.cckfield'),
+      $container->get('module_handler')->moduleExists('content_translation')
     );
   }
 
@@ -72,6 +84,11 @@ class D6NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
    * @see \Drupal\Component\Plugin\Derivative\DeriverBase::getDerivativeDefinition()
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
+    if ($base_plugin_definition['id'] == 'd6_node_translation' && !$this->includeTranslations) {
+      // Refuse to generate anything.
+      return $this->derivatives;
+    }
+
     // Read all CCK field instance definitions in the source database.
     $fields = array();
     try {
@@ -100,9 +117,10 @@ class D6NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
         $values['source']['node_type'] = $node_type;
         $values['destination']['default_bundle'] = $node_type;
 
-        // If this migration is based on the d6_node_revision migration, it
-        // should explicitly depend on the corresponding d6_node variant.
-        if ($base_plugin_definition['id'] == 'd6_node_revision') {
+        // If this migration is based on the d6_node_revision migration or
+        // is for translations of nodes, it should explicitly depend on the
+        // corresponding d6_node variant.
+        if (in_array($base_plugin_definition['id'], ['d6_node_revision', 'd6_node_translation'])) {
           $values['migration_dependencies']['required'][] = 'd6_node:' . $node_type;
         }
 

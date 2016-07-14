@@ -2,6 +2,7 @@
 
 namespace Drupal\node\Plugin\migrate\source\d6;
 
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -37,9 +38,11 @@ class Node extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    // Select node in its last revision.
-    $query = $this->select('node_revisions', 'nr')
-      ->fields('n', array(
+    $query = $this->select('node_revisions', 'nr');
+    $query->innerJoin('node', 'n', static::JOIN);
+    $this->handleTranslations($query);
+
+    $query->fields('n', array(
         'nid',
         'type',
         'language',
@@ -54,17 +57,16 @@ class Node extends DrupalSqlBase {
         'translate',
       ))
       ->fields('nr', array(
-        'vid',
         'title',
         'body',
         'teaser',
         'log',
         'timestamp',
         'format',
+        'vid',
       ));
     $query->addField('n', 'uid', 'node_uid');
     $query->addField('nr', 'uid', 'revision_uid');
-    $query->innerJoin('node', 'n', static::JOIN);
 
     if (isset($this->configuration['node_type'])) {
       $query->condition('n.type', $this->configuration['node_type']);
@@ -121,6 +123,11 @@ class Node extends DrupalSqlBase {
       foreach ($this->getFieldValues($row) as $field => $values) {
         $row->setSourceProperty($field, $values);
       }
+    }
+
+    // Make sure we always have a translation set.
+    if ($row->getSourceProperty('tnid') == 0) {
+      $row->setSourceProperty('tnid', $row->getSourceProperty('nid'));
     }
 
     return parent::prepareRow($row);
@@ -249,6 +256,24 @@ class Node extends DrupalSqlBase {
     $ids['nid']['type'] = 'integer';
     $ids['nid']['alias'] = 'n';
     return $ids;
+  }
+
+  /**
+   * Adapt our query for translations.
+   *
+   * @param \Drupal\Core\Database\Query\SelectInterface
+   *   The generated query.
+   */
+  protected function handleTranslations(SelectInterface $query) {
+    // Check whether or not we want translations.
+    if (empty($this->configuration['translations'])) {
+      // No translations: Yield untranslated nodes, or default translations.
+      $query->where('n.tnid = 0 OR n.tnid = n.nid');
+    }
+    else {
+      // Translations: Yield only non-default translations.
+      $query->where('n.tnid <> 0 AND n.tnid <> n.nid');
+    }
   }
 
 }
