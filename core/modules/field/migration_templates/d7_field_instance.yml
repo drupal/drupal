@@ -35,4 +35,3 @@ migration_dependencies:
   optional:
     - d7_node_type
     - d7_comment_type
-provider: migrate_drupal

@@ -33,4 +33,3 @@ migration_dependencies:
   required:
     - d7_node
     - d7_comment_type
-provider: migrate_drupal

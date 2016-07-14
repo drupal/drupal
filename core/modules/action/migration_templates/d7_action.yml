@@ -34,4 +34,3 @@ process:
       callable: unserialize
 destination:
   plugin: entity:action
-provider: migrate_drupal

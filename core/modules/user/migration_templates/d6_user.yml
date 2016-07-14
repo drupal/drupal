@@ -37,4 +37,3 @@ migration_dependencies:
     - d6_user_picture_file
     - user_picture_entity_display
     - user_picture_entity_form_display
-provider: migrate_drupal

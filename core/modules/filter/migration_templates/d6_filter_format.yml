@@ -37,4 +37,3 @@ process:
 destination:
   plugin: entity:filter_format
   no_stub: true
-provider: migrate_drupal

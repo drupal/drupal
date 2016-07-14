@@ -30,4 +30,3 @@ migration_dependencies:
   required:
     - d6_node_type
     - d6_vocabulary_field
-provider: migrate_drupal

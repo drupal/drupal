@@ -22,4 +22,3 @@ migration_dependencies:
   required:
     - d6_term_node
     - d6_node_revision
-provider: migrate_drupal

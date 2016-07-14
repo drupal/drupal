@@ -19,4 +19,3 @@ process:
   pattern: value
 destination:
   plugin: entity:date_format
-provider: migrate_drupal

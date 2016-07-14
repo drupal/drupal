@@ -30,4 +30,3 @@ migration_dependencies:
     - d7_node_type
   optional:
     - d7_field_instance
-provider: migrate_drupal

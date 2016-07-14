@@ -14,4 +14,3 @@ process:
 destination:
   plugin: config
   config_name: system.cron
-provider: migrate_drupal

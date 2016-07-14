@@ -23,4 +23,3 @@ migration_dependencies:
   required:
     - d7_shortcut_set
     - d7_user
-provider: migrate_drupal

@@ -18,4 +18,3 @@ process:
 destination:
   plugin: config
   config_name: system.performance
-provider: migrate_drupal

@@ -26,4 +26,3 @@ process:
 destination:
   plugin: config
   config_name: user.settings
-provider: migrate_drupal

@@ -25,4 +25,3 @@ process:
   targetEntityType: entity_type
 destination:
   plugin: entity:entity_view_mode
-provider: migrate_drupal

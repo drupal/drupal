@@ -22,4 +22,3 @@ process:
     source: language
 destination:
   plugin: url_alias
-provider: migrate_drupal

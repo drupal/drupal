@@ -18,4 +18,3 @@ process:
   modified: modified
 destination:
   plugin: entity:aggregator_feed
-provider: migrate_drupal

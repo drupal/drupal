@@ -21,4 +21,3 @@ destination:
 migration_dependencies:
   required:
     - d6_node
-provider: migrate_drupal

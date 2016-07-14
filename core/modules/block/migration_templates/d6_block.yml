@@ -98,4 +98,3 @@ migration_dependencies:
     - menu
     - d6_custom_block
     - d6_user_role
-provider: migrate_drupal

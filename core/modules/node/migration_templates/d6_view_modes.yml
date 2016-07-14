@@ -36,4 +36,3 @@ process:
   status: 'constants/status'
 destination:
   plugin: entity:entity_view_mode
-provider: migrate_drupal

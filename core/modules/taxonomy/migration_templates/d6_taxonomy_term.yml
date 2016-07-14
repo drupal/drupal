@@ -32,4 +32,3 @@ destination:
 migration_dependencies:
   required:
     - d6_taxonomy_vocabulary
-provider: migrate_drupal

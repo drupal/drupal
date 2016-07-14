@@ -18,4 +18,3 @@ process:
   label: title
 destination:
   plugin: entity:shortcut_set
-provider: migrate_drupal
