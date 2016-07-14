@@ -20,3 +20,4 @@ destination:
 migration_dependencies:
   required:
     - user_profile_field
+provider: migrate_drupal

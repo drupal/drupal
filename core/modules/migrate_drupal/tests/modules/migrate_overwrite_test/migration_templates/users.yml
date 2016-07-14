@@ -29,3 +29,4 @@ destination:
     - mail
     # It's possible to overwrite nested properties too.
     - 'signature/value'
+provider: migrate_drupal

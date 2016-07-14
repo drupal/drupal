@@ -13,3 +13,4 @@ process:
 destination:
   plugin: config
   config_name: language.negotiation
+provider: migrate_drupal

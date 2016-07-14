@@ -42,3 +42,4 @@ migration_dependencies:
   required:
     - d6_comment_field
     - d6_node_type
+provider: migrate_drupal

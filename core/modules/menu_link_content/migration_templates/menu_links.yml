@@ -51,3 +51,4 @@ destination:
 migration_dependencies:
   required:
     - menu
+provider: migrate_drupal

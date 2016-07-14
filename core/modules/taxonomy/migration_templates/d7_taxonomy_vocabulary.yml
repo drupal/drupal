@@ -13,3 +13,4 @@ process:
   weight: weight
 destination:
   plugin: entity:taxonomy_vocabulary
+provider: migrate_drupal

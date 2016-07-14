@@ -101,3 +101,4 @@ migration_dependencies:
   optional:
     - d7_custom_block
     - d7_user_role
+provider: migrate_drupal

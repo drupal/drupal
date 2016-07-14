@@ -33,3 +33,4 @@ process:
       list: -1
 destination:
   plugin: md_entity:field_storage_config
+provider: migrate_drupal

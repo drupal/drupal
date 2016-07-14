@@ -24,3 +24,4 @@ process:
     plugin: search_configuration_rankings
 destination:
   plugin: entity:search_page
+provider: migrate_drupal

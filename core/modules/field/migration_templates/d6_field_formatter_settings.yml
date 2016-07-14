@@ -262,3 +262,4 @@ migration_dependencies:
   required:
     - d6_field_instance
     - d6_view_modes
+provider: migrate_drupal
