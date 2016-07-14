@@ -40,7 +40,7 @@ class NodeByNodeTypeTest extends MigrateSqlSourceTestCase {
       'promote' => 1,
       'moderate' => 0,
       'sticky' => 0,
-      'tnid' => 0,
+      'tnid' => 1,
       'translate' => 0,
       // Node revision fields.
       'body' => 'body for node 1',
@@ -64,7 +64,7 @@ class NodeByNodeTypeTest extends MigrateSqlSourceTestCase {
       'promote' => 1,
       'moderate' => 0,
       'sticky' => 0,
-      'tnid' => 0,
+      'tnid' => 2,
       'translate' => 0,
       // Node revision fields.
       'body' => 'body for node 2',

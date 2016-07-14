@@ -55,7 +55,7 @@ class MigrateTermNodeTest extends MigrateDrupal6TestBase {
   public function testSkipNonExistentNode() {
     // Node 2 is migrated by d6_node__story, but we need to pretend that it
     // failed, so record that in the map table.
-    $this->mockFailure('d6_node:story', ['nid' => 2]);
+    $this->mockFailure('d6_node:story', ['nid' => 2, 'language' => 'en']);
 
     // d6_term_node__2 should skip over node 2 (a.k.a. revision 3) because,
     // according to the map table, it failed.

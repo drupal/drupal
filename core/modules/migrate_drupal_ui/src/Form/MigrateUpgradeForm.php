@@ -266,6 +266,14 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'image',
       'destination_module' => 'image',
     ],
+    'd6_language_content_settings' => [
+      'source_module' => 'locale',
+      'destination_module' => 'language',
+    ],
+    'd7_language_content_settings' => [
+      'source_module' => 'locale',
+      'destination_module' => 'language',
+    ],
     'd7_language_negotiation_settings' => [
       'source_module' => 'locale',
       'destination_module' => 'language',
@@ -287,6 +295,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'destination_module' => 'menu_ui',
     ],
     'd6_node' => [
+      'source_module' => 'node',
+      'destination_module' => 'node',
+    ],
+    'd6_node_translation' => [
       'source_module' => 'node',
       'destination_module' => 'node',
     ],

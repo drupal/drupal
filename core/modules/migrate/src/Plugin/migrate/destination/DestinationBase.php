@@ -94,8 +94,10 @@ abstract class DestinationBase extends PluginBase implements MigrateDestinationI
    *
    * @param array $id_map
    *   The map row data for the item.
+   * @param int $update_action
+   *   The rollback action to take if we are updating an existing item.
    */
-  protected function setRollbackAction(array $id_map) {
+  protected function setRollbackAction(array $id_map, $update_action = MigrateIdMapInterface::ROLLBACK_PRESERVE) {
     // If the entity we're updating was previously migrated by us, preserve the
     // existing rollback action.
     if (isset($id_map['sourceid1'])) {
@@ -104,7 +106,7 @@ abstract class DestinationBase extends PluginBase implements MigrateDestinationI
     // Otherwise, we're updating an entity which already existed on the
     // destination and want to make sure we do not delete it on rollback.
     else {
-      $this->rollbackAction = MigrateIdMapInterface::ROLLBACK_PRESERVE;
+      $this->rollbackAction = $update_action;
     }
   }
 

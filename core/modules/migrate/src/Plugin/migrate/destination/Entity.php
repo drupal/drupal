@@ -124,7 +124,8 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
   protected function getEntity(Row $row, array $old_destination_id_values) {
     $entity_id = reset($old_destination_id_values) ?: $this->getEntityId($row);
     if (!empty($entity_id) && ($entity = $this->storage->load($entity_id))) {
-      $this->updateEntity($entity, $row);
+      // Allow updateEntity() to change the entity.
+      $entity = $this->updateEntity($entity, $row) ?: $entity;
     }
     else {
       // Attempt to ensure we always have a bundle.
