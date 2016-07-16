@@ -13,7 +13,7 @@ class Uuid {
   const VALID_PATTERN = '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}';
 
   /**
-   * Checks that a string appears to be in the format of a UUID.
+   * Checks whether a string appears to be in the format of a UUID.
    *
    * Implementations should not implement validation, since UUIDs should be in
    * a consistent format across all implementations.
