@@ -788,17 +788,17 @@ function hook_render_template($template_file, $variables) {
  * A module may implement this hook in order to alter the element type defaults
  * defined by a module.
  *
- * @param array $types
+ * @param array $info
  *   An associative array with structure identical to that of the return value
  *   of \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
  *
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see \Drupal\Core\Render\Element\ElementInterface
  */
-function hook_element_info_alter(array &$types) {
+function hook_element_info_alter(array &$info) {
   // Decrease the default size of textfields.
-  if (isset($types['textfield']['#size'])) {
-    $types['textfield']['#size'] = 40;
+  if (isset($info['textfield']['#size'])) {
+    $info['textfield']['#size'] = 40;
   }
 }
 
