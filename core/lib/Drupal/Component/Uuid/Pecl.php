@@ -3,7 +3,7 @@
 namespace Drupal\Component\Uuid;
 
 /**
- * UUID implementation using the PECL extension.
+ * Generates a UUID using the PECL extension.
  */
 class Pecl implements UuidInterface {
 

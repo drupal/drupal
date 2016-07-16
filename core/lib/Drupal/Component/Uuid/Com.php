@@ -3,7 +3,7 @@
 namespace Drupal\Component\Uuid;
 
 /**
- * UUID implementation using the Windows internal GUID extension.
+ * Generates a UUID using the Windows internal GUID extension.
  *
  * @see http://php.net/com_create_guid
  */
