@@ -27,6 +27,7 @@ use Drupal\simpletest\AssertHelperTrait;
 use Drupal\simpletest\ContentTypeCreationTrait;
 use Drupal\simpletest\BlockCreationTrait;
 use Drupal\simpletest\NodeCreationTrait;
+use Drupal\simpletest\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Symfony\Component\CssSelector\CssSelectorConverter;
@@ -55,6 +56,10 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   }
   use ContentTypeCreationTrait {
     createContentType as drupalCreateContentType;
+  }
+  use UserCreationTrait {
+    createRole as drupalCreateRole;
+    createUser as drupalCreateUser;
   }
 
   /**
@@ -681,139 +686,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       $path = $base_url . $path;
     }
     return $path;
-  }
-
-  /**
-   * Creates a user with a given set of permissions.
-   *
-   * @param array $permissions
-   *   (optional) Array of permission names to assign to user. Note that the
-   *   user always has the default permissions derived from the
-   *   "authenticated users" role.
-   * @param string $name
-   *   (optional) The user name.
-   *
-   * @return \Drupal\user\Entity\User|false
-   *   A fully loaded user object with passRaw property, or FALSE if account
-   *   creation fails.
-   */
-  protected function drupalCreateUser(array $permissions = array(), $name = NULL) {
-    // Create a role with the given permission set, if any.
-    $rid = FALSE;
-    if ($permissions) {
-      $rid = $this->drupalCreateRole($permissions);
-      if (!$rid) {
-        return FALSE;
-      }
-    }
-
-    // Create a user assigned to that role.
-    $edit = array();
-    $edit['name'] = !empty($name) ? $name : $this->randomMachineName();
-    $edit['mail'] = $edit['name'] . '@example.com';
-    $edit['pass'] = user_password();
-    $edit['status'] = 1;
-    if ($rid) {
-      $edit['roles'] = array($rid);
-    }
-
-    $account = User::create($edit);
-    $account->save();
-
-    $this->assertNotNull($account->id(), SafeMarkup::format('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])));
-    if (!$account->id()) {
-      return FALSE;
-    }
-
-    // Add the raw password so that we can log in as this user.
-    $account->passRaw = $edit['pass'];
-    return $account;
-  }
-
-  /**
-   * Creates a role with specified permissions.
-   *
-   * @param array $permissions
-   *   Array of permission names to assign to role.
-   * @param string $rid
-   *   (optional) The role ID (machine name). Defaults to a random name.
-   * @param string $name
-   *   (optional) The label for the role. Defaults to a random string.
-   * @param int $weight
-   *   (optional) The weight for the role. Defaults NULL so that entity_create()
-   *   sets the weight to maximum + 1.
-   *
-   * @return string
-   *   Role ID of newly created role, or FALSE if role creation failed.
-   */
-  protected function drupalCreateRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL) {
-    // Generate a random, lowercase machine name if none was passed.
-    if (!isset($rid)) {
-      $rid = strtolower($this->randomMachineName(8));
-    }
-    // Generate a random label.
-    if (!isset($name)) {
-      // In the role UI role names are trimmed and random string can start or
-      // end with a space.
-      $name = trim($this->randomString(8));
-    }
-
-    // Check the all the permissions strings are valid.
-    if (!$this->checkPermissions($permissions)) {
-      return FALSE;
-    }
-
-    // Create new role.
-    /* @var \Drupal\user\RoleInterface $role */
-    $role = Role::create(array(
-      'id' => $rid,
-      'label' => $name,
-    ));
-    if (!is_null($weight)) {
-      $role->set('weight', $weight);
-    }
-    $result = $role->save();
-
-    $this->assertSame($result, SAVED_NEW, SafeMarkup::format('Created role ID @rid with name @name.', array(
-      '@name' => var_export($role->label(), TRUE),
-      '@rid' => var_export($role->id(), TRUE),
-    )));
-
-    if ($result === SAVED_NEW) {
-      // Grant the specified permissions to the role, if any.
-      if (!empty($permissions)) {
-        user_role_grant_permissions($role->id(), $permissions);
-        $assigned_permissions = Role::load($role->id())->getPermissions();
-        $missing_permissions = array_diff($permissions, $assigned_permissions);
-        if ($missing_permissions) {
-          $this->fail(SafeMarkup::format('Failed to create permissions: @perms', array('@perms' => implode(', ', $missing_permissions))));
-        }
-      }
-      return $role->id();
-    }
-
-    return FALSE;
-  }
-
-  /**
-   * Checks whether a given list of permission names is valid.
-   *
-   * @param array $permissions
-   *   The permission names to check.
-   *
-   * @return bool
-   *   TRUE if the permissions are valid, FALSE otherwise.
-   */
-  protected function checkPermissions(array $permissions) {
-    $available = array_keys(\Drupal::service('user.permissions')->getPermissions());
-    $valid = TRUE;
-    foreach ($permissions as $permission) {
-      if (!in_array($permission, $available)) {
-        $this->fail(SafeMarkup::format('Invalid permission %permission.', array('%permission' => $permission)));
-        $valid = FALSE;
-      }
-    }
-    return $valid;
   }
 
   /**
