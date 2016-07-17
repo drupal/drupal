@@ -129,7 +129,7 @@ abstract class Database {
    */
   final public static function getLog($logging_key, $key = 'default') {
     if (empty(self::$logs[$key])) {
-      return NULL;
+      return [];
     }
     $queries = self::$logs[$key]->get($logging_key);
     self::$logs[$key]->end($logging_key);
