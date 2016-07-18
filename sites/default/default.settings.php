@@ -155,7 +155,7 @@
  *   These settings are available as of MySQL 5.5.14, and are defaults in
  *   MySQL 5.7.7 and up.
  * - The PHP MySQL driver must support the utf8mb4 charset (libmysqlclient
-     5.5.3 and up, as well as mysqlnd 5.0.9 and up).
+ *   5.5.3 and up, as well as mysqlnd 5.0.9 and up).
  * - The MySQL server must support the utf8mb4 charset (5.5.3 and up).
  *
  * You can optionally set prefixes for some or all database table names
