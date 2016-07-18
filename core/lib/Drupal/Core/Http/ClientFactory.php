@@ -52,6 +52,13 @@ class ClientFactory {
         'User-Agent' => 'Drupal/' . \Drupal::VERSION . ' (+https://www.drupal.org/) ' . \GuzzleHttp\default_user_agent(),
       ],
       'handler' => $this->stack,
+      // Security consideration: prevent Guzzle from using environment variables
+      // to configure the outbound proxy.
+      'proxy' => [
+        'http' => NULL,
+        'https' => NULL,
+        'no' => [],
+      ]
     ];
 
     $config = NestedArray::mergeDeep($default_config, Settings::get('http_client_config', []), $config);
