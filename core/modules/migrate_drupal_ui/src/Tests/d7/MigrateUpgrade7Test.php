@@ -43,7 +43,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
       'configurable_language' => 4,
       'contact_form' => 3,
       'editor' => 2,
-      'field_config' => 41,
+      'field_config' => 42,
       'field_storage_config' => 31,
       'file' => 1,
       'filter_format' => 7,

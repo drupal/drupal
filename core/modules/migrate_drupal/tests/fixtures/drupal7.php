@@ -3720,6 +3720,15 @@ $connection->insert('field_config_instance')
   'data' => 'a:6:{s:5:"label";s:4:"File";s:6:"widget";a:5:{s:6:"weight";s:1:"8";s:4:"type";s:12:"file_generic";s:6:"module";s:4:"file";s:6:"active";i:1;s:8:"settings";a:1:{s:18:"progress_indicator";s:8:"throbber";}}s:8:"settings";a:5:{s:14:"file_directory";s:0:"";s:15:"file_extensions";s:3:"txt";s:12:"max_filesize";s:0:"";s:17:"description_field";i:0;s:18:"user_register_form";i:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"file_default";s:8:"settings";a:0:{}s:6:"module";s:4:"file";s:6:"weight";i:0;}}s:8:"required";i:0;s:11:"description";s:0:"";}',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '34',
+  'field_id' => '15',
+  'field_name' => 'field_link',
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'data' => 'a:7:{s:5:"label";s:4:"Link";s:6:"widget";a:5:{s:6:"weight";s:2:"10";s:4:"type";s:10:"link_field";s:6:"module";s:4:"link";s:6:"active";i:0;s:8:"settings";a:0:{}}s:8:"settings";a:12:{s:12:"absolute_url";i:1;s:12:"validate_url";i:1;s:3:"url";i:0;s:5:"title";s:8:"optional";s:11:"title_value";s:19:"Unused Static Title";s:27:"title_label_use_field_label";i:0;s:15:"title_maxlength";s:3:"128";s:7:"display";a:1:{s:10:"url_cutoff";s:2:"81";}s:10:"attributes";a:6:{s:6:"target";s:6:"_blank";s:3:"rel";s:8:"nofollow";s:18:"configurable_class";i:0;s:5:"class";s:7:"classes";s:18:"configurable_title";i:1;s:5:"title";s:0:"";}s:10:"rel_remove";s:19:"rel_remove_external";s:13:"enable_tokens";i:1;s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"link_default";s:6:"weight";s:1:"9";s:8:"settings";a:0:{}s:6:"module";s:4:"link";}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
+  'deleted' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('field_data_body', array(
@@ -4899,6 +4908,18 @@ $connection->insert('field_data_field_link')
   'field_link_url' => 'http://google.com',
   'field_link_title' => 'Click Here',
   'field_link_attributes' => 'a:1:{s:5:"title";s:10:"Click Here";}',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'und',
+  'delta' => '0',
+  'field_link_url' => '<front>',
+  'field_link_title' => 'Home',
+  'field_link_attributes' => 'a:0:{}',
 ))
 ->execute();
 
@@ -6667,6 +6688,18 @@ $connection->insert('field_revision_field_link')
   'field_link_url' => 'http://google.com',
   'field_link_title' => 'Click Here',
   'field_link_attributes' => 'a:1:{s:5:"title";s:10:"Click Here";}',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'und',
+  'delta' => '0',
+  'field_link_url' => '<front>',
+  'field_link_title' => 'Home',
+  'field_link_attributes' => 'a:0:{}',
 ))
 ->execute();
 
