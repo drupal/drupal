@@ -38,6 +38,13 @@ class CckMigration extends Migration implements ContainerFactoryPluginInterface 
   protected $cckPluginCache;
 
   /**
+   * The cckfield plugin manager.
+   *
+   * @var \Drupal\migrate\Plugin\MigratePluginManager
+   */
+  protected $cckPluginManager;
+
+  /**
    * Constructs a CckMigration.
    *
    * @param array $configuration
