@@ -165,6 +165,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts', 'max-age'], 'A view mode with render cache disabled has the correct output (only cache tags, contexts and max-age).');
 
     // Test that an entity type can opt out of render caching completely.
+    $this->installEntitySchema('entity_test_label');
     $entity_test_no_cache = $this->createTestEntity('entity_test_label');
     $entity_test_no_cache->save();
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test_label')->view($entity_test_no_cache, 'full');

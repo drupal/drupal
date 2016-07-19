@@ -271,6 +271,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
    * Tests the label formatter.
    */
   public function testLabelFormatter() {
+    $this->installEntitySchema('entity_test_label');
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $formatter = 'entity_reference_label';
