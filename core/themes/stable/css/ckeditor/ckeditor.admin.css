@@ -198,6 +198,10 @@
      far too wide focus indicator. This fixes that. */
   overflow: hidden;
 }
+.ckeditor-buttons .cke_button_icon img {
+  width: 16px;
+  height: 16px;
+}
 .ckeditor-buttons li .cke_ltr {
   direction: ltr;
 }
