@@ -619,6 +619,38 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
+   * Determines if the given grouped filter entry has a valid value.
+   *
+   * @param array $group
+   *   A group entry as defined by buildGroupForm().
+   *
+   * @return bool
+   */
+  protected function hasValidGroupedValue(array $group) {
+    $operators = $this->operators();
+    if ($operators[$group['operator']]['values'] == 0) {
+      // Some filters, such as "is empty," do not require a value to be
+      // specified in order to be valid entries.
+      return TRUE;
+    }
+    else {
+      if (is_string($group['value'])) {
+        return trim($group['value']) != '';
+      }
+      elseif (is_array($group['value'])) {
+        // Some filters allow multiple options to be selected (for example, node
+        // types). Ensure at least the minimum number of values is present for
+        // this entry to be considered valid.
+        $min_values = $operators[$group['operator']]['values'];
+        $actual_values = count(array_filter($group['value'], 'static::arrayFilterZero'));
+        return $actual_values >= $min_values;
+      }
+    }
+    return FALSE;
+  }
+
+
+  /**
    * Validate the build group options form.
    */
   protected function buildGroupValidate($form, FormStateInterface $form_state) {
@@ -628,25 +660,20 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
 
     if ($group_items = $form_state->getValue(array('options', 'group_info', 'group_items'))) {
-      $operators = $this->operators();
-
       foreach ($group_items as $id => $group) {
         if (empty($group['remove'])) {
-
-          // Check if the title is defined but value wasn't defined.
-          if (!empty($group['title']) && $operators[$group['operator']]['values'] > 0) {
-            if ((!is_array($group['value']) && trim($group['value']) == "") ||
-                (is_array($group['value']) && count(array_filter($group['value'], 'static::arrayFilterZero')) == 0)) {
-              $form_state->setError($form['group_info']['group_items'][$id]['value'], $this->t('The value is required if title for this item is defined.'));
+          $has_valid_value = $this->hasValidGroupedValue($group);
+          if ($has_valid_value && $group['title'] == '') {
+            $operators = $this->operators();
+            if ($operators[$group['operator']]['values'] == 0) {
+              $form_state->setError($form['group_info']['group_items'][$id]['title'], $this->t('A label is required for the specified operator.'));
+            }
+            else {
+              $form_state->setError($form['group_info']['group_items'][$id]['title'], $this->t('A label is required if the value for this item is defined.'));
             }
           }
-
-          // Check if the value is defined but title wasn't defined.
-          if ((!is_array($group['value']) && trim($group['value']) != "") ||
-              (is_array($group['value']) && count(array_filter($group['value'], 'static::arrayFilterZero')) > 0)) {
-            if (empty($group['title'])) {
-              $form_state->setError($form['group_info']['group_items'][$id]['title'], $this->t('The title is required if value for this item is defined.'));
-            }
+          if (!$has_valid_value && $group['title'] != '') {
+            $form_state->setError($form['group_info']['group_items'][$id]['value'], $this->t('A value is required if the label for this item is defined.'));
           }
         }
       }
@@ -1469,19 +1496,6 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    }
 
   /**
-   * Filter by no empty values, though allow to use "0".
-   *
-   * @param string $var
-   *   The variable to evaluate.
-   *
-   * @return bool
-   *   TRUE if the value is equal to an empty string, FALSE otherwise.
-   */
-  protected static function arrayFilterZero($var) {
-    return trim($var) != '';
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getCacheMaxAge() {
@@ -1516,6 +1530,22 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     if (!empty($this->options['exposed']) && $error = $this->validateIdentifier($this->options['expose']['identifier'])) {
       return [$error];
     }
+  }
+
+  /**
+   * Filter by no empty values, though allow the use of (string) "0".
+   *
+   * @param string $var
+   *   The variable to evaluate.
+   *
+   * @return bool
+   *   TRUE if the value is equal to an empty string, FALSE otherwise.
+   */
+  protected static function arrayFilterZero($var) {
+    if (is_int($var)) {
+      return $var != 0;
+    }
+    return trim($var) != '';
   }
 
 }
