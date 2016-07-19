@@ -169,7 +169,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    * {@inheritdoc}
    */
   public function getUrl() {
-    return Url::fromUri($this->uri);
+    return Url::fromUri($this->uri, $this->options);
   }
 
   /**

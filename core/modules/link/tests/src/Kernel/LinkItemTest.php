@@ -78,6 +78,13 @@ class LinkItemTest extends FieldKernelTestBase {
     $entity->field_test->title = $title;
     $entity->field_test->first()->get('options')->set('query', $parsed_url['query']);
     $entity->field_test->first()->get('options')->set('attributes', array('class' => $class));
+    $this->assertEquals([
+      'query' => $parsed_url['query'],
+      'attributes' => [
+        'class' => $class,
+      ],
+      'external' => TRUE,
+    ], $entity->field_test->first()->getUrl()->getOptions());
     $entity->name->value = $this->randomMachineName();
     $entity->save();
 
