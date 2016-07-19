@@ -76,6 +76,7 @@
         "drupal/core-filesystem": "self.version",
         "drupal/core-gettext": "self.version",
         "drupal/core-graph": "self.version",
+        "drupal/core-http-foundation": "self.version",
         "drupal/core-php-storage": "self.version",
         "drupal/core-plugin": "self.version",
         "drupal/core-proxy-builder": "self.version",
