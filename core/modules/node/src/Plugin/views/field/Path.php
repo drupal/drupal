@@ -63,7 +63,9 @@ class Path extends FieldPluginBase {
    */
   public function render(ResultRow $values) {
     $nid = $this->getValue($values, 'nid');
-    return \Drupal::url('entity.node.canonical', ['node' => $nid], ['absolute' => $this->options['absolute']]);
+    return array(
+      '#markup' => \Drupal::url('entity.node.canonical', ['node' => $nid], ['absolute' => $this->options['absolute']]),
+    );
   }
 
 }
