@@ -77,6 +77,20 @@ class EntityUrlTest extends UnitTestCase {
   const NON_DEFAULT_REVISION = FALSE;
 
   /**
+   * Indicator that the test entity type has no bundle key.
+   *
+   * @var false
+   */
+  const HAS_NO_BUNDLE_KEY = FALSE;
+
+  /**
+   * Indicator that the test entity type has a bundle key.
+   *
+   * @var true
+   */
+  const HAS_BUNDLE_KEY = TRUE;
+
+  /**
    * Tests the toUrl() method without an entity ID.
    *
    * @covers ::toUrl
@@ -185,20 +199,94 @@ class EntityUrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the toUrl() method with the 'collection' link template.
+   * Tests the toUrl() method with link templates without an entity ID.
+   *
+   * @param string $link_template
+   *   The link template to test.
+   * @param string $expected_route_name
+   *   The expected route name of the generated URL.
+   *
+   * @dataProvider providerTestToUrlLinkTemplateNoId
    *
    * @covers ::toUrl
    * @covers ::linkTemplates
    * @covers ::urlRouteParameters
    */
-  public function testToUrlLinkTemplateCollection() {
+  public function testToUrlLinkTemplateNoId($link_template, $expected_route_name) {
     $entity = $this->getEntity(Entity::class, ['id' => $this->entityId]);
-    $link_template = 'collection';
     $this->registerLinkTemplate($link_template);
 
     /** @var \Drupal\Core\Url $url */
     $url = $entity->toUrl($link_template);
-    $this->assertUrl('entity.test_entity.collection', [], $entity, FALSE, $url);
+    $this->assertUrl($expected_route_name, [], $entity, FALSE, $url);
+  }
+
+  /**
+   * Provides data for testToUrlLinkTemplateNoId().
+   *
+   * @return array
+   *   An array of test cases for testToUrlLinkTemplateNoId().
+   */
+  public function providerTestToUrlLinkTemplateNoId() {
+    $test_cases = [];
+
+    $test_cases['collection'] = ['collection', 'entity.test_entity.collection'];
+    $test_cases['add-page'] = ['add-page', 'entity.test_entity.add_page'];
+
+    return $test_cases;
+  }
+
+  /**
+   * Tests the toUrl() method with the 'revision' link template.
+   *
+   * @param bool $has_bundle_key
+   *   Whether or not the mock entity type should have a bundle key.
+   * @param string|null $bundle_entity_type
+   *   The ID of the bundle entity type of the mock entity type, or NULL if the
+   *   mock entity type should not have a bundle entity type.
+   * @param string $bundle_key
+   *   The bundle key of the mock entity type or FALSE if the entity type should
+   *   not have a bundle key.
+   * @param array $expected_route_parameters
+   *   The expected route parameters of the generated URL.
+   *
+   * @dataProvider providerTestToUrlLinkTemplateAddForm
+   *
+   * @covers ::toUrl
+   * @covers ::linkTemplates
+   * @covers ::urlRouteParameters
+   */
+  public function testToUrlLinkTemplateAddForm($has_bundle_key, $bundle_entity_type, $bundle_key, $expected_route_parameters) {
+    $values = ['id' => $this->entityId, 'langcode' => $this->langcode];
+    $entity = $this->getEntity(Entity::class, $values);
+    $this->entityType->hasKey('bundle')->willReturn($has_bundle_key);
+    $this->entityType->getBundleEntityType()->willReturn($bundle_entity_type);
+    $this->entityType->getKey('bundle')->willReturn($bundle_key);
+    $link_template = 'add-form';
+    $this->registerLinkTemplate($link_template);
+
+    /** @var \Drupal\Core\Url $url */
+    $url = $entity->toUrl($link_template);
+    $this->assertUrl('entity.test_entity.add_form', $expected_route_parameters, $entity, FALSE, $url);
+  }
+
+  /**
+   * Provides data for testToUrlLinkTemplateAddForm().
+   *
+   * @return array
+   *   An array of test cases for testToUrlLinkTemplateAddForm().
+   */
+  public function providerTestToUrlLinkTemplateAddForm() {
+    $test_cases = [];
+
+    $route_parameters = [];
+    $test_cases['no_bundle_key'] = [static::HAS_NO_BUNDLE_KEY, NULL, FALSE, $route_parameters];
+
+    $route_parameters = ['type' => $this->entityTypeId];
+    $test_cases['bundle_entity_type'] = [static::HAS_BUNDLE_KEY, 'type', FALSE, $route_parameters];
+    $test_cases['bundle_key'] = [static::HAS_BUNDLE_KEY, NULL, 'type', $route_parameters];
+
+    return $test_cases;
   }
 
   /**
