@@ -93,7 +93,7 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
         $source_id_values[$migration_id] = $value;
       }
       // Break out of the loop as soon as a destination ID is found.
-      if ($destination_ids = $migration->getIdMap()->lookupDestinationID($source_id_values[$migration_id])) {
+      if ($destination_ids = $migration->getIdMap()->lookupDestinationId($source_id_values[$migration_id])) {
         break;
       }
     }
@@ -162,7 +162,7 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
    *
    * @throws \Drupal\migrate\MigrateSkipProcessException
    */
-  protected function skipOnEmpty($value) {
+  protected function skipOnEmpty(array $value) {
     if (!array_filter($value)) {
       throw new MigrateSkipProcessException();
     }

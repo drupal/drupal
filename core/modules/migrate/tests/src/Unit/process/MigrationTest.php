@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\Migration;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
@@ -84,6 +85,53 @@ class MigrationTest extends MigrateProcessTestCase {
     $migration = new Migration($configuration, '', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertEquals(2, $result);
+  }
+
+  /**
+   * Tests that processing is skipped when the input value is empty.
+  *
+   * @expectedException \Drupal\migrate\MigrateSkipProcessException
+   */
+  public function testSkipOnEmpty() {
+    $migration_plugin = $this->prophesize(MigrationInterface::class);
+    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
+    $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
+
+    $configuration = [
+      'migration' => 'foobaz',
+    ];
+    $migration_plugin->id()->willReturn(uniqid());
+    $migration = new Migration($configuration, 'migration', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
+    $migration->transform(0, $this->migrateExecutable, $this->row, 'foo');
+  }
+
+  /**
+   * Tests a successful lookup.
+   */
+  public function testSuccessfulLookup() {
+    $migration_plugin = $this->prophesize(MigrationInterface::class);
+    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
+    $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
+
+    $configuration = [
+      'migration' => 'foobaz',
+    ];
+    $migration_plugin->id()->willReturn(uniqid());
+
+    $id_map = $this->prophesize(MigrateIdMapInterface::class);
+    $id_map->lookupDestinationId([1])->willReturn([3]);
+    $migration_plugin->getIdMap()->willReturn($id_map->reveal());
+
+    $migration_plugin_manager->createInstances(['foobaz'])
+      ->willReturn(['foobaz' => $migration_plugin->reveal()]);
+
+    $migrationStorage = $this->prophesize(EntityStorageInterface::class);
+    $migrationStorage
+      ->loadMultiple(['foobaz'])
+      ->willReturn([$migration_plugin->reveal()]);
+
+    $migration = new Migration($configuration, 'migration', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
+    $this->assertSame(3, $migration->transform(1, $this->migrateExecutable, $this->row, 'foo'));
   }
 
 }
