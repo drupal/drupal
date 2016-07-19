@@ -68,8 +68,20 @@ class UpdateTest extends RESTTestBase {
     $serialized = $serializer->serialize($patch_entity, $this->defaultFormat, $context);
 
     // Update the entity over the REST API.
-    $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
-    $this->assertResponse(204);
+    $response = $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->assertResponse(200);
+
+    // Make sure that the response includes an entity in the body, check the
+    // updated field as an example.
+    $request = Json::decode($serialized);
+    $response = Json::decode($response);
+    $this->assertEqual($request['field_test_text'][0]['value'], $response['field_test_text'][0]['value']);
+    unset($request['_links']);
+    unset($response['_links']);
+    unset($response['id']);
+    unset($response['uuid']);
+    unset($response['name']);
+    $this->assertEqual($request, $response);
 
     // Re-load updated entity from the database.
     $entity = entity_load($entity_type, $entity->id(), TRUE);
@@ -81,7 +93,7 @@ class UpdateTest extends RESTTestBase {
     unset($normalized['field_test_text']);
     $serialized = $serializer->encode($normalized, $this->defaultFormat);
     $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
-    $this->assertResponse(204);
+    $this->assertResponse(200);
 
     $entity = entity_load($entity_type, $entity->id(), TRUE);
     $this->assertNotNull($entity->field_test_text->value . 'Test field has not been deleted.');
@@ -92,7 +104,7 @@ class UpdateTest extends RESTTestBase {
 
     // Update the entity over the REST API.
     $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
-    $this->assertResponse(204);
+    $this->assertResponse(200);
 
     // Re-load updated entity from the database.
     $entity = entity_load($entity_type, $entity->id(), TRUE);
@@ -214,7 +226,7 @@ class UpdateTest extends RESTTestBase {
     $normalized['pass'][0]['existing'] = $account->pass_raw;
     $serialized = $serializer->serialize($normalized, $this->defaultFormat, $context);
     $this->httpRequest($account->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
-    $this->assertResponse(204);
+    $this->assertResponse(200);
 
     // Try to change the password without providing the current password.
     $new_password = $this->randomString();
@@ -230,7 +242,7 @@ class UpdateTest extends RESTTestBase {
     $normalized['pass'][0]['existing'] = $account->pass_raw;
     $serialized = $serializer->serialize($normalized, $this->defaultFormat, $context);
     $this->httpRequest($account->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
-    $this->assertResponse(204);
+    $this->assertResponse(200);
 
     // Verify that we can log in with the new password.
     $account->pass_raw = $new_password;
@@ -356,8 +368,7 @@ class UpdateTest extends RESTTestBase {
     $serialized = $serializer->serialize($normalized, $format, $context);
 
     $this->httpRequest($url, 'PATCH', $serialized, $mime_type);
-    $this->assertResponse(204);
-    $this->assertResponseBody('');
+    $this->assertResponse(200);
   }
 
 }

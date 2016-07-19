@@ -110,7 +110,7 @@ class NodeTest extends RESTTestBase {
     );
     $serialized = $this->container->get('serializer')->serialize($data, $this->defaultFormat);
     $this->httpRequest($node->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
-    $this->assertResponse(204);
+    $this->assertResponse(200);
 
     // Reload the node from the DB and check if the title was correctly updated.
     $node_storage->resetCache(array($node->id()));

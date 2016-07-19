@@ -229,8 +229,8 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       $original_entity->save();
       $this->logger->notice('Updated entity %type with ID %id.', array('%type' => $original_entity->getEntityTypeId(), '%id' => $original_entity->id()));
 
-      // Update responses have an empty body.
-      return new ModifiedResourceResponse(NULL, 204);
+      // Return the updated entity in the response body.
+      return new ModifiedResourceResponse($original_entity, 200);
     }
     catch (EntityStorageException $e) {
       throw new HttpException(500, 'Internal Server Error', $e);

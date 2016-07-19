@@ -115,10 +115,7 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     }
 
     // Invoke the operation on the resource plugin.
-    // All REST routes are restricted to exactly one format, so instead of
-    // parsing it out of the Accept headers again, we can simply retrieve the
-    // format requirement. If there is no format associated, just pick JSON.
-    $format = $route_match->getRouteObject()->getRequirement('_format') ?: 'json';
+    $format = $this->getResponseFormat($route_match, $request);
     try {
       $response = call_user_func_array(array($resource, $method), array_merge($parameters, array($unserialized, $request)));
     }
@@ -134,6 +131,54 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     return $response instanceof ResourceResponseInterface ?
       $this->renderResponse($request, $response, $serializer, $format, $resource_config) :
       $response;
+  }
+
+  /**
+   * Determines the format to respond in.
+   *
+   * Respects the requested format if one is specified. However, it is common to
+   * forget to specify a request format in case of a POST or PATCH. Rather than
+   * simply throwing an error, we apply the robustness principle: when POSTing
+   * or PATCHing using a certain format, you probably expect a response in that
+   * same format.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   *
+   * @return string
+   *   The response format.
+   */
+  protected function getResponseFormat(RouteMatchInterface $route_match, Request $request) {
+    $route = $route_match->getRouteObject();
+    $acceptable_request_formats = $route->hasRequirement('_format') ? explode('|', $route->getRequirement('_format')) : [];
+    $acceptable_content_type_formats = $route->hasRequirement('_content_type_format') ? explode('|', $route->getRequirement('_content_type_format')) : [];
+    $acceptable_formats = $request->isMethodSafe() ? $acceptable_request_formats : $acceptable_content_type_formats;
+
+    $requested_format = $request->getRequestFormat();
+    $content_type_format = $request->getContentType();
+
+    // If an acceptable format is requested, then use that. Otherwise, including
+    // and particularly when the client forgot to specify a format, then use
+    // heuristics to select the format that is most likely expected.
+    if (in_array($requested_format, $acceptable_formats)) {
+      return $requested_format;
+    }
+    // If a request body is present, then use the format corresponding to the
+    // request body's Content-Type for the response, if it's an acceptable
+    // format for the request.
+    elseif (!empty($request->getContent()) && in_array($content_type_format, $acceptable_content_type_formats)) {
+      return $content_type_format;
+    }
+    // Otherwise, use the first acceptable format.
+    elseif (!empty($acceptable_formats)) {
+      return $acceptable_formats[0];
+    }
+    // Sometimes, there are no acceptable formats, e.g. DELETE routes.
+    else {
+      return NULL;
+    }
   }
 
   /**
@@ -161,8 +206,9 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
    *   The response from the REST resource.
    * @param \Symfony\Component\Serializer\SerializerInterface $serializer
    *   The serializer to use.
-   * @param string $format
-   *   The response format.
+   * @param string|null $format
+   *   The response format, or NULL in case the response does not need a format,
+   *   for example for the response to a DELETE request.
    * @param \Drupal\rest\RestResourceConfigInterface $resource_config
    *   The resource config.
    *
@@ -176,24 +222,30 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     $data = $response->getResponseData();
 
     if ($response instanceof CacheableResponseInterface) {
-      $context = new RenderContext();
-      $output = $this->container->get('renderer')
-        ->executeInRenderContext($context, function () use ($serializer, $data, $format) {
-          return $serializer->serialize($data, $format);
-        });
-
-      if (!$context->isEmpty()) {
-        $response->addCacheableDependency($context->pop());
-      }
-
       // Add rest config's cache tags.
       $response->addCacheableDependency($resource_config);
     }
-    else {
-      $output = $serializer->serialize($data, $format);
+
+    // If there is data to send, serialize and set it as the response body.
+    if ($data !== NULL) {
+      if ($response instanceof CacheableResponseInterface) {
+        $context = new RenderContext();
+        $output = $this->container->get('renderer')
+          ->executeInRenderContext($context, function () use ($serializer, $data, $format) {
+            return $serializer->serialize($data, $format);
+          });
+
+        if (!$context->isEmpty()) {
+          $response->addCacheableDependency($context->pop());
+        }
+      }
+      else {
+        $output = $serializer->serialize($data, $format);
+      }
+
+      $response->setContent($output);
+      $response->headers->set('Content-Type', $request->getMimeType($format));
     }
-    $response->setContent($output);
-    $response->headers->set('Content-Type', $request->getMimeType($format));
 
     return $response;
   }

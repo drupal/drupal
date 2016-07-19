@@ -119,7 +119,7 @@ class PageCacheTest extends RESTTestBase {
 
     // Update the entity over the REST API.
     $this->httpRequest($url, 'PATCH', $serialized, $this->defaultMimeType);
-    $this->assertResponse(204);
+    $this->assertResponse(200);
 
     if ($this->getCacheHeaderValues('x-drupal-cache')) {
       $this->fail('Patch request is cached.');
