@@ -237,26 +237,26 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     // Add a search page.
     $edit = array();
     $edit['search_type'] = 'search_extra_type_search';
-    $this->drupalPostForm(NULL, $edit, t('Add new page'));
+    $this->drupalPostForm(NULL, $edit, t('Add search page'));
     $this->assertTitle('Add new search page | Drupal');
 
     $first = array();
     $first['label'] = $this->randomString();
     $first_id = $first['id'] = strtolower($this->randomMachineName(8));
     $first['path'] = strtolower($this->randomMachineName(8));
-    $this->drupalPostForm(NULL, $first, t('Add search page'));
+    $this->drupalPostForm(NULL, $first, t('Save'));
     $this->assertDefaultSearch($first_id, 'The default page matches the only search page.');
     $this->assertRaw(t('The %label search page has been added.', array('%label' => $first['label'])));
 
     // Attempt to add a search page with an existing path.
     $edit = array();
     $edit['search_type'] = 'search_extra_type_search';
-    $this->drupalPostForm(NULL, $edit, t('Add new page'));
+    $this->drupalPostForm(NULL, $edit, t('Add search page'));
     $edit = array();
     $edit['label'] = $this->randomString();
     $edit['id'] = strtolower($this->randomMachineName(8));
     $edit['path'] = $first['path'];
-    $this->drupalPostForm(NULL, $edit, t('Add search page'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('The search page path must be unique.'));
 
     // Add a second search page.
@@ -264,7 +264,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     $second['label'] = $this->randomString();
     $second_id = $second['id'] = strtolower($this->randomMachineName(8));
     $second['path'] = strtolower($this->randomMachineName(8));
-    $this->drupalPostForm(NULL, $second, t('Add search page'));
+    $this->drupalPostForm(NULL, $second, t('Save'));
     $this->assertDefaultSearch($first_id, 'The default page matches the only search page.');
 
     // Ensure both search pages have their tabs displayed.
