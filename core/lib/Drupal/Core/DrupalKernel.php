@@ -443,11 +443,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Provide a default configuration, if not set.
     if (!isset($configuration['default'])) {
-      $configuration['default'] = [
-        'class' => '\Drupal\Component\FileCache\FileCache',
-        'cache_backend_class' => NULL,
-        'cache_backend_configuration' => [],
-      ];
       // @todo Use extension_loaded('apcu') for non-testbot
       //  https://www.drupal.org/node/2447753.
       if (function_exists('apcu_fetch')) {

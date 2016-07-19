@@ -81,6 +81,79 @@ class FileCacheFactoryTest extends UnitTestCase {
     $this->assertInstanceOf(NullFileCache::class, $file_cache);
   }
 
+  /**
+   * @covers ::get
+   *
+   * @dataProvider configurationDataProvider
+   */
+  public function testGetConfigurationOverrides($configuration, $arguments, $class) {
+    FileCacheFactory::setConfiguration($configuration);
+
+    $file_cache = FileCacheFactory::get('test_foo_settings', $arguments);
+    $this->assertInstanceOf($class, $file_cache);
+  }
+
+  /**
+   * Data provider for testGetConfigurationOverrides().
+   */
+  public function configurationDataProvider() {
+    $data = [];
+
+    // Get a unique FileCache class.
+    $file_cache = $this->getMockBuilder(FileCache::class)
+       ->disableOriginalConstructor()
+       ->getMock();
+    $class = get_class($file_cache);
+
+    // Test fallback configuration.
+    $data['fallback-configuration'] = [[
+    ], [], FileCache::class];
+
+    // Test default configuration.
+    $data['default-configuration'] = [[
+      'default' => [
+        'class' => $class,
+      ],
+    ], [], $class];
+
+    // Test specific per collection setting.
+    $data['collection-setting'] = [[
+      'test_foo_settings' => [
+        'class' => $class,
+      ],
+    ], [], $class];
+
+
+    // Test default configuration plus specific per collection setting.
+    $data['default-plus-collection-setting'] = [[
+      'default' => [
+        'class' => '\stdClass',
+      ],
+      'test_foo_settings' => [
+        'class' => $class,
+      ],
+    ], [], $class];
+
+    // Test default configuration plus class specific override.
+    $data['default-plus-class-override'] = [[
+      'default' => [
+        'class' => '\stdClass',
+      ],
+    ], [ 'class' => $class ], $class];
+
+    // Test default configuration plus class specific override plus specific
+    // per collection setting.
+    $data['default-plus-class-plus-collection-setting'] = [[
+      'default' => [
+        'class' => '\stdClass',
+      ],
+      'test_foo_settings' => [
+        'class' => $class,
+      ],
+    ], [ 'class' => '\stdClass'], $class];
+
+    return $data;
+  }
 
   /**
    * @covers ::getConfiguration

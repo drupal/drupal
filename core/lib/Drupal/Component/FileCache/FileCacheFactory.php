@@ -44,23 +44,30 @@ class FileCacheFactory {
       return new NullFileCache('', '');
     }
 
-    $default_configuration += [
+    $configuration = [];
+
+    // Check for a collection specific setting first.
+    if (isset(static::$configuration[$collection])) {
+      $configuration += static::$configuration[$collection];
+    }
+    // Then check if a default configuration has been provided.
+    if (!empty($default_configuration)) {
+      $configuration += $default_configuration;
+    }
+    // Last check if a default setting has been provided.
+    if (isset(static::$configuration['default'])) {
+      $configuration += static::$configuration['default'];
+    }
+
+    // Ensure that all properties are set.
+    $fallback_configuration = [
       'class' => '\Drupal\Component\FileCache\FileCache',
       'collection' => $collection,
       'cache_backend_class' => NULL,
       'cache_backend_configuration' => [],
     ];
 
-    $configuration = [];
-    if (isset(static::$configuration[$collection])) {
-      $configuration = static::$configuration[$collection];
-    }
-    elseif (isset(static::$configuration['default'])) {
-      $configuration = static::$configuration['default'];
-    }
-
-    // Add defaults to the configuration.
-    $configuration = $configuration + $default_configuration;
+    $configuration = $configuration + $fallback_configuration;
 
     $class = $configuration['class'];
     return new $class(static::getPrefix(), $configuration['collection'], $configuration['cache_backend_class'], $configuration['cache_backend_configuration']);
