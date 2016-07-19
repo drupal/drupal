@@ -14,6 +14,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -755,4 +756,44 @@ function comment_preprocess_field(&$variables) {
  */
 function comment_ranking() {
   return \Drupal::service('comment.statistics')->getRankingInfo();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for entity_view_display entities.
+ */
+function comment_entity_view_display_presave(EntityViewDisplayInterface $display) {
+  // Act only on comment view displays being disabled.
+  if ($display->isNew() || $display->getTargetEntityTypeId() !== 'comment' || $display->status()) {
+    return;
+  }
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
+  if (!$storage->loadUnchanged($display->getOriginalId())->status()) {
+    return;
+  }
+
+  // Disable the comment field formatter when the used view display is disabled.
+  foreach ($storage->loadMultiple() as $id => $view_display) {
+    $changed = FALSE;
+    /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */
+    foreach ($view_display->getComponents() as $field => $component) {
+      if (isset($component['type']) && ($component['type'] === 'comment_default')) {
+        if ($component['settings']['view_mode'] === $display->getMode()) {
+          $view_display->removeComponent($field);
+          /** @var \Drupal\Core\Entity\EntityViewModeInterface $mode */
+          $mode = EntityViewMode::load($display->getTargetEntityTypeId() . '.' . $display->getMode());
+          $arguments = [
+            '@id' => $view_display->id(),
+            '@name' => $field,
+            '@display' => $mode->label(),
+            '@mode' => $display->getMode(),
+          ];
+          \Drupal::logger('system')->warning("View display '@id': Comment field formatter '@name' was disabled because it is using the comment view display '@display' (@mode) that was just disabled.", $arguments);
+          $changed = TRUE;
+        }
+      }
+    }
+    if ($changed) {
+      $view_display->save();
+    }
+  }
 }

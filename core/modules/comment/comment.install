@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -134,3 +136,46 @@ function comment_update_8001() {
 function comment_update_8002() {
   // Empty update to cause a cache flush.
 }
+
+/**
+ * @addtogroup updates-8.2.x
+ * @{
+ */
+
+/**
+ * Add the 'view_mode' setting to displays having 'comment_default' formatter.
+ */
+function comment_update_8200() {
+  $config_factory = \Drupal::configFactory();
+  $displays = [];
+  // Iterate on all entity view displays.
+  foreach ($config_factory->listAll('core.entity_view_display.') as $name) {
+    $changed = FALSE;
+    $display = $config_factory->getEditable($name);
+    $components = $display->get('content') ?: [];
+    foreach ($components as $field_name => $component) {
+      if (isset($component['type']) && ($component['type'] === 'comment_default')) {
+        if (empty($display->get("content.{$field_name}.settings.view_mode"))) {
+          $display->set("content.{$field_name}.settings.view_mode", 'default');
+          $displays[] = $display->get('id');
+          $changed = TRUE;
+        }
+      }
+    }
+
+    if ($changed) {
+      $display->save(TRUE);
+    }
+  }
+
+  if ($displays) {
+    return new PluralTranslatableMarkup(count($displays), '1 entity display updated: @displays.', '@count entity displays updated: @displays.', ['@displays' => implode(', ', $displays)]);
+  }
+  else {
+    return new TranslatableMarkup('No entity view display updated.');
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-8.2.x".
+ */

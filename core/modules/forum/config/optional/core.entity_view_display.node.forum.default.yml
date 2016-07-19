@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_display.comment.comment_forum.default
     - field.field.node.forum.body
     - field.field.node.forum.comment_forum
     - field.field.node.forum.taxonomy_forums
@@ -26,6 +27,7 @@ content:
     type: comment_default
     weight: 20
     settings:
+      view_mode: default
       pager_id: 0
     third_party_settings: {  }
   links:

@@ -4,6 +4,9 @@ field.formatter.settings.comment_default:
   type: mapping
   label: 'Comment display format settings'
   mapping:
+    view_mode:
+      type: string
+      label: 'The comment entity view mode to be used in this formatter'
     pager_id:
       type: integer
       label: 'Pager ID'

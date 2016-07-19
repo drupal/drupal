@@ -283,6 +283,7 @@ class CommentPagerTest extends CommentTestBase {
         'weight' => 30,
         'settings' => array(
           'pager_id' => 1,
+          'view_mode' => 'default',
         )
       ))
       ->save();

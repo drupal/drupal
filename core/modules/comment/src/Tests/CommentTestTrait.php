@@ -29,8 +29,11 @@ trait CommentTestTrait {
    *   CommentItemInterface::OPEN.
    * @param string $comment_type_id
    *   (optional) ID of comment type to use. Defaults to 'comment'.
+   * @param string $comment_view_mode
+   *   (optional) The comment view mode to be used in comment field formatter.
+   *   Defaults to 'full'.
    */
-  public function addDefaultCommentField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment') {
+  public function addDefaultCommentField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment', $comment_view_mode = 'full') {
     $entity_manager = \Drupal::entityManager();
     // Create the comment type if needed.
     $comment_type_storage = $entity_manager->getStorage('comment_type');
@@ -106,6 +109,7 @@ trait CommentTestTrait {
           'label' => 'above',
           'type' => 'comment_default',
           'weight' => 20,
+          'settings' => array('view_mode' => $comment_view_mode),
         ))
         ->save();
       foreach ($entity_manager->getViewModes($entity_type) as $id => $view_mode) {
