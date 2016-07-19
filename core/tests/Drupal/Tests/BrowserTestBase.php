@@ -7,6 +7,7 @@ use Behat\Mink\Element\Element;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
@@ -28,8 +29,6 @@ use Drupal\simpletest\ContentTypeCreationTrait;
 use Drupal\simpletest\BlockCreationTrait;
 use Drupal\simpletest\NodeCreationTrait;
 use Drupal\simpletest\UserCreationTrait;
-use Drupal\user\Entity\Role;
-use Drupal\user\Entity\User;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -1637,6 +1636,20 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    */
   protected function getUrl() {
     return $this->getSession()->getCurrentUrl();
+  }
+
+  /**
+   * Gets the JavaScript drupalSettings variable for the currently-loaded page.
+   *
+   * @return array
+   *   The JSON decoded drupalSettings value from the current page.
+   */
+  protected function getDrupalSettings() {
+    $html = $this->getSession()->getPage()->getHtml();
+    if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $html, $matches)) {
+      return Json::decode($matches[1]);
+    }
+    return [];
   }
 
   /**
