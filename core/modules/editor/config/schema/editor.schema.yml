@@ -34,7 +34,9 @@ editor.editor.*:
           mapping:
             width:
               type: integer
+              nullable: true
               label: 'Maximum width'
             height:
               type: integer
+              nullable: true
               label: 'Maximum height'
