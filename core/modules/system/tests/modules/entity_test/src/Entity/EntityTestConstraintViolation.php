@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *       "default" = "Drupal\entity_test\EntityTestForm"
  *     }
  *   },
- *   base_table = "entity_test",
+ *   base_table = "entity_test_constraint_violation",
  *   persistent_cache = FALSE,
  *   entity_keys = {
  *     "id" = "id",
