@@ -106,6 +106,26 @@ class ToolkitGdTest extends KernelTestBase {
     // Test that the image factory is set to use the GD toolkit.
     $this->assertEqual($this->imageFactory->getToolkitId(), 'gd', 'The image factory is set to use the \'gd\' image toolkit.');
 
+    // Test the list of supported extensions.
+    $expected_extensions = ['png', 'gif', 'jpeg', 'jpg', 'jpe'];
+    $supported_extensions = $this->imageFactory->getSupportedExtensions();
+    $this->assertEqual($expected_extensions, array_intersect($expected_extensions, $supported_extensions));
+
+    // Test that the supported extensions map to correct internal GD image
+    // types.
+    $expected_image_types = [
+      'png' => IMAGETYPE_PNG,
+      'gif' => IMAGETYPE_GIF,
+      'jpeg' => IMAGETYPE_JPEG,
+      'jpg' => IMAGETYPE_JPEG,
+      'jpe' => IMAGETYPE_JPEG
+    ];
+    $image = $this->imageFactory->get();
+    foreach ($expected_image_types as $extension => $expected_image_type) {
+      $image_type = $image->getToolkit()->extensionToImageType($extension);
+      $this->assertEqual($expected_image_type, $image_type);
+    }
+
     // Typically the corner colors will be unchanged. These colors are in the
     // order of top-left, top-right, bottom-right, bottom-left.
     $default_corners = array($this->red, $this->green, $this->blue, $this->transparent);
