@@ -325,6 +325,49 @@ class OptionsWidgetsTest extends FieldTestBase {
     $edit = array('card_1' => '_none');
     $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_1', array());
+
+    // Create field storage with string keys.
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'select_a',
+      'entity_type' => 'entity_test',
+      'type' => 'list_string',
+      'cardinality' => 1,
+      'settings' => [
+        'allowed_values' => [
+          '7.50' => '7.50',
+          '7.5' => '7.5',
+        ],
+      ],
+    ]);
+    $field_storage->save();
+
+    // Create a list_string field instance.
+    $field = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'entity_test',
+      'required' => TRUE,
+    ]);
+    $field->save();
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($field_storage->getName(), array(
+        'type' => 'options_select',
+      ))
+      ->save();
+
+    // Create and save an entity.
+    $entity = EntityTest::create(array(
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
+    ));
+    $entity->save();
+
+    // Ensure string keys are properly marked selected.
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $edit = array('select_a' => '7.50');
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->assertFieldValues($entity, 'select_a', array('7.50'));
+    $this->assertOptionSelected('edit-select-a', '7.50');
+    $this->assertNoOptionSelected('edit-select-a', '7.5');
   }
 
   /**
