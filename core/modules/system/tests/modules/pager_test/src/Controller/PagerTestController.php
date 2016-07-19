@@ -10,6 +10,41 @@ use Drupal\Core\Controller\ControllerBase;
 class PagerTestController extends ControllerBase {
 
   /**
+   * Builds a render array for a pageable test table.
+   *
+   * @param int $element
+   *   The pager element to be used for paging.
+   * @param int $limit
+   *   The limit of rows per page for the specified element.
+   *
+   * @return array
+   *   A render array.
+   */
+  protected function buildTestTable($element, $limit) {
+    $header = [
+      ['data' => 'wid'],
+      ['data' => 'type'],
+      ['data' => 'timestamp'],
+    ];
+    $query = db_select('watchdog', 'd')->extend('Drupal\Core\Database\Query\PagerSelectExtender')->element($element);
+    $result = $query
+      ->fields('d', array('wid', 'type', 'timestamp'))
+      ->limit($limit)
+      ->orderBy('d.wid')
+      ->execute();
+    $rows = [];
+    foreach ($result as $row) {
+      $rows[] = ['data' => (array) $row];
+    }
+    return [
+      '#theme' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+      '#empty' => $this->t("There are no watchdog records found in the db"),
+    ];
+  }
+
+  /**
    * Returns a pager with 'parameters' variable.
    *
    * The 'pager_calls' parameter counts the calls to the pager, subsequent
@@ -18,27 +53,7 @@ class PagerTestController extends ControllerBase {
   public function queryParameters() {
 
     // Example query.
-    $header_0 = array(
-      array('data' => 'wid'),
-      array('data' => 'type'),
-      array('data' => 'timestamp'),
-    );
-    $query_0 = db_select('watchdog', 'd')->extend('Drupal\Core\Database\Query\PagerSelectExtender')->element(0);
-    $query_0->fields('d', array('wid', 'type', 'timestamp'));
-    $result_0 = $query_0
-      ->limit(5)
-      ->orderBy('d.wid')
-      ->execute();
-    $rows_0 = array();
-    foreach ($result_0 as $row) {
-      $rows_0[] = array('data' => (array) $row);
-    }
-    $build['pager_table_0'] = array(
-      '#theme' => 'table',
-      '#header' => $header_0,
-      '#rows' => $rows_0,
-      '#empty' => $this->t("There are no watchdog records found in the db"),
-    );
+    $build['pager_table_0'] = $this->buildTestTable(0, 5);
 
     // Counter of calls to the current pager.
     $query_params = pager_get_query_parameters();
@@ -55,6 +70,45 @@ class PagerTestController extends ControllerBase {
       '#pre_render' => [
         'Drupal\pager_test\Controller\PagerTestController::showPagerCacheContext',
       ]
+    );
+
+    return $build;
+  }
+
+  /**
+   * Returns a page with multiple pagers.
+   */
+  public function multiplePagers() {
+
+    // Build three tables with same query and different pagers.
+    $build['pager_table_0'] = $this->buildTestTable(0, 20);
+    $build['pager_pager_0'] = array(
+      '#type' => 'container',
+      '#attributes' => ['class' => ['test-pager-0']],
+      'pager' => [
+        '#type' => 'pager',
+        '#element' => 0,
+      ],
+    );
+
+    $build['pager_table_1'] = $this->buildTestTable(1, 20);
+    $build['pager_pager_1'] = array(
+      '#type' => 'container',
+      '#attributes' => ['class' => ['test-pager-1']],
+      'pager' => [
+        '#type' => 'pager',
+        '#element' => 1,
+      ],
+    );
+
+    $build['pager_table_4'] = $this->buildTestTable(4, 20);
+    $build['pager_pager_4'] = array(
+      '#type' => 'container',
+      '#attributes' => ['class' => ['test-pager-4']],
+      'pager' => [
+        '#type' => 'pager',
+        '#element' => 4,
+      ],
     );
 
     return $build;

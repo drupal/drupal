@@ -91,6 +91,89 @@ class PagerTest extends WebTestBase {
   }
 
   /**
+   * Test proper functioning of multiple pagers.
+   */
+  protected function testMultiplePagers() {
+    // First page.
+    $this->drupalGet('pager-test/multiple-pagers');
+
+    // Test data.
+    // Expected URL query string param is 0-indexed.
+    // Expected page per pager is 1-indexed.
+    $test_data = [
+      // With no query, all pagers set to first page.
+      [
+        'input_query' => NULL,
+        'expected_page' => [0 => '1', 1 => '1', 4 => '1'],
+        'expected_query' => '?page=0,0,,,0',
+      ],
+      // Blanks around page numbers should not be relevant.
+      [
+        'input_query' => '?page=2  ,    10,,,   5     ,,',
+        'expected_page' => [0 => '3', 1 => '11', 4 => '6'],
+        'expected_query' => '?page=2,10,,,5',
+      ],
+      // Blanks within page numbers should lead to only the first integer
+      // to be considered.
+      [
+        'input_query' => '?page=2  ,   3 0,,,   4  13    ,,',
+        'expected_page' => [0 => '3', 1 => '4', 4 => '5'],
+        'expected_query' => '?page=2,3,,,4',
+      ],
+      // If floats are passed as page numbers, only the integer part is
+      // returned.
+      [
+        'input_query' => '?page=2.1,6.999,,,5.',
+        'expected_page' => [0 => '3', 1 => '7', 4 => '6'],
+        'expected_query' => '?page=2,6,,,5',
+      ],
+      // Partial page fragment, undefined pagers set to first page.
+      [
+        'input_query' => '?page=5,2',
+        'expected_page' => [0 => '6', 1 => '3', 4 => '1'],
+        'expected_query' => '?page=5,2,,,0',
+      ],
+      // Partial page fragment, undefined pagers set to first page.
+      [
+        'input_query' => '?page=,2',
+        'expected_page' => [0 => '1', 1 => '3', 4 => '1'],
+        'expected_query' => '?page=0,2,,,0',
+      ],
+      // Partial page fragment, undefined pagers set to first page.
+      [
+        'input_query' => '?page=,',
+        'expected_page' => [0 => '1', 1 => '1', 4 => '1'],
+        'expected_query' => '?page=0,0,,,0',
+      ],
+      // With overflow pages, all pagers set to max page.
+      [
+        'input_query' => '?page=99,99,,,99',
+        'expected_page' => [0 => '16', 1 => '16', 4 => '16'],
+        'expected_query' => '?page=15,15,,,15',
+      ],
+      // Wrong value for the page resets pager to first page.
+      [
+        'input_query' => '?page=bar,5,foo,qux,bet',
+        'expected_page' => [0 => '1', 1 => '6', 4 => '1'],
+        'expected_query' => '?page=0,5,,,0',
+      ],
+    ];
+
+    // We loop through the page with the test data query parameters, and check
+    // that the active page for each pager element has the expected page
+    // (1-indexed) and resulting query parameter
+    foreach ($test_data as $data) {
+      $input_query = str_replace(' ', '%20', $data['input_query']);
+      $this->drupalGet($GLOBALS['base_root'] . parse_url($this->getUrl())['path'] . $input_query, ['external' => TRUE]);
+      foreach ([0, 1, 4] as $pager_element) {
+        $active_page = $this->cssSelect("div.test-pager-{$pager_element} ul.pager__items li.is-active:contains('{$data['expected_page'][$pager_element]}')");
+        $destination = str_replace('%2C', ',', $active_page[0]->a['href'][0]->__toString());
+        $this->assertEqual($destination, $data['expected_query']);
+      }
+    }
+  }
+
+  /**
    * Test proper functioning of the ellipsis.
    */
   public function testPagerEllipsis() {
