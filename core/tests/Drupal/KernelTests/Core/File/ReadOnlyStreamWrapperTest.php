@@ -2,6 +2,9 @@
 
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\file_test\StreamWrapper\DummyReadOnlyStreamWrapper;
+
 /**
  * Tests the read-only stream wrapper write functions.
  *
@@ -27,6 +30,10 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
    * Test read-only specific behavior.
    */
   function testReadOnlyBehavior() {
+    $type = DummyReadOnlyStreamWrapper::getType();
+    // Checks that the stream wrapper type is not declared as writable.
+    $this->assertSame(0, $type & StreamWrapperInterface::WRITE);
+
     // Generate a test file
     $filename = $this->randomMachineName();
     $site_path = $this->container->get('site.path');

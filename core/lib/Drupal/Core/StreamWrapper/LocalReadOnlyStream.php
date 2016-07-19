@@ -18,6 +18,13 @@ abstract class LocalReadOnlyStream extends LocalStream {
   /**
    * {@inheritdoc}
    */
+  public static function getType() {
+    return StreamWrapperInterface::READ_VISIBLE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function stream_open($uri, $mode, $options, &$opened_path) {
     if (!in_array($mode, array('r', 'rb', 'rt'))) {
       if ($options & STREAM_REPORT_ERRORS) {
