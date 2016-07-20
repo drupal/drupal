@@ -8,6 +8,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
+use Drupal\node\NodeStorageInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -170,12 +171,9 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     $delete_permission = (($account->hasPermission("delete $type revisions") || $account->hasPermission('delete all revisions') || $account->hasPermission('administer nodes')) && $node->access('delete'));
 
     $rows = array();
-
-    $vids = $node_storage->revisionIds($node);
-
     $default_revision = $node->getRevisionId();
 
-    foreach (array_reverse($vids) as $vid) {
+    foreach ($this->getRevisionIds($node, $node_storage) as $vid) {
       /** @var \Drupal\node\NodeInterface $revision */
       $revision = $node_storage->loadRevision($vid);
       // Only show revisions that are affected by the language that is being
@@ -265,6 +263,8 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       '#attributes' => ['class' => 'node-revision-table'],
     );
 
+    $build['pager'] = array('#type' => 'pager');
+
     return $build;
   }
 
@@ -279,6 +279,27 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   public function addPageTitle(NodeTypeInterface $node_type) {
     return $this->t('Create @name', array('@name' => $node_type->label()));
+  }
+
+  /**
+   * Gets a list of node revision IDs for a specific node.
+   *
+   * @param \Drupal\node\NodeInterface
+   *   The node entity.
+   * @param \Drupal\node\NodeStorageInterface $node_storage
+   *   The node storage handler.
+   *
+   * @return int[]
+   *   Node revision IDs (in descending order).
+   */
+  protected function getRevisionIds(NodeInterface $node, NodeStorageInterface $node_storage) {
+    $result = $node_storage->getQuery()
+      ->allRevisions()
+      ->condition($node->getEntityType()->getKey('id'), $node->id())
+      ->sort($node->getEntityType()->getKey('revision'), 'DESC')
+      ->pager(50)
+      ->execute();
+    return array_keys($result);
   }
 
 }
