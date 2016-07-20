@@ -6,6 +6,7 @@ use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\node\Entity\NodeType;
 
@@ -87,6 +88,8 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
       'type' => 'test_content_type',
       'label' => $this->randomMachineName(),
     ])->save();
+
+    Vocabulary::create(['vid' => 'test_vocabulary'])->save();
 
     // Give one unfortunate field instance invalid display settings to ensure
     // that the migration provides an empty array as a default (thus avoiding

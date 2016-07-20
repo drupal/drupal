@@ -45,6 +45,7 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
     $this->executeMigrations([
       'd7_node_type',
       'd7_comment_type',
+      'd7_taxonomy_vocabulary',
       'd7_field',
       'd7_field_instance',
       'd7_field_instance_widget_settings',
@@ -126,6 +127,16 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
     $this->assertComponent('node.test_content_type.default', 'field_term_reference', 'entity_reference_autocomplete', 14);
     $this->assertComponent('node.test_content_type.default', 'field_text', 'text_textfield', 15);
     $this->assertComponent('node.test_content_type.default', 'field_text_list', 'options_select', 11);
+
+    $this->assertEntity('user.user.default', 'user', 'user');
+    $this->assertComponent('user.user.default', 'field_file', 'file_generic', 8);
+
+    $this->assertEntity('comment.comment_node_test_content_type.default', 'comment', 'comment_node_test_content_type');
+    $this->assertComponent('comment.comment_node_test_content_type.default', 'comment_body', 'text_textarea', 0);
+    $this->assertComponent('comment.comment_node_test_content_type.default', 'field_integer', 'number', 2);
+
+    $this->assertEntity('taxonomy_term.test_vocabulary.default', 'taxonomy_term', 'test_vocabulary');
+    $this->assertComponent('comment.comment_node_test_content_type.default', 'field_integer', 'number', 2);
   }
 
 }
