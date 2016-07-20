@@ -80,6 +80,7 @@
         "drupal/core-php-storage": "self.version",
         "drupal/core-plugin": "self.version",
         "drupal/core-proxy-builder": "self.version",
+        "drupal/core-render": "self.version",
         "drupal/core-serialization": "self.version",
         "drupal/core-transliteration": "self.version",
         "drupal/core-utility": "self.version",
