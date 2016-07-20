@@ -3,7 +3,6 @@
 namespace Drupal\FunctionalJavascriptTests;
 
 use Drupal\Tests\BrowserTestBase;
-use Zend\Escaper\Escaper;
 use Zumba\Mink\Driver\PhantomJSDriver;
 
 /**
@@ -101,33 +100,6 @@ abstract class JavascriptTestBase extends BrowserTestBase {
     $message = $message ?: "Javascript condition met:\n" . $condition;
     $result = $this->getSession()->getDriver()->wait($timeout, $condition);
     $this->assertTrue($result, $message);
-  }
-
-  /**
-   * Creates a screenshot.
-   *
-   * @param string $filename
-   *   The file name of the resulting screenshot. If using the default phantomjs
-   *   driver then this should be a JPG filename.
-   * @param string $background_color
-   *   (optional) Background color name. To use the default background color set
-   *   to NULL, however this can result in completely black screenshots if the
-   *   theme does not have a background color. This string is escaped by
-   *   \Zend\Escaper\Escaper::escapeJs().
-   *
-   * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
-   *   When operation not supported by the driver.
-   * @throws \Behat\Mink\Exception\DriverException
-   *   When the operation cannot be done.
-   */
-  protected function createScreenshot($filename, $background_color = 'white') {
-    $session = $this->getSession();
-    if (!empty($background_color)) {
-      $escaper = new Escaper();
-      $session->executeScript("document.body.style.backgroundColor = '" . $escaper->escapeJs($background_color) . "';");
-    }
-    $image = $session->getScreenshot();
-    file_put_contents($filename, $image);
   }
 
   /**

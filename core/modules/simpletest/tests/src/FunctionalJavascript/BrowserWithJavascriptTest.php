@@ -53,13 +53,4 @@ JS;
     $this->assertJsCondition($javascript, 100);
   }
 
-  /**
-   * Tests creating screenshots.
-   */
-  public function testCreateScreenshot() {
-    $this->drupalGet('<front>');
-    $this->createScreenshot('public://screenshot.jpg');
-    $this->assertFileExists('public://screenshot.jpg');
-  }
-
 }
