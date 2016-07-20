@@ -142,4 +142,25 @@ class ScanDirectoryTest extends FileTestBase {
     $this->assertTrue(empty($files), 'Minimum-depth of 1 successfully excludes files from current directory.');
   }
 
+  /**
+   * Tests file_scan_directory() obeys 'file_scan_ignore_directories' setting.
+   */
+  public function testIgnoreDirectories() {
+    $files = file_scan_directory('core/modules/system/tests/fixtures/IgnoreDirectories', '/\.txt$/');
+    $this->assertCount(2, $files, '2 text files found when not ignoring directories.');
+
+    $this->setSetting('file_scan_ignore_directories', ['frontend_framework']);
+    $files = file_scan_directory('core/modules/system/tests/fixtures/IgnoreDirectories', '/\.txt$/');
+    $this->assertCount(1, $files, '1 text files found when ignoring directories called "frontend_framework".');
+
+    // Ensure that the directories in file_scan_ignore_directories are escaped
+    // using preg_quote.
+    $this->setSetting('file_scan_ignore_directories', ['frontend.*']);
+    $files = file_scan_directory('core/modules/system/tests/fixtures/IgnoreDirectories', '/\.txt$/');
+    $this->assertCount(2, $files, '2 text files found when ignoring a directory that is not there.');
+
+    $files = file_scan_directory('core/modules/system/tests/fixtures/IgnoreDirectories', '/\.txt$/', ['nomask' => '/^something_thing_else$/']);
+    $this->assertCount(2, $files, '2 text files found when an "nomask" option is passed in.');
+  }
+
 }

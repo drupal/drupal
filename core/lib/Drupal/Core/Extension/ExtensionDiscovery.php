@@ -427,11 +427,17 @@ class ExtensionDiscovery {
     $flags |= \FilesystemIterator::CURRENT_AS_SELF;
     $directory_iterator = new \RecursiveDirectoryIterator($absolute_dir, $flags);
 
+    // Allow directories specified in settings.php to be ignored. You can use
+    // this to not check for files in common special-purpose directories. For
+    // example, node_modules and bower_components. Ignoring irrelevant
+    // directories is a performance boost.
+    $ignore_directories = Settings::get('file_scan_ignore_directories', []);
+
     // Filter the recursive scan to discover extensions only.
     // Important: Without a RecursiveFilterIterator, RecursiveDirectoryIterator
     // would recurse into the entire filesystem directory tree without any kind
     // of limitations.
-    $filter = new RecursiveExtensionFilterIterator($directory_iterator);
+    $filter = new RecursiveExtensionFilterIterator($directory_iterator, $ignore_directories);
     $filter->acceptTests($include_tests);
 
     // The actual recursive filesystem scan is only invoked by instantiating the

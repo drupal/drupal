@@ -82,6 +82,20 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
   protected $acceptTests = FALSE;
 
   /**
+   * Construct a RecursiveExtensionFilterIterator.
+   *
+   * @param \RecursiveIterator $iterator
+   *   The iterator to filter.
+   * @param array $blacklist
+   *   (optional) Add to the blacklist of directories that should be filtered
+   *   out during the iteration.
+   */
+  public function __construct(\RecursiveIterator $iterator, array $blacklist = []) {
+    parent::__construct($iterator);
+    $this->blacklist = array_merge($this->blacklist, $blacklist);
+  }
+
+  /**
    * Controls whether test directories will be scanned.
    *
    * @param bool $flag
@@ -102,6 +116,8 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
    */
   public function getChildren() {
     $filter = parent::getChildren();
+    // Pass on the blacklist.
+    $filter->blacklist = $this->blacklist;
     // Pass the $acceptTests flag forward to child iterators.
     $filter->acceptTests($this->acceptTests);
     return $filter;
