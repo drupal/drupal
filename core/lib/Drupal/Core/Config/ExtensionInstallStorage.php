@@ -44,9 +44,8 @@ class ExtensionInstallStorage extends InstallStorage {
    *   search and to get overrides from.
    */
   public function __construct(StorageInterface $config_storage, $directory = self::CONFIG_INSTALL_DIRECTORY, $collection = StorageInterface::DEFAULT_COLLECTION, $include_profile = TRUE) {
+    parent::__construct($directory, $collection);
     $this->configStorage = $config_storage;
-    $this->directory = $directory;
-    $this->collection = $collection;
     $this->includeProfile = $include_profile;
   }
 

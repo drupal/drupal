@@ -58,8 +58,7 @@ class InstallStorage extends FileStorage {
    *   default collection.
    */
   public function __construct($directory = self::CONFIG_INSTALL_DIRECTORY, $collection = StorageInterface::DEFAULT_COLLECTION) {
-    $this->directory = $directory;
-    $this->collection = $collection;
+    parent::__construct($directory, $collection);
   }
 
   /**
