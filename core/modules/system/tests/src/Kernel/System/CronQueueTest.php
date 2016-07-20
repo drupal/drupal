@@ -1,22 +1,51 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Kernel\System;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Database\Database;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the Cron Queue runner.
  *
  * @group system
  */
-class CronQueueTest extends WebTestBase {
+class CronQueueTest extends KernelTestBase {
 
   /**
    * The modules to enable.
    *
    * @var array
    */
-  public static $modules = array('cron_queue_test');
+  public static $modules = ['system', 'cron_queue_test'];
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The cron service.
+   *
+   * @var \Drupal\Core\Cron
+   */
+  protected $cron;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // These additional tables are necessary because $this->cron->run() calls
+    // system_cron().
+    $this->installSchema('system', ['key_value_expire']);
+
+    $this->connection = Database::getConnection();
+    $this->cron = \Drupal::service('cron');
+  }
 
   /**
    * Tests that exceptions thrown by workers are handled properly.
@@ -30,20 +59,22 @@ class CronQueueTest extends WebTestBase {
 
     // Run cron; the worker for this queue should throw an exception and handle
     // it.
-    $this->cronRun();
+    $this->cron->run();
     $this->assertEqual(\Drupal::state()->get('cron_queue_test_exception'), 1);
 
     // The item should be left in the queue.
     $this->assertEqual($queue->numberOfItems(), 1, 'Failing item still in the queue after throwing an exception.');
 
-    // Garbage collection should set the expire flag back to 0, making the queue
-    // item "claimable" again. We have to wait for 2 seconds because
-    // CronQueueTestException has a "cron" time of 1 second. The test runs so
-    // fast that if we don't wait, the item won't be cleared by Garbage
-    // Collection so it won't become claimable.
+    // Expire the queue item manually. system_cron() relies in REQUEST_TIME to
+    // find queue items whose expire field needs to be reset to 0. This is a
+    // Kernel test, so REQUEST_TIME won't change when cron runs.
+    // @see system_cron()
     // @see \Drupal\Core\Cron::processQueues()
-    sleep(2);
-    $this->cronRun();
+    $this->connection->update('queue')
+      ->condition('name', 'cron_queue_test_exception')
+      ->fields(['expire' => REQUEST_TIME - 1])
+      ->execute();
+    $this->cron->run();
     $this->assertEqual(\Drupal::state()->get('cron_queue_test_exception'), 2);
     $this->assertEqual($queue->numberOfItems(), 0, 'Item was processed and removed from the queue.');
 
@@ -57,7 +88,7 @@ class CronQueueTest extends WebTestBase {
 
     // Run cron; the worker for this queue should process as far as the crashing
     // item.
-    $this->cronRun();
+    $this->cron->run();
 
     // Only one item should have been processed.
     $this->assertEqual($queue->numberOfItems(), 2, 'Failing queue stopped processing at the failing item.');
@@ -72,7 +103,8 @@ class CronQueueTest extends WebTestBase {
     // Test the requeueing functionality.
     $queue = $this->container->get('queue')->get('cron_queue_test_requeue_exception');
     $queue->createItem([]);
-    $this->cronRun();
+    $this->cron->run();
+
     $this->assertEqual(\Drupal::state()->get('cron_queue_test_requeue_exception'), 2);
     $this->assertFalse($queue->numberOfItems());
   }
