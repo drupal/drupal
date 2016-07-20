@@ -149,10 +149,6 @@ class FilterNumericTest extends ViewsKernelTestBase {
         'age' => 25,
       ),
       array(
-        'name' => 'Paul',
-        'age' => 26,
-      ),
-      array(
         'name' => 'Meredith',
         'age' => 30,
       ),
@@ -207,10 +203,6 @@ class FilterNumericTest extends ViewsKernelTestBase {
       array(
         'name' => 'John',
         'age' => 25,
-      ),
-      array(
-        'name' => 'Paul',
-        'age' => 26,
       ),
       array(
         'name' => 'Meredith',

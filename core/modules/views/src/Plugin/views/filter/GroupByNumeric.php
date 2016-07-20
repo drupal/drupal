@@ -28,7 +28,7 @@ class GroupByNumeric extends NumericFilter {
       $this->query->addHavingExpression($this->options['group'], "$field <= $placeholder_max", array($placeholder_max => $this->value['max']));
     }
     else {
-      $this->query->addHavingExpression($this->options['group'], "$field <= $placeholder_min OR $field >= $placeholder_max", array($placeholder_min => $this->value['min'], $placeholder_max => $this->value['max']));
+      $this->query->addHavingExpression($this->options['group'], "$field < $placeholder_min OR $field > $placeholder_max", array($placeholder_min => $this->value['min'], $placeholder_max => $this->value['max']));
     }
   }
 

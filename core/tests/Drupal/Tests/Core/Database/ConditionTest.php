@@ -114,7 +114,7 @@ class ConditionTest extends UnitTestCase {
     $data[] = [" (name LIKE :db_condition_placeholder_0 ESCAPE '\\\\') ", 'name', '%muh%', 'LIKE', [':db_condition_placeholder_0' => '%muh%']];
     $data[] = [" (name NOT LIKE :db_condition_placeholder_0 ESCAPE '\\\\') ", 'name', '%muh%', 'NOT LIKE', [':db_condition_placeholder_0' => '%muh%']];
     $data[] = [" (name BETWEEN :db_condition_placeholder_0 AND :db_condition_placeholder_1) ", 'name', [1, 2], 'BETWEEN', [':db_condition_placeholder_0' => 1, ':db_condition_placeholder_1' => 2]];
-    // $data[] = [" (name NOT BETWEEN :db_condition_placeholder_0 AND :db_condition_placeholder_1) ", 'name', [1, 2], 'NOT BETWEEN', [':db_condition_placeholder_0' => 1, ':db_condition_placeholder_1' => 2]];
+    $data[] = [" (name NOT BETWEEN :db_condition_placeholder_0 AND :db_condition_placeholder_1) ", 'name', [1, 2], 'NOT BETWEEN', [':db_condition_placeholder_0' => 1, ':db_condition_placeholder_1' => 2]];
     // $data[] = [' ( STRCMP (name, :db_condition_placeholder_0) ) ', '', ['test-string'], 'STRCMP', [':db_condition_placeholder_0' => 'test-string']];
     // $data[] = [' (EXISTS ) ', '', NULL, 'EXISTS'];
     // $data[] = [' (name NOT EXISTS ) ', 'name', NULL, 'NOT EXISTS'];

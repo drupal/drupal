@@ -88,8 +88,8 @@ class FilterDateTest extends HandlerTestBase {
     // Test between with min and max.
     $view->initHandlers();
     $view->filter['created']->operator = 'between';
-    $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:s');
-    $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
+    $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:i:s');
+    $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
     $view->executeDisplay('default');
     $expected_result = array(
       array('nid' => $this->nodes[1]->id()),
@@ -100,7 +100,7 @@ class FilterDateTest extends HandlerTestBase {
     // Test between with just max.
     $view->initHandlers();
     $view->filter['created']->operator = 'between';
-    $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
+    $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
     $view->executeDisplay('default');
     $expected_result = array(
       array('nid' => $this->nodes[0]->id()),
@@ -112,11 +112,11 @@ class FilterDateTest extends HandlerTestBase {
     // Test not between with min and max.
     $view->initHandlers();
     $view->filter['created']->operator = 'not between';
-    $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:s');
-    $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
+    $view->filter['created']->value['min'] = format_date(100000, 'custom', 'Y-m-d H:i:s');
+    $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
+
     $view->executeDisplay('default');
     $expected_result = array(
-      array('nid' => $this->nodes[0]->id()),
       array('nid' => $this->nodes[2]->id()),
       array('nid' => $this->nodes[3]->id()),
     );
@@ -126,10 +126,9 @@ class FilterDateTest extends HandlerTestBase {
     // Test not between with just max.
     $view->initHandlers();
     $view->filter['created']->operator = 'not between';
-    $view->filter['created']->value['max'] = format_date(150000, 'custom', 'Y-m-d H:s');
+    $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
     $view->executeDisplay('default');
     $expected_result = array(
-      array('nid' => $this->nodes[1]->id()),
       array('nid' => $this->nodes[2]->id()),
       array('nid' => $this->nodes[3]->id()),
     );

@@ -136,7 +136,8 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
     $view->initHandlers();
     $view->filter[$field]->operator = 'not between';
     $view->filter[$field]->value['min'] = '2001-01-01';
-    $view->filter[$field]->value['max'] = '2002-01-01';
+    // Set maximum date to date of node 1 to test range borders.
+    $view->filter[$field]->value['max'] = '2001-10-10T12:12:12';
     $view->setDisplay('default');
     $this->executeView($view);
     $expected_result = [

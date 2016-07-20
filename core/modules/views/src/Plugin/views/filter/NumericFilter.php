@@ -248,7 +248,7 @@ class NumericFilter extends FilterPluginBase {
       $this->query->addWhere($this->options['group'], $field, array($this->value['min'], $this->value['max']), 'BETWEEN');
     }
     else {
-      $this->query->addWhere($this->options['group'], db_or()->condition($field, $this->value['min'], '<=')->condition($field, $this->value['max'], '>='));
+      $this->query->addWhere($this->options['group'], $field, array($this->value['min'], $this->value['max']), 'NOT BETWEEN');
     }
   }
 
