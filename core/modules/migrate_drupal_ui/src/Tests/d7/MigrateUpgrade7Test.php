@@ -68,8 +68,8 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
       'date_format' => 11,
       'entity_form_display' => 15,
       'entity_form_mode' => 1,
-      'entity_view_display' => 22,
-      'entity_view_mode' => 10,
+      'entity_view_display' => 23,
+      'entity_view_mode' => 11,
       'base_field_override' => 7,
     ];
   }
