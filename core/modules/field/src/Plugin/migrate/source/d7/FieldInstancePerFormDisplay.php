@@ -28,8 +28,7 @@ class FieldInstancePerFormDisplay extends DrupalSqlBase {
       ->fields('fc', array(
         'type',
         'module',
-      ))
-      ->condition('fci.entity_type', 'node');
+      ));
     $query->join('field_config', 'fc', 'fci.field_id = fc.id');
     return $query;
   }

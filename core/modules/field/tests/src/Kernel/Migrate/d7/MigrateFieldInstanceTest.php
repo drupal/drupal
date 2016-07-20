@@ -5,6 +5,7 @@ namespace Drupal\Tests\field\Kernel\Migrate\d7;
 use Drupal\comment\Entity\CommentType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigInterface;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\node\Entity\NodeType;
 
@@ -45,6 +46,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->createType('book');
     $this->createType('forum');
     $this->createType('test_content_type');
+    Vocabulary::create(['vid' => 'test_vocabulary'])->save();
     $this->executeMigrations(['d7_field', 'd7_field_instance']);
   }
 
