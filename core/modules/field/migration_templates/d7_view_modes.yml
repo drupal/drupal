@@ -14,6 +14,7 @@ process:
   label:
     plugin: static_map
     source: view_mode
+    bypass: true
     map:
       search_index: "Search index"
       search_result: "Search result"
