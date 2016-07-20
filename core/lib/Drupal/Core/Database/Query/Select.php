@@ -660,7 +660,7 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function range($start = NULL, $length = NULL) {
-    $this->range = func_num_args() ? array('start' => $start, 'length' => $length) : array();
+    $this->range = $start !== NULL ? array('start' => $start, 'length' => $length) : array();
     return $this;
   }
 

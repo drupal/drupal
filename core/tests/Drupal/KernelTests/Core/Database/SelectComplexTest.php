@@ -155,6 +155,20 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
+   * Test whether the range property of a select clause can be undone.
+   */
+  function testRangeUndo() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $query->range(0, 2);
+    $query->range(NULL, NULL);
+    $query_result = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($query_result, 4, 'Returned the correct number of rows.');
+  }
+
+  /**
    * Tests distinct queries.
    */
   function testDistinct() {
