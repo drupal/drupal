@@ -113,7 +113,7 @@ function form_select_options($element, $choices = NULL) {
       $option = [];
       $key = (string) $key;
       $empty_choice = $empty_value && $key == '_none';
-      if ($value_valid && ((!$value_is_array && (string) $element['#value'] === $key || ($value_is_array && in_array($key, $element['#value'], TRUE))) || $empty_choice)) {
+      if ($value_valid && ((!$value_is_array && (string) $element['#value'] === $key || ($value_is_array && in_array($key, $element['#value']))) || $empty_choice)) {
         $option['selected'] = TRUE;
       }
       else {
