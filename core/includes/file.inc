@@ -315,7 +315,22 @@ function file_ensure_htaccess() {
     file_save_htaccess('private://', TRUE);
   }
   file_save_htaccess('temporary://', TRUE);
-  file_save_htaccess(config_get_config_directory(CONFIG_SYNC_DIRECTORY), TRUE);
+
+  // If a staging directory exists then it should contain a .htaccess file.
+  // @todo https://www.drupal.org/node/2696103 catch a more specific exception
+  //   and simplify this code.
+  try {
+    $staging = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
+  }
+  catch (\Exception $e) {
+    $staging = FALSE;
+  }
+  if ($staging) {
+    // Note that we log an error here if we can't write the .htaccess file. This
+    // can occur if the staging directory is read-only. If it is then it is the
+    // user's responsibility to create the .htaccess file.
+    file_save_htaccess($staging, TRUE);
+  }
 }
 
 /**

@@ -50,6 +50,11 @@ class ConfigImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $directory = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
+    $directory_is_writable = is_writable($directory);
+    if (!$directory_is_writable) {
+      drupal_set_message($this->t('The directory %directory is not writable.', ['%directory' => $directory]), 'error');
+    }
     $form['import_tarball'] = array(
       '#type' => 'file',
       '#title' => $this->t('Configuration archive'),
@@ -59,6 +64,7 @@ class ConfigImportForm extends FormBase {
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Upload'),
+      '#disabled' => !$directory_is_writable,
     );
     return $form;
   }
