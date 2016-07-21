@@ -33,6 +33,8 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     $type = DummyReadOnlyStreamWrapper::getType();
     // Checks that the stream wrapper type is not declared as writable.
     $this->assertIdentical(0, $type & StreamWrapperInterface::WRITE);
+    // Checks that the stream wrapper type is declared as local.
+    $this->assertIdentical(1, $type & StreamWrapperInterface::LOCAL);
 
     // Generate a test file
     $filename = $this->randomMachineName();
