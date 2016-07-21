@@ -114,3 +114,10 @@ function _test_theme_twig_php_values() {
     ),
   );
 }
+
+/**
+ * Implements template_preprocess_status_messages().
+ */
+function twig_theme_test_preprocess_status_messages(&$variables) {
+  $variables['attributes']['class'][] = 'custom-test-messages-class';
+}
