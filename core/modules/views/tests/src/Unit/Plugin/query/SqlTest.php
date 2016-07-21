@@ -202,6 +202,12 @@ class SqlTest extends UnitTestCase {
         'entity revision' => TRUE,
       ],
     ]);
+    $views_data->get('entity_first_field_data')->willReturn([
+      'table' => [
+        'entity type' => 'first',
+        'entity revision' => FALSE,
+      ],
+    ]);
     $this->setupViewsData($views_data->reveal());
 
     // Setup the loading of entities and entity revisions.
@@ -365,6 +371,55 @@ class SqlTest extends UnitTestCase {
     $this->assertSame($entities['second'][11], $result[0]->_relationship_entities['entity_second']);
     $this->assertEquals([], $result[1]->_relationship_entities);
     $this->assertSame($entities['second'][12], $result[2]->_relationship_entities['entity_second']);
+  }
+
+  /**
+   * @covers ::loadEntities
+   * @covers ::_assignEntitiesToResult
+   */
+  public function testLoadEntitiesWithNonEntityRelationship() {
+    // We don't use prophecy, because prophecy enforces methods.
+    $view = $this->getMockBuilder(ViewExecutable::class)->disableOriginalConstructor()->getMock();
+    $this->setupViewWithRelationships($view, 'entity_first_field_data');
+
+    $view_entity = $this->prophesize(ViewEntityInterface::class);
+    $view_entity->get('base_table')->willReturn('entity_first');
+    $view_entity->get('base_field')->willReturn('id');
+    $view->storage = $view_entity->reveal();
+
+    $entities = [
+      'first' => [
+        1 => $this->prophesize(EntityInterface::class)->reveal(),
+        2 => $this->prophesize(EntityInterface::class)->reveal(),
+      ],
+    ];
+    $entity_type_manager = $this->setupEntityTypes($entities);
+
+    $query = new Sql([], 'sql', [], $entity_type_manager->reveal());
+    $query->view = $view;
+
+    $result = [];
+    $result[] = new ResultRow([
+      'id' => 1,
+    ]);
+    $result[] = new ResultRow([
+      'id' => 2,
+    ]);
+
+    $query->addField('entity_first', 'id', 'id');
+    $query->loadEntities($result);
+    $entity_information = $query->getEntityTableInfo();
+
+    $this->assertSame($entities['first'][1], $result[0]->_entity);
+    $this->assertSame($entities['first'][2], $result[1]->_entity);
+
+    $this->assertEquals([], $result[0]->_relationship_entities);
+    $this->assertEquals([], $result[1]->_relationship_entities);
+
+    // This is an entity table and should be in $entity_information.
+    $this->assertContains('first', array_keys($entity_information));
+    // This is not an entity table and should not be in $entity_information.
+    $this->assertNotContains('entity_first_field_data__entity_first_field_data', array_keys($entity_information));
   }
 
   /**
