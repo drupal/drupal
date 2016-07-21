@@ -214,6 +214,7 @@ Topic maintainers
 Accessibility
 - Mike Gifford 'mgifford' https://www.drupal.org/u/mgifford
 - Jesse Renée Beach 'jessebeach' https://www.drupal.org/u/jessebeach
+- Andrew Macpherson 'andrewmacpherson' https://www.drupal.org/u/andrewmacpherson
 
 Documentation
 - ?
