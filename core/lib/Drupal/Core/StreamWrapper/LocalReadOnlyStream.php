@@ -19,7 +19,7 @@ abstract class LocalReadOnlyStream extends LocalStream {
    * {@inheritdoc}
    */
   public static function getType() {
-    return StreamWrapperInterface::READ_VISIBLE;
+    return StreamWrapperInterface::READ_VISIBLE | StreamWrapperInterface::LOCAL;
   }
 
   /**
