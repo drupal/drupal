@@ -3,7 +3,7 @@ administer book outlines:
 create new books:
   title: 'Create new books'
 add content to books:
-  title: 'Add content and child pages to books'
+  title: 'Add content and child pages to books and manage their hierarchies.'
 access printer-friendly version:
   title: 'View printer-friendly books'
   description: 'View a book page and all of its sub-pages as a single document for ease of printing. Can be performance heavy.'
