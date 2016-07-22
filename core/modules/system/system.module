@@ -122,7 +122,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('These options control the display settings for the %name theme. When your site is displayed using this theme, these settings will be used.', array('%name' => $theme->info['name'])) . '</p>';
 
     case 'system.theme_settings':
-      return '<p>' . t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') . '</p>';
+      return '<p>' . t('Control default display settings for your site, across all themes. Use theme-specific settings to override these defaults.') . '</p>';
 
     case 'system.modules_list':
       $output = '<p>' . t('Download additional <a href=":modules">contributed modules</a> to extend your site\'s functionality.', array(':modules' => 'https://www.drupal.org/project/modules')) . '</p>';
