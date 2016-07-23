@@ -12,6 +12,7 @@ process:
   menu_name:
     -
       plugin: migration
+      # The menu migration is in the system module.
       migration: menu
       source: menu_name
     -
