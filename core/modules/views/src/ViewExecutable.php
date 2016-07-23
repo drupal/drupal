@@ -1420,7 +1420,7 @@ class ViewExecutable implements \Serializable {
     // Let modules modify the view just after executing it.
     $module_handler->invokeAll('views_post_execute', array($this));
 
-    $this->executed = TRUE;
+    return $this->executed = TRUE;
   }
 
   /**
