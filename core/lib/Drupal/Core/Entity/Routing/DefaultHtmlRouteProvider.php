@@ -23,6 +23,7 @@ use Symfony\Component\Routing\RouteCollection;
  * - add-form
  * - edit-form
  * - delete-form
+ * - collection
  *
  * @see \Drupal\Core\Entity\Routing\AdminHtmlRouteProvider.
  *
@@ -93,6 +94,10 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
     if ($delete_route = $this->getDeleteFormRoute($entity_type)) {
       $collection->add("entity.{$entity_type_id}.delete_form", $delete_route);
+    }
+
+    if ($collection_route = $this->getCollectionRoute($entity_type)) {
+      $collection->add("entity.{$entity_type_id}.collection", $collection_route);
     }
 
     return $collection;
@@ -294,6 +299,33 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       if ($this->getEntityTypeIdKeyType($entity_type) === 'integer') {
         $route->setRequirement($entity_type_id, '\d+');
       }
+      return $route;
+    }
+  }
+
+  /**
+   * Gets the collection route.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type.
+   *
+   * @return \Symfony\Component\Routing\Route|null
+   *   The generated route, if available.
+   */
+  protected function getCollectionRoute(EntityTypeInterface $entity_type) {
+    // If the entity type does not provide an admin permission, there is no way
+    // to control access, so we cannot provide a route in a sensible way.
+    if ($entity_type->hasLinkTemplate('collection') && $entity_type->hasListBuilderClass() && ($admin_permission = $entity_type->getAdminPermission())) {
+      $route = new Route($entity_type->getLinkTemplate('collection'));
+      $route
+        ->addDefaults([
+          '_entity_list' => $entity_type->id(),
+          // @todo Improve this in https://www.drupal.org/node/2767025
+          '_title' => '@label entities',
+          '_title_arguments' => ['@label' => $entity_type->getLabel()],
+        ])
+        ->setRequirement('_permission', $admin_permission);
+
       return $route;
     }
   }

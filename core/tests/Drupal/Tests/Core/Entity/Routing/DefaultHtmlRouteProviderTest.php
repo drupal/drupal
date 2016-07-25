@@ -253,6 +253,52 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getCanonicalRoute
+   * @dataProvider providerTestGetCollectionRoute
+   */
+  public function testGetCollectionRoute(Route $expected = NULL, EntityTypeInterface $entity_type) {
+    $route = $this->routeProvider->getCollectionRoute($entity_type);
+    $this->assertEquals($expected, $route);
+  }
+
+  public function providerTestGetCollectionRoute() {
+    $data = [];
+
+    $entity_type1 = $this->getEntityType();
+    $entity_type1->hasLinkTemplate('collection')->willReturn(FALSE);
+    $data['no_collection_link_template'] = [NULL, $entity_type1->reveal()];
+
+    $entity_type2 = $this->getEntityType();
+    $entity_type2->hasLinkTemplate('collection')->willReturn(TRUE);
+    $entity_type2->hasListBuilderClass()->willReturn(FALSE);
+    $data['no_list_builder'] = [NULL, $entity_type2->reveal()];
+
+    $entity_type3 = $this->getEntityType($entity_type2);
+    $entity_type3->hasListBuilderClass()->willReturn(TRUE);
+    $entity_type3->getAdminPermission()->willReturn(FALSE);
+    $data['no_admin_permission'] = [NULL, $entity_type3->reveal()];
+
+    $entity_type4 = $this->getEntityType($entity_type3);
+    $entity_type4->getAdminPermission()->willReturn('administer the entity type');
+    $entity_type4->id()->willReturn('the_entity_type_id');
+    $entity_type4->getLabel()->willReturn('The entity type');
+    $entity_type4->getLinkTemplate('collection')->willReturn('/the/collection/link/template');
+    $entity_type4->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE);
+    $route = (new Route('/the/collection/link/template'))
+      ->setDefaults([
+        '_entity_list' => 'the_entity_type_id',
+        '_title' => '@label entities',
+        '_title_arguments' => ['@label' => 'The entity type'],
+      ])
+      ->setRequirements([
+        '_permission' => 'administer the entity type',
+      ]);
+    $data['collection_route'] = [clone $route, $entity_type4->reveal()];
+
+    return $data;
+  }
+
+  /**
    * @covers ::getEntityTypeIdKeyType
    */
   public function testGetEntityTypeIdKeyType() {
@@ -312,6 +358,9 @@ class TestDefaultHtmlRouteProvider extends DefaultHtmlRouteProvider {
   }
   public function getCanonicalRoute(EntityTypeInterface $entity_type) {
     return parent::getCanonicalRoute($entity_type);
+  }
+  public function getCollectionRoute(EntityTypeInterface $entity_type) {
+    return parent::getCollectionRoute($entity_type);
   }
 
 }
