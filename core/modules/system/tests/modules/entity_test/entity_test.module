@@ -682,6 +682,17 @@ function entity_test_entity_prepare_view($entity_type, array $entities, array $d
 }
 
 /**
+ * Implements hook_entity_display_build_alter().
+ */
+function entity_test_entity_display_build_alter(&$build, $context) {
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+  $entity = $context['entity'];
+  if ($entity->getEntityTypeId() == 'entity_test' && $entity->bundle() == 'display_build_alter_bundle') {
+    $build['entity_display_build_alter']['#markup'] = 'Content added in hook_entity_display_build_alter for entity id ' . $entity->id();
+  }
+}
+
+/**
  * Implements hook_entity_access().
  */
 function entity_test_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
