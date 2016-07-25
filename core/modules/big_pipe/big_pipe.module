@@ -58,8 +58,7 @@ function big_pipe_page_attachments(array &$page) {
           '#noscript' => TRUE,
           '#attributes' => [
             'http-equiv' => 'Refresh',
-            // @todo: Switch to Url::fromRoute() once https://www.drupal.org/node/2589967 is resolved.
-            'content' => '0; URL=' . Url::fromUri('internal:/big_pipe/no-js', ['query' => \Drupal::service('redirect.destination')->getAsArray()])->toString(),
+            'content' => '0; URL=' . Url::fromRoute('big_pipe.nojs', [], ['query' => \Drupal::service('redirect.destination')->getAsArray()])->toString(),
           ],
         ],
         'big_pipe_detect_nojs',
