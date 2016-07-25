@@ -41,8 +41,9 @@ class SystemInfoController implements ContainerInjectionInterface {
   /**
    * Displays the site status report.
    *
-   * @return string
-   *   The current status of the Drupal installation.
+   * @return array
+   *  A render array containing a list of system requirements for the Drupal
+   *  installation and whether this installation meets the requirements.
    */
   public function status() {
     $requirements = $this->systemManager->listRequirements();
