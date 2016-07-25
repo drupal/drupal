@@ -72,6 +72,10 @@ class CsrfTest extends RESTTestBase {
 
   /**
    * Tests that CSRF check is triggered for Cookie Auth requests.
+   *
+   * @deprecated as of Drupal 8.2.x, will be removed before Drupal 9.0.0. Use
+   *   \Drupal\Tests\system\Functional\CsrfRequestHeaderTest::testRouteAccess
+   *   instead.
    */
   public function testCookieAuth() {
     $this->drupalLogin($this->account);

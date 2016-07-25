@@ -8,11 +8,9 @@ services:
       - { name: cache.bin }
     factory: cache_factory:get
     arguments: [rest]
+  # @todo Remove this service in Drupal 9.0.0.
   access_check.rest.csrf:
-    class: Drupal\rest\Access\CSRFAccessCheck
-    arguments: ['@session_configuration']
-    tags:
-      - { name: access_check }
+    alias: access_check.header.csrf
   rest.link_manager:
     class: Drupal\rest\LinkManager\LinkManager
     arguments: ['@rest.link_manager.type', '@rest.link_manager.relation']

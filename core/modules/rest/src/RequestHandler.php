@@ -182,16 +182,6 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
   }
 
   /**
-   * Generates a CSRF protecting session token.
-   *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   The response object.
-   */
-  public function csrfToken() {
-    return new Response(\Drupal::csrfToken()->get('rest'), 200, array('Content-Type' => 'text/plain'));
-  }
-
-  /**
    * Renders a resource response.
    *
    * Serialization can invoke rendering (e.g., generating URLs), but the

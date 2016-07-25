@@ -1100,6 +1100,11 @@ services:
     tags:
       - { name: access_check, applies_to: _csrf_token, needs_incoming_request: TRUE }
     arguments: ['@csrf_token']
+  access_check.header.csrf:
+    class: Drupal\Core\Access\CsrfRequestHeaderAccessCheck
+    arguments: ['@session_configuration', '@csrf_token']
+    tags:
+      - { name: access_check }
   maintenance_mode:
     class: Drupal\Core\Site\MaintenanceMode
     arguments: ['@state', '@current_user']

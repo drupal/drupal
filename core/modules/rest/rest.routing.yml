@@ -1,6 +1,9 @@
+# @deprecated This route is deprecated, use the system.csrftoken route from the
+# system module instead.
+# @todo Remove this route in Drupal 9.0.0.
 rest.csrftoken:
   path: '/rest/session/token'
   defaults:
-    _controller: '\Drupal\rest\RequestHandler::csrfToken'
+    _controller: '\Drupal\system\Controller\CsrfTokenController::csrfToken'
   requirements:
     _access: 'TRUE'

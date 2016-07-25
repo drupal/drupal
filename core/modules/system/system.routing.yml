@@ -490,3 +490,10 @@ system.entity_autocomplete:
     _controller: '\Drupal\system\Controller\EntityAutocompleteController::handleAutocomplete'
   requirements:
     _access: 'TRUE'
+
+system.csrftoken:
+  path: '/session/token'
+  defaults:
+    _controller: '\Drupal\system\Controller\CsrfTokenController::csrfToken'
+  requirements:
+    _access: 'TRUE'

@@ -91,7 +91,7 @@ class ResourceRoutes extends RouteSubscriberBase {
       $methods = $route->getMethods();
       // Only expose routes where the method is enabled in the configuration.
       if ($methods && ($method = $methods[0]) && $supported_formats = $rest_resource_config->getFormats($method)) {
-        $route->setRequirement('_access_rest_csrf', 'TRUE');
+        $route->setRequirement('_csrf_request_header_token', 'TRUE');
 
         // Check that authentication providers are defined.
         if (empty($rest_resource_config->getAuthenticationProviders($method))) {

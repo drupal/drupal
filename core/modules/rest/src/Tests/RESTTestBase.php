@@ -95,7 +95,7 @@ abstract class RESTTestBase extends WebTestBase {
     }
     if (!in_array($method, array('GET', 'HEAD', 'OPTIONS', 'TRACE'))) {
       // GET the CSRF token first for writing requests.
-      $token = $this->drupalGet('rest/session/token');
+      $token = $this->drupalGet('session/token');
     }
 
     $url = $this->buildUrl($url);

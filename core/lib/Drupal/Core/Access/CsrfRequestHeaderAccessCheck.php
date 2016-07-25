@@ -1,9 +1,7 @@
 <?php
 
-namespace Drupal\rest\Access;
+namespace Drupal\Core\Access;
 
-use Drupal\Core\Access\AccessCheckInterface;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\SessionConfigurationInterface;
 use Symfony\Component\Routing\Route;
@@ -12,7 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Access protection against CSRF attacks.
  */
-class CSRFAccessCheck implements AccessCheckInterface {
+class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
+
+  /**
+   * A string key that will used to designate the token used by this class.
+   */
+  const TOKEN_KEY = 'X-CSRF-Token request header';
 
   /**
    * The session configuration.
@@ -22,13 +25,23 @@ class CSRFAccessCheck implements AccessCheckInterface {
   protected $sessionConfiguration;
 
   /**
+   * The token generator.
+   *
+   * @var \Drupal\Core\Access\CsrfTokenGenerator
+   */
+  protected $csrfToken;
+
+  /**
    * Constructs a new rest CSRF access check.
    *
    * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
    *   The session configuration.
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   *   The token generator.
    */
-  public function __construct(SessionConfigurationInterface $session_configuration) {
+  public function __construct(SessionConfigurationInterface $session_configuration, CsrfTokenGenerator $csrf_token) {
     $this->sessionConfiguration = $session_configuration;
+    $this->csrfToken = $csrf_token;
   }
 
   /**
@@ -36,8 +49,16 @@ class CSRFAccessCheck implements AccessCheckInterface {
    */
   public function applies(Route $route) {
     $requirements = $route->getRequirements();
+    // Check for current requirement _csrf_request_header_token and deprecated
+    // REST requirement.
+    $applicable_requirements = [
+      '_csrf_request_header_token',
+      // @todo Remove _access_rest_csrf in Drupal 9.0.0.
+      '_access_rest_csrf',
+    ];
+    $requirement_keys = array_keys($requirements);
 
-    if (array_key_exists('_access_rest_csrf', $requirements)) {
+    if (array_intersect($applicable_requirements, $requirement_keys)) {
       if (isset($requirements['_method'])) {
         // There could be more than one method requirement separated with '|'.
         $methods = explode('|', $requirements['_method']);
@@ -77,7 +98,10 @@ class CSRFAccessCheck implements AccessCheckInterface {
       && $this->sessionConfiguration->hasSession($request)
     ) {
       $csrf_token = $request->headers->get('X-CSRF-Token');
-      if (!\Drupal::csrfToken()->validate($csrf_token, 'rest')) {
+      // @todo Remove validate call using 'rest' in 8.3.
+      //   Kept here for sessions active during update.
+      if (!$this->csrfToken->validate($csrf_token, self::TOKEN_KEY)
+        && !$this->csrfToken->validate($csrf_token, 'rest')) {
         return AccessResult::forbidden()->setCacheMaxAge(0);
       }
     }
