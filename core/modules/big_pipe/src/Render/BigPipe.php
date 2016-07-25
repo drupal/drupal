@@ -126,7 +126,13 @@ class BigPipe implements BigPipeInterface {
     // Reopen it for the duration that we are rendering placeholders.
     $this->session->start();
 
-    list($pre_body, $post_body) = explode('</body>', $content, 2);
+    // Find the closing </body> tag and get the strings before and after. But be
+    // careful to use the latest occurrence of the string "</body>", to ensure
+    // that strings in inline JavaScript or CDATA sections aren't used instead.
+    $parts = explode('</body>', $content);
+    $post_body = array_pop($parts);
+    $pre_body = implode('', $parts);
+
     $this->sendPreBody($pre_body, $nojs_placeholders, $cumulative_assets);
     $this->sendPlaceholders($placeholders, $this->getPlaceholderOrder($pre_body), $cumulative_assets);
     $this->sendPostBody($post_body);

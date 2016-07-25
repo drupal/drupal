@@ -2,10 +2,13 @@
 
 namespace Drupal\Tests\big_pipe\FunctionalJavascript;
 
+use Drupal\big_pipe\Render\BigPipe;
+use Drupal\big_pipe_regression_test\BigPipeRegressionTestController;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
@@ -30,6 +33,7 @@ class BigPipeRegressionTest extends JavascriptTestBase {
     'node',
     'comment',
     'big_pipe',
+    'big_pipe_regression_test',
     'history',
     'editor',
     'ckeditor',
@@ -112,6 +116,31 @@ class BigPipeRegressionTest extends JavascriptTestBase {
     }());
 JS;
     $this->assertJsCondition($javascript);
+  }
+
+  /**
+   * Ensure BigPipe works despite inline JS containing the string "</body>".
+   *
+   * @see https://www.drupal.org/node/2678662
+   */
+  public function testMultipleClosingBodies_2678662() {
+    $this->drupalLogin($this->drupalCreateUser());
+    $this->drupalGet(Url::fromRoute('big_pipe_regression_test.2678662'));
+
+    // Confirm that AJAX behaviors were instantiated, if not, this points to a
+    // JavaScript syntax error.
+    $javascript = <<<JS
+    (function(){
+      return Object.keys(Drupal.ajax.instances).length > 0;
+    }());
+JS;
+    $this->assertJsCondition($javascript);
+
+    // Besides verifying there is no JavaScript syntax error, also verify the
+    // HTML structure.
+    $this->assertSession()->responseContains(BigPipe::STOP_SIGNAL . "\n\n\n</body></html>", 'The BigPipe stop signal is present just before the closing </body> and </html> tags.');
+    $js_code_until_closing_body_tag = substr(BigPipeRegressionTestController::MARKER_2678662, 0, strpos(BigPipeRegressionTestController::MARKER_2678662, '</body>'));
+    $this->assertSession()->responseNotContains($js_code_until_closing_body_tag . "\n" . BigPipe::START_SIGNAL, 'The BigPipe start signal does NOT start at the closing </body> tag string in an inline script.');
   }
 
 }
