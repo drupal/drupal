@@ -247,32 +247,39 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertTrue(empty($node->{$field_name}->target_id), 'Node was successfully saved without any files.');
     }
 
-    $upload_files = array($test_file, $test_file);
+    $upload_files_node_creation = array($test_file, $test_file);
     // Try to upload multiple files, but fewer than the maximum.
-    $nid = $this->uploadNodeFiles($upload_files, $field_name, $type_name);
+    $nid = $this->uploadNodeFiles($upload_files_node_creation, $field_name, $type_name);
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
-    $this->assertEqual(count($node->{$field_name}), count($upload_files), 'Node was successfully saved with mulitple files.');
+    $this->assertEqual(count($node->{$field_name}), count($upload_files_node_creation), 'Node was successfully saved with mulitple files.');
 
     // Try to upload more files than allowed on revision.
-    $this->uploadNodeFiles($upload_files, $field_name, $nid, 1);
-    $args = array(
+    $upload_files_node_revision = array($test_file, $test_file, $test_file, $test_file);
+    $this->uploadNodeFiles($upload_files_node_revision, $field_name, $nid, 1);
+    $args = [
       '%field' => $field_name,
-      '@count' => $cardinality
-    );
-    $this->assertRaw(t('%field: this field cannot hold more than @count values.', $args));
+      '@max' => $cardinality,
+      '@count' => count($upload_files_node_creation) + count($upload_files_node_revision),
+      '%list' => implode(', ', array_fill(0, 3, $test_file->getFilename())),
+    ];
+    $this->assertRaw(t('Field %field can only hold @max values but there were @count uploaded. The following files have been omitted as a result: %list.', $args));
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
-    $this->assertEqual(count($node->{$field_name}), count($upload_files), 'More files than allowed could not be saved to node.');
+    $this->assertEqual(count($node->{$field_name}), $cardinality, 'More files than allowed could not be saved to node.');
 
-    // Try to upload exactly the allowed number of files on revision.
-    $this->uploadNodeFile($test_file, $field_name, $nid, 1);
+    // Try to upload exactly the allowed number of files on revision. Create an
+    // empty node first, to fill it in its first revision.
+    $node = $this->drupalCreateNode([
+      'type' => $type_name
+    ]);
+    $this->uploadNodeFile($test_file, $field_name, $node->id(), 1);
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
     $this->assertEqual(count($node->{$field_name}), $cardinality, 'Node was successfully revised to maximum number of files.');
 
     // Try to upload exactly the allowed number of files, new node.
-    $upload_files[] = $test_file;
+    $upload_files = array_fill(0, $cardinality, $test_file);
     $nid = $this->uploadNodeFiles($upload_files, $field_name, $type_name);
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
