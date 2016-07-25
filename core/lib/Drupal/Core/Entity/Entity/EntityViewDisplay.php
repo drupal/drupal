@@ -277,7 +277,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
         'view_mode' => $this->originalMode,
         'display' => $this,
       );
-      \Drupal::moduleHandler()->alter('entity_display_build', $build_list[$key], $context);
+      \Drupal::moduleHandler()->alter('entity_display_build', $build_list[$id], $context);
     }
 
     return $build_list;
