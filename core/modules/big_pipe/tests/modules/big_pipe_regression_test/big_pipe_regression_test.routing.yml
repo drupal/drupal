@@ -1,0 +1,6 @@
+big_pipe_regression_test.2678662:
+  path: '/big_pipe_regression_test/2678662'
+  defaults:
+    _controller: '\Drupal\big_pipe_regression_test\BigPipeRegressionTestController::regression2678662'
+  requirements:
+    _access: 'TRUE'
