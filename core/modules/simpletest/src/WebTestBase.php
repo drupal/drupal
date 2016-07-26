@@ -613,10 +613,6 @@ abstract class WebTestBase extends TestBase {
       'value' => $this->originalProfile,
       'required' => TRUE,
     ];
-    $settings['settings']['apcu_ensure_unique_prefix'] = (object) [
-      'value' => FALSE,
-      'required' => TRUE,
-    ];
     $this->writeSettings($settings);
     // Allow for test-specific overrides.
     $settings_testing_file = DRUPAL_ROOT . '/' . $this->originalSite . '/settings.testing.php';
