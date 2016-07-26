@@ -9,6 +9,8 @@ use Drupal\system\Tests\Update\UpdatePathTestBase;
  * Tests that rest.settings is converted to rest_resource_config entities.
  *
  * @see https://www.drupal.org/node/2308745
+ * @see rest_update_8201()
+ * @see rest_post_update_create_rest_resource_config_entities()
  *
  * @group rest
  */
@@ -43,10 +45,6 @@ class RestConfigurationEntitiesUpdateTest extends UpdatePathTestBase {
     $resource_config_entities = $resource_config_storage->loadMultiple();
     $this->assertIdentical([], array_keys($resource_config_entities));
 
-    // Read the existing 'entity:node' resource configuration so we can verify
-    // it after the update.
-    $node_configuration = $rest_settings->getRawData()['resources']['entity:node'];
-
     $this->runUpdates();
 
     // Make sure we have the expected values after the update.
@@ -55,8 +53,12 @@ class RestConfigurationEntitiesUpdateTest extends UpdatePathTestBase {
     $resource_config_entities = $resource_config_storage->loadMultiple();
     $this->assertIdentical(['entity.node'], array_keys($resource_config_entities));
     $node_resource_config_entity = $resource_config_entities['entity.node'];
-    $this->assertIdentical(RestResourceConfigInterface::METHOD_GRANULARITY, $node_resource_config_entity->get('granularity'));
-    $this->assertIdentical($node_configuration, $node_resource_config_entity->get('configuration'));
+    $this->assertIdentical(RestResourceConfigInterface::RESOURCE_GRANULARITY, $node_resource_config_entity->get('granularity'));
+    $this->assertIdentical([
+      'methods' => ['GET'],
+      'formats' => ['json'],
+      'authentication' => ['basic_auth'],
+    ], $node_resource_config_entity->get('configuration'));
     $this->assertIdentical(['module' => ['basic_auth', 'node', 'serialization']], $node_resource_config_entity->getDependencies());
   }
 

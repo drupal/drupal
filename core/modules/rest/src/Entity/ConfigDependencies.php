@@ -61,31 +61,25 @@ class ConfigDependencies implements ContainerInjectionInterface {
    */
   public function calculateDependencies(RestResourceConfigInterface $rest_config) {
     $granularity = $rest_config->get('granularity');
-    if ($granularity === RestResourceConfigInterface::METHOD_GRANULARITY) {
-      return $this->calculateDependenciesForMethodGranularity($rest_config);
-    }
-    else {
-      throw new \InvalidArgumentException("A different granularity then 'method' is not supported yet.");
-      // @todo Add resource-level granularity support in https://www.drupal.org/node/2721595.
-    }
-  }
 
-  /**
-   * Calculates dependencies of a specific rest resource configuration.
-   *
-   * @param \Drupal\rest\RestResourceConfigInterface $rest_config
-   *   The rest configuration.
-   *
-   * @return string[][]
-   *   Dependencies keyed by dependency type.
-   *
-   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
-   */
-  protected function calculateDependenciesForMethodGranularity(RestResourceConfigInterface $rest_config) {
+    // Dependency calculation is the same for either granularity, the most
+    // notable difference is that for the 'resource' granularity, the same
+    // authentication providers and formats are supported for every method.
+    switch ($granularity) {
+      case RestResourceConfigInterface::METHOD_GRANULARITY:
+        $methods = $rest_config->getMethods();
+        break;
+      case RestResourceConfigInterface::RESOURCE_GRANULARITY:
+        $methods = array_slice($rest_config->getMethods(), 0, 1);
+        break;
+      default:
+        throw new \InvalidArgumentException('Invalid granularity specified.');
+    }
+
     // The dependency lists for authentication providers and formats
     // generated on container build.
     $dependencies = [];
-    foreach (array_keys($rest_config->get('configuration')) as $request_method) {
+    foreach ($methods as $request_method) {
       // Add dependencies based on the supported authentication providers.
       foreach ($rest_config->getAuthenticationProviders($request_method) as $auth) {
         if (isset($this->authProviders[$auth])) {
@@ -100,6 +94,10 @@ class ConfigDependencies implements ContainerInjectionInterface {
           $dependencies['module'][] = $module_name;
         }
       }
+    }
+
+    if (isset($dependencies['module'])) {
+      sort($dependencies['module']);
     }
 
     return $dependencies;
@@ -121,12 +119,13 @@ class ConfigDependencies implements ContainerInjectionInterface {
    */
   public function onDependencyRemoval(RestResourceConfigInterface $rest_config, array $dependencies) {
     $granularity = $rest_config->get('granularity');
-    if ($granularity === RestResourceConfigInterface::METHOD_GRANULARITY) {
-      return $this->onDependencyRemovalForMethodGranularity($rest_config, $dependencies);
-    }
-    else {
-      throw new \InvalidArgumentException("A different granularity then 'method' is not supported yet.");
-      // @todo Add resource-level granularity support in https://www.drupal.org/node/2721595.
+    switch ($granularity) {
+      case RestResourceConfigInterface::METHOD_GRANULARITY:
+        return $this->onDependencyRemovalForMethodGranularity($rest_config, $dependencies);
+      case RestResourceConfigInterface::RESOURCE_GRANULARITY:
+        return $this->onDependencyRemovalForResourceGranularity($rest_config, $dependencies);
+      default:
+        throw new \InvalidArgumentException('Invalid granularity specified.');
     }
   }
 
@@ -183,7 +182,71 @@ class ConfigDependencies implements ContainerInjectionInterface {
           }
         }
       }
-      if (!empty($configuration_before != $configuration)) {
+      if ($configuration_before != $configuration && !empty($configuration)) {
+        $rest_config->set('configuration', $configuration);
+        // Only mark the dependencies problems as fixed if there is any
+        // configuration left.
+        $changed = TRUE;
+      }
+    }
+    // If the dependency problems are not marked as fixed at this point they
+    // should be related to the resource plugin and the config entity should
+    // be deleted.
+    return $changed;
+  }
+
+  /**
+   * Informs the entity that entities it depends on will be deleted.
+   *
+   * @param \Drupal\rest\RestResourceConfigInterface $rest_config
+   *   The rest configuration.
+   * @param array $dependencies
+   *   An array of dependencies that will be deleted keyed by dependency type.
+   *   Dependency types are, for example, entity, module and theme.
+   *
+   * @return bool
+   *   TRUE if the entity has been changed as a result, FALSE if not.
+   */
+  public function onDependencyRemovalForResourceGranularity(RestResourceConfigInterface $rest_config, array $dependencies) {
+    $changed = FALSE;
+    // Only module-related dependencies can be fixed. All other types of
+    // dependencies cannot, because they were not generated based on supported
+    // authentication providers or formats.
+    if (isset($dependencies['module'])) {
+      // Try to fix dependencies.
+      $removed_auth = array_keys(array_intersect($this->authProviders, $dependencies['module']));
+      $removed_formats = array_keys(array_intersect($this->formatProviders, $dependencies['module']));
+      $configuration_before = $configuration = $rest_config->get('configuration');
+      if (!empty($removed_auth) || !empty($removed_formats)) {
+        // Try to fix dependency problems by removing affected
+        // authentication providers and formats.
+        foreach ($removed_formats as $format) {
+          if (in_array($format, $rest_config->getFormats('GET'))) {
+            $configuration['formats'] = array_diff($configuration['formats'], $removed_formats);
+          }
+        }
+        foreach ($removed_auth as $auth) {
+          if (in_array($auth, $rest_config->getAuthenticationProviders('GET'))) {
+            $configuration['authentication'] = array_diff($configuration['authentication'], $removed_auth);
+          }
+        }
+        if (empty($configuration['authentication'])) {
+          // Remove the key if there are no more authentication providers
+          // supported.
+          unset($configuration['authentication']);
+        }
+        if (empty($configuration['formats'])) {
+          // Remove the key if there are no more formats supported.
+          unset($configuration['formats']);
+        }
+        if (empty($configuration['authentication']) || empty($configuration['formats'])) {
+          // If there no longer are any supported authentication providers or
+          // formats, this REST resource can no longer function, and so we
+          // cannot fix this config entity to keep it working.
+          $configuration = [];
+        }
+      }
+      if ($configuration_before != $configuration && !empty($configuration)) {
         $rest_config->set('configuration', $configuration);
         // Only mark the dependencies problems as fixed if there is any
         // configuration left.

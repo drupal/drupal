@@ -30,6 +30,8 @@ function rest_requirements($phase) {
 
 /**
  * Install the REST config entity type and fix old settings-based config.
+ *
+ * @see rest_post_update_create_rest_resource_config_entities()
  */
 function rest_update_8201() {
   \Drupal::entityDefinitionUpdateManager()->installEntityType(\Drupal::entityTypeManager()->getDefinition('rest_resource_config'));

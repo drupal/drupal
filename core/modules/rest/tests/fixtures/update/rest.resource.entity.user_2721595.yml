@@ -1,0 +1,32 @@
+id: entity.user
+plugin_id: 'entity:user'
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - hal_json
+    supported_auth:
+      - basic_auth
+      # This resource has a method-specific authentication.
+      # @see \Drupal\rest\Tests\Update\ResourceGranularityUpdateTest
+      - oauth
+  POST:
+    supported_formats:
+      - hal_json
+    supported_auth:
+      - basic_auth
+  PATCH:
+    supported_formats:
+      - hal_json
+    supported_auth:
+      - basic_auth
+  DELETE:
+    supported_formats:
+      - hal_json
+    supported_auth:
+      - basic_auth
+dependencies:
+  module:
+    - node
+    - basic_auth
+    - hal

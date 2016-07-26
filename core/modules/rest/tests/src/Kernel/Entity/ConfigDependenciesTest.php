@@ -21,72 +21,78 @@ class ConfigDependenciesTest extends KernelTestBase {
 
   /**
    * @covers ::calculateDependencies
-   * @covers ::calculateDependenciesForMethodGranularity
+   *
+   * @dataProvider providerBasicDependencies
    */
-  public function testCalculateDependencies() {
+  public function testCalculateDependencies(array $configuration) {
     $config_dependencies = new ConfigDependencies(['hal_json' => 'hal', 'json' => 'serialization'], ['basic_auth' => 'basic_auth']);
 
-    $rest_config = RestResourceConfig::create([
-      'plugin_id' => 'entity:entity_test',
-      'granularity' => RestResourceConfigInterface::METHOD_GRANULARITY,
-      'configuration' => [
-        'GET' => [
-          'supported_auth' => ['cookie'],
-          'supported_formats' => ['json'],
-        ],
-        'POST' => [
-          'supported_auth' => ['basic_auth'],
-          'supported_formats' => ['hal_json'],
-        ],
-      ],
-    ]);
+    $rest_config = RestResourceConfig::create($configuration);
 
     $result = $config_dependencies->calculateDependencies($rest_config);
     $this->assertEquals(['module' => [
-      'serialization', 'basic_auth', 'hal',
+      'basic_auth', 'hal', 'serialization',
     ]], $result);
   }
 
   /**
    * @covers ::onDependencyRemoval
-   * @covers ::calculateDependenciesForMethodGranularity
+   * @covers ::onDependencyRemovalForMethodGranularity
+   * @covers ::onDependencyRemovalForResourceGranularity
+   *
+   * @dataProvider providerBasicDependencies
    */
-  public function testOnDependencyRemovalRemoveUnrelatedDependency() {
+  public function testOnDependencyRemovalRemoveUnrelatedDependency(array $configuration) {
     $config_dependencies = new ConfigDependencies(['hal_json' => 'hal', 'json' => 'serialization'], ['basic_auth' => 'basic_auth']);
 
-    $rest_config = RestResourceConfig::create([
-      'plugin_id' => 'entity:entity_test',
-      'granularity' => RestResourceConfigInterface::METHOD_GRANULARITY,
-      'configuration' => [
-        'GET' => [
-          'supported_auth' => ['cookie'],
-          'supported_formats' => ['json'],
-        ],
-        'POST' => [
-          'supported_auth' => ['basic_auth'],
-          'supported_formats' => ['hal_json'],
-        ],
-      ],
-    ]);
+    $rest_config = RestResourceConfig::create($configuration);
 
     $this->assertFalse($config_dependencies->onDependencyRemoval($rest_config, ['module' => ['node']]));
-    $this->assertEquals([
-      'GET' => [
-        'supported_auth' => ['cookie'],
-        'supported_formats' => ['json'],
+    $this->assertEquals($configuration['configuration'], $rest_config->get('configuration'));
+  }
+
+  /**
+   * @return array
+   *   An array with numerical keys:
+   *   0. The original REST resource configuration.
+   */
+  public function providerBasicDependencies() {
+    return [
+      'method' => [
+        [
+          'plugin_id' => 'entity:entity_test',
+          'granularity' => RestResourceConfigInterface::METHOD_GRANULARITY,
+          'configuration' => [
+            'GET' => [
+              'supported_auth' => ['cookie'],
+              'supported_formats' => ['json'],
+            ],
+            'POST' => [
+              'supported_auth' => ['basic_auth'],
+              'supported_formats' => ['hal_json'],
+            ],
+          ],
+        ],
       ],
-      'POST' => [
-        'supported_auth' => ['basic_auth'],
-        'supported_formats' => ['hal_json'],
+      'resource' => [
+        [
+          'plugin_id' => 'entity:entity_test',
+          'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+          'configuration' => [
+            'methods' => ['GET', 'POST'],
+            'formats' => ['json', 'hal_json'],
+            'authentication' => ['cookie', 'basic_auth'],
+          ],
+        ],
       ],
-    ], $rest_config->get('configuration'));
+    ];
   }
 
   /**
    * @covers ::onDependencyRemoval
-   * @covers ::calculateDependenciesForMethodGranularity
+   * @covers ::onDependencyRemovalForMethodGranularity
    */
-  public function testOnDependencyRemovalRemoveFormat() {
+  public function testOnDependencyRemovalRemoveFormatForMethodGranularity() {
     $config_dependencies = new ConfigDependencies(['hal_json' => 'hal', 'json' => 'serialization'], ['basic_auth' => 'basic_auth']);
 
     $rest_config = RestResourceConfig::create([
@@ -120,7 +126,7 @@ class ConfigDependenciesTest extends KernelTestBase {
 
   /**
    * @covers ::onDependencyRemoval
-   * @covers ::calculateDependenciesForMethodGranularity
+   * @covers ::onDependencyRemovalForMethodGranularity
    */
   public function testOnDependencyRemovalRemoveAuth() {
     $config_dependencies = new ConfigDependencies(['hal_json' => 'hal', 'json' => 'serialization'], ['basic_auth' => 'basic_auth']);
@@ -156,7 +162,7 @@ class ConfigDependenciesTest extends KernelTestBase {
 
   /**
    * @covers ::onDependencyRemoval
-   * @covers ::calculateDependenciesForMethodGranularity
+   * @covers ::onDependencyRemovalForMethodGranularity
    */
   public function testOnDependencyRemovalRemoveAuthAndFormats() {
     $config_dependencies = new ConfigDependencies(['hal_json' => 'hal', 'json' => 'serialization'], ['basic_auth' => 'basic_auth']);
@@ -187,6 +193,97 @@ class ConfigDependenciesTest extends KernelTestBase {
         'supported_formats' => ['json'],
       ],
     ], $rest_config->get('configuration'));
+  }
+
+  /**
+   * @covers ::onDependencyRemoval
+   * @covers ::onDependencyRemovalForResourceGranularity
+   *
+   * @dataProvider providerOnDependencyRemovalForResourceGranularity
+   */
+  public function testOnDependencyRemovalForResourceGranularity(array $configuration, $module, $expected_configuration) {
+    assert('is_string($module)');
+    assert('$expected_configuration === FALSE || is_array($expected_configuration)');
+    $config_dependencies = new ConfigDependencies(['hal_json' => 'hal', 'json' => 'serialization'], ['basic_auth' => 'basic_auth']);
+
+    $rest_config = RestResourceConfig::create($configuration);
+
+    $this->assertSame(!empty($expected_configuration), $config_dependencies->onDependencyRemoval($rest_config, ['module' => [$module]]));
+    if (!empty($expected_configuration)) {
+      $this->assertEquals($expected_configuration, $rest_config->get('configuration'));
+    }
+  }
+
+  /**
+   * @return array
+   *   An array with numerical keys:
+   *   0. The original REST resource configuration.
+   *   1. The module to uninstall (the dependency that is about to be removed).
+   *   2. The expected configuration after uninstalling this module.
+   */
+  public function providerOnDependencyRemovalForResourceGranularity() {
+    return [
+      'resource with multiple formats' => [
+        [
+          'plugin_id' => 'entity:entity_test',
+          'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+          'configuration' => [
+            'methods' => ['GET', 'POST'],
+            'formats' => ['json', 'hal_json'],
+            'authentication' => ['cookie', 'basic_auth'],
+          ],
+        ],
+        'hal',
+        [
+          'methods' => ['GET', 'POST'],
+          'formats' => ['json'],
+          'authentication' => ['cookie', 'basic_auth'],
+        ]
+      ],
+      'resource with only HAL+JSON format' => [
+        [
+          'plugin_id' => 'entity:entity_test',
+          'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+          'configuration' => [
+            'methods' => ['GET', 'POST'],
+            'formats' => ['hal_json'],
+            'authentication' => ['cookie', 'basic_auth'],
+          ],
+        ],
+        'hal',
+        FALSE
+      ],
+      'resource with multiple authentication providers' => [
+        [
+          'plugin_id' => 'entity:entity_test',
+          'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+          'configuration' => [
+            'methods' => ['GET', 'POST'],
+            'formats' => ['json', 'hal_json'],
+            'authentication' => ['cookie', 'basic_auth'],
+          ],
+        ],
+        'basic_auth',
+        [
+          'methods' => ['GET', 'POST'],
+          'formats' => ['json', 'hal_json'],
+          'authentication' => ['cookie'],
+        ]
+      ],
+      'resource with only basic_auth authentication' => [
+        [
+          'plugin_id' => 'entity:entity_test',
+          'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+          'configuration' => [
+            'methods' => ['GET', 'POST'],
+            'formats' => ['json', 'hal_json'],
+            'authentication' => ['basic_auth'],
+          ],
+        ],
+        'basic_auth',
+        FALSE,
+      ],
+    ];
   }
 
 }

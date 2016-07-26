@@ -7,25 +7,14 @@ dependencies:
     - node
 id: entity.node
 plugin_id: 'entity:node'
-granularity: method
+granularity: resource
 configuration:
-  GET:
-    supported_formats:
-      - hal_json
-    supported_auth:
-      - basic_auth
-  POST:
-    supported_formats:
-      - hal_json
-    supported_auth:
-      - basic_auth
-  PATCH:
-    supported_formats:
-      - hal_json
-    supported_auth:
-      - basic_auth
-  DELETE:
-    supported_formats:
-      - hal_json
-    supported_auth:
-      - basic_auth
+  methods:
+    - GET
+    - POST
+    - PATCH
+    - DELETE
+  formats:
+    - hal_json
+  authentication:
+    - basic_auth

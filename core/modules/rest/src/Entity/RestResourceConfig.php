@@ -45,7 +45,9 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
   /**
    * The REST resource configuration granularity.
    *
-   * @todo Currently only 'method', but https://www.drupal.org/node/2721595 will add 'resource'
+   * Currently either:
+   * - \Drupal\rest\RestResourceConfigInterface::METHOD_GRANULARITY
+   * - \Drupal\rest\RestResourceConfigInterface::RESOURCE_GRANULARITY
    *
    * @var string
    */
@@ -112,12 +114,13 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    * {@inheritdoc}
    */
   public function getMethods() {
-    if ($this->granularity === RestResourceConfigInterface::METHOD_GRANULARITY) {
-      return $this->getMethodsForMethodGranularity();
-    }
-    else {
-      throw new \InvalidArgumentException("A different granularity then 'method' is not supported yet.");
-      // @todo Add resource-level granularity support in https://www.drupal.org/node/2721595.
+    switch ($this->granularity) {
+      case RestResourceConfigInterface::METHOD_GRANULARITY:
+        return $this->getMethodsForMethodGranularity();
+      case RestResourceConfigInterface::RESOURCE_GRANULARITY:
+        return $this->configuration['methods'];
+      default:
+        throw new \InvalidArgumentException('Invalid granularity specified.');
     }
   }
 
@@ -136,12 +139,13 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    * {@inheritdoc}
    */
   public function getAuthenticationProviders($method) {
-    if ($this->granularity === RestResourceConfigInterface::METHOD_GRANULARITY) {
-      return $this->getAuthenticationProvidersForMethodGranularity($method);
-    }
-    else {
-      throw new \InvalidArgumentException("A different granularity then 'method' is not supported yet.");
-      // @todo Add resource-level granularity support in https://www.drupal.org/node/2721595.
+    switch ($this->granularity) {
+      case RestResourceConfigInterface::METHOD_GRANULARITY:
+        return $this->getAuthenticationProvidersForMethodGranularity($method);
+      case RestResourceConfigInterface::RESOURCE_GRANULARITY:
+        return $this->configuration['authentication'];
+      default:
+        throw new \InvalidArgumentException('Invalid granularity specified.');
     }
   }
 
@@ -166,12 +170,13 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    * {@inheritdoc}
    */
   public function getFormats($method) {
-    if ($this->granularity === RestResourceConfigInterface::METHOD_GRANULARITY) {
-      return $this->getFormatsForMethodGranularity($method);
-    }
-    else {
-      throw new \InvalidArgumentException("A different granularity then 'method' is not supported yet.");
-      // @todo Add resource-level granularity support in https://www.drupal.org/node/2721595.
+    switch ($this->granularity) {
+      case RestResourceConfigInterface::METHOD_GRANULARITY:
+        return $this->getFormatsForMethodGranularity($method);
+      case RestResourceConfigInterface::RESOURCE_GRANULARITY:
+        return $this->configuration['formats'];
+      default:
+        throw new \InvalidArgumentException('Invalid granularity specified.');
     }
   }
 

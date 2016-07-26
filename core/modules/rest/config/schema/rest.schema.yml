@@ -8,7 +8,6 @@ rest.settings:
       label: 'Domain of the relation'
 
 # Method-level granularity of REST resource configuration.
-# @todo Add resource-level granularity in https://www.drupal.org/node/2721595.
 rest_resource.method:
   type: mapping
   mapping:
@@ -24,6 +23,29 @@ rest_resource.method:
     DELETE:
       type: rest_request
       label: 'DELETE method settings'
+
+# Resource-level granularity of REST resource configuration.
+rest_resource.resource:
+  type: mapping
+  mapping:
+    methods:
+      type: sequence
+      label: 'Supported methods'
+      sequence:
+        type: string
+        label: 'HTTP method'
+    formats:
+      type: sequence
+      label: 'Supported formats'
+      sequence:
+        type: string
+        label: 'Format'
+    authentication:
+      type: sequence
+      label: 'Supported authentication providers'
+      sequence:
+        type: string
+        label: 'Authentication provider'
 
 rest_request:
   type: mapping

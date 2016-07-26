@@ -16,6 +16,11 @@ interface RestResourceConfigInterface extends ConfigEntityInterface, EntityWithP
   const METHOD_GRANULARITY = 'method';
 
   /**
+   * Granularity value for per-resource configuration.
+   */
+  const RESOURCE_GRANULARITY = 'resource';
+
+  /**
    * Retrieves the REST resource plugin.
    *
    * @return \Drupal\rest\Plugin\ResourceInterface
