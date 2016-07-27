@@ -253,7 +253,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getCanonicalRoute
+   * @covers ::getCollectionRoute
    * @dataProvider providerTestGetCollectionRoute
    */
   public function testGetCollectionRoute(Route $expected = NULL, EntityTypeInterface $entity_type) {
