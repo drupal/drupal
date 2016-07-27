@@ -124,8 +124,8 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
    */
   public function onRouteMatch(GetResponseEvent $event) {
     // Don't cache the response if the Dynamic Page Cache request policies are
-    // not met. Store the result in a request attribute, so that onResponse()
-    // does not have to redo the request policy check.
+    // not met. Store the result in a static keyed by current request, so that
+    // onResponse() does not have to redo the request policy check.
     $request = $event->getRequest();
     $request_policy_result = $this->requestPolicy->check($request);
     $this->requestPolicyResults[$request] = $request_policy_result;
