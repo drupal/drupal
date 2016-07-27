@@ -56,6 +56,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   use ContentTypeCreationTrait {
     createContentType as drupalCreateContentType;
   }
+  use ConfigTestTrait;
   use UserCreationTrait {
     createRole as drupalCreateRole;
     createUser as drupalCreateUser;
