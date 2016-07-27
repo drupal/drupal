@@ -37,6 +37,8 @@ libraries-override:
   classy/dialog:
     seven/seven.drupal.dialog
 libraries-extend:
+  core/ckeditor:
+    - seven/ckeditor-dialog
   core/drupal.vertical-tabs:
     - seven/vertical-tabs
   core/jquery.ui:
