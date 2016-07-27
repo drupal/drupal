@@ -146,10 +146,21 @@ class NodeViewBuilder extends EntityViewBuilder {
     /** @var \Drupal\node\NodeInterface $entity */
     parent::alterBuild($build, $entity, $display, $view_mode);
     if ($entity->id()) {
-      $build['#contextual_links']['node'] = array(
-        'route_parameters' => array('node' => $entity->id()),
-        'metadata' => array('changed' => $entity->getChangedTime()),
-      );
+      if ($entity->isDefaultRevision()) {
+        $build['#contextual_links']['node'] = [
+          'route_parameters' => ['node' => $entity->id()],
+          'metadata' => ['changed' => $entity->getChangedTime()],
+        ];
+      }
+      else {
+        $build['#contextual_links']['node_revision'] = [
+          'route_parameters' => [
+            'node' => $entity->id(),
+            'node_revision' => $entity->getRevisionId(),
+          ],
+          'metadata' => ['changed' => $entity->getChangedTime()],
+        ];
+      }
     }
   }
 
