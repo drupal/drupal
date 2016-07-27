@@ -175,7 +175,7 @@ function hook_module_preinstall($module) {
  * This function differs from hook_install() in that it gives all other modules
  * a chance to perform actions when a module is installed, whereas
  * hook_install() is only called on the module actually being installed. See
- * \Drupal\Core\Extension\ModuleHandler::install() for a detailed description of
+ * \Drupal\Core\Extension\ModuleInstaller::install() for a detailed description of
  * the order in which install hooks are invoked.
  *
  * This hook should be implemented in a .module file, not in an .install file.
@@ -183,7 +183,7 @@ function hook_module_preinstall($module) {
  * @param $modules
  *   An array of the modules that were installed.
  *
- * @see \Drupal\Core\Extension\ModuleHandler::install()
+ * @see \Drupal\Core\Extension\ModuleInstaller::install()
  * @see hook_install()
  */
 function hook_modules_installed($modules) {
@@ -223,7 +223,7 @@ function hook_modules_installed($modules) {
  * be removed during uninstall should be removed with hook_uninstall().
  *
  * @see hook_schema()
- * @see \Drupal\Core\Extension\ModuleHandler::install()
+ * @see \Drupal\Core\Extension\ModuleInstaller::install()
  * @see hook_uninstall()
  * @see hook_modules_installed()
  */

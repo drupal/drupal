@@ -276,8 +276,8 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    */
   function purgeConfiguration() {
     // Ensure that we are getting the defined language negotiation information.
-    // An invocation of \Drupal\Core\Extension\ModuleHandler::install() or
-    // \Drupal\Core\Extension\ModuleHandler::uninstall() could invalidate the
+    // An invocation of \Drupal\Core\Extension\ModuleInstaller::install() or
+    // \Drupal\Core\Extension\ModuleInstaller::uninstall() could invalidate the
     // cached information.
     $this->negotiatorManager->clearCachedDefinitions();
     $this->languageManager->reset();
@@ -291,8 +291,8 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    */
   function updateConfiguration(array $types) {
     // Ensure that we are getting the defined language negotiation information.
-    // An invocation of \Drupal\Core\Extension\ModuleHandler::install() or
-    // \Drupal\Core\Extension\ModuleHandler::uninstall() could invalidate the
+    // An invocation of \Drupal\Core\Extension\ModuleInstaller::install() or
+    // \Drupal\Core\Extension\ModuleInstaller::uninstall() could invalidate the
     // cached information.
     $this->negotiatorManager->clearCachedDefinitions();
     $this->languageManager->reset();
