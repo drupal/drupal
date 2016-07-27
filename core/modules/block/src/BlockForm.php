@@ -3,6 +3,8 @@
 namespace Drupal\block;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Plugin\PluginFormFactoryInterface;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
@@ -69,6 +71,13 @@ class BlockForm extends EntityForm {
   protected $contextRepository;
 
   /**
+   * The plugin form manager.
+   *
+   * @var \Drupal\Core\Plugin\PluginFormFactoryInterface
+   */
+  protected $pluginFormFactory;
+
+  /**
    * Constructs a BlockForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -81,13 +90,16 @@ class BlockForm extends EntityForm {
    *   The language manager.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
+   * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
+   *   The plugin form manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ExecutableManagerInterface $manager, ContextRepositoryInterface $context_repository, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler) {
+  public function __construct(EntityManagerInterface $entity_manager, ExecutableManagerInterface $manager, ContextRepositoryInterface $context_repository, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler, PluginFormFactoryInterface $plugin_form_manager) {
     $this->storage = $entity_manager->getStorage('block');
     $this->manager = $manager;
     $this->contextRepository = $context_repository;
     $this->language = $language;
     $this->themeHandler = $theme_handler;
+    $this->pluginFormFactory = $plugin_form_manager;
   }
 
   /**
@@ -99,7 +111,8 @@ class BlockForm extends EntityForm {
       $container->get('plugin.manager.condition'),
       $container->get('context.repository'),
       $container->get('language_manager'),
-      $container->get('theme_handler')
+      $container->get('theme_handler'),
+      $container->get('plugin_form.factory')
     );
   }
 
@@ -120,7 +133,7 @@ class BlockForm extends EntityForm {
     $form_state->setTemporaryValue('gathered_contexts', $this->contextRepository->getAvailableContexts());
 
     $form['#tree'] = TRUE;
-    $form['settings'] = $entity->getPlugin()->buildConfigurationForm(array(), $form_state);
+    $form['settings'] = $this->getPluginForm($entity->getPlugin())->buildConfigurationForm(array(), $form_state);
     $form['visibility'] = $this->buildVisibilityInterface([], $form_state);
 
     // If creating a new block, calculate a safe default machine name.
@@ -282,7 +295,7 @@ class BlockForm extends EntityForm {
     // settings form element, so just pass that to the block for validation.
     $settings = (new FormState())->setValues($form_state->getValue('settings'));
     // Call the plugin validate handler.
-    $this->entity->getPlugin()->validateConfigurationForm($form, $settings);
+    $this->getPluginForm($this->entity->getPlugin())->validateConfigurationForm($form, $settings);
     // Update the original form values.
     $form_state->setValue('settings', $settings->getValues());
     $this->validateVisibility($form, $form_state);
@@ -329,8 +342,8 @@ class BlockForm extends EntityForm {
     $settings = (new FormState())->setValues($form_state->getValue('settings'));
 
     // Call the plugin submit handler.
-    $entity->getPlugin()->submitConfigurationForm($form, $settings);
     $block = $entity->getPlugin();
+    $this->getPluginForm($block)->submitConfigurationForm($form, $settings);
     // If this block is context-aware, set the context mapping.
     if ($block instanceof ContextAwarePluginInterface && $block->getContextDefinitions()) {
       $context_mapping = $settings->getValue('context_mapping', []);
@@ -400,6 +413,19 @@ class BlockForm extends EntityForm {
       $machine_default = $suggestion . '_' . ++$count;
     }
     return $machine_default;
+  }
+
+  /**
+   * Retrieves the plugin form for a given block and operation.
+   *
+   * @param \Drupal\Core\Block\BlockPluginInterface $block
+   *   The block plugin.
+   *
+   * @return \Drupal\Core\Plugin\PluginFormInterface
+   *   The plugin form for the block.
+   */
+  protected function getPluginForm(BlockPluginInterface $block) {
+    return $this->pluginFormFactory->createInstance($block, 'configure');
   }
 
 }

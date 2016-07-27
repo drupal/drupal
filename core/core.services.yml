@@ -577,6 +577,9 @@ services:
   entity.autocomplete_matcher:
     class: Drupal\Core\Entity\EntityAutocompleteMatcher
     arguments: ['@plugin.manager.entity_reference_selection']
+  plugin_form.factory:
+    class: Drupal\Core\Plugin\PluginFormFactory
+    arguments: ['@class_resolver']
   plugin.manager.entity_reference_selection:
     class: Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager
     parent: default_plugin_manager
