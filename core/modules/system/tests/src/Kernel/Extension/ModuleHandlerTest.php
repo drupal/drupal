@@ -3,7 +3,6 @@
 namespace Drupal\Tests\system\Kernel\Extension;
 
 use Drupal\Core\Extension\MissingDependencyException;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use \Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
@@ -34,16 +33,6 @@ class ModuleHandlerTest extends KernelTestBase {
     // drupal_get_filename().
     // @todo Remove as part of https://www.drupal.org/node/2186491
     system_rebuild_module_data();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function register(ContainerBuilder $container) {
-    parent::register($container);
-    // Put a fake route bumper on the container to be called during uninstall.
-    $container
-      ->register('router.dumper', 'Drupal\Core\Routing\NullMatcherDumper');
   }
 
   /**

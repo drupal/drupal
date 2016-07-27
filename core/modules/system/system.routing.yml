@@ -423,6 +423,14 @@ system.modules_uninstall_confirm:
   requirements:
     _permission: 'administer modules'
 
+system.prepare_modules_entity_uninstall:
+  path: '/admin/modules/uninstall/entity/{entity_type_id}'
+  defaults:
+    _form: '\Drupal\system\Form\PrepareModulesEntityUninstallForm'
+    _title_callback: '\Drupal\system\Form\PrepareModulesEntityUninstallForm::formTitle'
+  requirements:
+    _permission: 'administer modules'
+
 system.timezone:
   path: '/system/timezone/{abbreviation}/{offset}/{is_daylight_saving_time}'
   defaults:
