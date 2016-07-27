@@ -103,6 +103,30 @@ abstract class JavascriptTestBase extends BrowserTestBase {
   }
 
   /**
+   * Creates a screenshot.
+   *
+   * @param string $filename
+   *   The file name of the resulting screenshot. If using the default phantomjs
+   *   driver then this should be a JPG filename.
+   * @param bool $set_background_color
+   *   (optional) By default this method will set the background color to white.
+   *   Set to FALSE to override this behaviour.
+   *
+   * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+   *   When operation not supported by the driver.
+   * @throws \Behat\Mink\Exception\DriverException
+   *   When the operation cannot be done.
+   */
+  protected function createScreenshot($filename, $set_background_color = TRUE) {
+    $session = $this->getSession();
+    if ($set_background_color) {
+      $session->executeScript("document.body.style.backgroundColor = 'white';");
+    }
+    $image = $session->getScreenshot();
+    file_put_contents($filename, $image);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function assertSession($name = NULL) {
