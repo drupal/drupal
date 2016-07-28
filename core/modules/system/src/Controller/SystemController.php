@@ -307,7 +307,7 @@ class SystemController extends ControllerBase {
         $theme->notes[] = $this->t('default theme');
       }
       if ($theme->is_admin) {
-        $theme->notes[] = $this->t('admin theme');
+        $theme->notes[] = $this->t('administration theme');
       }
 
       // Sort installed and uninstalled themes into their own groups.

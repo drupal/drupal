@@ -223,7 +223,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
         throw new \InvalidArgumentException("The current default theme $key cannot be uninstalled.");
       }
       if ($key === $theme_config->get('admin')) {
-        throw new \InvalidArgumentException("The current admin theme $key cannot be uninstalled.");
+        throw new \InvalidArgumentException("The current administration theme $key cannot be uninstalled.");
       }
       // Base themes cannot be uninstalled if sub themes are installed, and if
       // they are not uninstalled at the same time.

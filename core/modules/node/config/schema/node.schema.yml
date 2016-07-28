@@ -6,7 +6,7 @@ node.settings:
   mapping:
     use_admin_theme:
       type: boolean
-      label: 'Use admin theme when editing or creating content'
+      label: 'Use administration theme when editing or creating content'
 
 node.type.*:
   type: config_entity
