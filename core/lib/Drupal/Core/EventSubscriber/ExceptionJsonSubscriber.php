@@ -28,6 +28,17 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
   }
 
   /**
+   * Handles a 400 error for JSON.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   *   The event to process.
+   */
+  public function on400(GetResponseForExceptionEvent $event) {
+    $response = new JsonResponse(array('message' => $event->getException()->getMessage()), Response::HTTP_BAD_REQUEST);
+    $event->setResponse($response);
+  }
+
+  /**
    * Handles a 403 error for JSON.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event

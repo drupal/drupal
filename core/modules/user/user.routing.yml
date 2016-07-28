@@ -129,6 +129,34 @@ user.login:
   options:
     _maintenance_access: TRUE
 
+user.login.http:
+  path: '/user/login'
+  defaults:
+    _controller: \Drupal\user\Controller\UserAuthenticationController::login
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: 'FALSE'
+    _format: 'json'
+
+user.login_status.http:
+  path: '/user/login_status'
+  defaults:
+    _controller: \Drupal\user\Controller\UserAuthenticationController::loginStatus
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    _format: 'json'
+
+user.logout.http:
+  path: '/user/logout'
+  defaults:
+    _controller: \Drupal\user\Controller\UserAuthenticationController::logout
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _format: 'json'
+    _csrf_token: 'TRUE'
+
 user.cancel_confirm:
   path: '/user/{user}/cancel/confirm/{timestamp}/{hashed_pass}'
   defaults:
