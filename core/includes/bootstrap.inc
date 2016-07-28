@@ -9,6 +9,8 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Render\Markup;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
@@ -435,15 +437,30 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *
  * @see drupal_get_messages()
  * @see status-messages.html.twig
- *
- * @deprecated Deprecated as of Drupal 8.2.
- *   Use \Drupal::service('messenger')->addMessage() instead.
  */
 function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) {
-  /* @var \Drupal\Core\Messenger\MessengerInterface $messenger */
-  $messenger = \Drupal::service('messenger');
-  $messenger->addMessage($message, $type, $repeat);
-  return $messenger->getMessages();
+  if (isset($message)) {
+    if (!isset($_SESSION['messages'][$type])) {
+      $_SESSION['messages'][$type] = array();
+    }
+
+    // Convert strings which are safe to the simplest Markup objects.
+    if (!($message instanceof Markup) && $message instanceof MarkupInterface) {
+      $message = Markup::create((string) $message);
+    }
+
+    // Do not use strict type checking so that equivalent string and
+    // MarkupInterface objects are detected.
+    if ($repeat || !in_array($message, $_SESSION['messages'][$type])) {
+      $_SESSION['messages'][$type][] = $message;
+    }
+
+    // Mark this page as being uncacheable.
+    \Drupal::service('page_cache_kill_switch')->trigger();
+  }
+
+  // Messages not set when DB connection fails.
+  return isset($_SESSION['messages']) ? $_SESSION['messages'] : NULL;
 }
 
 /**
@@ -470,19 +487,12 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
  *
  * @see drupal_set_message()
  * @see status-messages.html.twig
- *
- * @deprecated Deprecated as of Drupal 8.2.
- *   Use \Drupal::service('messenger')->getMessages() or
- *   \Drupal::service('messenger')->getMessagesByType() instead.
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
-  /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
-  $messenger = \Drupal::service('messenger');
-
-  if ($messages = $messenger->getMessages()) {
+  if ($messages = drupal_set_message()) {
     if ($type) {
       if ($clear_queue) {
-        $messenger->deleteMessagesByType($type);
+        unset($_SESSION['messages'][$type]);
       }
       if (isset($messages[$type])) {
         return array($type => $messages[$type]);
@@ -490,7 +500,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
     }
     else {
       if ($clear_queue) {
-        $messenger->deleteMessages();
+        unset($_SESSION['messages']);
       }
       return $messages;
     }

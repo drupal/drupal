@@ -5,7 +5,6 @@ namespace Drupal\Core\Installer;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
-use Drupal\Core\Messenger\StaticMessenger;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -35,9 +34,6 @@ class InstallerServiceProvider implements ServiceProviderInterface, ServiceModif
       ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
     $container
       ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueNullExpirableFactory');
-    $definition = $container->getDefinition('messenger');
-    $definition->setClass(StaticMessenger::class);
-    $definition->setArguments([new Reference('page_cache_kill_switch')]);
 
     // Replace services with no-op implementations.
     $container
