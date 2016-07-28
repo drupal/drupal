@@ -239,19 +239,8 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * method.
    */
   public function processDefinition(&$definition, $plugin_id) {
-    // Only arrays can be operated on.
-    if (!is_array($definition)) {
-      return;
-    }
-
     if (!empty($this->defaults) && is_array($this->defaults)) {
       $definition = NestedArray::mergeDeep($this->defaults, $definition);
-    }
-
-    // If no default form is defined and this plugin implements
-    // \Drupal\Core\Plugin\PluginFormInterface, use that for the default form.
-    if (!isset($definition['forms']['configure']) && isset($definition['class']) && is_subclass_of($definition['class'], PluginFormInterface::class)) {
-      $definition['forms']['configure'] = $definition['class'];
     }
   }
 
