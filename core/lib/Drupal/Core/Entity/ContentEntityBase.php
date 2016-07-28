@@ -1032,6 +1032,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       $this->clearTranslationCache();
       $translations = $this->translations;
       $this->translations = &$translations;
+
+      // Ensure the enforceIsNew property is actually cloned by overwriting the
+      // original reference with one pointing to a copy of it.
+      $enforce_is_new = $this->enforceIsNew;
+      $this->enforceIsNew = &$enforce_is_new;
     }
   }
 
