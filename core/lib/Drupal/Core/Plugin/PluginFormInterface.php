@@ -7,6 +7,10 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Provides an interface for an embeddable plugin form.
  *
+ * Plugins can implement this form directly, or a standalone class can be used.
+ * Decoupled forms can implement \Drupal\Component\Plugin\PluginAwareInterface
+ * in order to gain access to the plugin.
+ *
  * @ingroup plugin_api
  */
 interface PluginFormInterface {
