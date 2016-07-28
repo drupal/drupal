@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\ParamConverter;
 
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\Routing\Route;
 
@@ -32,13 +33,23 @@ class EntityRevisionParamConverter implements ParamConverterInterface {
   protected $entityTypeManager;
 
   /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * Creates a new EntityRevisionParamConverter instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -46,8 +57,8 @@ class EntityRevisionParamConverter implements ParamConverterInterface {
    */
   public function convert($value, $definition, $name, array $defaults) {
     list (, $entity_type_id) = explode(':', $definition['type'], 2);
-    $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
-    return $entity_storage->loadRevision($value);
+    $entity = $this->entityTypeManager->getStorage($entity_type_id)->loadRevision($value);
+    return $this->entityRepository->getTranslationFromContext($entity);
   }
 
   /**

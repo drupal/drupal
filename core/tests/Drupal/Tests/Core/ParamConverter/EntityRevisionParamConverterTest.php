@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\ParamConverter;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\ParamConverter\EntityRevisionParamConverter;
@@ -28,7 +29,10 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->converter = new EntityRevisionParamConverter($this->prophesize(EntityTypeManagerInterface::class)->reveal());
+    $this->converter = new EntityRevisionParamConverter(
+      $this->prophesize(EntityTypeManagerInterface::class)->reveal(),
+      $this->prophesize(EntityRepositoryInterface::class)->reveal()
+    );
   }
 
   protected function getTestRoute() {
@@ -67,7 +71,9 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
 
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type_manager->getStorage('test')->willReturn($storage->reveal());
-    $converter = new EntityRevisionParamConverter($entity_type_manager->reveal());
+    $entity_repository = $this->prophesize(EntityRepositoryInterface::class);
+    $entity_repository->getTranslationFromContext($entity)->willReturn($entity);
+    $converter = new EntityRevisionParamConverter($entity_type_manager->reveal(), $entity_repository->reveal());
 
     $route = $this->getTestRoute();
     $result = $converter->convert(1, $route->getOption('parameters')['test_revision'], 'test_revision', ['test_revision' => 1]);

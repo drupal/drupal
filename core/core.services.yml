@@ -940,7 +940,7 @@ services:
     class: Drupal\Core\ParamConverter\EntityRevisionParamConverter
     tags:
       - { name: paramconverter }
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@entity.repository']
   paramconverter.configentity_admin:
     class: Drupal\Core\ParamConverter\AdminPathConfigEntityConverter
     tags:
