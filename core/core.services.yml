@@ -1126,7 +1126,7 @@ services:
     arguments: ['@state', '@current_user']
   maintenance_mode_subscriber:
     class: Drupal\Core\EventSubscriber\MaintenanceModeSubscriber
-    arguments: ['@maintenance_mode', '@config.factory', '@string_translation', '@url_generator', '@current_user', '@bare_html_page_renderer']
+    arguments: ['@maintenance_mode', '@config.factory', '@string_translation', '@url_generator', '@current_user', '@bare_html_page_renderer', '@messenger']
     tags:
       - { name: event_subscriber }
   path_subscriber:
@@ -1631,3 +1631,6 @@ services:
     arguments: ['@current_user', '@path.current', '@path.matcher', '@language_manager']
     tags:
       - { name: event_subscriber }
+  messenger:
+    class: Drupal\Core\Messenger\SessionMessenger
+    arguments: ['@page_cache_kill_switch']
