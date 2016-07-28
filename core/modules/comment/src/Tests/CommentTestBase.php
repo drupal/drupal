@@ -111,7 +111,7 @@ abstract class CommentTestBase extends WebTestBase {
     $edit['comment_body[0][value]'] = $comment;
 
     if ($entity !== NULL) {
-      $field = FieldConfig::loadByName('node', $entity->bundle(), $field_name);
+      $field = FieldConfig::loadByName($entity->getEntityTypeId(), $entity->bundle(), $field_name);
     }
     else {
       $field = FieldConfig::loadByName('node', 'article', $field_name);
@@ -120,7 +120,7 @@ abstract class CommentTestBase extends WebTestBase {
 
     // Must get the page before we test for fields.
     if ($entity !== NULL) {
-      $this->drupalGet('comment/reply/node/' . $entity->id() . '/' . $field_name);
+      $this->drupalGet('comment/reply/' . $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $field_name);
     }
 
     // Determine the visibility of subject form field.
