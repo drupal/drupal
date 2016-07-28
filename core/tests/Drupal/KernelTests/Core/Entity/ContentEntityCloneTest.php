@@ -62,4 +62,31 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     }
   }
 
+  /**
+   * Tests that the flag for enforcing a new entity is not shared.
+   */
+  public function testEnforceIsNewOnClonedEntityTranslation() {
+    // Create a test entity.
+    $entity = EntityTestMul::create([
+      'name' => $this->randomString(),
+      'language' => 'en',
+    ]);
+    $entity->save();
+    $entity_translation = $entity->addTranslation('de');
+    $entity->save();
+
+    // The entity is not new anymore.
+    $this->assertFalse($entity_translation->isNew());
+
+    // The clone should not be new as well.
+    $clone = clone $entity_translation;
+    $this->assertFalse($clone->isNew());
+
+    // After enforcing the clone to be new only it should be flagged as new,
+    // but the original entity should not be flagged as new.
+    $clone->enforceIsNew();
+    $this->assertTrue($clone->isNew());
+    $this->assertFalse($entity_translation->isNew());
+  }
+
 }
