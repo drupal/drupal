@@ -87,4 +87,49 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $this->assertFalse($entity->hasTranslation('de'));
   }
 
+  /**
+   * Tests the translation values when saving a forward revision.
+   */
+  public function testTranslationValuesWhenSavingForwardRevisions() {
+    $user = $this->createUser();
+    $storage = $this->entityManager->getStorage('entity_test_mulrev');
+
+    // Create a test entity and a translation for it.
+    $entity = EntityTestMulRev::create([
+      'name' => 'default revision - en',
+      'user_id' => $user->id(),
+      'language' => 'en',
+    ]);
+    $entity->addTranslation('de', ['name' => 'default revision - de']);
+    $entity->save();
+
+    // Create a forward revision for the entity and change a field value for
+    // both languages.
+    $forward_revision = $this->reloadEntity($entity);
+
+    $forward_revision->setNewRevision();
+    $forward_revision->isDefaultRevision(FALSE);
+
+    $forward_revision->name = 'forward revision - en';
+    $forward_revision->save();
+
+    $forward_revision_translation = $forward_revision->getTranslation('de');
+    $forward_revision_translation->name = 'forward revision - de';
+    $forward_revision_translation->save();
+
+    $forward_revision_id = $forward_revision->getRevisionId();
+    $forward_revision = $storage->loadRevision($forward_revision_id);
+
+    // Change the value of the field in the default language, save the forward
+    // revision and check that the value of the field in the second language is
+    // also taken from the forward revision, *not* from the default revision.
+    $forward_revision->name = 'updated forward revision - en';
+    $forward_revision->save();
+
+    $forward_revision = $storage->loadRevision($forward_revision_id);
+
+    $this->assertEquals($forward_revision->name->value, 'updated forward revision - en');
+    $this->assertEquals($forward_revision->getTranslation('de')->name->value, 'forward revision - de');
+  }
+
 }

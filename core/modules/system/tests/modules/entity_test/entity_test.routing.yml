@@ -68,6 +68,19 @@ entity.entity_test_rev.revision:
   requirements:
     _access: 'TRUE'
 
+entity.entity_test_mulrev.revision:
+  path: '/entity_test_mulrev/{entity_test_mulrev}/revision/{entity_test_mulrev_revision}/view'
+  defaults:
+    _controller: '\Drupal\Core\Entity\Controller\EntityViewController::viewRevision'
+  options:
+    parameters:
+      entity_test_mulrev:
+        type: entity:entity_test_mulrev
+      entity_test_mulrev_revision:
+        type: entity_revision:entity_test_mulrev
+  requirements:
+    _access: 'TRUE'
+
 entity.block.test_operation:
   path: '/admin/structure/block/manage/{block}/test_operation'
   defaults:

@@ -445,4 +445,53 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     }
   }
 
+  /**
+   * Tests that revision translations are rendered properly.
+   */
+  public function testRevisionTranslationRendering() {
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+
+    // Create a node.
+    $nid = $this->createEntity(['title' => 'First rev en title'], 'en');
+    $node = $storage->load($nid);
+    $original_revision_id = $node->getRevisionId();
+
+    // Add a French translation.
+    $translation = $node->addTranslation('fr');
+    $translation->title = 'First rev fr title';
+    $translation->setNewRevision(FALSE);
+    $translation->save();
+
+    // Create a new revision.
+    $node->title = 'Second rev en title';
+    $node->setNewRevision(TRUE);
+    $node->save();
+
+    // Get an English view of this revision.
+    $original_revision = $storage->loadRevision($original_revision_id);
+    $original_revision_url = $original_revision->toUrl('revision')->toString();
+
+    // Should be different from regular node URL.
+    $this->assertNotIdentical($original_revision_url, $original_revision->toUrl()->toString());
+    $this->drupalGet($original_revision_url);
+    $this->assertResponse(200);
+
+    // Contents should be in English, of correct revision.
+    $this->assertText('First rev en title');
+    $this->assertNoText('First rev fr title');
+
+    // Get a French view.
+    $url_fr = $original_revision->getTranslation('fr')->toUrl('revision')->toString();
+
+    // Should have different URL from English.
+    $this->assertNotIdentical($url_fr, $original_revision->toUrl()->toString());
+    $this->assertNotIdentical($url_fr, $original_revision_url);
+    $this->drupalGet($url_fr);
+    $this->assertResponse(200);
+
+    // Contents should be in French, of correct revision.
+    $this->assertText('First rev fr title');
+    $this->assertNoText('First rev en title');
+  }
+
 }

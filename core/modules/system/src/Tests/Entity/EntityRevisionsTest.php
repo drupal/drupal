@@ -2,6 +2,8 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\entity_test\Entity\EntityTestMulRev;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -17,7 +19,7 @@ class EntityRevisionsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = array('entity_test', 'language');
 
   /**
    * A user with permission to administer entity_test content.
@@ -35,6 +37,9 @@ class EntityRevisionsTest extends WebTestBase {
       'view test entity',
     ));
     $this->drupalLogin($this->webUser);
+
+    // Enable an additional language.
+    ConfigurableLanguage::createFromLangcode('de')->save();
   }
 
   /**
@@ -111,6 +116,43 @@ class EntityRevisionsTest extends WebTestBase {
     $this->drupalGet($entity_type . '/manage/' . $entity->id->value . '/edit');
     $this->assertFieldById('edit-name-0-value', $entity->name->value, format_string('%entity_type: Name matches in UI.', array('%entity_type' => $entity_type)));
     $this->assertFieldById('edit-field-test-text-0-value', $entity->field_test_text->value, format_string('%entity_type: Text matches in UI.', array('%entity_type' => $entity_type)));
+  }
+
+  /**
+   * Tests that an entity revision is upcasted in the correct language.
+   */
+  public function testEntityRevisionParamConverter() {
+    // Create a test entity with multiple revisions and translations for them.
+    $entity = EntityTestMulRev::create([
+      'name' => 'default revision - en',
+      'user_id' => $this->webUser,
+      'language' => 'en',
+    ]);
+    $entity->addTranslation('de', ['name' => 'default revision - de']);
+    $entity->save();
+
+    $forward_revision = \Drupal::entityTypeManager()->getStorage('entity_test_mulrev')->loadUnchanged($entity->id());
+
+    $forward_revision->setNewRevision();
+    $forward_revision->isDefaultRevision(FALSE);
+
+    $forward_revision->name = 'forward revision - en';
+    $forward_revision->save();
+
+    $forward_revision_translation = $forward_revision->getTranslation('de');
+    $forward_revision_translation->name = 'forward revision - de';
+    $forward_revision_translation->save();
+
+    // Check that the entity revision is upcasted in the correct language.
+    $revision_url = 'entity_test_mulrev/' . $entity->id() . '/revision/' . $forward_revision->getRevisionId() . '/view';
+
+    $this->drupalGet($revision_url);
+    $this->assertText('forward revision - en');
+    $this->assertNoText('forward revision - de');
+
+    $this->drupalGet('de/' . $revision_url);
+    $this->assertText('forward revision - de');
+    $this->assertNoText('forward revision - en');
   }
 
 }
