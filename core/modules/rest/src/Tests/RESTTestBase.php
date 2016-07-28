@@ -176,6 +176,10 @@ abstract class RESTTestBase extends WebTestBase {
         break;
     }
 
+    if ($mime_type === 'none') {
+      unset($curl_options[CURLOPT_HTTPHEADER]['Content-Type']);
+    }
+
     $this->responseBody = $this->curlExec($curl_options);
 
     // Ensure that any changes to variables in the other thread are picked up.

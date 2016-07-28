@@ -29,6 +29,19 @@ class ExceptionHandlingTest extends KernelTestBase {
   }
 
   /**
+   * Tests on a route with a non-supported HTTP method.
+   */
+  public function test405() {
+    $request = Request::create('/router_test/test15', 'PATCH');
+
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
+    $kernel = \Drupal::getContainer()->get('http_kernel');
+    $response = $kernel->handle($request);
+
+    $this->assertEqual(Response::HTTP_METHOD_NOT_ALLOWED, $response->getStatusCode());
+  }
+
+  /**
    * Tests the exception handling for json and 403 status code.
    */
   public function testJson403() {

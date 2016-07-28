@@ -8,6 +8,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_test\Entity\EntityTest;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests the update of resources.
@@ -66,6 +67,12 @@ class UpdateTest extends RESTTestBase {
     // We don't want to overwrite the UUID.
     $patch_entity->set('uuid', NULL);
     $serialized = $serializer->serialize($patch_entity, $this->defaultFormat, $context);
+
+    // Update the entity over the REST API but forget to specify a Content-Type
+    // header, this should throw the proper exception.
+    $this->httpRequest($entity->toUrl(), 'PATCH', $serialized, 'none');
+    $this->assertResponse(Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
+    $this->assertRaw('No route found that matches &quot;Content-Type: none&quot;');
 
     // Update the entity over the REST API.
     $response = $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);

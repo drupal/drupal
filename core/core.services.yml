@@ -918,6 +918,10 @@ services:
     class: Drupal\Core\Routing\RequestFormatRouteFilter
     tags:
       - { name: route_filter }
+  method_filter:
+    class: Drupal\Core\Routing\MethodFilter
+    tags:
+      - { name: route_filter, priority: 1 }
   content_type_header_matcher:
     class: Drupal\Core\Routing\ContentTypeHeaderMatcher
     tags:

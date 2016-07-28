@@ -82,4 +82,15 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
     $event->setResponse($response);
   }
 
+  /**
+   * Handles a 415 error for JSON.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   *   The event to process.
+   */
+  public function on415(GetResponseForExceptionEvent $event) {
+    $response = new JsonResponse(['message' => $event->getException()->getMessage()], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
+    $event->setResponse($response);
+  }
+
 }
