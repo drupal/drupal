@@ -177,7 +177,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         )), 'error');
       return MigrationInterface::RESULT_FAILED;
     }
-    $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_IMPORT, new MigrateImportEvent($this->migration));
+    $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_IMPORT, new MigrateImportEvent($this->migration, $this->message));
 
     // Knock off migration if the requirements haven't been met.
     try {
@@ -229,9 +229,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
       if ($save) {
         try {
-          $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_ROW_SAVE, new MigratePreRowSaveEvent($this->migration, $row));
+          $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_ROW_SAVE, new MigratePreRowSaveEvent($this->migration, $this->message, $row));
           $destination_id_values = $destination->import($row, $id_map->lookupDestinationId($this->sourceIdValues));
-          $this->getEventDispatcher()->dispatch(MigrateEvents::POST_ROW_SAVE, new MigratePostRowSaveEvent($this->migration, $row, $destination_id_values));
+          $this->getEventDispatcher()->dispatch(MigrateEvents::POST_ROW_SAVE, new MigratePostRowSaveEvent($this->migration, $this->message, $row, $destination_id_values));
           if ($destination_id_values) {
             // We do not save an idMap entry for config.
             if ($destination_id_values !== TRUE) {
@@ -288,7 +288,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       }
     }
 
-    $this->getEventDispatcher()->dispatch(MigrateEvents::POST_IMPORT, new MigrateImportEvent($this->migration));
+    $this->getEventDispatcher()->dispatch(MigrateEvents::POST_IMPORT, new MigrateImportEvent($this->migration, $this->message));
     $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
     return $return;
   }
