@@ -116,16 +116,6 @@ class DefaultExceptionSubscriber extends HttpExceptionSubscriberBase {
   }
 
   /**
-   * Handles a 429 error for HTTP.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on429(GetResponseForExceptionEvent $event) {
-    $this->setEventResponse($event, Response::HTTP_TOO_MANY_REQUESTS);
-  }
-
-  /**
    * Sets the Response for the exception event.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
