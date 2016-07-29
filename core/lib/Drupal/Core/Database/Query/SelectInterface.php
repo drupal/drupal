@@ -340,6 +340,12 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   An array of arguments to replace into the $condition of this join.
    * @return
    *   The unique alias that was assigned for this table.
+   *
+   * @deprecated as of Drupal 8.1.x, will be removed in Drupal 9.0.0. Instead,
+   *   change the query to use leftJoin(). For instance:
+   *   db_query('A')->rightJoin('B') is identical to
+   *   db_query('B')->leftJoin('A'). This functionality has been deprecated
+   *   because SQLite does not support it.
    */
   public function rightJoin($table, $alias = NULL, $condition = NULL, $arguments = array());
 
