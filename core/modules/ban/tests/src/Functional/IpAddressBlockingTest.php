@@ -3,6 +3,8 @@
 namespace Drupal\Tests\ban\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\Database\Database;
+use Drupal\ban\BanIpManager;
 
 /**
  * Tests IP address banning.
@@ -73,6 +75,28 @@ class IpAddressBlockingTest extends BrowserTestBase {
     // $edit['ip'] = \Drupal::request()->getClientIP();
     // $this->drupalPostForm('admin/config/people/ban', $edit, t('Save'));
     // $this->assertText(t('You may not ban your own IP address.'));
+
+    // Test duplicate ip address are not present in the 'blocked_ips' table.
+    // when they are entered programmatically.
+    $connection = Database::getConnection();
+    $banIp = new BanIpManager($connection);
+    $ip = '1.0.0.0';
+    $banIp->banIp($ip);
+    $banIp->banIp($ip);
+    $banIp->banIp($ip);
+    $query = db_select('ban_ip', 'bip');
+    $query->fields('bip', array('iid'));
+    $query->condition('bip.ip', $ip);
+    $ip_count = $query->execute()->fetchAll();
+    $this->assertEqual(1, count($ip_count));
+    $ip = '';
+    $banIp->banIp($ip);
+    $banIp->banIp($ip);
+    $query = db_select('ban_ip', 'bip');
+    $query->fields('bip', array('iid'));
+    $query->condition('bip.ip', $ip);
+    $ip_count = $query->execute()->fetchAll();
+    $this->assertEqual(1, count($ip_count));
   }
 
 }
