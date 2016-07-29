@@ -55,9 +55,28 @@ class ReadTest extends RESTTestBase {
       // Create an entity programmatically.
       $entity = $this->entityCreate($entity_type);
       $entity->save();
+
+      // Verify that it exists: use a HEAD request.
+      $this->httpRequest($this->getReadUrl($entity), 'HEAD');
+      $this->assertResponseBody('');
+      $head_headers = $this->drupalGetHeaders();
+
       // Read it over the REST API.
       $response = $this->httpRequest($this->getReadUrl($entity), 'GET');
+      $get_headers = $this->drupalGetHeaders();
       $this->assertResponse('200', 'HTTP response code is correct.');
+
+      // Verify that the GET and HEAD responses are the same, that the only
+      // difference is that there's no body.
+      unset($get_headers['date']);
+      unset($head_headers['date']);
+      unset($get_headers['content-length']);
+      unset($head_headers['content-length']);
+      unset($get_headers['x-drupal-dynamic-cache']);
+      unset($head_headers['x-drupal-dynamic-cache']);
+      $this->assertIdentical($get_headers, $head_headers);
+      $this->assertResponse('200', 'HTTP response code is correct.');
+
       $this->assertHeader('content-type', $this->defaultMimeType);
       $data = Json::decode($response);
       // Only assert one example property here, other properties should be

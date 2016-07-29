@@ -2,6 +2,7 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 
@@ -19,7 +20,7 @@ class PageCacheTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'entity_test');
+  public static $modules = array('hal');
 
   /**
    * The 'serializer' service.
@@ -133,6 +134,33 @@ class PageCacheTest extends RESTTestBase {
     if ($this->getCacheHeaderValues('x-drupal-cache')) {
       $this->fail('Patch request is cached.');
     }
+  }
+
+  /**
+   * Tests HEAD support when a REST resource supports GET.
+   */
+  public function testHeadSupport() {
+    user_role_grant_permissions('anonymous', ['view test entity', 'restful get entity:entity_test']);
+
+    // Create an entity programatically.
+    $this->entityCreate('entity_test')->save();
+
+    $url = Url::fromUri('internal:/entity_test/1?_format=' . $this->defaultFormat);
+
+    $this->enableService('entity:entity_test', 'GET');
+
+    $this->httpRequest($url, 'HEAD', NULL, $this->defaultMimeType);
+    $this->assertResponse(200, 'HTTP response code is correct.');
+    $this->assertHeader('X-Drupal-Cache', 'MISS');
+    $this->assertResponseBody('');
+
+    $response = $this->httpRequest($url, 'GET', NULL, $this->defaultMimeType);
+    $this->assertResponse(200, 'HTTP response code is correct.');
+    $this->assertHeader('X-Drupal-Cache', 'HIT');
+    $this->assertCacheTag('config:rest.resource.entity.entity_test');
+    $this->assertCacheTag('entity_test:1');
+    $data = Json::decode($response);
+    $this->assertEqual($data['type'][0]['value'], 'entity_test');
   }
 
 }
