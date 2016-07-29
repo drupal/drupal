@@ -356,6 +356,10 @@ class CreateTest extends RESTTestBase {
   public function assertCreateEntityOverRestApi($entity_type, $serialized = NULL) {
     // Note: this will fail with PHP 5.6 when always_populate_raw_post_data is
     // set to something other than -1. See https://www.drupal.org/node/2456025.
+    // Try first without the CSRF token, which should fail.
+    $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, $this->defaultMimeType, TRUE);
+    $this->assertResponse(403, 'X-CSRF-Token request header is missing');
+    // Then try with the CSRF token.
     $response = $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, $this->defaultMimeType);
     $this->assertResponse(201);
 

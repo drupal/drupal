@@ -102,7 +102,7 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
       //   Kept here for sessions active during update.
       if (!$this->csrfToken->validate($csrf_token, self::TOKEN_KEY)
         && !$this->csrfToken->validate($csrf_token, 'rest')) {
-        return AccessResult::forbidden()->setCacheMaxAge(0);
+        return AccessResult::forbidden()->setReason('X-CSRF-Token request header is missing')->setCacheMaxAge(0);
       }
     }
     // Let other access checkers decide if the request is legit.

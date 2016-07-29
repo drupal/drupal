@@ -85,11 +85,13 @@ abstract class RESTTestBase extends WebTestBase {
    *   The body for POST and PUT.
    * @param string $mime_type
    *   The MIME type of the transmitted content.
+   * @param bool $forget_xcsrf_token
+   *   If TRUE, the CSRF token won't be included in request.
    *
    * @return string
    *   The content returned from the request.
    */
-  protected function httpRequest($url, $method, $body = NULL, $mime_type = NULL) {
+  protected function httpRequest($url, $method, $body = NULL, $mime_type = NULL, $forget_xcsrf_token = FALSE) {
     if (!isset($mime_type)) {
       $mime_type = $this->defaultMimeType;
     }
@@ -130,9 +132,11 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_POSTFIELDS => $body,
           CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => array(
+          CURLOPT_HTTPHEADER => !$forget_xcsrf_token ? array(
             'Content-Type: ' . $mime_type,
             'X-CSRF-Token: ' . $token,
+          ) : array(
+            'Content-Type: ' . $mime_type,
           ),
         );
         break;
@@ -144,9 +148,11 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_POSTFIELDS => $body,
           CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => array(
+          CURLOPT_HTTPHEADER => !$forget_xcsrf_token ? array(
             'Content-Type: ' . $mime_type,
             'X-CSRF-Token: ' . $token,
+          ) : array(
+            'Content-Type: ' . $mime_type,
           ),
         );
         break;
@@ -158,9 +164,11 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_POSTFIELDS => $body,
           CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => array(
+          CURLOPT_HTTPHEADER => !$forget_xcsrf_token ? array(
             'Content-Type: ' . $mime_type,
             'X-CSRF-Token: ' . $token,
+          ) : array(
+            'Content-Type: ' . $mime_type,
           ),
         );
         break;
@@ -171,7 +179,7 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_CUSTOMREQUEST => 'DELETE',
           CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => array('X-CSRF-Token: ' . $token),
+          CURLOPT_HTTPHEADER => !$forget_xcsrf_token ? array('X-CSRF-Token: ' . $token) : array(),
         );
         break;
     }

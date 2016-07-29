@@ -3,6 +3,7 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\Request;
@@ -105,7 +106,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
       $request->attributes->set(AccessAwareRouterInterface::ACCESS_RESULT, $access_result);
     }
     if (!$access_result->isAllowed()) {
-      throw new AccessDeniedHttpException();
+      throw new AccessDeniedHttpException($access_result instanceof AccessResultReasonInterface ? $access_result->getReason() : NULL);
     }
   }
 

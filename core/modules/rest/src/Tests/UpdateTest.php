@@ -374,6 +374,11 @@ class UpdateTest extends RESTTestBase {
     }
     $serialized = $serializer->serialize($normalized, $format, $context);
 
+    // Try first without CSRF token which should fail.
+    $this->httpRequest($url, 'PATCH', $serialized, $mime_type, TRUE);
+    $this->assertResponse(403, 'X-CSRF-Token request header is missing');
+
+    // Then try with CSRF token.
     $this->httpRequest($url, 'PATCH', $serialized, $mime_type);
     $this->assertResponse(200);
   }
