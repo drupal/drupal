@@ -173,12 +173,7 @@ class MenuForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $menu = $this->entity;
-    if (!$menu->isNew() || $menu->isLocked()) {
-      $this->submitOverviewForm($form, $form_state);
-    }
-
     $status = $menu->save();
-
     $edit_link = $this->entity->link($this->t('Edit'));
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('Menu %label has been updated.', array('%label' => $menu->label())));
@@ -190,6 +185,17 @@ class MenuForm extends EntityForm {
     }
 
     $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+
+    if (!$this->entity->isNew() || $this->entity->isLocked()) {
+      $this->submitOverviewForm($form, $form_state);
+    }
   }
 
   /**
