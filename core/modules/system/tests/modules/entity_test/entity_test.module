@@ -114,6 +114,11 @@ function entity_test_entity_base_field_info(EntityTypeInterface $entity_type) {
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
   }
+  if ($entity_type->id() == 'entity_test_mulrev' && \Drupal::state()->get('entity_test.multi_column')) {
+    $fields['description'] = BaseFieldDefinition::create('shape')
+      ->setLabel(t('Some custom description'))
+      ->setTranslatable(TRUE);
+  }
 
   return $fields;
 }
