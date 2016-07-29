@@ -174,4 +174,37 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
     $this->assertEquals($expected_non_rev_field_revision_ids, $non_rev_field_revision_ids, 'Revision ids found');
   }
 
+  /**
+   * Tests multi column non revisionable base field for revisionable entity.
+   */
+  public function testMultiColumnNonRevisionableBaseField() {
+    \Drupal::state()->set('entity_test.multi_column', TRUE);
+    \Drupal::entityDefinitionUpdateManager()->applyUpdates();
+    // Refresh the storage.
+    $this->mulRev = $this->entityManager->getStorage('entity_test_mulrev');
+    $user1 = $this->createUser();
+
+    // Create a test entity.
+    $entity = EntityTestMulRev::create([
+      'name' => $this->randomString(),
+      'user_id' => $user1->id(),
+      'language' => 'en',
+      'non_rev_field' => 'Huron',
+      'description' => [
+        'shape' => 'shape',
+        'color' => 'color',
+      ],
+    ]);
+    $entity->save();
+    $entity = $this->mulRev->loadUnchanged($entity->id());
+    $expected = [
+      [
+        'shape' => 'shape',
+        'color' => 'color',
+      ],
+    ];
+    $this->assertEquals('Huron', $entity->get('non_rev_field')->value, 'Huron found on entity 1');
+    $this->assertEquals($expected, $entity->description->getValue());
+  }
+
 }
