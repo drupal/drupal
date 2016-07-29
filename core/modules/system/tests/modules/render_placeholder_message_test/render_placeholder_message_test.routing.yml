@@ -1,0 +1,24 @@
+render_placeholder_message_test.first:
+  path: '/render_placeholder_message_test/first'
+  defaults:
+    _controller: '\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::messagesPlaceholderFirst'
+  requirements:
+    _access: 'TRUE'
+render_placeholder_message_test.middle:
+  path: '/render_placeholder_message_test/middle'
+  defaults:
+    _controller: '\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::messagesPlaceholderMiddle'
+  requirements:
+    _access: 'TRUE'
+render_placeholder_message_test.last:
+  path: '/render_placeholder_message_test/last'
+  defaults:
+    _controller: '\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::messagesPlaceholderLast'
+  requirements:
+    _access: 'TRUE'
+render_placeholder_message_test.queued:
+  path: '/render_placeholder_message_test/queued'
+  defaults:
+    _controller: '\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::queuedMessages'
+  requirements:
+    _access: 'TRUE'

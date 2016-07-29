@@ -134,7 +134,7 @@ class BigPipe implements BigPipeInterface {
     $pre_body = implode('', $parts);
 
     $this->sendPreBody($pre_body, $nojs_placeholders, $cumulative_assets);
-    $this->sendPlaceholders($placeholders, $this->getPlaceholderOrder($pre_body), $cumulative_assets);
+    $this->sendPlaceholders($placeholders, $this->getPlaceholderOrder($pre_body, $placeholders), $cumulative_assets);
     $this->sendPostBody($post_body);
 
     // Close the session again.
@@ -534,6 +534,9 @@ EOF;
    *
    * @param string $html
    *   HTML markup.
+   * @param array $placeholders
+   *   Associative array; the BigPipe placeholders. Keys are the BigPipe
+   *   placeholder IDs.
    *
    * @return array
    *   Indexed array; the order in which the BigPipe placeholders must be sent.
@@ -541,18 +544,45 @@ EOF;
    *   placeholders are kept: if the same placeholder occurs multiple times, we
    *   only keep the first occurrence.
    */
-  protected function getPlaceholderOrder($html) {
+  protected function getPlaceholderOrder($html, $placeholders) {
     $fragments = explode('<div data-big-pipe-placeholder-id="', $html);
     array_shift($fragments);
-    $order = [];
+    $placeholder_ids = [];
 
     foreach ($fragments as $fragment) {
       $t = explode('"></div>', $fragment, 2);
-      $placeholder = $t[0];
-      $order[] = $placeholder;
+      $placeholder_id = $t[0];
+      $placeholder_ids[] = $placeholder_id;
+    }
+    $placeholder_ids = array_unique($placeholder_ids);
+
+    // The 'status messages' placeholder needs to be special cased, because it
+    // depends on global state that can be modified when other placeholders are
+    // being rendered: any code can add messages to render.
+    // This violates the principle that each lazy builder must be able to render
+    // itself in isolation, and therefore in any order. However, we cannot
+    // change the way drupal_set_message() works in the Drupal 8 cycle. So we
+    // have to accommodate its special needs.
+    // Allowing placeholders to be rendered in a particular order (in this case:
+    // last) would violate this isolation principle. Thus a monopoly is granted
+    // to this one special case, with this hard-coded solution.
+    // @see \Drupal\Core\Render\Element\StatusMessages
+    // @see \Drupal\Core\Render\Renderer::replacePlaceholders()
+    // @see https://www.drupal.org/node/2712935#comment-11368923
+    $message_placeholder_ids = [];
+    foreach ($placeholders as $placeholder_id => $placeholder_element) {
+      if (isset($placeholder_element['#lazy_builder']) && $placeholder_element['#lazy_builder'][0] === 'Drupal\Core\Render\Element\StatusMessages::renderMessages') {
+        $message_placeholder_ids[] = $placeholder_id;
+      }
     }
 
-    return array_unique($order);
+    // Return placeholder IDs in DOM order, but with the 'status messages'
+    // placeholders at the end, if they are present.
+    $ordered_placeholder_ids = array_merge(
+      array_diff($placeholder_ids, $message_placeholder_ids),
+      array_intersect($placeholder_ids, $message_placeholder_ids)
+    );
+    return $ordered_placeholder_ids;
   }
 
 }

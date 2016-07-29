@@ -170,6 +170,11 @@ class BigPipeTest extends WebTestBase {
       $cases['edge_case__html_non_lazy_builder']->bigPipePlaceholderId => Json::encode($cases['edge_case__html_non_lazy_builder']->embeddedAjaxResponseCommands),
       $cases['exception__lazy_builder']->bigPipePlaceholderId          => NULL,
       $cases['exception__embedded_response']->bigPipePlaceholderId     => NULL,
+    ], [
+      0 => $cases['edge_case__html_non_lazy_builder']->bigPipePlaceholderId,
+      // The 'html' case contains the 'status messages' placeholder, which is
+      // always rendered last.
+      1 => $cases['html']->bigPipePlaceholderId,
     ]);
 
     $this->assertRaw('</body>', 'Closing body tag present.');
@@ -336,8 +341,11 @@ class BigPipeTest extends WebTestBase {
    *
    * @param array $expected_big_pipe_placeholders
    *   Keys: BigPipe placeholder IDs. Values: expected AJAX response.
+   * @param array $expected_big_pipe_placeholder_stream_order
+   *   Keys: BigPipe placeholder IDs. Values: expected AJAX response. Keys are
+   *   defined in the order that they are expected to be rendered & streamed.
    */
-  protected function assertBigPipePlaceholders(array $expected_big_pipe_placeholders) {
+  protected function assertBigPipePlaceholders(array $expected_big_pipe_placeholders, array $expected_big_pipe_placeholder_stream_order) {
     $this->pass('Verifying BigPipe placeholders & replacements…', 'Debug');
     $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders), explode(' ', $this->drupalGetHeader('BigPipe-Test-Placeholders')));
     $placeholder_positions = [];
@@ -365,8 +373,12 @@ class BigPipeTest extends WebTestBase {
     ksort($placeholder_positions, SORT_NUMERIC);
     $this->assertEqual(array_keys($expected_big_pipe_placeholders), array_values($placeholder_positions));
     $this->assertEqual(count($expected_big_pipe_placeholders), preg_match_all('/' . preg_quote('<div data-big-pipe-placeholder-id="', '/') . '/', $this->getRawContent()));
-    $expected_big_pipe_placeholders_with_replacements = array_filter($expected_big_pipe_placeholders);
-    $this->assertEqual(array_keys($expected_big_pipe_placeholders_with_replacements), array_values($placeholder_replacement_positions));
+    $expected_big_pipe_placeholders_with_replacements = [];
+    foreach ($expected_big_pipe_placeholder_stream_order as $big_pipe_placeholder_id) {
+      $expected_big_pipe_placeholders_with_replacements[$big_pipe_placeholder_id] = $expected_big_pipe_placeholders[$big_pipe_placeholder_id];
+    }
+    $this->assertEqual($expected_big_pipe_placeholders_with_replacements, array_filter($expected_big_pipe_placeholders));
+    $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders_with_replacements), array_values($placeholder_replacement_positions));
     $this->assertEqual(count($expected_big_pipe_placeholders_with_replacements), preg_match_all('/' . preg_quote('<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="', '/') . '/', $this->getRawContent()));
 
     $this->pass('Verifying BigPipe start/stop signals…', 'Debug');
