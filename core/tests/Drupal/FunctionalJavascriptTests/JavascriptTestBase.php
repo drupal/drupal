@@ -3,6 +3,7 @@
 namespace Drupal\FunctionalJavascriptTests;
 
 use Drupal\Tests\BrowserTestBase;
+use Zumba\GastonJS\Exception\DeadClient;
 use Zumba\Mink\Driver\PhantomJSDriver;
 
 /**
@@ -30,7 +31,16 @@ abstract class JavascriptTestBase extends BrowserTestBase {
     if (!file_exists($path)) {
       mkdir($path);
     }
-    return parent::initMink();
+
+    try {
+      return parent::initMink();
+    }
+    catch (DeadClient $e) {
+      $this->markTestSkipped('PhantomJS is either not installed or not running. Start it via phantomjs --ssl-protocol=any --ignore-ssl-errors=true vendor/jcalderonzumba/gastonjs/src/Client/main.js 8510 1024 768&');
+    }
+    catch (Exception $e) {
+      $this->markTestSkipped('An unexpected error occurred while starting Mink: ' . $e->getMessage());
+    }
   }
 
   /**
