@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
+use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -352,7 +353,30 @@ class BlockForm extends EntityForm {
     // Update the original form values.
     $form_state->setValue('settings', $settings->getValues());
 
-    // Submit visibility condition settings.
+    $this->submitVisibility($form, $form_state);
+
+    // Save the settings of the plugin.
+    $entity->save();
+
+    drupal_set_message($this->t('The block configuration has been saved.'));
+    $form_state->setRedirect(
+      'block.admin_display_theme',
+      array(
+        'theme' => $form_state->getValue('theme'),
+      ),
+      array('query' => array('block-placement' => Html::getClass($this->entity->id())))
+    );
+  }
+
+  /**
+   * Helper function to independently submit the visibility UI.
+   *
+   * @param array $form
+   *   A nested array form elements comprising the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function submitVisibility(array $form, FormStateInterface $form_state) {
     foreach ($form_state->getValue('visibility') as $condition_id => $values) {
       // Allow the condition to submit the form.
       $condition = $form_state->get(['conditions', $condition_id]);
@@ -367,20 +391,8 @@ class BlockForm extends EntityForm {
       $condition_configuration = $condition->getConfiguration();
       $form_state->setValue(['visibility', $condition_id], $condition_configuration);
       // Update the visibility conditions on the block.
-      $entity->getVisibilityConditions()->addInstanceId($condition_id, $condition_configuration);
+      $this->entity->getVisibilityConditions()->addInstanceId($condition_id, $condition_configuration);
     }
-
-    // Save the settings of the plugin.
-    $entity->save();
-
-    drupal_set_message($this->t('The block configuration has been saved.'));
-    $form_state->setRedirect(
-      'block.admin_display_theme',
-      array(
-        'theme' => $form_state->getValue('theme'),
-      ),
-      array('query' => array('block-placement' => Html::getClass($this->entity->id())))
-    );
   }
 
   /**
@@ -425,7 +437,10 @@ class BlockForm extends EntityForm {
    *   The plugin form for the block.
    */
   protected function getPluginForm(BlockPluginInterface $block) {
-    return $this->pluginFormFactory->createInstance($block, 'configure');
+    if ($block instanceof PluginWithFormsInterface) {
+      return $this->pluginFormFactory->createInstance($block, 'configure');
+    }
+    return $block;
   }
 
 }
