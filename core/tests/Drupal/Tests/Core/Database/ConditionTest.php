@@ -39,7 +39,7 @@ class ConditionTest extends UnitTestCase {
     $condition->condition('name', ['value']);
     $condition->compile($connection, $query_placeholder);
 
-    $this->assertEquals(' (name = :db_condition_placeholder_0) ', $condition->__toString());
+    $this->assertEquals('name = :db_condition_placeholder_0', $condition->__toString());
     $this->assertEquals([':db_condition_placeholder_0' => 'value'], $condition->arguments());
   }
 
@@ -96,28 +96,28 @@ class ConditionTest extends UnitTestCase {
     // aren't directly supported by core, but instead need manual handling with
     // prefix/suffix at the moment.
     $data = [];
-    $data[] = [' (name = :db_condition_placeholder_0) ', 'name', 'value', '='];
-    $data[] = [' (name != :db_condition_placeholder_0) ', 'name', 'value', '!='];
-    $data[] = [' (name <> :db_condition_placeholder_0) ', 'name', 'value', '<>'];
-    $data[] = [' (name >= :db_condition_placeholder_0) ', 'name', 'value', '>='];
-    $data[] = [' (name > :db_condition_placeholder_0) ', 'name', 'value', '>'];
-    $data[] = [' (name <= :db_condition_placeholder_0) ', 'name', 'value', '<='];
-    $data[] = [' (name < :db_condition_placeholder_0) ', 'name', 'value', '<'];
-    // $data[] = [' ( GREATEST (1, 2, 3) ) ', '', [1, 2, 3], 'GREATEST'];
-    $data[] = [' (name IN  (:db_condition_placeholder_0, :db_condition_placeholder_1, :db_condition_placeholder_2)) ', 'name', ['1', '2', '3'], 'IN'];
-    $data[] = [' (name NOT IN  (:db_condition_placeholder_0, :db_condition_placeholder_1, :db_condition_placeholder_2)) ', 'name', ['1', '2', '3'], 'NOT IN'];
-    // $data[] = [' ( INTERVAL (1, 2, 3) ) ', '', [1, 2, 3], 'INTERVAL'];
-    $data[] = [' (name IS NULL ) ', 'name', NULL, 'IS NULL'];
-    $data[] = [' (name IS NOT NULL ) ', 'name', NULL, 'IS NOT NULL'];
-    $data[] = [' (name IS :db_condition_placeholder_0) ', 'name', 'TRUE', 'IS'];
-    // $data[] = [' ( LEAST (1, 2, 3) ) ', '', [1, 2, 3], 'LEAST'];
-    $data[] = [" (name LIKE :db_condition_placeholder_0 ESCAPE '\\\\') ", 'name', '%muh%', 'LIKE', [':db_condition_placeholder_0' => '%muh%']];
-    $data[] = [" (name NOT LIKE :db_condition_placeholder_0 ESCAPE '\\\\') ", 'name', '%muh%', 'NOT LIKE', [':db_condition_placeholder_0' => '%muh%']];
-    $data[] = [" (name BETWEEN :db_condition_placeholder_0 AND :db_condition_placeholder_1) ", 'name', [1, 2], 'BETWEEN', [':db_condition_placeholder_0' => 1, ':db_condition_placeholder_1' => 2]];
-    $data[] = [" (name NOT BETWEEN :db_condition_placeholder_0 AND :db_condition_placeholder_1) ", 'name', [1, 2], 'NOT BETWEEN', [':db_condition_placeholder_0' => 1, ':db_condition_placeholder_1' => 2]];
-    // $data[] = [' ( STRCMP (name, :db_condition_placeholder_0) ) ', '', ['test-string'], 'STRCMP', [':db_condition_placeholder_0' => 'test-string']];
-    // $data[] = [' (EXISTS ) ', '', NULL, 'EXISTS'];
-    // $data[] = [' (name NOT EXISTS ) ', 'name', NULL, 'NOT EXISTS'];
+    $data[] = ['name = :db_condition_placeholder_0', 'name', 'value', '='];
+    $data[] = ['name != :db_condition_placeholder_0', 'name', 'value', '!='];
+    $data[] = ['name <> :db_condition_placeholder_0', 'name', 'value', '<>'];
+    $data[] = ['name >= :db_condition_placeholder_0', 'name', 'value', '>='];
+    $data[] = ['name > :db_condition_placeholder_0', 'name', 'value', '>'];
+    $data[] = ['name <= :db_condition_placeholder_0', 'name', 'value', '<='];
+    $data[] = ['name < :db_condition_placeholder_0', 'name', 'value', '<'];
+    // $data[] = ['GREATEST (1, 2, 3)', '', [1, 2, 3], 'GREATEST'];
+    $data[] = ['name IN (:db_condition_placeholder_0, :db_condition_placeholder_1, :db_condition_placeholder_2)', 'name', ['1', '2', '3'], 'IN'];
+    $data[] = ['name NOT IN (:db_condition_placeholder_0, :db_condition_placeholder_1, :db_condition_placeholder_2)', 'name', ['1', '2', '3'], 'NOT IN'];
+    // $data[] = ['INTERVAL (1, 2, 3)', '', [1, 2, 3], 'INTERVAL'];
+    $data[] = ['name IS NULL', 'name', NULL, 'IS NULL'];
+    $data[] = ['name IS NOT NULL', 'name', NULL, 'IS NOT NULL'];
+    $data[] = ['name IS :db_condition_placeholder_0', 'name', 'TRUE', 'IS'];
+    // $data[] = ['LEAST (1, 2, 3)', '', [1, 2, 3], 'LEAST'];
+    $data[] = ["name LIKE :db_condition_placeholder_0 ESCAPE '\\\\'", 'name', '%muh%', 'LIKE', [':db_condition_placeholder_0' => '%muh%']];
+    $data[] = ["name NOT LIKE :db_condition_placeholder_0 ESCAPE '\\\\'", 'name', '%muh%', 'NOT LIKE', [':db_condition_placeholder_0' => '%muh%']];
+    $data[] = ["name BETWEEN :db_condition_placeholder_0 AND :db_condition_placeholder_1", 'name', [1, 2], 'BETWEEN', [':db_condition_placeholder_0' => 1, ':db_condition_placeholder_1' => 2]];
+    $data[] = ["name NOT BETWEEN :db_condition_placeholder_0 AND :db_condition_placeholder_1", 'name', [1, 2], 'NOT BETWEEN', [':db_condition_placeholder_0' => 1, ':db_condition_placeholder_1' => 2]];
+    // $data[] = ['STRCMP (name, :db_condition_placeholder_0)', '', ['test-string'], 'STRCMP', [':db_condition_placeholder_0' => 'test-string']];
+    // $data[] = ['EXISTS', '', NULL, 'EXISTS'];
+    // $data[] = ['name NOT EXISTS', 'name', NULL, 'NOT EXISTS'];
 
     return $data;
   }

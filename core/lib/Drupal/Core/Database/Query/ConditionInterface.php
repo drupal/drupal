@@ -12,12 +12,20 @@ interface ConditionInterface {
   /**
    * Helper function: builds the most common conditional clauses.
    *
-   * This method can take a variable number of parameters. If called with two
-   * parameters, they are taken as $field and $value with $operator having a
-   * value of =.
+   * This method takes 1 to 3 parameters.
+   *
+   * If called with 1 parameter, it should be a ConditionInterface that in
+   * itself forms a valid where clause. Use e.g. to build clauses with nested
+   * AND's and OR's.
+   *
+   * If called with 2 parameters, they are taken as $field and $value with
+   * $operator having a value of =.
    *
    * Do not use this method to test for NULL values. Instead, use
    * QueryConditionInterface::isNull() or QueryConditionInterface::isNotNull().
+   *
+   * To improve readability, the operators EXISTS and NOT EXISTS have their own
+   * utility method defined.
    *
    * Drupal considers LIKE case insensitive and the following is often used
    * to tell the database that case insensitive equivalence is desired:
@@ -32,33 +40,43 @@ interface ConditionInterface {
    * be case sensitive and when a case insensitive collation is used, the =
    * operator will also be case insensitive.
    *
-   * @param $field
-   *   The name of the field to check. If you would like to add a more complex
-   *   condition involving operators or functions, use where().
-   * @param $value
-   *   The value to test the field against. In most cases, this is a scalar.
-   *   For more complex options, it is an array. The meaning of each element in
-   *   the array is dependent on the $operator.
-   * @param $operator
-   *   The comparison operator, such as =, <, or >=. It also accepts more
-   *   complex options such as IN, LIKE, LIKE BINARY, or BETWEEN. Defaults to =.
+   * @param string|\Drupal\Core\Database\Query\ConditionInterface $field
+   *   The name of the field to check. This can also be QueryConditionInterface
+   *   in itself. Use where() if you would like to add a more complex condition
+   *   involving operators or functions, or an already compiled condition.
+   * @param string|array|\Drupal\Core\Database\Query\SelectInterface|null $value
+   *   The value to test the field against. In most cases, and depending on the
+   *   operator, this will be a scalar or an array. As SQL accepts select
+   *   queries on any place where a scalar value or set is expected, $value may
+   *   also be a(n array of) SelectInterface(s). If $operator is a unary
+   *   operator, e.g. EXISTS, $value will be ignored and should be null.
+   * @param string|null $operator
+   *   The operator to use. Supported for all supported databases are at least:
+   *   - The comparison operators =, <>, <, <=, >, >=.
+   *   - The operators (NOT) BETWEEN, (NOT) IN, (NOT) EXISTS, (NOT) LIKE.
+   *   Other operators (e.g. LIke BINARY) may or may not work. Defaults to =.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    *
    * @see \Drupal\Core\Database\Query\ConditionInterface::isNull()
    * @see \Drupal\Core\Database\Query\ConditionInterface::isNotNull()
+   * @see \Drupal\Core\Database\Query\ConditionInterface::exists()
+   * @see \Drupal\Core\Database\Query\ConditionInterface::notExist()
+   * @see \Drupal\Core\Database\Query\ConditionInterface::where()
    */
   public function condition($field, $value = NULL, $operator = '=');
 
   /**
    * Adds an arbitrary WHERE clause to the query.
    *
-   * @param $snippet
+   * @param string $snippet
    *   A portion of a WHERE clause as a prepared statement. It must use named
-   *   placeholders, not ? placeholders.
-   * @param $args
-   *   An associative array of arguments.
+   *   placeholders, not ? placeholders. The caller is responsible for providing
+   *   unique placeholders that do not interfere with the placeholders generated
+   *   by this QueryConditionInterface object.
+   * @param array $args
+   *   An associative array of arguments keyed by the named placeholders.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
@@ -68,8 +86,8 @@ interface ConditionInterface {
   /**
    * Sets a condition that the specified field be NULL.
    *
-   * @param $field
-   *   The name of the field to check.
+   * @param string|\Drupal\Core\Database\Query\SelectInterface $field
+   *   The name of the field or a subquery to check.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
@@ -79,8 +97,8 @@ interface ConditionInterface {
   /**
    * Sets a condition that the specified field be NOT NULL.
    *
-   * @param $field
-   *   The name of the field to check.
+   * @param string|\Drupal\Core\Database\Query\SelectInterface $field
+   *   The name of the field or a subquery to check.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
@@ -110,7 +128,7 @@ interface ConditionInterface {
   public function notExists(SelectInterface $select);
 
   /**
-   * Gets a complete list of all conditions in this conditional clause.
+   * Gets the, possibly nested, list of conditions in this conditional clause.
    *
    * This method returns by reference. That allows alter hooks to access the
    * data structure directly and manipulate it before it gets compiled.
@@ -131,6 +149,9 @@ interface ConditionInterface {
    *
    * There will also be a single array entry of #conjunction, which is the
    * conjunction that will be applied to the array, such as AND.
+   *
+   * @return array
+   *   The, possibly nested, list of all conditions (by reference).
    */
   public function &conditions();
 
