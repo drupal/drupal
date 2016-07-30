@@ -80,7 +80,7 @@ class BasicTest extends WizardTestBase {
     $elements = $this->cssSelect('link[href="' . Url::fromRoute('view.' . $view2['id'] . '.feed_1', [], ['absolute' => TRUE])->toString() . '"]');
     $this->assertEqual(count($elements), 1, 'Feed found.');
     $this->drupalGet($view2['page[feed_properties][path]']);
-    $this->assertRaw('<rss version="2.0"');
+    $this->assertTrue(!empty($this->cssSelect('rss[version="2.0"]')));
     // The feed should have the same title and nodes as the page.
     $this->assertText($view2['page[title]']);
     $this->assertRaw($node1->url('canonical', ['absolute' => TRUE]));

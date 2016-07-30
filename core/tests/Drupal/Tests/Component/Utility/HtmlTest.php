@@ -321,4 +321,72 @@ class HtmlTest extends UnitTestCase {
     $this->assertSame('', $result);
   }
 
+  /**
+   * @covers ::transformRootRelativeUrlsToAbsolute
+   * @dataProvider providerTestTransformRootRelativeUrlsToAbsolute
+   */
+  public function testTransformRootRelativeUrlsToAbsolute($html, $scheme_and_host, $expected_html) {
+    $this->assertSame($expected_html ?: $html, Html::transformRootRelativeUrlsToAbsolute($html, $scheme_and_host));
+  }
+
+  /**
+   * @covers ::transformRootRelativeUrlsToAbsolute
+   * @dataProvider providerTestTransformRootRelativeUrlsToAbsoluteAssertion
+   * @expectedException \AssertionError
+   */
+  public function testTransformRootRelativeUrlsToAbsoluteAssertion($scheme_and_host) {
+    Html::transformRootRelativeUrlsToAbsolute('', $scheme_and_host);
+  }
+
+  /**
+   * Provides test data for testTransformRootRelativeUrlsToAbsolute().
+   *
+   * @return array
+   *   Test data.
+   */
+  public function providerTestTransformRootRelativeUrlsToAbsolute() {
+    $data = [];
+
+    // One random tag name.
+    $tag_name = strtolower($this->randomMachineName());
+
+    // A site installed either in the root of a domain or a subdirectory.
+    $base_paths = ['/', '/subdir/' . $this->randomMachineName() . '/'];
+
+    foreach ($base_paths as $base_path) {
+      // The only attribute that has more than just a URL as its value, is
+      // 'srcset', so special-case it.
+      $data += [
+        "$tag_name, srcset, $base_path: root-relative" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, {$base_path}root-relative 300w\">root-relative test</$tag_name>", 'http://example.com', "<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, http://example.com{$base_path}root-relative 300w\">root-relative test</$tag_name>"],
+        "$tag_name, srcset, $base_path: protocol-relative" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, //example.com{$base_path}protocol-relative 300w\">protocol-relative test</$tag_name>", 'http://example.com', FALSE],
+        "$tag_name, srcset, $base_path: absolute" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, http://example.com{$base_path}absolute 300w\">absolute test</$tag_name>", 'http://example.com', FALSE],
+      ];
+
+      foreach (['href', 'poster', 'src', 'cite', 'data', 'action', 'formaction', 'about'] as $attribute) {
+        $data += [
+          "$tag_name, $attribute, $base_path: root-relative" => ["<$tag_name $attribute=\"{$base_path}root-relative\">root-relative test</$tag_name>", 'http://example.com', "<$tag_name $attribute=\"http://example.com{$base_path}root-relative\">root-relative test</$tag_name>"],
+          "$tag_name, $attribute, $base_path: protocol-relative" => ["<$tag_name $attribute=\"//example.com{$base_path}protocol-relative\">protocol-relative test</$tag_name>", 'http://example.com', FALSE],
+          "$tag_name, $attribute, $base_path: absolute" => ["<$tag_name $attribute=\"http://example.com{$base_path}absolute\">absolute test</$tag_name>", 'http://example.com', FALSE],
+        ];
+      }
+    }
+
+    return $data;
+  }
+
+  /**
+   * Provides test data for testTransformRootRelativeUrlsToAbsoluteAssertion().
+   *
+   * @return array
+   *   Test data.
+   */
+  public function providerTestTransformRootRelativeUrlsToAbsoluteAssertion() {
+    return [
+      'only relative path' => ['llama'],
+      'only root-relative path' => ['/llama'],
+      'host and path' => ['example.com/llama'],
+      'scheme, host and path' => ['http://example.com/llama'],
+    ];
+  }
+
 }

@@ -2,6 +2,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\filter\Entity\FilterFormat;
+
 /**
  * Ensures that data added to nodes by other modules appears in RSS feeds.
  *
@@ -58,6 +60,49 @@ class NodeRSSContentTest extends NodeTestBase {
     // viewing node.
     $this->drupalGet('node/' . $node->id());
     $this->assertNoText($rss_only_content, 'Node content designed for RSS does not appear when viewing node.');
+  }
+
+  /**
+   * Tests relative, root-relative, protocol-relative and absolute URLs.
+   */
+  public function testUrlHandling() {
+    // Only the plain_text text format is available by default, which escapes
+    // all HTML.
+    FilterFormat::create([
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+      'filters' => [],
+    ])->save();
+
+    $defaults = [
+      'type' => 'article',
+      'promote' => 1,
+    ];
+    $this->drupalCreateNode($defaults + [
+      'body' => [
+        'value' => '<p><a href="' . file_url_transform_relative(file_create_url('public://root-relative')) . '">Root-relative URL</a></p>',
+        'format' => 'full_html',
+      ],
+    ]);
+    $protocol_relative_url = substr(file_create_url('public://protocol-relative'), strlen(\Drupal::request()->getScheme() . ':'));
+    $this->drupalCreateNode($defaults + [
+      'body' => [
+        'value' => '<p><a href="' . $protocol_relative_url . '">Protocol-relative URL</a></p>',
+        'format' => 'full_html',
+      ],
+    ]);
+    $absolute_url = file_create_url('public://absolute');
+    $this->drupalCreateNode($defaults + [
+      'body' => [
+        'value' => '<p><a href="' . $absolute_url . '">Absolute URL</a></p>',
+        'format' => 'full_html',
+      ],
+    ]);
+
+    $this->drupalGet('rss.xml');
+    $this->assertRaw(file_create_url('public://root-relative'), 'Root-relative URL is transformed to absolute.');
+    $this->assertRaw($protocol_relative_url, 'Protocol-relative URL is left untouched.');
+    $this->assertRaw($absolute_url, 'Absolute URL is left untouched.');
   }
 
 }
