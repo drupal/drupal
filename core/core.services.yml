@@ -1635,3 +1635,7 @@ services:
     arguments: ['@current_user', '@path.current', '@path.matcher', '@language_manager']
     tags:
       - { name: event_subscriber }
+  response_filter.rss.relative_url:
+    class: Drupal\Core\EventSubscriber\RssResponseRelativeUrlFilter
+    tags:
+      - { name: event_subscriber }
