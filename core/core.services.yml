@@ -33,14 +33,6 @@ parameters:
     - sftp
     - webcal
     - rtsp
-  cors.config:
-    enabled: false
-    allowedHeaders: []
-    allowedMethods: []
-    allowedOrigins: ['*']
-    exposedHeaders: false
-    maxAge: false
-    supportsCredentials: false
 services:
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
@@ -714,11 +706,6 @@ services:
       - { name: http_middleware, priority: 50 }
     calls:
       - [setContainer, ['@service_container']]
-  http_middleware.cors:
-     class: Asm89\Stack\Cors
-     arguments: ['%cors.config%']
-     tags:
-       - { name: http_middleware }
   psr7.http_foundation_factory:
     class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
   psr7.http_message_factory:
