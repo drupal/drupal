@@ -418,10 +418,11 @@ form_test.description_display:
     _access: 'TRUE'
 
 form_test.group_details:
-  path: '/form-test/group-details'
+  path: '/form-test/group-details/{required}'
   defaults:
     _form: '\Drupal\form_test\Form\FormTestGroupDetailsForm'
     _title: 'Group details testing'
+    required: FALSE
   requirements:
     _access: 'TRUE'
 
@@ -434,10 +435,11 @@ form_test.group_container:
     _access: 'TRUE'
 
 form_test.group_fieldset:
-  path: '/form-test/group-fieldset'
+  path: '/form-test/group-fieldset/{required}'
   defaults:
     _form: '\Drupal\form_test\Form\FormTestGroupFieldsetForm'
     _title: 'Group fieldset testing'
+    required: FALSE
   requirements:
     _access: 'TRUE'
 

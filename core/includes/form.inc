@@ -254,6 +254,7 @@ function template_preprocess_details(&$variables) {
   $variables['description'] = (!empty($element['#description'])) ? $element['#description'] : '';
   $variables['children'] = (isset($element['#children'])) ? $element['#children'] : '';
   $variables['value'] = (isset($element['#value'])) ? $element['#value'] : '';
+  $variables['required'] = !empty($element['#required']) ? $element['#required'] : NULL;
 
   // Suppress error messages.
   $variables['errors'] = NULL;

@@ -138,6 +138,20 @@ class ElementTest extends WebTestBase {
   }
 
   /**
+   * Tests the #required property on details and fieldset elements.
+   */
+  public function testRequiredFieldsetsAndDetails() {
+    $this->drupalGet('form-test/group-details');
+    $this->assertFalse($this->cssSelect('summary.form-required'));
+    $this->drupalGet('form-test/group-details/1');
+    $this->assertTrue($this->cssSelect('summary.form-required'));
+    $this->drupalGet('form-test/group-fieldset');
+    $this->assertFalse($this->cssSelect('span.form-required'));
+    $this->drupalGet('form-test/group-fieldset/1');
+    $this->assertTrue($this->cssSelect('span.form-required'));
+  }
+
+  /**
    * Tests a form with a autocomplete setting..
    */
   public function testFormAutocomplete() {
