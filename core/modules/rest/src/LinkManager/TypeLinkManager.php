@@ -5,6 +5,7 @@ namespace Drupal\rest\LinkManager;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfo;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -25,6 +26,13 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
   protected $moduleHandler;
 
   /**
+   * The bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfo
+   */
+  protected $bundleInfoService;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
@@ -35,12 +43,15 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
    *   The config factory service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfo $bundle_info_service
+   *   The bundle info service.
    */
-  public function __construct(CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, RequestStack $request_stack) {
+  public function __construct(CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, RequestStack $request_stack, EntityTypeBundleInfo $bundle_info_service) {
     $this->cache = $cache;
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->requestStack = $request_stack;
+    $this->bundleInfoService = $bundle_info_service;
   }
 
   /**
@@ -113,7 +124,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
     // Type URIs correspond to bundles. Iterate through the bundles to get the
     // URI and data for them.
     $entity_types = \Drupal::entityManager()->getDefinitions();
-    foreach (entity_get_bundles() as $entity_type_id => $bundles) {
+    foreach ($this->bundleInfoService->getAllBundleInfo() as $entity_type_id => $bundles) {
       // Only content entities are supported currently.
       // @todo Consider supporting config entities.
       if ($entity_types[$entity_type_id]->isSubclassOf('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {

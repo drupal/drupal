@@ -351,9 +351,9 @@ function content_translation_language_fallback_candidates_entity_view_alter(&$ca
  */
 function content_translation_entity_extra_field_info() {
   $extra = array();
-
+  $bundle_info_service = \Drupal::service('entity_type.bundle.info');
   foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $info) {
-    foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
+    foreach ($bundle_info_service->getBundleInfo($entity_type) as $bundle => $bundle_info) {
       if (\Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle)) {
         $extra[$entity_type][$bundle]['form']['translation'] = array(
           'label' => t('Translation'),

@@ -16,7 +16,7 @@ services:
     arguments: ['@rest.link_manager.type', '@rest.link_manager.relation']
   rest.link_manager.type:
     class: Drupal\rest\LinkManager\TypeLinkManager
-    arguments: ['@cache.default', '@module_handler', '@config.factory', '@request_stack']
+    arguments: ['@cache.default', '@module_handler', '@config.factory', '@request_stack', '@entity_type.bundle.info']
   rest.link_manager.relation:
     class: Drupal\rest\LinkManager\RelationLinkManager
     arguments: ['@cache.default', '@entity.manager', '@module_handler', '@config.factory', '@request_stack']

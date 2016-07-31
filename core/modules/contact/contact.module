@@ -51,7 +51,7 @@ function contact_entity_type_alter(array &$entity_types) {
  */
 function contact_entity_extra_field_info() {
   $fields = array();
-  foreach (array_keys(entity_get_bundles('contact_message')) as $bundle) {
+  foreach (array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo('contact_message')) as $bundle) {
     $fields['contact_message'][$bundle]['form']['name'] = array(
       'label' => t('Sender name'),
       'description' => t('Text'),
