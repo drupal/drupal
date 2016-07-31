@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\color\Tests;
+namespace Drupal\Tests\color\Functional;
 
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests sanitizing color preview loaded from theme.
  *
- * @group Theme
+ * @group color
  */
-class ColorSafePreviewTest extends WebTestBase {
+class ColorSafePreviewTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

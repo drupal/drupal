@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\color\Tests;
+namespace Drupal\Tests\color\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Ensures the color config schema is correct.
  *
  * @group color
  */
-class ColorConfigSchemaTest extends WebTestBase {
+class ColorConfigSchemaTest extends BrowserTestBase {
 
   /**
    * Modules to install.

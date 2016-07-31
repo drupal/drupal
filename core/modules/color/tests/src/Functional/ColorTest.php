@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\color\Tests;
+namespace Drupal\Tests\color\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Modify the Bartik theme colors and make sure the changes are reflected on the
@@ -10,7 +10,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group color
  */
-class ColorTest extends WebTestBase {
+class ColorTest extends BrowserTestBase {
 
   /**
    * Modules to install.
