@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\forum\Functional;
+namespace Drupal\forum\Tests;
 
+use Drupal\simpletest\WebTestBase;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests forum block view for private node access.
  *
  * @group forum
  */
-class ForumNodeAccessTest extends BrowserTestBase {
+class ForumNodeAccessTest extends WebTestBase {
 
   /**
    * Modules to enable.
