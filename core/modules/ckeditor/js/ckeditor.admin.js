@@ -483,7 +483,7 @@
    *   A HTML string for the button to toggle group names.
    */
   Drupal.theme.ckeditorButtonGroupNamesToggle = function () {
-    return '<a class="ckeditor-groupnames-toggle" role="button" aria-pressed="false"></a>';
+    return '<button class="link ckeditor-groupnames-toggle" aria-pressed="false"></button>';
   };
 
   /**
