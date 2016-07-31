@@ -1,20 +1,20 @@
 <?php
 
-namespace Drupal\Tests\forum\Functional;
+namespace Drupal\forum\Tests;
 
 use Drupal\comment\CommentInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
+use Drupal\simpletest\WebTestBase;
 use Drupal\comment\Entity\Comment;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests forum module uninstallation.
  *
  * @group forum
  */
-class ForumUninstallTest extends BrowserTestBase {
+class ForumUninstallTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -66,7 +66,7 @@ class ForumUninstallTest extends BrowserTestBase {
     // Attempt to uninstall forum.
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is required.
-    $this->assertSession()->fieldDisabled('uninstall[forum]');
+    $this->assertNoFieldByName('uninstall[forum]');
     $this->assertText('To uninstall Forum, first delete all Forum content');
 
     // Delete the node.
@@ -75,7 +75,7 @@ class ForumUninstallTest extends BrowserTestBase {
     // Attempt to uninstall forum.
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is still required.
-    $this->assertSession()->fieldDisabled('uninstall[forum]');
+    $this->assertNoFieldByName('uninstall[forum]');
     $this->assertText('To uninstall Forum, first delete all Forums terms');
 
     // Delete any forum terms.

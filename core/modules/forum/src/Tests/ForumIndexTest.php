@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\Tests\forum\Functional;
+namespace Drupal\forum\Tests;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the forum index listing.
  *
  * @group forum
  */
-class ForumIndexTest extends BrowserTestBase {
+class ForumIndexTest extends WebTestBase {
 
   /**
    * Modules to enable.
