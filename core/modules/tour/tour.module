@@ -53,7 +53,6 @@ function tour_toolbar() {
       '#value' => t('Tour'),
       '#attributes' => array(
         'class' => array('toolbar-icon', 'toolbar-icon-help'),
-        'role' => 'button',
         'aria-pressed' => 'false',
       ),
     ),

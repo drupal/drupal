@@ -493,7 +493,7 @@
    *   A HTML string for the button to create a name for a new button group.
    */
   Drupal.theme.ckeditorNewButtonGroup = function () {
-    return '<li class="ckeditor-add-new-group"><button role="button" aria-label="' + Drupal.t('Add a CKEditor button group to the end of this row.') + '">' + Drupal.t('Add group') + '</button></li>';
+    return '<li class="ckeditor-add-new-group"><button aria-label="' + Drupal.t('Add a CKEditor button group to the end of this row.') + '">' + Drupal.t('Add group') + '</button></li>';
   };
 
 })(jQuery, Drupal, drupalSettings, _);
