@@ -33,7 +33,7 @@
   width: auto;
 }
 .install-page table td {
-  word-break: break-word;
+  word-break: break-all;
 }
 
 .install-page .site-version {
