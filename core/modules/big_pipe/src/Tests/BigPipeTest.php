@@ -188,7 +188,7 @@ class BigPipeTest extends WebTestBase {
     $records = db_query('SELECT * FROM {watchdog} ORDER BY wid DESC LIMIT 2')->fetchAll();
     $this->assertEqual(RfcLogLevel::ERROR, $records[0]->severity);
     $this->assertTrue(FALSE !== strpos((string) unserialize($records[0]->variables)['@message'], 'Oh noes!'));
-    $this->assertEqual(RfcLogLevel::ERROR, $records[0]->severity);
+    $this->assertEqual(RfcLogLevel::ERROR, $records[1]->severity);
     $this->assertTrue(FALSE !== strpos((string) unserialize($records[1]->variables)['@message'], 'You are not allowed to say llamas are not cool!'));
 
     // Verify that 4xx responses work fine. (4xx responses are handled by
@@ -255,7 +255,7 @@ class BigPipeTest extends WebTestBase {
     $this->assertNoRaw(BigPipe::STOP_SIGNAL, 'BigPipe stop signal absent.');
 
     $this->pass('Verifying BigPipe assets are absent…', 'Debug');
-    $this->assertFalse(empty($this->getDrupalSettings()), 'drupalSettings and BigPipe asset library absent.');
+    $this->assertTrue(!isset($this->getDrupalSettings()['bigPipePlaceholderIds']) && empty($this->getDrupalSettings()['ajaxPageState']), 'BigPipe drupalSettings and BigPipe asset library absent.');
     $this->assertRaw('</body>', 'Closing body tag present.');
 
     // Verify that 4xx responses work fine. (4xx responses are handled by
@@ -372,7 +372,8 @@ class BigPipeTest extends WebTestBase {
     }
     ksort($placeholder_positions, SORT_NUMERIC);
     $this->assertEqual(array_keys($expected_big_pipe_placeholders), array_values($placeholder_positions));
-    $this->assertEqual(count($expected_big_pipe_placeholders), preg_match_all('/' . preg_quote('<div data-big-pipe-placeholder-id="', '/') . '/', $this->getRawContent()));
+    $placeholders = array_map(function(\SimpleXMLElement $element) { return (string) $element['data-big-pipe-placeholder-id']; }, $this->cssSelect('[data-big-pipe-placeholder-id]'));
+    $this->assertEqual(count($expected_big_pipe_placeholders), count(array_unique($placeholders)));
     $expected_big_pipe_placeholders_with_replacements = [];
     foreach ($expected_big_pipe_placeholder_stream_order as $big_pipe_placeholder_id) {
       $expected_big_pipe_placeholders_with_replacements[$big_pipe_placeholder_id] = $expected_big_pipe_placeholders[$big_pipe_placeholder_id];

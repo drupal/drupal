@@ -50,7 +50,7 @@ class BigPipePlaceholderTestCases {
 
     // 1. Real-world example of HTML placeholder.
     $status_messages = new BigPipePlaceholderTestCase(
-      [], //['#type' => 'status_messages'],
+      ['#type' => 'status_messages'],
       '<drupal-render-placeholder callback="Drupal\Core\Render\Element\StatusMessages::renderMessages" arguments="0" token="a8c34b5e"></drupal-render-placeholder>',
       [
         '#lazy_builder' => [
