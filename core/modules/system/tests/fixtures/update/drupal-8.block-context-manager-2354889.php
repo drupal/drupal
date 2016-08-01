@@ -6,8 +6,8 @@
  * upgrade path of https://www.drupal.org/node/2354889.
  */
 
-use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Serialization\Yaml;
 
 $connection = Database::getConnection();
 

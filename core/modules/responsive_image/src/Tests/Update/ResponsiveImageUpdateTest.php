@@ -2,8 +2,8 @@
 
 namespace Drupal\responsive_image\Tests\Update;
 
-use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\system\Tests\Update\UpdatePathTestBase;
 
 /**

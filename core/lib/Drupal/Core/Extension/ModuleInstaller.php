@@ -2,12 +2,12 @@
 
 namespace Drupal\Core\Extension;
 
-use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Serialization\Yaml;
 
 /**
  * Default implementation of the module installer.

@@ -7,8 +7,8 @@
 
 namespace Drupal\Tests\Core\Routing;
 
-use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Routing\RouteBuilder;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RoutingEvents;
@@ -53,7 +53,7 @@ class RouteBuilderTest extends UnitTestCase {
   /**
    * The mocked YAML discovery.
    *
-   * @var \Drupal\Component\Discovery\YamlDiscovery|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Discovery\YamlDiscovery|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $yamlDiscovery;
 
@@ -82,7 +82,7 @@ class RouteBuilderTest extends UnitTestCase {
     $this->dispatcher = $this->getMock('\Symfony\Component\EventDispatcher\EventDispatcherInterface');
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->controllerResolver = $this->getMock('Drupal\Core\Controller\ControllerResolverInterface');
-    $this->yamlDiscovery = $this->getMockBuilder('\Drupal\Component\Discovery\YamlDiscovery')
+    $this->yamlDiscovery = $this->getMockBuilder('\Drupal\Core\Discovery\YamlDiscovery')
       ->disableOriginalConstructor()
       ->getMock();
     $this->checkProvider = $this->getMock('\Drupal\Core\Access\CheckProviderInterface');
@@ -284,14 +284,14 @@ class TestRouteBuilder extends RouteBuilder {
   /**
    * The mocked YAML discovery.
    *
-   * @var \Drupal\Component\Discovery\YamlDiscovery|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Discovery\YamlDiscovery|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $yamlDiscovery;
 
   /**
    * Sets the YAML discovery.
    *
-   * @param \Drupal\Component\Discovery\YamlDiscovery $yaml_discovery
+   * @param \Drupal\Core\Discovery\YamlDiscovery $yaml_discovery
    *   The YAML discovery to set.
    */
   public function setYamlDiscovery(YamlDiscovery $yaml_discovery) {

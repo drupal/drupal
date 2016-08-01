@@ -5,8 +5,8 @@
  * Test fixture for \Drupal\rest\Tests\Update\RestExportAuthUpdateTest.
  */
 
-use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Serialization\Yaml;
 
 $connection = Database::getConnection();
 $config = $connection;

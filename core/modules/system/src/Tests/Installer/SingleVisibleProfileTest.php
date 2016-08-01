@@ -2,7 +2,7 @@
 
 namespace Drupal\system\Tests\Installer;
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\simpletest\InstallerTestBase;
 
 /**

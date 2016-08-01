@@ -7,7 +7,7 @@
  */
 
 use Drupal\Core\Database\Database;
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\field\Entity\FieldStorageConfig;
 
 $connection = Database::getConnection();

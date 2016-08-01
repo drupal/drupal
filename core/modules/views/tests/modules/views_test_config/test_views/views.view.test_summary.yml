@@ -96,7 +96,6 @@ display:
       footer: {  }
       empty: {  }
       relationships: {  }
-      fields: {  }
       display_extenders: {  }
     cache_metadata:
       contexts:
