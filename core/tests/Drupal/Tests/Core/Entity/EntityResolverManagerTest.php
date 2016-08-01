@@ -385,6 +385,38 @@ class EntityResolverManagerTest extends UnitTestCase {
   }
 
   /**
+   * Tests an _entity_form route where a non-entity parameter is first.
+   *
+   * The {argument} preceding {entity_test} in route path, is upcasting with a
+   * custom param converter.
+   *
+   * @covers ::setRouteOptions
+   * @covers ::getControllerClass
+   * @covers ::getEntityTypes
+   * @covers ::setParametersFromReflection
+   * @covers ::setParametersFromEntityInformation
+   */
+  public function testSetRouteOptionsWithEntityFormRouteAndArgument() {
+    $this->setupEntityTypes();
+    $route = new Route('/example/{argument}/{entity_test}', [
+      '_entity_form' => 'entity_test.edit',
+    ]);
+    // Add {argument} parameter configuration. In this case {argument} is
+    // upcasted by a custom param converter 'argument_type'.
+    $route->setOption('parameters', ['argument' => ['type' => 'argument_type']]);
+
+    $defaults = $route->getDefaults();
+    $this->entityResolverManager->setRouteOptions($route);
+    $this->assertEquals($defaults, $route->getDefaults());
+    $parameters = $route->getOption('parameters');
+    $expect = [
+      'argument' => ['type' => 'argument_type'],
+      'entity_test' => ['type' => 'entity:entity_test'],
+    ];
+    $this->assertEquals($expect, $parameters);
+  }
+
+  /**
    * Creates the entity manager mock returning entity type objects.
    */
   protected function setupEntityTypes() {
