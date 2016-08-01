@@ -300,3 +300,24 @@ input.form-submit:focus {
 .form-item--error-message {
   color: #e32700;
 }
+
+/**
+ * Improve form element usability on narrow devices.
+ */
+@media all and (max-width: 600px) {
+  .form-actions .button {
+    float: none;
+    margin: 10px 0 0;
+    padding-bottom: 6px;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+  }
+
+  .js .dropbutton .dropbutton-action > input, .js .dropbutton .dropbutton-action > a, .js .dropbutton .dropbutton-action > button {
+    text-align: center;
+    padding-left: 3em;
+  }
+}

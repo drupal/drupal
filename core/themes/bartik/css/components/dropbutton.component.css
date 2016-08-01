@@ -25,6 +25,18 @@
   padding: 0.32em 1em;
   background: transparent none;
 }
+.js .dropbutton-multiple .dropbutton-widget,
+.js[dir="rtl"] .dropbutton-multiple .dropbutton-widget {
+  padding: 0;
+}
+.js .dropbutton-multiple .dropbutton-widget .dropbutton {
+  padding-right: 2em; /* LTR */
+  position: relative;
+}
+.js[dir="rtl"] .dropbutton-multiple .dropbutton-widget .dropbutton {
+  padding-right: 0;
+  padding-left: 2em;
+}
 .js .dropbutton-multiple .dropbutton-widget .dropbutton-action a {
   margin-right: 0; /* LTR */
 }
