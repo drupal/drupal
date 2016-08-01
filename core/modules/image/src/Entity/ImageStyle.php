@@ -162,15 +162,28 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function buildUri($uri) {
-    $scheme = $this->fileUriScheme($uri);
-    if ($scheme) {
+    $source_scheme = $scheme = $this->fileUriScheme($uri);
+    $default_scheme = $this->fileDefaultScheme();
+
+    if ($source_scheme) {
       $path = $this->fileUriTarget($uri);
+      // The scheme of derivative image files only needs to be computed for
+      // source files not stored in the default scheme.
+      if ($source_scheme != $default_scheme) {
+        $class = $this->getStreamWrapperManager()->getClass($source_scheme);
+        $is_writable = $class::getType() & StreamWrapperInterface::WRITE;
+
+        // Compute the derivative URI scheme. Derivatives created from writable
+        // source stream wrappers will inherit the scheme. Derivatives created
+        // from read-only stream wrappers will fall-back to the default scheme.
+        $scheme = $is_writable ? $source_scheme : $default_scheme;
+      }
     }
     else {
       $path = $uri;
-      $scheme = $this->fileDefaultScheme();
+      $source_scheme = $scheme = $default_scheme;
     }
-    return $scheme . '://styles/' . $this->id() . '/' . $scheme . '/' . $this->addExtension($path);
+    return "$scheme://styles/{$this->id()}/$source_scheme/{$this->addExtension($path)}";
   }
 
   /**
@@ -211,7 +224,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     // to the actual file path, this avoids bootstrapping PHP once the files are
     // built.
     if ($clean_urls === FALSE && file_uri_scheme($uri) == 'public' && !file_exists($uri)) {
-      $directory_path = \Drupal::service('stream_wrapper_manager')->getViaUri($uri)->getDirectoryPath();
+      $directory_path = $this->getStreamWrapperManager()->getViaUri($uri)->getDirectoryPath();
       return Url::fromUri('base:' . $directory_path . '/' . file_uri_target($uri), array('absolute' => TRUE, 'query' => $token_query))->toString();
     }
 
@@ -238,7 +251,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     }
 
     // Delete the style directory in each registered wrapper.
-    $wrappers = \Drupal::service('stream_wrapper_manager')->getWrappers(StreamWrapperInterface::WRITE_VISIBLE);
+    $wrappers = $this->getStreamWrapperManager()->getWrappers(StreamWrapperInterface::WRITE_VISIBLE);
     foreach ($wrappers as $wrapper => $wrapper_data) {
       if (file_exists($directory = $wrapper . '://styles/' . $this->id())) {
         file_unmanaged_delete_recursive($directory);
@@ -493,6 +506,18 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    */
   protected function fileDefaultScheme() {
     return file_default_scheme();
+  }
+
+  /**
+   * Gets the stream wrapper manager service.
+   *
+   * @return \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   *   The stream wrapper manager service
+   *
+   * @todo Properly inject this service in Drupal 9.0.x.
+   */
+  protected function getStreamWrapperManager() {
+    return \Drupal::service('stream_wrapper_manager');
   }
 
 }
