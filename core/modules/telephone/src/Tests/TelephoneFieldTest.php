@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\Tests\telephone\Functional;
+namespace Drupal\telephone\Tests;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the creation of telephone fields.
  *
  * @group telephone
  */
-class TelephoneFieldTest extends BrowserTestBase {
+class TelephoneFieldTest extends WebTestBase {
 
   /**
    * Modules to enable.
