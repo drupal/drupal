@@ -66,5 +66,15 @@ function rest_update_8202() {
 }
 
 /**
+ * Enable BC for EntityResource: continue to use permissions.
+ */
+function rest_update_8203() {
+  $config_factory = \Drupal::configFactory();
+  $rest_settings = $config_factory->getEditable('rest.settings');
+  $rest_settings->set('bc_entity_resource_permissions', TRUE)
+    ->save(TRUE);
+}
+
+/**
  * @} End of "defgroup updates-8.1.x-to-8.2.x".
  */

@@ -62,18 +62,20 @@ trait EntityTranslationRenderTrait {
    *   The entity object the field value being processed is attached to.
    * @param \Drupal\views\ResultRow $row
    *   The result row the field value being processed belongs to.
+   * @param string $relationship
+   *   The relationship to be used, or 'none' by default.
    *
    * @return \Drupal\Core\Entity\FieldableEntityInterface
    *   The entity translation object for the specified row.
    */
-  public function getEntityTranslation(EntityInterface $entity, ResultRow $row) {
+  public function getEntityTranslation(EntityInterface $entity, ResultRow $row, $relationship = 'none') {
     // We assume the same language should be used for all entity fields
     // belonging to a single row, even if they are attached to different entity
     // types. Below we apply language fallback to ensure a valid value is always
     // picked.
     $translation = $entity;
     if ($entity instanceof TranslatableInterface && count($entity->getTranslationLanguages()) > 1) {
-      $langcode = $this->getEntityTranslationRenderer()->getLangcode($row);
+      $langcode = $this->getEntityTranslationRenderer()->getLangcode($row, $relationship);
       $translation = $this->getEntityManager()->getTranslationFromContext($entity, $langcode);
     }
     return $translation;

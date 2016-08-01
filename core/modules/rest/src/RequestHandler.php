@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -131,17 +130,7 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
 
     // Invoke the operation on the resource plugin.
     $format = $this->getResponseFormat($route_match, $request);
-    try {
-      $response = call_user_func_array(array($resource, $method), array_merge($parameters, array($unserialized, $request)));
-    }
-    catch (HttpException $e) {
-      $error['error'] = $e->getMessage();
-      $content = $serializer->serialize($error, $format);
-      // Add the default content type, but only if the headers from the
-      // exception have not specified it already.
-      $headers = $e->getHeaders() + array('Content-Type' => $request->getMimeType($format));
-      return new Response($content, $e->getStatusCode(), $headers);
-    }
+    $response = call_user_func_array(array($resource, $method), array_merge($parameters, array($unserialized, $request)));
 
     return $response instanceof ResourceResponseInterface ?
       $this->renderResponse($request, $response, $serializer, $format, $resource_config) :

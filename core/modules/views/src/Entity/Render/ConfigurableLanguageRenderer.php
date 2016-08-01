@@ -39,7 +39,7 @@ class ConfigurableLanguageRenderer extends EntityTranslationRendererBase {
   /**
    * {@inheritdoc}
    */
-  public function getLangcode(ResultRow $row) {
+  public function getLangcode(ResultRow $row, $relationship = 'none') {
     return $this->langcode;
   }
 
