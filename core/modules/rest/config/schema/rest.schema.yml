@@ -6,9 +6,6 @@ rest.settings:
     link_domain:
       type: string
       label: 'Domain of the relation'
-    bc_entity_resource_permissions:
-      type: boolean
-      label: 'Whether the pre Drupal 8.2.x behavior of having permissions for EntityResource is enabled or not.'
 
 # Method-level granularity of REST resource configuration.
 rest_resource.method:

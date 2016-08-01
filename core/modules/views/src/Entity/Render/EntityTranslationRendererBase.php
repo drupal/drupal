@@ -15,13 +15,11 @@ abstract class EntityTranslationRendererBase extends RendererBase {
    *
    * @param \Drupal\views\ResultRow $row
    *   The result row.
-   * @param string $relationship
-   *   The relationship to be used, or 'none' by default.
    *
    * @return string
    *   A language code.
    */
-  abstract public function getLangcode(ResultRow $row, $relationship = 'none');
+  abstract public function getLangcode(ResultRow $row);
 
   /**
    * {@inheritdoc}
@@ -30,62 +28,27 @@ abstract class EntityTranslationRendererBase extends RendererBase {
   }
 
   /**
-   * Runs before each entity is rendered.
-   *
-   * @param \Drupal\views\ResultRow[] $result
-   *   The full array of results from the query.
-   * @param string $relationship
-   *   The relationship to be used, or 'none' by default.
+   * {@inheritdoc}
    */
-  public function preRender(array $result, $relationship = 'none') {
+  public function preRender(array $result) {
     $view_builder = $this->view->rowPlugin->entityManager->getViewBuilder($this->entityType->id());
 
+    /** @var \Drupal\views\ResultRow $row */
     foreach ($result as $row) {
-      if ($entity = $this->getEntity($row, $relationship)) {
-        $entity->view = $this->view;
-        $this->build[$entity->id()] = $view_builder->view($entity, $this->view->rowPlugin->options['view_mode'], $this->getLangcode($row, $relationship));
-      }
+      // @todo Take relationships into account.
+      //   See https://www.drupal.org/node/2457999.
+      $entity = $row->_entity;
+      $entity->view = $this->view;
+      $this->build[$entity->id()] = $view_builder->view($entity, $this->view->rowPlugin->options['view_mode'], $this->getLangcode($row));
     }
   }
 
   /**
-   * Renders entity data.
-   *
-   * @param \Drupal\views\ResultRow $row
-   *   A single row of the query result.
-   * @param string $relationship
-   *   The relationship to be used, or 'none' by default.
-   *
-   * @return array
-   *   A renderable array for the entity data contained in the result row.
+   * {@inheritdoc}
    */
-  public function render(ResultRow $row, $relationship = 'none') {
-    if ($entity = $this->getEntity($row, $relationship)) {
-      $entity_id = $entity->id();
-      return $this->build[$entity_id];
-    }
-  }
-
-  /**
-   * Gets the entity assosiated with a row.
-   *
-   * @param \Drupal\views\ResultRow $row
-   *   The result row.
-   * @param string $relationship
-   *   (optional) The relationship.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface|null
-   *   The entity might be optional, because the relationship entity might not
-   *   always exist.
-   */
-  protected function getEntity($row, $relationship = 'none') {
-    if ($relationship === 'none') {
-      return $row->_entity;
-    }
-    elseif (isset($row->_relationship_entities[$relationship])) {
-      return $row->_relationship_entities[$relationship];
-    }
-    return NULL;
+  public function render(ResultRow $row) {
+    $entity_id = $row->_entity->id();
+    return $this->build[$entity_id];
   }
 
 }

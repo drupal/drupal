@@ -48,6 +48,10 @@ class PageCacheTest extends RESTTestBase {
     $this->enableService('entity:entity_test', 'POST');
     $permissions = [
       'administer entity_test content',
+      'restful post entity:entity_test',
+      'restful get entity:entity_test',
+      'restful patch entity:entity_test',
+      'restful delete entity:entity_test',
     ];
     $account = $this->drupalCreateUser($permissions);
 

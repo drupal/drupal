@@ -40,34 +40,31 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
   /**
    * {@inheritdoc}
    */
-  public function preRender(array $result, $relationship = 'none') {
+  public function preRender(array $result) {
     $view_builder = $this->view->rowPlugin->entityManager->getViewBuilder($this->entityType->id());
 
     /** @var \Drupal\views\ResultRow $row */
     foreach ($result as $row) {
-      if ($entity = $this->getEntity($row, $relationship)) {
-        $entity->view = $this->view;
-        $langcode = $this->getLangcode($row, $relationship);
-        $this->build[$entity->id()][$langcode] = $view_builder->view($entity, $this->view->rowPlugin->options['view_mode'], $langcode);
-      }
+      $entity = $row->_entity;
+      $entity->view = $this->view;
+      $langcode = $this->getLangcode($row);
+      $this->build[$entity->id()][$langcode] = $view_builder->view($entity, $this->view->rowPlugin->options['view_mode'], $this->getLangcode($row));
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function render(ResultRow $row, $relationship = 'none') {
-    if ($entity = $this->getEntity($row, $relationship)) {
-      $entity_id = $entity->id();
-      $langcode = $this->getLangcode($row, $relationship);
-      return $this->build[$entity_id][$langcode];
-    }
+  public function render(ResultRow $row) {
+    $entity_id = $row->_entity->id();
+    $langcode = $this->getLangcode($row);
+    return $this->build[$entity_id][$langcode];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getLangcode(ResultRow $row, $relationship = 'none') {
+  public function getLangcode(ResultRow $row) {
     return isset($row->{$this->langcodeAlias}) ? $row->{$this->langcodeAlias} : $this->languageManager->getDefaultLanguage()->getId();
   }
 

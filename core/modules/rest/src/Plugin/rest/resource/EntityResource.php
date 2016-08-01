@@ -6,7 +6,6 @@ use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\rest\Plugin\ResourceBase;
@@ -44,13 +43,6 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   protected $entityType;
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Constructs a Drupal\rest\Plugin\rest\resource\EntityResource object.
    *
    * @param array $configuration
@@ -65,13 +57,10 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    *   The available serialization formats.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface
-   *   The config factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, $serializer_formats, LoggerInterface $logger, ConfigFactoryInterface $config_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, $serializer_formats, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->entityType = $entity_type_manager->getDefinition($plugin_definition['entity_type']);
-    $this->configFactory = $config_factory;
   }
 
   /**
@@ -84,8 +73,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       $plugin_definition,
       $container->get('entity_type.manager'),
       $container->getParameter('serializer.formats'),
-      $container->get('logger.factory')->get('rest'),
-      $container->get('config.factory')
+      $container->get('logger.factory')->get('rest')
     );
   }
 
@@ -306,21 +294,6 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       // distinguish between general syntax errors in bad serializations (code
       // 400) and semantic errors in well-formed requests (code 422).
       throw new HttpException(422, $message);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function permissions() {
-    // @see https://www.drupal.org/node/2664780
-    if ($this->configFactory->get('rest.settings')->get('bc_entity_resource_permissions')) {
-      // The default Drupal 8.0.x and 8.1.x behavior.
-      return parent::permissions();
-    }
-    else {
-      // The default Drupal 8.2.x behavior.
-      return [];
     }
   }
 

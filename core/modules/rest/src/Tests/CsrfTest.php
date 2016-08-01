@@ -43,6 +43,7 @@ class CsrfTest extends RESTTestBase {
     // Create a user account that has the required permissions to create
     // resources via the REST API.
     $permissions = $this->entityPermissions($this->testEntityType, 'create');
+    $permissions[] = 'restful post entity:' . $this->testEntityType;
     $this->account = $this->drupalCreateUser($permissions);
 
     // Serialize an entity to a string to use in the content body of the POST

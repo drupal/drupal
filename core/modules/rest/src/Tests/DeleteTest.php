@@ -31,6 +31,7 @@ class DeleteTest extends RESTTestBase {
       // Create a user account that has the required permissions to delete
       // resources via the REST API.
       $permissions = $this->entityPermissions($entity_type, 'delete');
+      $permissions[] = 'restful delete entity:' . $entity_type;
       $account = $this->drupalCreateUser($permissions);
       $this->drupalLogin($account);
 

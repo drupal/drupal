@@ -32,6 +32,7 @@ class NodeTest extends RESTTestBase {
   protected function enableNodeConfiguration($method, $operation) {
     $this->enableService('entity:node', $method);
     $permissions = $this->entityPermissions('node', $operation);
+    $permissions[] = 'restful ' . strtolower($method) . ' entity:node';
     $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
   }
