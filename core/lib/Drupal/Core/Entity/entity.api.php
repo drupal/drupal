@@ -717,7 +717,7 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *   - translatable: (optional) A boolean value specifying whether this bundle
  *     has translation support enabled. Defaults to FALSE.
  *
- * @see entity_get_bundles()
+ * @see \Drupal\Core\Entity\EntityTypeBundleInfo::getBundleInfo()
  * @see hook_entity_bundle_info_alter()
  */
 function hook_entity_bundle_info() {
@@ -731,7 +731,7 @@ function hook_entity_bundle_info() {
  * @param array $bundles
  *   An array of bundles, keyed first by entity type, then by bundle name.
  *
- * @see entity_get_bundles()
+ * @see Drupal\Core\Entity\EntityTypeBundleInfo::getBundleInfo()
  * @see hook_entity_bundle_info()
  */
 function hook_entity_bundle_info_alter(&$bundles) {
