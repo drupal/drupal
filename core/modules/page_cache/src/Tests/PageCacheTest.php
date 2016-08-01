@@ -8,7 +8,6 @@ use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Cache\Cache;
-use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -136,10 +135,6 @@ class PageCacheTest extends WebTestBase {
     $node = $this->drupalCreateNode(['type' => 'article']);
     $node_uri = $node->urlInfo();
     $node_url_with_hal_json_format = $node->urlInfo('canonical')->setRouteParameter('_format', 'hal_json');
-    /** @var \Drupal\user\RoleInterface $role */
-    $role = Role::load('anonymous');
-    $role->grantPermission('restful get entity:node');
-    $role->save();
 
     $this->drupalGet($node_uri);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');

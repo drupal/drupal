@@ -12,6 +12,11 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Common base class for resource plugins.
  *
+ * Note that this base class' implementation of the permissions() method
+ * generates a permission for every method for a resource. If your resource
+ * already has its own access control mechanism, you should opt out from this
+ * default permissions() method by overriding it.
+ *
  * @see \Drupal\rest\Annotation\RestResource
  * @see \Drupal\rest\Plugin\Type\ResourcePluginManager
  * @see \Drupal\rest\Plugin\ResourceInterface
@@ -179,7 +184,7 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
   }
 
   /**
-   * Setups the base route for all HTTP methods.
+   * Gets the base route for a particular method.
    *
    * @param string $canonical_path
    *   The canonical path for the resource.
@@ -190,20 +195,48 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
    *   The created base route.
    */
   protected function getBaseRoute($canonical_path, $method) {
-    $lower_method = strtolower($method);
-
-    $route = new Route($canonical_path, array(
+    return new Route($canonical_path, array(
       '_controller' => 'Drupal\rest\RequestHandler::handle',
-    ), array(
-      '_permission' => "restful $lower_method $this->pluginId",
     ),
+      $this->getBaseRouteRequirements($method),
       array(),
       '',
       array(),
       // The HTTP method is a requirement for this route.
       array($method)
     );
-    return $route;
+  }
+
+  /**
+   * Gets the base route requirements for a particular method.
+   *
+   * @param $method
+   *   The HTTP method to be used for the route.
+   *
+   * @return array
+   *   An array of requirements for parameters.
+   */
+  protected function getBaseRouteRequirements($method) {
+    $lower_method = strtolower($method);
+    // Every route MUST have requirements that result in the access manager
+    // having access checks to check. If it does not, the route is made
+    // inaccessible. So, we default to granting access to everyone. If a
+    // permission exists, then we add that below. The access manager requires
+    // that ALL access checks must grant access, so this still results in
+    // correct behavior.
+    $requirements = [
+      '_access' => 'TRUE',
+    ];
+
+    // Only specify route requirements if the default permission exists. For any
+    // more advanced route definition, resource plugins extending this base
+    // class must override this method.
+    $permission = "restful $lower_method $this->pluginId";
+    if (isset($this->permissions()[$permission])) {
+      $requirements['_permission'] = $permission;
+    }
+
+    return $requirements;
   }
 
 }

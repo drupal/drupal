@@ -26,7 +26,6 @@ class ResponseGeneratorTest extends RESTTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     $permissions = $this->entityPermissions('node', 'view');
-    $permissions[] = 'restful get entity:node';
     $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
   }

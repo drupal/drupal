@@ -48,7 +48,6 @@ class ReadTest extends RESTTestBase {
       // Create a user account that has the required permissions to read
       // resources via the REST API.
       $permissions = $this->entityPermissions($entity_type, 'view');
-      $permissions[] = 'restful get entity:' . $entity_type;
       $account = $this->drupalCreateUser($permissions);
       $this->drupalLogin($account);
 
@@ -123,12 +122,6 @@ class ReadTest extends RESTTestBase {
         $data = Json::decode($response);
         $this->assertFalse(isset($data['field_test_text']), 'Field access protected field is not visible in the response.');
       }
-
-      // Try to read an entity without proper permissions.
-      $this->drupalLogout();
-      $response = $this->httpRequest($this->getReadUrl($entity), 'GET');
-      $this->assertResponse(403);
-      $this->assertIdentical('{"message":""}', $response);
     }
     // Try to read a resource, the user entity, which is not REST API enabled.
     $account = $this->drupalCreateUser();
@@ -155,7 +148,6 @@ class ReadTest extends RESTTestBase {
     // Create a user account that has the required permissions to read
     // resources via the REST API.
     $permissions = $this->entityPermissions('node', 'view');
-    $permissions[] = 'restful get entity:node';
     $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
 
