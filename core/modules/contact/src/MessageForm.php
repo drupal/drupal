@@ -206,9 +206,12 @@ class MessageForm extends ContentEntityForm {
     $message = $this->entity;
     $user = $this->currentUser();
     $this->mailHandler->sendMailMessages($message, $user);
+    $contact_form = $message->getContactForm();
 
     $this->flood->register('contact', $this->config('contact.settings')->get('flood.interval'));
-    drupal_set_message($this->t('Your message has been sent.'));
+    if ($submission_message = $contact_form->getMessage()) {
+      drupal_set_message($submission_message);
+    }
 
     // To avoid false error messages caused by flood control, redirect away from
     // the contact form; either to the contacted user account or the front page.
@@ -216,7 +219,7 @@ class MessageForm extends ContentEntityForm {
       $form_state->setRedirectUrl($message->getPersonalRecipient()->urlInfo());
     }
     else {
-      $form_state->setRedirect('<front>');
+      $form_state->setRedirectUrl($contact_form->getRedirectUrl());
     }
     // Save the message. In core this is a no-op but should contrib wish to
     // implement message storage, this will make the task of swapping in a real

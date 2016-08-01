@@ -5,3 +5,5 @@ reply: ''
 weight: 0
 status: true
 langcode: en
+message: 'Your message has been sent.'
+redirect: ''

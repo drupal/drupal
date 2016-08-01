@@ -5,6 +5,7 @@ namespace Drupal\contact\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Mail\MailFormatHelper;
+use Drupal\Core\Url;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -154,7 +155,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertEscaped($recipients[0]);
 
     // Test update contact form.
-    $this->updateContactForm($id, $label = $this->randomMachineName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomMachineName(30), FALSE);
+    $this->updateContactForm($id, $label = $this->randomMachineName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomMachineName(30), FALSE, 'Your message has been sent.', '/user');
     $config = $this->config('contact.form.' . $id)->get();
     $this->assertEqual($config['label'], $label);
     $this->assertEqual($config['recipients'], array($recipients[0], $recipients[1]));
@@ -298,6 +299,46 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertEqual($mail['subject'], t('[@label] @subject', array('@label' => $label, '@subject' => $edit['subject[0][value]'])));
     $this->assertTrue(strpos($mail['body'], $field_label));
     $this->assertTrue(strpos($mail['body'], $edit[$field_name . '[0][value]']));
+
+    // Test messages and redirect.
+    /** @var \Drupal\contact\ContactFormInterface $form */
+    $form = ContactForm::load($contact_form);
+    $form->setMessage('Thanks for your submission.');
+    $form->setRedirectPath('/user/' . $admin_user->id());
+    $form->save();
+    // Check that the field is displayed.
+    $this->drupalGet('contact/' . $contact_form);
+
+    // Submit the contact form and verify the content.
+    $edit = array(
+      'subject[0][value]' => $this->randomMachineName(),
+      'message[0][value]' => $this->randomMachineName(),
+      $field_name . '[0][value]' => $this->randomMachineName(),
+    );
+    $this->drupalPostForm(NULL, $edit, t('Send message'));
+    $this->assertText('Thanks for your submission.');
+    $this->assertUrl('user/' . $admin_user->id());
+
+    // Test Empty message.
+    /** @var \Drupal\contact\ContactFormInterface $form */
+    $form = ContactForm::load($contact_form);
+    $form->setMessage('');
+    $form->setRedirectPath('/user/' . $admin_user->id());
+    $form->save();
+    $this->drupalGet('admin/structure/contact/manage/' . $contact_form);
+    // Check that the field is displayed.
+    $this->drupalGet('contact/' . $contact_form);
+
+    // Submit the contact form and verify the content.
+    $edit = array(
+      'subject[0][value]' => $this->randomMachineName(),
+      'message[0][value]' => $this->randomMachineName(),
+      $field_name . '[0][value]' => $this->randomMachineName(),
+    );
+    $this->drupalPostForm(NULL, $edit, t('Send message'));
+    $result = $this->xpath('//div[@role=:role]', array(':role' => 'contentinfo'));
+    $this->assertEqual(count($result), 0, 'Messages not found.');
+    $this->assertUrl('user/' . $admin_user->id());
   }
 
   /**
@@ -359,13 +400,17 @@ class ContactSitewideTest extends WebTestBase {
    *   form.
    * @param bool $selected
    *   A Boolean indicating whether the form should be selected by default.
+   * @param string $message
+   *   The message that will be displayed to a user upon completing the contact
+   *   form.
    * @param array $third_party_settings
    *   Array of third party settings to be added to the posted form data.
    */
-  function addContactForm($id, $label, $recipients, $reply, $selected, $third_party_settings = []) {
+  function addContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $third_party_settings = []) {
     $edit = array();
     $edit['label'] = $label;
     $edit['id'] = $id;
+    $edit['message'] = $message;
     $edit['recipients'] = $recipients;
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? TRUE : FALSE);
@@ -387,13 +432,20 @@ class ContactSitewideTest extends WebTestBase {
    *   form.
    * @param bool $selected
    *   A Boolean indicating whether the form should be selected by default.
+   * @param string $message
+   *   The message that will be displayed to a user upon completing the contact
+   *   form.
+   * @param string $redirect
+   *   The path where user will be redirect after this form has been submitted..
    */
-  function updateContactForm($id, $label, $recipients, $reply, $selected) {
+  function updateContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $redirect = '/') {
     $edit = array();
     $edit['label'] = $label;
     $edit['recipients'] = $recipients;
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? TRUE : FALSE);
+    $edit['message'] = $message;
+    $edit['redirect'] = $redirect;
     $this->drupalPostForm("admin/structure/contact/manage/$id", $edit, t('Save'));
   }
 

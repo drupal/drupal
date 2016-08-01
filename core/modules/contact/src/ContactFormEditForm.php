@@ -2,6 +2,7 @@
 
 namespace Drupal\contact;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityForm;
@@ -9,6 +10,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Egulias\EmailValidator\EmailValidator;
+use Drupal\Core\Path\PathValidatorInterface;
+use Drupal\Core\Render\Element\PathElement;
 
 /**
  * Base form for contact form edit forms.
@@ -24,13 +27,21 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
   protected $emailValidator;
 
   /**
+   * The path validator.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface
+   */
+  protected $pathValidator;
+
+  /**
    * Constructs a new ContactFormEditForm.
    *
    * @param \Egulias\EmailValidator\EmailValidator $email_validator
    *   The email validator.
    */
-  public function __construct(EmailValidator $email_validator) {
+  public function __construct(EmailValidator $email_validator, PathValidatorInterface $path_validator) {
    $this->emailValidator = $email_validator;
+   $this->pathValidator = $path_validator;
   }
 
   /**
@@ -38,7 +49,8 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('email.validator')
+      $container->get('email.validator'),
+      $container->get('path.validator')
     );
   }
 
@@ -82,6 +94,19 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
       '#description' => $this->t("Example: 'webmaster@example.com' or 'sales@example.com,support@example.com' . To specify multiple recipients, separate each email address with a comma."),
       '#required' => TRUE,
     );
+    $form['message'] = array(
+      '#type' => 'textarea',
+      '#title' => $this->t('Message'),
+      '#default_value' => $contact_form->getMessage(),
+      '#description' => $this->t('The message to display to the user after submission of this form. Leave blank for no message.'),
+    );
+    $form['redirect'] = array(
+      '#type' => 'path',
+      '#title' => $this->t('Redirect path'),
+      '#convert_path' => PathElement::CONVERT_NONE,
+      '#default_value' => $contact_form->getRedirectPath(),
+      '#description' => $this->t('Path to redirect the user to after submission of this form. For example, type "/about" to redirect to that page. Use a relative path with a slash in front.'),
+    );
     $form['reply'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Auto-reply'),
@@ -119,6 +144,12 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
       }
     }
     $form_state->setValue('recipients', $recipients);
+    $redirect_url = $form_state->getValue('redirect');
+    if ($redirect_url && $this->pathValidator->isValid($redirect_url)) {
+      if (Unicode::substr($redirect_url, 0, 1) !== '/') {
+        $form_state->setErrorByName('redirect', $this->t('The path should start with /.'));
+      }
+    }
   }
 
   /**

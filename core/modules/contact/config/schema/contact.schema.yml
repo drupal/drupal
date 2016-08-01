@@ -22,6 +22,12 @@ contact.form.*:
     weight:
       type: integer
       label: 'Weight'
+    message:
+      type: label
+      label: 'Message displayed to user on submission'
+    redirect:
+      type: path
+      label: 'Redirect path on submission'
 
 contact.settings:
   type: config_object
