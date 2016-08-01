@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FormState implements FormStateInterface {
 
+  use FormStateValuesTrait;
+
   /**
    * Tracks if any errors have been set on any form.
    *
@@ -246,7 +248,8 @@ class FormState implements FormStateInterface {
    *
    * This property is uncacheable.
    *
-   * @var array
+   * @var array|null
+   *   The submitted user input array, or NULL if no input was submitted yet.
    */
   protected $input;
 
@@ -975,67 +978,6 @@ class FormState implements FormStateInterface {
    */
   public function &getValues() {
     return $this->values;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function &getValue($key, $default = NULL) {
-    $exists = NULL;
-    $value = &NestedArray::getValue($this->getValues(), (array) $key, $exists);
-    if (!$exists) {
-      $value = $default;
-    }
-    return $value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setValues(array $values) {
-    $this->values = $values;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setValue($key, $value) {
-    NestedArray::setValue($this->getValues(), (array) $key, $value, TRUE);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function unsetValue($key) {
-    NestedArray::unsetValue($this->getValues(), (array) $key);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function hasValue($key) {
-    $exists = NULL;
-    $value = NestedArray::getValue($this->getValues(), (array) $key, $exists);
-    return $exists && isset($value);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isValueEmpty($key) {
-    $exists = NULL;
-    $value = NestedArray::getValue($this->getValues(), (array) $key, $exists);
-    return !$exists || empty($value);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setValueForElement(array $element, $value) {
-    return $this->setValue($element['#parents'], $value);
   }
 
   /**

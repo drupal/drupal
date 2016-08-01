@@ -9,8 +9,8 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\SubformState;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
@@ -134,7 +134,9 @@ class BlockForm extends EntityForm {
     $form_state->setTemporaryValue('gathered_contexts', $this->contextRepository->getAvailableContexts());
 
     $form['#tree'] = TRUE;
-    $form['settings'] = $this->getPluginForm($entity->getPlugin())->buildConfigurationForm(array(), $form_state);
+    $form['settings'] = [];
+    $subform_state = SubformState::createForSubform($form['settings'], $form, $form_state);
+    $form['settings'] = $this->getPluginForm($entity->getPlugin())->buildConfigurationForm($form['settings'], $subform_state);
     $form['visibility'] = $this->buildVisibilityInterface([], $form_state);
 
     // If creating a new block, calculate a safe default machine name.
@@ -294,11 +296,7 @@ class BlockForm extends EntityForm {
 
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for validation.
-    $settings = (new FormState())->setValues($form_state->getValue('settings'));
-    // Call the plugin validate handler.
-    $this->getPluginForm($this->entity->getPlugin())->validateConfigurationForm($form, $settings);
-    // Update the original form values.
-    $form_state->setValue('settings', $settings->getValues());
+    $this->getPluginForm($this->entity->getPlugin())->validateConfigurationForm($form['settings'], SubformState::createForSubform($form['settings'], $form, $form_state));
     $this->validateVisibility($form, $form_state);
   }
 
@@ -322,11 +320,7 @@ class BlockForm extends EntityForm {
 
       // Allow the condition to validate the form.
       $condition = $form_state->get(['conditions', $condition_id]);
-      $condition_values = (new FormState())
-        ->setValues($values);
-      $condition->validateConfigurationForm($form, $condition_values);
-      // Update the original form values.
-      $form_state->setValue(['visibility', $condition_id], $condition_values->getValues());
+      $condition->validateConfigurationForm($form['visibility'][$condition_id], SubformState::createForSubform($form['visibility'][$condition_id], $form, $form_state));
     }
   }
 
@@ -339,19 +333,15 @@ class BlockForm extends EntityForm {
     $entity = $this->entity;
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for submission.
-    // @todo Find a way to avoid this manipulation.
-    $settings = (new FormState())->setValues($form_state->getValue('settings'));
-
+    $sub_form_state = SubformState::createForSubform($form['settings'], $form, $form_state);
     // Call the plugin submit handler.
     $block = $entity->getPlugin();
-    $this->getPluginForm($block)->submitConfigurationForm($form, $settings);
+    $this->getPluginForm($block)->submitConfigurationForm($form, $sub_form_state);
     // If this block is context-aware, set the context mapping.
     if ($block instanceof ContextAwarePluginInterface && $block->getContextDefinitions()) {
-      $context_mapping = $settings->getValue('context_mapping', []);
+      $context_mapping = $sub_form_state->getValue('context_mapping', []);
       $block->setContextMapping($context_mapping);
     }
-    // Update the original form values.
-    $form_state->setValue('settings', $settings->getValues());
 
     $this->submitVisibility($form, $form_state);
 
@@ -380,16 +370,19 @@ class BlockForm extends EntityForm {
     foreach ($form_state->getValue('visibility') as $condition_id => $values) {
       // Allow the condition to submit the form.
       $condition = $form_state->get(['conditions', $condition_id]);
-      $condition_values = (new FormState())
-        ->setValues($values);
-      $condition->submitConfigurationForm($form, $condition_values);
+      $condition->submitConfigurationForm($form['visibility'][$condition_id], SubformState::createForSubform($form['visibility'][$condition_id], $form, $form_state));
+
+      // Setting conditions' context mappings is the plugins' responsibility.
+      // This code exists for backwards compatibility, because
+      // \Drupal\Core\Condition\ConditionPluginBase::submitConfigurationForm()
+      // did not set its own mappings until Drupal 8.2
+      // @todo Remove the code that sets context mappings in Drupal 9.0.0.
       if ($condition instanceof ContextAwarePluginInterface) {
         $context_mapping = isset($values['context_mapping']) ? $values['context_mapping'] : [];
         $condition->setContextMapping($context_mapping);
       }
-      // Update the original form values.
+
       $condition_configuration = $condition->getConfiguration();
-      $form_state->setValue(['visibility', $condition_id], $condition_configuration);
       // Update the visibility conditions on the block.
       $this->entity->getVisibilityConditions()->addInstanceId($condition_id, $condition_configuration);
     }

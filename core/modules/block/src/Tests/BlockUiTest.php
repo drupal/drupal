@@ -288,4 +288,20 @@ class BlockUiTest extends WebTestBase {
     $this->assertUrl('admin/structure/block/list/classy');
   }
 
+  /**
+   * Tests if validation errors are passed plugin form to the parent form.
+   */
+  public function testBlockValidateErrors() {
+    $this->drupalPostForm('admin/structure/block/add/test_settings_validation/classy', ['settings[digits]' => 'abc'], t('Save block'));
+
+    $arguments = [':message' => 'Only digits are allowed'];
+    $pattern = '//div[contains(@class,"messages messages--error")]/div[contains(text()[2],:message)]';
+    $elements = $this->xpath($pattern, $arguments);
+    $this->assertTrue($elements, 'Plugin error message found in parent form.');
+
+    $error_class_pattern = '//div[contains(@class,"form-item-settings-digits")]/input[contains(@class,"error")]';
+    $error_class = $this->xpath($error_class_pattern);
+    $this->assertTrue($error_class, 'Plugin error class found in parent form.');
+  }
+
 }

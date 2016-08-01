@@ -2,6 +2,7 @@
 
 namespace Drupal\image\Tests;
 
+use Drupal\image\Entity\ImageStyle;
 use Drupal\system\Tests\Image\ToolkitTestBase;
 
 /**
@@ -160,6 +161,26 @@ class ImageEffectsTest extends ToolkitTestBase {
     $this->assertTrue($image_effect_definitions_called === 0, 'image_effect_definitions() returned data from cache.');
 
     $this->assertTrue($effects == $cached_effects, 'Cached effects are the same as generated effects.');
+  }
+
+  /**
+   * Tests if validation errors are passed plugin form to the parent form.
+   */
+  public function testEffectFormValidationErrors() {
+    $account = $this->drupalCreateUser(['administer image styles']);
+    $this->drupalLogin($account);
+    /** @var \Drupal\image\ImageStyleInterface $style */
+    $style = ImageStyle::load('thumbnail');
+    // Image Scale is the only effect shipped with 'thumbnail', by default.
+    $uuids = $style->getEffects()->getInstanceIds();
+    $uuid = key($uuids);
+
+    // We are posting the form with both, width and height, empty.
+    $edit = ['data[width]' => '', 'data[height]' => ''];
+    $path = 'admin/config/media/image-styles/manage/thumbnail/effects/' . $uuid;
+    $this->drupalPostForm($path, $edit, t('Update effect'));
+    // Check that the error message has been displayed.
+    $this->assertText(t('Width and height can not both be blank.'));
   }
 
   /**
