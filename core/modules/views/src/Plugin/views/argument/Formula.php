@@ -6,7 +6,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
- * Abstract argument handler for simple formulae.
+ * Argument handler for simple formulae.
  *
  * Child classes of this object should implement summaryArgument, at least.
  *
