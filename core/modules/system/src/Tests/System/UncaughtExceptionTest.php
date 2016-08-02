@@ -253,7 +253,7 @@ class UncaughtExceptionTest extends WebTestBase {
 
     // Find fatal error logged to the simpletest error.log
     $errors = file(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
-    $this->assertIdentical(count($errors), 2, 'The error + the error that the logging service is broken has been written to the error log.');
+    $this->assertIdentical(count($errors), 8, 'The error + the error that the logging service is broken has been written to the error log.');
     $this->assertTrue(strpos($errors[0], 'Failed to log error') !== FALSE, 'The error handling logs when an error could not be logged to the logger.');
 
     $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';
