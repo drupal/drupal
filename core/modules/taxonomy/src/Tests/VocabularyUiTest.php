@@ -47,14 +47,17 @@ class VocabularyUiTest extends TaxonomyTestBase {
 
     // Edit the vocabulary.
     $this->drupalGet('admin/structure/taxonomy');
-    $this->assertText($edit['name'], 'Vocabulary found in the vocabulary overview listing.');
+    $this->assertText($edit['name'], 'Vocabulary name found in the vocabulary overview listing.');
+    $this->assertText($edit['description'], 'Vocabulary description found in the vocabulary overview listing.');
     $this->assertLinkByHref(Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $edit['vid']])->toString());
     $this->clickLink(t('Edit vocabulary'));
     $edit = array();
     $edit['name'] = $this->randomMachineName();
+    $edit['description'] = $this->randomMachineName();
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy');
-    $this->assertText($edit['name'], 'Vocabulary found in the vocabulary overview listing.');
+    $this->assertText($edit['name'], 'Vocabulary name found in the vocabulary overview listing.');
+    $this->assertText($edit['description'], 'Vocabulary description found in the vocabulary overview listing.');
 
     // Try to submit a vocabulary with a duplicate machine name.
     $edit['vid'] = $vid;
