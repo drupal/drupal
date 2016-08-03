@@ -14,8 +14,9 @@ $autoloader = require_once 'autoload.php';
 
 $kernel = DrupalKernel::createFromRequest(Request::createFromGlobals(), $autoloader, 'prod');
 $kernel->boot();
+$container = $kernel->getContainer();
 
-$views = $kernel->getContainer()
+$views = $container
   ->get('config.factory')
   ->get('statistics.settings')
   ->get('count_content_views');
@@ -23,15 +24,7 @@ $views = $kernel->getContainer()
 if ($views) {
   $nid = filter_input(INPUT_POST, 'nid', FILTER_VALIDATE_INT);
   if ($nid) {
-    \Drupal::database()->merge('node_counter')
-      ->key('nid', $nid)
-      ->fields(array(
-        'daycount' => 1,
-        'totalcount' => 1,
-        'timestamp' => REQUEST_TIME,
-      ))
-      ->expression('daycount', 'daycount + 1')
-      ->expression('totalcount', 'totalcount + 1')
-      ->execute();
+    $container->get('request_stack')->push(Request::createFromGlobals());
+    $container->get('statistics.storage.node')->recordView($nid);
   }
 }

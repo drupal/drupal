@@ -52,9 +52,9 @@ function statistics_node_links_alter(array &$links, NodeInterface $entity, array
   if ($context['view_mode'] != 'rss') {
     $links['#cache']['contexts'][] = 'user.permissions';
     if (\Drupal::currentUser()->hasPermission('view post access counter')) {
-      $statistics = statistics_get($entity->id());
+      $statistics = \Drupal::service('statistics.storage.node')->fetchView($entity->id());
       if ($statistics) {
-        $statistics_links['statistics_counter']['title'] = \Drupal::translation()->formatPlural($statistics['totalcount'], '1 view', '@count views');
+        $statistics_links['statistics_counter']['title'] = \Drupal::translation()->formatPlural($statistics->getTotalCount(), '1 view', '@count views');
         $links['statistics'] = array(
           '#theme' => 'links__node__statistics',
           '#links' => $statistics_links,
@@ -70,18 +70,10 @@ function statistics_node_links_alter(array &$links, NodeInterface $entity, array
  * Implements hook_cron().
  */
 function statistics_cron() {
-  $statistics_timestamp = \Drupal::state()->get('statistics.day_timestamp') ?: 0;
-
-  if ((REQUEST_TIME - $statistics_timestamp) >= 86400) {
-    // Reset day counts.
-    db_update('node_counter')
-      ->fields(array('daycount' => 0))
-      ->execute();
-    \Drupal::state()->set('statistics.day_timestamp', REQUEST_TIME);
-  }
-
-  // Calculate the maximum of node views, for node search ranking.
-  \Drupal::state()->set('statistics.node_counter_scale', 1.0 / max(1.0, db_query('SELECT MAX(totalcount) FROM {node_counter}')->fetchField()));
+  $storage = \Drupal::service('statistics.storage.node');
+  $storage->resetDayCount();
+  $max_total_count = $storage->maxTotalCount();
+  \Drupal::state()->set('statistics.node_counter_scale', 1.0 / max(1.0, $max_total_count));
 }
 
 /**
@@ -123,26 +115,21 @@ function statistics_title_list($dbfield, $dbrows) {
   return FALSE;
 }
 
-
 /**
  * Retrieves a node's "view statistics".
  *
- * @param int $nid
- *   The node ID.
- *
- * @return array
- *   An associative array containing:
- *   - totalcount: Integer for the total number of times the node has been
- *     viewed.
- *   - daycount: Integer for the total number of times the node has been viewed
- *     "today". For the daycount to be reset, cron must be enabled.
- *   - timestamp: Integer for the timestamp of when the node was last viewed.
+ * @deprecated in Drupal 8.2.x, will be removed before Drupal 9.0.0.
+ *   Use \Drupal::service('statistics.storage.node')->fetchView($id).
  */
-function statistics_get($nid) {
-
-  if ($nid > 0) {
-    // Retrieve an array with both totalcount and daycount.
-    return db_query('SELECT totalcount, daycount, timestamp FROM {node_counter} WHERE nid = :nid', array(':nid' => $nid), array('target' => 'replica'))->fetchAssoc();
+function statistics_get($id) {
+  if ($id > 0) {
+    /** @var \Drupal\statistics\StatisticsViewsResult $statistics */
+    $statistics = \Drupal::service('statistics.storage.node')->fetchView($id);
+    return [
+      'totalcount' => $statistics->getTotalCount(),
+      'daycount' => $statistics->getDayCount(),
+      'timestamp' => $statistics->getTimestamp(),
+    ];
   }
 }
 
@@ -151,9 +138,8 @@ function statistics_get($nid) {
  */
 function statistics_node_predelete(EntityInterface $node) {
   // Clean up statistics table when node is deleted.
-  db_delete('node_counter')
-    ->condition('nid', $node->id())
-    ->execute();
+  $id = $node->id();
+  return \Drupal::service('statistics.storage.node')->deleteViews($id);
 }
 
 /**
