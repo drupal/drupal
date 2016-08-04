@@ -647,7 +647,6 @@ function simpletest_script_execute_batch($test_classes) {
         elseif ($status['exitcode']) {
           $message = 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').';
           echo $message . "\n";
-          $total_status = max($status['exitcode'], $total_status);
           // Insert a fail for xml results.
           TestBase::insertAssert($child['test_id'], $child['class'], FALSE, $message, 'run-tests.sh check');
           // Ensure that an error line is displayed for the class.
