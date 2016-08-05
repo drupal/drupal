@@ -31,7 +31,6 @@ interface QueryInterface extends AlterableInterface {
    *     ->condition('greetings', 'merhaba', '=', 'tr')
    *     ->condition('greetings.value', 'siema', '=', 'pl')
    *     ->execute();
-   *   $entity_ids = $query->execute();
    * @endcode
    *
    * @param $field
