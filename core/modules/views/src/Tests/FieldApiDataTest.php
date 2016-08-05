@@ -64,6 +64,7 @@ class FieldApiDataTest extends FieldTestBase {
     $this->assertTrue(isset($data[$revision_table]['table']['join']['node_field_revision']));
 
     $expected_join = array(
+      'table' => $current_table,
       'left_field' => 'nid',
       'field' => 'entity_id',
       'extra' => array(
@@ -73,6 +74,7 @@ class FieldApiDataTest extends FieldTestBase {
     );
     $this->assertEqual($expected_join, $data[$current_table]['table']['join']['node_field_data']);
     $expected_join = array(
+      'table' => $revision_table,
       'left_field' => 'vid',
       'field' => 'revision_id',
       'extra' => array(
