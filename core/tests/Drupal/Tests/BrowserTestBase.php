@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\Testing\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Serialization\Yaml;
@@ -153,6 +154,31 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * @var \Drupal\Core\Config\ConfigImporter
    */
   protected $configImporter;
+
+  /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
+   * An array of config object names that are excluded from schema checking.
+   *
+   * @var string[]
+   */
+  protected static $configSchemaCheckerExclusions = array(
+    // Following are used to test lack of or partial schema. Where partial
+    // schema is provided, that is explicitly tested in specific tests.
+    'config_schema_test.noschema',
+    'config_schema_test.someschema',
+    'config_schema_test.schema_data_types',
+    'config_schema_test.no_schema_data_types',
+    // Used to test application of schema to filtering of configuration.
+    'config_test.dynamic.system',
+  );
 
   /**
    * The profile to install as a basis for testing.
@@ -990,6 +1016,17 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     }
     // Copy the testing-specific service overrides in place.
     copy($settings_services_file, $directory . '/services.yml');
+    if ($this->strictConfigSchema) {
+      // Add a listener to validate configuration schema on save.
+      $content = file_get_contents($directory . '/services.yml');
+      $services = Yaml::decode($content);
+      $services['services']['simpletest.config_schema_checker'] = [
+        'class' => ConfigSchemaChecker::class,
+        'arguments' => ['@config.typed', $this->getConfigSchemaExclusions()],
+        'tags' => [['name' => 'event_subscriber']]
+      ];
+      file_put_contents($directory . '/services.yml', Yaml::encode($services));
+    }
 
     // Since Drupal is bootstrapped already, install_begin_request() will not
     // bootstrap into DRUPAL_BOOTSTRAP_CONFIGURATION (again). Hence, we have to
@@ -1684,6 +1721,25 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // Ensure that the cache is deleted for the yaml file loader.
     $file_cache = FileCacheFactory::get('container_yaml_loader');
     $file_cache->delete($filename);
+  }
+
+  /**
+   * Gets the config schema exclusions for this test.
+   *
+   * @return string[]
+   *   An array of config object names that are excluded from schema checking.
+   */
+  protected function getConfigSchemaExclusions() {
+    $class = get_class($this);
+    $exceptions = [];
+    while ($class) {
+      if (property_exists($class, 'configSchemaCheckerExclusions')) {
+        $exceptions = array_merge($exceptions, $class::$configSchemaCheckerExclusions);
+      }
+      $class = get_parent_class($class);
+    }
+    // Filter out any duplicates.
+    return array_unique($exceptions);
   }
 
 }
