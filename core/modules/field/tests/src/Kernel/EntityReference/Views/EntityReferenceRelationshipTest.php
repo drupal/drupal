@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel\EntityReference\Views;
 
+use Drupal\entity_test\Entity\EntityTestMulChanged;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
@@ -27,6 +28,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
    */
   public static $testViews = array(
     'test_entity_reference_entity_test_view',
+    'test_entity_reference_entity_test_view_long',
     'test_entity_reference_reverse_entity_test_view',
     'test_entity_reference_entity_test_mul_view',
     'test_entity_reference_reverse_entity_test_mul_view',
@@ -55,12 +57,19 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_mul');
+    $this->installEntitySchema('entity_test_mul_changed');
 
     // Create reference from entity_test to entity_test_mul.
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_data', 'field_test_data', 'entity_test_mul');
 
     // Create reference from entity_test_mul to entity_test.
     $this->createEntityReferenceField('entity_test_mul', 'entity_test_mul', 'field_data_test', 'field_data_test', 'entity_test');
+
+    // Create another field for testing with a long name. So it's storage name
+    // will become hashed. Use entity_test_mul_changed, so the resulting field
+    // tables created will be greater than 48 chars long.
+    // @see \Drupal\Core\Entity\Sql\DefaultTableMapping::generateFieldTableName()
+    $this->createEntityReferenceField('entity_test_mul_changed', 'entity_test_mul_changed', 'field_test_data_with_a_long_name', 'field_test_data_with_a_long_name', 'entity_test');
 
     ViewTestData::createTestViews(get_class($this), array('entity_reference_test_views'));
   }
@@ -124,7 +133,6 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
       // Test that the correct relationship entity is on the row.
       $this->assertEqual($row->_relationship_entities['field_test_data']->id(), 1);
       $this->assertEqual($row->_relationship_entities['field_test_data']->bundle(), 'entity_test_mul');
-
     }
 
     // Check the backwards reference view.
@@ -222,6 +230,49 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
       // Test that the correct relationship entity is on the row.
       $this->assertEqual($row->_relationship_entities['reverse__entity_test_mul__field_data_test']->id(), $this->entities[$index]->id());
       $this->assertEqual($row->_relationship_entities['reverse__entity_test_mul__field_data_test']->bundle(), 'entity_test_mul');
+    }
+  }
+
+  /**
+   * Tests views data generated for relationship.
+   *
+   * @see entity_reference_field_views_data()
+   */
+  public function testDataTableRelationshipWithLongFieldName() {
+    // Create some test entities which link each other.
+    $referenced_entity = EntityTest::create();
+    $referenced_entity->save();
+
+    $entity = EntityTestMulChanged::create();
+    $entity->field_test_data_with_a_long_name->target_id = $referenced_entity->id();
+    $entity->save();
+    $this->entities[] = $entity;
+
+    $entity = EntityTestMulChanged::create();
+    $entity->field_test_data_with_a_long_name->target_id = $referenced_entity->id();
+    $entity->save();
+    $this->entities[] = $entity;
+
+    Views::viewsData()->clear();
+
+    // Check an actual test view.
+    $view = Views::getView('test_entity_reference_entity_test_view_long');
+    $this->executeView($view);
+    /** @var \Drupal\views\ResultRow $row */
+    foreach ($view->result as $index => $row) {
+      // Check that the actual ID of the entity is the expected one.
+      $this->assertEqual($row->id, $this->entities[$index]->id());
+
+      // Also check that we have the correct result entity.
+      $this->assertEqual($row->_entity->id(), $this->entities[$index]->id());
+
+      // Test the forward relationship.
+      //$this->assertEqual($row->entity_test_entity_test_mul__field_data_test_id, 1);
+
+      // Test that the correct relationship entity is on the row.
+      $this->assertEqual($row->_relationship_entities['field_test_data_with_a_long_name']->id(), 1);
+      $this->assertEqual($row->_relationship_entities['field_test_data_with_a_long_name']->bundle(), 'entity_test');
+
     }
   }
 
