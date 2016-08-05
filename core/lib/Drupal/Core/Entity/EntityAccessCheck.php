@@ -17,13 +17,26 @@ class EntityAccessCheck implements AccessInterface {
    * Checks access to the entity operation on the given route.
    *
    * The value of the '_entity_access' key must be in the pattern
-   * 'entity_type.operation.' The entity type must match the {entity_type}
-   * parameter in the route pattern. This will check a node for 'update' access:
+   * 'entity_slug_name.operation.' For example, this will check a node for
+   * 'update' access:
    * @code
    * pattern: '/foo/{node}/bar'
    * requirements:
    *   _entity_access: 'node.update'
    * @endcode
+   * And this will check a dynamic entity type:
+   * @code
+   * example.route:
+   *   path: foo/{entity_type}/{example}
+   *   requirements:
+   *     _entity_access: example.update
+   *   options:
+   *     parameters:
+   *       example:
+   *         type: entity:{entity_type}
+   * @endcode
+   * @see \Drupal\Core\ParamConverter\EntityConverter
+   *
    * Available operations are 'view', 'update', 'create', and 'delete'.
    *
    * @param \Symfony\Component\Routing\Route $route
