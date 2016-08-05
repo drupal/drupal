@@ -446,7 +446,8 @@ abstract class RESTTestBase extends WebTestBase {
   protected function loadEntityFromLocationHeader($location_url) {
     $url_parts = explode('/', $location_url);
     $id = end($url_parts);
-    return entity_load($this->testEntityType, $id);
+    return $this->container->get('entity_type.manager')
+      ->getStorage($this->testEntityType)->load($id);
   }
 
   /**

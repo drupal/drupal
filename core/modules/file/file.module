@@ -1482,7 +1482,8 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
     $usage_list = \Drupal::service('file.usage')->listUsage($file);
     $file_usage_list = isset($usage_list['file']) ? $usage_list['file'] : array();
     foreach ($file_usage_list as $entity_type_id => $entity_ids) {
-      $entities = entity_load_multiple($entity_type_id, array_keys($entity_ids));
+      $entities = \Drupal::entityTypeManager()
+        ->getStorage($entity_type_id)->loadMultiple(array_keys($entity_ids));
       foreach ($entities as $entity) {
         $bundle = $entity->bundle();
         // We need to find file fields for this entity type and bundle.

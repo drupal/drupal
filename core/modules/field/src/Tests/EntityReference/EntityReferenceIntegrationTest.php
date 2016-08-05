@@ -82,7 +82,9 @@ class EntityReferenceIntegrationTest extends WebTestBase {
 
       // Try to post the form again with no modification and check if the field
       // values remain the same.
-      $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
+      /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
+      $storage = $this->container->get('entity_type.manager')->getStorage($this->entityType);
+      $entity = current($storage->loadByProperties(['name' => $entity_name]));
       $this->drupalGet($this->entityType . '/manage/' . $entity->id() . '/edit');
       $this->assertFieldByName($this->fieldName . '[0][target_id]', $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')');
       $this->assertFieldByName($this->fieldName . '[1][target_id]', $referenced_entities[1]->label() . ' (' . $referenced_entities[1]->id() . ')');
@@ -108,7 +110,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
 
       // Try to post the form again with no modification and check if the field
       // values remain the same.
-      $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
+      $entity = current($storage->loadByProperties(['name' => $entity_name]));
       $this->drupalGet($this->entityType . '/manage/' . $entity->id() . '/edit');
       $this->assertFieldByName($this->fieldName . '[target_id]', $target_id . ' (' . $referenced_entities[1]->id() . ')');
 
@@ -119,7 +121,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       // Since we don't know the form structure for these widgets, just test
       // that editing and saving an already created entity works.
       $exclude = array('entity_reference_autocomplete', 'entity_reference_autocomplete_tags');
-      $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
+      $entity = current($storage->loadByProperties(['name' => $entity_name]));
       $supported_widgets = \Drupal::service('plugin.manager.field.widget')->getOptions('entity_reference');
       $supported_widget_types = array_diff(array_keys($supported_widgets), $exclude);
 
@@ -173,7 +175,8 @@ class EntityReferenceIntegrationTest extends WebTestBase {
    *   An array of referenced entities.
    */
   protected function assertFieldValues($entity_name, $referenced_entities) {
-    $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
+    $entity = current($this->container->get('entity_type.manager')->getStorage(
+    $this->entityType)->loadByProperties(['name' => $entity_name]));
 
     $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', array('%entity_type' => $this->entityType)));
 

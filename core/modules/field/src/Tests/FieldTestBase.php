@@ -47,8 +47,11 @@ abstract class FieldTestBase extends WebTestBase {
    */
   function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_DEFAULT, $column = 'value') {
     // Re-load the entity to make sure we have the latest changes.
-    \Drupal::entityManager()->getStorage($entity->getEntityTypeId())->resetCache(array($entity->id()));
-    $e = entity_load($entity->getEntityTypeId(), $entity->id());
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage($entity->getEntityTypeId());
+    $storage->resetCache([$entity->id()]);
+    $e = $storage->load($entity->id());
+
     $field = $values = $e->getTranslation($langcode)->$field_name;
     // Filter out empty values so that they don't mess with the assertions.
     $field->filterEmptyItems();

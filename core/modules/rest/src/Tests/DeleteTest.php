@@ -44,7 +44,10 @@ class DeleteTest extends RESTTestBase {
       $response = $this->httpRequest($entity->urlInfo(), 'DELETE');
       // Clear the static cache with entity_load(), otherwise we won't see the
       // update.
-      $entity = entity_load($entity_type, $entity->id(), TRUE);
+      $storage = $this->container->get('entity_type.manager')
+        ->getStorage($entity_type);
+      $storage->resetCache([$entity->id()]);
+      $entity = $storage->load($entity->id());
       $this->assertFalse($entity, $entity_type . ' entity is not in the DB anymore.');
       $this->assertResponse('204', 'HTTP response code is correct.');
       $this->assertEqual($response, '', 'Response body is empty.');
@@ -61,7 +64,9 @@ class DeleteTest extends RESTTestBase {
       $entity->save();
       $this->httpRequest($entity->urlInfo(), 'DELETE');
       $this->assertResponse(403);
-      $this->assertNotIdentical(FALSE, entity_load($entity_type, $entity->id(), TRUE), 'The ' . $entity_type . ' entity is still in the database.');
+      $storage->resetCache([$entity->id()]);
+      $this->assertNotIdentical(FALSE, $storage->load($entity->id()),
+        'The ' . $entity_type . ' entity is still in the database.');
     }
     // Try to delete a resource which is not REST API enabled.
     $this->enableService(FALSE);
