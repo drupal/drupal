@@ -67,7 +67,9 @@ class EntityReference extends DataReferenceBase {
   public function getTarget() {
     if (!isset($this->target) && isset($this->id)) {
       // If we have a valid reference, return the entity's TypedData adapter.
-      $entity = entity_load($this->getTargetDefinition()->getEntityTypeId(), $this->id);
+      $entity = \Drupal::entityTypeManager()
+        ->getStorage($this->getTargetDefinition()->getEntityTypeId())
+        ->load($this->id);
       $this->target = isset($entity) ? $entity->getTypedData() : NULL;
     }
     return $this->target;

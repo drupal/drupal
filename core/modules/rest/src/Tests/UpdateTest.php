@@ -90,7 +90,10 @@ class UpdateTest extends RESTTestBase {
     $this->assertEqual($request, $response);
 
     // Re-load updated entity from the database.
-    $entity = entity_load($entity_type, $entity->id(), TRUE);
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type);
+    $storage->resetCache([$entity->id()]);
+    $entity = $storage->load($entity->id());
     $this->assertEqual($entity->field_test_text->value, $patch_entity->field_test_text->value, 'Field was successfully updated.');
 
     // Make sure that the field does not get deleted if it is not present in the
@@ -101,7 +104,8 @@ class UpdateTest extends RESTTestBase {
     $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(200);
 
-    $entity = entity_load($entity_type, $entity->id(), TRUE);
+    $storage->resetCache([$entity->id()]);
+    $entity = $storage->load($entity->id());
     $this->assertNotNull($entity->field_test_text->value . 'Test field has not been deleted.');
 
     // Try to empty a field.
@@ -113,7 +117,8 @@ class UpdateTest extends RESTTestBase {
     $this->assertResponse(200);
 
     // Re-load updated entity from the database.
-    $entity = entity_load($entity_type, $entity->id(), TRUE);
+    $storage->resetCache([$entity->id()]);
+    $entity = $storage->load($entity->id(), TRUE);
     $this->assertNull($entity->field_test_text->value, 'Test field has been cleared.');
 
     // Enable access protection for the text field.
@@ -127,7 +132,8 @@ class UpdateTest extends RESTTestBase {
     $this->assertResponse(403);
 
     // Re-load the entity from the database.
-    $entity = entity_load($entity_type, $entity->id(), TRUE);
+    $storage->resetCache([$entity->id()]);
+    $entity = $storage->load($entity->id());
     $this->assertEqual($entity->field_test_text->value, 'no edit access value', 'Text field was not deleted.');
 
     // Try to update an access protected field.
@@ -138,7 +144,8 @@ class UpdateTest extends RESTTestBase {
     $this->assertResponse(403);
 
     // Re-load the entity from the database.
-    $entity = entity_load($entity_type, $entity->id(), TRUE);
+    $storage->resetCache([$entity->id()]);
+    $entity = $storage->load($entity->id());
     $this->assertEqual($entity->field_test_text->value, 'no edit access value', 'Text field was not updated.');
 
     // Try to update the field with a text format this user has no access to.
@@ -154,7 +161,8 @@ class UpdateTest extends RESTTestBase {
     $this->assertResponse(422);
 
     // Re-load the entity from the database.
-    $entity = entity_load($entity_type, $entity->id(), TRUE);
+    $storage->resetCache([$entity->id()]);
+    $entity = $storage->load($entity->id());
     $this->assertEqual($entity->field_test_text->format, 'plain_text', 'Text format was not updated.');
 
     // Restore the valid test value.
@@ -168,7 +176,8 @@ class UpdateTest extends RESTTestBase {
     // Try to update a non-existing entity with ID 9999.
     $this->httpRequest($entity_type . '/9999', 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(404);
-    $loaded_entity = entity_load($entity_type, 9999, TRUE);
+    $storage->resetCache([9999]);
+    $loaded_entity = $storage->load(9999);
     $this->assertFalse($loaded_entity, 'Entity 9999 was not created.');
 
     // Try to send invalid data to trigger the entity validation constraints.

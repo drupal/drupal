@@ -87,7 +87,10 @@ class CsrfTest extends RESTTestBase {
     $this->curlExec($curl_options);
     $this->assertResponse(403);
     // Ensure that the entity was not created.
-    $this->assertFalse(entity_load_multiple($this->testEntityType, NULL, TRUE), 'No entity has been created in the database.');
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage($this->testEntityType);
+    $storage->resetCache();
+    $this->assertFalse($storage->loadMultiple(), 'No entity has been created in the database.');
 
     // Create an entity with the CSRF token.
     $token = $this->drupalGet('rest/session/token');

@@ -515,7 +515,9 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       // cache miss for both the referencing entity, and the listing of
       // referencing entities, but not for any other routes.
       $this->pass("Test modification of referenced entity's bundle entity.", 'Debug');
-      $bundle_entity = entity_load($bundle_entity_type_id, $this->entity->bundle());
+      $bundle_entity = $this->container->get('entity_type.manager')
+        ->getStorage($bundle_entity_type_id)
+        ->load($this->entity->bundle());
       $bundle_entity->save();
       $this->verifyPageCache($referencing_entity_url, 'MISS');
       $this->verifyPageCache($listing_url, 'MISS');

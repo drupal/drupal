@@ -555,7 +555,9 @@ class FormTest extends FieldTestBase {
     $id = $match[1];
 
     // Check that the default value was saved.
-    $entity = entity_load($entity_type, $id);
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type);
+    $entity = $storage->load($id);
     $this->assertEqual($entity->$field_name_no_access->value, 99, 'Default value was saved for the field with no edit access.');
     $this->assertEqual($entity->$field_name->value, 1, 'Entered value vas saved for the field with edit access.');
 
@@ -567,8 +569,8 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm($entity_type . '/manage/' . $id . '/edit', $edit, t('Save'));
 
     // Check that the new revision has the expected values.
-    $this->container->get('entity.manager')->getStorage($entity_type)->resetCache(array($id));
-    $entity = entity_load($entity_type, $id);
+    $storage->resetCache([$id]);
+    $entity = $storage->load($id);
     $this->assertEqual($entity->$field_name_no_access->value, 99, 'New revision has the expected value for the field with no edit access.');
     $this->assertEqual($entity->$field_name->value, 2, 'New revision has the expected value for the field with edit access.');
 
@@ -606,7 +608,10 @@ class FormTest extends FieldTestBase {
     preg_match('|' . $entity_type . '/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test_rev @id has been created.', array('@id' => $id)), 'Entity was created');
-    $entity = entity_load($entity_type, $id);
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type);
+
+    $entity = $storage->load($id);
     $this->assertEqual($entity->{$field_name}->value, 99, 'Default value was saved');
 
     // Update the field to remove the default value, and switch to the default
@@ -628,8 +633,8 @@ class FormTest extends FieldTestBase {
     $edit = array("{$field_name}[0][value]" => $value);
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('entity_test_rev @id has been updated.', array('@id' => $id)), 'Entity was updated');
-    \Drupal::entityManager()->getStorage($entity_type)->resetCache(array($id));
-    $entity = entity_load($entity_type, $id);
+    $storage->resetCache([$id]);
+    $entity = $storage->load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
 
     // Set the field back to hidden.
@@ -642,8 +647,8 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm($entity_type . '/manage/' . $id . '/edit', $edit, t('Save'));
 
     // Check that the expected value has been carried over to the new revision.
-    \Drupal::entityManager()->getStorage($entity_type)->resetCache(array($id));
-    $entity = entity_load($entity_type, $id);
+    $storage->resetCache(array($id));
+    $entity = $storage->load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'New revision has the expected value for the field with the Hidden widget');
   }
 

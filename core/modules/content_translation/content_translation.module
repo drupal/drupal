@@ -412,7 +412,8 @@ function content_translation_entity_presave(EntityInterface $entity) {
     // as original language, since source values are the only ones available to
     // compare against.
     if (!isset($entity->original)) {
-      $entity->original = entity_load_unchanged($entity->entityType(), $entity->id());
+      $entity->original = \Drupal::entityTypeManager()
+        ->getStorage($entity->entityType())->loadUnchanged($entity->id());
     }
     $langcode = $entity->language()->getId();
     /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
