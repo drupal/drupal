@@ -581,8 +581,8 @@ class ModuleHandler implements ModuleHandlerInterface {
       $this->alter('module_implements', $implementations, $hook);
       // Verify new or modified implementations.
       foreach (array_diff_assoc($implementations, $implementations_before) as $module => $group) {
-        // If drupal_alter('module_implements') changed or added a $group, the
-        // respective file needs to be included.
+        // If an implementation of hook_module_implements_alter() changed or
+        // added a group, the respective file needs to be included.
         if ($group) {
           $this->loadInclude($module, 'inc', "$module.$group");
         }
