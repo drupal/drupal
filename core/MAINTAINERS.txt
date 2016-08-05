@@ -523,6 +523,9 @@ Multi-lingual
 Web services
 - Larry Garfield 'Crell' https://www.drupal.org/u/crell
 
+Workflow Initiative
+- Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
+
 Provisional membership: None at this time.
 
 
