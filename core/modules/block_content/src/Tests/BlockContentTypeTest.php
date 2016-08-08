@@ -211,7 +211,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
         if (!empty($blocks)) {
           $block = reset($blocks);
           $this->assertUrl(\Drupal::url('block.admin_add', array('plugin_id' => 'block_content:' . $block->uuid(), 'theme' => $theme), array('absolute' => TRUE)));
-          $this->drupalPostForm(NULL, array(), t('Save block'));
+          $this->drupalPostForm(NULL, ['region' => 'content'], t('Save block'));
           $this->assertUrl(\Drupal::url('block.admin_display_theme', array('theme' => $theme), array('absolute' => TRUE, 'query' => array('block-placement' => Html::getClass($edit['info[0][value]'])))));
         }
         else {

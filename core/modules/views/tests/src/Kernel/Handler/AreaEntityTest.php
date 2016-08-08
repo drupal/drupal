@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
-use Drupal\block\Entity\Block;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\simpletest\BlockCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
@@ -16,6 +16,8 @@ use Drupal\views\Views;
  * @see \Drupal\views\Plugin\views\area\Entity
  */
 class AreaEntityTest extends ViewsKernelTestBase {
+
+  use BlockCreationTrait;
 
   /**
    * Modules to enable.
@@ -42,14 +44,15 @@ class AreaEntityTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected function setUpFixtures() {
+    // Install the themes used for this test.
+    $this->container->get('theme_installer')->install(['bartik']);
+    $this->container->get('config.factory')->getEditable('system.theme')->set('default', 'bartik')->save();
+
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
     $this->installConfig(['entity_test']);
 
-    Block::create([
-      'id' => 'test_block',
-      'plugin' => 'system_main_block',
-    ])->save();
+    $this->placeBlock('system_main_block', ['id' => 'test_block']);
 
     parent::setUpFixtures();
   }

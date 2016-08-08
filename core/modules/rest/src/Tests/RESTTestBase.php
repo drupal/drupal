@@ -270,6 +270,15 @@ abstract class RESTTestBase extends WebTestBase {
           'vid' => 'tags',
           'name' => $this->randomMachineName(),
         ];
+      case 'block':
+        // Block placements depend on themes, ensure Bartik is installed.
+        $this->container->get('theme_installer')->install(['bartik']);
+        return [
+          'id' => strtolower($this->randomMachineName(8)),
+          'plugin' => 'system_powered_by_block',
+          'theme' => 'bartik',
+          'region' => 'header',
+        ];
       default:
         if ($this->isConfigEntity($entity_type_id)) {
           return $this->configEntityValues($entity_type_id);

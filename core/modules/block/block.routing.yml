@@ -25,6 +25,22 @@ entity.block.edit_form:
   requirements:
     _entity_access: 'block.update'
 
+entity.block.enable:
+  path: '/admin/structure/block/manage/{block}/enable'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockController::performOperation'
+    op: enable
+  requirements:
+    _entity_access: 'block.enable'
+
+entity.block.disable:
+  path: '/admin/structure/block/manage/{block}/disable'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockController::performOperation'
+    op: disable
+  requirements:
+    _entity_access: 'block.disable'
+
 block.admin_display:
   path: '/admin/structure/block'
   defaults:

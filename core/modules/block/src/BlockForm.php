@@ -188,7 +188,7 @@ class BlockForm extends EntityForm {
       '#title' => $this->t('Region'),
       '#description' => $this->t('Select the region where this block should be displayed.'),
       '#default_value' => $region,
-      '#empty_value' => BlockInterface::BLOCK_REGION_NONE,
+      '#required' => TRUE,
       '#options' => system_region_list($theme, REGIONS_VISIBLE),
       '#prefix' => '<div id="edit-block-region-wrapper">',
       '#suffix' => '</div>',

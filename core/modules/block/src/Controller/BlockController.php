@@ -3,6 +3,7 @@
 namespace Drupal\block\Controller;
 
 use Drupal\Component\Utility\Html;
+use Drupal\block\BlockInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -37,6 +38,23 @@ class BlockController extends ControllerBase {
     return new static(
       $container->get('theme_handler')
     );
+  }
+
+  /**
+   * Calls a method on a block and reloads the listing page.
+   *
+   * @param \Drupal\block\BlockInterface $block
+   *   The block being acted upon.
+   * @param string $op
+   *   The operation to perform, e.g., 'enable' or 'disable'.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect back to the listing page.
+   */
+  public function performOperation(BlockInterface $block, $op) {
+    $block->$op()->save();
+    drupal_set_message($this->t('The block settings have been updated.'));
+    return $this->redirect('block.admin_display');
   }
 
   /**

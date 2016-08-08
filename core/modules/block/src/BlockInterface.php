@@ -16,6 +16,8 @@ interface BlockInterface extends ConfigEntityInterface {
 
   /**
    * Denotes that a block is not enabled in any region and should not be shown.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
    */
   const BLOCK_REGION_NONE = -1;
 

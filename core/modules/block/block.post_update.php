@@ -75,5 +75,12 @@ function block_post_update_disable_blocks_with_missing_contexts() {
 }
 
 /**
+ * Disable blocks that are placed into the "disabled" region.
+ */
+function block_post_update_disabled_region_update() {
+  // An empty update will flush caches, forcing block_rebuild() to run.
+}
+
+/**
  * @} End of "addtogroup updates-8.0.0-beta".
  */

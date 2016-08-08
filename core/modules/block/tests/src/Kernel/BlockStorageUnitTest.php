@@ -34,6 +34,8 @@ class BlockStorageUnitTest extends KernelTestBase {
     parent::setUp();
 
     $this->controller = $this->container->get('entity_type.manager')->getStorage('block');
+
+    $this->container->get('theme_installer')->install(['stark']);
   }
 
   /**
@@ -66,6 +68,7 @@ class BlockStorageUnitTest extends KernelTestBase {
     $entity = $this->controller->create(array(
       'id' => 'test_block',
       'theme' => 'stark',
+      'region' => 'content',
       'plugin' => 'test_html',
     ));
     $entity->save();
@@ -84,7 +87,7 @@ class BlockStorageUnitTest extends KernelTestBase {
       'dependencies' => array('module' => array('block_test'), 'theme' => array('stark')),
       'id' => 'test_block',
       'theme' => 'stark',
-      'region' => '-1',
+      'region' => 'content',
       'weight' => NULL,
       'provider' => NULL,
       'plugin' => 'test_html',
@@ -111,7 +114,7 @@ class BlockStorageUnitTest extends KernelTestBase {
     $this->assertTrue($entity instanceof Block, 'The loaded entity is a Block.');
 
     // Verify several properties of the block.
-    $this->assertEqual($entity->getRegion(), '-1');
+    $this->assertSame('content', $entity->getRegion());
     $this->assertTrue($entity->status());
     $this->assertEqual($entity->getTheme(), 'stark');
     $this->assertTrue($entity->uuid());
