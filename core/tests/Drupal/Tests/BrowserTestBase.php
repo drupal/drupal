@@ -1613,7 +1613,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * Retrieves the plain-text content from the current page.
    */
   protected function getTextContent() {
-    return $this->getSession()->getPage()->getContent();
+    return $this->getSession()->getPage()->getText();
   }
 
   /**
