@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - content_moderation.state.archived
+    - content_moderation.state.published
+id: archived_published
+label: 'Un-archive'
+stateFrom: archived
+stateTo: published
+weight: -4

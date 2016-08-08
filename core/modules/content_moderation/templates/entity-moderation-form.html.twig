@@ -1,0 +1,8 @@
+{{ attach_library('content_moderation/entity-moderation-form') }}
+<ul class="entity-moderation-form">
+  <li>{{ form.current }}</li>
+  <li>{{ form.new_state }}</li>
+  <li>{{ form.revision_log }}</li>
+  <li>{{ form.submit }}</li>
+</ul>
+{{ form|without('current', 'new_state', 'revision_log', 'submit') }}

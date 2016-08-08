@@ -1,0 +1,73 @@
+content_moderation.overview:
+  path: '/admin/config/workflow/moderation'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Content moderation'
+  requirements:
+    _permission: 'access administration pages'
+
+# ModerationState routing definition
+entity.moderation_state.collection:
+  path: '/admin/config/workflow/moderation/states'
+  defaults:
+    _entity_list: 'moderation_state'
+    _title: 'Moderation states'
+  requirements:
+    _permission: 'administer moderation states'
+
+entity.moderation_state.add_form:
+  path: '/admin/config/workflow/moderation/states/add'
+  defaults:
+    _entity_form: 'moderation_state.add'
+    _title: 'Add Moderation state'
+  requirements:
+    _permission: 'administer moderation states'
+
+entity.moderation_state.edit_form:
+  path: '/admin/config/workflow/moderation/states/{moderation_state}'
+  defaults:
+    _entity_form: 'moderation_state.edit'
+    _title: 'Edit Moderation state'
+  requirements:
+    _permission: 'administer moderation states'
+
+entity.moderation_state.delete_form:
+  path: '/admin/config/workflow/moderation/states/{moderation_state}/delete'
+  defaults:
+    _entity_form: 'moderation_state.delete'
+    _title: 'Delete Moderation state'
+  requirements:
+    _permission: 'administer moderation states'
+
+# ModerationStateTransition routing definition
+entity.moderation_state_transition.collection:
+  path: '/admin/config/workflow/moderation/transitions'
+  defaults:
+    _entity_list: 'moderation_state_transition'
+    _title: 'Moderation state transitions'
+  requirements:
+    _permission: 'administer moderation state transitions'
+
+entity.moderation_state_transition.add_form:
+  path: '/admin/config/workflow/moderation/transitions/add'
+  defaults:
+    _entity_form: 'moderation_state_transition.add'
+    _title: 'Add Moderation state transition'
+  requirements:
+    _permission: 'administer moderation state transitions'
+
+entity.moderation_state_transition.edit_form:
+  path: '/admin/config/workflow/moderation/transitions/{moderation_state_transition}'
+  defaults:
+    _entity_form: 'moderation_state_transition.edit'
+    _title: 'Edit Moderation state transition'
+  requirements:
+    _permission: 'administer moderation state transitions'
+
+entity.moderation_state_transition.delete_form:
+  path: '/admin/config/workflow/moderation/transitions/{moderation_state_transition}/delete'
+  defaults:
+    _entity_form: 'moderation_state_transition.delete'
+    _title: 'Delete Moderation state transition'
+  requirements:
+    _permission: 'administer moderation state transitions'
