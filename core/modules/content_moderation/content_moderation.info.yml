@@ -1,0 +1,7 @@
+name: 'Content Moderation'
+type: module
+description: 'Provides moderation states for content'
+version: VERSION
+core: 8.x
+package: Core (Experimental)
+configure: content_moderation.overview

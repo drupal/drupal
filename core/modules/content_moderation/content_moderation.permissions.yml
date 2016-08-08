@@ -1,0 +1,24 @@
+view any unpublished content:
+  title: 'View any unpublished content'
+  description: 'This permission is necessary for any users that may moderate content.'
+
+'view moderation states':
+  title: 'View moderation states'
+  description: 'View moderation states.'
+
+'administer moderation states':
+  title: 'Administer moderation states'
+  description: 'Create and edit moderation states.'
+  'restrict access': TRUE
+
+'administer moderation state transitions':
+  title: 'Administer content moderation state transitions'
+  description: 'Create and edit content moderation state transitions.'
+  'restrict access': TRUE
+
+view latest version:
+  title: 'View the latest version'
+  description: 'View the latest version of an entity. (Also requires "View any unpublished content" permission)'
+
+permission_callbacks:
+  - \Drupal\content_moderation\Permissions::transitionPermissions

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - content_moderation.state.draft
+    - content_moderation.state.published
+id: draft_published
+label: 'Publish'
+stateFrom: draft
+stateTo: published
+weight: -9

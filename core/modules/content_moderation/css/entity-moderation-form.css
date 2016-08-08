@@ -1,0 +1,16 @@
+ul.entity-moderation-form {
+  list-style: none;
+  display: -webkit-flex; /* Safari */
+  display: flex;
+  -webkit-flex-wrap: wrap; /* Safari */
+  flex-wrap:         wrap;
+  -webkit-justify-content: space-around; /* Safari */
+  justify-content:         space-around;
+  -webkit-align-items: flex-end; /* Safari */
+  align-items:         flex-end;
+  border-bottom: 1px solid gray;
+}
+
+ul.entity-moderation-form input[type=submit] {
+  margin-bottom: 1.2em;
+}

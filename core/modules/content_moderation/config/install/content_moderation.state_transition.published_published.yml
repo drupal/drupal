@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - content_moderation.state.published
+id: published_published
+label: 'Publish'
+stateFrom: published
+stateTo: published
+weight: -7

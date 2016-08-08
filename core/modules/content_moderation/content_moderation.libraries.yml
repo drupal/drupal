@@ -1,0 +1,5 @@
+entity-moderation-form:
+  version: VERSION
+  css:
+    layout:
+      css/entity-moderation-form.css: {}
