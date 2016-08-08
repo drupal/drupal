@@ -67,7 +67,7 @@ function content_moderation_entity_type_alter(array &$entity_types) {
  * Implements hook_entity_operation().
  */
 function content_moderation_entity_operation(EntityInterface $entity) {
-  _content_moderation_create_entity_type_info()->entityOperation($entity);
+  return _content_moderation_create_entity_type_info()->entityOperation($entity);
 }
 
 /**

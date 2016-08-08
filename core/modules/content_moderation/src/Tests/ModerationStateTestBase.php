@@ -106,6 +106,8 @@ abstract class ModerationStateTestBase extends WebTestBase {
    *   Default state.
    */
   protected function enableModerationThroughUi($content_type_id, array $allowed_states, $default_state) {
+    $this->drupalGet('admin/structure/types');
+    $this->assertLinkByHref('admin/structure/types/manage/' . $content_type_id . '/moderation');
     $this->drupalGet('admin/structure/types/manage/' . $content_type_id . '/moderation');
     $this->assertFieldByName('enable_moderation_state');
     $this->assertNoFieldChecked('edit-enable-moderation-state');
