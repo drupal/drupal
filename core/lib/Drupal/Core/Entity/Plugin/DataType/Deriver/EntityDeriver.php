@@ -3,7 +3,7 @@
 namespace Drupal\Core\Entity\Plugin\DataType\Deriver;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfo;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -36,7 +36,7 @@ class EntityDeriver implements ContainerDeriverInterface {
   /**
    * The bundle info service.
    *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfo
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   protected $bundleInfoService;
 
@@ -48,7 +48,7 @@ class EntityDeriver implements ContainerDeriverInterface {
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct($base_plugin_id, EntityManagerInterface $entity_manager, EntityTypeBundleInfo $bundle_info_service) {
+  public function __construct($base_plugin_id, EntityManagerInterface $entity_manager, EntityTypeBundleInfoInterface $bundle_info_service) {
     $this->basePluginId = $base_plugin_id;
     $this->entityManager = $entity_manager;
     $this->bundleInfoService = $bundle_info_service;

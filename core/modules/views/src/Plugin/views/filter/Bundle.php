@@ -3,7 +3,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfo;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,7 +41,7 @@ class Bundle extends InOperator {
   /**
    * The bundle info service.
    *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfo
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   protected $bundleInfoService;
 
@@ -57,7 +57,7 @@ class Bundle extends InOperator {
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, EntityTypeBundleInfo $bundle_info_service) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, EntityTypeBundleInfoInterface $bundle_info_service) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityManager = $entity_manager;
