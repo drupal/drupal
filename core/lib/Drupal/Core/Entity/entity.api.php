@@ -1253,21 +1253,6 @@ function hook_ENTITY_TYPE_revision_delete(Drupal\Core\Entity\EntityInterface $en
 }
 
 /**
- * Alter or execute an Drupal\Core\Entity\Query\EntityQueryInterface.
- *
- * @param \Drupal\Core\Entity\Query\QueryInterface $query
- *   Note the $query->altered attribute which is TRUE in case the query has
- *   already been altered once. This happens with cloned queries.
- *   If there is a pager, then such a cloned query will be executed to count
- *   all elements. This query can be detected by checking for
- *   ($query->pager && $query->count), allowing the driver to return 0 from
- *   the count query and disable the pager.
- */
-function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query) {
-  // @todo: code example.
-}
-
-/**
  * Act on entities being assembled before rendering.
  *
  * @param &$build
