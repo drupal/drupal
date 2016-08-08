@@ -33,6 +33,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // Test page contains some text.
     $this->assertSession()->pageTextContains('Test page text.');
 
+    // Check that returned plain text is correct.
+    $text = $this->getTextContent();
+    $this->assertContains('Test page text.', $text);
+    $this->assertNotContains('</html>', $text);
+
     // Response includes cache tags that we can assert.
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'rendered');
 
