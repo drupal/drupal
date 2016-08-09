@@ -1894,21 +1894,32 @@
 function hook_cron() {
   // Short-running operation example, not using a queue:
   // Delete all expired records since the last cron run.
-  $expires = \Drupal::state()->get('mymodule.cron_last_run', REQUEST_TIME);
-  db_delete('mymodule_table')
+  $expires = \Drupal::state()->get('mymodule.last_check', 0);
+  \Drupal::database()->delete('mymodule_table')
     ->condition('expires', $expires, '>=')
     ->execute();
-  \Drupal::state()->set('mymodule.cron_last_run', REQUEST_TIME);
+  \Drupal::state()->set('mymodule.last_check', REQUEST_TIME);
 
   // Long-running operation example, leveraging a queue:
-  // Fetch feeds from other sites.
-  $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < :time AND refresh <> :never', array(
-    ':time' => REQUEST_TIME,
-    ':never' => AGGREGATOR_CLEAR_NEVER,
-  ));
+  // Queue news feeds for updates once their refresh interval has elapsed.
   $queue = \Drupal::queue('aggregator_feeds');
-  foreach ($result as $feed) {
-    $queue->createItem($feed);
+  $ids = \Drupal::entityManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
+  foreach (Feed::loadMultiple($ids) as $feed) {
+    if ($queue->createItem($feed)) {
+      // Add timestamp to avoid queueing item more than once.
+      $feed->setQueuedTime(REQUEST_TIME);
+      $feed->save();
+    }
+  }
+  $ids = \Drupal::entityQuery('aggregator_feed')
+    ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
+    ->execute();
+  if ($ids) {
+    $feeds = Feed::loadMultiple($ids);
+    foreach ($feeds as $feed) {
+      $feed->setQueuedTime(0);
+      $feed->save();
+    }
   }
 }
 
