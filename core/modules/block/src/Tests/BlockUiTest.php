@@ -230,7 +230,7 @@ class BlockUiTest extends WebTestBase {
     $this->assertTrue(!empty($definition), 'The context-aware test block exists.');
     $edit = [
       'region' => 'content',
-      'settings[context_mapping][user]' => '@block_test.multiple_static_context:userB',
+      'settings[context_mapping][user]' => '@block_test.multiple_static_context:user2',
     ];
     $this->drupalPostForm($block_url, $edit, 'Save block');
 
