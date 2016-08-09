@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a filter to track images uploaded via a Text Editor.
  *
- * Passes the text unchanged, but associates the cache tags of referenced files.
+ * Generates file URLs and associates the cache tags of referenced files.
  *
  * @Filter(
  *   id = "editor_file_reference",
