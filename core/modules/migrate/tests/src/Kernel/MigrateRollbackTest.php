@@ -128,6 +128,9 @@ class MigrateRollbackTest extends MigrateTestBase {
       $this->assertNotNull($map_row['destid1']);
     }
 
+    // Add a failed row to test if this can be rolled back without errors.
+    $this->mockFailure($term_migration, ['id' => '4', 'vocab' => '2', 'name' => 'FAIL']);
+
     // Rollback and verify the entities are gone.
     $term_executable->rollback();
     foreach ($term_data_rows as $row) {

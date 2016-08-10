@@ -641,6 +641,35 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   }
 
   /**
+   * Tests currentDestination() and currentSource().
+   */
+  public function testCurrentDestinationAndSource() {
+    // Simple map with one source and one destination ID.
+    $id_map = $this->setupRows(['nid'], ['nid'], [
+      [1, 101],
+      [2, 102],
+      [3, 103],
+      // Mock a failed row by setting the destination ID to NULL.
+      [4, NULL],
+    ]);
+
+    // The rows are ordered by destination ID so the failed row should be first.
+    $id_map->rewind();
+    $this->assertEquals([], $id_map->currentDestination());
+    $this->assertEquals(['nid' => 4], $id_map->currentSource());
+    $id_map->next();
+    $this->assertEquals(['nid' => 101], $id_map->currentDestination());
+    $this->assertEquals(['nid' => 1], $id_map->currentSource());
+    $id_map->next();
+    $this->assertEquals(['nid' => 102], $id_map->currentDestination());
+    $this->assertEquals(['nid' => 2], $id_map->currentSource());
+    $id_map->next();
+    $this->assertEquals(['nid' => 103], $id_map->currentDestination());
+    $this->assertEquals(['nid' => 3], $id_map->currentSource());
+    $id_map->next();
+  }
+
+  /**
    * Tests the imported count method.
    *
    * Scenarios to test for:
