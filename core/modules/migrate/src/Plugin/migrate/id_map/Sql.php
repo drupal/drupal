@@ -845,7 +845,25 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     if ($this->valid()) {
       $result = array();
       foreach ($this->destinationIdFields() as $destination_field_name => $idmap_field_name) {
-        $result[$destination_field_name] = $this->currentRow[$idmap_field_name];
+        if (!is_null($this->currentRow[$idmap_field_name])) {
+          $result[$destination_field_name] = $this->currentRow[$idmap_field_name];
+        }
+      }
+      return $result;
+    }
+    else {
+      return NULL;
+    }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function currentSource() {
+    if ($this->valid()) {
+      $result = array();
+      foreach ($this->sourceIdFields() as $field_name => $source_id) {
+        $result[$field_name] = $this->currentKey[$source_id];
       }
       return $result;
     }

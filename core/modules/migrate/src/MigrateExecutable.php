@@ -329,6 +329,12 @@ class MigrateExecutable implements MigrateExecutableInterface {
         // We're now done with this row, so remove it from the map.
         $id_map->deleteDestination($destination_key);
       }
+      else {
+        // If there is no destination key the import probably failed and we can
+        // remove the row without further action.
+        $source_key = $id_map->currentSource();
+        $id_map->delete($source_key);
+      }
 
       // Check for memory exhaustion.
       if (($return = $this->checkStatus()) != MigrationInterface::RESULT_COMPLETED) {
