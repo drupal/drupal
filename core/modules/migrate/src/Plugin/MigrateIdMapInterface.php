@@ -244,6 +244,14 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
   public function currentDestination();
 
   /**
+   * Looks up the source identifier(s) currently being iterated.
+   *
+   * @return array
+   *   The source identifier values of the record, or NULL on failure.
+   */
+  public function currentSource();
+
+  /**
    * Removes any persistent storage used by this map.
    *
    * For example, remove the map and message tables.
