@@ -348,4 +348,16 @@ class SystemTestController extends ControllerBase {
     return $response;
   }
 
+  /**
+   * Returns a response with a test header set from the request.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response $response
+   *   A Response object containing the test header.
+   */
+  public function getTestHeader(Request $request) {
+    $response = new Response();
+    $response->headers->set('Test-Header', $request->headers->get('Test-Header'));
+    return $response;
+  }
+
 }

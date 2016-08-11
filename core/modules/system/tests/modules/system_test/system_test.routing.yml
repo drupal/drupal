@@ -175,3 +175,10 @@ system_test.always_denied:
     _controller: 'chop'
   requirements:
     _access: 'FALSE'
+
+system_test.header:
+  path: '/system-test/header'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::getTestHeader'
+  requirements:
+    _access: 'TRUE'
