@@ -655,17 +655,29 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   Drupal path or URL to load into Mink controlled browser.
    * @param array $options
    *   (optional) Options to be forwarded to the url generator.
+   * @param string[] $headers
+   *   An array containing additional HTTP request headers, the array keys are
+   *   the header names and the array values the header values. This is useful
+   *   to set for example the "Accept-Language" header for requesting the page
+   *   in a different language. Note that not all headers are supported, for
+   *   example the "Accept" header is always overridden by the browser. For
+   *   testing REST APIs it is recommended to directly use an HTTP client such
+   *   as Guzzle instead.
    *
    * @return string
    *   The retrieved HTML string, also available as $this->getRawContent()
    */
-  protected function drupalGet($path, array $options = array()) {
+  protected function drupalGet($path, array $options = array(), array $headers = array()) {
     $options['absolute'] = TRUE;
     $url = $this->buildUrl($path, $options);
 
     $session = $this->getSession();
 
     $this->prepareRequest();
+    foreach ($headers as $header_name => $header_value) {
+      $session->setRequestHeader($header_name, $header_value);
+    }
+
     $session->visit($url);
     $out = $session->getPage()->getContent();
 
