@@ -182,7 +182,7 @@ class UpdateKernel extends DrupalKernel {
     $db_update_access = $this->getContainer()->get('access_check.db_update');
 
     if (!Settings::get('update_free_access', FALSE) && !$db_update_access->access($account)->isAllowed()) {
-      throw new AccessDeniedHttpException('In order to run update.php you need to either be logged in as admin or have set $update_free_access in your settings.php.');
+      throw new AccessDeniedHttpException('In order to run update.php you need to either be logged in as admin or have set $settings[\'update_free_access\'] in your settings.php.');
     }
   }
 
