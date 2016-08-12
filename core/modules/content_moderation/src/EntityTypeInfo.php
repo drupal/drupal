@@ -21,7 +21,7 @@ use Drupal\content_moderation\Routing\EntityModerationRouteProvider;
 use Drupal\content_moderation\Routing\EntityTypeModerationRouteProvider;
 
 /**
- * Service class for manipulating entity type information.
+ * Manipulates entity type information.
  *
  * This class contains primarily bridged hooks for compile-time or
  * cache-clear-time hooks. Runtime hooks should be placed in EntityOperations.
