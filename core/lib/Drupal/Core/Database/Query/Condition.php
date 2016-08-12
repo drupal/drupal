@@ -40,11 +40,6 @@ class Condition implements ConditionInterface, \Countable {
   protected $queryPlaceholderIdentifier;
 
   /**
-   * @var string Contains the string version of the Condition.
-   */
-  protected $stringVersion;
-
-  /**
    * Constructs a Condition object.
    *
    * @param string $conjunction
@@ -163,127 +158,86 @@ class Condition implements ConditionInterface, \Countable {
       $conjunction = $conditions['#conjunction'];
       unset($conditions['#conjunction']);
       foreach ($conditions as $condition) {
-        // Process field.
-        if ($condition['field'] instanceof ConditionInterface) {
-          // Left hand part is a structured condition or a subquery. Compile,
-          // put brackets around it (if it is a query), and collect any
-          // arguments.
-          $condition['field']->compile($connection, $queryPlaceholder);
-          $field_fragment = (string) $condition['field'];
-          if ($condition['field'] instanceof SelectInterface) {
-            $field_fragment = '(' . $field_fragment . ')';
-          }
-          $arguments += $condition['field']->arguments();
-          // If the operator and value were not passed in to the
-          // @see ConditionInterface::condition() method (and thus have the
-          // default value as defined over there) it is assumed to be a valid
-          // condition on its own: ignore the operator and value parts.
-          $ignore_operator = $condition['operator'] === '=' && $condition['value'] === NULL;
-        }
-        elseif (!isset($condition['operator'])) {
-          // Left hand part is a literal string added with the
-          // @see ConditionInterface::where() method. Put brackets around
-          // the snippet and collect the arguments from the value part.
-          // Also ignore the operator and value parts.
-          $field_fragment = '(' . $condition['field'] . ')';
+        if (empty($condition['operator'])) {
+          // This condition is a literal string, so let it through as is.
+          $condition_fragments[] = ' (' . $condition['field'] . ') ';
           $arguments += $condition['value'];
-          $ignore_operator = TRUE;
         }
         else {
-          // Left hand part is a normal field. Add it as is.
-          $field_fragment = $condition['field'];
-          $ignore_operator = FALSE;
-        }
-
-        // Process operator.
-        if ($ignore_operator) {
-          $operator = array('operator' => '', 'use_value' => FALSE);
-        }
-        else {
-          // Remove potentially dangerous characters.
-          // If something passed in an invalid character stop early, so we
-          // don't rely on a broken SQL statement when we would just replace
-          // those characters.
-          if (stripos($condition['operator'], 'UNION') !== FALSE || strpbrk($condition['operator'], '[-\'"();') !== FALSE) {
-            $this->changed = TRUE;
-            $this->arguments = [];
-            // Provide a string which will result into an empty query result.
-            $this->stringVersion = '( AND 1 = 0 )';
-
-            // Conceptually throwing an exception caused by user input is bad
-            // as you result into a WSOD, which depending on your webserver
-            // configuration can result into the assumption that your site is
-            // broken.
-            // On top of that the database API relies on __toString() which
-            // does not allow to throw exceptions.
-            trigger_error('Invalid characters in query operator: ' . $condition['operator'], E_USER_ERROR);
-            return;
+          // It's a structured condition, so parse it out accordingly.
+          // Note that $condition['field'] will only be an object for a dependent
+          // DatabaseCondition object, not for a dependent subquery.
+          if ($condition['field'] instanceof ConditionInterface) {
+            // Compile the sub-condition recursively and add it to the list.
+            $condition['field']->compile($connection, $queryPlaceholder);
+            $condition_fragments[] = '(' . (string) $condition['field'] . ')';
+            $arguments += $condition['field']->arguments();
           }
+          else {
+            // For simplicity, we treat all operators as the same data structure.
+            // In the typical degenerate case, this won't get changed.
+            $operator_defaults = array(
+              'prefix' => '',
+              'postfix' => '',
+              'delimiter' => '',
+              'operator' => $condition['operator'],
+              'use_value' => TRUE,
+            );
+            // Remove potentially dangerous characters.
+            // If something passed in an invalid character stop early, so we
+            // don't rely on a broken SQL statement when we would just replace
+            // those characters.
+            if (stripos($condition['operator'], 'UNION') !== FALSE || strpbrk($condition['operator'], '[-\'"();') !== FALSE) {
+              $this->changed = TRUE;
+              $this->arguments = [];
+              // Provide a string which will result into an empty query result.
+              $this->stringVersion = '( AND 1 = 0 )';
 
-          // For simplicity, we convert all operators to a data structure to
-          // allow to specify a prefix, a delimiter and such. Find the
-          // associated data structure by first doing a database specific
-          // lookup, followed by a specification according to the SQL standard.
-          $operator = $connection->mapConditionOperator($condition['operator']);
-          if (!isset($operator)) {
-            $operator = $this->mapConditionOperator($condition['operator']);
-          }
-          $operator += array('operator' => $condition['operator']);
-        }
-        // Add defaults.
-        $operator += array(
-          'prefix' => '',
-          'postfix' => '',
-          'delimiter' => '',
-          'use_value' => TRUE,
-        );
-        $operator_fragment = $operator['operator'];
-
-        // Process value.
-        $value_fragment = '';
-        if ($operator['use_value']) {
-          // For simplicity, we first convert to an array, so that we can handle
-          // the single and multi value cases the same.
-          if (!is_array($condition['value'])) {
-            if ($condition['value'] instanceof SelectInterface && ($operator['operator'] === 'IN' || $operator['operator'] === 'NOT IN')) {
-              // Special case: IN is followed by a single select query instead
-              // of a set of values: unset prefix and postfix to prevent double
-              // brackets.
-              $operator['prefix'] = '';
-              $operator['postfix'] = '';
+              // Conceptually throwing an exception caused by user input is bad
+              // as you result into a WSOD, which depending on your webserver
+              // configuration can result into the assumption that your site is
+              // broken.
+              // On top of that the database API relies on __toString() which
+              // does not allow to throw exceptions.
+              trigger_error('Invalid characters in query operator: ' . $condition['operator'], E_USER_ERROR);
+              return;
             }
-            $condition['value'] = array($condition['value']);
-          }
-          // Process all individual values.
-          $value_fragment = [];
-          foreach ($condition['value'] as $value) {
-            if ($value instanceof SelectInterface) {
-              // Right hand part is a subquery. Compile, put brackets around it
-              // and collect any arguments.
-              $value->compile($connection, $queryPlaceholder);
-              $value_fragment[] = '(' . (string) $value . ')';
-              $arguments += $value->arguments();
+            $operator = $connection->mapConditionOperator($condition['operator']);
+            if (!isset($operator)) {
+              $operator = $this->mapConditionOperator($condition['operator']);
             }
-            else {
-              // Right hand part is a normal value. Replace the value with a
-              // placeholder and add the value as an argument.
-              $placeholder = ':db_condition_placeholder_' . $queryPlaceholder->nextPlaceholder();
-              $value_fragment[] = $placeholder;
-              $arguments[$placeholder] = $value;
-            }
-          }
-          $value_fragment = $operator['prefix'] . implode($operator['delimiter'], $value_fragment) . $operator['postfix'];
-        }
+            $operator += $operator_defaults;
 
-        // Concatenate the left hand part, operator and right hand part.
-        $condition_fragments[] = trim(implode(' ', array($field_fragment, $operator_fragment, $value_fragment)));
+            $placeholders = array();
+            if ($condition['value'] instanceof SelectInterface) {
+              $condition['value']->compile($connection, $queryPlaceholder);
+              $placeholders[] = (string) $condition['value'];
+              $arguments += $condition['value']->arguments();
+              // Subqueries are the actual value of the operator, we don't
+              // need to add another below.
+              $operator['use_value'] = FALSE;
+            }
+            // We assume that if there is a delimiter, then the value is an
+            // array. If not, it is a scalar. For simplicity, we first convert
+            // up to an array so that we can build the placeholders in the same way.
+            elseif (!$operator['delimiter'] && !is_array($condition['value'])) {
+              $condition['value'] = array($condition['value']);
+            }
+            if ($operator['use_value']) {
+              foreach ($condition['value'] as $value) {
+                $placeholder = ':db_condition_placeholder_' . $queryPlaceholder->nextPlaceholder();
+                $arguments[$placeholder] = $value;
+                $placeholders[] = $placeholder;
+              }
+            }
+            $condition_fragments[] = ' (' . $connection->escapeField($condition['field']) . ' ' . $operator['operator'] . ' ' . $operator['prefix'] . implode($operator['delimiter'], $placeholders) . $operator['postfix'] . ') ';
+          }
+        }
       }
 
-      // Concatenate all conditions using the conjunction and brackets around
-      // the individual conditions to assure the proper evaluation order.
-      $this->stringVersion = count($condition_fragments) > 1 ? '(' . implode(") $conjunction (", $condition_fragments) . ')' : implode($condition_fragments);
-      $this->arguments = $arguments;
       $this->changed = FALSE;
+      $this->stringVersion = implode($conjunction, $condition_fragments);
+      $this->arguments = $arguments;
     }
   }
 
@@ -335,7 +289,7 @@ class Condition implements ConditionInterface, \Countable {
    * the value data they pass in is not a simple value. This is a simple
    * overridable lookup function.
    *
-   * @param string $operator
+   * @param $operator
    *   The condition operator, such as "IN", "BETWEEN", etc. Case-sensitive.
    *
    * @return array
@@ -347,17 +301,15 @@ class Condition implements ConditionInterface, \Countable {
     static $specials = array(
       'BETWEEN' => array('delimiter' => ' AND '),
       'NOT BETWEEN' => array('delimiter' => ' AND '),
-      'IN' => array('delimiter' => ', ', 'prefix' => '(', 'postfix' => ')'),
-      'NOT IN' => array('delimiter' => ', ', 'prefix' => '(', 'postfix' => ')'),
+      'IN' => array('delimiter' => ', ', 'prefix' => ' (', 'postfix' => ')'),
+      'NOT IN' => array('delimiter' => ', ', 'prefix' => ' (', 'postfix' => ')'),
+      'EXISTS' => array('prefix' => ' (', 'postfix' => ')'),
+      'NOT EXISTS' => array('prefix' => ' (', 'postfix' => ')'),
       'IS NULL' => array('use_value' => FALSE),
       'IS NOT NULL' => array('use_value' => FALSE),
       // Use backslash for escaping wildcard characters.
       'LIKE' => array('postfix' => " ESCAPE '\\\\'"),
       'NOT LIKE' => array('postfix' => " ESCAPE '\\\\'"),
-      // Exists expects an already bracketed subquery as right hand part. Do
-      // not define additional brackets.
-      'EXISTS' => array(),
-      'NOT EXISTS' => array(),
       // These ones are here for performance reasons.
       '=' => array(),
       '<' => array(),
