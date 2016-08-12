@@ -59,7 +59,7 @@
  * @see update_menu()
  * @ingroup forms
  */
-function update_manager_update_form($form, $form_state = array(), $context) {
+function update_manager_update_form($form, $form_state, $context) {
   if (!_update_manager_check_backends($form, 'update')) {
     return $form;
   }

@@ -3,6 +3,7 @@ Drupal 7.51, xxxx-xx-xx (development version)
 -----------------------
 - Exceptions thrown in dblog_watchdog() are now caught and ignored.
 - Clarified the warning that appears when modules are missing or have moved.
+- Numerous small bugfixes.
 - Numerous API documentation improvements.
 
 Drupal 7.50, 2016-07-07 
