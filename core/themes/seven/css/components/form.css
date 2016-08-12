@@ -328,6 +328,9 @@ select {
     display: block;
     margin: 10px 0 0 0;
   }
+  select {
+    width: 100%;
+  }
 }
 
 /* Exceptions */
