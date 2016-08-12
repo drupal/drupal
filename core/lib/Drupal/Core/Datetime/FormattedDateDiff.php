@@ -51,9 +51,9 @@ class FormattedDateDiff implements RenderableInterface, CacheableDependencyInter
   }
 
   /**
-   * @return int
+   * {@inheritdoc}
    */
-  public function getMaxAge() {
+  public function getCacheMaxAge() {
     return $this->maxAge;
   }
 
