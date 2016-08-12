@@ -6,7 +6,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 
 /**
- * Service to determine whether a route is the "Latest version" tab of a node.
+ * Determines whether a route is the "Latest version" tab of a node.
  */
 class ContentPreprocess {
 
