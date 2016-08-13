@@ -11,6 +11,7 @@
 function update_test_system_theme_info() {
   $themes['update_test_basetheme'] = drupal_get_path('module', 'update_test') . '/themes/update_test_basetheme/update_test_basetheme.info';
   $themes['update_test_subtheme'] = drupal_get_path('module', 'update_test') . '/themes/update_test_subtheme/update_test_subtheme.info';
+  $themes['update_test_admintheme'] = drupal_get_path('module', 'update_test') . '/themes/update_test_admintheme/update_test_admintheme.info';
   return $themes;
 }
 

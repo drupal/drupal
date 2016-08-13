@@ -1,6 +1,8 @@
 
 Drupal 7.51, xxxx-xx-xx (development version)
 -----------------------
+- The update module now also checks for updates to a disabled themes that are
+  used as an admin theme.
 - Exceptions thrown in dblog_watchdog() are now caught and ignored.
 - Clarified the warning that appears when modules are missing or have moved.
 - Numerous small bugfixes.
