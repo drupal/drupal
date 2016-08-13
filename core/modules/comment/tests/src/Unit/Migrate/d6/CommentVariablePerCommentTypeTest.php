@@ -24,10 +24,10 @@ class CommentVariablePerCommentTypeTest extends MigrateSqlSourceTestCase {
     // Each result will also include a label and description, but those are
     // static values set by the source plugin and don't need to be asserted.
     array(
-      'comment_type' => 'comment_no_subject',
+      'comment_type' => 'comment',
     ),
     array(
-      'comment_type' => 'comment',
+      'comment_type' => 'comment_no_subject',
     ),
   );
 
