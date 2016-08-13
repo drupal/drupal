@@ -20,7 +20,7 @@ class CommentVariablePerCommentType extends CommentVariable {
     $return = array();
     foreach ($node_types as $node_type => $data) {
       // Only 2 comment types depending on subject field visibility.
-      if (empty($data['comment_subject_field'])) {
+      if (!empty($data['comment_subject_field'])) {
         // Default label and description should be set in migration.
         $return['comment'] = array(
           'comment_type' => 'comment',
