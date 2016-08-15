@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Datetime;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\FormattedDateDiff;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -390,6 +391,38 @@ class DateTest extends UnitTestCase {
     );
 
     return $data;
+  }
+
+  /**
+   * Tests FormattedDateDiff.
+   *
+   * @covers \Drupal\Core\Datetime\FormattedDateDiff::toRenderable
+   * @covers \Drupal\Core\Datetime\FormattedDateDiff::getString
+   * @covers \Drupal\Core\Datetime\FormattedDateDiff::getCacheMaxAge
+   */
+  public function testFormattedDateDiff() {
+    $string = '10 minutes';
+    $max_age = 60;
+    $object = new FormattedDateDiff($string, $max_age);
+
+    // Test conversion to a render array.
+    $expected = [
+      '#markup' => $string,
+      '#cache' => [
+        'max-age' => $max_age,
+      ],
+    ];
+    $this->assertArrayEquals($expected, $object->toRenderable());
+
+    // Test retrieving the formatted time difference string.
+    $this->assertEquals($string, $object->getString());
+
+    // Test applying cacheability data to an existing build.
+    $build = [];
+    CacheableMetadata::createFromObject($object)->applyTo($build);
+    $this->assertEquals($max_age, $build['#cache']['max-age']);
+    // Test the BC layer.
+    $this->assertSame($object->getCacheMaxAge(), $object->getMaxAge());
   }
 
   /**
