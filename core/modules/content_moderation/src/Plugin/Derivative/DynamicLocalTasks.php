@@ -76,18 +76,20 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
   public function getDerivativeDefinitions($base_plugin_definition) {
     $this->derivatives = [];
 
-    foreach ($this->moderatableEntityTypeDefinitions() as $entity_type_id => $entity_type) {
-      $this->derivatives["$entity_type_id.moderation_tab"] = [
-        'route_name' => "entity.$entity_type_id.moderation",
-        'title' => $this->t('Manage moderation'),
-        // @todo - are we sure they all have an edit_form?
-        'base_route' => "entity.$entity_type_id.edit_form",
-        'weight' => 30,
-      ] + $base_plugin_definition;
+    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
+      if ($this->moderationInfo->canModerateEntitiesOfEntityType($entity_type)) {
+        $this->derivatives["$entity_type_id.moderation_tab"] = [
+          'route_name' => "entity.$entity_type_id.moderation",
+          'title' => $this->t('Manage moderation'),
+          // @todo - are we sure they all have an edit_form?
+          'base_route' => "entity.$entity_type_id.edit_form",
+          'weight' => 30,
+        ] + $base_plugin_definition;
+      }
     }
 
-    $latest_version_entities = array_filter($this->moderatableEntityDefinitions(), function (EntityTypeInterface $type) {
-      return $type->hasLinkTemplate('latest-version');
+    $latest_version_entities = array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $type) {
+      return $this->moderationInfo->canModerateEntitiesOfEntityType($type) && $type->hasLinkTemplate('latest-version');
     });
 
     foreach ($latest_version_entities as $entity_type_id => $entity_type) {
@@ -100,26 +102,6 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
     }
 
     return $this->derivatives;
-  }
-
-  /**
-   * Returns an array of content entities that are potentially moderatable.
-   *
-   * @return EntityTypeInterface[]
-   *   An array of just those entities we care about.
-   */
-  protected function moderatableEntityDefinitions() {
-    return $this->moderationInfo->selectRevisionableEntities($this->entityTypeManager->getDefinitions());
-  }
-
-  /**
-   * Returns entity types that represent bundles that can be moderated.
-   *
-   * @return EntityTypeInterface[]
-   *   An array of entity types that represent bundles that can be moderated.
-   */
-  protected function moderatableEntityTypeDefinitions() {
-    return $this->moderationInfo->selectRevisionableEntityTypes($this->entityTypeManager->getDefinitions());
   }
 
 }

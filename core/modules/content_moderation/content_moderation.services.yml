@@ -9,7 +9,7 @@ services:
     arguments: ['@entity_type.manager', '@entity.query']
   content_moderation.moderation_information:
     class: Drupal\content_moderation\ModerationInformation
-    arguments: ['@entity_type.manager', '@current_user']
+    arguments: ['@entity_type.manager']
   access_check.latest_revision:
     class: Drupal\content_moderation\Access\LatestRevisionCheck
     arguments: ['@content_moderation.moderation_information']
