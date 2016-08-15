@@ -551,10 +551,20 @@ function system_requirements($phase) {
   if (!empty($GLOBALS['config_directories'])) {
     foreach (array_keys(array_filter($GLOBALS['config_directories'])) as $type) {
       $directory = config_get_config_directory($type);
+      // If we're installing Drupal try and create the config sync directory.
+      if (!is_dir($directory) && $phase == 'install') {
+        file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+      }
       if (!is_dir($directory)) {
+        if ($phase == 'install') {
+          $description = t('An automated attempt to create the directory %directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', array('%directory' => $directory, ':handbook_url' => 'https://www.drupal.org/server-permissions'));
+        }
+        else {
+          $description = t('The directory %directory does not exist.', array('%directory' => $directory));
+        }
         $requirements['config directory ' . $type] = array(
           'title' => t('Configuration directory: %type', ['%type' => $type]),
-          'description' => t('The directory %directory does not exist.', array('%directory' => $directory)),
+          'description' => $description,
           'severity' => REQUIREMENT_ERROR,
         );
       }
