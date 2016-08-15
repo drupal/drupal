@@ -115,8 +115,12 @@ class ViewsData {
       ],
     ];
 
+    $entity_types_with_moderation = array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $type) {
+      return $this->moderationInformation->canModerateEntitiesOfEntityType($type);
+    });
+
     // Add a join for each entity type to the content_revision_tracker table.
-    foreach ($this->moderationInformation->selectRevisionableEntities($this->entityTypeManager->getDefinitions()) as $entity_type_id => $entity_type) {
+    foreach ($entity_types_with_moderation as $entity_type_id => $entity_type) {
       /** @var \Drupal\views\EntityViewsDataInterface $views_data */
       // We need the views_data handler in order to get the table name later.
       if ($this->entityTypeManager->hasHandler($entity_type_id, 'views_data') && $views_data = $this->entityTypeManager->getHandler($entity_type_id, 'views_data')) {
@@ -178,7 +182,7 @@ class ViewsData {
     $content_moderation_state_entity_type = \Drupal::entityTypeManager()->getDefinition('content_moderation_state');
     $content_moderation_state_entity_base_table = $content_moderation_state_entity_type->getDataTable() ?: $content_moderation_state_entity_type->getBaseTable();
     $content_moderation_state_entity_revision_base_table = $content_moderation_state_entity_type->getRevisionDataTable() ?: $content_moderation_state_entity_type->getRevisionTable();
-    foreach ($this->moderationInformation->selectRevisionableEntities($this->entityTypeManager->getDefinitions()) as $entity_type_id => $entity_type) {
+    foreach ($entity_types_with_moderation as $entity_type_id => $entity_type) {
       $table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
 
       $data[$table]['moderation_state'] = [
@@ -234,8 +238,10 @@ class ViewsData {
    * @see hook_views_data()
    */
   public function alterViewsData(array &$data) {
-    $revisionable_types = $this->moderationInformation->selectRevisionableEntities($this->entityTypeManager->getDefinitions());
-    foreach ($revisionable_types as $type) {
+    $entity_types_with_moderation = array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $type) {
+      return $this->moderationInformation->canModerateEntitiesOfEntityType($type);
+    });
+    foreach ($entity_types_with_moderation as $type) {
       $data[$type->getRevisionTable()]['latest_revision'] = [
         'title' => t('Is Latest Revision'),
         'help' => t('Restrict the view to only revisions that are the latest revision of their entity.'),

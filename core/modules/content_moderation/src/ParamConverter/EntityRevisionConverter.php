@@ -88,7 +88,7 @@ class EntityRevisionConverter extends EntityConverter {
   public function convert($value, $definition, $name, array $defaults) {
     $entity = parent::convert($value, $definition, $name, $defaults);
 
-    if ($entity && $this->moderationInformation->isModeratableEntity($entity) && !$this->moderationInformation->isLatestRevision($entity)) {
+    if ($entity && $this->moderationInformation->isModeratedEntity($entity) && !$this->moderationInformation->isLatestRevision($entity)) {
       $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
       $latest_revision = $this->moderationInformation->getLatestRevision($entity_type_id, $value);
 

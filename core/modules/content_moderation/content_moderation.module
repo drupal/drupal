@@ -45,7 +45,8 @@ function _content_moderation_create_entity_type_info() {
   return new EntityTypeInfo(
     \Drupal::service('string_translation'),
     \Drupal::service('content_moderation.moderation_information'),
-    \Drupal::service('entity_type.manager')
+    \Drupal::service('entity_type.manager'),
+    \Drupal::service('current_user')
   );
 }
 
@@ -179,7 +180,7 @@ function content_moderation_node_access(NodeInterface $node, $operation, Account
 
     $access_result->addCacheableDependency($node);
   }
-  elseif ($operation === 'update' && $moderation_info->isModeratableEntity($node) && $node->moderation_state && $node->moderation_state->target_id) {
+  elseif ($operation === 'update' && $moderation_info->isModeratedEntity($node) && $node->moderation_state && $node->moderation_state->target_id) {
     /** @var \Drupal\content_moderation\StateTransitionValidation $transition_validation */
     $transition_validation = \Drupal::service('content_moderation.state_transition_validation');
 

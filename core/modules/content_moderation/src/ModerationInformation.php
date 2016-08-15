@@ -2,16 +2,13 @@
 
 namespace Drupal\content_moderation;
 
-use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormInterface;
-use Drupal\Core\Session\AccountInterface;
 
 /**
  * General service for moderation-related questions about Entity API.
@@ -26,13 +23,6 @@ class ModerationInformation implements ModerationInformationInterface {
   protected $entityTypeManager;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Creates a new ModerationInformation instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -40,26 +30,25 @@ class ModerationInformation implements ModerationInformationInterface {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->currentUser = $current_user;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isModeratableEntity(EntityInterface $entity) {
+  public function isModeratedEntity(EntityInterface $entity) {
     if (!$entity instanceof ContentEntityInterface) {
       return FALSE;
     }
 
-    return $this->isModeratableBundle($entity->getEntityType(), $entity->bundle());
+    return $this->shouldModerateEntitiesOfBundle($entity->getEntityType(), $entity->bundle());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isModeratableEntityType(EntityTypeInterface $entity_type) {
+  public function canModerateEntitiesOfEntityType(EntityTypeInterface $entity_type) {
     return $entity_type->hasHandlerClass('moderation');
   }
 
@@ -75,7 +64,7 @@ class ModerationInformation implements ModerationInformationInterface {
   /**
    * {@inheritdoc}
    */
-  public function isModeratableBundle(EntityTypeInterface $entity_type, $bundle) {
+  public function shouldModerateEntitiesOfBundle(EntityTypeInterface $entity_type, $bundle) {
     if ($bundle_entity = $this->loadBundleEntity($entity_type->getBundleEntityType(), $bundle)) {
       return $bundle_entity->getThirdPartySetting('content_moderation', 'enabled', FALSE);
     }
@@ -85,44 +74,9 @@ class ModerationInformation implements ModerationInformationInterface {
   /**
    * {@inheritdoc}
    */
-  public function selectRevisionableEntityTypes(array $entity_types) {
-    return array_filter($entity_types, function (EntityTypeInterface $type) use ($entity_types) {
-      return ($type instanceof ConfigEntityTypeInterface)
-      && ($bundle_of = $type->get('bundle_of'))
-      && $entity_types[$bundle_of]->isRevisionable();
-    });
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function selectRevisionableEntities(array $entity_types) {
-    return array_filter($entity_types, function (EntityTypeInterface $type) use ($entity_types) {
-      return ($type instanceof ContentEntityTypeInterface)
-      && $type->isRevisionable()
-      && $type->getBundleEntityType();
-    });
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isBundleForModeratableEntity(EntityInterface $entity) {
-    $type = $entity->getEntityType();
-
-    return
-      $type instanceof ConfigEntityTypeInterface
-      && ($bundle_of = $type->get('bundle_of'))
-      && $this->entityTypeManager->getDefinition($bundle_of)->isRevisionable()
-      && $this->currentUser->hasPermission('administer moderation states');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isModeratedEntityForm(FormInterface $form_object) {
     return $form_object instanceof ContentEntityFormInterface
-    && $this->isModeratableEntity($form_object->getEntity());
+    && $this->isModeratedEntity($form_object->getEntity());
   }
 
   /**
@@ -191,7 +145,7 @@ class ModerationInformation implements ModerationInformationInterface {
    * {@inheritdoc}
    */
   public function hasForwardRevision(ContentEntityInterface $entity) {
-    return $this->isModeratableEntity($entity)
+    return $this->isModeratedEntity($entity)
       && !($this->getLatestRevisionId($entity->getEntityTypeId(), $entity->id()) == $this->getDefaultRevisionId($entity->getEntityTypeId(), $entity->id()));
   }
 

@@ -54,7 +54,7 @@ class ModerationOptOutUnpublishNode extends UnpublishNode implements ContainerFa
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    if ($entity && $this->moderationInfo->isModeratableEntity($entity)) {
+    if ($entity && $this->moderationInfo->isModeratedEntity($entity)) {
       drupal_set_message($this->t('One or more entities were skipped as they are under moderation and may not be directly published or unpublished.'));
       return;
     }
@@ -67,7 +67,7 @@ class ModerationOptOutUnpublishNode extends UnpublishNode implements ContainerFa
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
     $result = parent::access($object, $account, TRUE)
-      ->andif(AccessResult::forbiddenIf($this->moderationInfo->isModeratableEntity($object))->addCacheableDependency($object));
+      ->andif(AccessResult::forbiddenIf($this->moderationInfo->isModeratedEntity($object))->addCacheableDependency($object));
 
     return $return_as_object ? $result : $result->isAllowed();
   }

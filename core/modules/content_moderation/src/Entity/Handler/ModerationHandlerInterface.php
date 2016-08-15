@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
 interface ModerationHandlerInterface {
 
   /**
-   * Operates on moderatable content entities preSave().
+   * Operates on moderated content entities preSave().
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity to modify.
@@ -28,7 +28,7 @@ interface ModerationHandlerInterface {
   public function onPresave(ContentEntityInterface $entity, $default_revision, $published_state);
 
   /**
-   * Operates on the bundle definition that has been marked as moderatable.
+   * Operates on the bundle definition that has been marked as moderated.
    *
    * Note: The values on the EntityModerationForm itself are already saved
    * so do not need to be saved here. If any changes are made to the bundle
