@@ -481,12 +481,12 @@ class BlockTest extends BlockTestBase {
     $theme_handler = \Drupal::service('theme_handler');
 
     $theme_handler->install(['seven']);
-    $theme_handler->setDefault('seven');
+    $this->config('system.theme')->set('default', 'seven')->save();
     $block = $this->drupalPlaceBlock('system_powered_by_block', ['theme' => 'seven', 'region' => 'help']);
     $this->drupalGet('<front>');
     $this->assertText('Powered by Drupal');
 
-    $theme_handler->setDefault('classy');
+    $this->config('system.theme')->set('default', 'classy')->save();
     $theme_handler->uninstall(['seven']);
 
     // Ensure that the block configuration does not exist anymore.

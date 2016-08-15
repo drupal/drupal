@@ -123,7 +123,7 @@ class SiteMaintenanceTest extends WebTestBase {
 
     // Regression test to check if title displays in Bartik on maintenance page.
     \Drupal::service('theme_handler')->install(array('bartik'));
-    \Drupal::service('theme_handler')->setDefault('bartik');
+    $this->config('system.theme')->set('default', 'bartik')->save();
 
     // Logout and verify that offline message is displayed in Bartik.
     $this->drupalLogout();

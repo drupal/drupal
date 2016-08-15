@@ -150,7 +150,7 @@ class RegistryTest extends KernelTestBase {
     /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
     $theme_handler = \Drupal::service('theme_handler');
     $theme_handler->install(['test_theme']);
-    $theme_handler->setDefault('test_theme');
+    $this->config('system.theme')->set('default', 'test_theme')->save();
 
     $registry = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
     $registry->setThemeManager(\Drupal::theme());

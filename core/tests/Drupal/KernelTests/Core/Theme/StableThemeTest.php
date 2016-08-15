@@ -47,7 +47,7 @@ class StableThemeTest extends KernelTestBase {
    */
   public function testStableIsDefault() {
     $this->themeHandler->install(['test_stable']);
-    $this->themeHandler->setDefault('test_stable');
+    $this->config('system.theme')->set('default', 'test_stable')->save();
     $theme = $this->themeManager->getActiveTheme();
     /** @var \Drupal\Core\Theme\ActiveTheme $base_theme */
     $base_themes = $theme->getBaseThemes();
@@ -60,7 +60,7 @@ class StableThemeTest extends KernelTestBase {
    */
   public function testWildWest() {
     $this->themeHandler->install(['test_wild_west']);
-    $this->themeHandler->setDefault('test_wild_west');
+    $this->config('system.theme')->set('default', 'test_wild_west')->save();
     $theme = $this->themeManager->getActiveTheme();
     /** @var \Drupal\Core\Theme\ActiveTheme $base_theme */
     $base_themes = $theme->getBaseThemes();

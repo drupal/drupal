@@ -201,7 +201,7 @@ class CKEditorLoadingTest extends WebTestBase {
     $theme_handler = \Drupal::service('theme_handler');
     // Case 1: Install theme which has an absolute external CSS URL.
     $theme_handler->install(['test_ckeditor_stylesheets_external']);
-    $theme_handler->setDefault('test_ckeditor_stylesheets_external');
+    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_external')->save();
     $expected = [
       'https://fonts.googleapis.com/css?family=Open+Sans',
     ];
@@ -209,7 +209,7 @@ class CKEditorLoadingTest extends WebTestBase {
 
     // Case 2: Install theme which has an external protocol-relative CSS URL.
     $theme_handler->install(['test_ckeditor_stylesheets_protocol_relative']);
-    $theme_handler->setDefault('test_ckeditor_stylesheets_protocol_relative');
+    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_protocol_relative')->save();
     $expected = [
       '//fonts.googleapis.com/css?family=Open+Sans',
     ];
@@ -217,7 +217,7 @@ class CKEditorLoadingTest extends WebTestBase {
 
     // Case 3: Install theme which has a relative CSS URL.
     $theme_handler->install(['test_ckeditor_stylesheets_relative']);
-    $theme_handler->setDefault('test_ckeditor_stylesheets_relative');
+    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_relative')->save();
     $expected = [
       'core/modules/system/tests/themes/test_ckeditor_stylesheets_relative/css/yokotsoko.css',
     ];
