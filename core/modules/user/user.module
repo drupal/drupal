@@ -1195,9 +1195,7 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
  * @see user_mail_tokens()
  */
 function _user_mail_notify($op, $account, $langcode = NULL) {
-  // By default, we always notify except for canceled and blocked.
-  $notify = \Drupal::config('user.settings')->get('notify.' . $op);
-  if ($notify || ($op != 'status_canceled' && $op != 'status_blocked')) {
+  if (\Drupal::config('user.settings')->get('notify.' . $op)) {
     $params['account'] = $account;
     $langcode = $langcode ? $langcode : $account->getPreferredLangcode();
     // Get the custom site notification email to use as the from email address
