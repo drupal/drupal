@@ -101,12 +101,12 @@ class StorageComparer implements StorageComparerInterface {
   public function __construct(StorageInterface $source_storage, StorageInterface $target_storage, ConfigManagerInterface $config_manager) {
     // Wrap the storages in a static cache so that multiple reads of the same
     // raw configuration object are not costly.
-    $this->sourceCacheStorage = new MemoryBackend(__CLASS__ . '::source');
+    $this->sourceCacheStorage = new MemoryBackend();
     $this->sourceStorage = new CachedStorage(
       $source_storage,
       $this->sourceCacheStorage
     );
-    $this->targetCacheStorage = new MemoryBackend(__CLASS__ . '::target');
+    $this->targetCacheStorage = new MemoryBackend();
     $this->targetStorage = new CachedStorage(
       $target_storage,
       $this->targetCacheStorage

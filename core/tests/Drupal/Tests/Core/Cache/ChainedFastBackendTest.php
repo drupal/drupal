@@ -62,7 +62,7 @@ class ChainedFastBackendTest extends UnitTestCase {
     $consistent_cache->expects($this->never())
       ->method('getMultiple');
 
-    $fast_cache = new MemoryBackend('foo');
+    $fast_cache = new MemoryBackend();
     $fast_cache->set('foo', 'baz');
 
     $chained_fast_backend = new ChainedFastBackend(

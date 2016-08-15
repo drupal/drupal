@@ -20,15 +20,6 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   protected $cache = array();
 
   /**
-   * Constructs a MemoryBackend object.
-   *
-   * @param string $bin
-   *   The cache bin for which the object is created.
-   */
-  public function __construct($bin) {
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE) {

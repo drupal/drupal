@@ -106,7 +106,7 @@ class AssetResolverTest extends UnitTestCase {
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
       ->will($this->onConsecutiveCalls($english, $english, $japanese, $japanese));
-    $this->cache = new TestMemoryBackend('llama');
+    $this->cache = new TestMemoryBackend();
 
     $this->assetResolver = new AssetResolver($this->libraryDiscovery, $this->libraryDependencyResolver, $this->moduleHandler, $this->themeManager, $this->languageManager, $this->cache);
   }

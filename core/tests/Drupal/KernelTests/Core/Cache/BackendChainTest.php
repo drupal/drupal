@@ -17,9 +17,9 @@ class BackendChainTest extends GenericCacheBackendUnitTestBase {
 
     // We need to create some various backends in the chain.
     $chain
-      ->appendBackend(new MemoryBackend('foo'))
-      ->prependBackend(new MemoryBackend('bar'))
-      ->appendBackend(new MemoryBackend('baz'));
+      ->appendBackend(new MemoryBackend())
+      ->prependBackend(new MemoryBackend())
+      ->appendBackend(new MemoryBackend());
 
     \Drupal::service('cache_tags.invalidator')->addInvalidator($chain);
 

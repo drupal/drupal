@@ -79,8 +79,8 @@ class RendererBubblingTest extends RendererTestBase {
     $bin = $this->randomMachineName();
 
     $this->setUpRequest();
-    $this->memoryCache = new MemoryBackend('render');
-    $custom_cache = new MemoryBackend($bin);
+    $this->memoryCache = new MemoryBackend();
+    $custom_cache = new MemoryBackend();
 
     $this->cacheFactory->expects($this->atLeastOnce())
       ->method('get')
