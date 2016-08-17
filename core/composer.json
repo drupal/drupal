@@ -113,6 +113,7 @@
         "drupal/migrate_drupal_ui": "self.version",
         "drupal/node": "self.version",
         "drupal/options": "self.version",
+        "drupal/outside_in": "self.version",
         "drupal/page_cache": "self.version",
         "drupal/path": "self.version",
         "drupal/quickedit": "self.version",

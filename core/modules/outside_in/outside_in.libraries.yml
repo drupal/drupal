@@ -1,0 +1,23 @@
+drupal.outside_in:
+  version: VERSION
+  js:
+    js/outside_in.js: {}
+  css:
+    component:
+      css/outside_in.module.css: {}
+      css/outside_in.theme.css: {}
+      css/outside_in.motion.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+drupal.off_canvas:
+  version: VERSION
+  js:
+    js/offcanvas.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.ajax
+    - core/drupal.announce
+    - core/drupal.dialog
+    - core/drupal.dialog.ajax
