@@ -4,6 +4,8 @@ namespace Drupal\content_moderation;
 
 use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
+use Drupal\Core\Entity\BundleEntityFormBase;
+use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -328,21 +330,23 @@ class EntityTypeInfo {
    *
    * @see hook_form_alter()
    */
-  public function bundleFormAlter(array &$form, FormStateInterface $form_state, $form_id) {
-    if ($this->moderationInfo->isRevisionableBundleForm($form_state->getFormObject())) {
-      /* @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $bundle */
-      $bundle = $form_state->getFormObject()->getEntity();
-
-      $this->entityTypeManager->getHandler($bundle->getEntityType()->getBundleOf(), 'moderation')->enforceRevisionsBundleFormAlter($form, $form_state, $form_id);
+  public function formAlter(array &$form, FormStateInterface $form_state, $form_id) {
+    $form_object = $form_state->getFormObject();
+    if ($form_object instanceof BundleEntityFormBase) {
+      $type = $form_object->getEntity()->getEntityType();
+      if ($this->moderationInfo->canModerateEntitiesOfEntityType($type)) {
+        $this->entityTypeManager->getHandler($type->getBundleOf(), 'moderation')->enforceRevisionsBundleFormAlter($form, $form_state, $form_id);
+      }
     }
-    elseif ($this->moderationInfo->isModeratedEntityForm($form_state->getFormObject())) {
-      /* @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-      $entity = $form_state->getFormObject()->getEntity();
-
-      $this->entityTypeManager->getHandler($entity->getEntityTypeId(), 'moderation')->enforceRevisionsEntityFormAlter($form, $form_state, $form_id);
-
-      // Submit handler to redirect to the latest version, if available.
-      $form['actions']['submit']['#submit'][] = [EntityTypeInfo::class, 'bundleFormRedirect'];
+    elseif ($form_object instanceof ContentEntityFormInterface) {
+      $entity = $form_object->getEntity();
+      if ($this->moderationInfo->isModeratedEntity($entity)) {
+        $this->entityTypeManager
+          ->getHandler($entity->getEntityTypeId(), 'moderation')
+          ->enforceRevisionsEntityFormAlter($form, $form_state, $form_id);
+        // Submit handler to redirect to the latest version, if available.
+        $form['actions']['submit']['#submit'][] = [EntityTypeInfo::class, 'bundleFormRedirect'];
+      }
     }
   }
 

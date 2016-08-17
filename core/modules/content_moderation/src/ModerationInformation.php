@@ -2,13 +2,10 @@
 
 namespace Drupal\content_moderation;
 
-use Drupal\Core\Entity\BundleEntityFormBase;
-use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Form\FormInterface;
 
 /**
  * General service for moderation-related questions about Entity API.
@@ -68,27 +65,6 @@ class ModerationInformation implements ModerationInformationInterface {
     if ($bundle_entity = $this->loadBundleEntity($entity_type->getBundleEntityType(), $bundle)) {
       return $bundle_entity->getThirdPartySetting('content_moderation', 'enabled', FALSE);
     }
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isModeratedEntityForm(FormInterface $form_object) {
-    return $form_object instanceof ContentEntityFormInterface
-    && $this->isModeratedEntity($form_object->getEntity());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isRevisionableBundleForm(FormInterface $form_object) {
-    if ($form_object instanceof BundleEntityFormBase) {
-      $bundle_of = $form_object->getEntity()->getEntityType()->getBundleOf();
-      $type = $this->entityTypeManager->getDefinition($bundle_of);
-      return $type->isRevisionable();
-    }
-
     return FALSE;
   }
 
