@@ -25,6 +25,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
@@ -38,6 +39,7 @@ use Zend\Diactoros\Uri;
 abstract class WebTestBase extends TestBase {
 
   use AssertContentTrait;
+  use AssertPageCacheContextsAndTagsTrait;
   use BlockCreationTrait {
     placeBlock as drupalPlaceBlock;
   }
@@ -2705,28 +2707,6 @@ abstract class WebTestBase extends TestBase {
     else {
       return $this->getAbsoluteUrl($path);
     }
-  }
-
-  /**
-   * Asserts whether an expected cache context was present in the last response.
-   *
-   * @param string $expected_cache_context
-   *   The expected cache context.
-   */
-  protected function assertCacheContext($expected_cache_context) {
-    $cache_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
-    $this->assertTrue(in_array($expected_cache_context, $cache_contexts), "'" . $expected_cache_context . "' is present in the X-Drupal-Cache-Contexts header.");
-  }
-
-  /**
-   * Asserts that a cache context was not present in the last response.
-   *
-   * @param string $not_expected_cache_context
-   *   The expected cache context.
-   */
-  protected function assertNoCacheContext($not_expected_cache_context) {
-    $cache_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
-    $this->assertFalse(in_array($not_expected_cache_context, $cache_contexts), "'" . $not_expected_cache_context . "' is not present in the X-Drupal-Cache-Contexts header.");
   }
 
   /**
