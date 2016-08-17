@@ -395,6 +395,9 @@ Number module
 Options module
 - Yves Chedemois 'yched' https://www.drupal.org/u/yched
 
+Outside In module
+- Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
+
 Page Cache module
 - Lorenz Schori 'znerol' https://www.drupal.org/u/znerol
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
