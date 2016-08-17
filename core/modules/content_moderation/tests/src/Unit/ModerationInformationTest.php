@@ -3,10 +3,8 @@
 namespace Drupal\Tests\content_moderation\Unit;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityType;
-use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -111,38 +109,6 @@ class ModerationInformationTest extends \PHPUnit_Framework_TestCase {
     $moderation_information = new ModerationInformation($this->setupModerationEntityManager($status), $this->getUser());
 
     $this->assertEquals($status, $moderation_information->shouldModerateEntitiesOfBundle($entity_type, 'test_bundle'));
-  }
-
-  /**
-   * @dataProvider providerBoolean
-   * @covers ::isModeratedEntityForm
-   */
-  public function testIsModeratedEntityForm($status) {
-    $entity_type = new ContentEntityType([
-      'id' => 'test_entity_type',
-      'bundle_entity_type' => 'entity_test_bundle',
-    ]);
-
-    $entity = $this->prophesize(ContentEntityInterface::class);
-    $entity->getEntityType()->willReturn($entity_type);
-    $entity->bundle()->willReturn('test_bundle');
-
-    $form = $this->prophesize(ContentEntityFormInterface::class);
-    $form->getEntity()->willReturn($entity);
-
-    $moderation_information = new ModerationInformation($this->setupModerationEntityManager($status), $this->getUser());
-
-    $this->assertEquals($status, $moderation_information->isModeratedEntityForm($form->reveal()));
-  }
-
-  /**
-   * @covers ::isModeratedEntityForm
-   */
-  public function testIsModeratedEntityFormWithNonContentEntityForm() {
-    $form = $this->prophesize(EntityFormInterface::class);
-    $moderation_information = new ModerationInformation($this->setupModerationEntityManager(TRUE), $this->getUser());
-
-    $this->assertFalse($moderation_information->isModeratedEntityForm($form->reveal()));
   }
 
   /**

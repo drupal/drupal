@@ -133,7 +133,7 @@ function content_moderation_local_tasks_alter(&$local_tasks) {
  * Implements hook_form_alter().
  */
 function content_moderation_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  _content_moderation_create_entity_type_info()->bundleFormAlter($form, $form_state, $form_id);
+  _content_moderation_create_entity_type_info()->formAlter($form, $form_state, $form_id);
 }
 
 /**

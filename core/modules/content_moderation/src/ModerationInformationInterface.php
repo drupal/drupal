@@ -5,7 +5,6 @@ namespace Drupal\content_moderation;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Form\FormInterface;
 
 /**
  * Interface for moderation_information service.
@@ -60,33 +59,6 @@ interface ModerationInformationInterface {
    *   otherwise.
    */
   public function shouldModerateEntitiesOfBundle(EntityTypeInterface $entity_type, $bundle);
-
-  /**
-   * Determines if this form is for a moderated entity.
-   *
-   * @param \Drupal\Core\Form\FormInterface $form_object
-   *   The form definition object for this form.
-   *
-   * @return bool
-   *   TRUE if the form is for an entity that is subject to moderation, FALSE
-   *   otherwise.
-   */
-  public function isModeratedEntityForm(FormInterface $form_object);
-
-  /**
-   * Determines if the form is the bundle edit of a revisionable entity.
-   *
-   * The logic here is not entirely clear, but seems to work. The form- and
-   * entity-dereference chaining seems excessive but is what works.
-   *
-   * @param \Drupal\Core\Form\FormInterface $form_object
-   *   The form definition object for this form.
-   *
-   * @return bool
-   *   True if the form is the bundle edit form for an entity type that supports
-   *   revisions, false otherwise.
-   */
-  public function isRevisionableBundleForm(FormInterface $form_object);
 
   /**
    * Loads the latest revision of a specific entity.
