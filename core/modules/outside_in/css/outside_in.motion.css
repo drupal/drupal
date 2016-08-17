@@ -1,0 +1,69 @@
+/**
+ * @file
+ * Motion effects for outside-in module.
+ *
+ * Motion effects are in a separate file so that they can be easily turned off
+ * to improve performance if desired.
+ *
+ * @todo Move motion effects file into a core Off-Canvas library and add a
+ *   configuration option for browser rendering performance to disable this
+ *   file: https://www.drupal.org/node/2784443.
+ */
+
+/* Transition the offcanvas tray container, with 2s delay to match main canvas speed. */
+#offcanvas {
+  -webkit-transition: all .7s ease 2s;
+  -moz-transition: all .7s ease 2s;
+  transition: all .7s ease 2s;
+}
+#main-canvas-wrapper #main-canvas,
+#main-canvas-wrapper.js-tray-open #main-canvas {
+  -webkit-transition: all .7s ease;
+  -moz-transition: all .7s ease;
+  transition: all .7s ease;
+}
+
+/* Transition the edit icon in the toolbar. */
+#toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
+  -webkit-transition: all .7s ease;
+  -moz-transition: all .7s ease;
+  transition: all .7s ease;
+}
+
+/* Transition the editables on the page, their contextual links and their hover states. */
+#main-canvas-wrapper .contextual,
+#main-canvas-wrapper .outside-in-editable,
+#main-canvas-wrapper.js-tray-open .outside-in-editable {
+  -webkit-transition: all .7s ease;
+  -moz-transition: all .7s ease;
+  transition: all .7s ease;
+}
+
+/* Transition the position of the toolbar. */
+.toolbar-fixed,
+.toolbar-tray-open {
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  transition: all .5s ease;
+}
+
+@media (max-width: 700px) {
+  #offcanvas {
+    -webkit-transition: all .7s ease;
+    -moz-transition: all .7s ease;
+    transition: all .7s ease;
+  }
+  #main-canvas-wrapper.js-tray-open #offcanvas {
+    -webkit-transition: all .7s ease;
+    -moz-transition: all .7s ease;
+    transition: all .7s ease;
+  }
+}
+
+/* Transition the administration tray.
+#toolbar-administration,
+#toolbar-administration * {
+  -webkit-transition: all .7s ease;
+  -moz-transition: all .7s ease;
+  transition: all .7s ease;
+}*/

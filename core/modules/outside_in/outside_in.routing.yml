@@ -1,0 +1,7 @@
+entity.block.offcanvas_form:
+  path: '/admin/structure/block/manage/{block}/offcanvas'
+  defaults:
+    _entity_form: 'block.offcanvas'
+    _title: 'Configure block'
+  requirements:
+    _permission: 'administer blocks'

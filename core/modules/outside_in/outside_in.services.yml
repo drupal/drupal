@@ -1,0 +1,16 @@
+services:
+  main_content_renderer.off_canvas:
+    class: Drupal\outside_in\Render\MainContent\OffCanvasRender
+    arguments: ['@title_resolver', '@renderer']
+    tags:
+      - { name: render.main_content_renderer, format: drupal_offcanvas }
+
+  outside_in.manager:
+    class: Drupal\outside_in\OutsideInManager
+    arguments: ['@router.admin_context', '@current_route_match', '@current_user']
+
+  cache_context.outside_in_is_applied:
+    class: Drupal\outside_in\Cache\Context\OutsideInCacheContext
+    arguments: ['@outside_in.manager']
+    tags:
+      - { name: cache.context}

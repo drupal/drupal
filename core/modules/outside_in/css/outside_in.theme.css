@@ -1,0 +1,109 @@
+/**
+ * @file
+ * Visual styling for Outside-In module.
+ */
+
+/**
+ * Style the contextual links toggle tab in the toolbar.
+ *
+ * @todo Move this into toolbar when module is not experimental:
+ *   https://www.drupal.org/node/2784593.
+ */
+
+/* Style both the edit and editing states. */
+button.toolbar-icon.toolbar-icon-edit.toolbar-item {
+  background: #0e69be;
+  background-image: -webkit-linear-gradient(top, #0094f0, #0e69be);
+  background-image: linear-gradient(to bottom, #0094f0, #0e69be);
+}
+button.toolbar-icon.toolbar-icon-edit.toolbar-item:hover,
+button.toolbar-icon.toolbar-icon-edit.toolbar-item:focus {
+  background-image: -webkit-linear-gradient(top, #0094f0, #0e69be);
+  background-image: linear-gradient(to bottom, #0094f0, #0e69be);
+  color: #fff;
+}
+button.toolbar-icon.toolbar-icon-edit.toolbar-item:before:hover,
+button.toolbar-icon.toolbar-icon-edit.toolbar-item:before:focus {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+}
+button.toolbar-icon.toolbar-icon-edit.toolbar-item:hover,
+button.toolbar-icon.toolbar-icon-edit.toolbar-item:focus {
+  background-image: -webkit-linear-gradient(top, #0094f0, #0e69be);
+  background-image: linear-gradient(to bottom, #0094f0, #0e69be);
+  outline: none;
+}
+button.toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit:before {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+}
+#toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+}
+
+/* Style the toolbar when in edit mode. */
+#toolbar-bar.js-outside-in-edit-mode {
+  background-color: #fff;
+}
+/* Change text color for white background. */
+#toolbar-bar.js-outside-in-edit-mode .toolbar-item {
+  color: #999;
+}
+#toolbar-bar.js-outside-in-edit-mode .toolbar-item .is-active {
+  color: #333;
+}
+/* Set color back to white for 'editing' button only. */
+#toolbar-bar.js-outside-in-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
+ color: #fff;
+}
+#toolbar-bar.js-outside-in-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
+ background-image: -webkit-linear-gradient(top, #0094f0, #0e69be);
+ background-image: linear-gradient(to bottom, #0094f0, #0e69be);
+}
+
+/*
+ * Style the editables while in edit mode.
+ */
+
+/* Highlight editable regions in edit mode. */
+#main-canvas.js-outside-in-edit-mode .outside-in-editable {
+  outline: 1px dashed rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.7);
+}
+#main-canvas.js-outside-in-edit-mode .outside-in-editable:hover {
+  outline: 1px dashed rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.7);
+  background-color: rgba(0,0,0,0.2);
+}
+/* Turn off the outlines on editables when the tray is open. */
+#main-canvas-wrapper.js-tray-open .outside-in-editable {
+  outline: transparent;
+  outline-color: transparent;
+  box-shadow: none;
+}
+#main-canvas-wrapper.js-tray-open .contextual {
+  opacity: 0;
+}
+#main-canvas-wrapper.js-tray-open .contextual:hover {
+  opacity: 1;
+}
+
+/**
+ * Style the offcanvas container.
+ *
+ * @todo Move Off-canvas css into core Off-canvas library:
+ *   https://www.drupal.org/node/2784443.
+ */
+#offcanvas {
+  background: #fff;
+  border-left: 1px solid #ddd; /* LTR */
+  box-shadow: -2px 2px 1px 1px rgba(0, 0, 0, 0.1); /* LTR */
+}
+[dir="rtl"] #offcanvas {
+  border-right: 1px solid #ddd;
+  box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the tray header. */
+#offcanvas h1 {
+  font-size: 120%;
+  border-bottom: 1px solid #ddd;
+}
