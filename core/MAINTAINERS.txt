@@ -475,11 +475,13 @@ Views module
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 - Damian Lee 'damiankloip' https://www.drupal.org/u/damiankloip
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
+- Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
 
 Views UI module
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 - Damian Lee 'damiankloip' https://www.drupal.org/u/damiankloip
+- Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
 
 
 Theme maintainers
