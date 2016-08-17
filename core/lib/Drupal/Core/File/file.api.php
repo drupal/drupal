@@ -157,12 +157,6 @@ function hook_archiver_info_alter(&$info) {
  *     will always be passed the full path to the root of the site that should
  *     be used to restrict where file transfer operations can occur (the $jail)
  *     and an array of settings values returned by the settings form.
- *   - 'file': Required. The include file containing the FileTransfer class.
- *     This should be a separate .inc file, not just the .module file, so that
- *     the minimum possible code is loaded when authorize.php is running.
- *   - 'file path': Optional. The directory (relative to the Drupal root)
- *     where the include file lives. If not defined, defaults to the base
- *     directory of the module implementing the hook.
  *   - 'weight': Optional. Integer weight used for sorting connection types on
  *     the authorize.php form.
  *
