@@ -51,6 +51,7 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
     $root . '/core/profiles',
     $root . '/modules',
     $root . '/profiles',
+    $root . '/themes',
   );
   $sites_path = $root . '/sites';
   // Note this also checks sites/../modules and sites/../profiles.
@@ -61,6 +62,7 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
     $path = "$sites_path/$site";
     $paths[] = is_dir("$path/modules") ? realpath("$path/modules") : NULL;
     $paths[] = is_dir("$path/profiles") ? realpath("$path/profiles") : NULL;
+    $paths[] = is_dir("$path/themes") ? realpath("$path/themes") : NULL;
   }
   return array_filter($paths);
 }
