@@ -65,7 +65,7 @@ class DblogClearLogConfirmForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $_SESSION['dblog_overview_filter'] = array();
-    $this->connection->delete('watchdog')->execute();
+    $this->connection->truncate('watchdog')->execute();
     drupal_set_message($this->t('Database log cleared.'));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
