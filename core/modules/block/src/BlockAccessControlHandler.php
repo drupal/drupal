@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
@@ -26,13 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BlockAccessControlHandler extends EntityAccessControlHandler implements EntityHandlerInterface {
 
   use ConditionAccessResolverTrait;
-
-  /**
-   * The condition plugin manager.
-   *
-   * @var \Drupal\Core\Executable\ExecutableManagerInterface
-   */
-  protected $manager;
 
   /**
    * The plugin context handler.
@@ -54,7 +46,6 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('plugin.manager.condition'),
       $container->get('context.handler'),
       $container->get('context.repository')
     );
@@ -65,16 +56,13 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Executable\ExecutableManagerInterface $manager
-   *   The ConditionManager for checking visibility of blocks.
    * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $context_handler
    *   The ContextHandler for applying contexts to conditions properly.
    * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
    *   The lazy context repository service.
    */
-  public function __construct(EntityTypeInterface $entity_type, ExecutableManagerInterface $manager, ContextHandlerInterface $context_handler, ContextRepositoryInterface $context_repository ) {
+  public function __construct(EntityTypeInterface $entity_type, ContextHandlerInterface $context_handler, ContextRepositoryInterface $context_repository ) {
     parent::__construct($entity_type);
-    $this->manager = $manager;
     $this->contextHandler = $context_handler;
     $this->contextRepository = $context_repository;
   }
