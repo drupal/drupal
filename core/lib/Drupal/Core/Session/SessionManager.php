@@ -78,7 +78,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    *   The session metadata bag.
    * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
    *   The session configuration interface.
-   * @param \Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy|Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler|\SessionHandlerInterface|NULL $handler
+   * @param \Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy|Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler|\SessionHandlerInterface|null $handler
    *   The object to register as a PHP session handler.
    *   @see \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage::setSaveHandler()
    */

@@ -65,7 +65,7 @@ abstract class FileManagedTestBase extends WebTestBase {
    *   String with the hook name; for instance, 'load', 'save', 'insert', etc.
    * @param int $expected_count
    *   Optional integer count.
-   * @param string|NULL $message
+   * @param string|null $message
    *   Optional translated string message.
    */
   function assertFileHookCalled($hook, $expected_count = 1, $message = NULL) {

@@ -148,13 +148,13 @@ class RequestHandlerTest extends KernelTestBase {
    *   The HTTP methods to test.
    * @param string[] $supported_formats
    *   The supported formats for the REST route to be tested.
-   * @param string|FALSE $request_format
+   * @param string|false $request_format
    *   The value for the ?_format URL query argument, if any.
    * @param string[] $request_headers
    *   The request headers to send, if any.
-   * @param string|NULL $request_body
+   * @param string|null $request_body
    *   The request body to send, if any.
-   * @param string|NULL $expected_response_content_type
+   * @param string|null $expected_response_content_type
    *   The expected MIME type of the response, if any.
    * @param string $expected_response_content
    *   The expected content of the response.

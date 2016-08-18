@@ -811,7 +811,7 @@ class UrlTest extends UnitTestCase {
    * Creates a mock access manager for the access tests.
    *
    * @param bool $access
-   * @param \Drupal\Core\Session\AccountInterface|NULL $account
+   * @param \Drupal\Core\Session\AccountInterface|null $account
    *
    * @return \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */

@@ -75,7 +75,7 @@ class UpdateRegistry {
    *   A list of enabled modules.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value
    *   The key value store.
-   * @param bool|NULL $include_tests
+   * @param bool|null $include_tests
    *   (optional) A flag whether to include tests in the scanning of modules.
    */
   public function __construct($root, $site_path, array $enabled_modules, KeyValueStoreInterface $key_value, $include_tests = NULL) {

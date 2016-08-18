@@ -18,7 +18,7 @@ interface MenuParentFormSelectorInterface {
    * @param array $menus
    *   Optional array of menu names as keys and titles as values to limit
    *   the select options.  If NULL, all menus will be included.
-   * @param \Drupal\Core\Cache\CacheableMetadata|NULL &$cacheability
+   * @param \Drupal\Core\Cache\CacheableMetadata|null &$cacheability
    *   Optional cacheability metadata object, which will be populated based on
    *   the accessibility of the links and the cacheability of the links.
    *

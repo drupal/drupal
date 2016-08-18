@@ -281,7 +281,7 @@ abstract class RESTTestBase extends WebTestBase {
   /**
    * Enables the REST service interface for a specific entity type.
    *
-   * @param string|FALSE $resource_type
+   * @param string|false $resource_type
    *   The resource type that should get REST API enabled or FALSE to disable all
    *   resource types.
    * @param string $method

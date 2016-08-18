@@ -545,7 +545,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
   }
 
   /**
-   * @param FALSE|array $cid_parts
+   * @param false|array $cid_parts
    * @param array $expected_data
    *   FALSE if no render cache item is expected, a render array with the
    *   expected values if a render cache item is expected.
