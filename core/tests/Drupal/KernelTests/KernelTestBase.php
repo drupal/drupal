@@ -1104,7 +1104,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
           return Settings::get('file_public_path', \Drupal::service('site.path') . '/files');
 
         case 'private_files_directory':
-          return $this->container->get('config.factory')->get('system.file')->get('path.private');
+          return Settings::get('file_private_path');
 
         case 'temp_files_directory':
           return file_directory_temp();
