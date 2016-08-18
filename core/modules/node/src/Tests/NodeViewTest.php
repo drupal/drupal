@@ -18,14 +18,49 @@ class NodeViewTest extends NodeTestBase {
 
     $this->drupalGet($node->urlInfo());
 
+    $result = $this->xpath('//link[@rel = "canonical"]');
+    $this->assertEqual($result[0]['href'], $node->url());
+
+    // Link relations are checked for access for anonymous users.
+    $result = $this->xpath('//link[@rel = "version-history"]');
+    $this->assertFalse($result, 'Version history not present for anonymous users without access.');
+
+    $result = $this->xpath('//link[@rel = "edit-form"]');
+    $this->assertFalse($result, 'Edit form not present for anonymous users without access.');
+
+    $this->drupalLogin($this->createUser(['access content']));
+    $this->drupalGet($node->urlInfo());
+
+    $result = $this->xpath('//link[@rel = "canonical"]');
+    $this->assertEqual($result[0]['href'], $node->url());
+
+    // Link relations are present regardless of access for authenticated users.
     $result = $this->xpath('//link[@rel = "version-history"]');
     $this->assertEqual($result[0]['href'], $node->url('version-history'));
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
     $this->assertEqual($result[0]['href'], $node->url('edit-form'));
 
+    // Give anonymous users access to edit the node. Do this through the UI to
+    // ensure caches are handled properly.
+    $this->drupalLogin($this->rootUser);
+    $edit = [
+      'anonymous[edit own ' . $node->bundle() . ' content]' => TRUE
+    ];
+    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
+    $this->drupalLogout();
+
+    // Anonymous user's should now see the edit-form link but not the
+    // version-history link.
+    $this->drupalGet($node->urlInfo());
     $result = $this->xpath('//link[@rel = "canonical"]');
     $this->assertEqual($result[0]['href'], $node->url());
+
+    $result = $this->xpath('//link[@rel = "version-history"]');
+    $this->assertFalse($result, 'Version history not present for anonymous users without access.');
+
+    $result = $this->xpath('//link[@rel = "edit-form"]');
+    $this->assertEqual($result[0]['href'], $node->url('edit-form'));
   }
 
   /**

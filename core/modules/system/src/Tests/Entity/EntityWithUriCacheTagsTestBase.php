@@ -27,7 +27,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     $view_mode = $this->selectViewMode($entity_type);
 
     // The default cache contexts for rendered entities.
-    $entity_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
+    $entity_cache_contexts = $this->getDefaultCacheContexts();
 
     // Generate the standardized entity cache tags.
     $cache_tag = $this->entity->getCacheTags();
@@ -139,6 +139,16 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     $this->entity->delete();
     $this->verifyPageCache($entity_url, 'MISS');
     $this->assertResponse(404);
+  }
+
+  /**
+   * Gets the default cache contexts for rendered entities.
+   *
+   * @return array
+   *   The default cache contexts for rendered entities.
+   */
+  protected function getDefaultCacheContexts() {
+    return ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
   }
 
 }

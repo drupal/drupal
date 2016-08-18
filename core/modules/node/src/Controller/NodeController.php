@@ -127,7 +127,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
   public function revisionShow($node_revision) {
     $node = $this->entityManager()->getStorage('node')->loadRevision($node_revision);
     $node = $this->entityManager()->getTranslationFromContext($node);
-    $node_view_controller = new NodeViewController($this->entityManager, $this->renderer);
+    $node_view_controller = new NodeViewController($this->entityManager, $this->renderer, $this->currentUser());
     $page = $node_view_controller->view($node);
     unset($page['nodes'][$node->id()]['#cache']);
     return $page;
