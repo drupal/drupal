@@ -3,6 +3,7 @@
 namespace Drupal\content_moderation;
 
 use Drupal\content_moderation\Entity\ContentModerationState;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -10,11 +11,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\content_moderation\Form\EntityModerationForm;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a class for reacting to entity events.
  */
-class EntityOperations {
+class EntityOperations implements ContainerInjectionInterface {
 
   /**
    * The Moderation Information service.
@@ -61,6 +63,18 @@ class EntityOperations {
     $this->entityTypeManager = $entity_type_manager;
     $this->formBuilder = $form_builder;
     $this->tracker = $tracker;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('content_moderation.moderation_information'),
+      $container->get('entity_type.manager'),
+      $container->get('form_builder'),
+      $container->get('content_moderation.revision_tracker')
+    );
   }
 
   /**

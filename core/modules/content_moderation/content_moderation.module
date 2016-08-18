@@ -37,80 +37,66 @@ function content_moderation_help($route_name, RouteMatchInterface $route_match) 
 }
 
 /**
- * Creates an EntityTypeInfo object to respond to entity hooks.
- *
- * @return \Drupal\content_moderation\EntityTypeInfo
- */
-function _content_moderation_create_entity_type_info() {
-  return new EntityTypeInfo(
-    \Drupal::service('string_translation'),
-    \Drupal::service('content_moderation.moderation_information'),
-    \Drupal::service('entity_type.manager'),
-    \Drupal::service('current_user')
-  );
-}
-
-/**
  * Implements hook_entity_base_field_info().
  */
 function content_moderation_entity_base_field_info(EntityTypeInterface $entity_type) {
-  return _content_moderation_create_entity_type_info()->entityBaseFieldInfo($entity_type);
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->entityBaseFieldInfo($entity_type);
 }
 
 /**
  * Implements hook_entity_type_alter().
  */
 function content_moderation_entity_type_alter(array &$entity_types) {
-  _content_moderation_create_entity_type_info()->entityTypeAlter($entity_types);
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->entityTypeAlter($entity_types);
 }
 
 /**
  * Implements hook_entity_operation().
  */
 function content_moderation_entity_operation(EntityInterface $entity) {
-  return _content_moderation_create_entity_type_info()->entityOperation($entity);
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->entityOperation($entity);
 }
 
 /**
  * Sets required flag based on enabled state.
  */
 function content_moderation_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
-  _content_moderation_create_entity_type_info()->entityBundleFieldInfoAlter($fields, $entity_type, $bundle);
-}
-
-/**
- * Creates an EntityOperations object to respond to entity operation hooks.
- *
- * @return \Drupal\content_moderation\EntityOperations
- */
-function _content_moderation_create_entity_operations() {
-  return new EntityOperations(
-    \Drupal::service('content_moderation.moderation_information'),
-    \Drupal::service('entity_type.manager'),
-    \Drupal::service('form_builder'),
-    \Drupal::service('content_moderation.revision_tracker')
-  );
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->entityBundleFieldInfoAlter($fields, $entity_type, $bundle);
 }
 
 /**
  * Implements hook_entity_presave().
  */
 function content_moderation_entity_presave(EntityInterface $entity) {
-  return _content_moderation_create_entity_operations()->entityPresave($entity);
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityPresave($entity);
 }
 
 /**
  * Implements hook_entity_insert().
  */
 function content_moderation_entity_insert(EntityInterface $entity) {
-  return _content_moderation_create_entity_operations()->entityInsert($entity);
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityInsert($entity);
 }
 
 /**
  * Implements hook_entity_update().
  */
 function content_moderation_entity_update(EntityInterface $entity) {
-  return _content_moderation_create_entity_operations()->entityUpdate($entity);
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityUpdate($entity);
 }
 
 /**
@@ -133,7 +119,9 @@ function content_moderation_local_tasks_alter(&$local_tasks) {
  * Implements hook_form_alter().
  */
 function content_moderation_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  _content_moderation_create_entity_type_info()->formAlter($form, $form_state, $form_id);
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->formAlter($form, $form_state, $form_id);
 }
 
 /**
@@ -143,22 +131,27 @@ function content_moderation_form_alter(&$form, FormStateInterface $form_state, $
  * node title as part of the node content.
  */
 function content_moderation_preprocess_node(&$variables) {
-  $content_process = new ContentPreprocess(\Drupal::routeMatch());
-  $content_process->preprocessNode($variables);
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(ContentPreprocess::class)
+    ->preprocessNode($variables);
 }
 
 /**
  * Implements hook_entity_extra_field_info().
  */
 function content_moderation_entity_extra_field_info() {
-  return _content_moderation_create_entity_type_info()->entityExtraFieldInfo();
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->entityExtraFieldInfo();
 }
 
 /**
  * Implements hook_entity_view().
  */
 function content_moderation_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-  _content_moderation_create_entity_operations()->entityView($build, $entity, $display, $view_mode);
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityView($build, $entity, $display, $view_mode);
 }
 
 /**

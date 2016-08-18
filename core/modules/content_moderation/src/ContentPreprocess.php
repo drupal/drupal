@@ -2,13 +2,15 @@
 
 namespace Drupal\content_moderation;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Determines whether a route is the "Latest version" tab of a node.
  */
-class ContentPreprocess {
+class ContentPreprocess implements ContainerInjectionInterface {
 
   /**
    * The route match service.
@@ -25,6 +27,15 @@ class ContentPreprocess {
    */
   public function __construct(RouteMatchInterface $route_match) {
     $this->routeMatch = $route_match;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('current_route_match')
+    );
   }
 
   /**
