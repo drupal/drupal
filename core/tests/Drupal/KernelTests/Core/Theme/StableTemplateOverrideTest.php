@@ -62,9 +62,9 @@ class StableTemplateOverrideTest extends KernelTestBase {
     // Enable all core modules.
     $all_modules = system_rebuild_module_data();
     $all_modules = array_filter($all_modules, function ($module) {
-      // Filter contrib, hidden, already enabled modules and modules in the
-      // Testing package.
-      if ($module->origin !== 'core' || !empty($module->info['hidden']) || $module->status == TRUE || $module->info['package'] == 'Testing') {
+      // Filter contrib, hidden, experimental, already enabled modules, and
+      // modules in the Testing package.
+      if ($module->origin !== 'core' || !empty($module->info['hidden']) || $module->status == TRUE || $module->info['package'] == 'Testing' || $module->info['package'] == 'Core (Experimental)') {
         return FALSE;
       }
       return TRUE;
