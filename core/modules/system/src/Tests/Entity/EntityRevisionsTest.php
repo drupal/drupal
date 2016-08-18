@@ -98,9 +98,10 @@ class EntityRevisionsTest extends WebTestBase {
       $this->assertNotEqual($entity->field_test_text->value, $legacy_text, format_string('%entity_type: Text changed.', array('%entity_type' => $entity_type)));
     }
 
+    $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
     for ($i = 0; $i < $revision_count; $i++) {
       // Load specific revision.
-      $entity_revision = entity_revision_load($entity_type, $revision_ids[$i]);
+      $entity_revision = $storage->loadRevision($revision_ids[$i]);
 
       // Check if properties and fields contain the revision specific content.
       $this->assertEqual($entity_revision->revision_id->value, $revision_ids[$i], format_string('%entity_type: Revision ID matches.', array('%entity_type' => $entity_type)));

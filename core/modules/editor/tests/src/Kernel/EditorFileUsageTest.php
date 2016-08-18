@@ -172,7 +172,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
 
     // Test editor_entity_revision_delete(): decrement, by deleting a revision.
-    entity_revision_delete('node', $second_revision_id);
+    $this->container->get('entity_type.manager')->getStorage('node')->deleteRevision($second_revision_id);
     foreach ($image_entities as $key => $image_entity) {
       $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }

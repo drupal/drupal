@@ -457,7 +457,7 @@ function node_load($nid = NULL, $reset = FALSE) {
  *   A fully-populated node entity, or NULL if the node is not found.
  */
 function node_revision_load($vid = NULL) {
-  return entity_revision_load('node', $vid);
+  return \Drupal::entityTypeManager()->getStorage('node')->loadRevision($vid);
 }
 
 /**

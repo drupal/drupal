@@ -124,7 +124,9 @@ class TranslationWebTest extends FieldTestBase {
    */
   private function checkTranslationRevisions($id, $revision_id, $available_langcodes) {
     $field_name = $this->fieldStorage->getName();
-    $entity = entity_revision_load($this->entityTypeId, $revision_id);
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityTypeId)
+      ->loadRevision($revision_id);
     foreach ($available_langcodes as $langcode => $value) {
       $passed = $entity->getTranslation($langcode)->{$field_name}->value == $value + 1;
       $this->assertTrue($passed, format_string('The @language translation for revision @revision was correctly stored', array('@language' => $langcode, '@revision' => $entity->getRevisionId())));

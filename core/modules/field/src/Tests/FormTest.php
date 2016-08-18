@@ -575,7 +575,9 @@ class FormTest extends FieldTestBase {
     $this->assertEqual($entity->$field_name->value, 2, 'New revision has the expected value for the field with edit access.');
 
     // Check that the revision is also saved in the revisions table.
-//    $entity = entity_revision_load($entity_type, $entity->getRevisionId());
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->loadRevision($entity->getRevisionId());
     $this->assertEqual($entity->$field_name_no_access->value, 99, 'New revision has the expected value for the field with no edit access.');
     $this->assertEqual($entity->$field_name->value, 2, 'New revision has the expected value for the field with edit access.');
   }
