@@ -35,7 +35,7 @@ class StatisticsTestCase extends DrupalWebTestCase {
         'title' => 'test',
         'path' => 'node/1',
         'url' => 'http://example.com',
-        'hostname' => '192.168.1.1',
+        'hostname' => '1.2.3.3',
         'uid' => 0,
         'sid' => 10,
         'timer' => 10,
@@ -268,7 +268,7 @@ class StatisticsBlockVisitorsTestCase extends StatisticsTestCase {
    */
   function testIPAddressBlocking() {
     // IP address for testing.
-    $test_ip_address = '192.168.1.1';
+    $test_ip_address = '1.2.3.3';
 
     // Verify the IP address from accesslog appears on the top visitors page
     // and that a 'block IP address' link is displayed.
