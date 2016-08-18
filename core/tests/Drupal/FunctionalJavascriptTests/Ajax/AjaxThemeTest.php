@@ -36,18 +36,10 @@ class AjaxThemeTest extends JavascriptTestBase {
     $this->drupalGet('ajax-test/dialog');
     $assert->pageTextNotContains('Current theme: stable');
     $this->clickLink('Link 8 (ajax)');
-    $this->waitForAjaxToFinish();
+    $assert->assertWaitOnAjaxRequest();
 
     $assert->pageTextContains('Current theme: stable');
     $assert->pageTextNotContains('Current theme: seven');
-  }
-
-  /**
-   * Waits for jQuery to become active and animations to complete.
-   */
-  protected function waitForAjaxToFinish() {
-    $condition = "(0 === jQuery.active && 0 === jQuery(':animated').length)";
-    $this->assertJsCondition($condition, 10000);
   }
 
 }
