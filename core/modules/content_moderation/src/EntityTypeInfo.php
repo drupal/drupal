@@ -6,6 +6,7 @@ use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\ContentEntityFormInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -22,6 +23,7 @@ use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
 use Drupal\content_moderation\Form\BundleModerationConfigurationForm;
 use Drupal\content_moderation\Routing\EntityModerationRouteProvider;
 use Drupal\content_moderation\Routing\EntityTypeModerationRouteProvider;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Manipulates entity type information.
@@ -29,7 +31,7 @@ use Drupal\content_moderation\Routing\EntityTypeModerationRouteProvider;
  * This class contains primarily bridged hooks for compile-time or
  * cache-clear-time hooks. Runtime hooks should be placed in EntityOperations.
  */
-class EntityTypeInfo {
+class EntityTypeInfo implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 
@@ -82,6 +84,19 @@ class EntityTypeInfo {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('string_translation'),
+      $container->get('content_moderation.moderation_information'),
+      $container->get('entity_type.manager'),
+      $container->get('current_user')
+    );
+  }
+
 
   /**
    * Adds Moderation configuration to appropriate entity types.
