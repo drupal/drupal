@@ -56,7 +56,7 @@ function options_field_storage_config_delete(FieldStorageConfigInterface $field_
  *
  * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $definition
  *   The field storage definition.
- * @param \Drupal\Core\Entity\FieldableEntityInterface|NULL $entity
+ * @param \Drupal\Core\Entity\FieldableEntityInterface|null $entity
  *   (optional) The specific entity when this function is called from the
  *   context of a specific field on a specific entity. This allows custom
  *   'allowed_values_function' callbacks to either restrict the values or

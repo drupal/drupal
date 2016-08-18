@@ -215,7 +215,7 @@ class ContentModerationStateTest extends KernelTestBase {
    *
    * @param \Drupal\node\NodeInterface $node
    *   The node to reload.
-   * @param int|FALSE $revision_id
+   * @param int|false $revision_id
    *   The specific revision ID to load. Defaults FALSE and just loads the
    *   default revision.
    *

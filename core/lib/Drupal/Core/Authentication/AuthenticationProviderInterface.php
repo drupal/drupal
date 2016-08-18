@@ -24,7 +24,7 @@ interface AuthenticationProviderInterface {
   /**
    * Authenticates the user.
    *
-   * @param \Symfony\Component\HttpFoundation\Request|NULL $request
+   * @param \Symfony\Component\HttpFoundation\Request|null $request
    *   The request object.
    *
    * @return \Drupal\Core\Session\AccountInterface|NULL

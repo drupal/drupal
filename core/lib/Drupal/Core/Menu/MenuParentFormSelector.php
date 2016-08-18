@@ -135,7 +135,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    *   An excluded menu link.
    * @param int $depth_limit
    *   The maximum depth of menu links considered for the select options.
-   * @param \Drupal\Core\Cache\CacheableMetadata|NULL &$cacheability
+   * @param \Drupal\Core\Cache\CacheableMetadata|null &$cacheability
    *   The object to add cacheability metadata to, if not NULL.
    */
   protected function parentSelectOptionsTreeWalk(array $tree, $menu_name, $indent, array &$options, $exclude, $depth_limit, CacheableMetadata &$cacheability = NULL) {

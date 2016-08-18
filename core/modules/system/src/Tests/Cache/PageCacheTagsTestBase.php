@@ -38,7 +38,7 @@ abstract class PageCacheTagsTestBase extends WebTestBase {
    * @param string $hit_or_miss
    *   'HIT' if a page cache hit is expected, 'MISS' otherwise.
    *
-   * @param array|FALSE $tags
+   * @param array|false $tags
    *   When expecting a page cache hit, you may optionally specify an array of
    *   expected cache tags. While FALSE, the cache tags will not be verified.
    */

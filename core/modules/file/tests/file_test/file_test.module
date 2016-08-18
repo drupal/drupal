@@ -317,7 +317,7 @@ function file_test_validator(File $file, $errors) {
  * When the function is called with no $filepath parameter, the results are
  * returned.
  *
- * @param string|NULL $filepath
+ * @param string|null $filepath
  *   File path
  * @return array
  *   If $filepath is NULL, an array of all previous $filepath parameters

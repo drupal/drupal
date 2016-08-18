@@ -18,7 +18,7 @@ class BlockRegionTest extends UnitTestCase {
    *
    * @param array $value
    *   The value to transform.
-   * @param \Drupal\migrate\Row|NULL $row
+   * @param \Drupal\migrate\Row|null $row
    *   (optional) The mocked row.
    *
    * @return array|string
