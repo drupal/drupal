@@ -1213,7 +1213,7 @@ function _node_access_rebuild_batch_operation(&$context) {
     // Initiate multistep processing.
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['current_node'] = 0;
-    $context['sandbox']['max'] = \Drupal::entityQuery('node')->count()->execute();
+    $context['sandbox']['max'] = \Drupal::entityQuery('node')->accessCheck(FALSE)->count()->execute();
   }
 
   // Process the next 20 nodes.
