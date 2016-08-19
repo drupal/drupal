@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a page wrapper.
+ *
+ * For consistent wrapping to {{ page }} render in all themes.
+ *
+ * Available variables:
+ * - children: Contains the child elements of the page.
+ *
+ * @ingroup themeable
+ */
+#}
+{% if children %}
+  {% spaceless %}
+    <div id="main-canvas-wrapper">
+      <div id="main-canvas">
+        {{ children }}
+      </div>
+    </div>
+  {% endspaceless %}
+{% endif %}

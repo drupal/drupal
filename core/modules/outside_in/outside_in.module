@@ -52,24 +52,22 @@ function outside_in_block_view_alter(array &$build) {
 }
 
 /**
- * Implements hook_page_top().
+ * Implements hook_element_info_alter().
  */
-function outside_in_page_top(array &$page_top) {
-  // Opens a div for consistent wrapping to {{ page }} render in all themes.
-  $page_top['outside_in_tray_open'] = [
-    '#markup' => '<div id="main-canvas-wrapper"><div id="main-canvas">',
-    '#weight' => 1000,
-  ];
+function outside_in_element_info_alter(&$type) {
+  if (isset($type['page'])) {
+    $type['page']['#theme_wrappers']['outside_in_page_wrapper'] = ['#weight' => -1000];
+  }
 }
 
 /**
- * Implements hook_page_bottom().
+ * Implements hook_theme().
  */
-function outside_in_page_bottom(array &$page_bottom) {
-  // Closes a div for consistent wrapping to {{ page }} render in all themes.
-  $page_bottom['outside_in_tray_close'] = [
-    '#markup' => '</div></div>',
-    '#weight' => -1000,
+function outside_in_theme() {
+  return [
+    'outside_in_page_wrapper' => [
+      'variables' => ['children' => NULL],
+    ],
   ];
 }
 
