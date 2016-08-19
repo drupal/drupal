@@ -188,6 +188,20 @@ class LinksTest extends WebTestBase {
     );
     $this->assertMenuLinkParents($links, $expected_hierarchy);
 
+    // Try changing the parent at the entity level.
+    $definition = $this->menuLinkManager->getDefinition($links['child-1-2']);
+    $entity = MenuLinkContent::load($definition['metadata']['entity_id']);
+    $entity->parent->value = '';
+    $entity->save();
+
+    $expected_hierarchy = array(
+      'parent' => '',
+      'child-1-1' => 'parent',
+      'child-1-2' => '',
+      'child-2' => 'parent',
+    );
+    $this->assertMenuLinkParents($links, $expected_hierarchy);
+
     // @todo Figure out what makes sense to test in terms of automatic
     //   re-parenting. https://www.drupal.org/node/2309531
   }
