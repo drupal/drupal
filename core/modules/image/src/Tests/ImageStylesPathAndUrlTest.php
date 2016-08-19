@@ -155,6 +155,11 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     $image = $this->container->get('image.factory')->get($generated_uri);
     $this->assertEqual($this->drupalGetHeader('Content-Type'), $image->getMimeType(), 'Expected Content-Type was reported.');
     $this->assertEqual($this->drupalGetHeader('Content-Length'), $image->getFileSize(), 'Expected Content-Length was reported.');
+
+    // Check that we did not download the original file.
+    $original_image = $this->container->get('image.factory')->get($original_uri);
+    $this->assertNotEqual($this->drupalGetHeader('Content-Length'), $original_image->getFileSize());
+
     if ($scheme == 'private') {
       $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
       $this->assertNotEqual(strpos($this->drupalGetHeader('Cache-Control'), 'no-cache'), FALSE, 'Cache-Control header contains \'no-cache\' to prevent caching.');
@@ -164,6 +169,12 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
       // works too.
       $this->drupalGet($generate_url);
       $this->assertResponse(200, 'Image was generated at the URL.');
+
+      // Check that the second request also returned the generated image.
+      $this->assertEqual($this->drupalGetHeader('Content-Length'), $image->getFileSize());
+
+      // Check that we did not download the original file.
+      $this->assertNotEqual($this->drupalGetHeader('Content-Length'), $original_image->getFileSize());
 
       // Make sure that access is denied for existing style files if we do not
       // have access.
