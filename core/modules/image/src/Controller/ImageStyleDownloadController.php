@@ -113,14 +113,9 @@ class ImageStyleDownloadController extends FileDownloadController {
     // If using the private scheme, let other modules provide headers and
     // control access to the file.
     if ($scheme == 'private') {
-      if (file_exists($derivative_uri)) {
-        return parent::download($request, $scheme);
-      }
-      else {
-        $headers = $this->moduleHandler()->invokeAll('file_download', array($image_uri));
-        if (in_array(-1, $headers) || empty($headers)) {
-          throw new AccessDeniedHttpException();
-        }
+      $headers = $this->moduleHandler()->invokeAll('file_download', array($image_uri));
+      if (in_array(-1, $headers) || empty($headers)) {
+        throw new AccessDeniedHttpException();
       }
     }
 
