@@ -51,13 +51,6 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   public $settings = array();
 
   /**
-   * A collection of all filters this filter participates in.
-   *
-   * @var \Drupal\filter\FilterPluginCollection
-   */
-  protected $collection;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
