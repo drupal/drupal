@@ -67,6 +67,7 @@ class EntityTestRev extends EntityTest {
       ->setLabel(t('Non Revisionable Field'))
       ->setDescription(t('A non-revisionable test field.'))
       ->setRevisionable(FALSE)
+      ->setTranslatable(TRUE)
       ->setCardinality(1)
       ->setReadOnly(TRUE);
 
