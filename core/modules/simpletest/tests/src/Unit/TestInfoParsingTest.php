@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\simpletest\Unit\TestInfoParsingTest.
  */
 
-namespace Drupal\Tests\simpletest\Unit {
+namespace Drupal\Tests\simpletest\Unit;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Extension\Extension;
@@ -413,9 +413,7 @@ class TestTestDiscovery extends TestDiscovery {
 
 }
 
-}
-
-namespace Drupal\simpletest\Tests {
+namespace Drupal\simpletest\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
@@ -425,6 +423,4 @@ use Drupal\simpletest\WebTestBase;
  * @group simpletest
  */
 class ExampleSimpleTest extends WebTestBase {
-}
-
 }

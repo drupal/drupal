@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Utility {
+namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\GeneratedNoLink;
@@ -594,7 +594,5 @@ class LinkGeneratorTest extends UnitTestCase {
 
     self::assertFalse((bool) $xpath->query($query)->length);
   }
-
-}
 
 }

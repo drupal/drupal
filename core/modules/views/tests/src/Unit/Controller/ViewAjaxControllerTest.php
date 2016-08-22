@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\views\Unit\Controller {
+namespace Drupal\Tests\views\Unit\Controller;
 
 use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\UnitTestCase;
@@ -356,7 +356,5 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->assertEquals('insert', $commands[$position]['command']);
     $this->assertEquals('View result', $commands[$position]['data']);
   }
-
-}
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Render\Element {
+namespace Drupal\Tests\Core\Render\Element;
 
   use Drupal\Core\Form\FormState;
   use Drupal\Core\Form\FormStateInterface;
@@ -103,12 +103,10 @@ class MachineNameTest extends UnitTestCase {
 
 }
 
-}
+namespace Drupal\Core\Render\Element;
 
-namespace Drupal\Core\Render\Element {
-  if (!function_exists('t')) {
-    function t($string, array $args = []) {
-      return strtr($string, $args);
-    }
+if (!function_exists('t')) {
+  function t($string, array $args = []) {
+    return strtr($string, $args);
   }
 }
