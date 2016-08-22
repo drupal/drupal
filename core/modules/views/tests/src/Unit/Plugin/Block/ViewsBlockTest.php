@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\views\Unit\Plugin\Block {
+namespace Drupal\Tests\views\Unit\Plugin\Block;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
@@ -198,13 +198,11 @@ class ViewsBlockTest extends UnitTestCase {
 
 }
 
-}
+// @todo https://www.drupal.org/node/2571679 replace
+//   views_add_contextual_links().
+namespace Drupal\views\Plugin\Block;
 
-namespace {
-  // @todo https://www.drupal.org/node/2571679 replace
-  // views_add_contextual_links().
-  if (!function_exists('views_add_contextual_links')) {
-    function views_add_contextual_links() {
-    }
+if (!function_exists('views_add_contextual_links')) {
+  function views_add_contextual_links() {
   }
 }

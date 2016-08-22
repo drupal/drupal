@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Entity\KeyValueStore {
+namespace Drupal\Tests\Core\Entity\KeyValueStore;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -696,13 +696,11 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 
 }
 
-}
+namespace Drupal\Core\Entity\KeyValueStore;
 
-namespace {
-  if (!defined('SAVED_NEW')) {
-    define('SAVED_NEW', 1);
-  }
-  if (!defined('SAVED_UPDATED')) {
-    define('SAVED_UPDATED', 2);
-  }
+if (!defined('SAVED_NEW')) {
+  define('SAVED_NEW', 1);
+}
+if (!defined('SAVED_UPDATED')) {
+  define('SAVED_UPDATED', 2);
 }

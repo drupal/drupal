@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\aggregator\Unit\Plugin {
+namespace Drupal\Tests\aggregator\Unit\Plugin;
 
 use Drupal\aggregator\Form\SettingsForm;
 use Drupal\Core\Form\FormState;
@@ -105,11 +105,9 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
 
 }
 
-}
+// @todo Delete after https://www.drupal.org/node/2278383 is in.
+namespace Drupal\Core\Form;
 
-namespace {
-  // @todo Delete after https://www.drupal.org/node/1858196 is in.
-  if (!function_exists('drupal_set_message')) {
-    function drupal_set_message() {}
-  }
+if (!function_exists('drupal_set_message')) {
+  function drupal_set_message() {}
 }

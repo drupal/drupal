@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTest.
  */
 
-namespace Drupal\Tests\views\Unit\Plugin\field {
+namespace Drupal\Tests\views\Unit\Plugin\field;
 
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
@@ -692,12 +692,12 @@ class FieldPluginBaseTestField extends FieldPluginBase {
   }
 
 }
-}
+
 // @todo Remove as part of https://www.drupal.org/node/2529170.
-namespace {
-  if (!function_exists('base_path')) {
-    function base_path() {
-      return '/';
-    }
+namespace Drupal\views\Plugin\views\field;
+
+if (!function_exists('base_path')) {
+  function base_path() {
+    return '/';
   }
 }
