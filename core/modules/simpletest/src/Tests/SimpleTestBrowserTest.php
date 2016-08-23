@@ -131,7 +131,7 @@ class SimpleTestBrowserTest extends WebTestBase {
       // A PHPUnit unit test.
       'Drupal\Tests\action\Unit\Menu\ActionLocalTasksTest',
       // A PHPUnit functional test.
-      'Drupal\Tests\simpletest\Functional\BrowserTestBaseTest',
+      'Drupal\FunctionalTests\BrowserTestBaseTest',
     );
 
     foreach ($tests as $test) {
