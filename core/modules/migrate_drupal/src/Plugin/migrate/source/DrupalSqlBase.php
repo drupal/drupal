@@ -102,7 +102,7 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
           }
         }
         else {
-          throw new RequirementsException('Missing source provider ' . $this->pluginDefinition['source_provider'], ['source_provider' => $this->pluginDefinition['source_provider']]);
+          throw new RequirementsException('The module ' . $this->pluginDefinition['source_provider'] . ' is not enabled in the source site.');
         }
       }
     }
