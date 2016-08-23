@@ -1657,3 +1657,26 @@ function system_update_8014() {
 /**
  * @} End of "addtogroup updates-8.0.0-rc".
  */
+
+/**
+ * Fix configuration overrides to not override non existing keys.
+ */
+function system_update_8200(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  if (!array_key_exists('config_names', $sandbox)) {
+    $sandbox['config_names'] = $config_factory->listAll();
+    $sandbox['max'] = count($sandbox['config_names']);
+  }
+
+  // Get a list of 50 to work on at a time.
+  $config_names_to_process = array_slice($sandbox['config_names'], 0, 50);
+  // Preload in a single query.
+  $config_factory->loadMultiple($config_names_to_process);
+  foreach ($config_names_to_process as $config_name) {
+    $config_factory->getEditable($config_name)->save();
+  }
+
+  // Update the list of names to process.
+  $sandbox['config_names'] = array_diff($sandbox['config_names'], $config_names_to_process);
+  $sandbox['#finished'] = empty($sandbox['config_names']) ? 1 : ($sandbox['max'] - count($sandbox['config_names'])) / $sandbox['max'];
+}
