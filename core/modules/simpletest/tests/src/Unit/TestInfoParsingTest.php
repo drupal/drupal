@@ -60,13 +60,13 @@ class TestInfoParsingTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\Tests\simpletest\Functional\BrowserTestBaseTest',
-        'group' => 'simpletest',
+        'name' => 'Drupal\FunctionalTests\BrowserTestBaseTest',
+        'group' => 'browsertestbase',
         'description' => 'Tests BrowserTestBase functionality.',
         'type' => 'PHPUnit-Functional',
       ],
       // Classname.
-      'Drupal\Tests\simpletest\Functional\BrowserTestBaseTest',
+      'Drupal\FunctionalTests\BrowserTestBaseTest',
     ];
 
     // kernel PHPUnit test.
@@ -400,7 +400,7 @@ class TestTestDiscovery extends TestDiscovery {
     $data['simpletest-kerneltest'] = ['\Drupal\hal\Tests\FileNormalizeTest', FALSE];
     $data['module-unittest'] = [static::class, 'Unit'];
     $data['module-kerneltest'] = ['\Drupal\KernelTests\Core\Theme\TwigMarkupInterfaceTest', 'Kernel'];
-    $data['module-functionaltest'] = ['\Drupal\Tests\simpletest\Functional\BrowserTestBaseTest', 'Functional'];
+    $data['module-functionaltest'] = ['\Drupal\FunctionalTests\BrowserTestBaseTest', 'Functional'];
     $data['module-functionaljavascripttest'] = ['\Drupal\Tests\toolbar\FunctionalJavascript\ToolbarIntegrationTest', 'FunctionalJavascript'];
     $data['core-unittest'] = ['\Drupal\Tests\ComposerIntegrationTest', 'Unit'];
     $data['core-unittest2'] = ['Drupal\Tests\Core\DrupalTest', 'Unit'];

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\simpletest\Functional;
+namespace Drupal\FunctionalTests;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -8,7 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests BrowserTestBase functionality.
  *
- * @group simpletest
+ * @group browsertestbase
  */
 class BrowserTestBaseTest extends BrowserTestBase {
 
