@@ -12,6 +12,12 @@ use Drupal\rdf\RdfMappingInterface;
  * @ConfigEntityType(
  *   id = "rdf_mapping",
  *   label = @Translation("RDF mapping"),
+ *   label_singular = @Translation("RDF mapping item"),
+ *   label_plural = @Translation("RDF mappings items"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count RDF mapping item",
+ *     plural = "@count RDF mapping items",
+ *   ),
  *   config_prefix = "mapping",
  *   entity_keys = {
  *     "id" = "id"
