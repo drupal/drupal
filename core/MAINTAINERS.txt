@@ -23,9 +23,10 @@ Drupal 8
   (Release Manager)
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
   (Framework Manager)
-
-Provisional membership:
 - Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
+  (Framework Manager - Frontend)
+
+Provisional membership: None at this time.
 
 Drupal 7
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
