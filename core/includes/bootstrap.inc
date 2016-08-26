@@ -640,10 +640,14 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     $key = $private_key . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
     $test_hmac = Crypt::hmacBase64($check_string, $key);
-    // Since we are making a local request a 5 second time window is allowed,
+    // Since we are making a local request a 600 second time window is allowed,
     // and the HMAC must match.
-    if ($time_diff >= 0 && $time_diff <= 5 && $hmac === $test_hmac) {
+    if ($time_diff >= 0 && $time_diff <= 600 && $hmac === $test_hmac) {
       $test_prefix = $prefix;
+    }
+    else {
+      header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden (SIMPLETEST_USER_AGENT invalid)');
+      exit;
     }
   }
   return $test_prefix;
