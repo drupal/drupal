@@ -47,7 +47,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
       'd7_taxonomy_vocabulary',
       'd7_field',
       'd7_field_instance',
-      'd7_node:test_content_type',
+      'd7_node',
       'd7_node:article',
     ]);
   }
