@@ -40,7 +40,7 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
       ),
     ));
     $this->executeMigrations([
-      'd7_node:test_content_type',
+      'd7_node',
       'd7_comment_type',
       'd7_comment',
     ]);
