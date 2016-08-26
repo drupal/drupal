@@ -21,4 +21,12 @@ class EntityFieldInstance extends EntityConfigBase {
     return $ids;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function rollback(array $destination_identifier) {
+    $destination_identifier = implode('.', $destination_identifier);
+    parent::rollback(array($destination_identifier));
+  }
+
 }
