@@ -51,6 +51,12 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
   public function testCustomBlockModeration() {
     $this->drupalLogin($this->rootUser);
 
+    $this->drupalGet('admin/structure/block/block-content/types');
+    $this->assertLinkByHref('admin/structure/block/block-content/manage/basic/moderation');
+    $this->drupalGet('admin/structure/block/block-content/manage/basic');
+    $this->assertLinkByHref('admin/structure/block/block-content/manage/basic/moderation');
+    $this->drupalGet('admin/structure/block/block-content/manage/basic/moderation');
+
     // Enable moderation for custom blocks at
     // admin/structure/block/block-content/manage/basic/moderation.
     $edit = [
@@ -59,7 +65,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'allowed_moderation_states_published[published]' => TRUE,
       'default_moderation_state' => 'draft',
     ];
-    $this->drupalPostForm('admin/structure/block/block-content/manage/basic/moderation', $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('Your settings have been saved.'));
 
     // Create a custom block at block/add and save it as draft.
