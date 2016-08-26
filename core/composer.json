@@ -88,6 +88,7 @@
         "drupal/core-utility": "self.version",
         "drupal/core-uuid": "self.version",
         "drupal/datetime": "self.version",
+        "drupal/datetime_range": "self.version",
         "drupal/dblog": "self.version",
         "drupal/dynamic_page_cache": "self.version",
         "drupal/editor": "self.version",
