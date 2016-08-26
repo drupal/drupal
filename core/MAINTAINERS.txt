@@ -324,6 +324,10 @@ DateTime module
 - Jonathan Hedstrom 'jhedstrom' https://www.drupal.org/u/jhedstrom
 - Matthew Donadio 'mpdonadio' https://www.drupal.org/u/mpdonadio
 
+DateTime range module
+- Jonathan Hedstrom 'jhedstrom' https://www.drupal.org/u/jhedstrom
+- Matthew Donadio 'mpdonadio' https://www.drupal.org/u/mpdonadio
+
 Dynamic Page Cache module
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
