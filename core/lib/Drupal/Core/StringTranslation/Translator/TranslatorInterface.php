@@ -17,7 +17,7 @@ interface TranslatorInterface {
    * @param string $context
    *   The string context.
    *
-   * @return string|FALSE
+   * @return string|false
    *   Translated string if there is a translation, FALSE if not.
    */
   public function getStringTranslation($langcode, $string, $context);

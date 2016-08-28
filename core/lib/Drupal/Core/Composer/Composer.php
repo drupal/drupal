@@ -196,7 +196,7 @@ EOT;
    * @param string $package_name
    *   The package name from composer. This is always already lower case.
    *
-   * @return NULL|string
+   * @return string|null
    *   The string key, or NULL if none was found.
    */
   protected static function findPackageKey($package_name) {

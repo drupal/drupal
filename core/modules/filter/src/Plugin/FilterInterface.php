@@ -182,7 +182,7 @@ interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionI
    * a generic manner into which HTML tags and attributes are allowed by a
    * format.
    *
-   * @return array|FALSE
+   * @return array|false
    *   A nested array with *either* of the following keys:
    *     - 'allowed': (optional) the allowed tags as keys, and for each of those
    *       tags (keys) either of the following values:

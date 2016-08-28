@@ -71,7 +71,7 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
    * Note: this does not use a Drupal library because this uses CKEditor's API,
    * see http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.resourceManager.html#addExternal.
    *
-   * @return string|FALSE
+   * @return string|false
    *   The Drupal root-relative path to the file, FALSE if an internal plugin.
    */
   public function getFile();

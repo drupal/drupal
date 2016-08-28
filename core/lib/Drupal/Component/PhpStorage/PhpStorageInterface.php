@@ -80,7 +80,7 @@ interface PhpStorageInterface {
    * @param string $name
    *   The virtual file name. Can be a relative path.
    *
-   * @return string|FALSE
+   * @return string|false
    *   The full file path for the provided name. Return FALSE if the
    *   implementation needs to prevent access to the file.
    */

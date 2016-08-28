@@ -273,7 +273,7 @@ class EntityController implements ContainerInjectionInterface {
    *   (optional) The entity, set in
    *   \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|NULL
+   * @return \Drupal\Core\Entity\EntityInterface|null
    *   The entity, if it is passed in directly or if the first parameter of the
    *   active route is an entity; otherwise, NULL.
    */

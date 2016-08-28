@@ -167,7 +167,7 @@ abstract class FieldRdfaTestBase extends FieldKernelTestBase {
    * @param array $arguments
    *   Some arguments for the xpath.
    *
-   * @return array|FALSE
+   * @return array|false
    *   The return value of the xpath search. For details on the xpath string
    *   format and return values see the SimpleXML documentation,
    *   http://php.net/manual/function.simplexml-element-xpath.php.

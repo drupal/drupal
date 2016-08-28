@@ -229,7 +229,7 @@ class TwigTransTest extends WebTestBase {
    * @param string $langcode
    *   The langcode of the specified language.
    *
-   * @return string|FALSE
+   * @return string|false
    *   The .po contents for the specified language or FALSE if none exists.
    */
   protected function poFileContents($langcode) {

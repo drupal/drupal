@@ -1318,7 +1318,7 @@ function file_icon_class($mime_type) {
  * @param string $mime_type
  *   A MIME type.
  *
- * @return string|FALSE
+ * @return string|false
  *   The generic icon MIME package expected for this file.
  */
 function file_icon_map($mime_type) {

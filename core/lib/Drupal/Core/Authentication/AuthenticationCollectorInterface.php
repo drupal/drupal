@@ -41,7 +41,7 @@ interface AuthenticationCollectorInterface {
    * @param string $provider_id
    *   The provider ID.
    *
-   * @return \Drupal\Core\Authentication\AuthenticationProviderInterface|NULL
+   * @return \Drupal\Core\Authentication\AuthenticationProviderInterface|null
    *   The authentication provider which matches the ID.
    */
   public function getProvider($provider_id);

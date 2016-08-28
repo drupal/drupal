@@ -41,7 +41,7 @@ interface MenuTreeStorageInterface {
    * @param string $id
    *   The menu link plugin ID.
    *
-   * @return array|FALSE
+   * @return array|false
    *   The plugin definition, or FALSE if no definition was found for the ID.
    */
   public function load($id);

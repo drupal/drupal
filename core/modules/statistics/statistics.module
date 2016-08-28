@@ -95,7 +95,7 @@ function statistics_cron() {
  * @param int $dbrows
  *   The number of rows to be returned.
  *
- * @return SelectQuery|FALSE
+ * @return SelectQuery|false
  *   A query result containing the node ID, title, user ID that owns the node,
  *   and the username for the selected node(s), or FALSE if the query could not
  *   be executed correctly.
