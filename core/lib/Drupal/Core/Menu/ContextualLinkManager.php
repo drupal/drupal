@@ -126,11 +126,11 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
 
-     // If there is no route name, this is a broken definition.
+    // If there is no route name, this is a broken definition.
     if (empty($definition['route_name'])) {
       throw new PluginException(sprintf('Contextual link plugin (%s) definition must include "route_name".', $plugin_id));
     }
-     // If there is no group name, this is a broken definition.
+    // If there is no group name, this is a broken definition.
     if (empty($definition['group'])) {
       throw new PluginException(sprintf('Contextual link plugin (%s) definition must include "group".', $plugin_id));
     }

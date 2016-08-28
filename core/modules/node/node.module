@@ -320,7 +320,7 @@ function node_type_load($name) {
  *   A Body field object.
  */
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
-   // Add or remove the body field, as needed.
+  // Add or remove the body field, as needed.
   $field_storage = FieldStorageConfig::loadByName('node', 'body');
   $field = FieldConfig::loadByName('node', $type->id(), 'body');
   if (empty($field)) {
@@ -751,7 +751,7 @@ function node_get_recent($number = 10) {
       // If not, restrict the query to published nodes.
       $query->condition('status', NODE_PUBLISHED);
     }
-   }
+  }
   $nids = $query
     ->sort('changed', 'DESC')
     ->range(0, $number)

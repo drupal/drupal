@@ -115,7 +115,7 @@ class CustomBooleanTest extends UITestBase {
       ->save();
     $this->assertEqual($this->config('system.theme')->get('default'), 'views_test_theme');
 
-   // Add the boolean field handler to the test view.
+    // Add the boolean field handler to the test view.
     $view = Views::getView('test_view');
     $view->setDisplay();
 

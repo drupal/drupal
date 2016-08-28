@@ -90,7 +90,7 @@ class QueryTest extends QueryPluginBase {
     // @todo You could add a string representation of the query.
     $this->view->build_info['query'] = "";
     $this->view->build_info['count_query'] = "";
-}
+  }
 
   /**
    * {@inheritdoc}

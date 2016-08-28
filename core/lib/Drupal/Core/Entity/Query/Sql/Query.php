@@ -225,7 +225,7 @@ class Query extends QueryBase implements QueryInterface {
     if ($this->range) {
       $this->sqlQuery->range($this->range['start'], $this->range['length']);
     }
-   foreach ($this->sqlGroupBy as $field) {
+    foreach ($this->sqlGroupBy as $field) {
       $this->sqlQuery->groupBy($field);
     }
     foreach ($this->sqlFields as $field) {

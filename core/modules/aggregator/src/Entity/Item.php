@@ -54,7 +54,7 @@ class Item extends ContentEntityBase implements ItemInterface {
       ->setDescription(t('The ID of the feed item.'));
 
     $fields['langcode']->setLabel(t('Language code'))
-    ->setDescription(t('The feed item language code.'));
+      ->setDescription(t('The feed item language code.'));
 
     $fields['fid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Source feed'))

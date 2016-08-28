@@ -232,9 +232,9 @@ class UpdateScriptTest extends WebTestBase {
     $this->assertEqual($final_maintenance_mode, $initial_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
   }
 
- /**
-  * Tests perfoming updates with update.php in a multilingual environment.
-  */
+  /**
+   * Tests perfoming updates with update.php in a multilingual environment.
+   */
   function testSuccessfulMultilingualUpdateFunctionality() {
     // Add some custom languages.
     foreach (array('aa', 'bb') as $language_code) {
@@ -242,7 +242,7 @@ class UpdateScriptTest extends WebTestBase {
           'id' => $language_code,
           'label' => $this->randomMachineName(),
         ))->save();
-     }
+    }
 
     $config = \Drupal::service('config.factory')->getEditable('language.negotiation');
     // Ensure path prefix is used to determine the language.

@@ -648,7 +648,7 @@ class FormState implements FormStateInterface {
    * {@inheritdoc}
    */
   public function isRedirectDisabled() {
-   return $this->no_redirect;
+    return $this->no_redirect;
   }
 
   /**

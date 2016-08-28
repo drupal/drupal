@@ -77,25 +77,25 @@ use Drupal\Core\Form\FormStateInterface;
  */
 interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionInterface {
 
-   /**
-    * Non-HTML markup language filters that generate HTML.
-    */
-   const TYPE_MARKUP_LANGUAGE = 0;
+  /**
+   * Non-HTML markup language filters that generate HTML.
+   */
+  const TYPE_MARKUP_LANGUAGE = 0;
 
-   /**
-    * HTML tag and attribute restricting filters to prevent XSS attacks.
-    */
-   const TYPE_HTML_RESTRICTOR = 1;
+  /**
+   * HTML tag and attribute restricting filters to prevent XSS attacks.
+   */
+  const TYPE_HTML_RESTRICTOR = 1;
 
-   /**
-    * Reversible transformation filters.
-    */
-   const TYPE_TRANSFORM_REVERSIBLE = 2;
+  /**
+   * Reversible transformation filters.
+   */
+  const TYPE_TRANSFORM_REVERSIBLE = 2;
 
-   /**
-    * Irreversible transformation filters.
-    */
-   const TYPE_TRANSFORM_IRREVERSIBLE = 3;
+  /**
+   * Irreversible transformation filters.
+   */
+  const TYPE_TRANSFORM_IRREVERSIBLE = 3;
 
   /**
    * Returns the processing type of this filter plugin.

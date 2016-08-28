@@ -555,7 +555,7 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  *   The name of the theme hook.
  */
 function hook_preprocess(&$variables, $hook) {
- static $hooks;
+  static $hooks;
 
   // Add contextual links to the variables, if the user has permission.
 

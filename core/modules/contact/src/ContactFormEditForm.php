@@ -40,8 +40,8 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
    *   The email validator.
    */
   public function __construct(EmailValidator $email_validator, PathValidatorInterface $path_validator) {
-   $this->emailValidator = $email_validator;
-   $this->pathValidator = $path_validator;
+    $this->emailValidator = $email_validator;
+    $this->pathValidator = $path_validator;
   }
 
   /**

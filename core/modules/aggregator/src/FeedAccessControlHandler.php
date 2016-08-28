@@ -21,11 +21,9 @@ class FeedAccessControlHandler extends EntityAccessControlHandler {
     switch ($operation) {
       case 'view':
         return AccessResult::allowedIfHasPermission($account, 'access news feeds');
-        break;
 
       default:
         return AccessResult::allowedIfHasPermission($account, 'administer news feeds');
-        break;
     }
   }
 

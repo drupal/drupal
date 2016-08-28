@@ -13,7 +13,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateBlockTest extends MigrateDrupal7TestBase {
 
- /**
+  /**
    * {@inheritdoc}
    */
   public static $modules = [

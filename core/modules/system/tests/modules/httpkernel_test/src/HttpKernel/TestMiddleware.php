@@ -10,12 +10,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class TestMiddleware implements HttpKernelInterface {
 
- /**
-  * The decorated kernel.
-  *
-  * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-  */
- protected $kernel;
+  /**
+   * The decorated kernel.
+   *
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
+   */
+  protected $kernel;
 
   /**
    * An optional argument.
@@ -35,21 +35,21 @@ class TestMiddleware implements HttpKernelInterface {
   public function __construct(HttpKernelInterface $kernel, $optional_argument = NULL) {
     $this->kernel = $kernel;
     $this->optionalArgument = $optional_argument;
- }
+  }
 
- /**
-  * {@inheritdoc}
-  */
- public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
-   $request->attributes->set('_hello', 'world');
-   if ($request->attributes->has('_optional_argument')) {
-     $request->attributes->set('_previous_optional_argument', $request->attributes->get('_optional_argument'));
-   }
-   elseif (isset($this->optionalArgument)) {
-     $request->attributes->set('_optional_argument', $this->optionalArgument);
-   }
+  /**
+   * {@inheritdoc}
+   */
+  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+    $request->attributes->set('_hello', 'world');
+    if ($request->attributes->has('_optional_argument')) {
+      $request->attributes->set('_previous_optional_argument', $request->attributes->get('_optional_argument'));
+    }
+    elseif (isset($this->optionalArgument)) {
+      $request->attributes->set('_optional_argument', $this->optionalArgument);
+    }
 
-   return $this->kernel->handle($request, $type, $catch);
- }
+    return $this->kernel->handle($request, $type, $catch);
+  }
 
 }

@@ -14,7 +14,7 @@ class Container extends DrupalContainer {
    * {@inheritdoc}
    */
   public function set($id, $service, $scope = ContainerInterface::SCOPE_CONTAINER) {
-     parent::set($id, $service, $scope);
+    parent::set($id, $service, $scope);
 
     // Ensure that the _serviceId property is set on synthetic services as well.
     if (isset($this->services[$id]) && is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {

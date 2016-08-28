@@ -45,7 +45,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
    */
   protected static $modules = [];
 
- /**
+  /**
    * The file path(s) to the dumped database(s) to load into the child site.
    *
    * The file system/tests/fixtures/update/drupal-8.bare.standard.php.gz is

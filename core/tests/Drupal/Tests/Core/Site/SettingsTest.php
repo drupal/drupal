@@ -95,11 +95,11 @@ class SettingsTest extends UnitTestCase {
    * @return array
    */
   public function providerTestGetHashSaltEmpty() {
-   return array(
-     array(array()),
-     array(array('hash_salt' => '')),
-     array(array('hash_salt' => NULL)),
-   );
+    return array(
+      array(array()),
+      array(array('hash_salt' => '')),
+      array(array('hash_salt' => NULL)),
+    );
   }
 
   /**

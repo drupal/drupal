@@ -66,8 +66,8 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-   public function getAggregate(EntityTypeInterface $entity_type, $conjunction) {
-      throw new QueryException('Aggregation over configuration entities is not supported');
+  public function getAggregate(EntityTypeInterface $entity_type, $conjunction) {
+    throw new QueryException('Aggregation over configuration entities is not supported');
   }
 
   /**

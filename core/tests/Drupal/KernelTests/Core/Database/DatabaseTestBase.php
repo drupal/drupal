@@ -36,20 +36,20 @@ abstract class DatabaseTestBase extends KernelTestBase {
    */
   function ensureSampleDataNull() {
     db_insert('test_null')
-    ->fields(array('name', 'age'))
-    ->values(array(
+      ->fields(array('name', 'age'))
+      ->values(array(
       'name' => 'Kermit',
       'age' => 25,
     ))
-    ->values(array(
+      ->values(array(
       'name' => 'Fozzie',
       'age' => NULL,
     ))
-    ->values(array(
+      ->values(array(
       'name' => 'Gonzo',
       'age' => 27,
     ))
-    ->execute();
+      ->execute();
   }
 
   /**

@@ -61,16 +61,16 @@ class DateTimeDatelistWidget extends DateTimeWidgetBase {
         break;
     }
     switch ($time_type) {
-       case '24':
-         $date_part_order = array_merge($date_part_order, array('hour', 'minute'));
-         break;
+      case '24':
+        $date_part_order = array_merge($date_part_order, array('hour', 'minute'));
+        break;
 
-       case '12':
-         $date_part_order = array_merge($date_part_order, array('hour', 'minute', 'ampm'));
-         break;
+      case '12':
+        $date_part_order = array_merge($date_part_order, array('hour', 'minute', 'ampm'));
+        break;
 
-       case 'none':
-         break;
+      case 'none':
+        break;
     }
 
     $element['value'] = array(

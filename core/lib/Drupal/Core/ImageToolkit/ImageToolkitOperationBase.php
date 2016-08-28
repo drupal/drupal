@@ -123,7 +123,7 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
 
         // Use the default value if the argument is not passed in.
         if (!array_key_exists($id, $arguments)) {
-         $arguments[$id] = $argument['default'];
+          $arguments[$id] = $argument['default'];
         }
       }
     }

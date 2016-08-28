@@ -1334,7 +1334,7 @@ function user_toolbar() {
     $links_cache_contexts[] = 'user';
   }
   else {
-     $links = array(
+    $links = array(
       'login' => array(
         'title' => t('Log in'),
         'url' => Url::fromRoute('user.page'),

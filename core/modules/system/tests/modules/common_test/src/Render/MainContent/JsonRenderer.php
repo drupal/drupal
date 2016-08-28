@@ -46,19 +46,19 @@ class JsonRenderer implements MainContentRendererInterface {
    * {@inheritdoc}
    */
   public function renderResponse(array $main_content, Request $request, RouteMatchInterface $route_match) {
-      $json = [];
+    $json = [];
 
-      $json['content'] = (string) $this->renderer->renderRoot($main_content);
-      if (!empty($main_content['#title'])) {
-        $json['title'] = (string) $main_content['#title'];
-      }
-      else {
-        $json['title'] = (string) $this->titleResolver->getTitle($request, $route_match->getRouteObject());
-      }
+    $json['content'] = (string) $this->renderer->renderRoot($main_content);
+    if (!empty($main_content['#title'])) {
+      $json['title'] = (string) $main_content['#title'];
+    }
+    else {
+      $json['title'] = (string) $this->titleResolver->getTitle($request, $route_match->getRouteObject());
+    }
 
-      $response = new CacheableJsonResponse($json, 200);
-      $response->addCacheableDependency(CacheableMetadata::createFromRenderArray($main_content));
-      return $response;
+    $response = new CacheableJsonResponse($json, 200);
+    $response->addCacheableDependency(CacheableMetadata::createFromRenderArray($main_content));
+    return $response;
   }
 
 }

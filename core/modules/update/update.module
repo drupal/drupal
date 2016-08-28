@@ -393,7 +393,7 @@ function update_refresh() {
  * @see \Drupal\update\UpdateProcessor::fetchData()
  */
 function update_fetch_data() {
- \Drupal::service('update.processor')->fetchData();
+  \Drupal::service('update.processor')->fetchData();
 }
 
 /**

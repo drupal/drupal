@@ -38,11 +38,11 @@ class LinkField extends CckFieldPluginBase {
    * {@inheritdoc}
    */
   public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
-      $process = [
-        'plugin' => 'd6_cck_link',
-        'source' => $field_name,
-      ];
-      $migration->mergeProcessOfProperty($field_name, $process);
+    $process = [
+      'plugin' => 'd6_cck_link',
+      'source' => $field_name,
+    ];
+    $migration->mergeProcessOfProperty($field_name, $process);
   }
 
 }

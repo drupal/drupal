@@ -25,11 +25,11 @@ class UserUpdate7002 extends ProcessPluginBase implements ContainerFactoryPlugin
    */
   protected static $timezones;
 
- /**
-  * Contains the system.theme configuration object.
-  *
-  * @var \Drupal\Core\Config\Config
-  */
+  /**
+   * Contains the system.theme configuration object.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
   protected $dateConfig;
 
   /**

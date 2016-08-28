@@ -31,7 +31,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
    */
   protected $sortedGuessers = NULL;
 
-   /**
+  /**
    * The stream wrapper manager.
    *
    * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface

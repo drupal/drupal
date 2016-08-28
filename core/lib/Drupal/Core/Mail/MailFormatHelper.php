@@ -202,8 +202,7 @@ class MailFormatHelper {
               // Ensure blank new-line.
               $chunk = '';
             }
-
-          // Fall-through.
+            // Intentional fall-through to the processing for '/li' and '/dd'.
           case '/li':
           case '/dd':
             array_pop($indent);
@@ -212,6 +211,7 @@ class MailFormatHelper {
           case '/h3':
           case '/h4':
             array_pop($indent);
+            // Intentional fall-through to the processing for '/h5' and '/h6'.
           case '/h5':
           case '/h6':
             // Ensure blank new-line.

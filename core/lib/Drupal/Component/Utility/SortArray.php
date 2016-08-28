@@ -81,9 +81,9 @@ class SortArray {
    * @return int
    *   The comparison result for uasort().
    */
-   public static function sortByTitleProperty($a, $b) {
-     return static::sortByKeyString($a, $b, '#title');
-   }
+  public static function sortByTitleProperty($a, $b) {
+    return static::sortByKeyString($a, $b, '#title');
+  }
 
   /**
    * Sorts a string array item by an arbitrary key.

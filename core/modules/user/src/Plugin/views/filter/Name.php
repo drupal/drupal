@@ -96,9 +96,9 @@ class Name extends InOperator {
     // prevent array filter from removing our anonymous user.
   }
 
-/**
- * {@inheritdoc}
- */
+  /**
+   * {@inheritdoc}
+   */
   public function getValueOptions() {
     return $this->valueOptions;
   }

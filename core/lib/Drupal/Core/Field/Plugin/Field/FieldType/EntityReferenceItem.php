@@ -617,7 +617,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     $form_state->setRebuild();
   }
 
-    /**
+  /**
    * {@inheritdoc}
    */
   public static function getPreconfiguredOptions() {

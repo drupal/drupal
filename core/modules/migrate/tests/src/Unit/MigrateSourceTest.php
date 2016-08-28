@@ -170,7 +170,7 @@ class MigrateSourceTest extends MigrateTestCase {
     $this->assertEquals(-1, $source->count());
   }
 
-   /**
+  /**
    * Test that the key can be set for the count cache.
    *
    * @covers ::count

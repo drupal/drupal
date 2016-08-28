@@ -115,15 +115,15 @@ abstract class RESTTestBase extends WebTestBase {
         );
         break;
 
-        case 'HEAD':
-          $curl_options = array(
-            CURLOPT_HTTPGET => FALSE,
-            CURLOPT_CUSTOMREQUEST => 'HEAD',
-            CURLOPT_URL => $url,
-            CURLOPT_NOBODY => TRUE,
-            CURLOPT_HTTPHEADER => array('Accept: ' . $mime_type),
-          );
-          break;
+      case 'HEAD':
+        $curl_options = array(
+          CURLOPT_HTTPGET => FALSE,
+          CURLOPT_CUSTOMREQUEST => 'HEAD',
+          CURLOPT_URL => $url,
+          CURLOPT_NOBODY => TRUE,
+          CURLOPT_HTTPHEADER => array('Accept: ' . $mime_type),
+        );
+        break;
 
       case 'POST':
         $curl_options = array(

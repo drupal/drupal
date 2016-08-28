@@ -66,7 +66,7 @@ class PublicStream extends LocalStream {
   public static function baseUrl() {
     $settings_base_url = Settings::get('file_public_base_url', '');
     if ($settings_base_url) {
-       return (string) $settings_base_url;
+      return (string) $settings_base_url;
     }
     else {
       return $GLOBALS['base_url'] . '/' . static::basePath();

@@ -226,7 +226,7 @@ class KernelTestBaseTest extends KernelTestBase {
         ':pattern' => 'sqlite_%',
       ))->fetchAllKeyed(0, 0);
 
-     $this->assertTrue(empty($result), 'All test tables have been removed.');
+      $this->assertTrue(empty($result), 'All test tables have been removed.');
     }
   }
 
