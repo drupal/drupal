@@ -39,7 +39,7 @@ interface RequestPolicyInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request object.
    *
-   * @return string|NULL
+   * @return string|null
    *   One of static::ALLOW, static::DENY or NULL. Calling code may attempt to
    *   deliver a cached page if static::ALLOW is returned. Returns NULL if the
    *   policy is not specified for the given request.

@@ -70,7 +70,7 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    * It is up to the caller to handle this in whatever way it sees fit; this way
    * no information granularity is lost.
    *
-   * @return array|FALSE
+   * @return array|false
    *   A structured array as returned by FilterInterface::getHTMLRestrictions(),
    *   but with the intersection of all filters in this text format.
    *   Will either indicate blacklisting of tags or whitelisting of tags. In

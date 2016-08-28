@@ -27,7 +27,7 @@ interface AuthenticationProviderInterface {
    * @param \Symfony\Component\HttpFoundation\Request|null $request
    *   The request object.
    *
-   * @return \Drupal\Core\Session\AccountInterface|NULL
+   * @return \Drupal\Core\Session\AccountInterface|null
    *   AccountInterface - in case of a successful authentication.
    *   NULL - in case where authentication failed.
    */

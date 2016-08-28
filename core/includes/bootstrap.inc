@@ -599,7 +599,7 @@ function _drupal_exception_handler_additional($exception, $exception2) {
  * @param string $new_prefix
  *   Internal use only. A new prefix to be stored.
  *
- * @return string|FALSE
+ * @return string|false
  *   Either the simpletest prefix (the string "simpletest" followed by any
  *   number of digits) or FALSE if the user agent does not contain a valid
  *   HMAC and timestamp.

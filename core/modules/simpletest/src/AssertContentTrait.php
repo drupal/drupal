@@ -117,7 +117,7 @@ trait AssertContentTrait {
   /**
    * Parse content returned from curlExec using DOM and SimpleXML.
    *
-   * @return \SimpleXMLElement|FALSE
+   * @return \SimpleXMLElement|false
    *   A SimpleXMLElement or FALSE on failure.
    */
   protected function parse() {

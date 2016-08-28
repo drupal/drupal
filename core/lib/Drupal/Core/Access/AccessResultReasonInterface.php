@@ -17,7 +17,7 @@ interface AccessResultReasonInterface extends AccessResultInterface {
   /**
    * Gets the reason for this access result.
    *
-   * @return string|NULL
+   * @return string|null
    *   The reason of this access result or NULL if no reason is provided.
    */
   public function getReason();
@@ -25,7 +25,7 @@ interface AccessResultReasonInterface extends AccessResultInterface {
   /**
    * Sets the reason for this access result.
    *
-   * @param $reason string|NULL
+   * @param $reason string|null
    *   The reason of this access result or NULL if no reason is provided.
    *
    * @return \Drupal\Core\Access\AccessResultInterface

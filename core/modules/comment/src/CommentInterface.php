@@ -32,7 +32,7 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
   /**
    * Returns the parent comment entity if this is a reply to a comment.
    *
-   * @return \Drupal\comment\CommentInterface|NULL
+   * @return \Drupal\comment\CommentInterface|null
    *   A comment entity of the parent comment or NULL if there is no parent.
    */
   public function getParentComment();

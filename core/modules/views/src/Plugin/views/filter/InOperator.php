@@ -54,7 +54,7 @@ class InOperator extends FilterPluginBase {
    * This can use a guard to be used to reduce database hits as much as
    * possible.
    *
-   * @return array|NULL
+   * @return array|null
    *   The stored values from $this->valueOptions.
    */
   public function getValueOptions() {
