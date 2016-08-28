@@ -333,7 +333,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
         'type' => 'boolean',
         'weight' => 0,
       ))
-    ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', array(
         'settings' => array('display_label' => TRUE),
         'weight' => 0,
       ));

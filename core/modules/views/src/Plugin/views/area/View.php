@@ -28,37 +28,37 @@ class View extends AreaPluginBase {
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-   protected $viewStorage;
+  protected $viewStorage;
 
-   /**
-    * Constructs a View object.
-    *
-    * @param array $configuration
-    *   A configuration array containing information about the plugin instance.
-    * @param string $plugin_id
-    *   The plugin_id for the plugin instance.
-    * @param mixed $plugin_definition
-    *   The plugin implementation definition.
-    * @param \Drupal\Core\Entity\EntityStorageInterface $view_storage
-    *   The view storage.
-    */
-   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $view_storage) {
-     parent::__construct($configuration, $plugin_id, $plugin_definition);
+  /**
+   * Constructs a View object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $view_storage
+   *   The view storage.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $view_storage) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-     $this->viewStorage = $view_storage;
-   }
+    $this->viewStorage = $view_storage;
+  }
 
-   /**
-    * {@inheritdoc}
-    */
-   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-       return new static(
-           $configuration,
-           $plugin_id,
-           $plugin_definition,
-       $container->get('entity.manager')->getStorage('view')
-       );
-   }
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')->getStorage('view')
+    );
+  }
 
   /**
    * {@inheritdoc}

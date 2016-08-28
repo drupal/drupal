@@ -13,7 +13,7 @@ class ImageFieldWidgetTest extends ImageFieldTestBase {
    * Tests file widget element.
    */
   public function testWidgetElement() {
-     // Check for image widget in add/node/article page
+    // Check for image widget in add/node/article page
     $field_name = strtolower($this->randomMachineName());
     $min_resolution = 50;
     $max_resolution = 100;

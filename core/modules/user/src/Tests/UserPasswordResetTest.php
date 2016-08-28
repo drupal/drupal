@@ -88,7 +88,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $edit['name'] = $this->account->getUsername();
     $this->drupalPostForm(NULL, $edit, t('Submit'));
 
-     // Verify that the user was sent an email.
+    // Verify that the user was sent an email.
     $this->assertMail('to', $this->account->getEmail(), 'Password email sent to user.');
     $subject = t('Replacement login information for @username at @site', array('@username' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name')));
     $this->assertMail('subject', $subject, 'Password reset email subject is correct.');
@@ -332,6 +332,6 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->assertNoText($user2->getUsername(), 'The invalid password reset page does not show the user name.');
     $this->assertUrl('user/password', array(), 'The user is redirected to the password reset request page.');
     $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
-   }
+  }
 
 }

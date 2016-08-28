@@ -99,10 +99,10 @@ class DbCommandBaseTest extends KernelTestBase {
     $this->assertEquals('extra2', $command->getDatabaseConnection($command_tester->getInput())->tablePrefix());
 
     // This breaks simpletest cleanup.
-//    $command_tester->execute([
-//      '--prefix' => 'notsimpletest',
-//    ]);
-//    $this->assertEquals('notsimpletest', $command->getDatabaseConnection($command_tester->getInput())->tablePrefix());
+    //    $command_tester->execute([
+    //      '--prefix' => 'notsimpletest',
+    //    ]);
+    //    $this->assertEquals('notsimpletest', $command->getDatabaseConnection($command_tester->getInput())->tablePrefix());
   }
 
 }

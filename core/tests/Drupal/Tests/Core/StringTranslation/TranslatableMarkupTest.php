@@ -68,8 +68,8 @@ class TranslatableMarkupTest extends UnitTestCase {
       ->method('translateString')
       ->with($text)
       ->willReturnCallback(function () {
-      throw new \Exception('Yes you may.');
-    });
+        throw new \Exception('Yes you may.');
+      });
 
     // We set a custom error handler because of https://github.com/sebastianbergmann/phpunit/issues/487
     set_error_handler([$this, 'errorHandler']);

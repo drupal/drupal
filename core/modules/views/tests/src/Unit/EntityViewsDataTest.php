@@ -568,7 +568,7 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $this->viewsData->setEntityType($entity_type);
 
-     // Setup the table mapping.
+    // Setup the table mapping.
     $table_mapping = $this->getMockBuilder(DefaultTableMapping::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -717,7 +717,7 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $this->viewsData->setEntityType($entity_type);
 
-     // Setup the table mapping.
+    // Setup the table mapping.
     $table_mapping = $this->getMockBuilder(DefaultTableMapping::class)
       ->disableOriginalConstructor()
       ->getMock();

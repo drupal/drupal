@@ -137,7 +137,7 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('update.settings');
-     // See if the update_check_disabled setting is being changed, and if so,
+    // See if the update_check_disabled setting is being changed, and if so,
     // invalidate all update status data.
     if ($form_state->getValue('update_check_disabled') != $config->get('check.disabled_extensions')) {
       update_storage_clear();

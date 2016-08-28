@@ -631,7 +631,7 @@ class DateTimeFieldTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertOptionSelected("edit-$field_name-0-value-minute", '0', 'Correct minute selected.');
- }
+  }
 
   /**
    * The data provider for testing the validation of the datelist widget.

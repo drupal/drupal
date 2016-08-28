@@ -329,7 +329,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    * @covers ::buildByExtension
    */
   public function testLibraryWithDependencies() {
-     $this->moduleHandler->expects($this->atLeastOnce())
+    $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('dependencies')
       ->will($this->returnValue(TRUE));

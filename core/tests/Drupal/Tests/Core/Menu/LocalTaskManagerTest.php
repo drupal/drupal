@@ -441,7 +441,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     // Ensure that all cacheability metadata is merged together.
     $this->assertEquals(['tag.example1', 'tag.example2'], $cacheability->getCacheTags());
     $this->assertEquals(['context.example1', 'context.example2', 'route', 'user.permissions'], $cacheability->getCacheContexts());
- }
+  }
 
   protected function setupFactoryAndLocalTaskPlugins(array $definitions, $active_plugin_id) {
     $map = [];

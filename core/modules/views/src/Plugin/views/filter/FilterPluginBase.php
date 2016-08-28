@@ -540,7 +540,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     );
 
     if (!empty($form['operator']['#type'])) {
-       // Increase the width of the left (operator) column.
+      // Increase the width of the left (operator) column.
       $form['operator']['#prefix'] = '<div class="views-group-box views-left-40">';
       $form['operator']['#suffix'] = '</div>';
       $form['value']['#prefix'] = '<div class="views-group-box views-right-60">';
@@ -1307,7 +1307,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    */
   public function groupMultipleExposedInput(&$input) {
     if (!empty($input[$this->options['group_info']['identifier']])) {
-    return array_filter($input[$this->options['group_info']['identifier']]);
+      return array_filter($input[$this->options['group_info']['identifier']]);
     }
     return array();
   }
@@ -1491,9 +1491,9 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *
    * @return bool
    */
-   public function canGroup() {
-     return TRUE;
-   }
+  public function canGroup() {
+    return TRUE;
+  }
 
   /**
    * {@inheritdoc}

@@ -23,11 +23,11 @@ db_insert('contact')->fields(array(
   'weight',
   'selected'
 ))
-->values(array(
+  ->values(array(
   'category' => 'Upgrade test',
   'recipients' => 'test1@example.com,test2@example.com',
   'reply' => 'Test reply',
   'weight' => 1,
   'selected' => 1,
 ))
-->execute();
+  ->execute();

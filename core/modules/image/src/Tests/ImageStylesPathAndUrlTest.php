@@ -62,9 +62,9 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
   /**
    * Tests an image style URL with the "public://" scheme and unclean URLs.
    */
-   function testImageStyleUrlAndPathPublicUnclean() {
-     $this->doImageStyleUrlAndPathTests('public', FALSE);
-   }
+  function testImageStyleUrlAndPathPublicUnclean() {
+    $this->doImageStyleUrlAndPathTests('public', FALSE);
+  }
 
   /**
    * Tests an image style URL with the "private://" schema and unclean URLs.

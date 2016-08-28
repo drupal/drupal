@@ -527,7 +527,7 @@ abstract class TestBase {
     // The first element is the call. The second element is the caller.
     // We skip calls that occurred in one of the methods of our base classes
     // or in an assertion function.
-   while (($caller = $backtrace[1]) &&
+    while (($caller = $backtrace[1]) &&
          ((isset($caller['class']) && isset($this->skipClasses[$caller['class']])) ||
            substr($caller['function'], 0, 6) == 'assert')) {
       // We remove that call.

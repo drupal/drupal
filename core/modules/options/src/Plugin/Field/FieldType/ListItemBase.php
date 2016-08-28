@@ -65,11 +65,11 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   /**
    * {@inheritdoc}
    */
-   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-     $allowed_options = options_allowed_values($field_definition->getFieldStorageDefinition());
-     $values['value'] = array_rand($allowed_options);
-     return $values;
-   }
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $allowed_options = options_allowed_values($field_definition->getFieldStorageDefinition());
+    $values['value'] = array_rand($allowed_options);
+    return $values;
+  }
 
   /**
    * {@inheritdoc}

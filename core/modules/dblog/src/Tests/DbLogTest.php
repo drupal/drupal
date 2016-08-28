@@ -236,14 +236,14 @@ class DbLogTest extends WebTestBase {
    *   (optional) The log entry severity.
   */
   protected function filterLogsEntries($type = NULL, $severity = NULL) {
-     $edit = array();
-     if (!is_null($type)) {
-       $edit['type[]'] = $type;
-     }
-     if (!is_null($severity)) {
-       $edit['severity[]'] = $severity;
-     }
-     $this->drupalPostForm(NULL, $edit, t('Filter'));
+    $edit = array();
+    if (!is_null($type)) {
+      $edit['type[]'] = $type;
+    }
+    if (!is_null($severity)) {
+      $edit['severity[]'] = $severity;
+    }
+    $this->drupalPostForm(NULL, $edit, t('Filter'));
   }
 
   /**

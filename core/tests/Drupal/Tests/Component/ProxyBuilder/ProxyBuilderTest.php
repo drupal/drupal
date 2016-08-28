@@ -230,7 +230,7 @@ public function testMethod($parameter)
 
 EOS;
 
-$this->assertEquals($this->buildExpectedClass($class, $method_body), $result);
+    $this->assertEquals($this->buildExpectedClass($class, $method_body), $result);
   }
 
   /**

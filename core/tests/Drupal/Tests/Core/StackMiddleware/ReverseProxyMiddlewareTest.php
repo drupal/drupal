@@ -49,9 +49,9 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    * @dataProvider reverseProxyEnabledProvider
    */
   public function testReverseProxyEnabled($provided_settings) {
-      // Enable reverse proxy and add test values.
-      $settings = new Settings(array('reverse_proxy' => 1) + $provided_settings);
-      $this->trustedHeadersAreSet($settings);
+    // Enable reverse proxy and add test values.
+    $settings = new Settings(array('reverse_proxy' => 1) + $provided_settings);
+    $this->trustedHeadersAreSet($settings);
   }
 
   /**

@@ -151,10 +151,10 @@ class CommentAdminOverview extends FormBase {
       'operations' => $this->t('Operations'),
     );
     $cids = $this->commentStorage->getQuery()
-     ->condition('status', $status)
-     ->tableSort($header)
-     ->pager(50)
-     ->execute();
+      ->condition('status', $status)
+      ->tableSort($header)
+      ->pager(50)
+      ->execute();
 
     /** @var $comments \Drupal\comment\CommentInterface[] */
     $comments = $this->commentStorage->loadMultiple($cids);

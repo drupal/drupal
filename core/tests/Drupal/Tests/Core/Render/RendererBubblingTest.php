@@ -326,9 +326,9 @@ class RendererBubblingTest extends RendererTestBase {
           ],
           'grandgrandchild' => [
             '#access_callback' => function () use (&$current_user_role) {
-                // Only role C can access this subtree.
-                return $current_user_role === 'C';
-              },
+              // Only role C can access this subtree.
+              return $current_user_role === 'C';
+            },
             '#cache' => [
               'contexts' => ['bar'],
               'tags' => ['d'],

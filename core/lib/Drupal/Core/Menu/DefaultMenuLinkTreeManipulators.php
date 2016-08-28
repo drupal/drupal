@@ -37,7 +37,7 @@ class DefaultMenuLinkTreeManipulators {
    *
    * @var \Drupal\Core\Entity\Query\QueryFactory
    */
-   protected $queryFactory;
+  protected $queryFactory;
 
   /**
    * Constructs a \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators object.

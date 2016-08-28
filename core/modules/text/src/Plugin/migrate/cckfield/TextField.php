@@ -120,7 +120,6 @@ class TextField extends CckFieldPluginBase {
           return 'text_long';
         default:
           return parent::getFieldType($row);
-          break;
       }
     }
   }

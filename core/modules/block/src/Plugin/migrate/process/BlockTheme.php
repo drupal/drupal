@@ -24,11 +24,11 @@ class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInte
    */
   protected $configFactory;
 
- /**
-  * Contains the system.theme configuration object.
-  *
-  * @var \Drupal\Core\Config\Config
-  */
+  /**
+   * Contains the system.theme configuration object.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
   protected $themeConfig;
 
   /**

@@ -59,11 +59,11 @@ class FieldInstancePerViewMode extends ViewModeBase {
         'label',
         'display_settings',
         'widget_settings',
-    ))
-    ->fields('cnf', array(
+      ))
+      ->fields('cnf', array(
         'type',
         'module',
-    ));
+      ));
     $query->join('content_node_field', 'cnf', 'cnfi.field_name = cnf.field_name');
     $query->orderBy('cnfi.weight');
 

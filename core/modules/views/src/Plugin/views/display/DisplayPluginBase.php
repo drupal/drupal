@@ -37,7 +37,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    *
    * @var \Drupal\views\Plugin\views\ViewsHandlerInterface[]
    */
-   public $handlers = [];
+  public $handlers = [];
 
   /**
    * An array of instantiated plugins used in this display.
@@ -1051,9 +1051,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       if (!isset($tokens["%$count"])) {
         $tokens["%$count"] = '';
       }
-       // Use strip tags as there should never be HTML in the path.
-       // However, we need to preserve special characters like " that
-       // were encoded by \Drupal\Component\Utility\Html::escape().
+      // Use strip tags as there should never be HTML in the path.
+      // However, we need to preserve special characters like " that
+      // were encoded by \Drupal\Component\Utility\Html::escape().
       $tokens["!$count"] = isset($this->view->args[$count - 1]) ? strip_tags(Html::decodeEntities($this->view->args[$count - 1])) : '';
     }
 
@@ -2236,7 +2236,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
 
     $plugin = $this->getPlugin('access');
-      /** @var \Drupal\views\Plugin\views\access\AccessPluginBase $plugin */
+    /** @var \Drupal\views\Plugin\views\access\AccessPluginBase $plugin */
     if ($plugin) {
       return $plugin->access($account);
     }

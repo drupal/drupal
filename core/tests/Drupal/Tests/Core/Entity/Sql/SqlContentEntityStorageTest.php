@@ -1314,16 +1314,16 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
     $this->fieldDefinitions = $this->mockFieldDefinitions(array('id'));
     $this->fieldDefinitions['id']->expects($this->any())
-    ->method('getType')
-    ->will($this->returnValue('integer'));
+      ->method('getType')
+      ->will($this->returnValue('integer'));
 
     $this->setUpEntityStorage();
 
     $this->entityType->expects($this->any())
-    ->method('getKey')
-    ->will($this->returnValueMap(array(
-      array('id', 'id'),
-    )));
+      ->method('getKey')
+      ->will($this->returnValueMap(
+        array(array('id', 'id'))
+      ));
 
     $method = new \ReflectionMethod($this->entityStorage, 'cleanIds');
     $method->setAccessible(TRUE);

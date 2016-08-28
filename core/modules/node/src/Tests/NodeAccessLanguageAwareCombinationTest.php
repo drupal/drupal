@@ -254,9 +254,9 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Query with no language specified. The fallback (hu or und) will be used.
     $select = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->addMetaData('account', $this->webUser)
-    ->addTag('node_access');
+      ->fields('n', array('nid'))
+      ->addMetaData('account', $this->webUser)
+      ->addTag('node_access');
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // Four nodes should be returned with public Hungarian translations or the
@@ -269,10 +269,10 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Query with Hungarian (hu) specified.
     $select = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->addMetaData('account', $this->webUser)
-    ->addMetaData('langcode', 'hu')
-    ->addTag('node_access');
+      ->fields('n', array('nid'))
+      ->addMetaData('account', $this->webUser)
+      ->addMetaData('langcode', 'hu')
+      ->addTag('node_access');
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // Three nodes should be returned (with public Hungarian translations).
@@ -283,10 +283,10 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Query with Catalan (ca) specified.
     $select = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->addMetaData('account', $this->webUser)
-    ->addMetaData('langcode', 'ca')
-    ->addTag('node_access');
+      ->fields('n', array('nid'))
+      ->addMetaData('account', $this->webUser)
+      ->addMetaData('langcode', 'ca')
+      ->addTag('node_access');
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // Three nodes should be returned (with public Catalan translations).
@@ -297,10 +297,10 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Query with German (de) specified.
     $select = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->addMetaData('account', $this->webUser)
-    ->addMetaData('langcode', 'de')
-    ->addTag('node_access');
+      ->fields('n', array('nid'))
+      ->addMetaData('account', $this->webUser)
+      ->addMetaData('langcode', 'de')
+      ->addTag('node_access');
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // There are no nodes with German translations, so no results are returned.
@@ -309,9 +309,9 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     // Query the nodes table as admin user (full access) with the node access
     // tag and no specific langcode.
     $select = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->addMetaData('account', $this->adminUser)
-    ->addTag('node_access');
+      ->fields('n', array('nid'))
+      ->addMetaData('account', $this->adminUser)
+      ->addTag('node_access');
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // All nodes are returned.
@@ -320,10 +320,10 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     // Query the nodes table as admin user (full access) with the node access
     // tag and langcode de.
     $select = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->addMetaData('account', $this->adminUser)
-    ->addMetaData('langcode', 'de')
-    ->addTag('node_access');
+      ->fields('n', array('nid'))
+      ->addMetaData('account', $this->adminUser)
+      ->addMetaData('langcode', 'de')
+      ->addTag('node_access');
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // Even though there is no German translation, all nodes are returned

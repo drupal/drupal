@@ -28,7 +28,7 @@ class MigratePreRowSaveEvent extends EventBase {
    * @param \Drupal\migrate\Row $row
    */
   public function __construct(MigrationInterface $migration, MigrateMessageInterface $message, Row $row) {
-     parent::__construct($migration, $message);
+    parent::__construct($migration, $message);
     $this->row = $row;
   }
 

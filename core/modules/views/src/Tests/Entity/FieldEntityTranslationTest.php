@@ -69,8 +69,7 @@ class FieldEntityTranslationTest extends ViewTestBase {
     $translation->save();
 
     $this->drupalGet('test_entity_field_renderers/entity_translation');
-    $this->assertRows(
-    [
+    $this->assertRows([
       [
         'title' => 'example EN',
         'sticky' => 'Off',
@@ -82,82 +81,76 @@ class FieldEntityTranslationTest extends ViewTestBase {
     ]);
 
     $this->drupalGet('test_entity_field_renderers/entity_default');
-    $this->assertRows(
+    $this->assertRows([
       [
-        [
-          'title' => 'example EN',
-          'sticky' => 'Off',
-        ],
-        [
-          'title' => 'example EN',
-          'sticky' => 'Off',
-        ],
-      ]);
+        'title' => 'example EN',
+        'sticky' => 'Off',
+      ],
+      [
+        'title' => 'example EN',
+        'sticky' => 'Off',
+      ],
+    ]);
 
     $this->drupalGet('test_entity_field_renderers/site_default');
-    $this->assertRows(
+    $this->assertRows([
       [
-        [
-          'title' => 'example EN',
-          'sticky' => 'Off',
-        ],
-        [
-          'title' => 'example EN',
-          'sticky' => 'Off',
-        ],
-      ]);
+        'title' => 'example EN',
+        'sticky' => 'Off',
+      ],
+      [
+        'title' => 'example EN',
+        'sticky' => 'Off',
+      ],
+    ]);
 
     $this->drupalGet('test_entity_field_renderers/language_interface');
-    $this->assertRows(
+    $this->assertRows([
       [
-        [
-          'title' => 'example EN',
-          'sticky' => 'Off',
-        ],
-        [
-          'title' => 'example EN',
-          'sticky' => 'Off',
-        ],
-      ]);
+        'title' => 'example EN',
+        'sticky' => 'Off',
+      ],
+      [
+        'title' => 'example EN',
+        'sticky' => 'Off',
+      ],
+    ]);
 
     $this->drupalGet('test_entity_field_renderers/language_interface', ['language' => new Language(['id' => 'es'])]);
-    $this->assertRows(
+    $this->assertRows([
       [
-        [
-          'title' => 'example ES',
-          'sticky' => 'On',
-        ],
-        [
-          'title' => 'example ES',
-          'sticky' => 'On',
-        ],
-      ]);
+        'title' => 'example ES',
+        'sticky' => 'On',
+      ],
+      [
+        'title' => 'example ES',
+        'sticky' => 'On',
+      ],
+    ]);
 
     $this->drupalGet('test_entity_field_renderers/en');
-    $this->assertRows(
+    $this->assertRows([
       [
-        [
-          'title' => 'example EN',
-          'sticky' => 'Off',
-        ],
-        [
-          'title' => 'example EN',
-          'sticky' => 'Off',
-        ],
-      ]);
+        'title' => 'example EN',
+        'sticky' => 'Off',
+      ],
+      [
+        'title' => 'example EN',
+        'sticky' => 'Off',
+      ],
+    ]);
 
     $this->drupalGet('test_entity_field_renderers/es');
-    $this->assertRows(
+    $this->assertRows([
       [
-        [
-          'title' => 'example ES',
-          'sticky' => 'On',
-        ],
-        [
-          'title' => 'example ES',
-          'sticky' => 'On',
-        ],
-      ]);
+        'title' => 'example ES',
+        'sticky' => 'On',
+      ],
+      [
+        'title' => 'example ES',
+        'sticky' => 'On',
+      ],
+    ]);
   }
 
   /**

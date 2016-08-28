@@ -124,25 +124,10 @@ class RestRegisterUserTest extends RESTTestBase {
     global $base_url;
     // New user info to be serialized.
     $data = [
-      "_links" =>
-        [
-          "type" => ["href" => $base_url . "/rest/type/user/user"],
-        ],
-      "langcode" => [
-        [
-          "value" => "en",
-        ],
-      ],
-      "name" => [
-        [
-          "value" => $name,
-        ],
-      ],
-      "mail" => [
-        [
-          "value" => "$name@example.com",
-        ],
-      ],
+      "_links" => ["type" => ["href" => $base_url . "/rest/type/user/user"]],
+      "langcode" => [["value" => "en"]],
+      "name" => [["value" => $name]],
+      "mail" => [["value" => "$name@example.com"]],
     ];
     if ($include_password) {
       $data['pass']['value'] = 'SuperSecretPassword';

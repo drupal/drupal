@@ -1219,10 +1219,10 @@ function system_update_8005() {
 
       case 'seven':
         $name = 'block.block.seven_local_actions';
-          $values = [
-            'id' => 'seven_local_actions',
-            'weight' => -10,
-          ] + $local_actions_default_settings;
+        $values = [
+          'id' => 'seven_local_actions',
+          'weight' => -10,
+        ] + $local_actions_default_settings;
         _system_update_create_block($name, $theme_name, $values);
 
         $name = 'block.block.seven_primary_local_tasks';

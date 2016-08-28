@@ -12,7 +12,7 @@ use Drupal\Core\Url;
  */
 function toolbar_test_toolbar() {
 
-    $items['testing'] = array(
+  $items['testing'] = array(
     '#type' => 'toolbar_item',
     'tab' => array(
       '#type' => 'link',

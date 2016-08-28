@@ -223,7 +223,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends WebTestBase {
       'bundle' => $this->referrerType->id(),
       'entity_type' => $this->testEntityTypeName,
     ])
-    ->save();
+      ->save();
     entity_get_form_display($this->testEntityTypeName, $this->referrerType->id(), 'default')
       ->setComponent($this->referenceFieldName, array(
         'type' => 'entity_reference_autocomplete',

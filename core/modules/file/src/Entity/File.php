@@ -229,7 +229,7 @@ class File extends ContentEntityBase implements FileInterface {
     $fields['uuid']->setDescription(t('The file UUID.'));
 
     $fields['langcode']->setLabel(t('Language code'))
-     ->setDescription(t('The file language code.'));
+      ->setDescription(t('The file language code.'));
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))

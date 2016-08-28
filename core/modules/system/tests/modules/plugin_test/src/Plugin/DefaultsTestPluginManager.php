@@ -12,12 +12,12 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  */
 class DefaultsTestPluginManager extends DefaultPluginManager {
 
- /**
-  * Constructs a new DefaultsTestPluginManager instance.
-  *
-  * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-  *   The module handler.
-  */
+  /**
+   * Constructs a new DefaultsTestPluginManager instance.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   */
   public function __construct(ModuleHandlerInterface $module_handler) {
     // Create the object that can be used to return definitions for all the
     // plugins available for this type. Most real plugin managers use a richer

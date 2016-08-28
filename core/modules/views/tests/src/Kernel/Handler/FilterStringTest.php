@@ -297,7 +297,7 @@ class FilterStringTest extends ViewsKernelTestBase {
 
 
   function testFilterStringGroupedExposedWord() {
-      $filters = $this->getGroupedExposedFilters();
+    $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
     // Filter: Name, Operator: contains, Value: ing

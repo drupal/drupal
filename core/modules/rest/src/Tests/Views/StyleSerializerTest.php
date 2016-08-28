@@ -353,7 +353,7 @@ class StyleSerializerTest extends PluginTestBase {
     $this->drupalGetWithFormat('test/serialize/field', 'json');
     $this->assertHeader('content-type', 'application/json');
     $this->assertResponse(406, 'A 406 response was returned when JSON was requested.');
-     // Should return a 200.
+    // Should return a 200.
     $this->drupalGetWithFormat('test/serialize/field', 'xml');
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
     $this->assertResponse(200, 'A 200 response was returned when XML was requested.');
@@ -551,7 +551,7 @@ class StyleSerializerTest extends PluginTestBase {
     // We set up a request so it looks like an request in the live preview.
     $request = new Request();
     $request->query->add([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']);
-      /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
+    /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = \Drupal::service('request_stack');
     $request_stack->push($request);
 

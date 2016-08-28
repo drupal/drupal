@@ -271,7 +271,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *
    * @dataProvider providerLimitValidationErrors
    *
-   * @param array{}|null $limit_validation_errors
+   * @param array[]|null $limit_validation_errors
    *   Any valid value for
    *   \Drupal\Core\Form\FormStateInterface::setLimitValidationErrors()'s
    *   $limit_validation_errors argument;
@@ -577,7 +577,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
     ];
 
     $this->decoratedFormState->setStorage($storage)
-    ->shouldBeCalled();
+      ->shouldBeCalled();
 
     $this->assertSame($this->formStateDecoratorBase, $this->formStateDecoratorBase->setStorage($storage));
   }

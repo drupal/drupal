@@ -70,6 +70,6 @@ class ShortcutSetDeleteForm extends EntityDeleteForm {
     );
 
     return parent::buildForm($form, $form_state);
-   }
+  }
 
 }

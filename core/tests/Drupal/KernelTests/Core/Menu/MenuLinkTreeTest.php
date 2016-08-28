@@ -84,16 +84,16 @@ class MenuLinkTreeTest extends KernelTestBase {
    * Tests creating links with an expected tree structure.
    */
   public function testCreateLinksInMenu() {
-     // This creates a tree with the following structure:
-     // - 1
-     // - 2
-     //   - 3
-     //     - 4
-     // - 5
-     //   - 7
-     // - 6
-     // - 8
-     // With link 6 being the only external link.
+    // This creates a tree with the following structure:
+    // - 1
+    // - 2
+    //   - 3
+    //     - 4
+    // - 5
+    //   - 7
+    // - 6
+    // - 8
+    // With link 6 being the only external link.
 
     $links = array(
       1 => MenuLinkMock::create(array('id' => 'test.example1', 'route_name' => 'example1', 'title' => 'foo', 'parent' => '')),
