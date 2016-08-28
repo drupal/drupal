@@ -105,15 +105,9 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
-    static::invalidateBlockPluginCache();
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function postDelete(EntityStorageInterface $storage, array $entities) {
-    parent::postDelete($storage, $entities);
-    static::invalidateBlockPluginCache();
+    // Invalidate the block cache to update custom block-based derivatives.
+    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 
   /**
@@ -288,14 +282,6 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
   public function setRevisionLogMessage($revision_log_message) {
     $this->set('revision_log', $revision_log_message);
     return $this;
-  }
-
-  /**
-   * Invalidates the block plugin cache after changes and deletions.
-   */
-  protected static function invalidateBlockPluginCache() {
-    // Invalidate the block cache to update custom block-based derivatives.
-    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 
 }
