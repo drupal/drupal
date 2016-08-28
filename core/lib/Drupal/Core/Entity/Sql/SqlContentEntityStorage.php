@@ -1543,6 +1543,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $item_query = $this->database->select($table_name, 't', array('fetch' => \PDO::FETCH_ASSOC))
         ->fields('t')
         ->condition('entity_id', $row['entity_id'])
+        ->condition('deleted', 1)
         ->orderBy('delta');
 
       foreach ($item_query->execute() as $item_row) {
@@ -1581,10 +1582,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $revision_id = $this->entityType->isRevisionable() ? $entity->getRevisionId() : $entity->id();
     $this->database->delete($table_name)
       ->condition('revision_id', $revision_id)
+      ->condition('deleted', 1)
       ->execute();
     if ($this->entityType->isRevisionable()) {
       $this->database->delete($revision_name)
         ->condition('revision_id', $revision_id)
+        ->condition('deleted', 1)
         ->execute();
     }
   }
@@ -1684,6 +1687,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   Whether the field has been already deleted.
    */
   protected function storageDefinitionIsDeleted(FieldStorageDefinitionInterface $storage_definition) {
+    // Configurable fields are marked for deletion.
+    if ($storage_definition instanceOf FieldStorageConfigInterface) {
+      return $storage_definition->isDeleted();
+    }
+    // For non configurable fields check whether they are still in the last
+    // installed schema repository.
     return !array_key_exists($storage_definition->getName(), $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityTypeId));
   }
 

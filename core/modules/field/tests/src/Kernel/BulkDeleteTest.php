@@ -211,6 +211,98 @@ class BulkDeleteTest extends FieldKernelTestBase {
   }
 
   /**
+   * Tests that recreating a field with the name as a deleted field works.
+   */
+  public function testPurgeWithDeletedAndActiveField() {
+    $bundle = reset($this->bundles);
+    // Create another field storage.
+    $field_name = 'bf_3';
+    $deleted_field_storage = FieldStorageConfig::create(array(
+      'field_name' => $field_name,
+      'entity_type' => $this->entityTypeId,
+      'type' => 'test_field',
+      'cardinality' => 1
+    ));
+    $deleted_field_storage->save();
+    // Create the field.
+    FieldConfig::create([
+      'field_storage' => $deleted_field_storage,
+      'bundle' => $bundle,
+    ])->save();
+
+    for ($i = 0; $i < 20; $i++) {
+      $entity = $this->container->get('entity_type.manager')
+        ->getStorage($this->entityTypeId)
+        ->create(array('type' => $bundle));
+      $entity->{$field_name}->setValue($this->_generateTestFieldValues(1));
+      $entity->save();
+    }
+
+    // Delete the field.
+    $deleted_field = FieldConfig::loadByName($this->entityTypeId, $bundle, $field_name);
+    $deleted_field->delete();
+    $deleted_field_uuid = $deleted_field->uuid();
+
+    // Reload the field storage.
+    $field_storages = entity_load_multiple_by_properties('field_storage_config', array('uuid' => $deleted_field_storage->uuid(), 'include_deleted' => TRUE));
+    $deleted_field_storage = reset($field_storages);
+
+    // Create the field again.
+    $field_storage = FieldStorageConfig::create(array(
+      'field_name' => $field_name,
+      'entity_type' => $this->entityTypeId,
+      'type' => 'test_field',
+      'cardinality' => 1
+    ));
+    $field_storage->save();
+    FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => $bundle,
+    ])->save();
+
+    // The field still exists, deleted, with the same field name.
+    $fields = entity_load_multiple_by_properties('field_config', array('uuid' => $deleted_field_uuid, 'include_deleted' => TRUE));
+    $this->assertTrue(isset($fields[$deleted_field_uuid]) && $fields[$deleted_field_uuid]->isDeleted(), 'The field exists and is deleted');
+    $this->assertTrue(isset($fields[$deleted_field_uuid]) && $fields[$deleted_field_uuid]->getName() == $field_name);
+
+    for ($i = 0; $i < 10; $i++) {
+      $entity = $this->container->get('entity_type.manager')
+        ->getStorage($this->entityTypeId)
+        ->create(array('type' => $bundle));
+      $entity->{$field_name}->setValue($this->_generateTestFieldValues(1));
+      $entity->save();
+    }
+
+    // Check that the two field storages have different tables.
+    $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = $storage->getTableMapping();
+    $deleted_table_name = $table_mapping->getDedicatedDataTableName($deleted_field_storage, TRUE);
+    $active_table_name = $table_mapping->getDedicatedDataTableName($field_storage);
+
+    field_purge_batch(50);
+
+    // Ensure the new field still has its table and the deleted one has been
+    // removed.
+    $this->assertTrue(\Drupal::database()->schema()->tableExists($active_table_name));
+    $this->assertFalse(\Drupal::database()->schema()->tableExists($deleted_table_name));
+
+    // The field has been removed from the system.
+    $fields = entity_load_multiple_by_properties('field_config', array('field_storage_uuid' => $deleted_field_storage->uuid(), 'deleted' => TRUE, 'include_deleted' => TRUE));
+    $this->assertEqual(count($fields), 0, 'The field is gone');
+
+    // Verify there are still 10 entries in the main table.
+    $count = \Drupal::database()
+      ->select('entity_test__' . $field_name, 'f')
+      ->fields('f', array('entity_id'))
+      ->condition('bundle', $bundle)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertEqual($count, 10);
+  }
+
+  /**
    * Verify that field data items and fields are purged when a field storage is
    * deleted.
    */
