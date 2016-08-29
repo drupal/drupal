@@ -66,7 +66,7 @@ class CommentLinksTest extends CommentTestBase {
       'subject' => $this->randomMachineName(),
       'hostname' => '127.0.0.1',
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'comment_body' => array(LanguageInterface::LANGCODE_NOT_SPECIFIED => array($this->randomMachineName())),
+      'comment_body' => array(array('value' => $this->randomMachineName())),
     ));
     $comment->save();
     $this->comment = $comment;
@@ -100,6 +100,26 @@ class CommentLinksTest extends CommentTestBase {
       }
       $this->assertLink('Add new comment');
     }
+
+    // Change weight to make links go before comment body.
+    entity_get_display('comment', 'comment', 'default')
+      ->setComponent('links', array('weight' => -100))
+      ->save();
+    $this->drupalGet($this->node->urlInfo());
+    $element = $this->cssSelect('article.js-comment > div');
+    // Get last child element.
+    $element = end($element[0]);
+    $this->assertIdentical($element[0]->getName(), 'div', 'Last element is comment body.');
+
+    // Change weight to make links go after comment body.
+    entity_get_display('comment', 'comment', 'default')
+      ->setComponent('links', array('weight' => 100))
+      ->save();
+    $this->drupalGet($this->node->urlInfo());
+    $element = $this->cssSelect('article.js-comment > div');
+    // Get last child element.
+    $element = end($element[0]);
+    $this->assertIdentical($element[0]->getName(), 'ul', 'Last element is comment links.');
 
     // Make sure we can hide node links.
     entity_get_display('node', $this->node->bundle(), 'default')
