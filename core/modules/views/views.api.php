@@ -701,7 +701,7 @@ function hook_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
   // Modify contextual filters for my_special_view if user has 'my special permission'.
   $account = \Drupal::currentUser();
 
-  if ($view->name == 'my_special_view' && $account->hasPermission('my special permission') && $display_id == 'public_display') {
+  if ($view->id() == 'my_special_view' && $account->hasPermission('my special permission') && $display_id == 'public_display') {
     $args[0] = 'custom value';
   }
 }
@@ -744,7 +744,7 @@ function hook_views_post_build(ViewExecutable $view) {
   // assumptions about both exposed filter settings and the fields in the view.
   // Also note that this alter could be done at any point before the view being
   // rendered.)
-  if ($view->name == 'my_view' && isset($view->exposed_raw_input['type']) && $view->exposed_raw_input['type'] != 'All') {
+  if ($view->id() == 'my_view' && isset($view->exposed_raw_input['type']) && $view->exposed_raw_input['type'] != 'All') {
     // 'Type' should be interpreted as content type.
     if (isset($view->field['type'])) {
       $view->field['type']->options['exclude'] = TRUE;
@@ -771,7 +771,7 @@ function hook_views_pre_execute(ViewExecutable $view) {
   $account = \Drupal::currentUser();
 
   if (count($view->query->tables) > 2 && $account->hasPermission('administer views')) {
-    drupal_set_message(t('The view %view may be heavy to execute.', array('%view' => $view->name)), 'warning');
+    drupal_set_message(t('The view %view may be heavy to execute.', array('%view' => $view->id())), 'warning');
   }
 }
 
