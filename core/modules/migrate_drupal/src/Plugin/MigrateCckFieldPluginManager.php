@@ -27,9 +27,22 @@ class MigrateCckFieldPluginManager extends MigratePluginManager {
   const DEFAULT_CORE_VERSION = 6;
 
   /**
-   * {@inheritdoc}
+   * Get the plugin ID from the field type.
+   *
+   * @param string $field_type
+   *   The field type being migrated.
+   * @param array $configuration
+   *   (optioanl) An array of configuration relevant to the plugin instance.
+   * @param \Drupal\migrate\Plugin\MigrationInterface|null $migration
+   *   (optional) The current migration instance.
+   *
+   * @return string
+   *   The ID of the plugin for the field_type if available.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   If the plugin cannot be determined, such as if the field type is invalid.
    */
-  public function createInstance($field_type, array $configuration = array(), MigrationInterface $migration = NULL) {
+  public function getPluginIdFromFieldType($field_type, array $configuration = [], MigrationInterface $migration = NULL) {
     $core = static::DEFAULT_CORE_VERSION;
     if (!empty($configuration['core'])) {
       $core = $configuration['core'];
@@ -45,7 +58,7 @@ class MigrateCckFieldPluginManager extends MigratePluginManager {
     foreach ($this->getDefinitions() as $plugin_id => $definition) {
       if (in_array($core, $definition['core'])) {
         if (array_key_exists($field_type, $definition['type_map']) || $field_type === $plugin_id) {
-          return parent::createInstance($plugin_id, $configuration, $migration);
+          return $plugin_id;
         }
       }
     }
