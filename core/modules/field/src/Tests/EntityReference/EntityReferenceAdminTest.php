@@ -208,6 +208,7 @@ class EntityReferenceAdminTest extends WebTestBase {
       'id' => 'node_test_view',
       'label' => 'Node Test View',
       'show[wizard_key]' => 'node',
+      'show[sort]' => 'none',
       'page[create]' => 1,
       'page[title]' => 'Test Node View',
       'page[path]' => 'test/node/view',
@@ -221,6 +222,14 @@ class EntityReferenceAdminTest extends WebTestBase {
       'style_options[search_fields][title]' => 'title',
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
+
+    // Set sort to NID ascending.
+    $edit = [
+      'name[node_field_data.nid]' => 1,
+    ];
+    $this->drupalPostForm('admin/structure/views/nojs/add-handler/node_test_view/entity_reference_1/sort', $edit, t('Add and configure sort criteria'));
+    $this->drupalPostForm(NULL, NULL, t('Apply'));
+
     $this->drupalPostForm('admin/structure/views/view/node_test_view/edit/entity_reference_1', array(), t('Save'));
     $this->clickLink(t('Settings'));
 
@@ -301,6 +310,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->assertText(t('Multiple entities match this reference;'));
     $this->assertText(t("@node1", ['@node1' => $node1->getTitle() . ' (' . $node1->id() . ')']));
     $this->assertText(t("@node2", ['@node2' => $node2->getTitle() . ' (' . $node2->id() . ')']));
+    $this->assertText(t('Specify the one you want by appending the id in parentheses, like "@example".', ['@example' => $node2->getTitle() . ' (' . $node2->id() . ')']));
 
     $edit = array(
       'title[0][value]' => 'Test',
