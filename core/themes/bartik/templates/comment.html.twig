@@ -103,9 +103,6 @@
       <h3{{ title_attributes }}>{{ title }}</h3>
       {{ title_suffix }}
     {% endif %}
-    {{ content|without('links') }}
-    {% if content.links %}
-      <nav>{{ content.links }}</nav>
-    {% endif %}
+    {{ content }}
   </div>
 </article>
