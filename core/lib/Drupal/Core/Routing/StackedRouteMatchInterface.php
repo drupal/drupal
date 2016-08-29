@@ -36,7 +36,7 @@ interface StackedRouteMatchInterface extends RouteMatchInterface {
   /**
    * Returns a route match from a given request, if possible.
    *
-   * @param \Symfony\Component\HttpFoundation\Request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    *
    * @return \Drupal\Core\Routing\RouteMatchInterface|null

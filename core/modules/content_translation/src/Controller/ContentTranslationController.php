@@ -26,7 +26,7 @@ class ContentTranslationController extends ControllerBase {
   /**
    * Initializes a content translation controller.
    *
-   * @param \Drupal\content_translation\ContentTranslationManagerInterface
+   * @param \Drupal\content_translation\ContentTranslationManagerInterface $manager
    *   A content translation manager instance.
    */
   public function __construct(ContentTranslationManagerInterface $manager) {
@@ -319,7 +319,7 @@ class ContentTranslationController extends ControllerBase {
    * @param \Drupal\Core\Language\LanguageInterface $target
    *   The language of the translated values. Defaults to the current content
    *   language.
-   * @param \Drupal\Core\Routing\RouteMatchInterface
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match object from which to extract the entity type.
    * @param string $entity_type_id
    *   (optional) The entity type ID.
@@ -354,7 +354,7 @@ class ContentTranslationController extends ControllerBase {
    * @param \Drupal\Core\Language\LanguageInterface $language
    *   The language of the translated values. Defaults to the current content
    *   language.
-   * @param \Drupal\Core\Routing\RouteMatchInterface
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match object from which to extract the entity type.
    * @param string $entity_type_id
    *   (optional) The entity type ID.

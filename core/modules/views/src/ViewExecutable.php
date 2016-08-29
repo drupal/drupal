@@ -1655,7 +1655,7 @@ class ViewExecutable implements \Serializable {
   /**
    * Runs attachments and lets the display do what it needs to before running.
    *
-   * @param array @args
+   * @param array $args
    *   An array of arguments from the URL that can be used by the view.
    */
   public function preExecute($args = array()) {

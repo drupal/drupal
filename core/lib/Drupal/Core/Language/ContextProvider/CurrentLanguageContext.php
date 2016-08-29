@@ -26,7 +26,7 @@ class CurrentLanguageContext implements ContextProviderInterface {
   /**
    * Constructs a new CurrentLanguageContext.
    *
-   * @param \Drupal\Core\Language\LanguageManagerInterface
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
   public function __construct(LanguageManagerInterface $language_manager) {

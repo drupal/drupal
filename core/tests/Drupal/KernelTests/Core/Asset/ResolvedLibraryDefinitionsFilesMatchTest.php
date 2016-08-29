@@ -140,7 +140,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
   /**
    * Checks that all the library files exist.
    *
-   * @param array[]
+   * @param array[] $library_definitions
    *   An array of library definitions, keyed by extension, then by library, and
    *   so on.
    */

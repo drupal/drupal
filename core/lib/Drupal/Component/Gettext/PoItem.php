@@ -169,7 +169,7 @@ class PoItem {
   /**
    * Create the PoItem from a structured array.
    *
-   * @param array values
+   * @param array $values
    */
   public function setFromArray(array $values = array()) {
     if (isset($values['context'])) {

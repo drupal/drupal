@@ -42,7 +42,7 @@ class UserPermissionsForm extends FormBase {
    *   The permission handler.
    * @param \Drupal\user\RoleStorageInterface $role_storage
    *   The role storage.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
   public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ModuleHandlerInterface $module_handler) {
