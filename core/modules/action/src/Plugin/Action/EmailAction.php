@@ -84,9 +84,9 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    *   The entity manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Mail\MailManagerInterface
+   * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
    *   The mail manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Egulias\EmailValidator\EmailValidator $email_validator
    *   The email validator.

@@ -36,9 +36,9 @@ class EditorSelector implements EditorSelectorInterface {
   /**
    * Constructs a new EditorSelector.
    *
-   * @param \Drupal\Component\Plugin\PluginManagerInterface
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $editor_manager
    *   The manager for editor plugins.
-   * @param \Drupal\Core\Field\FormatterPluginManager
+   * @param \Drupal\Core\Field\FormatterPluginManager $formatter_manager
    *   The manager for formatter plugins.
    */
   public function __construct(PluginManagerInterface $editor_manager, FormatterPluginManager $formatter_manager) {

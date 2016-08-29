@@ -83,7 +83,7 @@ class TestDrupalSqlBase extends DrupalSqlBase {
   /**
    * Tweaks DrupalSqlBase to set a new database connection for tests.
    *
-   * @param \Drupal\Core\Database\Connection
+   * @param \Drupal\Core\Database\Connection $database
    *   The new connection to use.
    *
    * @see \Drupal\Tests\migrate\Unit\MigrateSourceSqlTestCase

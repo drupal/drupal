@@ -261,7 +261,7 @@ class Node extends DrupalSqlBase {
   /**
    * Adapt our query for translations.
    *
-   * @param \Drupal\Core\Database\Query\SelectInterface
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   The generated query.
    */
   protected function handleTranslations(SelectInterface $query) {

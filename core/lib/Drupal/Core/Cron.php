@@ -83,7 +83,7 @@ class Cron implements CronInterface {
    *    The account switching service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Queue\QueueWorkerManagerInterface
+   * @param \Drupal\Core\Queue\QueueWorkerManagerInterface $queue_manager
    *   The queue plugin manager.
    */
   public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager) {

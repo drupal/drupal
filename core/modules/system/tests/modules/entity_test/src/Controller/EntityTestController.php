@@ -22,7 +22,7 @@ class EntityTestController extends ControllerBase {
   /**
    * Constructs a new EntityTestController.
    *
-   * @param \Drupal\Core\Entity\Query\QueryFactory
+   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
    *   The entity query factory.
    */
   public function __construct(QueryFactory $entity_query_factory) {

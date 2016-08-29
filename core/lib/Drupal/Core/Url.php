@@ -845,7 +845,7 @@ class Url {
   /**
    * Sets the URL generator.
    *
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   (optional) The URL generator, specify NULL to reset it.
    *
    * @return $this
@@ -859,7 +859,7 @@ class Url {
   /**
    * Sets the unrouted URL assembler.
    *
-   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface
+   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $url_assembler
    *   The unrouted URL assembler.
    *
    * @return $this

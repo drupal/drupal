@@ -285,7 +285,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
   /**
    * Gets a list of node revision IDs for a specific node.
    *
-   * @param \Drupal\node\NodeInterface
+   * @param \Drupal\node\NodeInterface $node
    *   The node entity.
    * @param \Drupal\node\NodeStorageInterface $node_storage
    *   The node storage handler.
