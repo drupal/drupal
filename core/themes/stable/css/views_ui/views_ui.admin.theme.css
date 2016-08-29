@@ -170,9 +170,9 @@ details.box-padding {
   margin-bottom: 6px;
   margin-top: 6px;
 }
-.views-ui-view-title {
+.views-ui-view-name h3 {
   font-weight: bold;
-  margin-top: 0;
+  margin: 0.25em 0;
 }
 .view-changed {
   margin-bottom: 21px;
@@ -183,22 +183,33 @@ details.box-padding {
   margin-bottom: 0;
   margin-top: 18px;
 }
+.views-ui-view-displays ul {
+  margin-left: 0; /* LTR */
+  padding-left: 0; /* LTR */
+  list-style: none;
+}
+[dir="rtl"] .views-ui-view-displays ul {
+  margin-right: 0;
+  padding-right: 0;
+  margin-left: inherit;
+  padding-left: inherit;
+}
 
 /* These header classes are ambiguous and should be scoped to th elements */
 .views-ui-name {
-  width: 18%;
+  width: 20%;
 }
 .views-ui-description {
-  width: 26%;
+  width: 30%;
 }
-.views-ui-tag {
-  width: 8%;
+.views-ui-machine-name {
+  width: 15%;
 }
-.views-ui-path {
-  width: auto;
+.views-ui-displays {
+  width: 25%;
 }
 .views-ui-operations {
-  width: 24%;
+  width: 10%;
 }
 
 /**

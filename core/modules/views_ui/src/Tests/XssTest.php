@@ -17,9 +17,6 @@ class XssTest extends UITestBase {
   public static $modules = array('node', 'user', 'views_ui', 'views_ui_test');
 
   public function testViewsUi() {
-    $this->drupalGet('admin/structure/views');
-    $this->assertEscaped('<script>alert("foo");</script>, <marquee>test</marquee>', 'The view tag is properly escaped.');
-
     $this->drupalGet('admin/structure/views/view/sa_contrib_2013_035');
     $this->assertEscaped('<marquee>test</marquee>', 'Field admin label is properly escaped.');
 

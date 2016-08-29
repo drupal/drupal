@@ -80,10 +80,23 @@ function views_ui_theme() {
       'file' => 'views_ui.theme.inc',
     ),
 
-    // list views
+    // Legacy theme hook for displaying views info.
     'views_ui_view_info' => array(
       'variables' => array('view' => NULL, 'displays' => NULL),
       'file' => 'views_ui.theme.inc',
+    ),
+
+    // List views.
+    'views_ui_views_listing_table' => array(
+      'variables' => array(
+        'headers' => NULL,
+        'rows' => NULL,
+        'attributes' => array(),
+      ),
+      'file' => 'views_ui.theme.inc',
+    ),
+    'views_ui_view_displays_list' => array(
+      'variables' => array('displays' => array()),
     ),
 
     // Group of filters.

@@ -1,0 +1,49 @@
+{#
+/**
+ * @file
+ * Default theme implementation for views listing table.
+ *
+ * Available variables:
+ * - headers: Contains table headers.
+ * - rows: Contains multiple rows. Each row contains:
+ *   - view_name: The human-readable name of the view.
+ *   - machine_name: Machine name of the view.
+ *   - description: The description of the view.
+ *   - displays: List of displays attached to the view.
+ *   - operations: List of available operations.
+ *
+ * @see template_preprocess_views_ui_views_listing_table()
+ *
+ * @ingroup themeable
+ */
+#}
+<table{{ attributes.addClass('responsive-enabled') }}>
+  <thead>
+    <tr>
+      {% for header in headers %}
+        <th{{ header.attributes }}>{{ header.data }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+      <tr{{ row.attributes }}>
+        <td class="views-ui-view-name">
+          <h3 data-drupal-selector="views-table-filter-text-source">{{ row.data.view_name.data }}</h3>
+        </td>
+        <td class="views-ui-view-machine-name" data-drupal-selector="views-table-filter-text-source">
+          {{ row.data.machine_name.data }}
+        </td>
+        <td class="views-ui-view-description" data-drupal-selector="views-table-filter-text-source">
+          {{ row.data.description.data }}
+        </td>
+        <td class="views-ui-view-displays">
+          {{ row.data.displays.data }}
+        </td>
+        <td class="views-ui-view-operations">
+          {{ row.data.operations.data }}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

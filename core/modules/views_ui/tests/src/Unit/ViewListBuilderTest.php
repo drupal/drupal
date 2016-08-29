@@ -152,21 +152,34 @@ class ViewListBuilderTest extends UnitTestCase {
     $view_list_builder = new TestViewListBuilder($entity_type, $storage, $display_manager);
     $view_list_builder->setStringTranslation($this->getStringTranslationStub());
 
+    // Create new view with test values.
     $view = new View($values, 'view');
 
+    // Get the row object created by ViewListBuilder for this test view.
     $row = $view_list_builder->buildRow($view);
 
+    // Expected output array for view's displays.
     $expected_displays = array(
-      'Embed admin label',
-      'Page admin label',
-      'Page admin label',
-      'Page admin label',
+      '0' => array(
+        'display' => 'Embed admin label',
+        'path' => FALSE,
+      ),
+      '1' => array(
+        'display' => 'Page admin label',
+        'path' => '/<object>malformed_path</object>',
+      ),
+      '2' => array(
+        'display' => 'Page admin label',
+        'path' => '/<script>alert("placeholder_page/%")</script>',
+      ),
+      '3' => array(
+        'display' => 'Page admin label',
+        'path' => '/test_page',
+      ),
     );
-    $this->assertEquals($expected_displays, $row['data']['view_name']['data']['#displays']);
 
-    $display_paths = $row['data']['path']['data']['#items'];
-    // These values will be escaped by Twig when rendered.
-    $this->assertEquals('/test_page, /<object>malformed_path</object>, /<script>alert("placeholder_page/%")</script>', implode(', ', $display_paths));
+    // Compare the expected and generated output.
+    $this->assertEquals($expected_displays, $row['data']['displays']['data']['#displays']);
   }
 
 }

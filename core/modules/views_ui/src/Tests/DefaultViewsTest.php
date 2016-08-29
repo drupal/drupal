@@ -161,10 +161,11 @@ class DefaultViewsTest extends UITestBase {
    */
   function testSplitListing() {
     // Build a re-usable xpath query.
-    $xpath = '//div[@id="views-entity-list"]/div[@class = :status]/table//tr[@title = :title]';
+    $xpath = '//div[@id="views-entity-list"]/div[@class = :status]/table//td/text()[contains(., :title)]';
+
     $arguments = array(
       ':status' => 'views-list-section enabled',
-      ':title' => t('Machine name: test_view_status'),
+      ':title' => 'test_view_status',
     );
 
     $this->drupalGet('admin/structure/views');
