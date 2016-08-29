@@ -31,6 +31,19 @@ function update_script_test_requirements($phase) {
           'severity' => REQUIREMENT_ERROR,
         );
         break;
+      case REQUIREMENT_INFO:
+        $requirements['update_script_test_stop'] = array(
+          'title' => 'Update script test stop',
+          'value' => 'Error',
+          'description' => 'This is a requirements error provided by the update_script_test module to stop the page redirect for the info.',
+          'severity' => REQUIREMENT_ERROR,
+        );
+        $requirements['update_script_test'] = array(
+          'title' => 'Update script test',
+          'description' => 'This is a requirements info provided by the update_script_test module.',
+          'severity' => REQUIREMENT_INFO,
+        );
+        break;
     }
   }
 

@@ -2449,6 +2449,12 @@ class UpdateScriptFunctionalTest extends DrupalWebTestCase {
     $this->assertText('This is a requirements error provided by the update_script_test module.');
     $this->clickLink('try again');
     $this->assertText('This is a requirements error provided by the update_script_test module.');
+
+    // Check if the optional 'value' key displays without a notice.
+    variable_set('update_script_test_requirement_type', REQUIREMENT_INFO);
+    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->assertText('This is a requirements info provided by the update_script_test module.');
+    $this->assertNoText('Notice: Undefined index: value in theme_status_report()');
   }
 
   /**
