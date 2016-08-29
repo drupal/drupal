@@ -24,13 +24,12 @@ class EntityResourceValidationTraitTest extends UnitTestCase {
     $method = new \ReflectionMethod($trait, 'validate');
     $method->setAccessible(TRUE);
 
-    $entity = $this->prophesize(Node::class);
-
     $violations = $this->prophesize(EntityConstraintViolationList::class);
-    $violations->filterByFieldAccess()->willReturn([]);
-    $violations->count()->willReturn(0);
+    $violations->filterByFieldAccess()->shouldBeCalled()->willReturn([]);
+    $violations->count()->shouldBeCalled()->willReturn(0);
 
-    $entity->validate()->willReturn($violations->reveal());
+    $entity = $this->prophesize(Node::class);
+    $entity->validate()->shouldBeCalled()->willReturn($violations->reveal());
 
     $method->invoke($trait, $entity->reveal());
   }
