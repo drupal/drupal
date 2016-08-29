@@ -2047,7 +2047,7 @@ function hook_mail_alter(&$message) {
  *   An array of parameters supplied by the caller of
  *   MailManagerInterface->mail().
  *
- * @see \Drupal\Core\Mail\MailManagerInterface->mail()
+ * @see \Drupal\Core\Mail\MailManagerInterface::mail()
  */
 function hook_mail($key, &$message, $params) {
   $account = $params['account'];

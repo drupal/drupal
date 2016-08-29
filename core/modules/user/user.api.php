@@ -115,7 +115,7 @@ function hook_user_cancel_methods_alter(&$methods) {
  * @param $account
  *   The account object the name belongs to.
  *
- * @see \Drupal\Core\Session\AccountInterface->getDisplayName()
+ * @see \Drupal\Core\Session\AccountInterface::getDisplayName()
  */
 function hook_user_format_name_alter(&$name, $account) {
   // Display the user's uid instead of name.

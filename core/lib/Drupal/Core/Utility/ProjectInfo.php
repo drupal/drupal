@@ -172,7 +172,7 @@ class ProjectInfo {
    * @return
    *   Array of .info.yml file data we need for the update manager.
    *
-   * @see \Drupal\Core\Utility\ProjectInfo->processInfoList()
+   * @see \Drupal\Core\Utility\ProjectInfo::processInfoList()
    */
   function filterProjectInfo($info, $additional_whitelist = array()) {
     $whitelist = array(
