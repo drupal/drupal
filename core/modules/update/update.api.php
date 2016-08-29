@@ -32,7 +32,7 @@
  *   examples of how to populate the array with real values.
  *
  * @see \Drupal\Update\UpdateManager::getProjects()
- * @see \Drupal\Core\Utility\ProjectInfo->processInfoList()
+ * @see \Drupal\Core\Utility\ProjectInfo::processInfoList()
  */
 function hook_update_projects_alter(&$projects) {
   // Hide a site-specific module from the list.

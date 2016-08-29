@@ -50,7 +50,7 @@ function hook_test_group_finished() {
  *   $results The results of the test as gathered by
  *   \Drupal\simpletest\WebTestBase.
  *
- * @see \Drupal\simpletest\WebTestBase->results()
+ * @see \Drupal\simpletest\WebTestBase::results()
  */
 function hook_test_finished($results) {
 }
