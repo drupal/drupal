@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrateDestinationPluginManager;
@@ -106,12 +107,19 @@ class CckMigration extends Migration implements ContainerFactoryPluginInterface 
       }
       foreach ($source_plugin as $row) {
         $field_type = $row->getSourceProperty('type');
-        if (!isset($this->processedFieldTypes[$field_type]) && $this->cckPluginManager->hasDefinition($field_type)) {
+        try {
+          $plugin_id = $this->cckPluginManager->getPluginIdFromFieldType($field_type, [], $this);
+        }
+        catch (PluginNotFoundException $ex) {
+          continue;
+        }
+
+        if (!isset($this->processedFieldTypes[$field_type])) {
           $this->processedFieldTypes[$field_type] = TRUE;
           // Allow the cckfield plugin to alter the migration as necessary so
           // that it knows how to handle fields of this type.
           if (!isset($this->cckPluginCache[$field_type])) {
-            $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($field_type, [], $this);
+            $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($plugin_id, [], $this);
           }
           call_user_func([$this->cckPluginCache[$field_type], $this->pluginDefinition['cck_plugin_method']], $this);
         }

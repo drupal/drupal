@@ -3,6 +3,7 @@
 namespace Drupal\node\Plugin\migrate;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
@@ -98,14 +99,15 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
         if (isset($fields[$node_type])) {
           foreach ($fields[$node_type] as $field_name => $info) {
             $field_type = $info['type'];
-            if ($this->cckPluginManager->hasDefinition($field_type)) {
+            try {
+              $plugin_id = $this->cckPluginManager->getPluginIdFromFieldType($field_type, ['core' => 7], $migration);
               if (!isset($this->cckPluginCache[$field_type])) {
-                $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($field_type, ['core' => 7], $migration);
+                $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($plugin_id, ['core' => 7], $migration);
               }
               $this->cckPluginCache[$field_type]
                 ->processCckFieldValues($migration, $field_name, $info);
             }
-            else {
+            catch (PluginNotFoundException $ex) {
               $migration->setProcessOfProperty($field_name, $field_name);
             }
           }
