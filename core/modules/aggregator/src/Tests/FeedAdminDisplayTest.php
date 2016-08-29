@@ -3,7 +3,7 @@
 namespace Drupal\aggregator\Tests;
 
 /**
- * Tests the display of a feed on the feed aggregator list page.
+ * Tests the display of a feed on the Aggregator list page.
  *
  * @group aggregator
  */
