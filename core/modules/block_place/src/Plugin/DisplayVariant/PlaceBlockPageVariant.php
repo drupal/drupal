@@ -6,10 +6,10 @@ use Drupal\block\BlockRepositoryInterface;
 use Drupal\block\Plugin\DisplayVariant\BlockPageVariant;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
+use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Link;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Allows blocks to be placed directly within a region.
@@ -29,11 +29,11 @@ class PlaceBlockPageVariant extends BlockPageVariant {
   protected $themeManager;
 
   /**
-   * The request stack.
+   * The redirect destination.
    *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
+   * @var \Drupal\Core\Routing\RedirectDestinationInterface
    */
-  protected $requestStack;
+  protected $redirectDestination;
 
   /**
    * Constructs a new PlaceBlockPageVariant.
@@ -52,14 +52,14 @@ class PlaceBlockPageVariant extends BlockPageVariant {
    *   The Block entity type list cache tags.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The current request stack.
+   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
+   *   The redirect destination.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockRepositoryInterface $block_repository, EntityViewBuilderInterface $block_view_builder, array $block_list_cache_tags, ThemeManagerInterface $theme_manager, RequestStack $request_stack) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockRepositoryInterface $block_repository, EntityViewBuilderInterface $block_view_builder, array $block_list_cache_tags, ThemeManagerInterface $theme_manager, RedirectDestinationInterface $redirect_destination) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $block_repository, $block_view_builder, $block_list_cache_tags);
 
     $this->themeManager = $theme_manager;
-    $this->requestStack = $request_stack;
+    $this->redirectDestination = $redirect_destination;
   }
 
   /**
@@ -74,7 +74,7 @@ class PlaceBlockPageVariant extends BlockPageVariant {
       $container->get('entity_type.manager')->getViewBuilder('block'),
       $container->get('entity_type.manager')->getDefinition('block')->getListCacheTags(),
       $container->get('theme.manager'),
-      $container->get('request_stack')
+      $container->get('redirect.destination')
     );
   }
 
@@ -86,13 +86,13 @@ class PlaceBlockPageVariant extends BlockPageVariant {
 
     $active_theme = $this->themeManager->getActiveTheme();
     $theme_name = $active_theme->getName();
+    $destination = $this->redirectDestination->get();
     $visible_regions = $this->getVisibleRegionNames($theme_name);
 
     // Build an array of the region names in the right order.
     $build += array_fill_keys(array_keys($visible_regions), []);
 
     foreach ($visible_regions as $region => $region_name) {
-      $destination = $this->requestStack->getCurrentRequest()->query->get('destination');
       $query = [
         'region' => $region,
       ];
