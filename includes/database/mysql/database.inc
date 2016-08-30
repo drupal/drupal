@@ -240,7 +240,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
 
     // Ensure that the MySQL server supports large prefixes and utf8mb4.
     try {
-      $this->query("CREATE TABLE {drupal_utf8mb4_test} (id VARCHAR(255), PRIMARY KEY(id(255))) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ROW_FORMAT=DYNAMIC");
+      $this->query("CREATE TABLE {drupal_utf8mb4_test} (id VARCHAR(255), PRIMARY KEY(id(255))) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ROW_FORMAT=DYNAMIC ENGINE=INNODB");
     }
     catch (Exception $e) {
       return FALSE;
