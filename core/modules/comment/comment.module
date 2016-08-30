@@ -657,7 +657,7 @@ function template_preprocess_comment(&$variables) {
     $variables['permalink'] = \Drupal::l(t('Permalink'), new Url('<front>'));
   }
   else {
-    $uri = $comment->urlInfo();
+    $uri = $comment->permalink();
     $attributes = $uri->getOption('attributes') ?: array();
     $attributes += array('class' => array('permalink'), 'rel' => 'bookmark');
     $uri->setOption('attributes', $attributes);
