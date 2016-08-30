@@ -1362,7 +1362,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if ($path != '<front>') {
       // Use strip_tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that were
-      // removed by SafeMarkup::checkPlain().
+      // removed by Html::escape().
       $path = Html::decodeEntities($this->viewsTokenReplace($alter['path'], $tokens));
 
       // Tokens might contain <front>, so check for <front> again.
@@ -1562,7 +1562,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that
-      // were removed by SafeMarkup::checkPlain().
+      // were removed by Html::escape().
       $tokens["{{ raw_arguments.$arg }}"] = isset($this->view->args[$count]) ? strip_tags(Html::decodeEntities($this->view->args[$count])) : '';
       $count++;
     }

@@ -568,7 +568,7 @@ function template_preprocess_form_element_label(&$variables) {
  * Note: if the batch 'title', 'init_message', 'progress_message', or
  * 'error_message' could contain any user input, it is the responsibility of
  * the code calling batch_set() to sanitize them first with a function like
- * \Drupal\Component\Utility\SafeMarkup::checkPlain() or
+ * \Drupal\Component\Utility\Html::escape() or
  * \Drupal\Component\Utility\Xss::filter(). Furthermore, if the batch operation
  * returns any user input in the 'results' or 'message' keys of $context, it
  * must also sanitize them first.
@@ -596,8 +596,8 @@ function template_preprocess_form_element_label(&$variables) {
  *   $nodes = \Drupal::entityTypeManager()->getStorage('node')
  *     ->loadByProperties(['uid' => $uid, 'type' => $type]);
  *   $node = reset($nodes);
- *   $context['results'][] = $node->id() . ' : ' . SafeMarkup::checkPlain($node->label());
- *   $context['message'] = SafeMarkup::checkPlain($node->label());
+ *   $context['results'][] = $node->id() . ' : ' . Html::escape($node->label());
+ *   $context['message'] = Html::escape($node->label());
  * }
  *
  * // A more advanced example is a multi-step operation that loads all rows,
@@ -616,10 +616,10 @@ function template_preprocess_form_element_label(&$variables) {
  *     ->range(0, $limit)
  *     ->execute();
  *   foreach ($result as $row) {
- *     $context['results'][] = $row->id . ' : ' . SafeMarkup::checkPlain($row->title);
+ *     $context['results'][] = $row->id . ' : ' . Html::escape($row->title);
  *     $context['sandbox']['progress']++;
  *     $context['sandbox']['current_id'] = $row->id;
- *     $context['message'] = SafeMarkup::checkPlain($row->title);
+ *     $context['message'] = Html::escape($row->title);
  *   }
  *   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
  *     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
