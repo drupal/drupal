@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\migrate\Unit\process;
+namespace Drupal\Tests\migrate\Kernel\process;
 
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\KernelTests\Core\File\FileTestBase;
