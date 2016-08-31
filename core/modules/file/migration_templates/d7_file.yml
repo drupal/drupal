@@ -1,15 +1,34 @@
-# Every migration that references a file by fid should specify this migration
-# as an optional dependency.
+# Every migration that references a file by Drupal 7 fid should specify this
+# migration as an optional dependency.
 id: d7_file
 label: Files
 migration_tags:
   - Drupal 7
 source:
   plugin: d7_file
+  constants:
+    # source_base_path must be set by the tool configuring this migration. It
+    # represents the fully qualified path relative to which uris in the files
+    # table are specified, and must end with a /. See source_full_path
+    # configuration in this migration's process pipeline as an example.
+    source_base_path: ''
 process:
   fid: fid
   filename: filename
-  uri: uri
+  source_full_path:
+    -
+      plugin: concat
+      delimiter: /
+      source:
+        - constants/source_base_path
+        - filepath
+    -
+      plugin: urlencode
+  uri:
+    plugin: file_copy
+    source:
+      - '@source_full_path'
+      - uri
   filemime: filemime
   # filesize is dynamically computed when file entities are saved, so there is
   # no point in migrating it.
@@ -22,5 +41,3 @@ process:
   uid: uid
 destination:
   plugin: entity:file
-  source_path_property: filepath
-  urlencode: true
