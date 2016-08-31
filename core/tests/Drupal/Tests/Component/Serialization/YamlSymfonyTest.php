@@ -10,7 +10,6 @@ use Drupal\Component\Serialization\YamlSymfony;
  * @group Drupal
  * @group Serialization
  * @coversDefaultClass \Drupal\Component\Serialization\YamlSymfony
- * @requires extension yaml
  */
 class YamlSymfonyTest extends YamlTestBase {
 
