@@ -111,8 +111,9 @@ class MigrateUpgradeRunBatch {
     if ($destination['plugin'] === 'entity:file') {
       // Make sure we have a single trailing slash.
       $source_base_path = rtrim($config['source_base_path'], '/') . '/';
-      $destination['source_base_path'] = $source_base_path;
-      $migration->set('destination', $destination);
+      $source = $migration->getSourceConfiguration();
+      $source['constants']['source_base_path'] = $source_base_path;
+      $migration->set('source', $source);
     }
 
     if ($migration) {

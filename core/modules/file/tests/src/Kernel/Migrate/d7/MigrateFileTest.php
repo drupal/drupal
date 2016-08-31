@@ -33,17 +33,11 @@ class MigrateFileTest extends MigrateDrupal7TestBase {
 
     /** @var \Drupal\migrate\Plugin\Migration $migration */
     $migration = $this->getMigration('d7_file');
-    // Set the destination plugin's source_base_path configuration value, which
+    // Set the source plugin's source_base_path configuration value, which
     // would normally be set by the user running the migration.
-    $migration->set('destination', [
-      'plugin' => 'entity:file',
-      // Note that source_base_path must include a trailing slash because it's
-      // prepended directly to the value of the source path property.
-      'source_base_path' => $fs->realpath('public://') . '/',
-      // This is set in the migration's YAML file, but we need to repeat it
-      // here because all the destination configuration must be set at once.
-      'source_path_property' => 'filepath',
-    ]);
+    $source = $migration->getSourceConfiguration();
+    $source['constants']['source_base_path'] = $fs->realpath('public://');
+    $migration->set('source', $source);
     $this->executeMigration($migration);
   }
 

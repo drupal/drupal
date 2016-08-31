@@ -7,6 +7,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\Migration;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -137,6 +139,16 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   }
 
   /**
+   * Modify a migration's configuration before executing it.
+   *
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+   *   The migration to execute.
+   */
+  protected function prepareMigration(MigrationInterface $migration) {
+    // Default implementation for test classes not requiring modification.
+  }
+
+  /**
    * Executes a single migration.
    *
    * @param string|\Drupal\migrate\Plugin\MigrationInterface $migration
@@ -152,6 +164,8 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
     if ($this instanceof MigrateDumpAlterInterface) {
       static::migrateDumpAlter($this);
     }
+
+    $this->prepareMigration($this->migration);
     (new MigrateExecutable($this->migration, $this))->import();
   }
 
