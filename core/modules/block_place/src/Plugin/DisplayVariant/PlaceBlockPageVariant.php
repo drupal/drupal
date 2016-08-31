@@ -99,7 +99,7 @@ class PlaceBlockPageVariant extends BlockPageVariant {
       if ($destination) {
         $query['destination'] = $destination;
       }
-      $title = $this->t('Place block<span class="visually-hidden"> in the %region region</span>', ['%region' => $region_name]);
+      $title = $this->t('<span class="visually-hidden">Place block in the %region region</span>', ['%region' => $region_name]);
       $operations['block_description'] = [
         '#type' => 'inline_template',
         '#template' => '<div class="block-place-region">{{ link }}</div>',

@@ -50,7 +50,7 @@ class BlockPlaceTest extends BrowserTestBase {
       $this->assertNotEmpty($query_parts['destination']);
 
       // Get the text inside the div->a->span->em.
-      $demo_block = $this->xpath('//div[@class="block-place-region"]/a[text()="Place block"]//em[text()="' . $name . '"]');
+      $demo_block = $this->xpath('//div[@class="block-place-region"]/a/span[text()="Place block in the "]/em[text()="' . $name . '"]');
       $this->assertEquals(1, count($demo_block));
     }
   }
