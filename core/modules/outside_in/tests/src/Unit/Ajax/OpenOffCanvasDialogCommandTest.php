@@ -18,7 +18,7 @@ class OpenOffCanvasDialogCommandTest extends UnitTestCase {
     $command = new OpenOffCanvasDialogCommand('Title', '<p>Text!</p>', ['url' => 'example']);
 
     $expected = [
-      'command' => 'openOffCanvas',
+      'command' => 'openDialog',
       'selector' => '#drupal-offcanvas',
       'settings' => NULL,
       'data' => '<p>Text!</p>',
@@ -26,6 +26,10 @@ class OpenOffCanvasDialogCommandTest extends UnitTestCase {
         'url' => 'example',
         'title' => 'Title',
         'modal' => FALSE,
+        'autoResize' => FALSE,
+        'resizable' => 'w',
+        'draggable' => FALSE,
+        'drupalAutoButtons' => FALSE,
       ],
     ];
     $this->assertEquals($expected, $command->render());

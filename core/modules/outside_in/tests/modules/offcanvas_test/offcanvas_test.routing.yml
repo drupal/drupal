@@ -18,6 +18,12 @@ offcanvas_test.thing2:
   path: '/offcanvas-thing2'
   defaults:
     _controller: '\Drupal\offcanvas_test\Controller\TestController::thing2'
-    _title: 'Thing 2'
+  requirements:
+    _access: 'TRUE'
+
+offcanvas_test.dialog_links:
+  path: '/offcanvas-dialog-links'
+  defaults:
+    _controller: '\Drupal\offcanvas_test\Controller\TestController::otherDialogLinks'
   requirements:
     _access: 'TRUE'

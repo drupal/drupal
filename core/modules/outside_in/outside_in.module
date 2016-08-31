@@ -32,7 +32,8 @@ function outside_in_contextual_links_view_alter(&$element, $items) {
   if (isset($element['#links']['outside-inblock-configure'])) {
     $element['#links']['outside-inblock-configure']['attributes'] = [
       'class' => ['use-ajax'],
-      'data-dialog-type' => 'offcanvas',
+      'data-dialog-type' => 'dialog',
+      'data-dialog-renderer' => 'offcanvas',
     ];
 
     $element['#attached']['library'][] = 'outside_in/drupal.off_canvas';

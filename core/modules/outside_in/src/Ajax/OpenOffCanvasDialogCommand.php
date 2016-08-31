@@ -31,18 +31,21 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
    *   populated automatically from the current request.
    */
   public function __construct($title, $content, array $dialog_options = [], $settings = NULL) {
-    $dialog_options['modal'] = FALSE;
     parent::__construct('#drupal-offcanvas', $title, $content, $dialog_options, $settings);
+    $this->dialogOptions['modal'] = FALSE;
+    $this->dialogOptions['autoResize'] = FALSE;
+    $this->dialogOptions['resizable'] = 'w';
+    $this->dialogOptions['draggable'] = FALSE;
+    $this->dialogOptions['drupalAutoButtons'] = FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function render() {
-    $this->dialogOptions['modal'] = FALSE;
     return [
-      'command' => 'openOffCanvas',
-      'selector' => $this->selector,
+      'command' => 'openDialog',
+      'selector' => '#drupal-offcanvas',
       'settings' => $this->settings,
       'data' => $this->getRenderedContent(),
       'dialogOptions' => $this->dialogOptions,
