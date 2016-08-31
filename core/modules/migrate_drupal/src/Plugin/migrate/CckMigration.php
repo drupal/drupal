@@ -6,10 +6,11 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrateDestinationPluginManager;
-use Drupal\migrate\Plugin\MigratePluginManager;
+use Drupal\migrate\Plugin\MigratePluginManagerInterface;
 use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate\Plugin\RequirementsInterface;
+use Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -41,7 +42,7 @@ class CckMigration extends Migration implements ContainerFactoryPluginInterface 
   /**
    * The cckfield plugin manager.
    *
-   * @var \Drupal\migrate\Plugin\MigratePluginManager
+   * @var \Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface
    */
   protected $cckPluginManager;
 
@@ -54,20 +55,20 @@ class CckMigration extends Migration implements ContainerFactoryPluginInterface 
    *   The plugin ID.
    * @param mixed $plugin_definition
    *   The plugin definition.
-   * @param \Drupal\migrate\Plugin\MigratePluginManager $cck_manager
+   * @param \Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface $cck_manager
    *   The cckfield plugin manager.
    * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
    *   The migration plugin manager.
-   * @param \Drupal\migrate\Plugin\MigratePluginManager $source_plugin_manager
+   * @param \Drupal\migrate\Plugin\MigratePluginManagerInterface $source_plugin_manager
    *   The source migration plugin manager.
-   * @param \Drupal\migrate\Plugin\MigratePluginManager $process_plugin_manager
+   * @param \Drupal\migrate\Plugin\MigratePluginManagerInterface $process_plugin_manager
    *   The process migration plugin manager.
    * @param \Drupal\migrate\Plugin\MigrateDestinationPluginManager $destination_plugin_manager
    *   The destination migration plugin manager.
-   * @param \Drupal\migrate\Plugin\MigratePluginManager $idmap_plugin_manager
+   * @param \Drupal\migrate\Plugin\MigratePluginManagerInterface $idmap_plugin_manager
    *   The ID map migration plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigratePluginManager $cck_manager, MigrationPluginManagerInterface $migration_plugin_manager, MigratePluginManager $source_plugin_manager, MigratePluginManager $process_plugin_manager, MigrateDestinationPluginManager $destination_plugin_manager, MigratePluginManager $idmap_plugin_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrateCckFieldPluginManagerInterface $cck_manager, MigrationPluginManagerInterface $migration_plugin_manager, MigratePluginManagerInterface $source_plugin_manager, MigratePluginManagerInterface $process_plugin_manager, MigrateDestinationPluginManager $destination_plugin_manager, MigratePluginManagerInterface $idmap_plugin_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration_plugin_manager, $source_plugin_manager, $process_plugin_manager, $destination_plugin_manager, $idmap_plugin_manager);
     $this->cckPluginManager = $cck_manager;
   }

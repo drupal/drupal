@@ -4,11 +4,11 @@ namespace Drupal\node\Plugin\migrate;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrationDeriverTrait;
+use Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -34,7 +34,7 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
   /**
    * The CCK plugin manager.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   * @var \Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface
    */
   protected $cckPluginManager;
 
@@ -43,10 +43,10 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
    *
    * @param string $base_plugin_id
    *   The base plugin ID for the plugin ID.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $cck_manager
+   * @param \Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface $cck_manager
    *   The CCK plugin manager.
    */
-  public function __construct($base_plugin_id, PluginManagerInterface $cck_manager) {
+  public function __construct($base_plugin_id, MigrateCckFieldPluginManagerInterface $cck_manager) {
     $this->basePluginId = $base_plugin_id;
     $this->cckPluginManager = $cck_manager;
   }
