@@ -4,10 +4,10 @@
  */
 
 /* Position the offcanvas tray container outside the right of the viewport. */
-#offcanvas {
+.ui-dialog.ui-dialog-offcanvas {
   box-sizing: border-box;
   height: 100%;
-  overflow-y: auto;
+  overflow: hidden;
   z-index: 501;
 }
 
@@ -16,49 +16,28 @@
   right: 0;
 }
 
-/* Position the button that closes the offcanvas tray. */
-#offcanvas > button.offcanvasClose {
-  position: static;
-  float: right; /* LTR */
-  height: 52px;
-  width: 40px;
-  border: 0;
-  border-radius: 0;
-  background: url(../../../misc/icons/bebebe/ex.svg) center center no-repeat;
-  color: transparent;
-  cursor: pointer;
-  z-index: 501;
-}
-#offcanvas > button.offcanvasClose:focus {
-  outline: none;
-}
-[dir="rtl"] #offcanvas > button.offcanvasClose {
-  float: left;
-}
-
 /* Create a place to name the tray. */
-#offcanvas h1 {
+.ui-dialog.ui-dialog-offcanvas h1 {
   padding: 15px 25% 15px 15px; /* LTR */
   margin-top: 0;
   margin-bottom: 0;
   font-size: 120%;
 }
-[dir="rtl"] #offcanvas h1 {
+[dir="rtl"] .ui-dialog.ui-dialog-offcanvas h1 {
   text-align: right;
   padding-right: 0;
   padding-left: 25%;
 }
 
 /* Wrap the form that's inside the offcanvas tray. */
-#offcanvas > .offcanvas-content {
-  height: 10000px;
+.ui-dialog.ui-dialog-offcanvas > .ui-dialog-content {
   padding: 0 15px;
 }
-[dir="rtl"] #offcanvas .offcanvas-content {
+[dir="rtl"] .ui-dialog.ui-dialog-offcanvas .ui-dialog-content {
   text-align: right;
 }
-#offcanvas > .form-item,
-#offcanvas > .form-item .form-item {
+.ui-dialog.ui-dialog-offcanvas > .form-item,
+.ui-dialog.ui-dialog-offcanvas > .form-item .form-item {
   width: 100%;
 }
 
@@ -71,132 +50,32 @@
   float: left;
 }
 
-/* Media queries. */
-/* @todo Rework breakpoints: https://www.drupal.org/node/2784599. */
-@media (max-width: 700px) {
-  #offcanvas {
-    position: absolute;
-    display: block;
-    right: 0;
-    top: 0;
-    width: 300px;
-    margin-right: -300px;
-    padding-top: 39px;
-  }
-  /* Wrap the rest of the site so we can control its width. */
-  #main-canvas-wrapper #main-canvas {
-    display: inline-block;
-    width: 100%;
-  }
-  #main-canvas-wrapper.js-tray-open #offcanvas {
-    margin-right: 0;
-    right: 0;
-    top: 0;
-  }
-  #main-canvas-wrapper.js-tray-open #main-canvas {
-    position: static;
-    width: 100%;
-  }
-}
-@media (min-width: 700px) {
-  /* Position the offcanvas tray container outside the right of the viewport. */
-  #offcanvas {
-    position: fixed;
-    display: inline-block;
-    width: 35%;
-    -webkit-transform: translateX(100%);
-    -moz-transform: translateX(100%);
-    -o-transform: translateX(100%);
-    -ms-transform: translateX(100%);
-    transform: translateX(100%);
-  }
-  [dir="rtl"] #offcanvas {
-    text-align: right;
-    -webkit-transform: translateX(-100%);
-    -moz-transform: translateX(-100%);
-    -o-transform: translateX(-100%);
-    -ms-transform: translateX(-100%);
-    transform: translateX(-100%);
-  }
-  /* Wrap the rest of the site so we can control its width. */
-  #main-canvas-wrapper #main-canvas {
-    display: inline-block;
-    width: 100%;
-  }
-  /* Move the offcanvas tray on canvas. */
-  #main-canvas-wrapper.js-tray-open #offcanvas {
-    -webkit-transform: translateX(0);
-    -moz-transform: translateX(0);
-    -o-transform: translateX(0);
-    -ms-transform: translateX(0);
-    transform: translateX(0);
-  }
-  /* Reduce the width of the main canvas to provide space for the offcanvas tray. */
-  #main-canvas-wrapper.js-tray-open #main-canvas {
-    width: 65%;
-  }
-}
-@media (min-width: 900px) {
-  /* Position the offcanvas tray container outside the right of the viewport. */
-  #offcanvas {
-    position: fixed;
-    display: inline-block;
-    width: 30%;
-  }
-  /* Wrap the rest of the site so we can control its width. */
-  #main-canvas-wrapper #main-canvas {
-    display: inline-block;
-    width: 100%;
-  }
-  /* Reduce the width of the main canvas to provide space for the offcanvas tray. */
-  #main-canvas-wrapper.js-tray-open #main-canvas {
-    width: 70%;
-  }
-}
-@media (min-width: 1000px) {
-  /* Position the offcanvas tray container outside the right of the viewport. */
-  #offcanvas {
-    position: fixed;
-    display: inline-block;
-    width: 25%;
-  }
-  /* Wrap the rest of the site so we can control its width. */
-  #main-canvas-wrapper #main-canvas {
-    display: inline-block;
-    width: 100%;
-  }
-  /* Reduce the width of the main canvas to provide space for the offcanvas tray. */
-  #main-canvas-wrapper.js-tray-open #main-canvas {
-    width: 75%;
-  }
-}
-
 /*
  * Form layout changes, mostly specific to Bartik theme and menu.
  * @todo Remove when more general form styling is done:
  *    https://www.drupal.org/node/2784437.
  */
-#offcanvas td {
+.ui-dialog.ui-dialog-offcanvas td {
     width: auto;
 }
-#offcanvas .menu-enabled {
+.ui-dialog.ui-dialog-offcanvas .menu-enabled {
     width: auto;
 }
-#offcanvas table#menu-overview th {
+.ui-dialog.ui-dialog-offcanvas table#menu-overview th {
   display: none;
 }
-#offcanvas table#menu-overview tr td:first-child {
+.ui-dialog.ui-dialog-offcanvas table#menu-overview tr td:first-child {
   min-width: 110px;
 }
-#offcanvas details > .details-wrapper {
+.ui-dialog.ui-dialog-offcanvas details > .details-wrapper {
   padding: 5px;
   overflow: scroll;
 }
-#offcanvas .tabledrag-toggle-weight {
+.ui-dialog.ui-dialog-offcanvas .tabledrag-toggle-weight {
   font-size: 80%;
 }
-#offcanvas input:focus,
-#offcanvas summary:focus {
+.ui-dialog.ui-dialog-offcanvas input:focus,
+.ui-dialog.ui-dialog-offcanvas summary:focus {
   outline: none;
   box-shadow: 2px 2px #ddd;
 }

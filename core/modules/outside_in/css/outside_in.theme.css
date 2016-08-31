@@ -92,18 +92,18 @@ button.toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit:be
  * @todo Move Off-canvas css into core Off-canvas library:
  *   https://www.drupal.org/node/2784443.
  */
-#offcanvas {
+.ui-dialog.ui-dialog-offcanvas {
   background: #fff;
   border-left: 1px solid #ddd; /* LTR */
   box-shadow: -2px 2px 1px 1px rgba(0, 0, 0, 0.1); /* LTR */
 }
-[dir="rtl"] #offcanvas {
+[dir="rtl"] .ui-dialog.ui-dialog-offcanvas {
   border-right: 1px solid #ddd;
   box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 /* Style the tray header. */
-#offcanvas h1 {
+.ui-dialog.ui-dialog-offcanvas h1 {
   font-size: 120%;
   border-bottom: 1px solid #ddd;
 }

@@ -27,14 +27,14 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
    * Waits for Off-canvas tray to open.
    */
   protected function waitForOffCanvasToOpen() {
-    $this->waitForElement('#offcanvas');
+    $this->waitForElement('#drupal-offcanvas');
   }
 
   /**
    * Waits for Off-canvas tray to close.
    */
   protected function waitForOffCanvasToClose() {
-    $condition = "(jQuery('#offcanvas').length == 0)";
+    $condition = "(jQuery('#drupal-offcanvas').length == 0)";
     $this->assertJsCondition($condition);
   }
 
@@ -57,7 +57,9 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
    * @return \Behat\Mink\Element\NodeElement|null
    */
   protected function getTray() {
-    return $this->getSession()->getPage()->findById('offcanvas');
+    $tray = $this->getSession()->getPage()->find('css', '.ui-dialog[aria-describedby="drupal-offcanvas"]');
+    $this->assertEquals(FALSE, empty($tray), 'The tray was found.');
+    return $tray;
   }
 
 }

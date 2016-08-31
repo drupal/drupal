@@ -49,11 +49,12 @@ class TestController {
         '#url' => Url::fromRoute('offcanvas_test.thing1'),
         '#attributes' => [
           'class' => ['use-ajax'],
-          'data-dialog-type' => 'offcanvas',
+          'data-dialog-type' => 'dialog',
+          'data-dialog-renderer' => 'offcanvas',
         ],
         '#attached' => [
           'library' => [
-            'outside_in/drupal.off_canvas',
+            'outside_in/drupal.outside_in',
           ],
         ],
       ],
@@ -63,15 +64,72 @@ class TestController {
         '#url' => Url::fromRoute('offcanvas_test.thing2'),
         '#attributes' => [
           'class' => ['use-ajax'],
-          'data-dialog-type' => 'offcanvas',
+          'data-dialog-type' => 'dialog',
+          'data-dialog-renderer' => 'offcanvas',
         ],
         '#attached' => [
           'library' => [
-            'outside_in/drupal.off_canvas',
+            'outside_in/drupal.outside_in',
           ],
         ],
       ],
+      'other_dialog_links' => [
+        '#title' => 'Display more links!',
+        '#type' => 'link',
+        '#url' => Url::fromRoute('offcanvas_test.dialog_links'),
+        '#attributes' => [
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'dialog',
+          'data-dialog-renderer' => 'offcanvas',
+        ],
+        '#attached' => [
+          'library' => [
+            'outside_in/drupal.outside_in',
+          ],
+        ],
+      ],
+    ];
+  }
 
+  /**
+   * Displays dialogs links to be displayed inside the offcanvas tray.
+   *
+   * This links are used to test opening a modal and another offcanvas link from
+   * inside the offcanvas tray.
+   *
+   * @todo Update tests to check these links work in the offcanvas tray.
+   *       https://www.drupal.org/node/2790073
+   *
+   * @return array
+   *   Render array with links.
+   */
+  public function otherDialogLinks() {
+    return [
+      '#theme' => 'links',
+      '#links' => [
+        'modal_link' => [
+          'title' => 'Open modal!',
+          'url' => Url::fromRoute('offcanvas_test.thing2'),
+          'attributes' => [
+            'class' => ['use-ajax'],
+            'data-dialog-type' => 'modal',
+          ],
+        ],
+        'offcanvas_link' => [
+          'title' => 'Offcanvas link!',
+          'url' => Url::fromRoute('offcanvas_test.thing2'),
+          'attributes' => [
+            'class' => ['use-ajax'],
+            'data-dialog-type' => 'dialog',
+            'data-dialog-renderer' => 'offcanvas',
+          ],
+        ],
+      ],
+      '#attached' => [
+        'library' => [
+          'outside_in/drupal.outside_in',
+        ],
+      ],
     ];
   }
 
