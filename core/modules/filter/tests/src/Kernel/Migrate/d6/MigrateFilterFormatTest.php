@@ -3,6 +3,7 @@
 namespace Drupal\Tests\filter\Kernel\Migrate\d6;
 
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\filter\FilterFormatInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
@@ -39,14 +40,18 @@ class MigrateFilterFormatTest extends MigrateDrupal6TestBase {
     $this->assertFalse(isset($filters['filter_html_image_secure']));
 
     // Check variables migrated into filter.
-    $this->assertIdentical('<a href hreflang> <em> <strong> <cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd>', $filters['filter_html']['settings']['allowed_html']);
-    $this->assertIdentical(TRUE, $filters['filter_html']['settings']['filter_html_help']);
-    $this->assertIdentical(FALSE, $filters['filter_html']['settings']['filter_html_nofollow']);
-    $this->assertIdentical(72, $filters['filter_url']['settings']['filter_url_length']);
+    $this->assertSame('<a href hreflang> <em> <strong> <cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd>', $filters['filter_html']['settings']['allowed_html']);
+    $this->assertSame(TRUE, $filters['filter_html']['settings']['filter_html_help']);
+    $this->assertSame(FALSE, $filters['filter_html']['settings']['filter_html_nofollow']);
+    $this->assertSame(72, $filters['filter_url']['settings']['filter_url_length']);
 
-    // Check that the PHP code filter is converted to filter_null.
-    $filters = FilterFormat::load('php_code')->get('filters');
-    $this->assertTrue(isset($filters['filter_null']));
+    // Assert that the php_code format was migrated with filter_null in the
+    // php_code filter's place.
+    $filter_format = FilterFormat::load('php_code');
+    $this->assertInstanceOf(FilterFormatInterface::class, $filter_format);
+    $filters = $filter_format->get('filters');
+    $this->assertArrayHasKey('filter_null', $filters);
+    $this->assertArrayNotHasKey('php_code', $filters);
   }
 
 }

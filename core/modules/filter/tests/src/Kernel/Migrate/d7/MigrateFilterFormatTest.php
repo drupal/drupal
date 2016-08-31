@@ -42,13 +42,13 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
   protected function assertEntity($id, $label, array $enabled_filters, $weight) {
     /** @var \Drupal\filter\FilterFormatInterface $entity */
     $entity = FilterFormat::load($id);
-    $this->assertTrue($entity instanceof FilterFormatInterface);
-    $this->assertIdentical($label, $entity->label());
+    $this->assertInstanceOf(FilterFormatInterface::class, $entity);
+    $this->assertSame($label, $entity->label());
     // get('filters') will return enabled filters only, not all of them.
-    $this->assertIdentical(array_keys($enabled_filters), array_keys($entity->get('filters')));
-    $this->assertIdentical($weight, $entity->get('weight'));
+    $this->assertSame(array_keys($enabled_filters), array_keys($entity->get('filters')));
+    $this->assertSame($weight, $entity->get('weight'));
     foreach ($entity->get('filters') as $filter_id => $filter) {
-      $this->assertIdentical($filter['weight'], $enabled_filters[$filter_id]);
+      $this->assertSame($filter['weight'], $enabled_filters[$filter_id]);
     }
   }
 
@@ -68,15 +68,17 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
     // Ensure that filter-specific settings were migrated.
     /** @var \Drupal\filter\FilterFormatInterface $format */
     $format = FilterFormat::load('filtered_html');
+    $this->assertInstanceOf(FilterFormatInterface::class, $format);
     $config = $format->filters('filter_html')->getConfiguration();
-    $this->assertIdentical('<div> <span> <ul type> <li> <ol start type> <a href hreflang> <img src alt height width>', $config['settings']['allowed_html']);
+    $this->assertSame('<div> <span> <ul type> <li> <ol start type> <a href hreflang> <img src alt height width>', $config['settings']['allowed_html']);
     $config = $format->filters('filter_url')->getConfiguration();
-    $this->assertIdentical(128, $config['settings']['filter_url_length']);
+    $this->assertSame(128, $config['settings']['filter_url_length']);
 
     // The php_code format gets migrated, but the php_code filter is changed to
     // filter_null.
-    $filters = FilterFormat::load('php_code')->get('filters');
-    $this->assertTrue(isset($filters['filter_null']));
+    $format = FilterFormat::load('php_code');
+    $this->assertInstanceOf(FilterFormatInterface::class, $format);
+    $this->assertArrayHasKey('filter_null', $format->get('filters'));
   }
 
 }
