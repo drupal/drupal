@@ -15,7 +15,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *
  * @ingroup migration
  */
-class MigrateCckFieldPluginManager extends MigratePluginManager {
+class MigrateCckFieldPluginManager extends MigratePluginManager implements MigrateCckFieldPluginManagerInterface {
 
   /**
    * The default version of core to use for cck field plugins.
@@ -27,20 +27,7 @@ class MigrateCckFieldPluginManager extends MigratePluginManager {
   const DEFAULT_CORE_VERSION = 6;
 
   /**
-   * Get the plugin ID from the field type.
-   *
-   * @param string $field_type
-   *   The field type being migrated.
-   * @param array $configuration
-   *   (optioanl) An array of configuration relevant to the plugin instance.
-   * @param \Drupal\migrate\Plugin\MigrationInterface|null $migration
-   *   (optional) The current migration instance.
-   *
-   * @return string
-   *   The ID of the plugin for the field_type if available.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   *   If the plugin cannot be determined, such as if the field type is invalid.
+   * {@inheritdoc}
    */
   public function getPluginIdFromFieldType($field_type, array $configuration = [], MigrationInterface $migration = NULL) {
     $core = static::DEFAULT_CORE_VERSION;
