@@ -3,22 +3,27 @@
  * Styling for block_place module regions and buttons during block placement.
  */
 
-/* Borrows styling from Bartik's demo-block.css. */
 .block-place-region {
-  background: #ffff66;
-  border: 1px dotted #9f9e00;
-  font: 90% "Lucida Grande", "Lucida Sans Unicode", sans-serif;
-  margin: 5px;
+  outline: 1px dashed rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.7);
+  margin: 1em 0;
   padding: 5px;
   text-align: center;
   text-shadow: none;
 }
 
 .block-place-region a.button {
+  background: url(../../../misc/icons/bebebe/plus.svg) #ffffff center center / 16px 16px no-repeat;
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  font-size: 1rem;
+  padding: 0;
+  height: 26px;
+  width: 26px;
   white-space: nowrap;
-  color: #3a3a3a;
 }
 
-.region:hover {
-  outline: 1px dashed #9f9e00;
+.block-place-region:hover a.button, .block-place-region:focus a.button {
+  background-image: url(../../../misc/icons/787878/plus.svg);
+  transition: all 0.25s ease;
 }
