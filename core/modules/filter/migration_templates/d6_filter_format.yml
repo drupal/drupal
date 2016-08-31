@@ -16,11 +16,16 @@ process:
     key: '@id'
     process:
       id:
-        plugin: static_map
-        default_value: filter_null
+        # If the filter ID cannot be mapped, it will be passed through
+        # unchanged because the bypass flag is set. The filter_id plugin
+        # will flatten the input value and default it to filter_null (the
+        # fallback filter plugin ID) if the flattened input value is not
+        # a valid plugin ID.
+        plugin: filter_id
         source:
           - module
           - delta
+        bypass: true
         map:
           filter:
             - filter_html
