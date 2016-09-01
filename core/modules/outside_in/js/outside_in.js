@@ -120,7 +120,7 @@
    */
   Drupal.behaviors.toggleActiveMode = {
     attach: function () {
-      $('.contextual-toolbar-tab.toolbar-tab button').on('click', function () {
+      $('.contextual-toolbar-tab.toolbar-tab button').once('toggle-edit-mode').on('click', function () {
         setToggleActiveMode();
       });
 
