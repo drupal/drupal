@@ -633,8 +633,6 @@ class Registry implements DestructableInterface {
    * @see ::processExtension()
    */
   protected function postProcessExtension(array &$cache, ActiveTheme $theme) {
-    $grouped_functions = $this->getPrefixGroupedUserFunctions();
-
     // Gather prefixes. This will be used to limit the found functions to the
     // expected naming conventions.
     $prefixes = array_keys((array) $this->moduleHandler->getModuleList());
@@ -645,6 +643,8 @@ class Registry implements DestructableInterface {
       $prefixes[] = $theme->getEngine() . '_engine';
     }
     $prefixes[] = $theme->getName();
+
+    $grouped_functions = $this->getPrefixGroupedUserFunctions($prefixes);
 
     // Collect all variable preprocess functions in the correct order.
     $suggestion_level = [];
@@ -744,15 +744,26 @@ class Registry implements DestructableInterface {
   /**
    * Gets all user functions grouped by the word before the first underscore.
    *
+   * @param $prefixes
+   *   An array of function prefixes by which the list can be limited.
    * @return array
    *   Functions grouped by the first prefix.
    */
-  public function getPrefixGroupedUserFunctions() {
+  public function getPrefixGroupedUserFunctions($prefixes = array()) {
     $functions = get_defined_functions();
+
+    // If a list of prefixes is supplied, trim down the list to those items
+    // only as efficiently as possible.
+    if ($prefixes) {
+      $theme_functions = preg_grep('/^(' . implode(')|(', $prefixes) . ')_/', $functions['user']);
+    }
+    else {
+      $theme_functions = $functions['user'];
+    }
 
     $grouped_functions = [];
     // Splitting user defined functions into groups by the first prefix.
-    foreach ($functions['user'] as $function) {
+    foreach ($theme_functions as $function) {
       list($first_prefix,) = explode('_', $function, 2);
       $grouped_functions[$first_prefix][] = $function;
     }
