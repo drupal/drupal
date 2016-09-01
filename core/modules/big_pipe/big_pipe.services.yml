@@ -16,8 +16,7 @@ services:
     public: false
     class: \Drupal\big_pipe\Render\BigPipeResponseAttachmentsProcessor
     decorates: html_response.attachments_processor
-    decoration_inner_name: html_response.attachments_processor.original
-    arguments: ['@html_response.attachments_processor.original', '@asset.resolver', '@config.factory', '@asset.css.collection_renderer', '@asset.js.collection_renderer', '@request_stack', '@renderer', '@module_handler']
+    arguments: ['@html_response.attachments_processor.big_pipe.inner', '@asset.resolver', '@config.factory', '@asset.css.collection_renderer', '@asset.js.collection_renderer', '@request_stack', '@renderer', '@module_handler']
 
   route_subscriber.no_big_pipe:
     class: Drupal\big_pipe\EventSubscriber\NoBigPipeRouteAlterSubscriber
