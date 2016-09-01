@@ -34,8 +34,8 @@ class MigrationTest extends KernelTestBase {
     $this->assertEqual('entity:entity_view_mode', $migration->getDestinationPlugin()->getPluginId());
 
     // Test the source plugin is invalidated.
-    $migration->set('source', ['plugin' => 'd6_field']);
-    $this->assertEqual('d6_field', $migration->getSourcePlugin()->getPluginId());
+    $migration->set('source', ['plugin' => 'embedded_data', 'data_rows' => [], 'ids' => []]);
+    $this->assertEqual('embedded_data', $migration->getSourcePlugin()->getPluginId());
 
     // Test the destination plugin is invalidated.
     $migration->set('destination', ['plugin' => 'null']);
