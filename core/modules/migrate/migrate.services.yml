@@ -6,8 +6,8 @@ services:
     factory: cache_factory:get
     arguments: [migrate]
   plugin.manager.migrate.source:
-    class: Drupal\migrate\Plugin\MigratePluginManager
-    arguments: [source, '@container.namespaces', '@cache.discovery', '@module_handler', 'Drupal\migrate\Annotation\MigrateSource']
+    class: Drupal\migrate\Plugin\MigrateSourcePluginManager
+    arguments: [source, '@container.namespaces', '@cache.discovery', '@module_handler', '@class_loader']
   plugin.manager.migrate.process:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [process, '@container.namespaces', '@cache.discovery', '@module_handler', 'Drupal\migrate\Annotation\MigrateProcessPlugin']

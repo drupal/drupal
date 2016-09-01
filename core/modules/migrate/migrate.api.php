@@ -40,7 +40,8 @@ use Drupal\migrate\Row;
  * 'core/modules/action/migration_templates'. The plugin class is
  * \Drupal\migrate\Plugin\Migration, with interface
  * \Drupal\migrate\Plugin\MigrationInterface. Migration plugins are managed by
- * the \Drupal\migrate\Plugin\MigrationPluginManager class.
+ * the \Drupal\migrate\Plugin\MigrationPluginManager class. Migration plugins
+ * are only available if the providers of their source plugins are installed.
  *
  * @section sec_source Source plugins
  * Migration source plugins implement
@@ -49,7 +50,8 @@ use Drupal\migrate\Row;
  * with \Drupal\migrate\Annotation\MigrateSource annotation, and must be in
  * namespace subdirectory Plugin\migrate\source under the namespace of the
  * module that defines them. Migration source plugins are managed by the
- * \Drupal\migrate\Plugin\MigratePluginManager class.
+ * \Drupal\migrate\Plugin\MigratePluginManager class. Source plugin providers
+ * are determined by their and their parents namespaces.
  *
  * @section sec_process Process plugins
  * Migration process plugins implement

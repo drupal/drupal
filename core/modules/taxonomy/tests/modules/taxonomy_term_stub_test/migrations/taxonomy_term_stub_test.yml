@@ -27,3 +27,6 @@ destination:
 migration_dependencies:
   required:
     - vocabularies
+provider:
+  - migrate_drupal
+  - taxonomy

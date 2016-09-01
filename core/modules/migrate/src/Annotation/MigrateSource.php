@@ -24,7 +24,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @Annotation
  */
-class MigrateSource extends Plugin {
+class MigrateSource extends Plugin implements MultipleProviderAnnotationInterface {
 
   /**
    * A unique identifier for the process plugin.
@@ -65,5 +65,35 @@ class MigrateSource extends Plugin {
    * @var mixed
    */
   public $minimum_version;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProvider() {
+    if (isset($this->definition['provider'])) {
+      return is_array($this->definition['provider']) ? reset($this->definition['provider']) : $this->definition['provider'];
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProviders() {
+    if (isset($this->definition['provider'])) {
+      // Ensure that we return an array even if
+      // \Drupal\Component\Annotation\AnnotationInterface::setProvider() has
+      // been called.
+      return (array) $this->definition['provider'];
+    }
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setProviders(array $providers) {
+    $this->definition['provider'] = $providers;
+  }
 
 }

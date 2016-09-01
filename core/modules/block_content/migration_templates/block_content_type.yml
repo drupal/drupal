@@ -17,3 +17,6 @@ process:
   label: label
 destination:
   plugin: entity:block_content_type
+provider:
+  - block_content
+  - migrate_drupal
