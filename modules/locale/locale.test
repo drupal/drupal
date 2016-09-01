@@ -393,6 +393,16 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // The indicator should not be here.
     $this->assertNoRaw($language_indicator, 'String is translated.');
 
+    // Verify that a translation set which has an empty target string can be
+    // updated without any database error.
+    db_update('locales_target')
+      ->fields(array('translation' => ''))
+      ->condition('language', $langcode, '=')
+      ->condition('lid', $lid, '=')
+      ->execute();
+    $this->drupalPost('admin/config/regional/translate/edit/' . $lid, $edit, t('Save translations'));
+    $this->assertText(t('The string has been saved.'), 'The string has been saved.');
+
     // Try to edit a non-existent string and ensure we're redirected correctly.
     // Assuming we don't have 999,999 strings already.
     $random_lid = 999999;
