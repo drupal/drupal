@@ -13,7 +13,7 @@ tracker.users_recent_content:
     _title: 'My recent content'
   requirements:
     _permission: 'access content'
-    _access_tracker_own_information: 'TRUE'
+    _custom_access: '\Drupal\tracker\Controller\TrackerUserRecent::checkAccess'
     user: \d+
 
 tracker.user_tab:

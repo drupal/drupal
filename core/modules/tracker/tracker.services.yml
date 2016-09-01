@@ -1,5 +1,0 @@
-services:
-  access_check.tracker.view_own:
-    class: Drupal\tracker\Access\ViewOwnTrackerAccessCheck
-    tags:
-      - { name: access_check, applies_to: _access_tracker_own_information }
