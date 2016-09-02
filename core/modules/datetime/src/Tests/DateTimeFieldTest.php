@@ -6,125 +6,30 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Entity\DateFormat;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
-use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests Datetime field functionality.
  *
  * @group datetime
  */
-class DateTimeFieldTest extends WebTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node', 'entity_test', 'datetime', 'field_ui');
+class DateTimeFieldTest extends DateTestBase {
 
   /**
    * The default display settings to use for the formatters.
-   */
-  protected $defaultSettings;
-
-  /**
-   * An array of display options to pass to entity_get_display()
    *
    * @var array
    */
-  protected $displayOptions;
-
-  /**
-   * A field storage to use in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldStorageConfig
-   */
-  protected $fieldStorage;
-
-  /**
-   * The field used in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldConfig
-   */
-  protected $field;
-
-  /**
-   * An array of timezone extremes to test.
-   *
-   * @var string[]
-   */
-  protected static $timezones = [
-    // UTC-12, no DST.
-    'Pacific/Kwajalein',
-    // UTC-11, no DST
-    'Pacific/Midway',
-    // UTC-7, no DST.
-    'America/Phoenix',
-    // UTC.
-    'UTC',
-    // UTC+5:30, no DST.
-    'Asia/Kolkata',
-    // UTC+12, no DST
-    'Pacific/Funafuti',
-    // UTC+13, no DST.
-    'Pacific/Tongatapu',
-  ];
+  protected $defaultSettings = ['timezone_override' => ''];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
-
-    $web_user = $this->drupalCreateUser(array(
-      'access content',
-      'view test entity',
-      'administer entity_test content',
-      'administer entity_test form display',
-      'administer content types',
-      'administer node fields',
-    ));
-    $this->drupalLogin($web_user);
-
-    // Create a field with settings to validate.
-    $field_name = Unicode::strtolower($this->randomMachineName());
-    $this->fieldStorage = FieldStorageConfig::create(array(
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
-      'type' => 'datetime',
-      'settings' => array('datetime_type' => 'date'),
-    ));
-    $this->fieldStorage->save();
-    $this->field = FieldConfig::create([
-      'field_storage' => $this->fieldStorage,
-      'bundle' => 'entity_test',
-      'required' => TRUE,
-    ]);
-    $this->field->save();
-
-    entity_get_form_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'default')
-      ->setComponent($field_name, array(
-        'type' => 'datetime_default',
-      ))
-      ->save();
-
-    $this->defaultSettings = array(
-      'timezone_override' => '',
-    );
-
-    $this->displayOptions = array(
-      'type' => 'datetime_default',
-      'label' => 'hidden',
-      'settings' => array('format_type' => 'medium') + $this->defaultSettings,
-    );
-    entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
+  protected function getTestFieldType() {
+    return 'datetime';
   }
 
   /**
@@ -256,7 +161,7 @@ class DateTimeFieldTest extends WebTestBase {
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = SafeMarkup::format($this->displayOptions['settings']['past_format'], [
-        '@interval' => \Drupal::service('date.formatter')->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
+        '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
       ]);
       $this->renderTestEntity($id);
       $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', array('%expected' => $expected)));
@@ -277,7 +182,7 @@ class DateTimeFieldTest extends WebTestBase {
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = SafeMarkup::format($this->displayOptions['settings']['future_format'], [
-        '@interval' => \Drupal::service('date.formatter')->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
+        '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
       ]);
       $this->renderTestEntity($id);
       $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', array('%expected' => $expected)));
@@ -397,7 +302,7 @@ class DateTimeFieldTest extends WebTestBase {
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = SafeMarkup::format($this->displayOptions['settings']['past_format'], [
-      '@interval' => \Drupal::service('date.formatter')->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
+      '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
     ]);
     $this->renderTestEntity($id);
     $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', array('%expected' => $expected)));
@@ -418,7 +323,7 @@ class DateTimeFieldTest extends WebTestBase {
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = SafeMarkup::format($this->displayOptions['settings']['future_format'], [
-      '@interval' => \Drupal::service('date.formatter')->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
+      '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
     ]);
     $this->renderTestEntity($id);
     $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', array('%expected' => $expected)));
@@ -892,44 +797,6 @@ class DateTimeFieldTest extends WebTestBase {
     $result = $this->xpath("//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]");
     $this->assertEqual(count($result), 1, "Changing datetime setting is disabled.");
     $this->assertText('There is data for this field in the database. The field settings can no longer be changed.');
-  }
-
-  /**
-   * Renders a entity_test and sets the output in the internal browser.
-   *
-   * @param int $id
-   *   The entity_test ID to render.
-   * @param string $view_mode
-   *   (optional) The view mode to use for rendering. Defaults to 'full'.
-   * @param bool $reset
-   *   (optional) Whether to reset the entity_test controller cache. Defaults to
-   *   TRUE to simplify testing.
-   */
-  protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
-    if ($reset) {
-      \Drupal::entityManager()->getStorage('entity_test')->resetCache(array($id));
-    }
-    $entity = EntityTest::load($id);
-    $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
-    $build = $display->build($entity);
-    $output = \Drupal::service('renderer')->renderRoot($build);
-    $this->setRawContent($output);
-    $this->verbose($output);
-  }
-
-  /**
-   * Sets the site timezone to a given timezone.
-   *
-   * @param string $timezone
-   *   The timezone identifier to set.
-   */
-  protected function setSiteTimezone($timezone) {
-    // Set an explicit site timezone, and disallow per-user timezones.
-    $this->config('system.date')
-      ->set('timezone.user.configurable', 0)
-      // A timezone with an offset greater than UTC+12 is used.
-      ->set('timezone.default', $timezone)
-      ->save();
   }
 
 }
