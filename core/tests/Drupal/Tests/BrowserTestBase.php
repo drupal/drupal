@@ -1200,7 +1200,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * @see drupal_valid_test_ua()
    * @see BrowserTestBase::prepareEnvironment()
    */
-  private function prepareDatabasePrefix() {
+  protected function prepareDatabasePrefix() {
     // Ensure that the generated test site directory does not exist already,
     // which may happen with a large amount of concurrent threads and
     // long-running tests.
@@ -1216,7 +1216,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *
    * @see BrowserTestBase::prepareEnvironment()
    */
-  private function changeDatabasePrefix() {
+  protected function changeDatabasePrefix() {
     if (empty($this->databasePrefix)) {
       $this->prepareDatabasePrefix();
     }
