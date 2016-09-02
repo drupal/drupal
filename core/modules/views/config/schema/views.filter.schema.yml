@@ -123,7 +123,7 @@ views.filter.group_item.numeric:
 # Schema for the views filter value.
 
 views.filter_value.boolean:
-  type: boolean
+  type: string
 
 views.filter_value.combine:
   type: string

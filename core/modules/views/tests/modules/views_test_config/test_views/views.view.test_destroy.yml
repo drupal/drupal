@@ -126,7 +126,7 @@ display:
           entity_type: node
           entity_field: nid
         status:
-          field: status
+          field: '1'
           id: status
           table: node_field_data
           plugin_id: boolean

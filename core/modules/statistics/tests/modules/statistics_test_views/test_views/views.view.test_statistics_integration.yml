@@ -223,7 +223,7 @@ display:
           plugin_id: numeric
       filters:
         status:
-          value: true
+          value: '1'
           table: node_field_data
           field: status
           id: status

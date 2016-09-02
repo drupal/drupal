@@ -142,7 +142,7 @@ display:
           plugin_id: user_roles
       filters:
         status:
-          value: true
+          value: '1'
           table: users_field_data
           field: status
           id: status

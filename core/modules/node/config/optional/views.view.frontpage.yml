@@ -105,7 +105,7 @@ display:
           operator: '='
           relationship: none
           table: node_field_data
-          value: true
+          value: '1'
           plugin_id: boolean
           entity_type: node
           entity_field: promote
@@ -116,7 +116,7 @@ display:
           group: 1
           id: status
           table: node_field_data
-          value: true
+          value: '1'
           plugin_id: boolean
           entity_type: node
           entity_field: status

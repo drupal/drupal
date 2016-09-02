@@ -250,27 +250,28 @@ abstract class UpdatePathTestBase extends WebTestBase {
     // Ensure there are no failed updates.
     if ($this->checkFailedUpdates) {
       $this->assertNoRaw('<strong>' . t('Failed:') . '</strong>');
-    }
 
-    // The config schema can be incorrect while the update functions are being
-    // executed. But once the update has been completed, it needs to be valid
-    // again. Assert the schema of all configuration objects now.
-    $names = $this->container->get('config.storage')->listAll();
-    /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
-    $typed_config = $this->container->get('config.typed');
-    $typed_config->clearCachedDefinitions();
-    foreach ($names as $name) {
-      $config = $this->config($name);
-      $this->assertConfigSchema($typed_config, $name, $config->get());
-    }
+      // The config schema can be incorrect while the update functions are being
+      // executed. But once the update has been completed, it needs to be valid
+      // again. Assert the schema of all configuration objects now.
+      $names = $this->container->get('config.storage')->listAll();
+      /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
+      $typed_config = $this->container->get('config.typed');
+      $typed_config->clearCachedDefinitions();
+      foreach ($names as $name) {
+        $config = $this->config($name);
+        $this->assertConfigSchema($typed_config, $name, $config->get());
+      }
 
-    // Ensure that the update hooks updated all entity schema.
-    $needs_updates = \Drupal::entityDefinitionUpdateManager()->needsUpdates();
-    $this->assertFalse($needs_updates, 'After all updates ran, entity schema is up to date.');
-    if ($needs_updates) {
-      foreach (\Drupal::entityDefinitionUpdateManager()->getChangeSummary() as $entity_type_id => $summary) {
-        foreach ($summary as $message) {
-          $this->fail($message);
+      // Ensure that the update hooks updated all entity schema.
+      $needs_updates = \Drupal::entityDefinitionUpdateManager()->needsUpdates();
+      $this->assertFalse($needs_updates, 'After all updates ran, entity schema is up to date.');
+      if ($needs_updates) {
+        foreach (\Drupal::entityDefinitionUpdateManager()
+                   ->getChangeSummary() as $entity_type_id => $summary) {
+          foreach ($summary as $message) {
+            $this->fail($message);
+          }
         }
       }
     }

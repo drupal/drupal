@@ -96,7 +96,7 @@ display:
           entity_field: name
       filters:
         status:
-          value: true
+          value: '1'
           table: users_field_data
           field: status
           id: status
