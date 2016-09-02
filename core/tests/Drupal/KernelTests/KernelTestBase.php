@@ -131,7 +131,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   /**
    * @var \Drupal\Core\DependencyInjection\ContainerBuilder
    */
-  private static $initialContainerBuilder;
+  protected static $initialContainerBuilder;
 
   /**
    * Modules to enable.
@@ -319,7 +319,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   /**
    * Bootstraps a kernel for a test.
    */
-  private function bootKernel() {
+  protected function bootKernel() {
     $this->setSetting('container_yamls', []);
     // Allow for test-specific overrides.
     $settings_services_file = $this->root . '/sites/default' . '/testing.services.yml';
@@ -501,7 +501,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * @return \Drupal\Core\DependencyInjection\ContainerBuilder
    *   A clone of the precompiled, empty service container.
    */
-  private function getCompiledContainerBuilder(array $modules) {
+  protected function getCompiledContainerBuilder(array $modules) {
     if (!isset(self::$initialContainerBuilder)) {
       $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
       $kernel->setSitePath($this->siteDirectory);
@@ -567,7 +567,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * @see \Drupal\Tests\KernelTestBase::enableModules()
    * @see \Drupal\Core\Extension\ModuleHandler::add()
    */
-  private function getExtensionsForModules(array $modules) {
+  protected function getExtensionsForModules(array $modules) {
     $extensions = array();
     $discovery = new ExtensionDiscovery($this->root);
     $discovery->setProfileDirectories(array());
@@ -1031,7 +1031,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    *
    * @return array
    */
-  private static function getModulesToEnable($class) {
+  protected static function getModulesToEnable($class) {
     $modules = array();
     while ($class) {
       if (property_exists($class, 'modules')) {
