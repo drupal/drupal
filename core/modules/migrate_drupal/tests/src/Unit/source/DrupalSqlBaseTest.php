@@ -42,7 +42,6 @@ class DrupalSqlBaseTest extends MigrateTestCase {
    * @covers ::checkRequirements
    */
   public function testSourceProviderNotActive() {
-    $this->setExpectedException(RequirementsException::class, 'The module module1 is not enabled in the source site.');
     $plugin_definition['requirements_met'] = TRUE;
     $plugin_definition['source_provider'] = 'module1';
     /** @var \Drupal\Core\State\StateInterface $state */
@@ -52,7 +51,16 @@ class DrupalSqlBaseTest extends MigrateTestCase {
     $plugin = new TestDrupalSqlBase([], 'placeholder_id', $plugin_definition, $this->getMigration(), $state, $entity_manager);
     $plugin->setDatabase($this->getDatabase($this->databaseContents));
     $system_data = $plugin->getSystemData();
-    $plugin->checkRequirements();
+    $this->setExpectedException(RequirementsException::class, 'The module module1 is not enabled in the source site.');
+    try {
+      $plugin->checkRequirements();
+    }
+    catch (RequirementsException $e) {
+      // Ensure requirements are set on the exception.
+      $this->assertEquals(['source_provider' => 'module1'], $e->getRequirements());
+      // Re-throw so PHPUnit can assert the exception.
+      throw $e;
+    }
   }
 
 }
