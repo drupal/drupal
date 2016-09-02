@@ -669,7 +669,30 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function getMigrationDependencies() {
-    return ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
+    $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
+    $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
+    return $this->migration_dependencies;
+  }
+
+  /**
+   * Find migration dependencies from the migration and the iterator plugins.
+   *
+   * @param $process
+   * @return array
+   */
+  protected function findMigrationDependencies($process) {
+    $return = [];
+    foreach ($this->getProcessNormalized($process) as $process_pipeline) {
+      foreach ($process_pipeline as $plugin_configuration) {
+        if ($plugin_configuration['plugin'] == 'migration') {
+          $return = array_merge($return, (array) $plugin_configuration['migration']);
+        }
+        if ($plugin_configuration['plugin'] == 'iterator') {
+          $return = array_merge($return, $this->findMigrationDependencies($plugin_configuration['process']));
+        }
+      }
+    }
+    return $return;
   }
 
   /**
