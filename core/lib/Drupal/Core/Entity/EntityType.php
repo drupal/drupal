@@ -482,6 +482,7 @@ class EntityType implements EntityTypeInterface {
   public function setStorageClass($class) {
     $this->checkStorageClass($class);
     $this->handlers['storage'] = $class;
+    return $this;
   }
 
   /**
