@@ -17,6 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * and replaced by an underscore and multiple underscores are collapsed into
  * one.
  *
+ * @link https://www.drupal.org/node/2135323 Online handbook documentation for machine_name process plugin @endlink
+ *
  * @MigrateProcessPlugin(
  *   id = "machine_name"
  * )

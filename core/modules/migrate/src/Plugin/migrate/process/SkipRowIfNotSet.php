@@ -10,6 +10,8 @@ use Drupal\migrate\MigrateSkipRowException;
 /**
  * If the source evaluates to empty, we skip the current row.
  *
+ * @link https://www.drupal.org/node/2345935 Online handbook documentation for skip_row_if_not_set process plugin @endlink
+ *
  * @MigrateProcessPlugin(
  *   id = "skip_row_if_not_set",
  *   handle_multiples = TRUE

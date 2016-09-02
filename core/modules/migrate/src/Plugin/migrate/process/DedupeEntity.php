@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Ensures value is not duplicated against an entity field.
  *
+ * @link https://www.drupal.org/node/2135325 Online handbook documentation for dedupe_entity process plugin @endlink
+ *
  * @MigrateProcessPlugin(
  *   id = "dedupe_entity"
  * )

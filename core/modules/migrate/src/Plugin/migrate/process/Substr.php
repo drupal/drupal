@@ -11,6 +11,8 @@ use Drupal\Component\Utility\Unicode;
 /**
  * This plugin returns a substring of the current value.
  *
+ * @link https://www.drupal.org/node/2771965 Online handbook documentation for substr process plugin @endlink
+ *
  * @MigrateProcessPlugin(
  *   id = "substr"
  * )
