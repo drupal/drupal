@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- TODO set checkForUnintentionallyCoveredCode="true" once https://www.drupal.org/node/2626832 is resolved. -->
-<!-- TODO set printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter" once
- https://youtrack.jetbrains.com/issue/WI-24808 is resolved. Drupal provides a
- result printer that links to the html output results for functional tests.
- Unfortunately, this breaks the output of PHPStorm's PHPUnit runner. However, if
- using the command line you can add
- - -printer="\Drupal\Tests\Listeners\HtmlOutputPrinter" to use it (note there
- should be no spaces between the hyphens).
+<!-- PHPUnit expects functional tests to be run with either a privileged user
+ or your current system user. See core/tests/README.md and
+ https://www.drupal.org/node/2116263 for details.
 -->
 <phpunit bootstrap="tests/bootstrap.php" colors="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
          checkForUnintentionallyCoveredCode="false">
+<!-- TODO set printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter" once
+ https://youtrack.jetbrains.com/issue/WI-24808 is resolved. Drupal provides a
+ result printer that links to the html output results for functional tests.
+ Unfortunately, this breaks the output of PHPStorm's PHPUnit runner. However, if
+ using the command line you can add
+ - -printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter" to use it (note
+ there should be no spaces between the hyphens).
+-->
   <php>
     <!-- Set error reporting to E_ALL. -->
     <ini name="error_reporting" value="32767"/>
