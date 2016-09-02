@@ -166,6 +166,15 @@ class EntityTypeTest extends UnitTestCase {
   }
 
   /**
+   * Tests the setStorageClass() method.
+   */
+  public function testSetStorageClass() {
+    $controller = $this->getTestHandlerClass();
+    $entity_type = $this->setUpEntityType(array());
+    $this->assertSame($entity_type, $entity_type->setStorageClass($controller));
+  }
+
+  /**
    * Tests the getListBuilderClass() method.
    */
   public function testGetListBuilderClass() {
