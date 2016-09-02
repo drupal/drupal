@@ -172,6 +172,51 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
+   * Tests adding a block from the library page with a weight query string.
+   */
+  public function testAddBlockFromLibraryWithWeight() {
+    $default_theme = $this->config('system.theme')->get('default');
+    // Test one positive, zero, and one negative weight.
+    foreach (['7', '0', '-9'] as $weight) {
+      $options = [
+        'query' => [
+          'region' => 'sidebar_first',
+          'weight' => $weight,
+        ],
+      ];
+      $this->drupalGet(Url::fromRoute('block.admin_library', ['theme' => $default_theme], $options));
+
+      $block_name = 'system_powered_by_block';
+      $add_url = Url::fromRoute('block.admin_add', [
+        'plugin_id' => $block_name,
+        'theme' => $default_theme
+      ]);
+      $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
+      $this->assertEqual(1, count($links), 'Found one matching link.');
+      $this->assertEqual(t('Place block'), (string) $links[0], 'Found the expected link text.');
+
+      list($path, $query_string) = explode('?', $links[0]['href'], 2);
+      parse_str($query_string, $query_parts);
+      $this->assertEqual($weight, $query_parts['weight'], 'Found the expected weight query string.');
+
+      // Create a random title for the block.
+      $title = $this->randomMachineName(8);
+      $block_id = strtolower($this->randomMachineName(8));
+      $edit = [
+        'id' => $block_id,
+        'settings[label]' => $title,
+      ];
+      // Create the block using the link parsed from the library page.
+      $this->drupalPostForm($this->getAbsoluteUrl($links[0]['href']), $edit, t('Save block'));
+
+      // Ensure that the block was created with the expected weight.
+      /** @var \Drupal\block\BlockInterface $block */
+      $block = Block::load($block_id);
+      $this->assertEqual($weight, $block->getWeight(), 'Found the block with expected weight.');
+    }
+  }
+
+  /**
    * Test configuring and moving a module-define block to specific regions.
    */
   function testBlock() {

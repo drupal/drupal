@@ -180,6 +180,13 @@ class BlockForm extends EntityForm {
       );
     }
 
+    // Hidden weight setting.
+    $weight = $entity->isNew() ? $this->getRequest()->query->get('weight', 0) : $entity->getWeight();
+    $form['weight'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $weight,
+    );
+
     // Region settings.
     $entity_region = $entity->getRegion();
     $region = $entity->isNew() ? $this->getRequest()->query->get('region', $entity_region) : $entity_region;
@@ -294,6 +301,7 @@ class BlockForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
+    $form_state->setValue('weight', (int) $form_state->getValue('weight'));
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for validation.
     $this->getPluginForm($this->entity->getPlugin())->validateConfigurationForm($form['settings'], SubformState::createForSubform($form['settings'], $form, $form_state));
