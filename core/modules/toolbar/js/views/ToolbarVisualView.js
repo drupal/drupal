@@ -23,9 +23,9 @@
       };
 
       return {
-        'click .toolbar-bar .toolbar-tab': 'onTabClick',
+        'click .toolbar-bar .toolbar-tab .trigger': 'onTabClick',
         'click .toolbar-toggle-orientation button': 'onOrientationToggleClick',
-        'touchend .toolbar-bar .toolbar-tab': touchEndToClick,
+        'touchend .toolbar-bar .toolbar-tab .trigger': touchEndToClick,
         'touchend .toolbar-toggle-orientation button': touchEndToClick
       };
     },
