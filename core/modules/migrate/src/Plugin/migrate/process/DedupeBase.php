@@ -15,6 +15,8 @@ use Drupal\Component\Utility\Unicode;
  * creating filter format names, the current value is checked against the
  * existing filter format names and if it exists, a numeric postfix is added
  * and incremented until a unique value is created.
+ *
+ * @link https://www.drupal.org/node/2345929 Online handbook documentation for dedupebase process plugin @endlink
  */
 abstract class DedupeBase extends ProcessPluginBase {
 

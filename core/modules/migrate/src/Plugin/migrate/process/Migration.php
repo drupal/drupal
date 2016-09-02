@@ -16,6 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Calculates the value of a property based on a previous migration.
  *
+ * @link https://www.drupal.org/node/2149801 Online handbook documentation for migration process plugin @endlink
+ *
  * @MigrateProcessPlugin(
  *   id = "migration"
  * )

@@ -11,7 +11,10 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
- * @MigrateProcessPlugin(
+ *
+ * @link https://www.drupal.org/node/2750777 Online handbook documentation for route process plugin @endlink
+ *
+ * * @MigrateProcessPlugin(
  *   id = "route"
  * )
  */
