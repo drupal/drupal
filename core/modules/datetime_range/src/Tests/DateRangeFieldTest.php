@@ -6,138 +6,39 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Entity\DateFormat;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\datetime\Tests\DateTestBase;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
-use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests Daterange field functionality.
  *
  * @group datetime
  */
-class DateRangeFieldTest extends WebTestBase {
+class DateRangeFieldTest extends DateTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['node', 'entity_test', 'datetime', 'datetime_range', 'field_ui'];
+  public static $modules = ['datetime_range'];
 
   /**
    * The default display settings to use for the formatters.
    *
    * @var array
    */
-  protected $defaultSettings;
-
-  /**
-   * An array of display options to pass to entity_get_display()
-   *
-   * @var array
-   */
-  protected $displayOptions;
-
-  /**
-   * A field storage to use in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldStorageConfig
-   */
-  protected $fieldStorage;
-
-  /**
-   * The field used in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldConfig
-   */
-  protected $field;
-
-  /**
-   * An array of timezone extremes to test.
-   *
-   * @var string[]
-   */
-  protected static $timezones = [
-    // UTC-12, no DST.
-    'Pacific/Kwajalein',
-    // UTC-11, no DST.
-    'Pacific/Midway',
-    // UTC-7, no DST.
-    'America/Phoenix',
-    // UTC.
-    'UTC',
-    // UTC+5:30, no DST.
-    'Asia/Kolkata',
-    // UTC+12, no DST.
-    'Pacific/Funafuti',
-    // UTC+13, no DST.
-    'Pacific/Tongatapu',
-  ];
-
-  /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
+  protected $defaultSettings = ['timezone_override' => '', 'separator' => '-'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
-
-    $web_user = $this->drupalCreateUser([
-      'access content',
-      'view test entity',
-      'administer entity_test content',
-      'administer entity_test form display',
-      'administer content types',
-      'administer node fields',
-    ]);
-    $this->drupalLogin($web_user);
-
-    // Create a field with settings to validate.
-    $field_name = Unicode::strtolower($this->randomMachineName());
-    $this->fieldStorage = FieldStorageConfig::create([
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
-      'type' => 'daterange',
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATE],
-    ]);
-    $this->fieldStorage->save();
-    $this->field = FieldConfig::create([
-      'field_storage' => $this->fieldStorage,
-      'bundle' => 'entity_test',
-      'required' => TRUE,
-    ]);
-    $this->field->save();
-
-    entity_get_form_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'default')
-      ->setComponent($field_name, [
-        'type' => 'daterange_default',
-      ])
-      ->save();
-
-    $this->defaultSettings = [
-      'separator' => '-',
-      'timezone_override' => '',
-    ];
-
-    $this->displayOptions = [
-      'type' => 'daterange_default',
-      'label' => 'hidden',
-      'settings' => ['format_type' => 'medium'] + $this->defaultSettings,
-    ];
-    entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
-      ->save();
-
-    $this->dateFormatter = \Drupal::service('date.formatter');
+  protected function getTestFieldType() {
+    return 'daterange';
   }
 
   /**
@@ -1389,44 +1290,6 @@ class DateRangeFieldTest extends WebTestBase {
     $result = $this->xpath("//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]");
     $this->assertEqual(count($result), 1, "Changing datetime setting is disabled.");
     $this->assertText('There is data for this field in the database. The field settings can no longer be changed.');
-  }
-
-  /**
-   * Renders a entity_test and sets the output in the internal browser.
-   *
-   * @param int $id
-   *   The entity_test ID to render.
-   * @param string $view_mode
-   *   (optional) The view mode to use for rendering. Defaults to 'full'.
-   * @param bool $reset
-   *   (optional) Whether to reset the entity_test controller cache. Defaults to
-   *   TRUE to simplify testing.
-   */
-  protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
-    if ($reset) {
-      \Drupal::service('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
-    }
-    $entity = EntityTest::load($id);
-    $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
-    $build = $display->build($entity);
-    $output = \Drupal::service('renderer')->renderRoot($build);
-    $this->setRawContent($output);
-    $this->verbose($output);
-  }
-
-  /**
-   * Sets the site timezone to a given timezone.
-   *
-   * @param string $timezone
-   *   The timezone identifier to set.
-   */
-  protected function setSiteTimezone($timezone) {
-    // Set an explicit site timezone, and disallow per-user timezones.
-    $this->config('system.date')
-      ->set('timezone.user.configurable', 0)
-      // A timezone with an offset greater than UTC+12 is used.
-      ->set('timezone.default', $timezone)
-      ->save();
   }
 
 }
