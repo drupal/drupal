@@ -48,7 +48,7 @@ display:
           group: 1
           id: status
           table: users_field_data
-          value: true
+          value: '1'
           plugin_id: boolean
           entity_type: user
           entity_field: status

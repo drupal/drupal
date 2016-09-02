@@ -91,7 +91,7 @@ display:
           plugin_id: field
       filters:
         status:
-          value: true
+          value: '1'
           table: node_field_data
           field: status
           id: status
@@ -177,7 +177,7 @@ display:
         filter_groups: false
       filters:
         status:
-          value: true
+          value: '1'
           table: node_field_data
           field: status
           id: status
@@ -244,7 +244,7 @@ display:
         filter_groups: false
       filters:
         status:
-          value: true
+          value: '1'
           table: node_field_data
           field: status
           id: status
@@ -311,7 +311,7 @@ display:
         filter_groups: false
       filters:
         status:
-          value: true
+          value: '1'
           table: node_field_data
           field: status
           id: status

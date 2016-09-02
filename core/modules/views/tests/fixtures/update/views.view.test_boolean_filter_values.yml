@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
     - user
-id: test_content_ajax
+id: test_boolean_filter_values
 label: Content
 module: node
 description: 'Find and manage content.'
@@ -15,7 +15,6 @@ core: 8.x
 display:
   default:
     display_options:
-      use_ajax: true
       access:
         type: perm
         options:
@@ -371,7 +370,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: '1'
+          value: true
           group: 1
           exposed: true
           expose:
@@ -573,7 +572,7 @@ display:
       tags: {  }
   page_1:
     display_options:
-      path: test-content-ajax
+      path: admin/content/node
       menu:
         type: 'default tab'
         title: Content

@@ -97,7 +97,7 @@ display:
             link_to_entity: true
       filters:
         status:
-          value: true
+          value: '1'
           table: node_field_data
           field: status
           id: status
@@ -135,7 +135,7 @@ display:
       display_description: ''
       filters:
         status:
-          value: true
+          value: '1'
           table: node_field_data
           field: status
           id: status
@@ -200,7 +200,7 @@ display:
       display_description: ''
       filters:
         status:
-          value: true
+          value: '1'
           table: node_field_data
           field: status
           id: status

@@ -203,5 +203,39 @@ function views_post_update_serializer_dependencies() {
 }
 
 /**
+ * Set all boolean filter values to strings.
+ */
+function views_post_update_boolean_filter_values() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('views.view.') as $view_config_name) {
+    $view = $config_factory->getEditable($view_config_name);
+    $save = FALSE;
+    foreach ($view->get('display') as $display_name => $display) {
+      if (isset($display['display_options']['filters'])) {
+        foreach ($display['display_options']['filters'] as $filter_name => $filter) {
+          if (isset($filter['plugin_id']) && $filter['plugin_id'] === 'boolean') {
+            $new_value = FALSE;
+            // Update all boolean and integer values to strings.
+            if ($filter['value'] === TRUE || $filter['value'] === 1) {
+              $new_value = '1';
+            }
+            elseif ($filter['value'] === FALSE || $filter['value'] === 0) {
+              $new_value = '0';
+            }
+            if ($new_value !== FALSE) {
+              $view->set("display.$display_name.display_options.filters.$filter_name.value", $new_value);
+              $save = TRUE;
+            }
+          }
+        }
+      }
+    }
+    if ($save) {
+      $view->save();
+    }
+  }
+}
+
+/**
  * @} End of "addtogroup updates-8.2.x".
  */

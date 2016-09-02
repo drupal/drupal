@@ -119,7 +119,7 @@ display:
           field_api_classes: false
       filters:
         status:
-          value: true
+          value: '1'
           table: node_field_data
           field: status
           plugin_id: boolean

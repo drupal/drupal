@@ -106,7 +106,7 @@ display:
           id: status
           table: node_field_data
           field: status
-          value: true
+          value: '1'
           group: 0
           expose:
             operator: '0'

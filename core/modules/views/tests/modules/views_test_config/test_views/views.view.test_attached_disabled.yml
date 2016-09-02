@@ -110,7 +110,7 @@ display:
           hide_alter_empty: true
       filters:
         status:
-          value: true
+          value: '1'
           table: node_field_data
           field: status
           plugin_id: boolean
