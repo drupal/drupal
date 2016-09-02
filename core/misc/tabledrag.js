@@ -498,6 +498,9 @@
 
       var keyChange = false;
       var groupHeight;
+
+      /* eslint-disable no-fallthrough */
+
       switch (event.keyCode) {
         // Left arrow.
         case 37:
@@ -601,6 +604,8 @@
           break;
       }
 
+      /* eslint-enable no-fallthrough */
+
       if (self.rowObject && self.rowObject.changed === true) {
         $(item).addClass('drag');
         if (self.oldRowElement) {
@@ -624,6 +629,9 @@
     // other browsers need to return false on keypress.
     // http://www.quirksmode.org/js/keys.html
     handle.on('keypress', function (event) {
+
+      /* eslint-disable no-fallthrough */
+
       switch (event.keyCode) {
         // Left arrow.
         case 37:
@@ -635,6 +643,9 @@
         case 40:
           return false;
       }
+
+      /* eslint-enable no-fallthrough */
+
     });
   };
 

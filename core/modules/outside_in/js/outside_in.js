@@ -125,7 +125,7 @@
       });
 
       var search = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog';
-      var replace =  Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog_offcanvas';
+      var replace = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog_offcanvas';
       // Loop through all Ajax links and change the format to offcanvas when
       // needed.
       Drupal.ajax.instances
@@ -142,7 +142,7 @@
         .forEach(function (instance) {
           // @todo Move logic for data-dialog-renderer attribute into ajax.js
           //   https://www.drupal.org/node/2784443
-            instance.options.url = instance.options.url.replace(search, replace);
+          instance.options.url = instance.options.url.replace(search, replace);
         });
     }
   };
