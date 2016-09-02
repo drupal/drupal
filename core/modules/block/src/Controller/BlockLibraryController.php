@@ -119,6 +119,7 @@ class BlockLibraryController extends ControllerBase {
     $definitions = $this->blockManager->getSortedDefinitions($definitions);
 
     $region = $request->query->get('region');
+    $weight = $request->query->get('weight');
     $rows = [];
     foreach ($definitions as $plugin_id => $plugin_definition) {
       $row = [];
@@ -143,6 +144,9 @@ class BlockLibraryController extends ControllerBase {
       ];
       if ($region) {
         $links['add']['query']['region'] = $region;
+      }
+      if (isset($weight)) {
+        $links['add']['query']['weight'] = $weight;
       }
       $destination = $this->redirectDestination->get();
       if ($destination) {
