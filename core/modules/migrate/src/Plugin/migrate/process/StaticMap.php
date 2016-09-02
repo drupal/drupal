@@ -12,7 +12,7 @@ use Drupal\migrate\MigrateSkipRowException;
 /**
  * This plugin changes the current value based on a static lookup map.
  *
- * @see https://www.drupal.org/node/2143521
+ * @link https://www.drupal.org/node/2143521 Online handbook documentation for static_map process plugin @endlink
  *
  * @MigrateProcessPlugin(
  *   id = "static_map"

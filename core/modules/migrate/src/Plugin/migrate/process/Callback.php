@@ -15,6 +15,8 @@ use Drupal\migrate\Row;
  * arguments can be passed to the callback as this would make the migration YAML
  * file too complex.
  *
+ * @link https://www.drupal.org/node/2181783 Online handbook documentation for callback process plugin @endlink
+ *
  * @MigrateProcessPlugin(
  *   id = "callback"
  * )

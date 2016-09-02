@@ -9,7 +9,7 @@ use Drupal\migrate\Row;
 /**
  * This plugin iterates and processes an array.
  *
- * @see https://www.drupal.org/node/2135345
+ * @link https://www.drupal.org/node/2135345 Online handbook documentation for iterator process plugin @endlink
  *
  * @MigrateProcessPlugin(
  *   id = "iterator",

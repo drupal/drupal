@@ -10,6 +10,8 @@ use Drupal\migrate\Row;
 /**
  * This plugin explodes a delimited string into an array of values.
  *
+ * @link https://www.drupal.org/node/2674504 Online handbook documentation for explode process plugin @endlink
+ *
  * @MigrateProcessPlugin(
  *   id = "explode"
  * )
