@@ -68,11 +68,16 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
    *   An event dispatcher instance to use for configuration events.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
+   * @param \Drupal\Core\Language\LanguageDefault $default_language
+   *   The default language.
    */
-  public function __construct(StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config) {
+  public function __construct(StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config, LanguageDefault $default_language) {
     $this->baseStorage = $storage;
     $this->eventDispatcher = $event_dispatcher;
     $this->typedConfigManager = $typed_config;
+    // Prior to negiotiation the override language should be the default
+    // language.
+    $this->language = $default_language->get();
   }
 
   /**

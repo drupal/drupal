@@ -36,6 +36,10 @@ interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideIn
    *   The default language.
    *
    * @return $this
+   *
+   * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. This
+   *   method has been replaced by injecting the default language into the
+   *   constructor.
    */
   public function setLanguageFromDefault(LanguageDefault $language_default = NULL);
 
