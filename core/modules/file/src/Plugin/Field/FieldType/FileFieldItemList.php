@@ -81,11 +81,9 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
     parent::delete();
     $entity = $this->getEntity();
 
-    // If a translation is deleted only decrement the file usage by one. If the
-    // default translation is deleted remove all file usages within this entity.
-    $count = $entity->isDefaultTranslation() ? 0 : 1;
+    // Delete all file usages within this entity.
     foreach ($this->referencedEntities() as $file) {
-      \Drupal::service('file.usage')->delete($file, 'file', $entity->getEntityTypeId(), $entity->id(), $count);
+      \Drupal::service('file.usage')->delete($file, 'file', $entity->getEntityTypeId(), $entity->id(), 0);
     }
   }
 
