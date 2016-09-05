@@ -145,7 +145,6 @@ User experience and usability
 Node Access
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
 - Ken Rickard 'agentrickard' https://www.drupal.org/u/agentrickard
-- Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 
 
 Security team
@@ -268,7 +267,6 @@ System module
 - ?
 
 Taxonomy module
-- Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Benjamin Doherty 'bangpound' https://www.drupal.org/u/bangpound
 
