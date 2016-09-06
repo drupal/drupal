@@ -2,6 +2,13 @@
 
 namespace Drupal\Tests\file\Kernel;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
+
 /**
  * Tests file usage functions.
  *
@@ -201,6 +208,59 @@ class UsageTest extends FileManagedUnitTestBase {
     $this->assertTrue(file_exists($temp_new->getFileUri()), 'New temp file was correctly ignored.');
     $this->assertTrue(file_exists($perm_old->getFileUri()), 'Old permanent file was correctly ignored.');
     $this->assertTrue(file_exists($perm_new->getFileUri()), 'New permanent file was correctly ignored.');
+  }
+
+  /**
+   * Tests file usage with translated entities.
+   */
+  public function testFileUsageWithEntityTranslation() {
+    /** @var \Drupal\file\FileUsage\FileUsageInterface $file_usage */
+    $file_usage = $this->container->get('file.usage');
+
+    $this->enableModules(['node', 'language']);
+    $this->installEntitySchema('node');
+    $this->installSchema('node', ['node_access']);
+
+    // Activate English and Romanian languages.
+    ConfigurableLanguage::create(['id' => 'en'])->save();
+    ConfigurableLanguage::create(['id' => 'ro'])->save();
+
+    NodeType::create(['type' => 'page'])->save();
+    ContentLanguageSettings::loadByEntityTypeBundle('node', 'page')
+      ->setLanguageAlterable(FALSE)
+      ->setDefaultLangcode('en')
+      ->save();
+    // Create a file field attached to 'page' node-type.
+    FieldStorageConfig::create([
+      'type' => 'file',
+      'entity_type' => 'node',
+      'field_name' => 'file',
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => 'node',
+      'bundle' => 'page',
+      'field_name' => 'file',
+      'label' => 'File',
+    ])->save();
+
+    // Create a node, attach a file and add a Romanian translation.
+    $node = Node::create(['type' => 'page', 'title' => 'Page']);
+    $node
+      ->set('file', $file = $this->createFile())
+      ->addTranslation('ro', $node->getTranslation('en')->toArray())
+      ->save();
+
+    // Check that the file is used twice.
+    $usage = $file_usage->listUsage($file);
+    $this->assertEquals(2, $usage['file']['node'][$node->id()]);
+
+    // Remove the Romanian translation.
+    $node->removeTranslation('ro');
+    $node->save();
+
+    // Check that one usage has been removed and is used only once now.
+    $usage = $file_usage->listUsage($file);
+    $this->assertEquals(1, $usage['file']['node'][$node->id()]);
   }
 
 }

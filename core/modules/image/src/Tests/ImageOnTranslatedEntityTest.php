@@ -30,7 +30,9 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     parent::setUp();
 
     // Create the "Basic page" node type.
-    $this->drupalCreateContentType(array('type' => 'basicpage', 'name' => 'Basic page'));
+    // @todo Remove the disabling of new revision creation in
+    //   https://www.drupal.org/node/1239558.
+    $this->drupalCreateContentType(['type' => 'basicpage', 'name' => 'Basic page', 'new_revision' => FALSE]);
 
     // Create a image field on the "Basic page" node type.
     $this->fieldName = strtolower($this->randomMachineName());
