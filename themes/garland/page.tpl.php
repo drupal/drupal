@@ -8,7 +8,7 @@
       <div id="header">
         <div id="logo-floater">
         <?php if ($logo || $site_title): ?>
-          <?php if ($title): ?>
+          <?php if (isset($title)): ?>
             <div id="branding"><strong><a href="<?php print $front_page ?>">
             <?php if ($logo): ?>
               <img src="<?php print $logo ?>" alt="<?php print $site_name_and_slogan ?>" title="<?php print $site_name_and_slogan ?>" id="logo" />
@@ -42,7 +42,7 @@
           <a id="main-content"></a>
           <?php if ($tabs): ?><div id="tabs-wrapper" class="clearfix"><?php endif; ?>
           <?php print render($title_prefix); ?>
-          <?php if ($title): ?>
+          <?php if (isset($title)): ?>
             <h1<?php print $tabs ? ' class="with-tabs"' : '' ?>><?php print $title ?></h1>
           <?php endif; ?>
           <?php print render($title_suffix); ?>

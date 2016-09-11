@@ -5,6 +5,7 @@ Drupal 7.51, xxxx-xx-xx (development version)
   used as an admin theme.
 - Exceptions thrown in dblog_watchdog() are now caught and ignored.
 - Clarified the warning that appears when modules are missing or have moved.
+- If the page title is "0", it is now displayed.
 - Numerous small bugfixes.
 - Numerous API documentation improvements.
 

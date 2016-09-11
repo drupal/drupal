@@ -1943,6 +1943,32 @@ class NodeTitleTestCase extends DrupalWebTestCase {
     // Test node title is clickable on teaser list (/node).
     $this->drupalGet('node');
     $this->clickLink($node->title);
+
+    // Test edge cases.
+    // When node title is set to 0, the title should be '0'.
+    $node = $this->drupalCreateNode(array('title' => '0'));
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertTitle('0' . ' | Drupal', 'Page title is equal to 0.', 'Node');
+    // Test that 0 appears in the template <h1>.
+    $xpath = '//h1[@id="page-title"]';
+    $this->assertEqual(trim(current($this->xpath($xpath))),
+      '0',
+      'Node title is displayed as 0.',
+      'Node');
+
+    // When node title is empty string, the h1 doesn't show up.
+    $node = $this->drupalCreateNode(array('title' => ''));
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertTitle('Drupal', '', 'Node');
+    $xpath = '//h1[@id="page-title"]';
+    $this->assertIdentical(count($this->xpath($xpath)), 0);
+
+    // When node title is string with only spaces, the h1 doesn't show up.
+    $node = $this->drupalCreateNode(array('title' => '   '));
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertTitle('Drupal', '', 'Node');
+    $xpath = '//h1[@id="page-title"]';
+    $this->assertIdentical(count($this->xpath($xpath)), 0);
   }
 }
 
