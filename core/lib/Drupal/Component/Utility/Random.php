@@ -288,7 +288,6 @@ class Random {
     // Make a perfect circle in the image middle.
     $color = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
     $smaller_dimension = min($width, $height);
-    $smaller_dimension = ($smaller_dimension % 2) ? $smaller_dimension : $smaller_dimension;
     imageellipse($im, $width / 2, $height / 2, $smaller_dimension, $smaller_dimension, $color);
 
     $save_function = 'image' . ($extension == 'jpg' ? 'jpeg' : $extension);
