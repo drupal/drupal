@@ -245,7 +245,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     $transliterated = $this->transliteration()->transliterate($admin_label, LanguageInterface::LANGCODE_DEFAULT, '_');
     $transliterated = Unicode::strtolower($transliterated);
 
-    $transliterated = preg_replace('@[^a-z0-9_.]+@', '', $transliterated);
+    $transliterated = preg_replace('@[^a-z0-9_]+@', '', $transliterated);
 
     return $transliterated;
   }
