@@ -147,7 +147,7 @@ class BlockForm extends EntityForm {
       '#default_value' => !$entity->isNew() ? $entity->id() : $this->getUniqueMachineName($entity),
       '#machine_name' => array(
         'exists' => '\Drupal\block\Entity\Block::load',
-        'replace_pattern' => '[^a-z0-9_]+',
+        'replace_pattern' => '[^a-z0-9_.]+',
         'source' => array('settings', 'label'),
       ),
       '#required' => TRUE,
