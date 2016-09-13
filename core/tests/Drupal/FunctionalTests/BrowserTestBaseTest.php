@@ -81,6 +81,21 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSame('green', $value);
   }
 
+  /**
+   * Tests clickLink() functionality.
+   */
+  public function testClickLink() {
+    $this->drupalGet('test-page');
+    $this->clickLink('Visually identical test links');
+    $this->assertContains('user/login', $this->getSession()->getCurrentUrl());
+    $this->drupalGet('test-page');
+    $this->clickLink('Visually identical test links', 0);
+    $this->assertContains('user/login', $this->getSession()->getCurrentUrl());
+    $this->drupalGet('test-page');
+    $this->clickLink('Visually identical test links', 1);
+    $this->assertContains('user/register', $this->getSession()->getCurrentUrl());
+  }
+
   public function testError() {
     $this->setExpectedException('\Exception', 'User notice: foo');
     $this->drupalGet('test-error');

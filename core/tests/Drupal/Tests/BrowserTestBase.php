@@ -1615,10 +1615,14 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *
    * @param string|\Drupal\Component\Render\MarkupInterface $label
    *   Text between the anchor tags.
+   * @param int $index
+   *   (optional) The index number for cases where multiple links have the same
+   *   text. Defaults to 0.
    */
-  protected function clickLink($label) {
+  protected function clickLink($label, $index = 0) {
     $label = (string) $label;
-    $this->getSession()->getPage()->clickLink($label);
+    $links = $this->getSession()->getPage()->findAll('named', ['link', $label]);
+    $links[$index]->click();
   }
 
   /**
