@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
+use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Core\Path\AliasStorage;
 use Drupal\Core\Url;
@@ -541,7 +542,7 @@ function system_requirements($phase) {
     else {
       // If the temporary directory is not overridden use an appropriate
       // temporary path for the system.
-      $directories[] = file_directory_os_temp();
+      $directories[] = FileSystem::getOsTemporaryDirectory();
     }
   }
 
