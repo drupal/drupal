@@ -18,17 +18,17 @@ editor.field_untransformed_text:
     _access_quickedit_entity_field: 'TRUE'
 
 editor.image_dialog:
-  path: '/editor/dialog/image/{filter_format}'
+  path: '/editor/dialog/image/{editor}'
   defaults:
     _form: '\Drupal\editor\Form\EditorImageDialog'
     _title: 'Upload image'
   requirements:
-    _entity_access: 'filter_format.use'
+    _entity_access: 'editor.use'
 
 editor.link_dialog:
-  path: '/editor/dialog/link/{filter_format}'
+  path: '/editor/dialog/link/{editor}'
   defaults:
     _form: '\Drupal\editor\Form\EditorLinkDialog'
     _title: 'Add link'
   requirements:
-    _entity_access: 'filter_format.use'
+    _entity_access: 'editor.use'

@@ -11,6 +11,9 @@ use Drupal\editor\EditorInterface;
  * @ConfigEntityType(
  *   id = "editor",
  *   label = @Translation("Text Editor"),
+ *   handlers = {
+ *     "access" = "Drupal\editor\EditorAccessControlHandler",
+ *   },
  *   entity_keys = {
  *     "id" = "format"
  *   },
