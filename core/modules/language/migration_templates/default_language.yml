@@ -1,0 +1,25 @@
+id: default_language
+label: Default language
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - language_default
+process:
+  default_langcode:
+    -
+      plugin: callback
+      callable: get_object_vars
+      source: language_default
+    -
+      plugin: extract
+      index:
+        - language
+destination:
+  plugin: default_langcode
+  config_name: system.site
+migration_dependencies:
+  required:
+    - language
