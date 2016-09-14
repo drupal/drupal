@@ -43,4 +43,3 @@ process:
   uid: uid
 destination:
   plugin: entity:file
-  urlencode: true

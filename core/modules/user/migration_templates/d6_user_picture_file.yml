@@ -36,7 +36,6 @@ process:
       - '@destination_full_path'
 destination:
   plugin: entity:file
-  source_path_property: picture
 migration_dependencies:
   # Every migration that references a file by Drupal 6 fid should specify d6_file as an
   # optional dependency.
