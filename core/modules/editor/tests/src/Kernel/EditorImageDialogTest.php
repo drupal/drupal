@@ -17,11 +17,11 @@ use Drupal\node\Entity\NodeType;
 class EditorImageDialogTest extends EntityKernelTestBase {
 
   /**
-   * Filter format for testing.
+   * Text editor config entity for testing.
    *
-   * @var \Drupal\filter\FilterFormatInterface
+   * @var \Drupal\editor\EditorInterface
    */
-  protected $format;
+  protected $editor;
 
   /**
    * Modules to enable.
@@ -42,7 +42,7 @@ class EditorImageDialogTest extends EntityKernelTestBase {
     $this->installConfig(['node']);
 
     // Add text formats.
-    $this->format = FilterFormat::create([
+    $format = FilterFormat::create([
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,
@@ -51,7 +51,7 @@ class EditorImageDialogTest extends EntityKernelTestBase {
         'filter_caption' => ['status' => TRUE],
       ],
     ]);
-    $this->format->save();
+    $format->save();
 
     // Set up text editor.
     $editor = Editor::create([
@@ -65,6 +65,7 @@ class EditorImageDialogTest extends EntityKernelTestBase {
       ],
     ]);
     $editor->save();
+    $this->editor = $editor;
 
     // Create a node type for testing.
     $type = NodeType::create(['type' => 'page', 'name' => 'page']);
@@ -104,7 +105,7 @@ class EditorImageDialogTest extends EntityKernelTestBase {
     $form_state = (new FormState())
       ->setRequestMethod('POST')
       ->setUserInput($input)
-      ->addBuildInfo('args', [$this->format]);
+      ->addBuildInfo('args', [$this->editor]);
 
     $form_builder = $this->container->get('form_builder');
     $form_object = new EditorImageDialog(\Drupal::entityManager()->getStorage('file'));
