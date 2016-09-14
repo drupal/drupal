@@ -113,7 +113,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
       $fields = $entity_manager->getFieldDefinitions($entity_type_id, $bundle);
       if ($fields) {
         foreach ($fields as $field_name => $definition) {
-          if (!empty($storage_definitions[$field_name]) && _content_translation_is_field_translatability_configurable($entity_type, $storage_definitions[$field_name])) {
+          if ($definition->isComputed() || (!empty($storage_definitions[$field_name]) && _content_translation_is_field_translatability_configurable($entity_type, $storage_definitions[$field_name]))) {
             $form['settings'][$entity_type_id][$bundle]['fields'][$field_name] = array(
               '#label' => $definition->getLabel(),
               '#type' => 'checkbox',

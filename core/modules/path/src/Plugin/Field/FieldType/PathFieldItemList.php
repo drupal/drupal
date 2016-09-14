@@ -21,4 +21,17 @@ class PathFieldItemList extends FieldItemList {
     return AccessResult::allowedIfHasPermissions($account, ['create url aliases', 'administer url aliases'], 'OR')->cachePerPermissions();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function delete() {
+    // Delete all aliases associated with this entity in the current language.
+    $entity = $this->getEntity();
+    $conditions = [
+      'source' => '/' . $entity->toUrl()->getInternalPath(),
+      'langcode' => $entity->language()->getId(),
+    ];
+    \Drupal::service('path.alias_storage')->delete($conditions);
+  }
+
 }

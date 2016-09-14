@@ -75,15 +75,6 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function delete() {
-    // Delete all aliases associated with this entity.
-    $entity = $this->getEntity();
-    \Drupal::service('path.alias_storage')->delete(array('source' => '/' . $entity->urlInfo()->getInternalPath()));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
     $random = new Random();
     $values['alias'] = str_replace(' ', '-', strtolower($random->sentences(3)));
