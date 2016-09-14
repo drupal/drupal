@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Update functions for the path module.
+ */
+
+/**
+ * @addtogroup updates-8.2.0
+ * @{
+ */
+
+/**
+ * Change the path field to computed for node and taxonomy_term.
+ */
+function path_update_8200() {
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  foreach (['node', 'taxonomy_term'] as $entity_type_id) {
+    if ($entity_definition_update_manager->getEntityType($entity_type_id)) {
+      // Computed field definitions are not tracked by the entity definition
+      // update manager, so remove them.
+      $storage_definition = $entity_definition_update_manager->getFieldStorageDefinition('path', $entity_type_id);
+      if ($storage_definition) {
+        $entity_definition_update_manager->uninstallFieldStorageDefinition($storage_definition);
+      }
+    }
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-8.2.0".
+ */
