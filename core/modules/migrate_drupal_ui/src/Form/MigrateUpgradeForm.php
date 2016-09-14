@@ -170,6 +170,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'dblog',
       'destination_module' => 'dblog',
     ],
+    'default_language' => [
+      'source_module' => 'locale',
+      'destination_module' => 'language',
+    ],
     'd6_field' => [
       'source_module' => 'content',
       'destination_module' => 'field',
