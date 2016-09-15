@@ -455,9 +455,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $profile_storages = $this->getProfileStorages($name);
 
     // Check the dependencies of configuration provided by the module.
-    $invalid_default_config = $this->findDefaultConfigWithUnmetDependencies($storage, $enabled_extensions, $profile_storages);
+    list($invalid_default_config, $missing_dependencies) = $this->findDefaultConfigWithUnmetDependencies($storage, $enabled_extensions, $profile_storages);
     if (!empty($invalid_default_config)) {
-      throw UnmetDependenciesException::create($name, $invalid_default_config);
+      throw UnmetDependenciesException::create($name, array_unique($missing_dependencies));
     }
 
     // Install profiles can not have config clashes. Configuration that
@@ -485,14 +485,24 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   for overrides.
    *
    * @return array
-   *   List of configuration that has unmet dependencies
+   *   An array containing:
+   *     - A list of configuration that has unmet dependencies.
+   *     - An array that will be filled with the missing dependency names, keyed
+   *       by the dependents' names.
    */
   protected function findDefaultConfigWithUnmetDependencies(StorageInterface $storage, array $enabled_extensions, array $profile_storages = []) {
+    $missing_dependencies = [];
     $config_to_create = $this->getConfigToCreate($storage, StorageInterface::DEFAULT_COLLECTION, '', $profile_storages);
     $all_config = array_merge($this->configFactory->listAll(), array_keys($config_to_create));
-    return array_filter(array_keys($config_to_create), function($config_name) use ($enabled_extensions, $all_config, $config_to_create) {
-      return !$this->validateDependencies($config_name, $config_to_create[$config_name], $enabled_extensions, $all_config);
-    });
+    foreach ($config_to_create as $config_name => $config) {
+      if ($missing = $this->getMissingDependencies($config_name, $config, $enabled_extensions, $all_config)) {
+        $missing_dependencies[$config_name] = $missing;
+      }
+    }
+    return [
+      array_intersect_key($config_to_create, $missing_dependencies),
+      $missing_dependencies,
+    ];
   }
 
   /**
@@ -508,11 +518,37 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   A list of all the active configuration names.
    *
    * @return bool
-   *   TRUE if the dependencies are met, FALSE if not.
+   *   TRUE if all dependencies are present, FALSE otherwise.
    */
   protected function validateDependencies($config_name, array $data, array $enabled_extensions, array $all_config) {
-    list($provider) = explode('.', $config_name, 2);
+    if (!isset($data['dependencies'])) {
+      // Simple config or a config entity without dependencies.
+      list($provider) = explode('.', $config_name, 2);
+      return in_array($provider, $enabled_extensions, TRUE);
+    }
+
+    $missing = $this->getMissingDependencies($config_name, $data, $enabled_extensions, $all_config);
+    return empty($missing);
+  }
+
+  /**
+   * Returns an array of missing dependencies for a config object.
+   *
+   * @param string $config_name
+   *   The name of the configuration object that is being validated.
+   * @param array $data
+   *   Configuration data.
+   * @param array $enabled_extensions
+   *   A list of all the currently enabled modules and themes.
+   * @param array $all_config
+   *   A list of all the active configuration names.
+   *
+   * @return array
+   *   A list of missing config dependencies.
+   */
+  protected function getMissingDependencies($config_name, array $data, array $enabled_extensions, array $all_config) {
     if (isset($data['dependencies'])) {
+      list($provider) = explode('.', $config_name, 2);
       $all_dependencies = $data['dependencies'];
 
       // Ensure enforced dependencies are included.
@@ -541,18 +577,12 @@ class ConfigInstaller implements ConfigInstallerInterface {
             break;
         }
         if (!empty($list_to_check)) {
-          $missing = array_diff($dependencies, $list_to_check);
-          if (!empty($missing)) {
-            return FALSE;
-          }
+          return array_diff($dependencies, $list_to_check);
         }
       }
     }
-    else {
-      // Simple config or a config entity without dependencies.
-      return in_array($provider, $enabled_extensions, TRUE);
-    }
-    return TRUE;
+
+    return [];
   }
 
   /**
