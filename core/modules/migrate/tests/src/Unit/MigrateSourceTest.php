@@ -10,6 +10,8 @@ namespace Drupal\Tests\migrate\Unit;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
@@ -75,7 +77,21 @@ class MigrateSourceTest extends MigrateTestCase {
    * @return \Drupal\migrate\Plugin\MigrateSourceInterface
    *   A mocked source plugin.
    */
-  protected function getSource($configuration = [], $migrate_config = [], $status = MigrateIdMapInterface::STATUS_NEEDS_UPDATE) {
+  protected function getSource($configuration = [], $migrate_config = [], $status = MigrateIdMapInterface::STATUS_NEEDS_UPDATE, $high_water_value = NULL) {
+    $container = new ContainerBuilder();
+    \Drupal::setContainer($container);
+
+    $key_value = $this->getMock(KeyValueStoreInterface::class);
+
+    $key_value_factory = $this->getMock(KeyValueFactoryInterface::class);
+    $key_value_factory
+      ->method('get')
+      ->with('migrate:high_water')
+      ->willReturn($key_value);
+    $container->set('keyvalue', $key_value_factory);
+
+    $container->set('cache.migrate', $this->getMock(CacheBackendInterface::class));
+
     $this->migrationConfiguration = $this->defaultMigrationConfiguration + $migrate_config;
     $this->migration = parent::getMigration();
     $this->executable = $this->getMigrateExecutable($this->migration);
@@ -90,47 +106,45 @@ class MigrateSourceTest extends MigrateTestCase {
       ->willReturn($id_map_array);
 
     $constructor_args = [$configuration, 'd6_action', [], $this->migration];
-    $methods = ['getModuleHandler', 'fields', 'getIds', '__toString', 'getIterator', 'prepareRow', 'initializeIterator', 'calculateDependencies'];
-    $source_plugin = $this->getMock('\Drupal\migrate\Plugin\migrate\source\SourcePluginBase', $methods, $constructor_args);
+    $methods = ['getModuleHandler', 'fields', 'getIds', '__toString', 'prepareRow', 'initializeIterator'];
+    $source_plugin = $this->getMock(SourcePluginBase::class, $methods, $constructor_args);
 
     $source_plugin
-      ->expects($this->any())
       ->method('fields')
       ->willReturn([]);
     $source_plugin
-      ->expects($this->any())
       ->method('getIds')
       ->willReturn([]);
     $source_plugin
-      ->expects($this->any())
       ->method('__toString')
       ->willReturn('');
     $source_plugin
-      ->expects($this->any())
       ->method('prepareRow')
       ->willReturn(empty($migrate_config['prepare_row_false']));
+
+    $rows = [$this->row];
+    if (isset($configuration['high_water_property']) && isset($high_water_value)) {
+      $property = $configuration['high_water_property']['name'];
+      $rows = array_filter($rows, function (array $row) use ($property, $high_water_value) {
+        return $row[$property] >= $high_water_value;
+      });
+    }
+    $iterator = new \ArrayIterator($rows);
+
     $source_plugin
-      ->expects($this->any())
       ->method('initializeIterator')
-      ->willReturn([]);
-    $iterator = new \ArrayIterator([$this->row]);
-    $source_plugin
-      ->expects($this->any())
-      ->method('getIterator')
       ->willReturn($iterator);
 
-    $module_handler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
+    $module_handler = $this->getMock(ModuleHandlerInterface::class);
     $source_plugin
-      ->expects($this->any())
       ->method('getModuleHandler')
       ->willReturn($module_handler);
 
     $this->migration
-      ->expects($this->any())
       ->method('getSourcePlugin')
       ->willReturn($source_plugin);
 
-    return $this->migration->getSourcePlugin();
+    return $source_plugin;
   }
 
   /**
@@ -138,9 +152,8 @@ class MigrateSourceTest extends MigrateTestCase {
    * @expectedException \Drupal\migrate\MigrateException
    */
   public function testHighwaterTrackChangesIncompatible() {
-    $source_config = ['track_changes' => TRUE];
-    $migration_config = ['highWaterProperty' => ['name' => 'something']];
-    $this->getSource($source_config, $migration_config);
+    $source_config = ['track_changes' => TRUE, 'high_water_property' => ['name' => 'something']];
+    $this->getSource($source_config);
   }
 
   /**
@@ -219,14 +232,12 @@ class MigrateSourceTest extends MigrateTestCase {
    * Test that an outdated highwater mark does not cause a row to be imported.
    */
   public function testOutdatedHighwater() {
-
-    $source = $this->getSource([], [], MigrateIdMapInterface::STATUS_IMPORTED);
-
-    // Set the originalHighwater to something higher than our timestamp.
-    $this->migration
-      ->expects($this->any())
-      ->method('getHighwater')
-      ->willReturn($this->row['timestamp'] + 1);
+    $configuration = [
+      'high_water_property' => [
+        'name' => 'timestamp',
+      ],
+    ];
+    $source = $this->getSource($configuration, [], MigrateIdMapInterface::STATUS_IMPORTED, $this->row['timestamp'] + 1);
 
     // The current highwater mark is now higher than the row timestamp so no row
     // is expected.
@@ -240,13 +251,17 @@ class MigrateSourceTest extends MigrateTestCase {
    * @throws \Exception
    */
   public function testNewHighwater() {
-
+    $configuration = [
+      'high_water_property' => [
+        'name' => 'timestamp',
+      ],
+    ];
     // Set a highwater property field for source. Now we should have a row
     // because the row timestamp is greater than the current highwater mark.
-    $source = $this->getSource([], ['highWaterProperty' => ['name' => 'timestamp']], MigrateIdMapInterface::STATUS_IMPORTED);
+    $source = $this->getSource($configuration, [], MigrateIdMapInterface::STATUS_IMPORTED, $this->row['timestamp'] - 1);
 
     $source->rewind();
-    $this->assertTrue(is_a($source->current(), 'Drupal\migrate\Row'), 'Incoming row timestamp is greater than current highwater mark so we have a row.');
+    $this->assertInstanceOf(Row::class, $source->current(), 'Incoming row timestamp is greater than current highwater mark so we have a row.');
   }
 
   /**

@@ -80,7 +80,7 @@ abstract class MigrateTestCase extends UnitTestCase {
 
     $migration->method('getHighWaterProperty')
       ->willReturnCallback(function () use ($configuration) {
-        return isset($configuration['highWaterProperty']) ? $configuration['highWaterProperty'] : '';
+        return isset($configuration['high_water_property']) ? $configuration['high_water_property'] : '';
       });
 
     $migration->method('set')
