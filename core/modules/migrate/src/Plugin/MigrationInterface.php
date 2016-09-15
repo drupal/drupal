@@ -153,26 +153,6 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function getIdMap();
 
   /**
-   * The current value of the high water mark.
-   *
-   * The high water mark defines a timestamp stating the time the import was last
-   * run. If the mark is set, only content with a higher timestamp will be
-   * imported.
-   *
-   * @return int
-   *   A Unix timestamp representing the high water mark.
-   */
-  public function getHighWater();
-
-  /**
-   * Save the new high water mark.
-   *
-   * @param int $high_water
-   *   The high water timestamp.
-   */
-  public function saveHighWater($high_water);
-
-  /**
    * Check if all source rows from this migration have been processed.
    *
    * @return bool
@@ -342,18 +322,6 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *   The source configuration.
    */
   public function getSourceConfiguration();
-
-  /**
-   * Get information on the property used as the high watermark.
-   *
-   * Array of 'name' & (optional) db 'alias' properties used for high watermark.
-   *
-   * @see Drupal\migrate\Plugin\migrate\source\SqlBase::initializeIterator()
-   *
-   * @return array
-   *   The property used as the high watermark.
-   */
-  public function getHighWaterProperty();
 
   /**
    * If true, track time of last import.

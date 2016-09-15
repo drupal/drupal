@@ -15,7 +15,7 @@ class CommentSourceWithHighWaterTest extends CommentTestBase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->migrationConfiguration['highWaterProperty']['field'] = 'timestamp';
+    $this->migrationConfiguration['source']['high_water_property']['name'] = 'timestamp';
     array_shift($this->expectedResults);
     parent::setUp();
   }
