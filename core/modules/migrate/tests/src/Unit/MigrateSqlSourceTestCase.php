@@ -3,10 +3,6 @@
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 
 /**
  * Base class for Migrate module source unit tests.
@@ -48,9 +44,9 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
    * Once the migration is run, we save a mark of the migrated sources, so the
    * migration can run again and update only new sources or changed sources.
    *
-   * @var mixed
+   * @var string
    */
-  const ORIGINAL_HIGH_WATER = NULL;
+  const ORIGINAL_HIGH_WATER = '';
 
   /**
    * Expected results after the source parsing.
@@ -80,27 +76,6 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
     $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $state = $this->getMock('Drupal\Core\State\StateInterface');
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-
-    // Mock a key-value store to return high-water values.
-    $key_value = $this->getMock(KeyValueStoreInterface::class);
-
-    // SourcePluginBase does not yet support full dependency injection so we
-    // need to make sure that \Drupal::keyValue() works as expected by mocking
-    // the keyvalue service.
-    $key_value_factory = $this->getMock(KeyValueFactoryInterface::class);
-    $key_value_factory
-      ->method('get')
-      ->with('migrate:high_water')
-      ->willReturn($key_value);
-
-    try {
-      $container = \Drupal::getContainer();
-    }
-    catch (ContainerNotInitializedException $e) {
-      $container = new ContainerBuilder();
-    }
-    $container->set('keyvalue', $key_value_factory);
-    \Drupal::setContainer($container);
 
     $migration = $this->getMigration();
     $migration->expects($this->any())
