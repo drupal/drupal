@@ -1591,10 +1591,13 @@ services:
     tags:
       - { name: mime_type_guesser }
     lazy: true
+  # Currently needs to be public as it is called by
+  # \Drupal\Core\Render\Element\StatusMessages.
+  # @todo Consider making this service private again after
+  #   https://www.drupal.org/node/2367555 lands.
   render_placeholder_generator:
     class: Drupal\Core\Render\PlaceholderGenerator
     arguments: ['%renderer.config%']
-    public: false
   render_cache:
     class: Drupal\Core\Render\PlaceholderingRenderCache
     arguments: ['@request_stack', '@cache_factory', '@cache_contexts_manager', '@render_placeholder_generator']

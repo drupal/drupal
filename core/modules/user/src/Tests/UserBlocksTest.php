@@ -87,6 +87,17 @@ class UserBlocksTest extends WebTestBase {
     $this->drupalPostForm('http://example.com/', $edit, t('Log in'), array('external' => FALSE));
     // Check that we remain on the site after login.
     $this->assertUrl($user->url('canonical', ['absolute' => TRUE]), [], 'Redirected to user profile page after login from the frontpage');
+
+    // Verify that form validation errors are displayed immediately for forms
+    // in blocks and not on subsequent page requests.
+    $this->drupalLogout();
+    $edit = array();
+    $edit['name'] = 'foo';
+    $edit['pass'] = 'invalid password';
+    $this->drupalPostForm('filter/tips', $edit, t('Log in'));
+    $this->assertText(t('Unrecognized username or password. Forgot your password?'));
+    $this->drupalGet('filter/tips');
+    $this->assertNoText(t('Unrecognized username or password. Forgot your password?'));
   }
 
   /**
