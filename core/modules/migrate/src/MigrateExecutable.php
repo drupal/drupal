@@ -262,6 +262,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $this->handleException($e);
         }
       }
+      if ($high_water_property = $this->migration->getHighWaterProperty()) {
+        $this->migration->saveHighWater($row->getSourceProperty($high_water_property['name']));
+      }
 
       // Reset row properties.
       unset($sourceValues, $destinationValues);
@@ -350,6 +353,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $this->migration->clearInterruptionResult();
         break;
       }
+    }
+    // If rollback completed successfully, reset the high water mark.
+    if ($return == MigrationInterface::RESULT_COMPLETED) {
+      $this->migration->saveHighWater(NULL);
     }
 
     // Notify modules that rollback attempt was complete.

@@ -3,8 +3,6 @@
 namespace Drupal\migrate\Plugin\migrate\source;
 
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\migrate\Event\MigrateRollbackEvent;
-use Drupal\migrate\Event\RollbackAwareInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
@@ -22,7 +20,7 @@ use Drupal\migrate\Row;
  *
  * @ingroup migration
  */
-abstract class SourcePluginBase extends PluginBase implements MigrateSourceInterface, RollbackAwareInterface {
+abstract class SourcePluginBase extends PluginBase implements MigrateSourceInterface {
 
   /**
    * The module handler service.
@@ -39,6 +37,15 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected $migration;
 
   /**
+   * The name and type of the highwater property in the source.
+   *
+   * @var array
+   *
+   * @see $originalHighwater
+   */
+  protected $highWaterProperty;
+
+  /**
    * The current row from the query.
    *
    * @var \Drupal\Migrate\Row
@@ -53,26 +60,9 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected $currentSourceIds;
 
   /**
-   * Information on the property used as the high-water mark.
-   *
-   * Array of 'name' and (optional) db 'alias' properties used for high-water
-   * mark.
-   *
-   * @var array
-   */
-  protected $highWaterProperty = [];
-
-  /**
-   * The key-value storage for the high-water value.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   */
-  protected $highWaterStorage;
-
-  /**
    * The high water mark at the beginning of the import operation.
    *
-   * If the source has a property for tracking changes (like Drupal has
+   * If the source has a property for tracking changes (like Drupal ha
    * node.changed) then this is the highest value of those imported so far.
    *
    * @var int
@@ -156,11 +146,10 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
     $this->cacheKey = !empty($configuration['cache_key']) ? $configuration['cache_key'] : NULL;
     $this->trackChanges = !empty($configuration['track_changes']) ? $configuration['track_changes'] : FALSE;
     $this->idMap = $this->migration->getIdMap();
-    $this->highWaterProperty = !empty($configuration['high_water_property']) ? $configuration['high_water_property'] : FALSE;
 
     // Pull out the current highwater mark if we have a highwater property.
-    if ($this->highWaterProperty) {
-      $this->originalHighWater = $this->getHighWater();
+    if ($this->highWaterProperty = $this->migration->getHighWaterProperty()) {
+      $this->originalHighWater = $this->migration->getHighWater();
     }
 
     // Don't allow the use of both highwater and track changes together.
@@ -335,10 +324,6 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       if (!$row->getIdMap() || $row->needsUpdate() || $this->aboveHighwater($row) || $this->rowChanged($row)) {
         $this->currentRow = $row->freezeSource();
       }
-
-      if ($this->getHighWaterProperty()) {
-        $this->saveHighWater($row->getSourceProperty($this->highWaterProperty['name']));
-      }
     }
   }
 
@@ -352,7 +337,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    *   TRUE if the highwater value in the row is greater than our current value.
    */
   protected function aboveHighwater(Row $row) {
-    return $this->getHighWaterProperty() && $row->getSourceProperty($this->highWaterProperty['name']) > $this->originalHighWater;
+    return $this->highWaterProperty && $row->getSourceProperty($this->highWaterProperty['name']) > $this->originalHighWater;
   }
 
   /**
@@ -430,92 +415,6 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       $this->cache = \Drupal::cache('migrate');
     }
     return $this->cache;
-  }
-
-  /**
-   * Get the high water storage object.
-   *
-   * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   *   The storage object.
-   */
-  protected function getHighWaterStorage() {
-    if (!isset($this->highWaterStorage)) {
-      $this->highWaterStorage = \Drupal::keyValue('migrate:high_water');
-    }
-    return $this->highWaterStorage;
-  }
-
-  /**
-   * The current value of the high water mark.
-   *
-   * The high water mark defines a timestamp stating the time the import was last
-   * run. If the mark is set, only content with a higher timestamp will be
-   * imported.
-   *
-   * @return int|null
-   *   A Unix timestamp representing the high water mark, or NULL if no high
-   *   water mark has been stored.
-   */
-  protected function getHighWater() {
-    return $this->getHighWaterStorage()->get($this->migration->id());
-  }
-
-  /**
-   * Save the new high water mark.
-   *
-   * @param int $high_water
-   *   The high water timestamp.
-   */
-  protected function saveHighWater($high_water) {
-    $this->getHighWaterStorage()->set($this->migration->id(), $high_water);
-  }
-
-  /**
-   * Get information on the property used as the high watermark.
-   *
-   * Array of 'name' & (optional) db 'alias' properties used for high watermark.
-   *
-   * @see \Drupal\migrate\Plugin\migrate\source\SqlBase::initializeIterator()
-   *
-   * @return array
-   *   The property used as the high watermark.
-   */
-  protected function getHighWaterProperty() {
-    return $this->highWaterProperty;
-  }
-
-  /**
-   * Get the name of the field used as the high watermark.
-   *
-   * The name of the field qualified with an alias if available.
-   *
-   * @see \Drupal\migrate\Plugin\migrate\source\SqlBase::initializeIterator()
-   *
-   * @return string|null
-   *   The name of the field for the high water mark, or NULL if not set.
-   */
-  protected function getHighWaterField() {
-    if (!empty($this->highWaterProperty['name'])) {
-      return !empty($this->highWaterProperty['alias']) ?
-        $this->highWaterProperty['alias'] . '.' . $this->highWaterProperty['name'] :
-        $this->highWaterProperty['name'];
-    }
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preRollback(MigrateRollbackEvent $event) {
-    // Nothing to do in this implementation.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postRollback(MigrateRollbackEvent $event) {
-    // Reset the high-water mark.
-    $this->saveHighWater(NULL);
   }
 
 }
