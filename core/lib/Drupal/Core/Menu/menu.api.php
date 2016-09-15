@@ -170,11 +170,11 @@
  * - Pass the menu tree to \Drupal\Core\Menu\MenuLinkTree::transform() to apply
  *   menu link tree manipulators that transform the tree. You will almost always
  *   want to apply access checking. The manipulators that you will typically
- *   need can be found in \Drupal\Core\Menu\DefaultMenuTreeManipulators.
+ *   need can be found in \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators.
  * - Potentially write a custom menu tree manipulator, see
- *   \Drupal\Core\Menu\DefaultMenuTreeManipulators for examples. This is only
- *   necessary if you want to do things like adding extra metadata to rendered
- *   links to display icons next to them.
+ *   \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators for examples. This is
+ *   only necessary if you want to do things like adding extra metadata to
+ *   rendered links to display icons next to them.
  * - Pass the menu tree to \Drupal\Core\Menu\MenuLinkTree::build(), this will
  *   build a renderable array.
  *
