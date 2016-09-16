@@ -7,32 +7,10 @@
 
   'use strict';
 
-  $('.outside-in-editable')
-    // Bind an event listener to the .outside-in-editable div
-    // This listen for click events and stops default actions of those elements.
-    .on('click', '.js-outside-in-edit-mode', function (e) {
-      if (localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false') {
-        e.preventDefault();
-      }
-    })
-    // Bind an event listener to the .outside-in-editable div
-    // When a click occurs try and find the outside-in edit link
-    // and click it.
-    .not('div.contextual a, div.contextual button')
-    .on('click', function (e) {
-      if ($(e.target.offsetParent).hasClass('contextual')) {
-        return;
-      }
-      if (!localStorage.getItem('Drupal.contextualToolbar.isViewing')) {
-        return;
-      }
-      var editLink = $(e.target).find('a[data-dialog-renderer="offcanvas"]')[0];
-      if (!editLink) {
-        var closest = $(e.target).closest('.outside-in-editable');
-        editLink = closest.find('li a[data-dialog-renderer="offcanvas"]')[0];
-      }
-      editLink.click();
-    });
+  var blockConfigureSelector = '[data-dialog-renderer="offcanvas"]';
+  var toggleEditSelector = '[data-drupal-outsidein="toggle"]';
+  var itemsToToggleSelector = '#main-canvas, #toolbar-bar, [data-drupal-outsidein="editable"] a, [data-drupal-outsidein="editable"] button';
+  var contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
 
   /**
    * Reacts to contextual links being added.
@@ -53,45 +31,96 @@
     // Bind a listener to all 'Quick edit' links for blocks
     // Click "Edit" button in toolbar to force Contextual Edit which starts
     // Outside-In edit mode also.
-    data.$el.find('.outside-inblock-configure a').on('click', function () {
-      if (!isActiveMode()) {
-        $('div.contextual-toolbar-tab.toolbar-tab button').click();
-      }
-    });
+    data.$el.find(blockConfigureSelector)
+      .on('click.outsidein', function () {
+        if (!isInEditMode()) {
+          $(toggleEditSelector).trigger('click.outsidein');
+        }
+      });
   });
 
   /**
    * Gets all items that should be toggled with class during edit mode.
    *
-   * @return {*}
+   * @return {jQuery}
    *   Items that should be toggled.
    */
-  var getItemsToToggle = function () {
-    return $('#main-canvas, #toolbar-bar, .outside-in-editable a, .outside-in-editable button')
-      .not('div.contextual a, div.contextual button');
-  };
+  function getItemsToToggle() {
+    return $(itemsToToggleSelector).not(contextualItemsSelector);
+  }
 
-  var isActiveMode = function () {
+  /**
+   * Helper to check the state of the outside-in mode.
+   *
+   * @todo don't use a class for this.
+   *
+   * @return {bool}
+   *  State of the outside-in edit mode.
+   */
+  function isInEditMode() {
     return $('#toolbar-bar').hasClass('js-outside-in-edit-mode');
-  };
+  }
 
-  var setToggleActiveMode = function setToggleActiveMode(forceActive) {
-    forceActive = forceActive || false;
-    if (forceActive || !isActiveMode()) {
-      $('#toolbar-bar .contextual-toolbar-tab button').text(Drupal.t('Editing'));
+  function toggleEditMode() {
+    setEditModeState(!isInEditMode());
+  }
+
+  function preventClick(event) {
+    event.preventDefault();
+  }
+
+  /**
+   *  Helper to switch edit mode state.
+   *
+   * @param {bool} editMode
+   *  True enable edit mode, false disable edit mode.
+   */
+  function setEditModeState(editMode) {
+    editMode = !!editMode;
+    var $editButton = $(toggleEditSelector);
+    var $editables;
+    // Turn on edit mode.
+    if (editMode) {
+      $editButton.text(Drupal.t('Editing'));
       // Close the Manage tray if open when entering edit mode.
       if ($('#toolbar-item-administration-tray').hasClass('is-active')) {
-        $('#toolbar-item-administration').click();
+        $('#toolbar-item-administration').trigger('click');
       }
-      getItemsToToggle().addClass('js-outside-in-edit-mode');
-      $('.edit-mode-inactive').addClass('visually-hidden');
+
+      $editables = $('[data-drupal-outsidein="editable"]').once('outsidein');
+      if ($editables.length) {
+        // Use event capture to prevent clicks on links.
+        document.addEventListener('click', preventClick, true);
+
+        // When a click occurs try and find the outside-in edit link
+        // and click it.
+        $editables
+          .not(contextualItemsSelector)
+          .on('click.outsidein', function (e) {
+            // @todo check if we can't use currentTarget too.
+            if ($(e.target).parent().hasClass('contextual') || !localStorage.getItem('Drupal.contextualToolbar.isViewing')) {
+              return;
+            }
+
+            $(e.currentTarget).find(blockConfigureSelector).trigger('click');
+          });
+      }
     }
+    // Disable edit mode.
     else {
-      $('#toolbar-bar .contextual-toolbar-tab button').text(Drupal.t('Edit'));
-      getItemsToToggle().removeClass('js-outside-in-edit-mode');
-      $('.edit-mode-inactive').removeClass('visually-hidden');
+      $editables = $('[data-drupal-outsidein="editable"]').removeOnce('outsidein');
+      if ($editables.length) {
+        document.removeEventListener('click', preventClick, true);
+        $editables.off('.outsidein');
+      }
+
+      $editButton.text(Drupal.t('Edit'));
+      // Close/remove offcanvas.
+      $('.ui-dialog-offcanvas .ui-dialog-titlebar-close').trigger('click');
     }
-  };
+    getItemsToToggle().toggleClass('js-outside-in-edit-mode', editMode);
+    $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
+  }
 
   /**
    * Attaches contextual's edit toolbar tab behavior.
@@ -105,7 +134,7 @@
     attach: function () {
       var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
       if (editMode) {
-        setToggleActiveMode(true);
+        setEditModeState(true);
       }
     }
   };
@@ -118,11 +147,10 @@
    * @prop {Drupal~behaviorAttach} attach
    *   Toggle the js-outside-edit-mode class.
    */
-  Drupal.behaviors.toggleActiveMode = {
+  Drupal.behaviors.toggleEditMode = {
     attach: function () {
-      $('.contextual-toolbar-tab.toolbar-tab button').once('toggle-edit-mode').on('click', function () {
-        setToggleActiveMode();
-      });
+
+      $(toggleEditSelector).once('outsidein').on('click.outsidein', toggleEditMode);
 
       var search = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog';
       var replace = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog_offcanvas';
