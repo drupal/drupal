@@ -535,7 +535,8 @@ function simpletest_last_test_get($test_id) {
  *   Whether any fatal errors were found.
  */
 function simpletest_log_read($test_id, $database_prefix, $test_class) {
-  $log = DRUPAL_ROOT . '/sites/simpletest/' . substr($database_prefix, 10) . '/error.log';
+  $test_db = new TestDatabase($database_prefix);
+  $log = DRUPAL_ROOT . '/' . $test_db->getTestSitePath() . '/error.log';
   $found = FALSE;
   if (file_exists($log)) {
     foreach (file($log) as $line) {

@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Render\Markup;
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
@@ -622,7 +623,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   // string.
   $http_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : NULL;
   $user_agent = isset($_COOKIE['SIMPLETEST_USER_AGENT']) ? $_COOKIE['SIMPLETEST_USER_AGENT'] : $http_user_agent;
-  if (isset($user_agent) && preg_match("/^(simpletest\d+):(.+):(.+):(.+)$/", $user_agent, $matches)) {
+  if (isset($user_agent) && preg_match("/^simple(\w+\d+):(.+):(.+):(.+)$/", $user_agent, $matches)) {
     list(, $prefix, $time, $salt, $hmac) = $matches;
     $check_string = $prefix . ':' . $time . ':' . $salt;
     // Read the hash salt prepared by drupal_generate_test_ua().
@@ -630,7 +631,8 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     // handlers are set up. While Drupal's error handling may be properly
     // configured on production sites, the server's PHP error_reporting may not.
     // Ensure that no information leaks on production sites.
-    $key_file = DRUPAL_ROOT . '/sites/simpletest/' . substr($prefix, 10) . '/.htkey';
+    $test_db = new TestDatabase($prefix);
+    $key_file = DRUPAL_ROOT . '/' . $test_db->getTestSitePath() . '/.htkey';
     if (!is_readable($key_file)) {
       header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
       exit;
@@ -661,7 +663,8 @@ function drupal_generate_test_ua($prefix) {
 
   if (!isset($key) || $last_prefix != $prefix) {
     $last_prefix = $prefix;
-    $key_file = DRUPAL_ROOT . '/sites/simpletest/' . substr($prefix, 10) . '/.htkey';
+    $test_db = new TestDatabase($prefix);
+    $key_file = DRUPAL_ROOT . '/' . $test_db->getTestSitePath() . '/.htkey';
     // When issuing an outbound HTTP client request from within an inbound test
     // request, then the outbound request has to use the same User-Agent header
     // as the inbound request. A newly generated private key for the same test
@@ -686,7 +689,7 @@ function drupal_generate_test_ua($prefix) {
   // Generate a moderately secure HMAC based on the database credentials.
   $salt = uniqid('', TRUE);
   $check_string = $prefix . ':' . time() . ':' . $salt;
-  return $check_string . ':' . Crypt::hmacBase64($check_string, $key);
+  return 'simple' . $check_string . ':' . Crypt::hmacBase64($check_string, $key);
 }
 
 /**

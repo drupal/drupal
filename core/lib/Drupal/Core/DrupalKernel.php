@@ -18,6 +18,7 @@ use Drupal\Core\File\MimeType\MimeTypeGuesser;
 use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Test\TestDatabase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -365,7 +366,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Check for a simpletest override.
     if ($test_prefix = drupal_valid_test_ua()) {
-      return 'sites/simpletest/' . substr($test_prefix, 10);
+      $test_db = new TestDatabase($test_prefix);
+      return $test_db->getTestSitePath();
     }
 
     // Determine whether multi-site functionality is enabled.
@@ -944,6 +946,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Indicate that code is operating in a test child site.
     if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {
       if ($test_prefix = drupal_valid_test_ua()) {
+        $test_db = new TestDatabase($test_prefix);
         // Only code that interfaces directly with tests should rely on this
         // constant; e.g., the error/exception handler conditionally adds further
         // error information into HTTP response headers that are consumed by
@@ -958,7 +961,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
         // Log fatal errors to the test site directory.
         ini_set('log_errors', 1);
-        ini_set('error_log', $app_root . '/sites/simpletest/' . substr($test_prefix, 10) . '/error.log');
+        ini_set('error_log', $app_root . '/' . $test_db->getTestSitePath() . '/error.log');
 
         // Ensure that a rewritten settings.php is used if opcache is on.
         ini_set('opcache.validate_timestamps', 'on');

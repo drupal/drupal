@@ -25,13 +25,13 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::bootEnvironment
    */
   public function testBootEnvironment() {
-    $this->assertRegExp('/^simpletest\d{6}$/', $this->databasePrefix);
+    $this->assertRegExp('/^test\d{8}$/', $this->databasePrefix);
     $this->assertStringStartsWith('vfs://root/sites/simpletest/', $this->siteDirectory);
     $this->assertEquals(array(
       'root' => array(
         'sites' => array(
           'simpletest' => array(
-            substr($this->databasePrefix, 10) => array(
+            substr($this->databasePrefix, 4) => array(
               'files' => array(
                 'config' => array(
                   'sync' => array(),
