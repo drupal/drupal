@@ -2,13 +2,9 @@
 
 namespace Drupal\Core\Test;
 
+use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
-
-// This class has a dependency on file_directory_os_temp().
-// @todo https://www.drupal.org/node/2794249 Remove once function moved to a
-//   class.
-require_once __DIR__ . '/../../../../includes/file.inc';
 
 /**
  * Provides helper methods for interacting with the Simpletest database.
@@ -169,7 +165,7 @@ class TestDatabase {
    *   A file path to the symbolic link that prevents the lock ID being re-used.
    */
   protected function getLockFile($lock_id) {
-    return file_directory_os_temp() . '/test_' . $lock_id;
+    return FileSystem::getOsTemporaryDirectory() . '/test_' . $lock_id;
   }
 
 }
