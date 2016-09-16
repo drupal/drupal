@@ -1162,9 +1162,7 @@ abstract class WebTestBase extends TestBase {
     }
     // We set the user agent header on each request so as to use the current
     // time and a new uniqid.
-    if (preg_match('/simpletest\d+/', $this->databasePrefix, $matches)) {
-      curl_setopt($this->curlHandle, CURLOPT_USERAGENT, drupal_generate_test_ua($matches[0]));
-    }
+    curl_setopt($this->curlHandle, CURLOPT_USERAGENT, drupal_generate_test_ua($this->databasePrefix));
   }
 
   /**
