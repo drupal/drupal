@@ -89,8 +89,9 @@ function outside_in_preprocess_block(&$variables) {
   // The main system block does not contain the block contextual links.
   $variables['#cache']['contexts'][] = 'outside_in_is_applied';
   if ($variables['plugin_id'] !== 'system_main_block' && \Drupal::service('outside_in.manager')->isApplicable()) {
-    // Add class to all blocks to allow Javascript to target.
+    // Add class and attributes to all blocks to allow Javascript to target.
     $variables['attributes']['class'][] = 'outside-in-editable';
+    $variables['attributes']['data-drupal-outsidein'] = 'editable';
   }
 }
 
@@ -104,6 +105,7 @@ function outside_in_toolbar_alter(&$items) {
   if (isset($items['contextual']['tab']) && \Drupal::service('outside_in.manager')->isApplicable()) {
     $items['contextual']['#weight'] = -1000;
     $items['contextual']['#attached']['library'][] = 'outside_in/drupal.outside_in';
+    $items['contextual']['tab']['#attributes']['data-drupal-outsidein'] = 'toggle';
 
     // Set a class on items to mark whether they should be active in edit mode.
     // @todo Create a dynamic method for modules to set their own items.
