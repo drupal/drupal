@@ -17,9 +17,12 @@ function outside_in_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.outside_in':
       $output = '<h3>' . t('About') . '</h3>';
-      // @todo Update help text: https://www.drupal.org/node/2784465.
-      $output .= '<p>' . t('The Outside-In module is something that we should have help for. For more information, see the <a href=":outside-in-documentation">online documentation for the Outside-In module</a>.', [':outside-in-documentation' => 'https://www.drupal.org/documentation/modules/outside_in']) . '</p>';
-      return $output;
+      $output .= '<p>' . t('The outside-in module provides an \'edit mode\' in which clicking on a block opens a side tray which allows configuration to be altered without leaving the page.For more information, see the <a href=":outside-in-documentation">online documentation for the Outside-In module</a>.', [':outside-in-documentation' => 'https://www.drupal.org/documentation/modules/outside_in']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Editing blocks on the same page in the side tray') . '</dt>';
+      $output .= '</dl>';
+      return ['#markup' => $output];
   }
 }
 
