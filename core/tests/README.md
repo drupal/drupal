@@ -43,6 +43,6 @@ be invoked with sudo instead:
 ```
 export SIMPLETEST_DB='mysql://root@localhost/dev_d8'
 export SIMPLETEST_BASE_URL='http://d8.dev'
-sudo -u www-data ./vendor/bin/phpunit -c core --testsuite functional
-sudo -u www-data ./vendor/bin/phpunit -c core --testsuite functional-javascript
+sudo -u www-data -E ./vendor/bin/phpunit -c core --testsuite functional
+sudo -u www-data -E ./vendor/bin/phpunit -c core --testsuite functional-javascript
 ```
