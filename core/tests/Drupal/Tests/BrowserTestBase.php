@@ -165,6 +165,19 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   protected $strictConfigSchema = TRUE;
 
   /**
+   * Modules to enable.
+   *
+   * The test runner will merge the $modules lists from this class, the class
+   * it extends, and so on up the class hierarchy. It is not necessary to
+   * include modules in your list that a parent class has already declared.
+   *
+   * @var string[]
+   *
+   * @see \Drupal\Tests\BrowserTestBase::installDrupal()
+   */
+  public static $modules = [];
+
+  /**
    * An array of config object names that are excluded from schema checking.
    *
    * @var string[]
