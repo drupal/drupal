@@ -558,10 +558,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       }
       // Ensure the configuration entity type provider is in the list of
       // dependencies.
-      if (!isset($all_dependencies['module'])) {
-        $all_dependencies['module'][] = $provider;
-      }
-      elseif (!in_array($provider, $all_dependencies['module'])) {
+      if (!isset($all_dependencies['module']) || !in_array($provider, $all_dependencies['module'])) {
         $all_dependencies['module'][] = $provider;
       }
 
