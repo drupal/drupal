@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\Tests\Core\Mail\MailManagerTest.
