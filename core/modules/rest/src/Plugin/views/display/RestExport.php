@@ -298,7 +298,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
       $form['auth'] = array(
         '#type' => 'checkboxes',
         '#title' => $this->t('Authentication methods'),
-        '#description' => $this->t('These are the supported authentication providers for this view. When this view is requested, the client will be forced to authenticate with one of the selected providers. Make sure you set the appropiate requirements at the <em>Access</em> section since the Authentication System will fallback to the anonymous user if it fails to authenticate. For example: require Access: Role | Authenticated User.'),
+        '#description' => $this->t('These are the supported authentication providers for this view. When this view is requested, the client will be forced to authenticate with one of the selected providers. Make sure you set the appropriate requirements at the <em>Access</em> section since the Authentication System will fallback to the anonymous user if it fails to authenticate. For example: require Access: Role | Authenticated User.'),
         '#options' => $this->getAuthOptions(),
         '#default_value' => $this->getOption('auth'),
       );
