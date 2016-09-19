@@ -924,6 +924,8 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   $edit = array();
    *   $edit['name[]'] = array('value1', 'value2');
    *   @endcode
+   *   @todo change $edit to disallow NULL as a value for Drupal 9.
+   *     https://www.drupal.org/node/2802401
    * @param string $submit
    *   Value of the submit button whose click is to be emulated. For example,
    *   t('Save'). The processing of the request depends on this value. For
@@ -949,10 +951,13 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * @param array $options
    *   Options to be forwarded to the url generator.
    */
-  protected function drupalPostForm($path, array $edit, $submit, array $options = array()) {
+  protected function drupalPostForm($path, $edit, $submit, array $options = array()) {
     if (is_object($submit)) {
       // Cast MarkupInterface objects to string.
       $submit = (string) $submit;
+    }
+    if ($edit === NULL) {
+      $edit = [];
     }
     if (is_array($edit)) {
       $edit = $this->castSafeStrings($edit);

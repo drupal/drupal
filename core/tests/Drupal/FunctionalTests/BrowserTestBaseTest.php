@@ -79,6 +79,16 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $config_factory = $this->container->get('config.factory');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('green', $value);
+
+    // Test drupalPostForm().
+    $edit = ['bananas' => 'red'];
+    $this->drupalPostForm('form-test/object-builder', $edit, 'Save');
+    $value = $config_factory->get('form_test.object')->get('bananas');
+    $this->assertSame('red', $value);
+
+    $this->drupalPostForm('form-test/object-builder', NULL, 'Save');
+    $value = $config_factory->get('form_test.object')->get('bananas');
+    $this->assertSame('', $value);
   }
 
   /**
