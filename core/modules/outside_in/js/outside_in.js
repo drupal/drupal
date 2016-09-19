@@ -171,6 +171,7 @@
           // @todo Move logic for data-dialog-renderer attribute into ajax.js
           //   https://www.drupal.org/node/2784443
           instance.options.url = instance.options.url.replace(search, replace);
+          instance.progress = {type: 'fullscreen'};
         });
     }
   };
