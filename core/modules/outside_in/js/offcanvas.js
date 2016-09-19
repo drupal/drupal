@@ -18,6 +18,8 @@
    */
   var edge = document.documentElement.dir === 'rtl' ? 'left' : 'right';
 
+  var $mainCanvasWrapper = $('#main-canvas-wrapper');
+
   /**
    * Resets the size of the dialog.
    *
@@ -81,12 +83,11 @@
   function bodyPadding(event) {
     var $element = event.data.$element;
     var $widget = $element.dialog('widget');
-    var $body = $('body');
 
     var width = $widget.outerWidth();
-    var bodyPadding = $body.css('padding-' + edge);
-    if (width !== bodyPadding) {
-      $body.css('padding-' + edge, width + 'px');
+    var mainCanvasPadding = $mainCanvasWrapper.css('padding-' + edge);
+    if (width !== mainCanvasPadding) {
+      $mainCanvasWrapper.css('padding-' + edge, width + 'px');
       $widget.attr('data-offset-' + edge, width);
       displace();
     }
@@ -125,7 +126,7 @@
       if ($element.is('#drupal-offcanvas')) {
         $(document).off('.outsidein');
         $(window).off('.outsidein');
-        $('body').css('padding-' + edge, 0);
+        $mainCanvasWrapper.css('padding-' + edge, 0);
       }
     }
   });

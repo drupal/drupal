@@ -49,6 +49,8 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
       'settings' => $this->settings,
       'data' => $this->getRenderedContent(),
       'dialogOptions' => $this->dialogOptions,
+      'effect' => 'fade',
+      'speed' => 1000,
     ];
   }
 

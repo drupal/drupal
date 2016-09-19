@@ -46,6 +46,8 @@ class OffCanvasDialogTest extends AjaxTestBase {
           'draggable' => FALSE,
           'drupalAutoButtons' => FALSE,
         ],
+      'effect' => 'fade',
+      'speed' => 1000,
     ];
 
     // Emulate going to the JS version of the page and check the JSON response.
