@@ -37,12 +37,17 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    * Tests updating the "Powered by Drupal" block in the Off-Canvas tray.
    */
   public function testPoweredByBlock() {
-    $block_selector = '#block-powered';
+
     $page = $this->getSession()->getPage();
+    $web_assert = $this->assertSession();
 
     $this->drupalGet('user');
-    $this->toggleEditingMode();
-    $this->openBlockForm($block_selector);
+    $this->enableEditingMode();
+
+    // Open "Powered by Drupal" block form by clicking div.
+    $page->find('css', '#block-powered')->click();
+    $this->waitForOffCanvasToOpen();
+    $this->assertOffCanvasBlockFormIsValid();
 
     // Fill out form, save the form.
     $new_label = 'Can you imagine anyone showing the label on this block?';
@@ -53,19 +58,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     // https://www.drupal.org/node/2789381
     // $this->getTray()->pressButton('Save block');
     // Make sure the changes are present.
-    // $web_assert = $this->assertSession();
     // $web_assert->pageTextContains($new_label);
-
-    $this->openBlockForm($block_selector);
-
-    $this->toggleEditingMode();
-    // Canvas should close when editing module is closed.
-    $this->waitForOffCanvasToClose();
-
-    // Go into Edit mode again
-    $this->toggleEditingMode();
-    // Open block form by click "Drupal" link in content.
-    $this->openBlockForm("$block_selector .content a");
   }
 
   /**
@@ -74,14 +67,15 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    * Also tests updating the site name.
    */
   public function testBrandingBlock() {
-    $block_selector = '#block-branding';
-
+    $web_assert = $this->assertSession();
     $this->drupalGet('user');
     $page = $this->getSession()->getPage();
-    $this->toggleEditingMode();
+    $this->enableEditingMode();
 
     // Open branding block form by clicking div.
-    $this->openBlockForm($block_selector);
+    $page->find('css', '#block-branding')->click();
+    $this->waitForOffCanvasToOpen();
+    $this->assertOffCanvasBlockFormIsValid();
 
     // Fill out form, save the form.
     $new_site_name = 'The site that will live a very short life.';
@@ -89,22 +83,15 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
 
     // @todo Uncomment the following lines after GastonJS problem solved.
     // https://www.drupal.org/node/2789381
-    // $web_assert = $this->assertSession();
     // $this->getTray()->pressButton('Save block');
     // Make sure the changes are present.
     //$web_assert->pageTextContains($new_site_name);
-
-    $this->openBlockForm($block_selector);
-
-    $this->toggleEditingMode();
-    // Canvas should close when editing module is closed.
-    $this->waitForOffCanvasToClose();
   }
 
   /**
    * Enables Editing mode by pressing "Edit" button in the toolbar.
    */
-  protected function toggleEditingMode() {
+  protected function enableEditingMode() {
     $this->waitForElement('div[data-contextual-id="block:block=powered:langcode=en|outside_in::langcode=en"] .contextual-links a');
 
     $this->waitForElement('#toolbar-bar', 3000);
@@ -125,20 +112,6 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     // Check that advanced block form elements do not exist.
     $web_assert->elementNotExists('css', 'input[data-drupal-selector="edit-visibility-request-path-pages"]');
     $web_assert->elementNotExists('css', 'select[data-drupal-selector="edit-region"]');
-  }
-
-  /**
-   * Open block form by clicking the element found with a css selector.
-   *
-   * @param string $block_selector
-   *   A css selector selects the block or an element within it.
-   */
-  protected function openBlockForm($block_selector) {
-    $page = $this->getSession()->getPage();
-    // Open block form by clicking div.
-    $page->find('css', $block_selector)->click();
-    $this->waitForOffCanvasToOpen();
-    $this->assertOffCanvasBlockFormIsValid();
   }
 
 }
