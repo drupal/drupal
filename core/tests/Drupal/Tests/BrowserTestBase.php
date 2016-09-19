@@ -1683,6 +1683,19 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Returns all response headers.
+   *
+   * @return array
+   *   The HTTP headers values.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->getSession()->getResponseHeaders() instead.
+   */
+  protected function drupalGetHeaders() {
+    return $this->getSession()->getResponseHeaders();
+  }
+
+  /**
    * Gets the value of an HTTP response header.
    *
    * If multiple requests were required to retrieve the page, only the headers

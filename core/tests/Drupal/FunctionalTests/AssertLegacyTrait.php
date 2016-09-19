@@ -520,6 +520,21 @@ trait AssertLegacyTrait {
   }
 
   /**
+   * Checks that current response header equals value.
+   *
+   * @param string $name
+   *   Name of header to assert.
+   * @param string $value
+   *   Value of the header to assert
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->responseHeaderEquals() instead.
+   */
+  protected function assertHeader($name, $value) {
+    $this->assertSession()->responseHeaderEquals($name, $value);
+  }
+
+  /**
    * Returns WebAssert object.
    *
    * @param string $name
