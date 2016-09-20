@@ -49,6 +49,7 @@ class ManagedFile extends FormElement {
       '#attached' => [
         'library' => ['file/drupal.file'],
       ],
+      '#accept' => NULL,
     ];
   }
 
@@ -308,6 +309,9 @@ class ManagedFile extends FormElement {
       '#weight' => -10,
       '#error_no_message' => TRUE,
     ];
+    if (!empty($element['#accept'])) {
+      $element['upload']['#attributes'] = ['accept' => $element['#accept']];
+    }
 
     if (!empty($fids) && $element['#files']) {
       foreach ($element['#files'] as $delta => $file) {

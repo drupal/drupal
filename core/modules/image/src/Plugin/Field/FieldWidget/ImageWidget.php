@@ -123,6 +123,9 @@ class ImageWidget extends FileWidget {
     $extensions = array_intersect(explode(' ', $extensions), $supported_extensions);
     $element['#upload_validators']['file_validate_extensions'][0] = implode(' ', $extensions);
 
+    // Add mobile device image capture acceptance.
+    $element['#accept'] = 'image/*';
+
     // Add properties needed by process() method.
     $element['#preview_image_style'] = $this->getSetting('preview_image_style');
     $element['#title_field'] = $field_settings['title_field'];
