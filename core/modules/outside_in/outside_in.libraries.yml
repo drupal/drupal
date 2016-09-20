@@ -5,8 +5,16 @@ drupal.outside_in:
   css:
     component:
       css/outside_in.module.css: {}
-      css/outside_in.theme.css: {}
       css/outside_in.motion.css: {}
+      css/outside_in.form.css: {}
+      css/outside_in.table.css: {}
+      css/outside_in.details.css: {}
+      css/outside_in.tabledrag.css: {}
+    theme:
+      # @todo Set the group higher than CSS_AGGREGATE_THEME so that it overrides
+      #   both jQuery UI and Classy's dialog.css, remove in
+      #   https://www.drupal.org/node/1945262.
+      css/outside_in.theme.css: { group: 200 }
   dependencies:
     - core/jquery
     - core/drupal

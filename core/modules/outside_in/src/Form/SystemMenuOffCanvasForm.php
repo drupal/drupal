@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormBase;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -84,6 +85,18 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
       '#open' => TRUE,
     ];
     $form['entity_form'] += $this->getEntityForm($this->entity)->buildForm([], $form_state);
+
+    // Print the menu link titles as text instead of a link.
+    if (!empty($form['entity_form']['links']['links'])) {
+      foreach (Element::children($form['entity_form']['links']['links']) as $child) {
+        $title = $form['entity_form']['links']['links'][$child]['title'][1]['#title'];
+        $form['entity_form']['links']['links'][$child]['title'][1] = ['#markup' => $title];
+      }
+    }
+    // Change the header text.
+    $form['entity_form']['links']['links']['#header'][0] = $this->t('Link');
+    $form['entity_form']['links']['links']['#header'][1]['data'] = $this->t('On');
+
     // Remove the label, ID, description, and buttons from the entity form.
     unset($form['entity_form']['label'], $form['entity_form']['id'], $form['entity_form']['description'], $form['entity_form']['actions']);
     // Since the overview form is further nested than expected, update the

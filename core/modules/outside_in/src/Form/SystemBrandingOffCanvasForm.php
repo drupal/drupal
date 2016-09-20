@@ -54,6 +54,9 @@ class SystemBrandingOffCanvasForm extends PluginFormBase implements ContainerInj
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = $this->plugin->buildConfigurationForm($form, $form_state);
 
+    $form['block_branding']['#type'] = 'details';
+    $form['block_branding']['#weight'] = 10;
+
     // Unset links to Site Information form, we can make these changes here.
     unset($form['block_branding']['use_site_name']['#description'], $form['block_branding']['use_site_slogan']['#description']);
 
@@ -62,7 +65,6 @@ class SystemBrandingOffCanvasForm extends PluginFormBase implements ContainerInj
       '#type' => 'details',
       '#title' => t('Site details'),
       '#open' => TRUE,
-      '#weight' => -100,
     ];
     $form['site_information']['site_name'] = [
       '#type' => 'textfield',

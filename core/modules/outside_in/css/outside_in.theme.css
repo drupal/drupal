@@ -3,107 +3,326 @@
  * Visual styling for Outside-In module.
  */
 
-/**
- * Style the contextual links toggle tab in the toolbar.
- *
- * @todo Move this into toolbar when module is not experimental:
+/* @todo Move this into toolbar when this module is no longer experimental:
  *   https://www.drupal.org/node/2784593.
  */
 
-/* Style both the edit and editing states. */
-button.toolbar-icon.toolbar-icon-edit.toolbar-item {
-  background: #0e69be;
-  background-image: -webkit-linear-gradient(top, #0094f0, #0e69be);
-  background-image: linear-gradient(to bottom, #0094f0, #0e69be);
-}
-button.toolbar-icon.toolbar-icon-edit.toolbar-item:hover,
-button.toolbar-icon.toolbar-icon-edit.toolbar-item:focus {
-  background-image: -webkit-linear-gradient(top, #0094f0, #0e69be);
-  background-image: linear-gradient(to bottom, #0094f0, #0e69be);
-  color: #fff;
-}
-button.toolbar-icon.toolbar-icon-edit.toolbar-item:before:hover,
-button.toolbar-icon.toolbar-icon-edit.toolbar-item:before:focus {
-  background-image: url(../../../misc/icons/ffffff/pencil.svg);
-}
-button.toolbar-icon.toolbar-icon-edit.toolbar-item:hover,
-button.toolbar-icon.toolbar-icon-edit.toolbar-item:focus {
-  background-image: -webkit-linear-gradient(top, #0094f0, #0e69be);
-  background-image: linear-gradient(to bottom, #0094f0, #0e69be);
-  outline: none;
-}
-button.toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit:before {
-  background-image: url(../../../misc/icons/ffffff/pencil.svg);
-}
-#toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
-  background-image: url(../../../misc/icons/ffffff/pencil.svg);
-}
-
-/* Style the toolbar when in edit mode. */
+/* Style the edit mode toolbar and tabs. */
 #toolbar-bar.js-outside-in-edit-mode {
   background-color: #fff;
 }
-/* Change text color for white background. */
-#toolbar-bar.js-outside-in-edit-mode .toolbar-item {
+.js-outside-in-edit-mode .toolbar-item:not(.toolbar-icon-edit) {
   color: #999;
 }
-#toolbar-bar.js-outside-in-edit-mode .toolbar-item .is-active {
+.js-outside-in-edit-mode .toolbar-item:not(.toolbar-icon-edit) .is-active {
   color: #333;
 }
-/* Set color back to white for 'editing' button only. */
-#toolbar-bar.js-outside-in-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
- color: #fff;
+
+/* Style both the edit and editing states of the contextual links toggle tab. */
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item,
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active,
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:focus {
+  background-color: #50a0e9;
+  background-image: linear-gradient(to bottom, #007bc6, #0071b8);
+  color: #ddd;
+  text-shadow: none;
+  font-weight: bold;
+  outline: none;
 }
-#toolbar-bar.js-outside-in-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
- background-image: -webkit-linear-gradient(top, #0094f0, #0e69be);
- background-image: linear-gradient(to bottom, #0094f0, #0e69be);
+/* Make the hover of the inactive state the same as the active state. */
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover,
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
+  background-image: linear-gradient(to bottom, #0c97ed, #1f86c7);
+  color: #fff;
+}
+/* Make the hover of the active state the same as the inactive state. */
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
+  background-color: #2369a6;
+  background-image: linear-gradient(to bottom, #007bc6, #0071b8);
+  color: #fff;
+}
+/* Make the inactive icon grey. */
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:before {
+  background-image: url(../../../misc/icons/bebebe/pencil.svg);
+}
+/* Make the active icon white. */
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:before {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+}
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover:before {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+}
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit:before {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+}
+.toolbar-tab > .button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
 }
 
-/*
- * Style the editables while in edit mode.
- */
-
-/* Highlight editable regions in edit mode. */
+/* Style the editables while in edit mode. */
 #main-canvas.js-outside-in-edit-mode .outside-in-editable {
   outline: 1px dashed rgba(0,0,0,0.5);
   box-shadow: 0 0 0 1px rgba(255,255,255,0.7);
 }
 #main-canvas.js-outside-in-edit-mode .outside-in-editable:hover {
-  outline: 1px dashed rgba(0,0,0,0.5);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.7);
   background-color: rgba(0,0,0,0.2);
 }
-/* Turn off the outlines on editables when the tray is open. */
-#main-canvas-wrapper.js-tray-open .outside-in-editable {
-  outline: transparent;
-  outline-color: transparent;
-  box-shadow: none;
-}
-#main-canvas-wrapper.js-tray-open .contextual {
-  opacity: 0;
-}
-#main-canvas-wrapper.js-tray-open .contextual:hover {
-  opacity: 1;
+
+/* Style the offcanvas container. */
+.ui-dialog-offcanvas {
+  background: #444;
+  border: 0px solid transparent;
+  border-radius: 0;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3333);
+  padding: 0;
+  color: #ddd;
+  /* Layer the dialog just under the toolbar. */
+  z-index: 501;
 }
 
-/**
- * Style the offcanvas container.
- *
- * @todo Move Off-canvas css into core Off-canvas library:
- *   https://www.drupal.org/node/2784443.
- */
-.ui-dialog.ui-dialog-offcanvas {
-  background: #fff;
-  border-left: 1px solid #ddd; /* LTR */
-  box-shadow: -2px 2px 1px 1px rgba(0, 0, 0, 0.1); /* LTR */
+/* Style content in the tray. */
+.ui-dialog-offcanvas p,
+.ui-dialog-offcanvas h1,
+.ui-dialog-offcanvas h2,
+.ui-dialog-offcanvas h3,
+.ui-dialog-offcanvas h4,
+.ui-dialog-offcanvas h5,
+.ui-dialog-offcanvas h6,
+.ui-dialog-offcanvas pre,
+.ui-dialog-offcanvas legend,
+.ui-dialog-offcanvas cite,
+.ui-dialog-offcanvas span,
+.ui-dialog-offcanvas summary,
+.ui-dialog-offcanvas details,
+.ui-dialog-offcanvas .form-item {
+  color: #ddd;
+  font-family: "Lucida Grande", 'Lucida Sans Unicode','liberation sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  background-color: transparent;
+  text-shadow: none;
 }
-[dir="rtl"] .ui-dialog.ui-dialog-offcanvas {
-  border-right: 1px solid #ddd;
-  box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, 0.1);
+.ui-dialog-offcanvas a,
+.ui-dialog-offcanvas .link {
+  border-bottom: none;
+  font-family: "Lucida Grande", 'Lucida Sans Unicode','liberation sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  color: #85bef4;
+  text-decoration: none;
+  transition: color .5s ease;
+}
+.ui-dialog-offcanvas a:focus,
+.ui-dialog-offcanvas .link:focus,
+.ui-dialog-offcanvas a:hover,
+.ui-dialog-offcanvas .link:hover {
+  outline: none;
+  color: #46a0f5;
 }
 
 /* Style the tray header. */
-.ui-dialog.ui-dialog-offcanvas h1 {
-  font-size: 120%;
-  border-bottom: 1px solid #ddd;
+.ui-dialog-offcanvas .ui-dialog-titlebar {
+  padding: 20px;
+  background: #2d2d2d;
+  border: 0;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  font-weight: normal;
+  color: #fff;
 }
+.ui-dialog-offcanvas .ui-dialog-titlebar-close {
+  background-image: url(../../../misc/icons/bebebe/ex.svg);
+  background-position-x: center;
+  background-repeat: no-repeat;
+  background-position-y: center;
+  background-color: transparent;
+  border: 0;
+  position: absolute;
+  right: 20px;
+  -moz-transition: all .5s ease;
+  transition: background .5s ease;
+}
+.ui-dialog-offcanvas .ui-dialog-titlebar-close:hover {
+  background-image: url(../../../misc/icons/ffffff/ex.svg);
+}
+[dir="rtl"] .ui-dialog-offcanvas .ui-dialog-titlebar-close {
+  left: 20px;
+  right: auto;
+}
+.ui-dialog-offcanvas .ui-dialog-title {
+  font-size: 16px;
+  margin: 0;
+  /* Push the text away from the icon. */
+  padding-left: 30px; /* LTR */
+  padding-right: 0px; /* LTR */
+  /* Ensure that long titles do not overlap the close button. */
+  max-width: 210px;
+  text-align: left; /* LTR */
+}
+[dir="rtl"] .ui-dialog-offcanvas .ui-dialog-title {
+  text-align: right;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.ui-dialog-offcanvas .ui-dialog-title:before {
+  background: transparent url(../../../misc/icons/ffffff/pencil.svg) no-repeat scroll center center;
+  background-size: 100% auto;
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  left: 20px; /* LTR */
+  top: 0;
+  width: 20px;
+}
+[dir="rtl"] .ui-dialog-offcanvas .ui-dialog-title:before {
+  left: auto;
+  right: 20px;
+}
+
+/* Override default styling from jquery UI. */
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+  border: 0;
+  font-weight: normal;
+  font-size: 14px;
+  color: #333;
+}
+/* Hide the defauld Jquery UI dialog close button. */
+.ui-dialog-offcanvas .ui-icon-closethick {
+  visibility: hidden;
+}
+
+/* Groups below here with todos to move to new component need to load last. */
+
+/**
+ * Visual styling for buttons in the Outside-In module off canvas tray.
+ * @todo Move to it's own component:
+ *   https://www.drupal.org/node/1945262.
+ */
+
+.ui-dialog-offcanvas button.link {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+.ui-dialog-offcanvas .button {
+  width: 100%;
+  height: auto;
+  margin: 1em auto;
+  padding: 6px 1em;
+  background: #7b7b7b;
+  border-radius: 1em;
+  font-size: 14px;
+  color: #fff;
+  transition: all .5s ease;
+}
+.ui-dialog-offcanvas .button:hover,
+.ui-dialog-offcanvas .button:focus {
+  background: #888;
+}
+.ui-dialog-offcanvas .button--primary {
+  background: #277abd none;
+  border: none;
+  color: #fff;
+  transition: all .5s ease;
+}
+.ui-dialog-offcanvas .button--primary:hover,
+.ui-dialog-offcanvas .button--primary:focus {
+  background: #2b8bd8;
+}
+
+
+/*
+ * Visual styling for dropbutton in the Outside-In modules off canvas tray.
+ * @todo Move to it's own component:
+ *   https://www.drupal.org/node/1945262.
+ */
+
+.ui-dialog-offcanvas .dropbutton-widget {
+  background: #7b7b7b none;
+  border: 0;
+  border-radius: 1em;
+  color: #eee;
+  transition: background .5s ease;
+}
+.ui-dialog-offcanvas .dropbutton-widget:hover {
+  box-shadow: 0 2px 2px 1px rgba(0,0,0,0.5);
+}
+.ui-dialog-offcanvas .dropbutton-toggle button {
+  background: #7b7b7b none;
+  border-bottom-right-radius: 1em; /* LTR */
+  border-top-right-radius: 1em; /* LTR */
+  border-style: solid;
+  border-color: #333;
+  border-left-width: 1px; /* LTR */
+  transition: background .5s ease;
+}
+[dir="rtl"] .ui-dialog-offcanvas .dropbutton-toggle button {
+  border-radius: 0;
+  border-bottom-left-radius: 1em;
+  border-top-left-radius: 1em;
+  border-width: 0;
+  border-right-width: 1px;
+}
+.ui-dialog-offcanvas .dropbutton .dropbutton-action:hover,
+.ui-dialog-offcanvas .dropbutton a:hover {
+  background: #6b6b6b none;
+  border-bottom-left-radius: 1em; /* LTR */
+  border-top-left-radius: 1em; /* LTR */
+}
+[dir="rtl"] .ui-dialog-offcanvas .dropbutton .dropbutton-action:hover,
+[dir="rtl"] .ui-dialog-offcanvas .dropbutton a:hover {
+  border-radius: 0;
+  border-bottom-right-radius: 1em;
+  border-top-right-radius: 1em;
+}
+.ui-dialog-offcanvas .dropbutton a {
+  padding: 0.1em 0.8em;
+  color: #eee;
+  font-size: 90%;
+  line-height: 1.8;
+  transition: all .5s ease;
+}
+.ui-dialog-offcanvas .dropbutton:hover a {
+  color: #fff;
+}
+/* Make an arrow out of borders with some fancy CSS. */
+.ui-dialog-offcanvas span.dropbutton-arrow {
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-style: solid;
+  border-width: 0.3333em 0.3333em 0;
+  display: block;
+  height: 0;
+  line-height: 0;
+  position: absolute;
+  right: 40%;
+  top: 50%;
+  margin-top: -0.1666em;
+  width: 0;
+  overflow: hidden;
+  color: #fff;
+}
+.js .dropbutton-toggle .dropbutton-arrow:hover {
+  background: transparent;
+}
+.ui-dialog-offcanvas td .dropbutton-multiple {
+  padding-right: 0;
+}
+[dir="rtl"].ui-dialog-offcanvas td .dropbutton-multiple {
+  padding-left: 0;
+}
+.ui-dialog-offcanvas td .dropbutton-multiple .dropbutton {
+  border-right: 0;
+  border-left: 0;
+}
+.ui-dialog-offcanvas td .dropbutton .secondary-action {
+  border-top-color: #000;
+}
+
+
