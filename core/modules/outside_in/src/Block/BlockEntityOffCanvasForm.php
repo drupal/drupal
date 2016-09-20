@@ -3,6 +3,7 @@
 namespace Drupal\outside_in\Block;
 
 use Drupal\block\BlockForm;
+use Drupal\block\BlockInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
@@ -14,6 +15,21 @@ use Drupal\Core\Plugin\PluginWithFormsInterface;
  * visibility settings, machine ID and region.
  */
 class BlockEntityOffCanvasForm extends BlockForm {
+
+  /**
+   * Provides a title callback to get the block's admin label.
+   *
+   * @param \Drupal\block\BlockInterface $block
+   *   The block entity.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The title.
+   */
+  public function title(BlockInterface $block) {
+    // @todo Wrap "Configure " in <span class="visually-hidden"></span> once
+    //   https://www.drupal.org/node/2359901 is fixed.
+    return $this->t('Configure @block', ['@block' => $block->getPlugin()->getPluginDefinition()['admin_label']]);
+  }
 
   /**
    * {@inheritdoc}
@@ -34,9 +50,19 @@ class BlockEntityOffCanvasForm extends BlockForm {
     ];
 
     // Remove the ID and region elements.
-    unset($form['id'], $form['region']);
+    unset($form['id'], $form['region'], $form['settings']['admin_label']);
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions = parent::actions($form, $form_state);
+    $actions['submit']['#value'] = $this->t('Save @block', ['@block' => $this->entity->getPlugin()->getPluginDefinition()['admin_label']]);
+    $actions['delete']['#access'] = FALSE;
+    return $actions;
   }
 
   /**

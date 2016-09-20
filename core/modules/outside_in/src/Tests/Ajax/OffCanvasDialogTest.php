@@ -45,6 +45,7 @@ class OffCanvasDialogTest extends AjaxTestBase {
           'resizable' => 'w',
           'draggable' => FALSE,
           'drupalAutoButtons' => FALSE,
+          'buttons' => [],
         ],
       'effect' => 'fade',
       'speed' => 1000,

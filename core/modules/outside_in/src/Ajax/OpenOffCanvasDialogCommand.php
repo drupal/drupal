@@ -37,6 +37,9 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     $this->dialogOptions['resizable'] = 'w';
     $this->dialogOptions['draggable'] = FALSE;
     $this->dialogOptions['drupalAutoButtons'] = FALSE;
+    // @todo drupal.ajax.js does not respect drupalAutoButtons properly, pass an
+    //   empty set of buttons until https://www.drupal.org/node/2793343 is in.
+    $this->dialogOptions['buttons'] = [];
   }
 
   /**

@@ -5,6 +5,7 @@
  * Allows configuring blocks and other configuration from the site front-end.
  */
 
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\outside_in\Block\BlockEntityOffCanvasForm;
 use Drupal\outside_in\Form\SystemBrandingOffCanvasForm;
@@ -135,5 +136,18 @@ function outside_in_block_alter(&$definitions) {
     if ($definition['id'] === 'system_menu_block') {
       $definition['forms']['offcanvas'] = SystemMenuOffCanvasForm::class;
     }
+  }
+}
+
+/**
+ * Implements hook_css_alter().
+ */
+function outside_in_css_alter(&$css, AttachedAssetsInterface $assets) {
+  // @todo Remove once conditional ordering is introduced in
+  //   https://www.drupal.org/node/1945262.
+  $path = drupal_get_path('module', 'outside_in') . '/css/outside_in.theme.css';
+  if (isset($css[$path])) {
+    // Use 200 to come after CSS_AGGREGATE_THEME.
+    $css[$path]['group'] = 200;
   }
 }

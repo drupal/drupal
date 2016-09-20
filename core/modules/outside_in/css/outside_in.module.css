@@ -4,11 +4,10 @@
  */
 
 /* Position the offcanvas tray container outside the right of the viewport. */
-.ui-dialog.ui-dialog-offcanvas {
+.ui-dialog-offcanvas {
   box-sizing: border-box;
   height: 100%;
-  overflow: hidden;
-  z-index: 501;
+  overflow: visible;
 }
 
 /* Shift the main canvas to the right for right-to-left languages. */
@@ -16,29 +15,16 @@
   right: 0;
 }
 
-/* Create a place to name the tray. */
-.ui-dialog.ui-dialog-offcanvas h1 {
-  padding: 15px 25% 15px 15px; /* LTR */
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: 120%;
-}
-[dir="rtl"] .ui-dialog.ui-dialog-offcanvas h1 {
-  text-align: right;
-  padding-right: 0;
-  padding-left: 25%;
-}
 
 /* Wrap the form that's inside the offcanvas tray. */
-.ui-dialog.ui-dialog-offcanvas > .ui-dialog-content {
-  padding: 0 15px;
+.ui-dialog-offcanvas .ui-dialog-content {
+  padding: 0 20px;
+  /* Prevent horizontal scrollbar. */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
-[dir="rtl"] .ui-dialog.ui-dialog-offcanvas .ui-dialog-content {
+[dir="rtl"] .ui-dialog-offcanvas .ui-dialog-content {
   text-align: right;
-}
-.ui-dialog.ui-dialog-offcanvas > .form-item,
-.ui-dialog.ui-dialog-offcanvas > .form-item .form-item {
-  width: 100%;
 }
 
 /*
@@ -49,39 +35,12 @@
 .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
   float: left;
 }
-
-/*
- * Form layout changes, mostly specific to Bartik theme and menu.
- * @todo Remove when more general form styling is done:
- *    https://www.drupal.org/node/2784437.
- */
-.ui-dialog.ui-dialog-offcanvas td {
-    width: auto;
-}
-.ui-dialog.ui-dialog-offcanvas .menu-enabled {
-    width: auto;
-}
-.ui-dialog.ui-dialog-offcanvas table#menu-overview th {
-  display: none;
-}
-.ui-dialog.ui-dialog-offcanvas table#menu-overview tr td:first-child {
-  min-width: 110px;
-}
-.ui-dialog.ui-dialog-offcanvas details > .details-wrapper {
-  padding: 5px;
-  overflow: scroll;
-}
-.ui-dialog.ui-dialog-offcanvas .tabledrag-toggle-weight {
-  font-size: 80%;
-}
-.ui-dialog.ui-dialog-offcanvas input:focus,
-.ui-dialog.ui-dialog-offcanvas summary:focus {
-  outline: none;
-  box-shadow: 2px 2px #ddd;
+[dir="rtl"] .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
+  float: right;
 }
 
 .offcanvas-lining {
-  background: #fff;
+  background: #333;
   position: absolute;
   top: 0;
   height: 100%;
