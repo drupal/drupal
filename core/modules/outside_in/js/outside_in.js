@@ -143,9 +143,28 @@
           // @todo Move logic for data-dialog-renderer attribute into ajax.js
           //   https://www.drupal.org/node/2784443
           instance.options.url = instance.options.url.replace(search, replace);
+          instance.options.data.dialogOptions = {outsideInActiveEditableId: $(instance.element).parents('.outside-in-editable').attr('id')};
           instance.progress = {type: 'fullscreen'};
         });
     }
   };
+
+  // Manage Active editable class on opening and closing of the dialog.
+  $(window).on({
+    'dialog:beforecreate': function (event, dialog, $element, settings) {
+      if ($element.is('#drupal-offcanvas')) {
+        $('body .outside-in-active-editable').removeClass('outside-in-active-editable');
+        var $activeElement = $('#' + settings.outsideInActiveEditableId);
+        if ($activeElement) {
+          $activeElement.addClass('outside-in-active-editable');
+        }
+      }
+    },
+    'dialog:beforeclose': function (event, dialog, $element) {
+      if ($element.is('#drupal-offcanvas')) {
+        $('body .outside-in-active-editable').removeClass('outside-in-active-editable');
+      }
+    }
+  });
 
 })(jQuery, Drupal);
