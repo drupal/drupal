@@ -188,13 +188,16 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     if (!method_exists($this, $method)) {
       if ($exception instanceof HttpExceptionInterface) {
         $this->onFormatUnknown($event);
+        $response = $event->getResponse();
+        $response->headers->set('Content-Type', 'text/plain');
       }
       else {
         $this->onHtml($event);
       }
-      return;
     }
-    $this->$method($event);
+    else {
+      $this->$method($event);
+    }
   }
 
   /**
