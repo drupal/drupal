@@ -5,6 +5,9 @@
  * Install, update and uninstall functions for the rest module.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Implements hook_requirements().
  */
@@ -34,7 +37,20 @@ function rest_requirements($phase) {
  * @see rest_post_update_create_rest_resource_config_entities()
  */
 function rest_update_8201() {
-  \Drupal::entityDefinitionUpdateManager()->installEntityType(\Drupal::entityTypeManager()->getDefinition('rest_resource_config'));
+  \Drupal::entityDefinitionUpdateManager()->installEntityType(new ConfigEntityType([
+    'id' => 'rest_resource_config',
+    'label' => new TranslatableMarkup('REST resource configuration'),
+    'config_prefix' => 'resource',
+    'admin_permission' => 'administer rest resources',
+    'label_callback' => 'getLabelFromPlugin',
+    'entity_keys' => ['id' => 'id'],
+    'config_export' => [
+      'id',
+      'plugin_id',
+      'granularity',
+      'configuration',
+    ],
+  ]));
   \Drupal::state()->set('rest_update_8201_resources', \Drupal::config('rest.settings')->get('resources'));
   \Drupal::configFactory()->getEditable('rest.settings')
     ->clear('resources')
