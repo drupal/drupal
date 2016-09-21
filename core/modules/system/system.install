@@ -1660,6 +1660,11 @@ function system_update_8014() {
  */
 
 /**
+ * @addtogroup updates-8.2.0
+ * @{
+ */
+
+/**
  * Fix configuration overrides to not override non existing keys.
  */
 function system_update_8200(&$sandbox) {
@@ -1681,3 +1686,14 @@ function system_update_8200(&$sandbox) {
   $sandbox['config_names'] = array_diff($sandbox['config_names'], $config_names_to_process);
   $sandbox['#finished'] = empty($sandbox['config_names']) ? 1 : ($sandbox['max'] - count($sandbox['config_names'])) / $sandbox['max'];
 }
+
+/**
+ * Clear caches due to behavior change in DefaultPluginManager.
+ */
+function system_update_8201() {
+  // Empty update to cause a cache rebuild.
+}
+
+/**
+ * @} End of "addtogroup updates-8.2.0".
+ */

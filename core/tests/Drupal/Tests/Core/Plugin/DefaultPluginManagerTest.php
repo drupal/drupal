@@ -61,6 +61,25 @@ class DefaultPluginManagerTest extends UnitTestCase {
   }
 
   /**
+   * Tests the plugin manager with a plugin that extends a non-installed class.
+   */
+  public function testDefaultPluginManagerWithPluginExtendingNonInstalledClass() {
+    $definitions = array();
+    $definitions['extending_non_installed_class'] = array(
+      'id' => 'extending_non_installed_class',
+      'label' => 'A plugin whose class is extending from a non-installed module class',
+      'color' => 'pink',
+      'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\ExtendingNonInstalledClass',
+      'provider' => 'plugin_test',
+    );
+
+    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook', '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
+    $plugin_manager->getDefinition('plugin_test', FALSE);
+    $this->assertTrue(TRUE, 'No PHP fatal error occurred when retrieving the definitions of a module with plugins that depend on a non-installed module class should not cause a PHP fatal.');
+  }
+
+  /**
    * Tests the plugin manager with a disabled module.
    */
   public function testDefaultPluginManagerWithDisabledModule() {
@@ -383,7 +402,6 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $data['no_form'][] = ['class' => TestPluginForm::class];
     $data['no_form'][] = [
       'class' => TestPluginForm::class,
-      'forms' => ['configure' => TestPluginForm::class],
       'foo' => ['bar' => ['baz']],
     ];
 
