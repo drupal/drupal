@@ -2,7 +2,9 @@
 
 namespace Drupal\comment;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines a item list class for comment fields.
@@ -35,6 +37,30 @@ class CommentFieldItemList extends FieldItemList {
       return TRUE;
     }
     return parent::offsetExists($offset);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
+    if ($operation === 'edit') {
+      // Only users with administer comments permission can edit the comment
+      // status field.
+      $result = AccessResult::allowedIfHasPermission($account ?: \Drupal::currentUser(), 'administer comments');
+      return $return_as_object ? $result : $result->isAllowed();
+    }
+    if ($operation === 'view') {
+      // Only users with either post comments or access comments permisison can
+      // view the field value. The formatter,
+      // Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter,
+      // takes care of showing the thread and form based on individual
+      // permissions, so if a user only has ‘post comments’ access, only the
+      // form will be shown and not the comments.
+      $result = AccessResult::allowedIfHasPermission($account ?: \Drupal::currentUser(), 'access comments')
+        ->orIf(AccessResult::allowedIfHasPermission($account ?: \Drupal::currentUser(), 'post comments'));
+      return $return_as_object ? $result : $result->isAllowed();
+    }
+    return parent::access($operation, $account, $return_as_object);
   }
 
 }
