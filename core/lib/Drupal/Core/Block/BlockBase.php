@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
+use Drupal\Core\Plugin\PluginWithFormsTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Transliteration\TransliterationInterface;
 
@@ -26,6 +27,7 @@ use Drupal\Component\Transliteration\TransliterationInterface;
 abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginInterface, PluginWithFormsInterface {
 
   use ContextAwarePluginAssignmentTrait;
+  use PluginWithFormsTrait;
 
   /**
    * The transliteration service.
@@ -270,22 +272,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    */
   public function setTransliteration(TransliterationInterface $transliteration) {
     $this->transliteration = $transliteration;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFormClass($operation) {
-    if ($this->hasFormClass($operation)) {
-      return $this->getPluginDefinition()['forms'][$operation];
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function hasFormClass($operation) {
-    return isset($this->getPluginDefinition()['forms'][$operation]);
   }
 
 }

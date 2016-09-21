@@ -71,6 +71,13 @@ class CustomDirectoryAnnotatedClassDiscoveryTest extends DiscoveryTestBase {
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Orange',
         'provider' => 'plugin_test',
       ),
+      'extending_non_installed_class' => array(
+        'id' => 'extending_non_installed_class',
+        'label' => 'A plugin whose class is extending from a non-installed module class',
+        'color' => 'pink',
+        'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\ExtendingNonInstalledClass',
+        'provider' => 'plugin_test',
+      ),
     );
 
     $base_directory = \Drupal::root() . '/core/modules/system/tests/modules/plugin_test/src';
