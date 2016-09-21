@@ -185,6 +185,17 @@ class ExceptionHandlingTest extends KernelTestBase {
     $this->setRawContent($response->getContent());
     $this->assertRaw(Html::escape('Escaped content: <p> <br> <h3>'));
     $this->assertNoRaw('<p> <br> <h3>');
+
+    $string = '<script>alert(123);</script>';
+    $request = Request::create('/router_test/test2?_format=json' . urlencode($string), 'GET');
+
+    $kernel = \Drupal::getContainer()->get('http_kernel');
+    $response = $kernel->handle($request)->prepare($request);
+    // As the Content-type is text/plain the fact that the raw string is
+    // contained in the output does not matter.
+    $this->assertEqual($response->headers->get('Content-type'), 'text/plain; charset=UTF-8');
+    $this->setRawContent($response->getContent());
+    $this->assertRaw($string);
   }
 
 }

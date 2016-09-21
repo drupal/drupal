@@ -384,6 +384,7 @@ class CommentNonNodeTest extends WebTestBase {
       'administer entity_test fields',
       'view test entity',
       'administer entity_test content',
+      'administer comments',
     ));
     $this->drupalLogin($limited_user);
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
