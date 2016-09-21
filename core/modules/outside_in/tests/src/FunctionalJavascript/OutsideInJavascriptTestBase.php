@@ -5,7 +5,7 @@ namespace Drupal\Tests\outside_in\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
- * Base class contains common test functionality for the Outside-In module.
+ * Base class contains common test functionality for the Settings Tray module.
  */
 abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
 

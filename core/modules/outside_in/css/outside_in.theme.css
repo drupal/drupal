@@ -1,6 +1,6 @@
 /**
  * @file
- * Visual styling for Outside-In module.
+ * Visual styling for Settings Tray module.
  */
 
 /* @todo Move this into toolbar when this module is no longer experimental:
@@ -198,7 +198,7 @@
 /* Groups below here with todos to move to new component need to load last. */
 
 /**
- * Visual styling for buttons in the Outside-In module off canvas tray.
+ * Visual styling for buttons in the Settings Tray module's off canvas tray.
  * @todo Move to it's own component:
  *   https://www.drupal.org/node/1945262.
  */
@@ -238,7 +238,7 @@
 
 
 /*
- * Visual styling for dropbutton in the Outside-In modules off canvas tray.
+ * Visual styling for dropbutton in the Settings Tray module's off canvas tray.
  * @todo Move to it's own component:
  *   https://www.drupal.org/node/1945262.
  */

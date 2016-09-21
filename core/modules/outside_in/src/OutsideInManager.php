@@ -7,7 +7,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Manages information related to Outside-In.
+ * Manages information related to Settings Tray.
  */
 class OutsideInManager implements OutsideInManagerInterface {
 

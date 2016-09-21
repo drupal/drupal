@@ -1,6 +1,6 @@
 /**
  * @file
- * Drupal's Outside-In library.
+ * Drupal's Settings Tray library.
  */
 
 (function ($, Drupal) {
@@ -52,7 +52,7 @@
 
     // Bind a listener to all 'Quick edit' links for blocks
     // Click "Edit" button in toolbar to force Contextual Edit which starts
-    // Outside-In edit mode also.
+    // Settings Tray edit mode also.
     data.$el.find('.outside-inblock-configure a').on('click', function () {
       if (!isActiveMode()) {
         $('div.contextual-toolbar-tab.toolbar-tab button').click();

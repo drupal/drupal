@@ -1,6 +1,6 @@
 /**
  * @file
- * Styling for Outside-In module.
+ * Styling for Settings Tray module.
  */
 
 /* Position the offcanvas tray container outside the right of the viewport. */
@@ -29,7 +29,7 @@
 
 /*
  * Position the edit toolbar tab.
- * @todo Move changes into contextual module when outside-in is not
+ * @todo Move changes into contextual module when Settings Tray is not
  *   experimental: https://www.drupal.org/node/2784591.
  */
 .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {

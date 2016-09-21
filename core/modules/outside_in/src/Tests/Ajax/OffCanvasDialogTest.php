@@ -9,7 +9,7 @@ use Drupal\system\Tests\Ajax\AjaxTestBase;
 /**
  * Performs tests on opening and manipulating dialogs via AJAX commands.
  *
- * @group Outside-In
+ * @group outside_in
  */
 class OffCanvasDialogTest extends AjaxTestBase {
 
