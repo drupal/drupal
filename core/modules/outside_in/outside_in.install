@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the Outside-In module.
+ * Install, update and uninstall functions for the Settings Tray module.
  */
 
 use Drupal\Core\Cache\Cache;

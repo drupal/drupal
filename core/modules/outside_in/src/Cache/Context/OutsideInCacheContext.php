@@ -34,7 +34,7 @@ class OutsideInCacheContext implements CacheContextInterface {
    * {@inheritdoc}
    */
   public static function getLabel() {
-    return t('Outside-In');
+    return t('Settings Tray');
   }
 
   /**

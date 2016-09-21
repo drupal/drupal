@@ -18,10 +18,10 @@ function outside_in_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.outside_in':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The outside-in module provides an \'edit mode\' in which clicking on a block opens a side tray which allows configuration to be altered without leaving the page.For more information, see the <a href=":outside-in-documentation">online documentation for the Outside-In module</a>.', [':outside-in-documentation' => 'https://www.drupal.org/documentation/modules/outside_in']) . '</p>';
+      $output .= '<p>' . t('The Settings Tray module provides an \'edit mode\' in which clicking on a block opens a slide-out tray which allows configuration to be altered without leaving the page.For more information, see the <a href=":outside-in-documentation">online documentation for the Settings Tray module</a>.', [':outside-in-documentation' => 'https://www.drupal.org/documentation/modules/outside_in']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Editing blocks on the same page in the side tray') . '</dt>';
+      $output .= '<dt>' . t('Editing blocks on the same page in the slide-out tray') . '</dt>';
       $output .= '</dl>';
       return ['#markup' => $output];
   }
