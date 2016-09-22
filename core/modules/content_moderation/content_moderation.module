@@ -31,7 +31,16 @@ function content_moderation_help($route_name, RouteMatchInterface $route_match) 
     case 'help.page.content_moderation':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Content Moderation module provides basic moderation for content. For more information, see the <a href=":content_moderation">online documentation for the Content Moderation module</a>.', [':content_moderation' => 'https://www.drupal.org/documentation/modules/content_moderation']) . '</p>';
+      $output .= '<p>' . t('The Content Moderation module provides basic moderation for content. This lets site admins define states for content, and then define transitions between those states. For more information, see the <a href=":content_moderation">online documentation for the Content Moderation module</a>.', [':content_moderation' => 'https://www.drupal.org/documentation/modules/content_moderation']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Moderation states') . '</dt>';
+      $output .= '<dd>' . t('Moderation states provide the <em>Draft</em> and <em>Archived</em> states as additions to the basic <em>Published</em> option. You can click the blue <em>Add Moderation state</em> button and create new states.') . '</dd>';
+      $output .= '<dt>' . t('Moderation state transitions') . '</dt>';
+      $output .= '<dd>' . t('Using the "Moderation state transitions" screen, you can create the actual workflow. You decide the direction in which content moves from state to state, and which user roles are allowed to make that move.') . '</dd>';
+      $output .= '<dt>' . t('Configure Content Moderation permissions') . '</dt>';
+      $output .= '<dd>' . t('Each state is exposed as a permission. If a user has the permission for a transition, then they can move that node from the start state to the end state') . '</p>';
+      $output .= '</dl>';
       return $output;
   }
 }
