@@ -41,7 +41,7 @@ class ModerationStateTransitionsTest extends ModerationStateTestBase {
 
     $this->drupalGet('admin/config/workflow/moderation');
     $this->clickLink('Moderation state transitions');
-    $this->assertLink('Add Moderation state transition');
+    $this->assertLink('Add moderation state transition');
     $this->assertText('Create New Draft');
 
     // Edit the Draft » Draft review.
@@ -71,7 +71,7 @@ class ModerationStateTransitionsTest extends ModerationStateTestBase {
 
     // Add a new transition.
     $this->drupalGet('admin/config/workflow/moderation/transitions');
-    $this->clickLink(t('Add Moderation state transition'));
+    $this->clickLink(t('Add moderation state transition'));
     $this->drupalPostForm(NULL, [
       'label' => 'Published » Expired',
       'id' => 'published_expired',
