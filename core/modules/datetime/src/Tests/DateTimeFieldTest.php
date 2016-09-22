@@ -594,83 +594,103 @@ class DateTimeFieldTest extends DateTestBase {
     ]);
     $field->save();
 
-    // Set now as default_value.
-    $field_edit = array(
-      'default_value_input[default_date_type]' => 'now',
-    );
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, t('Save settings'));
+    // Loop through defined timezones to test that date-only defaults work at
+    // the extremes.
+    foreach (static::$timezones as $timezone) {
 
-    // Check that default value is selected in default value form.
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->assertOptionSelected('edit-default-value-input-default-date-type', 'now', 'The default value is selected in instance settings page');
-    $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
+      $this->setSiteTimezone($timezone);
 
-    // Check if default_date has been stored successfully.
-    $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
-    $this->assertEqual($config_entity['default_value'][0], array('default_date_type' => 'now', 'default_date' => 'now'), 'Default value has been stored successfully');
+      // Set now as default_value.
+      $field_edit = array(
+        'default_value_input[default_date_type]' => 'now',
+      );
+      $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, t('Save settings'));
 
-    // Clear field cache in order to avoid stale cache values.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+      // Check that default value is selected in default value form.
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->assertOptionSelected('edit-default-value-input-default-date-type', 'now', 'The default value is selected in instance settings page');
+      $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
 
-    // Create a new node to check that datetime field default value is today.
-    $new_node = Node::create(['type' => 'date_content']);
-    $expected_date = new DrupalDateTime('now', DATETIME_STORAGE_TIMEZONE);
-    $this->assertEqual($new_node->get($field_name)->offsetGet(0)->value, $expected_date->format(DATETIME_DATE_STORAGE_FORMAT));
+      // Check if default_date has been stored successfully.
+      $config_entity = $this->config('field.field.node.date_content.' . $field_name)
+        ->get();
+      $this->assertEqual($config_entity['default_value'][0], array(
+        'default_date_type' => 'now',
+        'default_date' => 'now',
+      ), 'Default value has been stored successfully');
 
-    // Set an invalid relative default_value to test validation.
-    $field_edit = array(
-      'default_value_input[default_date_type]' => 'relative',
-      'default_value_input[default_date]' => 'invalid date',
-    );
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, t('Save settings'));
+      // Clear field cache in order to avoid stale cache values.
+      \Drupal::entityManager()->clearCachedFieldDefinitions();
 
-    $this->assertText('The relative date value entered is invalid.');
+      // Create a new node to check that datetime field default value is today.
+      $new_node = Node::create(['type' => 'date_content']);
+      $expected_date = new DrupalDateTime('now', drupal_get_user_timezone());
+      $this->assertEqual($new_node->get($field_name)
+        ->offsetGet(0)->value, $expected_date->format(DATETIME_DATE_STORAGE_FORMAT));
 
-    // Set a relative default_value.
-    $field_edit = array(
-      'default_value_input[default_date_type]' => 'relative',
-      'default_value_input[default_date]' => '+90 days',
-    );
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, t('Save settings'));
+      // Set an invalid relative default_value to test validation.
+      $field_edit = array(
+        'default_value_input[default_date_type]' => 'relative',
+        'default_value_input[default_date]' => 'invalid date',
+      );
+      $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, t('Save settings'));
 
-    // Check that default value is selected in default value form.
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->assertOptionSelected('edit-default-value-input-default-date-type', 'relative', 'The default value is selected in instance settings page');
-    $this->assertFieldByName('default_value_input[default_date]', '+90 days', 'The relative default value is displayed in instance settings page');
+      $this->assertText('The relative date value entered is invalid.');
 
-    // Check if default_date has been stored successfully.
-    $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
-    $this->assertEqual($config_entity['default_value'][0], array('default_date_type' => 'relative', 'default_date' => '+90 days'), 'Default value has been stored successfully');
+      // Set a relative default_value.
+      $field_edit = array(
+        'default_value_input[default_date_type]' => 'relative',
+        'default_value_input[default_date]' => '+90 days',
+      );
+      $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, t('Save settings'));
 
-    // Clear field cache in order to avoid stale cache values.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+      // Check that default value is selected in default value form.
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->assertOptionSelected('edit-default-value-input-default-date-type', 'relative', 'The default value is selected in instance settings page');
+      $this->assertFieldByName('default_value_input[default_date]', '+90 days', 'The relative default value is displayed in instance settings page');
 
-    // Create a new node to check that datetime field default value is +90 days.
-    $new_node = Node::create(['type' => 'date_content']);
-    $expected_date = new DrupalDateTime('+90 days', DATETIME_STORAGE_TIMEZONE);
-    $this->assertEqual($new_node->get($field_name)->offsetGet(0)->value, $expected_date->format(DATETIME_DATE_STORAGE_FORMAT));
+      // Check if default_date has been stored successfully.
+      $config_entity = $this->config('field.field.node.date_content.' . $field_name)
+        ->get();
+      $this->assertEqual($config_entity['default_value'][0], array(
+        'default_date_type' => 'relative',
+        'default_date' => '+90 days',
+      ), 'Default value has been stored successfully');
 
-    // Remove default value.
-    $field_edit = array(
-      'default_value_input[default_date_type]' => '',
-    );
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, t('Save settings'));
+      // Clear field cache in order to avoid stale cache values.
+      \Drupal::entityManager()->clearCachedFieldDefinitions();
 
-    // Check that default value is selected in default value form.
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->assertOptionSelected('edit-default-value-input-default-date-type', '', 'The default value is selected in instance settings page');
-    $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
+      // Create a new node to check that datetime field default value is +90
+      // days.
+      $new_node = Node::create(['type' => 'date_content']);
+      $expected_date = new DrupalDateTime('+90 days', drupal_get_user_timezone());
+      $this->assertEqual($new_node->get($field_name)
+        ->offsetGet(0)->value, $expected_date->format(DATETIME_DATE_STORAGE_FORMAT));
 
-    // Check if default_date has been stored successfully.
-    $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
-    $this->assertTrue(empty($config_entity['default_value']), 'Empty default value has been stored successfully');
+      // Remove default value.
+      $field_edit = array(
+        'default_value_input[default_date_type]' => '',
+      );
+      $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, t('Save settings'));
 
-    // Clear field cache in order to avoid stale cache values.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+      // Check that default value is selected in default value form.
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->assertOptionSelected('edit-default-value-input-default-date-type', '', 'The default value is selected in instance settings page');
+      $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
 
-    // Create a new node to check that datetime field default value is not set.
-    $new_node = Node::create(['type' => 'date_content']);
-    $this->assertNull($new_node->get($field_name)->value, 'Default value is not set');
+      // Check if default_date has been stored successfully.
+      $config_entity = $this->config('field.field.node.date_content.' . $field_name)
+        ->get();
+      $this->assertTrue(empty($config_entity['default_value']), 'Empty default value has been stored successfully');
+
+      // Clear field cache in order to avoid stale cache values.
+      \Drupal::entityManager()->clearCachedFieldDefinitions();
+
+      // Create a new node to check that datetime field default value is not
+      // set.
+      $new_node = Node::create(['type' => 'date_content']);
+      $this->assertNull($new_node->get($field_name)->value, 'Default value is not set');
+    }
   }
 
   /**
