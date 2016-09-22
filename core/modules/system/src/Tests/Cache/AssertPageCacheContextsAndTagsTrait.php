@@ -142,7 +142,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @param bool $include_default_contexts
    *   (optional) Whether the default contexts should automatically be included.
    *
-   * @return
+   * @return bool
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertCacheContexts(array $expected_contexts, $message = NULL, $include_default_contexts = TRUE) {
@@ -159,12 +159,17 @@ trait AssertPageCacheContextsAndTagsTrait {
     $actual_contexts = $this->getCacheHeaderValues('X-Drupal-Cache-Contexts');
     sort($expected_contexts);
     sort($actual_contexts);
-    $return = $this->assertIdentical($actual_contexts, $expected_contexts, $message);
-    if (!$return) {
+    $match = $actual_contexts === $expected_contexts;
+    if (!$match) {
       debug('Unwanted cache contexts in response: ' . implode(',', array_diff($actual_contexts, $expected_contexts)));
       debug('Missing cache contexts in response: ' . implode(',', array_diff($expected_contexts, $actual_contexts)));
     }
-    return $return;
+
+    $this->assertIdentical($actual_contexts, $expected_contexts, $message);
+
+    // For compatibility with both BrowserTestBase and WebTestBase always return
+    // a boolean.
+    return $match;
   }
 
   /**
