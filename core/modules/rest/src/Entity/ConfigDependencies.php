@@ -8,6 +8,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Calculates rest resource config dependencies.
+ *
+ * @internal
  */
 class ConfigDependencies implements ContainerInjectionInterface {
 
@@ -51,13 +53,20 @@ class ConfigDependencies implements ContainerInjectionInterface {
   /**
    * Calculates dependencies of a specific rest resource configuration.
    *
+   * This function returns dependencies in a non-sorted, non-unique manner. It
+   * is therefore the caller's responsibility to sort and remove duplicates
+   * from the result prior to saving it with the configuration or otherwise
+   * using it in a way that requires that. For example,
+   * \Drupal\rest\Entity\RestResourceConfig::calculateDependencies() does this
+   * via its \Drupal\Core\Entity\DependencyTrait::addDependency() method.
+   *
    * @param \Drupal\rest\RestResourceConfigInterface $rest_config
    *   The rest configuration.
    *
    * @return string[][]
    *   Dependencies keyed by dependency type.
    *
-   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
+   * @see \Drupal\rest\Entity\RestResourceConfig::calculateDependencies()
    */
   public function calculateDependencies(RestResourceConfigInterface $rest_config) {
     $granularity = $rest_config->get('granularity');
@@ -94,10 +103,6 @@ class ConfigDependencies implements ContainerInjectionInterface {
           $dependencies['module'][] = $module_name;
         }
       }
-    }
-
-    if (isset($dependencies['module'])) {
-      sort($dependencies['module']);
     }
 
     return $dependencies;
@@ -156,12 +161,12 @@ class ConfigDependencies implements ContainerInjectionInterface {
         // authentication providers and formats.
         foreach (array_keys($rest_config->get('configuration')) as $request_method) {
           foreach ($removed_formats as $format) {
-            if (in_array($format, $rest_config->getFormats($request_method))) {
+            if (in_array($format, $rest_config->getFormats($request_method), TRUE)) {
               $configuration[$request_method]['supported_formats'] = array_diff($configuration[$request_method]['supported_formats'], $removed_formats);
             }
           }
           foreach ($removed_auth as $auth) {
-            if (in_array($auth, $rest_config->getAuthenticationProviders($request_method))) {
+            if (in_array($auth, $rest_config->getAuthenticationProviders($request_method), TRUE)) {
               $configuration[$request_method]['supported_auth'] = array_diff($configuration[$request_method]['supported_auth'], $removed_auth);
             }
           }
@@ -207,7 +212,7 @@ class ConfigDependencies implements ContainerInjectionInterface {
    * @return bool
    *   TRUE if the entity has been changed as a result, FALSE if not.
    */
-  public function onDependencyRemovalForResourceGranularity(RestResourceConfigInterface $rest_config, array $dependencies) {
+  protected function onDependencyRemovalForResourceGranularity(RestResourceConfigInterface $rest_config, array $dependencies) {
     $changed = FALSE;
     // Only module-related dependencies can be fixed. All other types of
     // dependencies cannot, because they were not generated based on supported
@@ -218,15 +223,19 @@ class ConfigDependencies implements ContainerInjectionInterface {
       $removed_formats = array_keys(array_intersect($this->formatProviders, $dependencies['module']));
       $configuration_before = $configuration = $rest_config->get('configuration');
       if (!empty($removed_auth) || !empty($removed_formats)) {
+        // All methods support the same formats and authentication providers, so
+        // get those for whichever the first listed method is.
+        $first_method = $rest_config->getMethods()[0];
+
         // Try to fix dependency problems by removing affected
         // authentication providers and formats.
         foreach ($removed_formats as $format) {
-          if (in_array($format, $rest_config->getFormats('GET'))) {
+          if (in_array($format, $rest_config->getFormats($first_method), TRUE)) {
             $configuration['formats'] = array_diff($configuration['formats'], $removed_formats);
           }
         }
         foreach ($removed_auth as $auth) {
-          if (in_array($auth, $rest_config->getAuthenticationProviders('GET'))) {
+          if (in_array($auth, $rest_config->getAuthenticationProviders($first_method), TRUE)) {
             $configuration['authentication'] = array_diff($configuration['authentication'], $removed_auth);
           }
         }
