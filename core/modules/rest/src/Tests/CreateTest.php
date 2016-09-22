@@ -366,10 +366,16 @@ class CreateTest extends RESTTestBase {
     // Note: this will fail with PHP 5.6 when always_populate_raw_post_data is
     // set to something other than -1. See https://www.drupal.org/node/2456025.
     // Try first without the CSRF token, which should fail.
-    $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, $this->defaultMimeType, TRUE);
-    $this->assertResponse(403, 'X-CSRF-Token request header is missing');
+    $url = Url::fromUri('internal:/entity/' . $entity_type)->setOption('query', ['_format' => $this->defaultFormat]);
+    $this->httpRequest($url, 'POST', $serialized, $this->defaultMimeType, FALSE);
+    $this->assertResponse(403);
+    $this->assertRaw('X-CSRF-Token request header is missing');
+    // Then try with an invalid CSRF token.
+    $this->httpRequest($url, 'POST', $serialized, $this->defaultMimeType, 'invalid-csrf-token');
+    $this->assertResponse(403);
+    $this->assertRaw('X-CSRF-Token request header is invalid');
     // Then try with the CSRF token.
-    $response = $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, $this->defaultMimeType);
+    $response = $this->httpRequest($url, 'POST', $serialized, $this->defaultMimeType);
     $this->assertResponse(201);
 
     // Make sure that the response includes an entity in the body and check the

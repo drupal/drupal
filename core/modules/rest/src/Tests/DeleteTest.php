@@ -38,10 +38,17 @@ class DeleteTest extends RESTTestBase {
       $entity = $this->entityCreate($entity_type);
       $entity->save();
       // Try first to delete over REST API without the CSRF token.
-      $this->httpRequest($entity->urlInfo(), 'DELETE', NULL, NULL, TRUE);
-      $this->assertResponse(403, 'X-CSRF-Token request header is missing');
+      $url = $entity->toUrl()->setRouteParameter('_format', $this->defaultFormat);
+      $this->httpRequest($url, 'DELETE', NULL, 'application/hal+json', FALSE);
+      $this->assertResponse(403);
+      $this->assertRaw('X-CSRF-Token request header is missing');
+      // Then try with an invalid CSRF token.
+      $this->httpRequest($url, 'DELETE', NULL, 'application/hal+json', 'invalid-csrf-token');
+      $this->assertResponse(403);
+      $this->assertRaw('X-CSRF-Token request header is invalid');
       // Delete it over the REST API.
-      $response = $this->httpRequest($entity->urlInfo(), 'DELETE');
+      $response = $this->httpRequest($url, 'DELETE');
+      $this->assertResponse(204);
       // Clear the static cache with entity_load(), otherwise we won't see the
       // update.
       $storage = $this->container->get('entity_type.manager')
