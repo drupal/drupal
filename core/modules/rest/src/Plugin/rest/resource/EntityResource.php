@@ -95,7 +95,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    *
-   * @return \Drupal\rest\ModifiedResourceResponse
+   * @return \Drupal\rest\ResourceResponse
    *   The response containing the entity with its accessible fields.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
@@ -131,7 +131,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
-   * @return \Drupal\rest\ResourceResponse
+   * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
@@ -191,7 +191,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
-   * @return \Drupal\rest\ResourceResponse
+   * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
@@ -255,7 +255,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    *
-   * @return \Drupal\rest\ResourceResponse
+   * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
