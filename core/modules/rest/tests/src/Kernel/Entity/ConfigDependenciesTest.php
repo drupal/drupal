@@ -31,7 +31,7 @@ class ConfigDependenciesTest extends KernelTestBase {
 
     $result = $config_dependencies->calculateDependencies($rest_config);
     $this->assertEquals(['module' => [
-      'basic_auth', 'hal', 'serialization',
+      'basic_auth', 'serialization', 'hal',
     ]], $result);
   }
 
@@ -64,11 +64,11 @@ class ConfigDependenciesTest extends KernelTestBase {
           'granularity' => RestResourceConfigInterface::METHOD_GRANULARITY,
           'configuration' => [
             'GET' => [
-              'supported_auth' => ['cookie'],
+              'supported_auth' => ['basic_auth'],
               'supported_formats' => ['json'],
             ],
             'POST' => [
-              'supported_auth' => ['basic_auth'],
+              'supported_auth' => ['cookie'],
               'supported_formats' => ['hal_json'],
             ],
           ],
