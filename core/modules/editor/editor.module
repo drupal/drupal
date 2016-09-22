@@ -468,6 +468,78 @@ function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count
 }
 
 /**
+ * Implements hook_file_download().
+ *
+ * @see file_file_download()
+ * @see file_get_file_references()
+ */
+function editor_file_download($uri) {
+  // Get the file record based on the URI. If not in the database just return.
+  /** @var \Drupal\file\FileInterface[] $files */
+  $files = \Drupal::entityTypeManager()
+    ->getStorage('file')
+    ->loadByProperties(['uri' => $uri]);
+  if (count($files)) {
+    foreach ($files as $item) {
+      // Since some database servers sometimes use a case-insensitive comparison
+      // by default, double check that the filename is an exact match.
+      if ($item->getFileUri() === $uri) {
+        $file = $item;
+        break;
+      }
+    }
+  }
+  if (!isset($file)) {
+    return;
+  }
+
+  // Temporary files are handled by file_file_download(), so nothing to do here
+  // about them.
+  // @see file_file_download()
+
+  // Find out if any editor-backed field contains the file.
+  $usage_list = \Drupal::service('file.usage')->listUsage($file);
+
+  // Stop processing if there are no references in order to avoid returning
+  // headers for files controlled by other modules. Make an exception for
+  // temporary files where the host entity has not yet been saved (for example,
+  // an image preview on a node creation form) in which case, allow download by
+  // the file's owner.
+  if (empty($usage_list['editor']) && ($file->isPermanent() || $file->getOwnerId() != \Drupal::currentUser()->id())) {
+    return;
+  }
+
+  // Editor.module MUST NOT call $file->access() here (like file_file_download()
+  // does) as checking the 'download' access to a file entity would end up in
+  // FileAccessControlHandler->checkAccess() and ->getFileReferences(), which
+  // calls file_get_file_references(). This latter one would allow downloading
+  // files only handled by the file.module, which is exactly not the case right
+  // here. So instead we must check if the current user is allowed to view any
+  // of the entities that reference the image using the 'editor' module.
+  if ($file->isPermanent()) {
+    $referencing_entity_is_accessible = FALSE;
+    $references = empty($usage_list['editor']) ? [] : $usage_list['editor'];
+    foreach ($references as $entity_type => $entity_ids) {
+      $referencing_entities = entity_load_multiple($entity_type, $entity_ids);
+      /** @var \Drupal\Core\Entity\EntityInterface $referencing_entity */
+      foreach ($referencing_entities as $referencing_entity) {
+        if ($referencing_entity->access('view', NULL, TRUE)->isAllowed()) {
+          $referencing_entity_is_accessible = TRUE;
+          break 2;
+        }
+      }
+    }
+    if (!$referencing_entity_is_accessible) {
+      return -1;
+    }
+  }
+
+  // Access is granted.
+  $headers = file_get_content_headers($file);
+  return $headers;
+}
+
+/**
  * Finds all files referenced (data-entity-uuid) by formatted text fields.
  *
  * @param EntityInterface $entity
