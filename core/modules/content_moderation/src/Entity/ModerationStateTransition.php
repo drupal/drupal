@@ -18,6 +18,9 @@ use Drupal\content_moderation\ModerationStateTransitionInterface;
  *       "edit" = "Drupal\content_moderation\Form\ModerationStateTransitionForm",
  *       "delete" = "Drupal\content_moderation\Form\ModerationStateTransitionDeleteForm"
  *     },
+ *     "route_provider" = {
+ *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *     },
  *   },
  *   config_prefix = "state_transition",
  *   admin_permission = "administer moderation state transitions",
@@ -28,7 +31,8 @@ use Drupal\content_moderation\ModerationStateTransitionInterface;
  *     "weight" = "weight"
  *   },
  *   links = {
- *     "edit-form" = "/admin/config/workflow/moderation/transitions/{moderation_state_transition}/edit",
+ *     "add-form" = "/admin/config/workflow/moderation/transitions/add",
+ *     "edit-form" = "/admin/config/workflow/moderation/transitions/{moderation_state_transition}",
  *     "delete-form" = "/admin/config/workflow/moderation/transitions/{moderation_state_transition}/delete",
  *     "collection" = "/admin/config/workflow/moderation/transitions"
  *   }

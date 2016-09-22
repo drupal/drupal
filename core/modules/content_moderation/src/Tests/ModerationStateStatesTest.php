@@ -43,7 +43,7 @@ class ModerationStateStatesTest extends ModerationStateTestBase {
     $this->assertLink('Moderation states');
     $this->assertLink('Moderation state transitions');
     $this->clickLink('Moderation states');
-    $this->assertLink('Add Moderation state');
+    $this->assertLink('Add moderation state');
     $this->assertText('Draft');
     // Edit the draft.
     $this->clickLink('Edit', 0);
@@ -59,7 +59,7 @@ class ModerationStateStatesTest extends ModerationStateTestBase {
       'label' => 'Draft',
     ], t('Save'));
     $this->assertText('Saved the Draft Moderation state.');
-    $this->clickLink(t('Add Moderation state'));
+    $this->clickLink(t('Add moderation state'));
     $this->drupalPostForm(NULL, [
       'label' => 'Expired',
       'id' => 'expired',

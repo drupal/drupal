@@ -18,7 +18,7 @@ class ModerationStateAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    $admin_access = AccessResult::allowedIfHasPermission($account, 'administer moderation states');
+    $admin_access = parent::checkAccess($entity, $operation, $account);
 
     // Allow view with other permission.
     if ($operation === 'view') {
@@ -26,13 +26,6 @@ class ModerationStateAccessControlHandler extends EntityAccessControlHandler {
     }
 
     return $admin_access;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIfHasPermission($account, 'administer moderation states');
   }
 
 }

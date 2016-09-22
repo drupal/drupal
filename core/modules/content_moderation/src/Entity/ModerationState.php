@@ -19,8 +19,12 @@ use Drupal\content_moderation\ModerationStateInterface;
  *       "edit" = "Drupal\content_moderation\Form\ModerationStateForm",
  *       "delete" = "Drupal\content_moderation\Form\ModerationStateDeleteForm"
  *     },
+ *     "route_provider" = {
+ *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *     },
  *   },
  *   config_prefix = "state",
+ *   admin_permission = "administer moderation states",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
@@ -28,7 +32,8 @@ use Drupal\content_moderation\ModerationStateInterface;
  *     "weight" = "weight",
  *   },
  *   links = {
- *     "edit-form" = "/admin/config/workflow/moderation/states/{moderation_state}/edit",
+ *     "add-form" = "/admin/config/workflow/moderation/states/add",
+ *     "edit-form" = "/admin/config/workflow/moderation/states/{moderation_state}",
  *     "delete-form" = "/admin/config/workflow/moderation/states/{moderation_state}/delete",
  *     "collection" = "/admin/config/workflow/moderation/states"
  *   },
