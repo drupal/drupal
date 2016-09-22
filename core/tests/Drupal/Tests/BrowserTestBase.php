@@ -23,6 +23,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\Error;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\simpletest\AssertHelperTrait;
@@ -32,6 +33,8 @@ use Drupal\simpletest\NodeCreationTrait;
 use Drupal\simpletest\UserCreationTrait;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Provides a test case for functional Drupal tests.
@@ -349,7 +352,14 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     $driver = $this->getDefaultDriverInstance();
 
     if ($driver instanceof GoutteDriver) {
-      $driver->getClient()->setClient(\Drupal::httpClient());
+      $client = \Drupal::httpClient();
+
+      // Inject a Guzzle middleware to generate debug output for every request
+      // performed in the test.
+      $handler_stack = $client->getConfig('handler');
+      $handler_stack->push($this->getResponseLogHandler());
+
+      $driver->getClient()->setClient($client);
     }
 
     $session = new Session($driver);
@@ -406,6 +416,43 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       $driver = new $this->minkDefaultDriverClass();
     }
     return $driver;
+  }
+
+  /**
+   * Provides a Guzzle middleware handler to log every response received.
+   *
+   * @return callable
+   *   The callable handler that will do the logging.
+   */
+  protected function getResponseLogHandler() {
+    return function (callable $handler) {
+      return function (RequestInterface $request, array $options) use ($handler) {
+        return $handler($request, $options)
+          ->then(function (ResponseInterface $response) use ($request) {
+            if ($this->htmlOutputEnabled) {
+
+              $caller = $this->getTestMethodCaller();
+              $html_output = 'Called from ' . $caller['function'] . ' line ' . $caller['line'];
+              $html_output .= '<hr />' . $request->getMethod() . ' request to: ' . $request->getUri();
+
+              // On redirect responses (status code starting with '3') we need
+              // to remove the meta tag that would do a browser refresh. We
+              // don't want to redirect developers away when they look at the
+              // debug output file in their browser.
+              $body = $response->getBody();
+              $status_code = (string) $response->getStatusCode();
+              if ($status_code[0] === '3') {
+                $body = preg_replace('#<meta http-equiv="refresh" content=.+/>#', '', $body, 1);
+              }
+              $html_output .= '<hr />' . $body;
+              $html_output .= $this->formatHtmlOutputHeaders($response->getHeaders());
+
+              $this->htmlOutput($html_output);
+            }
+            return $response;
+          });
+      };
+    };
   }
 
   /**
@@ -701,7 +748,9 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
 
-    if ($this->htmlOutputEnabled) {
+    // Log only for JavascriptTestBase tests because for Goutte we log with
+    // ::getResponseLogHandler.
+    if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
       $html_output = 'GET request to: ' . $url .
         '<hr />Ending URL: ' . $this->getSession()->getCurrentUrl();
       $html_output .= '<hr />' . $out;
@@ -871,7 +920,10 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
 
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
-    if ($this->htmlOutputEnabled) {
+
+    // Log only for JavascriptTestBase tests because for Goutte we log with
+    // ::getResponseLogHandler.
+    if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
       $out = $this->getSession()->getPage()->getContent();
       $html_output = 'POST request to: ' . $action .
         '<hr />Ending URL: ' . $this->getSession()->getCurrentUrl();
@@ -879,6 +931,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       $html_output .= $this->getHtmlOutputHeaders();
       $this->htmlOutput($html_output);
     }
+
   }
 
   /**
@@ -1578,15 +1631,28 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   HTML output headers.
    */
   protected function getHtmlOutputHeaders() {
-    $headers = array_map(function($headers) {
-      if (is_array($headers)) {
-        return implode(';', array_map('trim', $headers));
+    return $this->formatHtmlOutputHeaders($this->getSession()->getResponseHeaders());
+  }
+
+  /**
+   * Formats HTTP headers as string for HTML output logging.
+   *
+   * @param array[] $headers
+   *   Headers that should be formatted.
+   *
+   * @return string
+   *   The formatted HTML string.
+   */
+  protected function formatHtmlOutputHeaders(array $headers) {
+    $flattened_headers = array_map(function($header) {
+      if (is_array($header)) {
+        return implode(';', array_map('trim', $header));
       }
       else {
-        return $headers;
+        return $header;
       }
-    }, $this->getSession()->getResponseHeaders());
-    return '<hr />Headers: <pre>' . Html::escape(var_export($headers, TRUE)) . '</pre>';
+    }, $headers);
+    return '<hr />Headers: <pre>' . Html::escape(var_export($flattened_headers, TRUE)) . '</pre>';
   }
 
   /**
@@ -1786,6 +1852,26 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     }
     // Filter out any duplicates.
     return array_unique($exceptions);
+  }
+
+  /**
+   * Retrieves the current calling line in the class under test.
+   *
+   * @return array
+   *   An associative array with keys 'file', 'line' and 'function'.
+   */
+  protected function getTestMethodCaller() {
+    $backtrace = debug_backtrace();
+
+    // Remove all calls until we reach the current test class.
+    while (($caller = $backtrace[1]) &&
+      (!isset($caller['class']) || $caller['class'] !== get_class($this))
+    ) {
+      // We remove that call.
+      array_shift($backtrace);
+    }
+
+    return Error::getLastCaller($backtrace);
   }
 
 }
