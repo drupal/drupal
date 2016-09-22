@@ -464,7 +464,7 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $re
  *     'bundle' => $bundle,
  *     'mode' => $view_mode,
  *     'status' => TRUE,
- *   ));
+ *   );
  *   \Drupal::entityTypeManager()
  *     ->getStorage('entity_view_display')
  *     ->create($values);
