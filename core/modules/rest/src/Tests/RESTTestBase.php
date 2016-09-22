@@ -85,19 +85,22 @@ abstract class RESTTestBase extends WebTestBase {
    *   The body for POST and PUT.
    * @param string $mime_type
    *   The MIME type of the transmitted content.
-   * @param bool $forget_xcsrf_token
-   *   If TRUE, the CSRF token won't be included in request.
+   * @param bool $csrf_token
+   *   If NULL, a CSRF token will be retrieved and used. If FALSE, omit the
+   *   X-CSRF-Token request header (to simulate developer error). Otherwise, the
+   *   passed in value will be used as the value for the X-CSRF-Token request
+   *   header (to simulate developer error, by sending an invalid CSRF token).
    *
    * @return string
    *   The content returned from the request.
    */
-  protected function httpRequest($url, $method, $body = NULL, $mime_type = NULL, $forget_xcsrf_token = FALSE) {
+  protected function httpRequest($url, $method, $body = NULL, $mime_type = NULL, $csrf_token = NULL) {
     if (!isset($mime_type)) {
       $mime_type = $this->defaultMimeType;
     }
     if (!in_array($method, array('GET', 'HEAD', 'OPTIONS', 'TRACE'))) {
       // GET the CSRF token first for writing requests.
-      $token = $this->drupalGet('session/token');
+      $requested_token = $this->drupalGet('session/token');
     }
 
     $url = $this->buildUrl($url);
@@ -132,9 +135,9 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_POSTFIELDS => $body,
           CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => !$forget_xcsrf_token ? array(
+          CURLOPT_HTTPHEADER => $csrf_token !== FALSE ? array(
             'Content-Type: ' . $mime_type,
-            'X-CSRF-Token: ' . $token,
+            'X-CSRF-Token: ' . ($csrf_token === NULL ? $requested_token : $csrf_token),
           ) : array(
             'Content-Type: ' . $mime_type,
           ),
@@ -148,9 +151,9 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_POSTFIELDS => $body,
           CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => !$forget_xcsrf_token ? array(
+          CURLOPT_HTTPHEADER => $csrf_token !== FALSE ? array(
             'Content-Type: ' . $mime_type,
-            'X-CSRF-Token: ' . $token,
+            'X-CSRF-Token: ' . ($csrf_token === NULL ? $requested_token : $csrf_token),
           ) : array(
             'Content-Type: ' . $mime_type,
           ),
@@ -164,9 +167,9 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_POSTFIELDS => $body,
           CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => !$forget_xcsrf_token ? array(
+          CURLOPT_HTTPHEADER => $csrf_token !== FALSE ? array(
             'Content-Type: ' . $mime_type,
-            'X-CSRF-Token: ' . $token,
+            'X-CSRF-Token: ' . ($csrf_token === NULL ? $requested_token : $csrf_token),
           ) : array(
             'Content-Type: ' . $mime_type,
           ),
@@ -179,7 +182,9 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_CUSTOMREQUEST => 'DELETE',
           CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => !$forget_xcsrf_token ? array('X-CSRF-Token: ' . $token) : array(),
+          CURLOPT_HTTPHEADER => $csrf_token !== FALSE ? array(
+            'X-CSRF-Token: ' . ($csrf_token === NULL ? $requested_token : $csrf_token),
+          ) : array(),
         );
         break;
     }
@@ -197,6 +202,8 @@ abstract class RESTTestBase extends WebTestBase {
 
     $this->verbose($method . ' request to: ' . $url .
       '<hr />Code: ' . curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE) .
+      (isset($curl_options[CURLOPT_HTTPHEADER]) ? '<hr />Request headers: ' . nl2br(print_r($curl_options[CURLOPT_HTTPHEADER], TRUE)) : '' ) .
+      (isset($curl_options[CURLOPT_POSTFIELDS]) ? '<hr />Request body: ' . nl2br(print_r($curl_options[CURLOPT_POSTFIELDS], TRUE)) : '' ) .
       '<hr />Response headers: ' . nl2br(print_r($headers, TRUE)) .
       '<hr />Response body: ' . $this->responseBody);
 
