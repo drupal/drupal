@@ -53,9 +53,11 @@
   Drupal.Views.parseViewArgs = function (href, viewPath) {
     var returnObj = {};
     var path = Drupal.Views.getPath(href);
+    // Get viewPath url without baseUrl portion.
+    var viewHref = Drupal.url(viewPath).substring(drupalSettings.path.baseUrl.length);
     // Ensure we have a correct path.
-    if (viewPath && path.substring(0, viewPath.length + 1) === viewPath + '/') {
-      returnObj.view_args = decodeURIComponent(path.substring(viewPath.length + 1, path.length));
+    if (viewHref && path.substring(0, viewHref.length + 1) === viewHref + '/') {
+      returnObj.view_args = decodeURIComponent(path.substring(viewHref.length + 1, path.length));
       returnObj.view_path = path;
     }
     return returnObj;
