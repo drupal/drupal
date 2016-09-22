@@ -146,183 +146,183 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
     return array(
       // "basicstyles" plugin.
       'Bold' => array(
-        'label' => t('Bold'),
+        'label' => $this->t('Bold'),
         'image_alternative' => $button('bold'),
         'image_alternative_rtl' => $button('bold', 'rtl'),
       ),
       'Italic' => array(
-        'label' => t('Italic'),
+        'label' => $this->t('Italic'),
         'image_alternative' => $button('italic'),
         'image_alternative_rtl' => $button('italic', 'rtl'),
       ),
       'Underline' => array(
-        'label' => t('Underline'),
+        'label' => $this->t('Underline'),
         'image_alternative' => $button('underline'),
         'image_alternative_rtl' => $button('underline', 'rtl'),
       ),
       'Strike' => array(
-        'label' => t('Strike-through'),
+        'label' => $this->t('Strike-through'),
         'image_alternative' => $button('strike'),
         'image_alternative_rtl' => $button('strike', 'rtl'),
       ),
       'Superscript' => array(
-        'label' => t('Superscript'),
+        'label' => $this->t('Superscript'),
         'image_alternative' => $button('super script'),
         'image_alternative_rtl' => $button('super script', 'rtl'),
       ),
       'Subscript' => array(
-        'label' => t('Subscript'),
+        'label' => $this->t('Subscript'),
         'image_alternative' => $button('sub script'),
         'image_alternative_rtl' => $button('sub script', 'rtl'),
       ),
       // "removeformat" plugin.
       'RemoveFormat' => array(
-        'label' => t('Remove format'),
+        'label' => $this->t('Remove format'),
         'image_alternative' => $button('remove format'),
         'image_alternative_rtl' => $button('remove format', 'rtl'),
       ),
       // "justify" plugin.
       'JustifyLeft' => array(
-        'label' => t('Align left'),
+        'label' => $this->t('Align left'),
         'image_alternative' => $button('justify left'),
         'image_alternative_rtl' => $button('justify left', 'rtl'),
       ),
       'JustifyCenter' => array(
-        'label' => t('Align center'),
+        'label' => $this->t('Align center'),
         'image_alternative' => $button('justify center'),
         'image_alternative_rtl' => $button('justify center', 'rtl'),
       ),
       'JustifyRight' => array(
-        'label' => t('Align right'),
+        'label' => $this->t('Align right'),
         'image_alternative' => $button('justify right'),
         'image_alternative_rtl' => $button('justify right', 'rtl'),
       ),
       'JustifyBlock' => array(
-        'label' => t('Justify'),
+        'label' => $this->t('Justify'),
         'image_alternative' => $button('justify block'),
         'image_alternative_rtl' => $button('justify block', 'rtl'),
       ),
       // "list" plugin.
       'BulletedList' => array(
-        'label' => t('Bullet list'),
+        'label' => $this->t('Bullet list'),
         'image_alternative' => $button('bulleted list'),
         'image_alternative_rtl' => $button('bulleted list', 'rtl'),
       ),
       'NumberedList' => array(
-        'label' => t('Numbered list'),
+        'label' => $this->t('Numbered list'),
         'image_alternative' => $button('numbered list'),
         'image_alternative_rtl' => $button('numbered list', 'rtl'),
       ),
       // "indent" plugin.
       'Outdent' => array(
-        'label' => t('Outdent'),
+        'label' => $this->t('Outdent'),
         'image_alternative' => $button('outdent'),
         'image_alternative_rtl' => $button('outdent', 'rtl'),
       ),
       'Indent' => array(
-        'label' => t('Indent'),
+        'label' => $this->t('Indent'),
         'image_alternative' => $button('indent'),
         'image_alternative_rtl' => $button('indent', 'rtl'),
       ),
       // "undo" plugin.
       'Undo' => array(
-        'label' => t('Undo'),
+        'label' => $this->t('Undo'),
         'image_alternative' => $button('undo'),
         'image_alternative_rtl' => $button('undo', 'rtl'),
       ),
       'Redo' => array(
-        'label' => t('Redo'),
+        'label' => $this->t('Redo'),
         'image_alternative' => $button('redo'),
         'image_alternative_rtl' => $button('redo', 'rtl'),
       ),
       // "blockquote" plugin.
       'Blockquote' => array(
-        'label' => t('Blockquote'),
+        'label' => $this->t('Blockquote'),
         'image_alternative' => $button('blockquote'),
         'image_alternative_rtl' => $button('blockquote', 'rtl'),
       ),
       // "horizontalrule" plugin
       'HorizontalRule' => array(
-        'label' => t('Horizontal rule'),
+        'label' => $this->t('Horizontal rule'),
         'image_alternative' => $button('horizontal rule'),
         'image_alternative_rtl' => $button('horizontal rule', 'rtl'),
       ),
       // "clipboard" plugin.
       'Cut' => array(
-        'label' => t('Cut'),
+        'label' => $this->t('Cut'),
         'image_alternative' => $button('cut'),
         'image_alternative_rtl' => $button('cut', 'rtl'),
       ),
       'Copy' => array(
-        'label' => t('Copy'),
+        'label' => $this->t('Copy'),
         'image_alternative' => $button('copy'),
         'image_alternative_rtl' => $button('copy', 'rtl'),
       ),
       'Paste' => array(
-        'label' => t('Paste'),
+        'label' => $this->t('Paste'),
         'image_alternative' => $button('paste'),
         'image_alternative_rtl' => $button('paste', 'rtl'),
       ),
       // "pastetext" plugin.
       'PasteText' => array(
-        'label' => t('Paste Text'),
+        'label' => $this->t('Paste Text'),
         'image_alternative' => $button('paste text'),
         'image_alternative_rtl' => $button('paste text', 'rtl'),
       ),
       // "pastefromword" plugin.
       'PasteFromWord' => array(
-        'label' => t('Paste from Word'),
+        'label' => $this->t('Paste from Word'),
         'image_alternative' => $button('paste from word'),
         'image_alternative_rtl' => $button('paste from word', 'rtl'),
       ),
       // "specialchar" plugin.
       'SpecialChar' => array(
-        'label' => t('Character map'),
+        'label' => $this->t('Character map'),
         'image_alternative' => $button('special char'),
         'image_alternative_rtl' => $button('special char', 'rtl'),
       ),
       'Format' => array(
-        'label' => t('HTML block format'),
+        'label' => $this->t('HTML block format'),
         'image_alternative' => [
           '#type' => 'inline_template',
           '#template' => '<a href="#" role="button" aria-label="{{ format_text }}"><span class="ckeditor-button-dropdown">{{ format_text }}<span class="ckeditor-button-arrow"></span></span></a>',
           '#context' => [
-            'format_text' => t('Format'),
+            'format_text' => $this->t('Format'),
           ],
         ],
       ),
       // "table" plugin.
       'Table' => array(
-        'label' => t('Table'),
+        'label' => $this->t('Table'),
         'image_alternative' => $button('table'),
         'image_alternative_rtl' => $button('table', 'rtl'),
       ),
       // "showblocks" plugin.
       'ShowBlocks' => array(
-        'label' => t('Show blocks'),
+        'label' => $this->t('Show blocks'),
         'image_alternative' => $button('show blocks'),
         'image_alternative_rtl' => $button('show blocks', 'rtl'),
       ),
       // "sourcearea" plugin.
       'Source' => array(
-        'label' => t('Source code'),
+        'label' => $this->t('Source code'),
         'image_alternative' => $button('source'),
         'image_alternative_rtl' => $button('source', 'rtl'),
       ),
       // "maximize" plugin.
       'Maximize' => array(
-        'label' => t('Maximize'),
+        'label' => $this->t('Maximize'),
         'image_alternative' => $button('maximize'),
         'image_alternative_rtl' => $button('maximize', 'rtl'),
       ),
       // No plugin, separator "button" for toolbar builder UI use only.
       '-' => array(
-        'label' => t('Separator'),
+        'label' => $this->t('Separator'),
         'image_alternative' => [
           '#type' => 'inline_template',
           '#template' => '<a href="#" role="button" aria-label="{{ button_separator_text }}" class="ckeditor-separator"></a>',
           '#context' => [
-            'button_separator_text' => t('Button separator'),
+            'button_separator_text' => $this->t('Button separator'),
           ],
         ],
         'attributes' => array(

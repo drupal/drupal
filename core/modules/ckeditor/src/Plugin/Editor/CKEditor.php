@@ -108,23 +108,23 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
           // Button groups.
           array(
             array(
-              'name' => t('Formatting'),
+              'name' => $this->t('Formatting'),
               'items' => array('Bold', 'Italic',),
             ),
             array(
-              'name' => t('Links'),
+              'name' => $this->t('Links'),
               'items' => array('DrupalLink', 'DrupalUnlink',),
             ),
             array(
-              'name' => t('Lists'),
+              'name' => $this->t('Lists'),
               'items' => array('BulletedList', 'NumberedList',),
             ),
             array(
-              'name' => t('Media'),
+              'name' => $this->t('Media'),
               'items' => array('Blockquote', 'DrupalImage',),
             ),
             array(
-              'name' => t('Tools'),
+              'name' => $this->t('Tools'),
               'items' => array('Source',),
             ),
           ),
@@ -160,7 +160,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
 
     $form['toolbar']['button_groups'] = array(
       '#type' => 'textarea',
-      '#title' => t('Toolbar buttons'),
+      '#title' => $this->t('Toolbar buttons'),
       '#default_value' => json_encode($settings['toolbar']['rows']),
       '#attributes' => array('class' => array('ckeditor-toolbar-textarea')),
     );
@@ -168,7 +168,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     // CKEditor plugin settings, if any.
     $form['plugin_settings'] = array(
       '#type' => 'vertical_tabs',
-      '#title' => t('CKEditor plugin settings'),
+      '#title' => $this->t('CKEditor plugin settings'),
       '#attributes' => array(
         'id' => 'ckeditor-plugin-settings',
       ),

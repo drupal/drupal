@@ -39,8 +39,8 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getConfig(Editor $editor) {
     return array(
-      'drupalImage_dialogTitleAdd' => t('Insert Image'),
-      'drupalImage_dialogTitleEdit' => t('Edit Image'),
+      'drupalImage_dialogTitleAdd' => $this->t('Insert Image'),
+      'drupalImage_dialogTitleEdit' => $this->t('Edit Image'),
     );
   }
 
@@ -50,7 +50,7 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
   public function getButtons() {
     return array(
       'DrupalImage' => array(
-        'label' => t('Image'),
+        'label' => $this->t('Image'),
         'image' => drupal_get_path('module', 'ckeditor') . '/js/plugins/drupalimage/icons/drupalimage.png',
       ),
     );
