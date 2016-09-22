@@ -38,6 +38,8 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
    *
    * @param \Egulias\EmailValidator\EmailValidator $email_validator
    *   The email validator.
+   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   *   The path validator service.
    */
   public function __construct(EmailValidator $email_validator, PathValidatorInterface $path_validator) {
     $this->emailValidator = $email_validator;
