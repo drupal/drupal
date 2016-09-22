@@ -61,7 +61,7 @@
         var $button = $target.parent();
         var $container = $button.parent();
         var $group = $button.closest('.ckeditor-toolbar-group');
-        var $row = $button.closest('.ckeditor-row');
+        var $row;
         var containerType = $container.data('drupal-ckeditor-button-sorting');
         var $availableButtons = this.$el.find('[data-drupal-ckeditor-button-sorting="source"]');
         var $activeButtons = this.$el.find('.ckeditor-toolbar-active');
