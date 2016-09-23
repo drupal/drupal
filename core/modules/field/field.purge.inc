@@ -21,9 +21,9 @@ use Drupal\field\FieldConfigInterface;
  *
  * When a single entity is deleted, the Entity storage performs the
  * following operations:
- * - Invoking the FieldItemListInterface delete() method for each field on the
- *   entity. A file field type might use this method to delete uploaded files
- *   from the filesystem.
+ * - Invoking the method \Drupal\Core\Field\FieldItemListInterface::delete() for
+ *   each field on the entity. A file field type might use this method to delete
+ *   uploaded files from the filesystem.
  * - Removing the data from storage.
  * - Invoking the global hook_entity_delete() for all modules that implement it.
  *   Each hook implementation receives the entity being deleted and can operate
