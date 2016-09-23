@@ -12,7 +12,17 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['block', 'system', 'breakpoint', 'toolbar', 'contextual', 'outside_in'];
+  public static $modules = [
+    'node',
+    'block',
+    'system',
+    'breakpoint',
+    'toolbar',
+    'contextual',
+    'outside_in',
+    'quickedit',
+    'search',
+  ];
 
   /**
    * {@inheritdoc}
@@ -26,72 +36,92 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       'administer blocks',
       'access contextual links',
       'access toolbar',
+      'administer nodes',
+      'access in-place editing',
+      'search content',
     ]);
     $this->drupalLogin($user);
 
     $this->placeBlock('system_powered_by_block', ['id' => 'powered']);
     $this->placeBlock('system_branding_block', ['id' => 'branding']);
+    $this->placeBlock('search_form_block', ['id' => 'search']);
   }
 
   /**
-   * Tests updating the "Powered by Drupal" block in the Off-Canvas tray.
+   * Tests opening Offcanvas tray by click blocks and elements in the blocks.
    */
-  public function testPoweredByBlock() {
-
+  public function testBlocks() {
+    $blocks = [
+      [
+        'id' => 'block-powered',
+        'new_page_text' => 'Can you imagine anyone showing the label on this block?',
+        'element_selector' => '.content a',
+        'button_text' => 'Save Powered by Drupal',
+      ],
+      [
+        'id' => 'block-branding',
+        'new_page_text' => 'The site that will live a very short life.',
+        'element_selector' => 'a[rel="home"]:nth-child(2)',
+        'button_text' => 'Save Site branding',
+      ],
+      [
+        'id' => 'block-search',
+        'element_selector' => '#edit-submit',
+        'button_text' => 'Save Search form',
+      ],
+    ];
     $page = $this->getSession()->getPage();
-    $web_assert = $this->assertSession();
+    foreach ($blocks as $block) {
+      $block_selector = '#' . $block['id'];
+      $this->drupalGet('user');
+      $this->toggleEditingMode();
+      $this->openBlockForm($block_selector);
 
-    $this->drupalGet('user');
-    $this->enableEditingMode();
+      switch ($block['id']) {
+        case 'block-powered':
+          // Fill out form, save the form.
+          $page->fillField('settings[label]', $block['new_page_text']);
+          $page->checkField('settings[label_display]');
+          break;
 
-    // Open "Powered by Drupal" block form by clicking div.
-    $page->find('css', '#block-powered')->click();
-    $this->waitForOffCanvasToOpen();
-    $this->assertOffCanvasBlockFormIsValid();
+        case 'block-branding':
+          // Fill out form, save the form.
+          $page->fillField('settings[site_information][site_name]', $block['new_page_text']);
+          break;
+      }
 
-    // Fill out form, save the form.
-    $new_label = 'Can you imagine anyone showing the label on this block?';
-    $page->fillField('settings[label]', $new_label);
-    $page->checkField('settings[label_display]');
+      if (isset($block['new_page_text'])) {
+        $page->pressButton($block['button_text']);
+        // Make sure the changes are present.
+        $this->getSession()->wait(500);
+        $web_assert = $this->assertSession();
+        $web_assert->pageTextContains($block['new_page_text']);
+      }
 
-    // @todo Uncomment the following lines after GastonJS problem solved.
-    // https://www.drupal.org/node/2789381
-    // $this->getTray()->pressButton('Save block');
-    // Make sure the changes are present.
-    // $web_assert->pageTextContains($new_label);
-  }
+      $this->openBlockForm($block_selector);
 
-  /**
-   * Tests updating the System Branding block in the Off-Canvas tray.
-   *
-   * Also tests updating the site name.
-   */
-  public function testBrandingBlock() {
-    $web_assert = $this->assertSession();
-    $this->drupalGet('user');
-    $page = $this->getSession()->getPage();
-    $this->enableEditingMode();
+      $this->toggleEditingMode();
+      // Canvas should close when editing module is closed.
+      $this->waitForOffCanvasToClose();
 
-    // Open branding block form by clicking div.
-    $page->find('css', '#block-branding')->click();
-    $this->waitForOffCanvasToOpen();
-    $this->assertOffCanvasBlockFormIsValid();
+      // Go into Edit mode again.
+      $this->toggleEditingMode();
 
-    // Fill out form, save the form.
-    $new_site_name = 'The site that will live a very short life.';
-    $page->fillField('settings[site_information][site_name]', $new_site_name);
+      $element_selector = "$block_selector {$block['element_selector']}";
+      // Open block form by clicking a element inside the block.
+      // This confirms that default action for links and form elements is
+      // suppressed.
+      $this->openBlockForm($element_selector);
 
-    // @todo Uncomment the following lines after GastonJS problem solved.
-    // https://www.drupal.org/node/2789381
-    // $this->getTray()->pressButton('Save block');
-    // Make sure the changes are present.
-    //$web_assert->pageTextContains($new_site_name);
+      // Exit edit mode.
+      $this->toggleEditingMode();
+    }
   }
 
   /**
    * Enables Editing mode by pressing "Edit" button in the toolbar.
    */
-  protected function enableEditingMode() {
+  protected function toggleEditingMode() {
     $this->waitForElement('div[data-contextual-id="block:block=powered:langcode=en|outside_in::langcode=en"] .contextual-links a');
 
     $this->waitForElement('#toolbar-bar', 3000);
@@ -114,4 +144,15 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $web_assert->elementNotExists('css', 'select[data-drupal-selector="edit-region"]');
   }
 
+  /**
+   * Open block form by clicking the element found with a css selector.
+   *
+   * @param string $block_selector
+   *   A css selector selects the block or an element within it.
+   */
+  protected function openBlockForm($block_selector) {
+    $this->click($block_selector);
+    $this->waitForOffCanvasToOpen();
+    $this->assertOffCanvasBlockFormIsValid();
+  }
 }
