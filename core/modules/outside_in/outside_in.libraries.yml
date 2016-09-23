@@ -18,6 +18,7 @@ drupal.outside_in:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/jquery.once
     - core/drupal.ajax
 drupal.off_canvas:
   version: VERSION

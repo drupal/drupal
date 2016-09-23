@@ -27,6 +27,8 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
    * Waits for Off-canvas tray to open.
    */
   protected function waitForOffCanvasToOpen() {
+    $web_assert = $this->assertSession();
+    $web_assert->assertWaitOnAjaxRequest();
     $this->waitForElement('#drupal-offcanvas');
   }
 
