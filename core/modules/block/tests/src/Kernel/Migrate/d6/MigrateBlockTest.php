@@ -50,6 +50,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'd6_user_role',
       'd6_block',
     ]);
+    block_rebuild();
   }
 
   /**
@@ -69,19 +70,21 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
    *   The block label.
    * @param string $label_display
    *   The block label display setting.
+   * @param bool $status
+   *   Whether the block is expected to be enabled or disabled.
    */
   public function assertEntity($id, $visibility, $region, $theme, $weight, $label, $label_display, $status = TRUE) {
     $block = Block::load($id);
     $this->assertTrue($block instanceof Block);
-    $this->assertIdentical($visibility, $block->getVisibility());
-    $this->assertIdentical($region, $block->getRegion());
-    $this->assertIdentical($theme, $block->getTheme());
-    $this->assertIdentical($weight, $block->getWeight());
-    $this->assertIdentical($status, $block->status());
+    $this->assertSame($visibility, $block->getVisibility());
+    $this->assertSame($region, $block->getRegion());
+    $this->assertSame($theme, $block->getTheme());
+    $this->assertSame($weight, $block->getWeight());
+    $this->assertSame($status, $block->status());
 
     $config = $this->config('block.block.' . $id);
-    $this->assertIdentical($label, $config->get('settings.label'));
-    $this->assertIdentical($label_display, $config->get('settings.label_display'));
+    $this->assertSame($label, $config->get('settings.label'));
+    $this->assertSame($label_display, $config->get('settings.label_display'));
   }
 
   /**
@@ -124,9 +127,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility['request_path']['id'] = 'request_path';
     $visibility['request_path']['negate'] = TRUE;
     $visibility['request_path']['pages'] = '/node/1';
-    // @todo https://www.drupal.org/node/2753939 This block is the footer region
-    //   but Bartik in D8 does not have this region.
-    $this->assertEntity('system', $visibility, 'header', 'bartik', -5, '', '0', FALSE);
+    $this->assertEntity('system', $visibility, 'footer_fifth', 'bartik', -5, '', '0');
 
     // Check menu blocks
     $visibility = [];
@@ -141,8 +142,8 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility['request_path']['id'] = 'request_path';
     $visibility['request_path']['negate'] = FALSE;
     $visibility['request_path']['pages'] = '/node';
-    // @todo https://www.drupal.org/node/2753939 The bluemarine theme does not
-    //   exist.
+    // We expect this block to be disabled because '' is not a valid region,
+    // and block_rebuild() will disable any block in an invalid region.
     $this->assertEntity('block_1', $visibility, '', 'bluemarine', -4, 'Another Static Block', 'visible', FALSE);
 
     $visibility = [];

@@ -67,17 +67,24 @@ process:
   region:
     plugin: block_region
     source:
-      - region
       - theme
       - '@theme'
-    region_map:
-      left: sidebar_first
-      right: sidebar_second
-      sidebar_first: sidebar_first
-      sidebar_second: sidebar_second
-      help: help
-      header: header
-      footer: footer
+      - region
+    map:
+      bartik:
+        bartik:
+          # Bartik 7.x --> Bartik 8.x
+          featured: featured_top
+          triptych_first: featured_bottom_first
+          triptych_middle: featured_bottom_second
+          triptych_last: featured_bottom_third
+          footer_firstcolumn: footer_first
+          footer_secondcolumn: footer_second
+          footer_thirdcolumn: footer_third
+          footer_fourthcolumn: footer_fourth
+          footer: footer_fifth
+    # If mapping fails, put the block in the content region.
+    default_value: content
   weight: weight
   settings:
     plugin: block_settings
