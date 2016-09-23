@@ -99,7 +99,19 @@ class Connection extends DatabaseConnection {
       // Convert numeric values to strings when fetching.
       \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     );
-    $pdo = new \PDO('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
+
+    try {
+      $pdo = new \PDO('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
+    }
+    catch (\PDOException $e) {
+      if ($e->getCode() == static::DATABASE_NOT_FOUND) {
+        throw new DatabaseNotFoundException($e->getMessage(), $e->getCode(), $e);
+      }
+      // SQLite doesn't have a distinct error code for access denied, so don't
+      // deal with that case.
+      throw $e;
+    }
+
 
     // Create functions needed by SQLite.
     $pdo->sqliteCreateFunction('if', array(__CLASS__, 'sqlFunctionIf'));

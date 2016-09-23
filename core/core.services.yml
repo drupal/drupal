@@ -1197,6 +1197,11 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@config.manager', '@config.storage', '@config.storage.snapshot']
+  exception.needs_installer:
+    class: Drupal\Core\EventSubscriber\ExceptionDetectNeedsInstallSubscriber
+    arguments: ['@database']
+    tags:
+      - { name: event_subscriber }
   exception.default_json:
     class: Drupal\Core\EventSubscriber\ExceptionJsonSubscriber
     tags:

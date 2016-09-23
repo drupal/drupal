@@ -16,6 +16,7 @@ use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\File\MimeType\MimeTypeGuesser;
 use Drupal\Core\Http\TrustedHostsRequestFactory;
+use Drupal\Core\Installer\InstallerRedirectTrait;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
@@ -45,6 +46,7 @@ use Symfony\Component\Routing\Route;
  * container, or modify existing services.
  */
 class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
+  use InstallerRedirectTrait;
 
   /**
    * Holds the class used for dumping the container to a PHP array.
@@ -644,7 +646,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // installed yet (i.e., if no $databases array has been defined in the
       // settings.php file) and we are not already installing.
       if (!Database::getConnectionInfo() && !drupal_installation_attempted() && PHP_SAPI !== 'cli') {
-        $response = new RedirectResponse($request->getBasePath() . '/core/install.php');
+        $response = new RedirectResponse($request->getBasePath() . '/core/install.php', 302, ['Cache-Control' => 'no-cache']);
       }
       else {
         $this->boot();
@@ -683,14 +685,17 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   If the passed in exception cannot be turned into a response.
    */
   protected function handleException(\Exception $e, $request, $type) {
+    if ($this->shouldRedirectToInstaller($e, $this->container ? $this->container->get('database') : NULL)) {
+      return new RedirectResponse($request->getBasePath() . '/core/install.php', 302, ['Cache-Control' => 'no-cache']);
+    }
+
     if ($e instanceof HttpExceptionInterface) {
       $response = new Response($e->getMessage(), $e->getStatusCode());
       $response->headers->add($e->getHeaders());
       return $response;
     }
-    else {
-      throw $e;
-    }
+
+    throw $e;
   }
 
   /**

@@ -1445,6 +1445,26 @@ abstract class Connection {
   }
 
   /**
+   * Extracts the SQLSTATE error from the PDOException.
+   *
+   * @param \Exception $e
+   *   The exception
+   *
+   * @return string
+   *   The five character error code.
+   */
+  protected static function getSQLState(\Exception $e) {
+    // The PDOException code is not always reliable, try to see whether the
+    // message has something usable.
+    if (preg_match('/^SQLSTATE\[(\w{5})\]/', $e->getMessage(), $matches)) {
+      return $matches[1];
+    }
+    else {
+      return $e->getCode();
+    }
+  }
+
+  /**
    * Prevents the database connection from being serialized.
    */
   public function __sleep() {

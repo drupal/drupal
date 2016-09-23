@@ -4,6 +4,7 @@ namespace Drupal\Core\Database\Driver\pgsql;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 
 /**
@@ -25,6 +26,14 @@ class Connection extends DatabaseConnection {
    * Error code for "Unknown database" error.
    */
   const DATABASE_NOT_FOUND = 7;
+
+  /**
+   * Error code for "Connection failure" errors.
+   *
+   * Technically this is an internal error code that will only be shown in the
+   * PDOException message. It will need to get extracted.
+   */
+  const CONNECTION_FAILURE = '08006';
 
   /**
    * The list of PostgreSQL reserved key words.
@@ -113,7 +122,21 @@ class Connection extends DatabaseConnection {
       // Convert numeric values to strings when fetching.
       \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     );
-    $pdo = new \PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
+
+    try {
+      $pdo = new \PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
+    }
+    catch (\PDOException $e) {
+      if (static::getSQLState($e) == static::CONNECTION_FAILURE) {
+        if (strpos($e->getMessage(), 'password authentication failed for user') !== FALSE) {
+          throw new DatabaseAccessDeniedException($e->getMessage(), $e->getCode(), $e);
+        }
+        elseif (strpos($e->getMessage(), 'database') !== FALSE && strpos($e->getMessage(), 'does not exist') !== FALSE) {
+          throw new DatabaseNotFoundException($e->getMessage(), $e->getCode(), $e);
+        }
+      }
+      throw $e;
+    }
 
     return $pdo;
   }

@@ -4,7 +4,6 @@ namespace Drupal\Core\Database\Driver\pgsql\Install;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\Tasks as InstallTasks;
-use Drupal\Core\Database\Driver\pgsql\Connection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 
 /**
@@ -66,7 +65,7 @@ class Tasks extends InstallTasks {
     }
     catch (\Exception $e) {
       // Attempt to create the database if it is not found.
-      if ($e->getCode() == Connection::DATABASE_NOT_FOUND) {
+      if ($e instanceof DatabaseNotFoundException) {
         // Remove the database string from connection info.
         $connection_info = Database::getConnectionInfo();
         $database = $connection_info['default']['database'];
