@@ -526,7 +526,9 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   /**
    * Gets the name of the entity type which provides bundles.
    *
-   * @return string
+   * @return string|null
+   *   The name of the entity type which provides bundles, or NULL if the entity
+   *   type does not have a bundle entity type.
    */
   public function getBundleEntityType();
 
