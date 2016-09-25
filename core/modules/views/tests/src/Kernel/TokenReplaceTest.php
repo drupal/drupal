@@ -19,7 +19,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_tokens');
+  public static $testViews = array('test_tokens', 'test_invalid_tokens');
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
@@ -82,6 +82,25 @@ class TokenReplaceTest extends ViewsKernelTestBase {
 
     $expected = array(
       '[view:page-count]' => '1',
+    );
+
+    foreach ($expected as $token => $expected_output) {
+      $output = $token_handler->replace($token, array('view' => $view));
+      $this->assertIdentical($output, $expected_output, format_string('Token %token replaced correctly.', array('%token' => $token)));
+    }
+  }
+
+  /**
+   * Tests path token replacements generated from a view without a path.
+   */
+  function testTokenReplacementNoPath() {
+    $token_handler = \Drupal::token();
+    $view = Views::getView('test_invalid_tokens');
+    $view->setDisplay('block_1');
+    $this->executeView($view);
+
+    $expected = array(
+      '[view:url]' => '',
     );
 
     foreach ($expected as $token => $expected_output) {
