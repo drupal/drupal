@@ -418,8 +418,6 @@ function user_load_by_name($name) {
  *
  * @return
  *   A fully-loaded $user object upon successful save or FALSE if the save failed.
- *
- * @todo D8: Drop $edit and fix user_save() to be consistent with others.
  */
 function user_save($account, $edit = array(), $category = 'account') {
   $transaction = db_transaction();
