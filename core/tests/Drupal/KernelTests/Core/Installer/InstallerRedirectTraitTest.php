@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Installer;
+namespace Drupal\KernelTests\Core\Installer;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
@@ -8,19 +8,15 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Schema;
 use Drupal\Core\Installer\InstallerRedirectTrait;
-use Drupal\Tests\UnitTestCase;
+use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-// The function drupal_installation_attempted() has to be included.
-$root = dirname(dirname(dirname(dirname(dirname(dirname(__DIR__))))));
-require_once $root . '/core/includes/bootstrap.inc';
 
 /**
  * @coversDefaultClass \Drupal\Core\Installer\InstallerRedirectTrait
  *
  * @group Installer
  */
-class InstallerRedirectTraitTest extends UnitTestCase {
+class InstallerRedirectTraitTest extends KernelTestBase {
 
   /**
    * Data provider for testShouldRedirectToInstaller().
