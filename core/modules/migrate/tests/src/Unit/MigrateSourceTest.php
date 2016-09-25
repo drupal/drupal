@@ -168,6 +168,17 @@ class MigrateSourceTest extends MigrateTestCase {
     // Test the skip argument.
     $source = $this->getSource(['skip_count' => TRUE]);
     $this->assertEquals(-1, $source->count());
+
+    $this->migrationConfiguration['id'] = 'test_migration';
+    $migration = $this->getMigration();
+    $source = new StubSourceGeneratorPlugin([], '', [], $migration);
+
+    // Test the skipCount property's default value.
+    $this->assertEquals(-1, $source->count());
+
+    // Test the count value using a generator.
+    $source = new StubSourceGeneratorPlugin(['skip_count' => FALSE], '', [], $migration);
+    $this->assertEquals(3, $source->count());
   }
 
   /**
@@ -388,6 +399,21 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
+   * Test that cacheCounts, skipCount, trackChanges preserve their default
+   * values.
+   */
+  public function testDefaultPropertiesValues() {
+    $this->migrationConfiguration['id'] = 'test_migration';
+    $migration = $this->getMigration();
+    $source = new StubSourceGeneratorPlugin([], '', [], $migration);
+
+    // Test the default value of the skipCount Value;
+    $this->assertTrue($source->getSkipCount());
+    $this->assertTrue($source->getCacheCounts());
+    $this->assertTrue($source->getTrackChanges());
+  }
+
+  /**
    * Gets a mock executable for the test.
    *
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
@@ -447,6 +473,64 @@ class StubSourcePlugin extends SourcePluginBase {
    */
   protected function initializeIterator() {
     return [];
+  }
+
+}
+
+/**
+ * Stubbed source plugin with a generator as iterator. Also it overwrites the
+ * $skipCount, $cacheCounts and $trackChanges properties.
+ */
+class StubSourceGeneratorPlugin extends StubSourcePlugin {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $skipCount = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $cacheCounts = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $trackChanges = TRUE;
+
+  /**
+   * Return the skipCount value.
+   */
+  public function getSkipCount() {
+    return $this->skipCount;
+  }
+
+  /**
+   * Return the cacheCounts value.
+   */
+  public function getCacheCounts() {
+    return $this->cacheCounts;
+  }
+
+  /**
+   * Return the trackChanges value.
+   */
+  public function getTrackChanges() {
+    return $this->trackChanges;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function initializeIterator() {
+    $data = [
+      ['title' => 'foo'],
+      ['title' => 'bar'],
+      ['title' => 'iggy'],
+    ];
+    foreach ($data as $row) {
+      yield $row;
+    }
   }
 
 }
