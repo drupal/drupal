@@ -58,3 +58,11 @@ test_page_test.error:
     code: 200
   requirements:
     _access: 'TRUE'
+
+test_page_test.encoded:
+  path: '/test-encoded'
+  defaults:
+    _title: 'Page with encoded HTML'
+    _controller: '\Drupal\test_page_test\Controller\Test::renderEncodedMarkup'
+  requirements:
+    _access: 'TRUE'

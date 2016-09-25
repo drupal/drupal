@@ -2,6 +2,8 @@
 
 namespace Drupal\FunctionalTests;
 
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Xss;
 use Drupal\KernelTests\AssertLegacyTrait as BaseAssertLegacyTrait;
 
 /**
@@ -53,10 +55,17 @@ trait AssertLegacyTrait {
    *   Plain text to look for.
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
-   *   Use $this->assertSession()->pageTextContains() or
-   *   $this->assertSession()->responseContains() instead.
+   *   Use instead:
+   *     - $this->assertSession()->responseContains() for non-HTML responses,
+   *       like XML or Json.
+   *     - $this->assertSession()->pageTextContains() for HTML responses. Unlike
+   *       the deprecated assertText(), the passed text should be HTML decoded,
+   *       exactly as a human sees it in the browser.
    */
   protected function assertText($text) {
+    // Cast MarkupInterface to string.
+    $text = (string) $text;
+
     $content_type = $this->getSession()->getResponseHeader('Content-type');
     // In case of a Non-HTML response (example: XML) check the original
     // response.
@@ -64,7 +73,7 @@ trait AssertLegacyTrait {
       $this->assertSession()->responseContains($text);
     }
     else {
-      $this->assertSession()->pageTextContains($text);
+      $this->assertTextHelper($text, FALSE);
     }
   }
 
@@ -78,10 +87,17 @@ trait AssertLegacyTrait {
    *   Plain text to look for.
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
-   *   Use $this->assertSession()->pageTextNotContains() or
-   *   $this->assertSession()->responseNotContains() instead.
+   *   Use instead:
+   *     - $this->assertSession()->responseNotContains() for non-HTML responses,
+   *       like XML or Json.
+   *     - $this->assertSession()->pageTextNotContains() for HTML responses.
+   *       Unlike the deprecated assertNoText(), the passed text should be HTML
+   *       decoded, exactly as a human sees it in the browser.
    */
   protected function assertNoText($text) {
+    // Cast MarkupInterface to string.
+    $text = (string) $text;
+
     $content_type = $this->getSession()->getResponseHeader('Content-type');
     // In case of a Non-HTML response (example: XML) check the original
     // response.
@@ -89,8 +105,38 @@ trait AssertLegacyTrait {
       $this->assertSession()->responseNotContains($text);
     }
     else {
-      $this->assertSession()->pageTextNotContains($text);
+      $this->assertTextHelper($text);
     }
+  }
+
+  /**
+   * Helper for assertText and assertNoText.
+   *
+   * @param string $text
+   *   Plain text to look for.
+   * @param bool $not_exists
+   *   (optional) TRUE if this text should not exist, FALSE if it should.
+   *   Defaults to TRUE.
+   *
+   * @return bool
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertTextHelper($text, $not_exists = TRUE) {
+    $args = ['@text' => $text];
+    $message = $not_exists ? new FormattableMarkup('"@text" not found', $args) : new FormattableMarkup('"@text" found', $args);
+
+    $raw_content = $this->getSession()->getPage()->getContent();
+    // Trying to simulate what the user sees, given that it removes all text
+    // inside the head tags, removes inline Javascript, fix all HTML entities,
+    // removes dangerous protocols and filtering out all HTML tags, as they are
+    // not visible in a normal browser.
+    $raw_content = preg_replace('@<head>(.+?)</head>@si', '', $raw_content);
+    $page_text = Xss::filter($raw_content, []);
+
+    $actual = $not_exists == (strpos($page_text, (string) $text) === FALSE);
+    $this->assertTrue($actual, $message);
+
+    return $actual;
   }
 
   /**

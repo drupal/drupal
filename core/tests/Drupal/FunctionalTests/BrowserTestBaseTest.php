@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalTests;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
@@ -99,6 +100,17 @@ class BrowserTestBaseTest extends BrowserTestBase {
   public function testError() {
     $this->setExpectedException('\Exception', 'User notice: foo');
     $this->drupalGet('test-error');
+  }
+
+  /**
+   * Tests legacy asserts.
+   */
+  public function testLegacyAsserts() {
+    $this->drupalGet('test-encoded');
+    $dangerous = 'Bad html <script>alert(123);</script>';
+    $sanitized = Html::escape($dangerous);
+    $this->assertNoText($dangerous);
+    $this->assertText($sanitized);
   }
 
 }
