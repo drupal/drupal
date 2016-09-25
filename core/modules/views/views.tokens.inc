@@ -101,9 +101,15 @@ function views_tokens($type, $tokens, array $data, array $options, BubbleableMet
           break;
 
         case 'url':
-          if ($url = $view->getUrl()) {
-            $replacements[$original] = $url->setOptions($url_options)
-              ->toString();
+          try {
+            if ($url = $view->getUrl()) {
+              $replacements[$original] = $url->setOptions($url_options)
+                ->toString();
+            }
+          }
+          catch (\InvalidArgumentException $e) {
+            // The view has no URL so we leave the value empty.
+            $replacements[$original] = '';
           }
           break;
         case 'base-table':
