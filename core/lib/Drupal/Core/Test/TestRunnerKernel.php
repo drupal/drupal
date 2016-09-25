@@ -70,7 +70,7 @@ class TestRunnerKernel extends DrupalKernel {
 
     $this->getContainer()->get('module_handler')->loadAll();
 
-    simpletest_classloader_register();
+    $this->getContainer()->get('test_discovery')->registerTestNamespaces();
 
     // Register stream wrappers.
     $this->getContainer()->get('stream_wrapper_manager')->register();

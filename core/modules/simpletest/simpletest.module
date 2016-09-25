@@ -583,13 +583,20 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  *       ),
  *     );
  *   @endcode
+ *
+ * @deprecated in Drupal 8.3.x, for removal before 9.0.0 release. Use
+ *   \Drupal::service('test_discovery')->getTestClasses($extension, $types)
+ *   instead.
  */
 function simpletest_test_get_all($extension = NULL, array $types = []) {
   return \Drupal::service('test_discovery')->getTestClasses($extension, $types);
 }
 
 /**
- * Registers namespaces for disabled modules.
+ * Registers test namespaces of all extensions and core test classes.
+ *
+ * @deprecated in Drupal 8.3.x for removal before 9.0.0 release. Use
+ *   \Drupal::service('test_discovery')->registerTestNamespaces() instead.
  */
 function simpletest_classloader_register() {
   \Drupal::service('test_discovery')->registerTestNamespaces();

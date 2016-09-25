@@ -81,7 +81,7 @@ class TestDiscovery {
   }
 
   /**
-   * Registers test namespaces of all available extensions.
+   * Registers test namespaces of all extensions and core test classes.
    *
    * @return array
    *   An associative array whose keys are PSR-4 namespace prefixes and whose
