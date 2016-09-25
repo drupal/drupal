@@ -1,7 +1,8 @@
-id: d6_action_settings
+id: action_settings
 label: Action configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   variables:

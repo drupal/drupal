@@ -1,0 +1,17 @@
+id: d7_system_mail
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - mail_system
+process:
+  'interface/default':
+    plugin: static_map
+    source: 'mail_system/default-system'
+    map:
+      DefaultMailSystem: php_mail
+      MailTestCase: test_mail_collector
+destination:
+  plugin: config
+  config_name: system.mail

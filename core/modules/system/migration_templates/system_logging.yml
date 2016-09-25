@@ -1,7 +1,8 @@
-id: d6_system_logging
+id: system_logging
 label: System logging
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   variables:

@@ -1,7 +1,8 @@
-id: d6_system_maintenance
+id: system_maintenance
 label: Maintenance page configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   variables:
