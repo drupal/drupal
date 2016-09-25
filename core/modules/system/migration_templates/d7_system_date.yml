@@ -1,0 +1,22 @@
+id: d7_system_date
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - site_default_country
+    - date_first_day
+    - date_default_timezone
+    - configurable_timezones
+    - empty_timezone_message
+    - user_default_timezone
+process:
+  'country/default': site_default_country
+  first_day: date_first_day
+  'timezone/default': date_default_timezone
+  'timezone/user/configurable': configurable_timezones
+  'timezone/user/warn': empty_timezone_message
+  'timezone/user/default': user_default_timezone
+destination:
+  plugin: config
+  config_name: system.date

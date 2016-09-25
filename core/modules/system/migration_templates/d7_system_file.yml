@@ -1,0 +1,20 @@
+id: d7_system_file
+label: Drupal 7 file system configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - allow_insecure_uploads
+    - file_temporary_path
+process:
+  allow_insecure_uploads:
+    plugin: static_map
+    source: allow_insecure_uploads
+    map:
+      0: FALSE
+      1: TRUE
+  'path/temporary': file_temporary_path
+destination:
+  plugin: config
+  config_name: system.file

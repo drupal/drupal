@@ -1,7 +1,8 @@
-id: d6_system_site
+id: system_site
 label: Site configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   constants:

@@ -30,7 +30,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    * @var array[]
    */
   protected $moduleUpgradePaths = [
-    'd6_action_settings' => [
+    'action_settings' => [
       'source_module' => 'system',
       'destination_module' => 'action',
     ],
@@ -214,7 +214,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'system',
       'destination_module' => 'file',
     ],
-    'd6_file_settings' => [
+    'file_settings' => [
       'source_module' => 'system',
       'destination_module' => 'file',
     ],
@@ -422,19 +422,19 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'system',
       'destination_module' => 'system',
     ],
-    'd6_system_image' => [
+    'system_image' => [
       'source_module' => 'system',
       'destination_module' => 'system',
     ],
-    'd6_system_image_gd' => [
+    'system_image_gd' => [
       'source_module' => 'system',
       'destination_module' => 'system',
     ],
-    'd6_system_logging' => [
+    'system_logging' => [
       'source_module' => 'system',
       'destination_module' => 'system',
     ],
-    'd6_system_maintenance' => [
+    'system_maintenance' => [
       'source_module' => 'system',
       'destination_module' => 'system',
     ],
@@ -442,11 +442,35 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'system',
       'destination_module' => 'system',
     ],
-    'd6_system_rss' => [
+    'system_rss' => [
       'source_module' => 'system',
       'destination_module' => 'system',
     ],
-    'd6_system_site' => [
+    'system_site' => [
+      'source_module' => 'system',
+      'destination_module' => 'system',
+    ],
+    'd7_system_authorize' => [
+      'source_module' => 'system',
+      'destination_module' => 'system',
+    ],
+    'd7_system_cron' => [
+      'source_module' => 'system',
+      'destination_module' => 'system',
+    ],
+    'd7_system_date' => [
+      'source_module' => 'system',
+      'destination_module' => 'system',
+    ],
+    'd7_system_file' => [
+      'source_module' => 'system',
+      'destination_module' => 'system',
+    ],
+    'd7_system_mail' => [
+      'source_module' => 'system',
+      'destination_module' => 'system',
+    ],
+    'd7_system_performance' => [
       'source_module' => 'system',
       'destination_module' => 'system',
     ],

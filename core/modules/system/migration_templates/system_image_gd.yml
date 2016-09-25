@@ -1,7 +1,8 @@
-id: d6_system_image_gd
+id: system_image_gd
 label: Image quality configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   variables:

@@ -1,0 +1,12 @@
+id: d7_system_authorize
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - authorize_filetransfer_default
+process:
+   filetransfer_default: authorize_filetransfer_default
+destination:
+  plugin: config
+  config_name: system.authorize

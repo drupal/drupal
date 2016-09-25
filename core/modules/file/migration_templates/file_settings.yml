@@ -1,7 +1,8 @@
-id: d6_file_settings
+id: file_settings
 label: File configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   variables:
