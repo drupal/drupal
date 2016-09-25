@@ -227,18 +227,61 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   }
 
   /**
+   * Determines whether the view overrides the given route.
+   *
+   * @param string $view_path
+   *   The path of the view.
+   * @param \Symfony\Component\Routing\Route $view_route
+   *   The route of the view.
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route itself.
+   *
+   * @return bool
+   *   TRUE, when the view should override the given route.
+   */
+  protected function overrideApplies($view_path, Route $view_route, Route $route) {
+    return $this->overrideAppliesPathAndMethod($view_path, $view_route, $route)
+      && (!$route->hasRequirement('_format') || $route->getRequirement('_format') === 'html');
+  }
+
+  /**
+   * Determines whether a override for the path and method should happen.
+   *
+   * @param string $view_path
+   *   The path of the view.
+   * @param \Symfony\Component\Routing\Route $view_route
+   *   The route of the view.
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route itself.
+   *
+   * @return bool
+   *   TRUE, when the view should override the given route.
+   */
+  protected function overrideAppliesPathAndMethod($view_path, Route $view_route, Route $route) {
+    // Find all paths which match the path of the current display..
+    $route_path = RouteCompiler::getPathWithoutDefaults($route);
+    $route_path = RouteCompiler::getPatternOutline($route_path);
+
+    // Ensure that we don't override a route which is already controlled by
+    // views.
+    return !$route->hasDefault('view_id')
+    && ('/' . $view_path == $route_path)
+    // Also ensure that we don't override for example REST routes.
+    && (!$route->getMethods() || in_array('GET', $route->getMethods()));
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function alterRoutes(RouteCollection $collection) {
     $view_route_names = array();
     $view_path = $this->getPath();
+    $view_id = $this->view->storage->id();
+    $display_id = $this->display['id'];
+    $view_route = $this->getRoute($view_id, $display_id);
+
     foreach ($collection->all() as $name => $route) {
-      // Find all paths which match the path of the current display..
-      $route_path = RouteCompiler::getPathWithoutDefaults($route);
-      $route_path = RouteCompiler::getPatternOutline($route_path);
-      // Ensure that we don't override a route which is already controlled by
-      // views. Also ensure that we don't override for example REST routes.
-      if (!$route->hasDefault('view_id') && ('/' . $view_path == $route_path) && (!$route->getMethods() || in_array('GET', $route->getMethods()))) {
+      if ($this->overrideApplies($view_path, $view_route, $route)) {
         $parameters = $route->compile()->getPathVariables();
 
         // @todo Figure out whether we need to merge some settings (like
@@ -248,11 +291,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         $original_route = $collection->get($name);
         $collection->remove($name);
 
-        $view_id = $this->view->storage->id();
-        $display_id = $this->display['id'];
-        $route = $this->getRoute($view_id, $display_id);
-
-        $path = $route->getPath();
+        $path = $view_route->getPath();
         // Replace the path with the original parameter names and add a mapping.
         $argument_map = array();
         // We assume that the numeric ids of the parameters match the one from
@@ -263,17 +302,17 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         }
         // Copy the original options from the route, so for example we ensure
         // that parameter conversion options is carried over.
-        $route->setOptions($route->getOptions() + $original_route->getOptions());
+        $view_route->setOptions($view_route->getOptions() + $original_route->getOptions());
 
         if ($original_route->hasDefault('_title_callback')) {
-          $route->setDefault('_title_callback', $original_route->getDefault('_title_callback'));
+          $view_route->setDefault('_title_callback', $original_route->getDefault('_title_callback'));
         }
 
         // Set the corrected path and the mapping to the route object.
-        $route->setOption('_view_argument_map', $argument_map);
-        $route->setPath($path);
+        $view_route->setOption('_view_argument_map', $argument_map);
+        $view_route->setPath($path);
 
-        $collection->add($name, $route);
+        $collection->add($name, $view_route);
         $view_route_names[$view_id . '.' . $display_id] = $name;
       }
     }

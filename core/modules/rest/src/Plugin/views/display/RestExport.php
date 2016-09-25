@@ -14,6 +14,7 @@ use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\PathPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -345,6 +346,26 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
         $route->setOption('_auth', $auth);
       }
     }
+  }
+
+  /**
+   * Determines whether the view overrides the given route.
+   *
+   * @param string $view_path
+   *   The path of the view.
+   * @param \Symfony\Component\Routing\Route $view_route
+   *   The route of the view.
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route itself.
+   *
+   * @return bool
+   *   TRUE, when the view should override the given route.
+   */
+  protected function overrideApplies($view_path, Route $view_route, Route $route) {
+    $route_formats = explode('|', $route->getRequirement('_format'));
+    $view_route_formats = explode('|', $view_route->getRequirement('_format'));
+    return $this->overrideAppliesPathAndMethod($view_path, $view_route, $route)
+      && (!$route->hasRequirement('_format') || array_intersect($route_formats, $view_route_formats) != []);
   }
 
   /**
