@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\serialization\Tests;
+namespace Drupal\Tests\serialization\Kernel;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\entity_test\Entity\EntityTestMulRev;

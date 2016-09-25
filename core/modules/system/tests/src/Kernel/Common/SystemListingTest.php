@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\system\Kernel\Common;
 
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\KernelTests\KernelTestBase;
