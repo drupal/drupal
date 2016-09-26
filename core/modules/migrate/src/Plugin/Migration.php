@@ -292,7 +292,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     $this->destinationPluginManager = $destination_plugin_manager;
     $this->idMapPluginManager = $idmap_plugin_manager;
 
-    foreach ($plugin_definition as $key => $value) {
+    foreach (NestedArray::mergeDeep($plugin_definition, $configuration) as $key => $value) {
       $this->$key = $value;
     }
   }

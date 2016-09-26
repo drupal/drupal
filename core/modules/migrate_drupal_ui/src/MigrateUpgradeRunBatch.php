@@ -105,18 +105,17 @@ class MigrateUpgradeRunBatch {
     static::$numProcessed = 0;
 
     $migration_id = reset($context['sandbox']['migration_ids']);
-    /** @var \Drupal\migrate\Plugin\Migration $migration */
-    $migration = \Drupal::service('plugin.manager.migration')->createInstance($migration_id);
+    $definition = \Drupal::service('plugin.manager.migration')->getDefinition($migration_id);
+    $configuration = [];
 
-    // @TODO, remove this in https://www.drupal.org/node/2681869.
-    $destination = $migration->getDestinationConfiguration();
-    if ($destination['plugin'] === 'entity:file') {
+    // @todo Find a way to avoid this in https://www.drupal.org/node/2804611.
+    if ($definition['destination']['plugin'] === 'entity:file') {
       // Make sure we have a single trailing slash.
-      $source_base_path = rtrim($config['source_base_path'], '/') . '/';
-      $source = $migration->getSourceConfiguration();
-      $source['constants']['source_base_path'] = $source_base_path;
-      $migration->set('source', $source);
+      $configuration['source']['constants']['source_base_path'] = rtrim($config['source_base_path'], '/') . '/';
     }
+
+    /** @var \Drupal\migrate\Plugin\Migration $migration */
+    $migration = \Drupal::service('plugin.manager.migration')->createInstance($migration_id, $configuration);
 
     if ($migration) {
       static::$messages = new MigrateMessageCapture();
