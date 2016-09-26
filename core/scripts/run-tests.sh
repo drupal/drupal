@@ -5,6 +5,7 @@
  * This script runs Drupal tests from command line.
  */
 
+use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Uuid\Php;
@@ -455,6 +456,12 @@ function simpletest_script_init() {
   $_SERVER['HTTP_USER_AGENT'] = 'Drupal command line';
 
   if ($args['concurrency'] > 1) {
+    $directory = FileSystem::getOsTemporaryDirectory();
+    $test_symlink = @symlink(__FILE__, $directory . '/test_symlink');
+    if (!$test_symlink) {
+      throw new \RuntimeException('In order to use a concurrency higher than 1 the test system needs to be able to create symlinks in ' . $directory);
+    }
+    unlink($directory . '/test_symlink');
     putenv('RUN_TESTS_CONCURRENCY=' . $args['concurrency']);
   }
 

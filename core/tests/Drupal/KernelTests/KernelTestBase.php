@@ -701,10 +701,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $this->vfsRoot = NULL;
     $this->configImporter = NULL;
 
-    // Release the prefix.
-    $test_db = new TestDatabase($test_prefix);
-    $test_db->releaseTestLock();
-
     // Free up memory: Custom test class properties.
     // Note: Private properties cannot be cleaned up.
     $rc = new \ReflectionClass(__CLASS__);
