@@ -115,25 +115,14 @@ class TestDatabase {
     // tests are run concurrently.
     do {
       $lock_id = mt_rand(10000000, 99999999);
-      if (@symlink(__FILE__, $this->getLockFile($lock_id)) === FALSE) {
+      // If we're only running with a concurrency of 1 there's no need to create
+      // a test lock file as there is no chance of the random number generated
+      // clashing.
+      if (getenv('RUN_TESTS_CONCURRENCY') > 1 && @symlink(__FILE__, $this->getLockFile($lock_id)) === FALSE) {
         $lock_id = NULL;
       }
     } while ($lock_id === NULL);
     return $lock_id;
-  }
-
-  /**
-   * Releases a test lock.
-   *
-   * This should only be called once the related test fixtures have been cleaned
-   * up.
-   */
-  public function releaseTestLock() {
-    $concurrency = getenv('RUN_TESTS_CONCURRENCY');
-    // If we're doing concurrent testing then ensure no dupes in the whole run.
-    if (!$concurrency || $concurrency == 1) {
-      unlink($this->getLockFile($this->lockId));
-    }
   }
 
   /**

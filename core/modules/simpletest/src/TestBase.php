@@ -1366,10 +1366,6 @@ abstract class TestBase {
     // Delete test site directory.
     file_unmanaged_delete_recursive($this->siteDirectory, array($this, 'filePreDeleteCallback'));
 
-    // Release the test lock.
-    $test_db = new TestDatabase($test_prefix);
-    $test_db->releaseTestLock();
-
     // Restore original database connection.
     Database::removeConnection('default');
     Database::renameConnection('simpletest_original_default', 'default');

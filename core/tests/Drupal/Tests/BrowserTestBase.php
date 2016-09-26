@@ -554,10 +554,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
 
     // Delete test site directory.
     file_unmanaged_delete_recursive($this->siteDirectory, array($this, 'filePreDeleteCallback'));
-
-    // Release the prefix.
-    $test_db = new TestDatabase($test_prefix);
-    $test_db->releaseTestLock();
   }
 
   /**
