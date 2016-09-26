@@ -140,6 +140,32 @@ class RendererTest extends RendererTestBase {
       '#children' => 'foo',
       'child' => ['#markup' => 'bar'],
     ], 'foo'];
+    // Ensure that content added to #markup via a #pre_render callback is safe.
+    $data[] = [[
+      '#markup' => 'foo',
+      '#pre_render' => [function($elements) {
+        $elements['#markup'] .= '<script>alert("bar");</script>';
+        return $elements;
+      }]
+    ], 'fooalert("bar");'];
+    // Test #allowed_tags in combination with #markup and #pre_render.
+    $data[] = [[
+      '#markup' => 'foo',
+      '#allowed_tags' => array('script'),
+      '#pre_render' => [function($elements) {
+        $elements['#markup'] .= '<script>alert("bar");</script>';
+        return $elements;
+      }]
+    ], 'foo<script>alert("bar");</script>'];
+    // Ensure output is escaped when adding content to #check_plain through
+    // a #pre_render callback.
+    $data[] = [[
+      '#plain_text' => 'foo',
+      '#pre_render' => [function($elements) {
+        $elements['#plain_text'] .= '<script>alert("bar");</script>';
+        return $elements;
+      }]
+    ], 'foo&lt;script&gt;alert(&quot;bar&quot;);&lt;/script&gt;'];
 
     // Part 2: render arrays using #theme and #theme_wrappers.
 

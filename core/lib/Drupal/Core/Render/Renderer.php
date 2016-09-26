@@ -365,11 +365,6 @@ class Renderer implements RendererInterface {
       $elements['#lazy_builder_built'] = TRUE;
     }
 
-    // All render elements support #markup and #plain_text.
-    if (!empty($elements['#markup']) || !empty($elements['#plain_text'])) {
-      $elements = $this->ensureMarkupIsSafe($elements);
-    }
-
     // Make any final changes to the element before it is rendered. This means
     // that the $element or the children can be altered or corrected before the
     // element is rendered into the final text.
@@ -380,6 +375,11 @@ class Renderer implements RendererInterface {
         }
         $elements = call_user_func($callable, $elements);
       }
+    }
+
+    // All render elements support #markup and #plain_text.
+    if (!empty($elements['#markup']) || !empty($elements['#plain_text'])) {
+      $elements = $this->ensureMarkupIsSafe($elements);
     }
 
     // Defaults for bubbleable rendering metadata.
