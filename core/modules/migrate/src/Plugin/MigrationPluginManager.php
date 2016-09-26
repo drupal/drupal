@@ -86,7 +86,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration = array()) {
-    $instances = $this->createInstances([$plugin_id], $configuration);
+    $instances = $this->createInstances([$plugin_id], [$plugin_id => $configuration]);
     return reset($instances);
   }
 
