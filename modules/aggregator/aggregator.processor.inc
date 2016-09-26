@@ -72,7 +72,7 @@ function aggregator_aggregator_remove($feed) {
  */
 function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
   if (in_array('aggregator', variable_get('aggregator_processors', array('aggregator')))) {
-    $info = module_invoke('aggregator', 'aggregator_process', 'info');
+    $info = module_invoke('aggregator', 'aggregator_process_info');
     $items = drupal_map_assoc(array(3, 5, 10, 15, 20, 25), '_aggregator_items');
     $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
     $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
