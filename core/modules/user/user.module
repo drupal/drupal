@@ -913,7 +913,7 @@ function user_mail($key, &$message, $params) {
   $langcode = $message['langcode'];
   $variables = array('user' => $params['account']);
 
-  $language = \Drupal::languageManager()->getLanguage($params['account']->getPreferredLangcode());
+  $language = $language_manager->getLanguage($params['account']->getPreferredLangcode());
   $original_language = $language_manager->getConfigOverrideLanguage();
   $language_manager->setConfigOverrideLanguage($language);
   $mail_config = \Drupal::config('user.mail');
