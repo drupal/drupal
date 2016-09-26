@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
@@ -75,12 +76,14 @@ class EngineTwigTest extends WebTestBase {
     /** @var \Drupal\Core\Utility\LinkGenerator $link_generator */
     $link_generator = $this->container->get('link_generator');
 
+
     $expected = [
       'link via the linkgenerator: ' . $link_generator->generate('register', new Url('user.register', [], ['absolute' => TRUE])),
       'link via the linkgenerator: ' . $link_generator->generate('register', new Url('user.register', [], ['absolute' => TRUE, 'attributes' => ['foo' => 'bar']])),
       'link via the linkgenerator: ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['foo' => 'bar', 'id' => 'kitten']])),
       'link via the linkgenerator: ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['id' => 'kitten']])),
       'link via the linkgenerator: ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['class' => ['llama', 'kitten', 'panda']]])),
+      'link via the linkgenerator: ' . $link_generator->generate(Markup::create('<span>register</span>'), new Url('user.register', [], ['absolute' => TRUE])),
     ];
 
     // Verify that link() has the ability to bubble cacheability metadata:
