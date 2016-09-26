@@ -224,6 +224,8 @@ class Xss {
             $skip_protocol_filtering = substr($attribute_name, 0, 5) === 'data-' || in_array($attribute_name, array(
               'title',
               'alt',
+              'rel',
+              'property',
             ));
 
             $working = $mode = 1;
