@@ -40,12 +40,9 @@ class MigrateSourcePluginManager extends MigratePluginManager {
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-   * @param object $class_loader
-   *   The class loader.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, $class_loader) {
+  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct($type, $namespaces, $cache_backend, $module_handler, 'Drupal\migrate\Annotation\MigrateSource');
-    $this->classLoader = $class_loader;
   }
 
   /**
@@ -53,7 +50,7 @@ class MigrateSourcePluginManager extends MigratePluginManager {
    */
   protected function getDiscovery() {
     if (!$this->discovery) {
-      $discovery = new AnnotatedClassDiscoveryAutomatedProviders($this->subdir, $this->namespaces, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces, $this->classLoader);
+      $discovery = new AnnotatedClassDiscoveryAutomatedProviders($this->subdir, $this->namespaces, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces);
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
     }
     return $this->discovery;

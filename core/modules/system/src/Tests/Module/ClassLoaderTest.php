@@ -70,4 +70,18 @@ class ClassLoaderTest extends WebTestBase {
     }
   }
 
+  /**
+   * Ensures the negative caches in the class loader don't result in crashes.
+   */
+  public function testMultipleModules() {
+    $this->drupalLogin($this->rootUser);
+    $edit = [
+      "modules[Testing][module_install_class_loader_test1][enable]" => TRUE,
+      "modules[Testing][module_install_class_loader_test2][enable]" => TRUE,
+    ];
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->rebuildContainer();
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('module_install_class_loader_test2'), 'The module_install_class_loader_test2 module has been installed.');
+  }
+
 }
