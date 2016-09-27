@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Reflection\StaticReflectionParser as BaseStaticReflectionParser;
 use Drupal\Component\Annotation\AnnotationInterface;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
+use Drupal\Component\ClassFinder\ClassFinder;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\migrate\Annotation\MultipleProviderAnnotationInterface;
 
@@ -20,9 +21,9 @@ use Drupal\migrate\Annotation\MultipleProviderAnnotationInterface;
 class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery {
 
   /**
-   * Any class loader with a findFile() method.
+   * A utility object that can use active autoloaders to find files for classes.
    *
-   * @var \Composer\Autoload\ClassLoader
+   * @var \Doctrine\Common\Reflection\ClassFinderInterface
    */
   protected $finder;
 
@@ -41,17 +42,10 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
    *   Defaults to 'Drupal\Component\Annotation\Plugin'.
    * @param string[] $annotation_namespaces
    *   Additional namespaces to scan for annotation definitions.
-   * @param $class_loader
-   *   The class loader already knows where to find the classes so it is reused
-   *   as the class finder.
    */
-  public function __construct($subdir, \Traversable $root_namespaces, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin', array $annotation_namespaces = [], $class_loader) {
+  public function __construct($subdir, \Traversable $root_namespaces, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin', array $annotation_namespaces = []) {
     parent::__construct($subdir, $root_namespaces, $plugin_definition_annotation_name, $annotation_namespaces);
-
-    if (!method_exists($class_loader, 'findFile')) {
-      throw new \LogicException(sprintf('Class loader (%s) must implement findFile() method', get_class($class_loader)));
-    }
-    $this->finder = $class_loader;
+    $this->finder = new ClassFinder();
   }
 
 

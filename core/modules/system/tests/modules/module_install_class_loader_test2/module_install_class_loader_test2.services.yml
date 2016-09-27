@@ -1,0 +1,5 @@
+services:
+  module_install_class_loader_test1.event_subscriber:
+    class: Drupal\module_install_class_loader_test2\EventSubscriber
+    tags:
+      - { name: event_subscriber }

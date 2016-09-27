@@ -7,7 +7,7 @@ services:
     arguments: [migrate]
   plugin.manager.migrate.source:
     class: Drupal\migrate\Plugin\MigrateSourcePluginManager
-    arguments: [source, '@container.namespaces', '@cache.discovery', '@module_handler', '@class_loader']
+    arguments: [source, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.migrate.process:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [process, '@container.namespaces', '@cache.discovery', '@module_handler', 'Drupal\migrate\Annotation\MigrateProcessPlugin']

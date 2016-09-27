@@ -1,0 +1,16 @@
+{
+  "name": "drupal/core-class-finder",
+  "description": "This class provides a class finding utility.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.5.9",
+    "doctrine/common": "2.5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\ClassFinder\\": ""
+    }
+  }
+}
