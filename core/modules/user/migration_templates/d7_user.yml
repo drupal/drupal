@@ -41,3 +41,4 @@ migration_dependencies:
     - user_picture_field_instance
     - user_picture_entity_display
     - user_picture_entity_form_display
+    - d7_field_instance
