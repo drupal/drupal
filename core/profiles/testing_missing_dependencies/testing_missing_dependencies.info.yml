@@ -1,0 +1,10 @@
+name: 'Testing missing dependencies'
+type: profile
+description: 'Minimal profile for running a test when dependencies are listed but missing.'
+version: VERSION
+core: 8.x
+hidden: true
+dependencies:
+  - missing_module1
+  - missing_module2
+keep_english: true
