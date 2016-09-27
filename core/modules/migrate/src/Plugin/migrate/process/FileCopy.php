@@ -53,6 +53,7 @@ class FileCopy extends ProcessPluginBase implements ContainerFactoryPluginInterf
     $configuration += array(
       'move' => FALSE,
       'rename' => FALSE,
+      'reuse' => FALSE,
     );
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->streamWrapperManager = $stream_wrappers;
@@ -130,8 +131,13 @@ class FileCopy extends ProcessPluginBase implements ContainerFactoryPluginInterf
     if ($this->configuration['move']) {
       return file_unmanaged_move($source, $destination, $replace);
     }
+    // Check if there is a destination available for copying. If there isn't,
+    // it already exists at the destination and the replace flag tells us to not
+    // replace it. In that case, return the original destination.
+    if (!($final_destination = file_destination($destination, $replace))) {
+      return $destination;
+    }
     // We can't use file_unmanaged_copy because it will break with remote Urls.
-    $final_destination = file_destination($destination, $replace);
     if (@copy($source, $final_destination)) {
       return $final_destination;
     }
@@ -142,13 +148,17 @@ class FileCopy extends ProcessPluginBase implements ContainerFactoryPluginInterf
    * Determines how to handle file conflicts.
    *
    * @return int
-   *   Either FILE_EXISTS_REPLACE (default) or FILE_EXISTS_RENAME, depending
-   *   on the current configuration.
+   *   FILE_EXISTS_REPLACE (default), FILE_EXISTS_RENAME, or FILE_EXISTS_ERROR
+   *   depending on the current configuration.
    */
   protected function getOverwriteMode() {
     if (!empty($this->configuration['rename'])) {
       return FILE_EXISTS_RENAME;
     }
+    if (!empty($this->configuration['reuse'])) {
+      return FILE_EXISTS_ERROR;
+    }
+
     return FILE_EXISTS_REPLACE;
   }
 
