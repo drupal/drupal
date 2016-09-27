@@ -76,6 +76,7 @@ if ($args['list']) {
     $groups = simpletest_test_get_all($args['module']);
   }
   catch (Exception $e) {
+    error_log((string) $e);
     echo (string) $e;
     exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
   }
