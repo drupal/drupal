@@ -13,7 +13,7 @@ tips:
     id: locale-overview
     plugin: text
     label: 'User interface translation'
-    body: 'This page allows you to translate the user interface or modify existing translations. If you have installed your site initially in English, you must first add another language on the <a href="[site:url]/admin/config/regional/language">Languages page</a>, in order to use this page.'
+    body: 'This page allows you to translate the user interface or modify existing translations. If you have installed your site initially in English, you must first add another language on the <a href="[site:url]admin/config/regional/language">Languages page</a>, in order to use this page.'
     weight: 1
   locale-language:
     id: locale-language
@@ -67,5 +67,5 @@ tips:
     id: locale-continue
     plugin: text
     label: 'Continuing on'
-    body: 'The translations you have made here will be used on your site''s user interface. If you want to use them on another site or modify them on an external translation editor, you can <a href="[site:url]/admin/config/regional/translate/export">export them</a> to a .po file and <a href="[site:url]/admin/config/regional/translate/import">import them</a> later.'
+    body: 'The translations you have made here will be used on your site''s user interface. If you want to use them on another site or modify them on an external translation editor, you can <a href="[site:url]admin/config/regional/translate/export">export them</a> to a .po file and <a href="[site:url]admin/config/regional/translate/import">import them</a> later.'
     weight: 8
