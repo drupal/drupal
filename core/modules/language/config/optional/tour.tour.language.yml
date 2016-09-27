@@ -49,5 +49,5 @@ tips:
     id: language-continue
     plugin: text
     label: 'Continuing on'
-    body: '<p>Now that you have an overview of the "Languages" page, you can continue by:<ul><li><a href="[site:url]/admin/config/regional/language/add">Adding a language</a></li><li>Reordering languages</li><li>Editing a language</li><li>Deleting a language</li></ul></p>'
+    body: '<p>Now that you have an overview of the "Languages" page, you can continue by:<ul><li><a href="[site:url]admin/config/regional/language/add">Adding a language</a></li><li>Reordering languages</li><li>Editing a language</li><li>Deleting a language</li></ul></p>'
     weight: 6
