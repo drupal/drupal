@@ -28,4 +28,15 @@ class JSWebAssert extends WebAssert {
     }
   }
 
+  /**
+   * Waits for the jQuery autocomplete delay duration.
+   *
+   * @see https://api.jqueryui.com/autocomplete/#option-delay
+   */
+  public function waitOnAutocomplete() {
+    // Drupal is using the default delay value of 300 milliseconds.
+    $this->session->wait(300);
+    $this->assertWaitOnAjaxRequest();
+  }
+
 }
