@@ -691,7 +691,7 @@ function template_preprocess_form_element_label(&$variables) {
  *     'finished' functions, for instance if they don't reside in the main
  *     .module file. The path should be relative to base_path(), and thus should
  *     be built using drupal_get_path().
- *   - css: Array of paths to CSS files to be used on the progress page.
+ *   - library: An array of batch-specific CSS and JS libraries.
  *   - url_options: options passed to the \Drupal\Core\Url object when
  *     constructing redirect URLs for the batch.
  *   - progressive: A Boolean that indicates whether or not the batch needs to
@@ -734,7 +734,6 @@ function batch_set($batch_definition) {
       'init_message' => t('Initializing.'),
       'progress_message' => t('Completed @current of @total.'),
       'error_message' => t('An error has occurred.'),
-      'css' => array(),
     );
     $batch_set = $init + $batch_definition + $defaults;
 
