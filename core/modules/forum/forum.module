@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\taxonomy\VocabularyInterface;
 use Drupal\user\Entity\User;
 
 /**
@@ -295,7 +296,7 @@ function forum_form_taxonomy_vocabulary_form_alter(&$form, FormStateInterface $f
     // Forum's vocabulary always has single hierarchy. Forums and containers
     // have only one parent or no parent for root items. By default this value
     // is 0.
-    $form['hierarchy']['#value'] = TAXONOMY_HIERARCHY_SINGLE;
+    $form['hierarchy']['#value'] = VocabularyInterface::HIERARCHY_SINGLE;
     // Do not allow to delete forum's vocabulary.
     $form['actions']['delete']['#access'] = FALSE;
     // Do not allow to change a vid of forum's vocabulary.
