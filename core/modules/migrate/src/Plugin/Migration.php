@@ -126,15 +126,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $destinationIds = [];
 
   /**
-   * Information on the property used as the high watermark.
-   *
-   * Array of 'name' & (optional) db 'alias' properties used for high watermark.
-   *
-   * @var array
-   */
-  protected $highWaterProperty;
-
-  /**
    * Indicate whether the primary system of record for this migration is the
    * source, or the destination (Drupal). In the source case, migration of
    * an existing object will completely replace the Drupal object with data from
@@ -153,11 +144,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * @var int
    */
   protected $sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
-
-  /**
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   */
-  protected $highWaterStorage;
 
   /**
    * Track time of last import if TRUE.
@@ -444,33 +430,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   }
 
   /**
-   * Get the high water storage object.
-   *
-   * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   *   The storage object.
-   */
-  protected function getHighWaterStorage() {
-    if (!isset($this->highWaterStorage)) {
-      $this->highWaterStorage = \Drupal::keyValue('migrate:high_water');
-    }
-    return $this->highWaterStorage;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getHighWater() {
-    return $this->getHighWaterStorage()->get($this->id());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function saveHighWater($high_water) {
-    $this->getHighWaterStorage()->set($this->id(), $high_water);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function checkRequirements() {
@@ -720,13 +679,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function getSourceConfiguration() {
     return $this->source;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getHighWaterProperty() {
-    return $this->highWaterProperty;
   }
 
   /**

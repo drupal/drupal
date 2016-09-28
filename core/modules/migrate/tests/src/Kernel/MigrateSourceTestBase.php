@@ -62,13 +62,12 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
     $this->migration->id()->willReturn(
       $this->randomMachineName(16)
     );
-    // Prophesize a useless ID map plugin, an empty high water property, and
-    // an empty set of destination IDs. Calling code can override these
-    // prophecies later and set up different behaviors.
+    // Prophesize a useless ID map plugin and an empty set of destination IDs.
+    // Calling code can override these prophecies later and set up different
+    // behaviors.
     $this->migration->getIdMap()->willReturn(
       $this->prophesize(MigrateIdMapInterface::class)->reveal()
     );
-    $this->migration->getHighWaterProperty()->willReturn([]);
     $this->migration->getDestinationIds()->willReturn([]);
   }
 
