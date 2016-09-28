@@ -26,6 +26,7 @@ use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\Tests\XdebugRequestTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
@@ -62,6 +63,8 @@ abstract class WebTestBase extends TestBase {
     createRole as drupalCreateRole;
     createAdminRole as drupalCreateAdminRole;
   }
+
+  use XdebugRequestTrait;
 
   /**
    * The profile to install as a basis for testing.
@@ -1117,29 +1120,10 @@ abstract class WebTestBase extends TestBase {
     if (!empty($this->curlCookies)) {
       $cookies = $this->curlCookies;
     }
-    // In order to debug web tests you need to either set a cookie, have the
-    // Xdebug session in the URL or set an environment variable in case of CLI
-    // requests. If the developer listens to connection on the parent site, by
-    // default the cookie is not forwarded to the client side, so you cannot
-    // debug the code running on the child site. In order to make debuggers work
-    // this bit of information is forwarded. Make sure that the debugger listens
-    // to at least three external connections.
-    $request = \Drupal::request();
-    $cookie_params = $request->cookies;
-    if ($cookie_params->has('XDEBUG_SESSION')) {
-      $cookies[] = 'XDEBUG_SESSION=' . $cookie_params->get('XDEBUG_SESSION');
-    }
-    // For CLI requests, the information is stored in $_SERVER.
-    $server = $request->server;
-    if ($server->has('XDEBUG_CONFIG')) {
-      // $_SERVER['XDEBUG_CONFIG'] has the form "key1=value1 key2=value2 ...".
-      $pairs = explode(' ', $server->get('XDEBUG_CONFIG'));
-      foreach ($pairs as $pair) {
-        list($key, $value) = explode('=', $pair);
-        // Account for key-value pairs being separated by multiple spaces.
-        if (trim($key, ' ') == 'idekey') {
-          $cookies[] = 'XDEBUG_SESSION=' . trim($value, ' ');
-        }
+
+    foreach ($this->extractCookiesFromRequest(\Drupal::request()) as $cookie_name => $values) {
+      foreach ($values as $value) {
+        $cookies[] = $cookie_name . '=' . $value;
       }
     }
 

@@ -65,6 +65,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     createRole as drupalCreateRole;
     createUser as drupalCreateUser;
   }
+  use XdebugRequestTrait;
 
   /**
    * Class loader.
@@ -519,29 +520,10 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // Setup Mink.
     $session = $this->initMink();
 
-    // In order to debug web tests you need to either set a cookie, have the
-    // Xdebug session in the URL or set an environment variable in case of CLI
-    // requests. If the developer listens to connection when running tests, by
-    // default the cookie is not forwarded to the client side, so you cannot
-    // debug the code running on the test site. In order to make debuggers work
-    // this bit of information is forwarded. Make sure that the debugger listens
-    // to at least three external connections.
-    $request = \Drupal::request();
-    $cookie_params = $request->cookies;
-    if ($cookie_params->has('XDEBUG_SESSION')) {
-      $session->setCookie('XDEBUG_SESSION', $cookie_params->get('XDEBUG_SESSION'));
-    }
-    // For CLI requests, the information is stored in $_SERVER.
-    $server = $request->server;
-    if ($server->has('XDEBUG_CONFIG')) {
-      // $_SERVER['XDEBUG_CONFIG'] has the form "key1=value1 key2=value2 ...".
-      $pairs = explode(' ', $server->get('XDEBUG_CONFIG'));
-      foreach ($pairs as $pair) {
-        list($key, $value) = explode('=', $pair);
-        // Account for key-value pairs being separated by multiple spaces.
-        if (trim($key) == 'idekey') {
-          $session->setCookie('XDEBUG_SESSION', trim($value));
-        }
+    $cookies = $this->extractCookiesFromRequest(\Drupal::request());
+    foreach ($cookies as $cookie_name => $values) {
+      foreach ($values as $value) {
+        $session->setCookie($cookie_name, $value);
       }
     }
 

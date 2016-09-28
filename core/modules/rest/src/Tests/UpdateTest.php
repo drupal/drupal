@@ -258,6 +258,11 @@ class UpdateTest extends RESTTestBase {
     $this->httpRequest($account->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(200);
 
+    // Log out the user to clear the cookies used by the Guzzle client so that a
+    // log in request can be made for the changed user.
+    $this->httpRequest('user/logout', 'GET');
+    $this->loggedInUser = FALSE;
+
     // Verify that we can log in with the new password.
     $account->pass_raw = $new_password;
     $this->drupalLogin($account);

@@ -2,10 +2,13 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\node\NodeInterface;
 use Drupal\rest\RestResourceConfigInterface;
 use Drupal\simpletest\WebTestBase;
+use GuzzleHttp\Cookie\FileCookieJar;
+use GuzzleHttp\Cookie\SetCookie;
 
 /**
  * Test helper class that provides a REST client method to send HTTP requests.
@@ -62,6 +65,13 @@ abstract class RESTTestBase extends WebTestBase {
    */
   public static $modules = array('rest', 'entity_test');
 
+  /**
+   * The last response.
+   *
+   * @var \Psr\Http\Message\ResponseInterface
+   */
+  protected $response;
+
   protected function setUp() {
     parent::setUp();
     $this->defaultFormat = 'hal_json';
@@ -72,6 +82,38 @@ abstract class RESTTestBase extends WebTestBase {
     if (in_array('node', static::$modules)) {
       $this->drupalCreateContentType(array('name' => 'resttest', 'type' => 'resttest'));
     }
+
+    $this->cookieFile = $this->publicFilesDirectory . '/cookie.jar';
+  }
+
+  /**
+   * Calculates cookies used by guzzle later.
+   *
+   * @return \GuzzleHttp\Cookie\CookieJarInterface
+   *   The used CURL options in guzzle.
+   */
+  protected function cookies() {
+    $cookies = [];
+
+    foreach ($this->cookies as $key => $cookie) {
+      $cookies[$key][] = $cookie['value'];
+    }
+
+    $request = \Drupal::request();
+    $cookies = NestedArray::mergeDeep($cookies, $this->extractCookiesFromRequest($request));
+
+    $cookie_jar = new FileCookieJar($this->cookieFile);
+    foreach ($cookies as $key => $cookie_values) {
+      foreach ($cookie_values as $cookie_value) {
+        // setcookie() sets the value of a cookie to be deleted, when its gonna
+        // be removed.
+        if ($cookie_value !== 'deleted') {
+          $cookie_jar->setCookie(new SetCookie(['Name' => $key, 'Value' => $cookie_value, 'Domain' => $request->getHost()]));
+        }
+      }
+    }
+
+    return $cookie_jar;
   }
 
   /**
@@ -103,111 +145,130 @@ abstract class RESTTestBase extends WebTestBase {
       $requested_token = $this->drupalGet('session/token');
     }
 
+    $client = \Drupal::httpClient();
     $url = $this->buildUrl($url);
 
-    $curl_options = array();
+    $options = [
+      'http_errors' => FALSE,
+      'cookies' => $this->cookies(),
+      'curl' => [
+        CURLOPT_HEADERFUNCTION => [&$this, 'curlHeaderCallback'],
+      ],
+    ];
     switch ($method) {
       case 'GET':
-        // Set query if there are additional GET parameters.
-        $curl_options = array(
-          CURLOPT_HTTPGET => TRUE,
-          CURLOPT_CUSTOMREQUEST => 'GET',
-          CURLOPT_URL => $url,
-          CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => array('Accept: ' . $mime_type),
-        );
+        $options += [
+          'headers' => [
+            'Accept' => $mime_type,
+          ],
+        ];
+        $response = $client->get($url, $options);
         break;
 
       case 'HEAD':
-        $curl_options = array(
-          CURLOPT_HTTPGET => FALSE,
-          CURLOPT_CUSTOMREQUEST => 'HEAD',
-          CURLOPT_URL => $url,
-          CURLOPT_NOBODY => TRUE,
-          CURLOPT_HTTPHEADER => array('Accept: ' . $mime_type),
-        );
+        $response = $client->head($url, $options);
         break;
 
       case 'POST':
-        $curl_options = array(
-          CURLOPT_HTTPGET => FALSE,
-          CURLOPT_POST => TRUE,
-          CURLOPT_POSTFIELDS => $body,
-          CURLOPT_URL => $url,
-          CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => $csrf_token !== FALSE ? array(
-            'Content-Type: ' . $mime_type,
-            'X-CSRF-Token: ' . ($csrf_token === NULL ? $requested_token : $csrf_token),
-          ) : array(
-            'Content-Type: ' . $mime_type,
-          ),
-        );
+        $options += [
+          'headers' => $csrf_token !== FALSE ? [
+            'Content-Type' => $mime_type,
+            'X-CSRF-Token' => ($csrf_token === NULL ? $requested_token : $csrf_token),
+          ] : [
+            'Content-Type' => $mime_type,
+          ],
+          'body' => $body,
+        ];
+        $response = $client->post($url, $options);
         break;
 
       case 'PUT':
-        $curl_options = array(
-          CURLOPT_HTTPGET => FALSE,
-          CURLOPT_CUSTOMREQUEST => 'PUT',
-          CURLOPT_POSTFIELDS => $body,
-          CURLOPT_URL => $url,
-          CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => $csrf_token !== FALSE ? array(
-            'Content-Type: ' . $mime_type,
-            'X-CSRF-Token: ' . ($csrf_token === NULL ? $requested_token : $csrf_token),
-          ) : array(
-            'Content-Type: ' . $mime_type,
-          ),
-        );
+        $options += [
+          'headers' => $csrf_token !== FALSE ? [
+            'Content-Type' => $mime_type,
+            'X-CSRF-Token' => ($csrf_token === NULL ? $requested_token : $csrf_token),
+          ] : [
+            'Content-Type' => $mime_type,
+          ],
+          'body' => $body,
+        ];
+        $response = $client->put($url, $options);
         break;
 
       case 'PATCH':
-        $curl_options = array(
-          CURLOPT_HTTPGET => FALSE,
-          CURLOPT_CUSTOMREQUEST => 'PATCH',
-          CURLOPT_POSTFIELDS => $body,
-          CURLOPT_URL => $url,
-          CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => $csrf_token !== FALSE ? array(
-            'Content-Type: ' . $mime_type,
-            'X-CSRF-Token: ' . ($csrf_token === NULL ? $requested_token : $csrf_token),
-          ) : array(
-            'Content-Type: ' . $mime_type,
-          ),
-        );
+        $options += [
+          'headers' => $csrf_token !== FALSE ? [
+            'Content-Type' => $mime_type,
+            'X-CSRF-Token' => ($csrf_token === NULL ? $requested_token : $csrf_token),
+          ] : [
+            'Content-Type' => $mime_type,
+          ],
+          'body' => $body,
+        ];
+        $response = $client->patch($url, $options);
         break;
 
       case 'DELETE':
-        $curl_options = array(
-          CURLOPT_HTTPGET => FALSE,
-          CURLOPT_CUSTOMREQUEST => 'DELETE',
-          CURLOPT_URL => $url,
-          CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => $csrf_token !== FALSE ? array(
-            'X-CSRF-Token: ' . ($csrf_token === NULL ? $requested_token : $csrf_token),
-          ) : array(),
-        );
+        $options += [
+          'headers' => $csrf_token !== FALSE ? [
+            'Content-Type' => $mime_type,
+            'X-CSRF-Token' => ($csrf_token === NULL ? $requested_token : $csrf_token),
+          ] : [],
+        ];
+        $response = $client->delete($url, $options);
         break;
     }
 
-    if ($mime_type === 'none') {
-      unset($curl_options[CURLOPT_HTTPHEADER]['Content-Type']);
-    }
-
-    $this->responseBody = $this->curlExec($curl_options);
+    $this->response = $response;
+    $this->responseBody = (string) $response->getBody();
+    $this->setRawContent($this->responseBody);
 
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
 
-    $headers = $this->drupalGetHeaders();
-
     $this->verbose($method . ' request to: ' . $url .
-      '<hr />Code: ' . curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE) .
-      (isset($curl_options[CURLOPT_HTTPHEADER]) ? '<hr />Request headers: ' . nl2br(print_r($curl_options[CURLOPT_HTTPHEADER], TRUE)) : '' ) .
-      (isset($curl_options[CURLOPT_POSTFIELDS]) ? '<hr />Request body: ' . nl2br(print_r($curl_options[CURLOPT_POSTFIELDS], TRUE)) : '' ) .
-      '<hr />Response headers: ' . nl2br(print_r($headers, TRUE)) .
+      '<hr />Code: ' . $this->response->getStatusCode() .
+      (isset($options['headers']) ? '<hr />Request headers: ' . nl2br(print_r($options['headers'], TRUE)) : '') .
+      (isset($options['body']) ? '<hr />Request body: ' . nl2br(print_r($options['body'], TRUE)) : '') .
+      '<hr />Response headers: ' . nl2br(print_r($response->getHeaders(), TRUE)) .
       '<hr />Response body: ' . $this->responseBody);
 
     return $this->responseBody;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function assertResponse($code, $message = '', $group = 'Browser') {
+    if (!isset($this->response)) {
+      return parent::assertResponse($code, $message, $group);
+    }
+    return $this->assertEqual($code, $this->response->getStatusCode(), $message ? $message : "HTTP response expected $code, actual {$this->response->getStatusCode()}", $group);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function drupalGetHeaders($all_requests = FALSE) {
+    if (!isset($this->response)) {
+      return parent::drupalGetHeaders($all_requests);
+    }
+    $lowercased_keys = array_map('strtolower', array_keys($this->response->getHeaders()));
+    return array_map(function (array $header) {
+      return implode(', ', $header);
+    }, array_combine($lowercased_keys, array_values($this->response->getHeaders())));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function drupalGetHeader($name, $all_requests = FALSE) {
+    if (!isset($this->response)) {
+      return parent::drupalGetHeader($name, $all_requests);
+    }
+    if ($header = $this->response->getHeader($name)) {
+      return implode(', ', $header);
+    }
   }
 
   /**
@@ -369,6 +430,8 @@ abstract class RESTTestBase extends WebTestBase {
    * override it every time it is omitted.
    */
   protected function curlExec($curl_options, $redirect = FALSE) {
+    unset($this->response);
+
     if (!isset($curl_options[CURLOPT_CUSTOMREQUEST])) {
       if (!empty($curl_options[CURLOPT_HTTPGET])) {
         $curl_options[CURLOPT_CUSTOMREQUEST] = 'GET';
