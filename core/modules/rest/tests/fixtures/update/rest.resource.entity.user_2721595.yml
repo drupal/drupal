@@ -1,5 +1,4 @@
 id: entity.user
-uuid: A4674E26-9831-40B4-B3E7-A087C8C9B00D
 plugin_id: 'entity:user'
 granularity: method
 configuration:

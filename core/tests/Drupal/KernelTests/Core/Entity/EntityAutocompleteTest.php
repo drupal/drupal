@@ -33,6 +33,14 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
   protected $bundle = 'entity_test';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->installSchema('system', ['key_value']);
+  }
+
+  /**
    * Tests autocompletion edge cases with slashes in the names.
    */
   function testEntityReferenceAutocompletion() {

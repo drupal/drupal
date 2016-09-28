@@ -53,7 +53,7 @@ class ExternalFormUrlTest extends KernelTestBase implements FormInterface {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', ['sequences']);
+    $this->installSchema('system', ['key_value_expire', 'sequences']);
     $this->installEntitySchema('user');
 
     $test_user = User::create([

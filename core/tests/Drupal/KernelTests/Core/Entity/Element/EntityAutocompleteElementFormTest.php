@@ -45,6 +45,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
   protected function setUp() {
     parent::setUp();
 
+    $this->installSchema('system', ['key_value_expire']);
     \Drupal::service('router.builder')->rebuild();
 
     $this->testUser = User::create(array(
