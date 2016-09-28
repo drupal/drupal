@@ -223,7 +223,7 @@ class OverviewTerms extends FormBase {
         '#title' => $term->getName(),
         '#url' => $term->urlInfo(),
       );
-      if ($taxonomy_vocabulary->getHierarchy() != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
+      if ($taxonomy_vocabulary->getHierarchy() != VocabularyInterface::HIERARCHY_MULTIPLE && count($tree) > 1) {
         $parent_fields = TRUE;
         $form['terms'][$key]['term']['tid'] = array(
           '#type' => 'hidden',
@@ -340,7 +340,7 @@ class OverviewTerms extends FormBase {
       'group' => 'term-weight',
     );
 
-    if ($taxonomy_vocabulary->getHierarchy() != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
+    if ($taxonomy_vocabulary->getHierarchy() != VocabularyInterface::HIERARCHY_MULTIPLE && count($tree) > 1) {
       $form['actions'] = array('#type' => 'actions', '#tree' => FALSE);
       $form['actions']['submit'] = array(
         '#type' => 'submit',
@@ -382,7 +382,7 @@ class OverviewTerms extends FormBase {
 
     $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     // Update the current hierarchy type as we go.
-    $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
+    $hierarchy = VocabularyInterface::HIERARCHY_DISABLED;
 
     $changed_terms = array();
     $tree = $this->storageController->loadTree($vocabulary->id(), 0, NULL, TRUE);
@@ -400,7 +400,7 @@ class OverviewTerms extends FormBase {
         $changed_terms[$term->id()] = $term;
       }
       $weight++;
-      $hierarchy = $term->parents[0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
+      $hierarchy = $term->parents[0] != 0 ? VocabularyInterface::HIERARCHY_SINGLE : $hierarchy;
       $term = $tree[$weight];
     }
 
@@ -427,7 +427,7 @@ class OverviewTerms extends FormBase {
           $term->parent->target_id = $values['term']['parent'];
           $changed_terms[$term->id()] = $term;
         }
-        $hierarchy = $term->parents[0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
+        $hierarchy = $term->parents[0] != 0 ? VocabularyInterface::HIERARCHY_SINGLE : $hierarchy;
         $weight++;
       }
     }
@@ -440,7 +440,7 @@ class OverviewTerms extends FormBase {
         $term->setWeight($weight);
         $changed_terms[$term->id()] = $term;
       }
-      $hierarchy = $term->parents[0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
+      $hierarchy = $term->parents[0] != 0 ? VocabularyInterface::HIERARCHY_SINGLE : $hierarchy;
     }
 
     // Save all updated terms.

@@ -1,0 +1,7 @@
+name: 'Vocabulary serialization test'
+type: module
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - taxonomy

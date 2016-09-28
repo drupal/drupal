@@ -19,16 +19,25 @@ use Drupal\taxonomy\VocabularyInterface;
 
 /**
  * Denotes that no term in the vocabulary has a parent.
+ *
+ * @deprecated in Drupal 8.2.x and will be removed before 9.0.0. Use
+ *   \Drupal\taxonomy\VocabularyInterface::HIERARCHY_DISABLED instead.
  */
 const TAXONOMY_HIERARCHY_DISABLED = 0;
 
 /**
  * Denotes that one or more terms in the vocabulary has a single parent.
+ *
+ * @deprecated in Drupal 8.2.x and will be removed before 9.0.0. Use
+ *   \Drupal\taxonomy\VocabularyInterface::HIERARCHY_SINGLE instead.
  */
 const TAXONOMY_HIERARCHY_SINGLE = 1;
 
 /**
  * Denotes that one or more terms in the vocabulary have multiple parents.
+ *
+ * @deprecated in Drupal 8.2.x and will be removed before 9.0.0. Use
+ *   \Drupal\taxonomy\VocabularyInterface::HIERARCHY_MULTIPLE instead.
  */
 const TAXONOMY_HIERARCHY_MULTIPLE = 2;
 
@@ -67,11 +76,11 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.taxonomy_vocabulary.overview_form':
       $vocabulary = $route_match->getParameter('taxonomy_vocabulary');
       switch ($vocabulary->getHierarchy()) {
-        case TAXONOMY_HIERARCHY_DISABLED:
+        case VocabularyInterface::HIERARCHY_DISABLED:
           return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label())) . '</p>';
-        case TAXONOMY_HIERARCHY_SINGLE:
+        case VocabularyInterface::HIERARCHY_SINGLE:
           return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', array('%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label())) . '</p>';
-        case TAXONOMY_HIERARCHY_MULTIPLE:
+        case VocabularyInterface::HIERARCHY_MULTIPLE:
           return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', array('%capital_name' => Unicode::ucfirst($vocabulary->label()))) . '</p>';
       }
   }
@@ -134,10 +143,11 @@ function taxonomy_theme() {
  * Checks the current parents of all terms in a vocabulary and updates the
  * vocabulary's hierarchy setting to the lowest possible level. If no term
  * has parent terms then the vocabulary will be given a hierarchy of
- * TAXONOMY_HIERARCHY_DISABLED. If any term has a single parent then the
- * vocabulary will be given a hierarchy of TAXONOMY_HIERARCHY_SINGLE. If any
- * term has multiple parents then the vocabulary will be given a hierarchy of
- * TAXONOMY_HIERARCHY_MULTIPLE.
+ * VocabularyInterface::HIERARCHY_DISABLED. If any term has a single parent then
+ * the vocabulary will be given a hierarchy of
+ * VocabularyInterface::HIERARCHY_SINGLE. If any term has multiple parents then
+ * the vocabulary will be given a hierarchy of
+ * VocabularyInterface::HIERARCHY_MULTIPLE.
  *
  * @param \Drupal\taxonomy\VocabularyInterface $vocabulary
  *   A taxonomy vocabulary entity.
@@ -149,7 +159,7 @@ function taxonomy_theme() {
  */
 function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $changed_term) {
   $tree = \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($vocabulary->id());
-  $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
+  $hierarchy = VocabularyInterface::HIERARCHY_DISABLED;
   foreach ($tree as $term) {
     // Update the changed term with the new parent value before comparison.
     if ($term->tid == $changed_term['tid']) {
@@ -158,11 +168,11 @@ function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $c
     }
     // Check this term's parent count.
     if (count($term->parents) > 1) {
-      $hierarchy = TAXONOMY_HIERARCHY_MULTIPLE;
+      $hierarchy = VocabularyInterface::HIERARCHY_MULTIPLE;
       break;
     }
     elseif (count($term->parents) == 1 && !isset($term->parents[0])) {
-      $hierarchy = TAXONOMY_HIERARCHY_SINGLE;
+      $hierarchy = VocabularyInterface::HIERARCHY_SINGLE;
     }
   }
   if ($hierarchy != $vocabulary->getHierarchy()) {
