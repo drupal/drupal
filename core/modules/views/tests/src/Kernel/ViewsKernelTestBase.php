@@ -41,7 +41,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
-    $this->installSchema('system', ['router', 'sequences', 'key_value_expire']);
+    $this->installSchema('system', ['router', 'sequences']);
     $this->setUpFixtures();
 
     if ($import_test_views) {

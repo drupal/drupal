@@ -66,10 +66,12 @@ $connection->insert('config')
   ])
   ->execute();
 
+$config = Yaml::decode(file_get_contents('core/modules/views/tests/modules/views_test_config/test_views/views.view.rest_export_with_authorization.yml'));
+$config['uuid'] = '1D52D29E-2DD8-417A-9CDA-1BBC5A013B1F';
 $connection->merge('config')
   ->condition('name', 'views.view.rest_export_with_authorization')
   ->condition('collection', '')
   ->fields([
-    'data' => serialize(Yaml::decode(file_get_contents('core/modules/views/tests/modules/views_test_config/test_views/views.view.rest_export_with_authorization.yml'))),
+    'data' => serialize($config),
   ])
   ->execute();

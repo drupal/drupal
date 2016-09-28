@@ -1,4 +1,5 @@
 id: entity.node
+uuid: 63E588C5-B0EA-4156-8EFE-1A288DAA975F
 plugin_id: 'entity:node'
 granularity: method
 configuration:

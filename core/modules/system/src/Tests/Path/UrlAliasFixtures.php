@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Tests\Path;
 
+use Drupal\Core\KeyValueStore\DatabaseStorage;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Path\AliasStorage;
 
@@ -89,7 +90,7 @@ class UrlAliasFixtures {
     $schema = system_schema();
 
     $tables['url_alias'] = AliasStorage::schemaDefinition();
-    $tables['key_value'] = $schema['key_value'];
+    $tables['key_value'] = DatabaseStorage::schemaDefinition();
 
     return $tables;
   }

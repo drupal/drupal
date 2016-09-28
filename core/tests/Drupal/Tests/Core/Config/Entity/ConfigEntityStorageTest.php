@@ -525,6 +525,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $config_object = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()
       ->getMock();
+
     $config_object->expects($this->atLeastOnce())
       ->method('isNew')
       ->will($this->returnValue(TRUE));
@@ -539,14 +540,16 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->with('the_config_prefix.foo')
       ->will($this->returnValue($config_object));
 
+    $uuid = '7C1821EF-A96F-4BF0-B654-F683532EECB3';
     $this->entityQuery->expects($this->once())
       ->method('condition')
+      ->with('uuid', $uuid)
       ->will($this->returnSelf());
     $this->entityQuery->expects($this->once())
       ->method('execute')
       ->will($this->returnValue(array('baz')));
 
-    $entity = $this->getMockEntity(array('id' => 'foo'));
+    $entity = $this->getMockEntity(array('id' => 'foo', 'uuid' => $uuid));
     $this->entityStorage->save($entity);
   }
 
@@ -591,7 +594,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->method('execute')
       ->will($this->returnValue(array('baz')));
 
-    $entity = $this->getMockEntity(array('id' => 'foo'));
+    $uuid = '7C1821EF-A96F-4BF0-B654-F683532EECB3';
+    $entity = $this->getMockEntity(array('id' => 'foo', 'uuid' => $uuid));
     $entity->setOriginalId('baz');
     $entity->enforceIsNew();
     $this->entityStorage->save($entity);

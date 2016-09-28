@@ -19,11 +19,6 @@ class DatabaseStorageTest extends StorageTestBase {
    */
   public static $modules = array('system');
 
-  protected function setUp() {
-    parent::setUp();
-    $this->installSchema('system', array('key_value'));
-  }
-
   /**
    * {@inheritdoc}
    */

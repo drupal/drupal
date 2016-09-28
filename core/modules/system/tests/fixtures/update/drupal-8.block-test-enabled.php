@@ -39,6 +39,7 @@ $connection->update('config')
 // Install the block configuration.
 $config = file_get_contents(__DIR__ . '/../../../../block/tests/modules/block_test/config/install/block.block.test_block.yml');
 $config = Yaml::parse($config);
+$config['uuid'] = '35B67D42-EF1C-424F-99E6-9DA4E3275A27';
 $connection->insert('config')
   ->fields(['data', 'name', 'collection'])
   ->values([

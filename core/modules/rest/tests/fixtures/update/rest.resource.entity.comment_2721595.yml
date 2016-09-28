@@ -1,4 +1,5 @@
 id: entity.comment
+uuid: 4093D90C-69E6-4024-B177-25EE075F86D8
 plugin_id: 'entity:comment'
 granularity: method
 configuration:

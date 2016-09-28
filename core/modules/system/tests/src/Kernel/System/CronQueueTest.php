@@ -38,11 +38,6 @@ class CronQueueTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-
-    // These additional tables are necessary because $this->cron->run() calls
-    // system_cron().
-    $this->installSchema('system', ['key_value_expire']);
-
     $this->connection = Database::getConnection();
     $this->cron = \Drupal::service('cron');
   }

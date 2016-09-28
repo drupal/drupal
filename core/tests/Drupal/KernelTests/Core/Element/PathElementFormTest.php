@@ -37,7 +37,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', ['sequences', 'key_value_expire']);
+    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     \Drupal::service('router.builder')->rebuild();
     /** @var \Drupal\user\RoleInterface $role */

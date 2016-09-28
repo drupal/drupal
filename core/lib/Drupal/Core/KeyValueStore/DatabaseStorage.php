@@ -5,6 +5,7 @@ namespace Drupal\Core\KeyValueStore;
 use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -61,10 +62,16 @@ class DatabaseStorage extends StorageBase {
    * {@inheritdoc}
    */
   public function has($key) {
-    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key', array(
-      ':collection' => $this->collection,
-      ':key' => $key,
-    ))->fetchField();
+    try {
+      return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key', array(
+        ':collection' => $this->collection,
+        ':key' => $key,
+      ))->fetchField();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+      return FALSE;
+    }
   }
 
   /**
@@ -84,6 +91,7 @@ class DatabaseStorage extends StorageBase {
       // @todo: Perhaps if the database is never going to be available,
       // key/value requests should return FALSE in order to allow exception
       // handling to occur but for now, keep it an array, always.
+      $this->catchException($e);
     }
     return $values;
   }
@@ -92,7 +100,14 @@ class DatabaseStorage extends StorageBase {
    * {@inheritdoc}
    */
   public function getAll() {
-    $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection', array(':collection' => $this->collection));
+    try {
+      $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection', array(':collection' => $this->collection));
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+      $result = [];
+    }
+
     $values = array();
 
     foreach ($result as $item) {
@@ -107,40 +122,75 @@ class DatabaseStorage extends StorageBase {
    * {@inheritdoc}
    */
   public function set($key, $value) {
-    $this->connection->merge($this->table)
-      ->keys(array(
-        'name' => $key,
-        'collection' => $this->collection,
-      ))
-      ->fields(array('value' => $this->serializer->encode($value)))
-      ->execute();
+    $try_again = FALSE;
+    try {
+      $this->connection->merge($this->table)
+        ->keys(array(
+          'name' => $key,
+          'collection' => $this->collection,
+        ))
+        ->fields(array('value' => $this->serializer->encode($value)))
+        ->execute();
+    }
+    catch (\Exception $e) {
+      // If there was an exception, try to create the table.
+      if (!$try_again = $this->ensureTableExists()) {
+        // If the exception happened for other reason than the missing bin
+        // table, propagate the exception.
+        throw $e;
+      }
+    }
+    // Now that the bin has been created, try again if necessary.
+    if ($try_again) {
+      $this->set($key, $value);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function setIfNotExists($key, $value) {
-    $result = $this->connection->merge($this->table)
-      ->insertFields(array(
-        'collection' => $this->collection,
-        'name' => $key,
-        'value' => $this->serializer->encode($value),
-      ))
-      ->condition('collection', $this->collection)
-      ->condition('name', $key)
-      ->execute();
-    return $result == Merge::STATUS_INSERT;
+    $try_again = FALSE;
+    try {
+      $result = $this->connection->merge($this->table)
+        ->insertFields(array(
+          'collection' => $this->collection,
+          'name' => $key,
+          'value' => $this->serializer->encode($value),
+        ))
+        ->condition('collection', $this->collection)
+        ->condition('name', $key)
+        ->execute();
+      return $result == Merge::STATUS_INSERT;
+    }
+    catch (\Exception $e) {
+      // If there was an exception, try to create the table.
+      if (!$try_again = $this->ensureTableExists()) {
+        // If the exception happened for other reason than the missing bin
+        // table, propagate the exception.
+        throw $e;
+      }
+    }
+    // Now that the bin has been created, try again if necessary.
+    if ($try_again) {
+      return $this->setIfNotExists($key, $value);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function rename($key, $new_key) {
-    $this->connection->update($this->table)
-      ->fields(array('name' => $new_key))
-      ->condition('collection', $this->collection)
-      ->condition('name', $key)
-      ->execute();
+    try {
+      $this->connection->update($this->table)
+        ->fields(array('name' => $new_key))
+        ->condition('collection', $this->collection)
+        ->condition('name', $key)
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
   }
 
   /**
@@ -149,10 +199,15 @@ class DatabaseStorage extends StorageBase {
   public function deleteMultiple(array $keys) {
     // Delete in chunks when a large array is passed.
     while ($keys) {
-      $this->connection->delete($this->table)
-        ->condition('name', array_splice($keys, 0, 1000), 'IN')
-        ->condition('collection', $this->collection)
-        ->execute();
+      try {
+        $this->connection->delete($this->table)
+          ->condition('name', array_splice($keys, 0, 1000), 'IN')
+          ->condition('collection', $this->collection)
+          ->execute();
+      }
+      catch (\Exception $e) {
+        $this->catchException($e);
+      }
     }
   }
 
@@ -160,9 +215,82 @@ class DatabaseStorage extends StorageBase {
    * {@inheritdoc}
    */
   public function deleteAll() {
-    $this->connection->delete($this->table)
-      ->condition('collection', $this->collection)
-      ->execute();
+    try {
+      $this->connection->delete($this->table)
+        ->condition('collection', $this->collection)
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
+  }
+
+  /**
+   * Check if the table exists and create it if not.
+   */
+  protected function ensureTableExists() {
+    try {
+      $database_schema = $this->connection->schema();
+      if (!$database_schema->tableExists($this->table)) {
+        $database_schema->createTable($this->table, $this->schemaDefinition());
+        return TRUE;
+      }
+    }
+    // If the table already exists, then attempting to recreate it will throw an
+    // exception. In this case just catch the exception and do nothing.
+    catch (SchemaObjectExistsException $e) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Act on an exception when the table might not have been created.
+   *
+   * If the table does not yet exist, that's fine, but if the table exists and
+   * something else cause the exception, then propagate it.
+   *
+   * @param \Exception $e
+   *   The exception.
+   *
+   * @throws \Exception
+   */
+  protected function catchException(\Exception $e) {
+    if ($this->connection->schema()->tableExists($this->table)) {
+      throw $e;
+    }
+  }
+
+  /**
+   * Defines the schema for the key_value table.
+   */
+  public static function schemaDefinition() {
+    return [
+      'description' => 'Generic key-value storage table. See the state system for an example.',
+      'fields' => [
+        'collection' => [
+          'description' => 'A named collection of key and value pairs.',
+          'type' => 'varchar_ascii',
+          'length' => 128,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'name' => [
+          'description' => 'The key of the key-value pair. As KEY is a SQL reserved keyword, name was chosen instead.',
+          'type' => 'varchar_ascii',
+          'length' => 128,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'value' => [
+          'description' => 'The value.',
+          'type' => 'blob',
+          'not null' => TRUE,
+          'size' => 'big',
+        ],
+      ],
+      'primary key' => ['collection', 'name'],
+    ];
   }
 
 }

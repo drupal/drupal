@@ -79,7 +79,7 @@ class DbLogFormInjectionTest extends KernelTestBase implements FormInterface {
   protected function setUp() {
     parent::setUp();
     $this->installSchema('dblog', ['watchdog']);
-    $this->installSchema('system', ['key_value_expire', 'sequences']);
+    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     $this->logger = \Drupal::logger('test_logger');
     $test_user = User::create(array(
