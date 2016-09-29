@@ -8,7 +8,7 @@ Drupal 7.51, xxxx-xx-xx (development version)
 - If the page title is "0", it is now displayed.
 - Log messages are now XSS filtered on display.
 - Draggable tables do now work on touch screen devices.
-- Numerous small performance improvements.
+- Numerous performance improvements.
 - Numerous small bugfixes.
 - Numerous API documentation improvements.
 
