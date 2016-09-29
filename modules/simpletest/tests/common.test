@@ -947,6 +947,31 @@ class DrupalHTMLIdentifierTestCase extends DrupalUnitTestCase {
 
     // Verify that invalid characters (including non-breaking space) are stripped from the identifier.
     $this->assertIdentical(drupal_clean_css_identifier('invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', array()), 'invalididentifier', 'Strip invalid characters.');
+
+    // Verify that double underscores are replaced in the identifier by default.
+    $identifier = 'css__identifier__with__double__underscores';
+    $expected = 'css--identifier--with--double--underscores';
+    $this->assertIdentical(drupal_clean_css_identifier($identifier), $expected, 'Verify double underscores are replaced with double hyphens by default.');
+
+    // Verify that double underscores are preserved in the identifier if the
+    // variable allow_css_double_underscores is set to TRUE.
+    $this->setAllowCSSDoubleUnderscores(TRUE);
+    $this->assertIdentical(drupal_clean_css_identifier($identifier), $identifier, 'Verify double underscores are preserved if the allow_css_double_underscores set to TRUE.');
+
+    // To avoid affecting other test cases, set the variable
+    // allow_css_double_underscores to FALSE which is the default value.
+    $this->setAllowCSSDoubleUnderscores(FALSE);
+  }
+
+  /**
+   * Set the variable allow_css_double_underscores and reset the cache.
+   *
+   * @param $value bool
+   *   A new value to be set to allow_css_double_underscores.
+   */
+  function setAllowCSSDoubleUnderscores($value) {
+    $GLOBALS['conf']['allow_css_double_underscores'] = $value;
+    drupal_static_reset('drupal_clean_css_identifier:allow_css_double_underscores');
   }
 
   /**

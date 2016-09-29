@@ -3900,6 +3900,21 @@ function drupal_delete_file_if_stale($uri) {
  *   The cleaned identifier.
  */
 function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '/' => '-', '[' => '-', ']' => '')) {
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['allow_css_double_underscores'] = &drupal_static(__FUNCTION__ . ':allow_css_double_underscores');
+  }
+  $allow_css_double_underscores = &$drupal_static_fast['allow_css_double_underscores'];
+  if (!isset($allow_css_double_underscores)) {
+    $allow_css_double_underscores = variable_get('allow_css_double_underscores', FALSE);
+  }
+
+  // Preserve BEM-style double-underscores depending on custom setting.
+  if ($allow_css_double_underscores) {
+    $filter['__'] = '__';
+  }
+
   // By default, we filter using Drupal's coding standards.
   $identifier = strtr($identifier, $filter);
 
