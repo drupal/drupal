@@ -294,10 +294,17 @@ function theme_dblog_message($variables) {
     else {
       $output = t($event->message, unserialize($event->variables));
     }
+    // If the output is expected to be a link, strip all the tags and
+    // special characters by using filter_xss() without any allowed tags.
+    // If not, use filter_xss_admin() to allow some tags.
     if ($variables['link'] && isset($event->wid)) {
-      // Truncate message to 56 chars.
+      // Truncate message to 56 chars after stripping all the tags.
       $output = truncate_utf8(filter_xss($output, array()), 56, TRUE, TRUE);
       $output = l($output, 'admin/reports/event/' . $event->wid, array('html' => TRUE));
+    }
+    else {
+      // Prevent XSS in log detail pages.
+      $output = filter_xss_admin($output);
     }
   }
   return $output;

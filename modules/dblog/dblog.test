@@ -665,4 +665,32 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Document Object Model (DOM).
     $this->assertLink(html_entity_decode($message_text), 0, $message);
   }
+
+  /**
+   * Make sure HTML tags are filtered out in the log detail page.
+   */
+  public function testLogMessageSanitized() {
+    $this->drupalLogin($this->big_user);
+
+    // Make sure dangerous HTML tags are filtered out in log detail page.
+    $log = array(
+      'uid' => 0,
+      'type' => 'custom',
+      'message' => "<script>alert('foo');</script> <strong>Lorem ipsum</strong>",
+      'variables' => NULL,
+      'severity' => WATCHDOG_NOTICE,
+      'link' => 'foo/bar',
+      'request_uri' => 'http://example.com?dblog=1',
+      'referer' => 'http://example.org?dblog=2',
+      'ip' => '0.0.1.0',
+      'timestamp' => REQUEST_TIME,
+    );
+    dblog_watchdog($log);
+
+    $wid = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $this->drupalGet('admin/reports/event/' . $wid);
+    $this->assertResponse(200);
+    $this->assertNoRaw("<script>alert('foo');</script>");
+    $this->assertRaw("alert('foo'); <strong>Lorem ipsum</strong>");
+  }
 }
