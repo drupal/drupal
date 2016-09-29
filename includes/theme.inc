@@ -2639,7 +2639,7 @@ function template_preprocess_page(&$variables) {
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['show_messages'] = $variables['page']['#show_messages'];
 
-  foreach (system_region_list($GLOBALS['theme']) as $region_key => $region_name) {
+  foreach (system_region_list($GLOBALS['theme'], REGIONS_ALL, FALSE) as $region_key) {
     if (!isset($variables['page'][$region_key])) {
       $variables['page'][$region_key] = array();
     }
