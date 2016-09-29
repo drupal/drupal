@@ -277,8 +277,8 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
 
   // Add the mousedown action for the handle.
   handle.bind('mousedown touchstart pointerdown', function (event) {
-    if(event.originalEvent.type == "touchstart"){
-        event=event.originalEvent.touches[0];
+    if (event.originalEvent.type == "touchstart") {
+      event = event.originalEvent.touches[0];
     }
     // Create a new dragObject recording the event information.
     self.dragObject = {};
