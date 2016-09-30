@@ -15,10 +15,12 @@ mode: teaser
 content:
   links:
     weight: 100
+    region: content
   body:
     label: hidden
     type: text_summary_or_trimmed
     weight: 101
+    region: content
     settings:
       trim_length: 600
     third_party_settings: {  }

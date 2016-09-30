@@ -4,6 +4,7 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
@@ -172,6 +173,13 @@ abstract class EntityDisplayFormBase extends EntityForm {
           'subgroup' => 'field-parent',
           'source' => 'field-name',
         ),
+        array(
+          'action' => 'match',
+          'relationship' => 'parent',
+          'group' => 'field-region',
+          'subgroup' => 'field-region',
+          'source' => 'field-name',
+        ),
       ),
     );
 
@@ -308,6 +316,15 @@ abstract class EntityDisplayFormBase extends EntityForm {
           '#default_value' => $field_name,
           '#attributes' => array('class' => array('field-name')),
         ),
+      ),
+      'region' => array(
+        '#type' => 'select',
+        '#title' => $this->t('Region for @title', array('@title' => $label)),
+        '#title_display' => 'invisible',
+        '#options' => $this->getRegionOptions(),
+        '#empty_value' => 'hidden',
+        '#default_value' => isset($display_options['region']) ? $display_options['region'] : 'hidden',
+        '#attributes' => array('class' => array('field-region')),
       ),
     );
 
@@ -474,6 +491,15 @@ abstract class EntityDisplayFormBase extends EntityForm {
           '#attributes' => array('class' => array('field-name')),
         ),
       ),
+      'region' => array(
+        '#type' => 'select',
+        '#title' => $this->t('Region for @title', array('@title' => $extra_field['label'])),
+        '#title_display' => 'invisible',
+        '#options' => $this->getRegionOptions(),
+        '#empty_value' => 'hidden',
+        '#default_value' => $display_options ? $display_options['region'] : 'hidden',
+        '#attributes' => array('class' => array('field-region')),
+      ),
       'plugin' => array(
         'type' => array(
           '#type' => 'select',
@@ -548,44 +574,119 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
     // Collect data for 'regular' fields.
     foreach ($form['#fields'] as $field_name) {
-      $values = $form_values['fields'][$field_name];
-
-      if ($values['type'] == 'hidden') {
-        $entity->removeComponent($field_name);
-      }
-      else {
-        $options = $entity->getComponent($field_name);
-
-        // Update field settings only if the submit handler told us to.
-        if ($form_state->get('plugin_settings_update') === $field_name) {
-          // Only store settings actually used by the selected plugin.
-          $default_settings = $this->pluginManager->getDefaultSettings($options['type']);
-          $options['settings'] = isset($values['settings_edit_form']['settings']) ? array_intersect_key($values['settings_edit_form']['settings'], $default_settings) : [];
-          $options['third_party_settings'] = isset($values['settings_edit_form']['third_party_settings']) ? $values['settings_edit_form']['third_party_settings'] : [];
-          $form_state->set('plugin_settings_update', NULL);
-        }
-
-        $options['type'] = $values['type'];
-        $options['weight'] = $values['weight'];
-        // Only formatters have configurable label visibility.
-        if (isset($values['label'])) {
-          $options['label'] = $values['label'];
-        }
-        $entity->setComponent($field_name, $options);
-      }
+      $this->processFieldUpdates($field_name, $form_values['fields'][$field_name], $entity, $form_state);
     }
 
     // Collect data for 'extra' fields.
     foreach ($form['#extra'] as $name) {
-      if ($form_values['fields'][$name]['type'] == 'hidden') {
-        $entity->removeComponent($name);
+      $this->processFieldUpdates($name, $form_values['fields'][$name], $entity, $form_state);
+    }
+
+    $form_state->setTemporaryValue('entity_display_components_updated', TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save(array $form, FormStateInterface $form_state) {
+    $form_state->setTemporaryValue('entity_display_components_updated', NULL);
+    return parent::save($form, $form_state);
+  }
+
+  /**
+   * Processes updates to the components for a given field.
+   *
+   * @param string $field_name
+   *   The field name being processed.
+   * @param array $values
+   *   The submitted form values.
+   * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $entity
+   *   The entity being updated.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function processFieldUpdates($field_name, array $values, EntityDisplayInterface $entity, FormStateInterface $form_state) {
+    // If the component is not found, it is initially hidden.
+    $options = $entity->getComponent($field_name) ?: ['type' => 'hidden', 'region' => 'hidden'];
+    $remove_component = $options['region'] === 'hidden';
+    if ($form_state->getTemporaryValue('entity_display_components_updated')) {
+      // Since the component has already been updated, replace $values with the
+      // relevant parts of $options.
+      $values = array_intersect_key($options, $values) + $values;
+    }
+    // @todo In https://www.drupal.org/node/2799641, remove this else statement.
+    else {
+      $remove_component = $this->determineComponentAction($options, $values);
+    }
+
+    if ($remove_component) {
+      $entity->removeComponent($field_name);
+    }
+    else {
+      // Update field settings only if the submit handler told us to.
+      if ($form_state->get('plugin_settings_update') === $field_name) {
+        // Only store settings actually used by the selected plugin.
+        $default_settings = $this->pluginManager->getDefaultSettings($options['type']);
+        $options['settings'] = isset($values['settings_edit_form']['settings']) ? array_intersect_key($values['settings_edit_form']['settings'], $default_settings) : [];
+        $options['third_party_settings'] = isset($values['settings_edit_form']['third_party_settings']) ? $values['settings_edit_form']['third_party_settings'] : [];
+        $form_state->set('plugin_settings_update', NULL);
+      }
+
+      if (isset($values['type'])) {
+        $options['type'] = $values['type'];
+      }
+      $options['weight'] = $values['weight'];
+      if (isset($values['region'])) {
+        $options['region'] = $values['region'];
+      }
+      // Only formatters have configurable label visibility.
+      if (isset($values['label'])) {
+        $options['label'] = $values['label'];
+      }
+      $entity->setComponent($field_name, $options);
+    }
+  }
+
+  /**
+   * Determines whether a component should be updated or removed.
+   *
+   * @todo Remove handling of 'type' in https://www.drupal.org/node/2799641.
+   *
+   * @param array $old_values
+   *   An array of the old values for a given component.
+   * @param array $new_values
+   *   An array of the new values for a given component.
+   *
+   * @return bool
+   *   TRUE if the component should be removed, FALSE if it should be updated.
+   */
+  protected function determineComponentAction(array &$old_values, array &$new_values) {
+    $has_type_change = $new_values['type'] !== $old_values['type'];
+    $has_region_change = $new_values['region'] !== $old_values['region'];
+    // If the type and region both changed or neither changed, the action will
+    // be the same. Base the decision on whether the region is hidden.
+    if ($has_type_change === $has_region_change) {
+      $remove_component = $new_values['region'] === 'hidden';
+    }
+    else {
+      if ($has_region_change) {
+        // If only the region changed, remove the component if it is now hidden.
+        $remove_component = $new_values['region'] === 'hidden';
+        // If the region and type mismatch, remove the invalid type.
+        if ($new_values['region'] !== 'hidden' && $new_values['type'] === 'hidden') {
+          unset($new_values['type'], $old_values['type']);
+        }
       }
       else {
-        $entity->setComponent($name, array(
-          'weight' => $form_values['fields'][$name]['weight'],
-        ));
+        // If only the type changed, remove the component if it is now hidden.
+        $remove_component = $new_values['type'] === 'hidden';
+        // If the region and type mismatch, remove the invalid region.
+        if ($new_values['region'] === 'hidden' && $new_values['type'] !== 'hidden') {
+          unset($new_values['region'], $old_values['region']);
+        }
       }
     }
+    return $remove_component;
   }
 
   /**
@@ -813,7 +914,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
     switch ($row['#row_type']) {
       case 'field':
       case 'extra_field':
-        return ($row['plugin']['type']['#value'] == 'hidden' ? 'hidden' : 'content');
+        return $row['region']['#value'] ?: 'hidden';
     }
   }
 

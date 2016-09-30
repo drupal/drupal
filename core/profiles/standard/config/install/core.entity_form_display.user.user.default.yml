@@ -14,12 +14,16 @@ mode: default
 content:
   account:
     weight: -10
+    region: content
   contact:
     weight: 5
+    region: content
   language:
     weight: 0
+    region: content
   timezone:
     weight: 6
+    region: content
   user_picture:
     type: image_image
     settings:
@@ -27,4 +31,5 @@ content:
       preview_image_style: thumbnail
     third_party_settings: {  }
     weight: -1
+    region: content
 hidden: {  }

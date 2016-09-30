@@ -5,6 +5,10 @@
  * Post update functions for System.
  */
 
+use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+
 /**
  * @addtogroup updates-8.0.0-beta
  * @{
@@ -41,3 +45,18 @@ function system_post_update_recalculate_configuration_entity_dependencies(&$sand
 /**
  * @} End of "addtogroup updates-8.0.0-beta".
  */
+
+/**
+ * Update entity displays to contain the region for each field.
+ */
+function system_post_update_add_region_to_entity_displays() {
+  $entity_save = function (EntityDisplayInterface $entity) {
+    foreach ($entity->getComponents() as $name => $component) {
+      // setComponent() will fill in the correct region based on the 'type'.
+      $entity->setComponent($name, $component);
+    }
+    $entity->save();
+  };
+  array_map($entity_save, EntityViewDisplay::loadMultiple());
+  array_map($entity_save, EntityFormDisplay::loadMultiple());
+}

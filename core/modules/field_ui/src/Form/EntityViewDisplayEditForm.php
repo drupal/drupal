@@ -127,6 +127,7 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
       $this->t('Field'),
       $this->t('Weight'),
       $this->t('Parent'),
+      $this->t('Region'),
       $this->t('Label'),
       array('data' => $this->t('Format'), 'colspan' => 3),
     );

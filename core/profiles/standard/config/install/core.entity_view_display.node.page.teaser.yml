@@ -17,9 +17,11 @@ content:
     label: hidden
     type: text_summary_or_trimmed
     weight: 100
+    region: content
     settings:
       trim_length: 600
     third_party_settings: {  }
   links:
     weight: 101
+    region: content
 hidden: {  }
