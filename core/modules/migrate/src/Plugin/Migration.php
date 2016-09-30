@@ -126,18 +126,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $destinationIds = [];
 
   /**
-   * Indicate whether the primary system of record for this migration is the
-   * source, or the destination (Drupal). In the source case, migration of
-   * an existing object will completely replace the Drupal object with data from
-   * the source side. In the destination case, the existing Drupal object will
-   * be loaded, then changes from the source applied; also, rollback will not be
-   * supported.
-   *
-   * @var string
-   */
-  protected $systemOfRecord = self::SOURCE;
-
-  /**
    * Specify value of source_row_status for current map row. Usually set by
    * MigrateFieldHandler implementations.
    *
@@ -591,21 +579,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
       $this->setProcessOfProperty($property, $process_of_property);
     }
 
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSystemOfRecord() {
-    return $this->systemOfRecord;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setSystemOfRecord($system_of_record) {
-    $this->systemOfRecord = $system_of_record;
     return $this;
   }
 
