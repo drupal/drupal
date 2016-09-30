@@ -137,7 +137,7 @@ class SafeMarkupTest extends UnitTestCase {
     UrlHelper::setAllowedProtocols(['http', 'https', 'mailto']);
 
     $result = SafeMarkup::format($string, $args);
-    $this->assertEquals($expected, (string) $result, $message);
+    $this->assertEquals($expected, $result, $message);
     $this->assertEquals($expected_is_safe, $result instanceof MarkupInterface, 'SafeMarkup::format correctly sets the result as safe or not safe.');
 
     foreach ($args as $arg) {
@@ -171,8 +171,6 @@ class SafeMarkupTest extends UnitTestCase {
     $tests['non-url-with-colon'] = ['Hey giraffe <a href=":url">MUUUH</a>', [':url' => "llamas: they are not URLs"], 'Hey giraffe <a href=" they are not URLs">MUUUH</a>', '', TRUE];
     $tests['non-url-with-html'] = ['Hey giraffe <a href=":url">MUUUH</a>', [':url' => "<span>not a url</span>"], 'Hey giraffe <a href="&lt;span&gt;not a url&lt;/span&gt;">MUUUH</a>', '', TRUE];
 
-    // Tests non-standard placeholders.
-    $tests['non-standard-placeholder'] = ['Hey risky', ['risky' => "<script>alert('foo');</script>"], 'Hey <em class="placeholder">&lt;script&gt;alert(&#039;foo&#039;);&lt;/script&gt;</em>', '', TRUE];
     return $tests;
   }
   /**
