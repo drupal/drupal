@@ -414,8 +414,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   public function setDisplayConfigurable($display_context, $configurable) {
     // If no explicit display options have been specified, default to 'hidden'.
     if (empty($this->definition['display'][$display_context])) {
-      // @todo Remove handling of 'type' in https://www.drupal.org/node/2799641.
-      $this->definition['display'][$display_context]['options'] = array('type' => 'hidden', 'region' => 'hidden');
+      $this->definition['display'][$display_context]['options'] = array('type' => 'hidden');
     }
     $this->definition['display'][$display_context]['configurable'] = $configurable;
     return $this;

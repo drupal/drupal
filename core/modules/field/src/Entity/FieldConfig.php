@@ -306,8 +306,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    */
   public function getDisplayOptions($display_context) {
     // Hide configurable fields by default.
-    // @todo Remove handling of 'type' in https://www.drupal.org/node/2799641.
-    return array('type' => 'hidden', 'region' => 'hidden');
+    return array('type' => 'hidden');
   }
 
   /**

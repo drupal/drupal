@@ -3,7 +3,6 @@
 namespace Drupal\field_ui\Tests;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -98,19 +97,6 @@ class ManageDisplayTest extends WebTestBase {
       'hidden',
     );
     $this->assertEqual($options, $expected_options, 'The expected formatter ordering is respected.');
-
-    // Ensure that fields can be hidden directly by changing the region.
-    $this->drupalGet($manage_display);
-    $this->assertFieldByName('fields[field_test][region]', 'content');
-    $edit = ['fields[field_test][region]' => 'hidden'];
-    $this->drupalPostForm($manage_display, $edit, t('Save'));
-    $this->assertFieldByName('fields[field_test][region]', 'hidden');
-    $display = EntityViewDisplay::load("node.{$this->type}.default");
-    $this->assertNull($display->getComponent('field_test'));
-
-    // Restore the field to the content region.
-    $edit = ['fields[field_test][region]' => 'content'];
-    $this->drupalPostForm($manage_display, $edit, t('Save'));
 
     // Change the formatter and check that the summary is updated.
     $edit = array('fields[field_test][type]' => 'field_test_multiple', 'refresh_rows' => 'field_test');
@@ -298,14 +284,6 @@ class ManageDisplayTest extends WebTestBase {
     // Checks if the select elements contain the specified options.
     $this->assertFieldSelectOptions('fields[field_test][type]', array('test_field_widget', 'test_field_widget_multiple', 'hidden'));
     $this->assertFieldSelectOptions('fields[field_onewidgetfield][type]', array('test_field_widget', 'hidden'));
-
-    // Ensure that fields can be hidden directly by changing the region.
-    $this->assertFieldByName('fields[field_test][region]', 'content');
-    $edit = ['fields[field_test][region]' => 'hidden'];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertFieldByName('fields[field_test][region]', 'hidden');
-    $display = EntityFormDisplay::load("node.{$this->type}.default");
-    $this->assertNull($display->getComponent('field_test'));
   }
 
   /**

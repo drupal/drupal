@@ -154,7 +154,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   protected function init() {
     // Only populate defaults for "official" view modes and form modes.
     if ($this->mode !== static::CUSTOM_MODE) {
-      $default_region = $this->getDefaultRegion();
       // Fill in defaults for extra fields.
       $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
       $extra_fields = \Drupal::entityManager()->getExtraFields($this->targetEntityType, $this->bundle);
@@ -164,8 +163,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
           // Extra fields are visible by default unless they explicitly say so.
           if (!isset($definition['visible']) || $definition['visible'] == TRUE) {
             $this->content[$name] = array(
-              'type' => 'visible',
-              'region' => $default_region,
               'weight' => $definition['weight']
             );
           }
@@ -181,13 +178,10 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
         if (!$definition->isDisplayConfigurable($this->displayContext) || (!isset($this->content[$name]) && !isset($this->hidden[$name]))) {
           $options = $definition->getDisplayOptions($this->displayContext);
 
-          // Check if either 'type' or 'region' is set to hidden.
-          // @todo Remove handling of 'type' in https://www.drupal.org/node/2799641.
-          if ((!empty($options['type']) && $options['type'] === 'hidden') || (!empty($options['region']) && $options['region'] === 'hidden')) {
+          if (!empty($options['type']) && $options['type'] == 'hidden') {
             $this->hidden[$name] = TRUE;
           }
           elseif ($options) {
-            $options += ['region' => $default_region];
             $this->content[$name] = $this->pluginManager->prepareConfiguration($definition->getType(), $options);
           }
           // Note: (base) fields that do not specify display options are not
@@ -339,12 +333,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
 
     // Ensure we always have an empty settings and array.
     $options += ['settings' => [], 'third_party_settings' => []];
-
-    // Ensure that a region is set.
-    // @todo Make 'region' required in https://www.drupal.org/node/2799641.
-    if (!isset($options['region'])) {
-      $options['region'] = (isset($options['type']) && $options['type'] === 'hidden') ? 'hidden' : $this->getDefaultRegion();
-    }
 
     $this->content[$name] = $options;
     unset($this->hidden[$name]);
@@ -514,16 +502,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       }
     }
     return $intersect;
-  }
-
-  /**
-   * Gets the default region.
-   *
-   * @return string
-   *   The default region for this display.
-   */
-  protected function getDefaultRegion() {
-    return 'content';
   }
 
   /**

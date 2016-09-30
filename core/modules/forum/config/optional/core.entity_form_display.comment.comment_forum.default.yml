@@ -13,11 +13,9 @@ mode: default
 content:
   author:
     weight: -2
-    region: content
   comment_body:
     type: text_textarea
     weight: 11
-    region: content
     settings:
       rows: 5
       placeholder: ''
@@ -25,7 +23,6 @@ content:
   subject:
     type: string_textfield
     weight: 10
-    region: content
     settings:
       size: 60
       placeholder: ''
