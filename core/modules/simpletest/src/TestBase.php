@@ -1532,7 +1532,11 @@ abstract class TestBase {
    * need to get deleted too.
    */
   public static function filePreDeleteCallback($path) {
-    chmod($path, 0700);
+    // When the webserver runs with the same system user as the test runner, we
+    // can make read-only files writable again. If not, chmod will fail while
+    // the file deletion still works if file permissions have been configured
+    // correctly. Thus, we ignore any problems while running chmod.
+    @chmod($path, 0700);
   }
 
   /**
