@@ -11,16 +11,6 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 interface MigrationInterface extends PluginInspectionInterface, DerivativeInspectionInterface {
 
   /**
-   * A constant used for systemOfRecord.
-   */
-  const SOURCE = 'source';
-
-  /**
-   * A constant used for systemOfRecord.
-   */
-  const DESTINATION = 'destination';
-
-  /**
    * The migration is currently not running.
    */
   const STATUS_IDLE = 0;
@@ -262,24 +252,6 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @see Drupal\migrate_drupal\Plugin\migrate\load\LoadEntity::processLinkField()
    */
   public function mergeProcessOfProperty($property, array $process_of_property);
-
-  /**
-   * Get the current system of record of the migration.
-   *
-   * @return string
-   *   The current system of record of the migration.
-   */
-  public function getSystemOfRecord();
-
-  /**
-   * Set the system of record for the migration.
-   *
-   * @param string $system_of_record
-   *   The system of record of the migration.
-   *
-   * @return $this
-   */
-  public function setSystemOfRecord($system_of_record);
 
   /**
    * Checks if the migration should track time of last import.
