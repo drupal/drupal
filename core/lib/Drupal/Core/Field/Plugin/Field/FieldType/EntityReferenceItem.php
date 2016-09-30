@@ -268,7 +268,26 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
     $manager = \Drupal::service('plugin.manager.entity_reference_selection');
-    if ($referenceable = $manager->getSelectionHandler($field_definition)->getReferenceableEntities()) {
+
+    // Instead of calling $manager->getSelectionHandler($field_definition)
+    // replicate the behavior to be able to override the sorting settings.
+    $options = array(
+      'target_type' => $field_definition->getFieldStorageDefinition()->getSetting('target_type'),
+      'handler' => $field_definition->getSetting('handler'),
+      'handler_settings' => $field_definition->getSetting('handler_settings') ?: array(),
+      'entity' => NULL,
+    );
+
+    $entity_type = \Drupal::entityManager()->getDefinition($options['target_type']);
+    $options['handler_settings']['sort'] = [
+      'field' => $entity_type->getKey('id'),
+      'direction' => 'DESC',
+    ];
+    $selection_handler = $manager->getInstance($options);
+
+    // Select a random number of references between the last 50 referenceable
+    // entities created.
+    if ($referenceable = $selection_handler->getReferenceableEntities(NULL, 'CONTAINS', 50)) {
       $group = array_rand($referenceable);
       $values['target_id'] = array_rand($referenceable[$group]);
       return $values;
