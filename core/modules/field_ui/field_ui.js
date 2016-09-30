@@ -128,9 +128,14 @@
       var refreshRows = {};
       refreshRows[rowHandler.name] = $trigger.get(0);
 
-      // Handle region change.
+      // Handle region or type change.
       var region = rowHandler.getRegion();
-      if (region !== rowHandler.region) {
+      // @todo Remove handling of 'type' in https://www.drupal.org/node/2799641.
+      var typeRegion = rowHandler.getType();
+      if (region !== rowHandler.region || typeRegion !== rowHandler.region) {
+        if (region === rowHandler.region) {
+          region = typeRegion;
+        }
         // Remove parenting.
         $row.find('select.js-field-parent').val('');
         // Let the row handler deal with the region change.
@@ -270,6 +275,10 @@
     this.$pluginSelect = $(row).find('select.field-plugin-type');
     this.$pluginSelect.on('change', Drupal.fieldUIOverview.onChange);
 
+    // Attach change listener to the 'region' select.
+    this.$regionSelect = $(row).find('select.field-region');
+    this.$regionSelect.on('change', Drupal.fieldUIOverview.onChange);
+
     return this;
   };
 
@@ -282,6 +291,16 @@
      *   Either 'hidden' or 'content'.
      */
     getRegion: function () {
+      return this.$regionSelect.val();
+    },
+
+    /**
+     * Returns the region corresponding to the current form values of the row.
+     *
+     * @return {string}
+     *   Either 'hidden' or 'content'.
+     */
+    getType: function () {
       return (this.$pluginSelect.val() === 'hidden') ? 'hidden' : 'content';
     },
 
@@ -305,14 +324,17 @@
      *   {@link Drupal.fieldUIOverview.AJAXRefreshRows}.
      */
     regionChange: function (region) {
+      // Replace dashes with underscores.
+      region = region.replace(/-/g, '_');
+
+      // Set the region of the select list.
+      this.$regionSelect.val(region);
 
       // When triggered by a row drag, the 'format' select needs to be adjusted
       // to the new region.
       var currentValue = this.$pluginSelect.val();
       var value;
-      // @TODO Check if this couldn't just be like
-      // if (region !== 'hidden') {
-      if (region === 'content') {
+      if (region !== 'hidden') {
         if (currentValue === 'hidden') {
           // Restore the formatter back to the default formatter. Pseudo-fields
           // do not have default formatters, we just return to 'visible' for

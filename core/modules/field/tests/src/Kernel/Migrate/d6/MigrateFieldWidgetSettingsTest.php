@@ -33,6 +33,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
     $expected = array('weight' => 1, 'type' => 'text_textfield');
     $expected['settings'] = array('size' => 60, 'placeholder' => '');
     $expected['third_party_settings'] = array();
+    $expected['region'] = 'content';
     $this->assertIdentical($expected, $component, 'Text field settings are correct.');
 
     // Integer field.

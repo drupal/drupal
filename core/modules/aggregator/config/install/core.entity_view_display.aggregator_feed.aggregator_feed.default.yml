@@ -11,20 +11,26 @@ content:
   checked:
     type: timestamp_ago
     weight: 1
+    region: content
     settings: {  }
     third_party_settings: {  }
     label: inline
   description:
     weight: 3
+    region: content
   feed_icon:
     weight: 5
+    region: content
   image:
     weight: 2
+    region: content
   items:
     weight: 0
+    region: content
   link:
     type: uri_link
     weight: 4
+    region: content
     settings: {  }
     third_party_settings: {  }
     label: inline

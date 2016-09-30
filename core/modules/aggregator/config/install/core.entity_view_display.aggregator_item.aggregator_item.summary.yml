@@ -12,6 +12,7 @@ mode: summary
 content:
   timestamp:
     weight: 0
+    region: content
 hidden:
   author: true
   description: true
