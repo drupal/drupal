@@ -298,7 +298,7 @@ class ManyToOneHelper {
         }
         $placeholders = array(
           $placeholder => $value,
-        ) + $this->placeholders;
+        );
         $this->handler->query->addWhereExpression($options['group'], "$field $operator", $placeholders);
       }
       else {
