@@ -129,14 +129,22 @@ class ContentEntityNormalizer extends NormalizerBase {
     // Create the entity.
     $typed_data_ids = $this->getTypedDataIds($data['_links']['type'], $context);
     $entity_type = $this->entityManager->getDefinition($typed_data_ids['entity_type']);
+    $default_langcode_key = $entity_type->getKey('default_langcode');
     $langcode_key = $entity_type->getKey('langcode');
     $values = array();
 
     // Figure out the language to use.
-    if (isset($data[$langcode_key])) {
-      $values[$langcode_key] = $data[$langcode_key][0]['value'];
-      // Remove the langcode so it does not get iterated over below.
-      unset($data[$langcode_key]);
+    if (isset($data[$default_langcode_key])) {
+      // Find the field item for which the default_lancode value is set to 1 and
+      // set the langcode the right default language.
+      foreach ($data[$default_langcode_key] as $item) {
+        if (!empty($item['value']) && isset($item['lang'])) {
+          $values[$langcode_key] = $item['lang'];
+          break;
+        }
+      }
+      // Remove the default langcode so it does not get iterated over below.
+      unset($data[$default_langcode_key]);
     }
 
     if ($entity_type->hasKey('bundle')) {
