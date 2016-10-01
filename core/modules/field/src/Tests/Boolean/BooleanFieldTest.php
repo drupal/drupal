@@ -20,7 +20,12 @@ class BooleanFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'field_ui', 'options');
+  public static $modules = [
+    'entity_test',
+    'field_ui',
+    'options',
+    'field_test_boolean_access_denied',
+  ];
 
   /**
    * A field to use in this test class.
@@ -177,6 +182,68 @@ class BooleanFieldTest extends WebTestBase {
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name);
     $this->assertFieldById('edit-settings-on-label', $on);
     $this->assertFieldById('edit-settings-off-label', $off);
+  }
+
+  /**
+   * Test field access.
+   */
+  public function testFormAccess() {
+    $on = 'boolean_on';
+    $off = 'boolean_off';
+    $label = 'boolean_label';
+    $field_name = 'boolean_name';
+    $this->fieldStorage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'boolean',
+    ]);
+    $this->fieldStorage->save();
+    $this->field = FieldConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+      'label' => $label,
+      'settings' => [
+        'on_label' => $on,
+        'off_label' => $off,
+      ],
+    ]);
+    $this->field->save();
+
+    // Create a form display for the default form mode.
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($field_name, [
+        'type' => 'boolean_checkbox',
+      ])
+      ->save();
+
+    // Create a display for the full view mode.
+    entity_get_display('entity_test', 'entity_test', 'full')
+      ->setComponent($field_name, [
+        'type' => 'boolean',
+      ])
+      ->save();
+
+    // Display creation form.
+    $this->drupalGet('entity_test/add');
+    $this->assertFieldByName("{$field_name}[value]");
+
+    // Should be posted OK.
+    $this->drupalPostForm(NULL, [], t('Save'));
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    $id = $match[1];
+    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+
+    // Tell the test module to disable access to the field.
+    \Drupal::state()->set('field.test_boolean_field_access_field', $field_name);
+    $this->drupalGet('entity_test/add');
+    // Field should not be there anymore.
+    $this->assertNoFieldByName("{$field_name}[value]");
+    // Should still be able to post the form.
+    $this->drupalPostForm(NULL, [], t('Save'));
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    $id = $match[1];
+    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
   }
 
 }
