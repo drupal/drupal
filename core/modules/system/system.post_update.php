@@ -51,10 +51,7 @@ function system_post_update_recalculate_configuration_entity_dependencies(&$sand
  */
 function system_post_update_add_region_to_entity_displays() {
   $entity_save = function (EntityDisplayInterface $entity) {
-    foreach ($entity->getComponents() as $name => $component) {
-      // setComponent() will fill in the correct region based on the 'type'.
-      $entity->setComponent($name, $component);
-    }
+    // preSave() will fill in the correct region based on the 'type'.
     $entity->save();
   };
   array_map($entity_save, EntityViewDisplay::loadMultiple());
