@@ -99,7 +99,7 @@
       <div id="name-and-slogan"<?php if ($hide_site_name && $hide_site_slogan) { print ' class="element-invisible"'; } ?>>
 
         <?php if ($site_name): ?>
-          <?php if (isset($title)): ?>
+          <?php if ($title): ?>
             <div id="site-name"<?php if ($hide_site_name) { print ' class="element-invisible"'; } ?>>
               <strong>
                 <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
@@ -187,7 +187,7 @@
       <?php if ($page['highlighted']): ?><div id="highlighted"><?php print render($page['highlighted']); ?></div><?php endif; ?>
       <a id="main-content"></a>
       <?php print render($title_prefix); ?>
-      <?php if (isset($title)): ?>
+      <?php if ($title): ?>
         <h1 class="title" id="page-title">
           <?php print $title; ?>
         </h1>

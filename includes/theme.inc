@@ -2597,10 +2597,9 @@ function template_preprocess_html(&$variables) {
   }
 
   // Construct page title.
-  $title = drupal_get_title();
-  if (strlen(trim($title))) {
+  if (drupal_get_title()) {
     $head_title = array(
-      'title' => strip_tags($title),
+      'title' => strip_tags(drupal_get_title()),
       'name' => check_plain(variable_get('site_name', 'Drupal')),
     );
   }
@@ -2699,8 +2698,7 @@ function template_process_page(&$variables) {
     $variables['breadcrumb'] = theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb()));
   }
   if (!isset($variables['title'])) {
-    $title = drupal_get_title();
-    $variables['title'] = strlen(trim($title)) ? $title : NULL;
+    $variables['title'] = drupal_get_title();
   }
 
   // Generate messages last in order to capture as many as possible for the

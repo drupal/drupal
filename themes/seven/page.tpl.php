@@ -2,7 +2,7 @@
   <div id="branding" class="clearfix">
     <?php print $breadcrumb; ?>
     <?php print render($title_prefix); ?>
-    <?php if (isset($title)): ?>
+    <?php if ($title): ?>
       <h1 class="page-title"><?php print $title; ?></h1>
     <?php endif; ?>
     <?php print render($title_suffix); ?>
