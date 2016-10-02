@@ -667,9 +667,6 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
  *   translations).
  */
 function _locale_import_po($file, $langcode, $mode, $group = NULL) {
-  // Try to allocate enough time to parse and import the data.
-  drupal_set_time_limit(240);
-
   // Check if we have the language already in the database.
   if (!db_query("SELECT COUNT(language) FROM {languages} WHERE language = :language", array(':language' => $langcode))->fetchField()) {
     drupal_set_message(t('The language selected for import is not supported.'), 'error');
@@ -753,6 +750,12 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
   $lineno = 0;
 
   while (!feof($fd)) {
+    // Refresh the time limit every 10 parsed rows to ensure there is always
+    // enough time to import the data for large PO files.
+    if (!($lineno % 10)) {
+      drupal_set_time_limit(30);
+    }
+
     // A line should not be longer than 10 * 1024.
     $line = fgets($fd, 10 * 1024);
 
