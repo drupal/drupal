@@ -733,7 +733,7 @@ class Renderer implements RendererInterface {
    *
    * @see \Drupal\Component\Utility\Html::escape()
    * @see \Drupal\Component\Utility\Xss::filter()
-   * @see \Drupal\Component\Utility\Xss::adminFilter()
+   * @see \Drupal\Component\Utility\Xss::filterAdmin()
    */
   protected function ensureMarkupIsSafe(array $elements) {
     if (empty($elements['#markup']) && empty($elements['#plain_text'])) {
