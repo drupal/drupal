@@ -8,9 +8,6 @@ Drupal 7.51, xxxx-xx-xx (development version)
 - Log messages are now XSS filtered on display.
 - Draggable tables do now work on touch screen devices.
 - Added setting for allowing double underscores in CSS identifiers.
-- If a user navigates away from a page while an AJAX request is running they
-  will no longer get an error message saying "An AJAX HTTP request terminated
-  abnormally"
 - Numerous performance improvements.
 - Numerous small bugfixes.
 - Numerous API documentation improvements.
