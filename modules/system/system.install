@@ -3271,6 +3271,21 @@ function system_update_7080() {
 }
 
 /**
+ * Remove the Drupal 6 default install profile if it is still in the database.
+ */
+function system_update_7081() {
+  // Sites which used the default install profile in Drupal 6 and then updated
+  // to Drupal 7.44 or earlier will still have a record of this install profile
+  // in the database that needs to be deleted.
+  db_delete('system')
+    ->condition('filename', 'profiles/default/default.profile')
+    ->condition('type', 'module')
+    ->condition('status', 0)
+    ->condition('schema_version', 0)
+    ->execute();
+}
+
+/**
  * @} End of "defgroup updates-7.x-extra".
  * The next series of updates should start at 8000.
  */

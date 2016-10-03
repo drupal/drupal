@@ -1072,8 +1072,8 @@ function _drupal_get_filename_perform_file_scan($type, $name) {
  */
 function _drupal_get_filename_fallback_trigger_error($type, $name, $error_type) {
   // Hide messages due to known bugs that will appear on a lot of sites.
-  // @todo Remove this in https://www.drupal.org/node/2762241
-  if (empty($name) || ($type == 'module' && $name == 'default')) {
+  // @todo Remove this in https://www.drupal.org/node/2383823
+  if (empty($name)) {
     return;
   }
 
