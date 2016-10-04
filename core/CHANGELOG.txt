@@ -1,3 +1,81 @@
+Drupal 8.2.0, 2016-10-05
+------------------------
+- Updated the git repository configuration to not normalize line endings for
+  files of unknown type.
+- Added vendor libraries:
+    * Added Stack/Cors 1.0.0.
+- Updated vendor libraries:
+    * Updated to jQuery 2.2.3.
+    * Updated to Twig 1.24.
+    * Updated to CKEditor 4.5.11.
+    * Updated to Symfony Routing 1.4.0.
+    * Updated to Stack/Builder 1.0.4.
+    * Updated to Guzzle 6.2.1.
+    * Updated to paragonie/random_compat 2.0.2.
+- Added modules:
+    * Added the Place Block module (experimental) to place a block on any page
+      without having to navigate to the backend administration form.
+    * Added the Settings Tray module (experimental) to edit the configuration of
+      any block on the page. Its machine name in this release is "outside_in".
+    * Added the Content Moderation module (experimental) to define and use
+      workflow states such as Draft, Archived and Published. This functionality
+      was previously provided by the contributed module Workbench Moderation.
+    * Added the Datetime Range module (experimental) that provides a new field
+      type with support for start and end dates.
+- Raised stability levels of experimental modules:
+    * Updated the BigPipe module from alpha to beta.
+    * See https://www.drupal.org/core/experimental#versions for more
+      information about the stability levels of experimental modules.
+- Improved authoring features:
+    * Relative URLs are automatically converted to absolute ones when content
+      is output to an RSS feed.
+    * Enabled revisions by default on new node types.
+    * Added a redirect option to site-wide contact forms.
+    * Whenever a new entity is created, a link to it is now provided in a
+      status message, for easy access to it regardless of the form workflow.
+    * Styled CKEditor dialogs to match Drupal dialogs.
+- Improved site administration experience:
+    * Numerous improvements to user interface text.
+- Improved site building features:
+    * Added the ability to remove a module's content entities prior to
+      uninstallation.
+    * Made it possible to select the comment view mode in the formatter form.
+    * Fixed the Migrate module to skip over migration sources that require
+      code from uninstalled modules.
+- Improved REST API and decoupled site features:
+    * Added support for reading (GET) configuration entities as REST resources.
+    * Added dedicated resources for user login, logout and registration.
+    * Added support for selecting an authentication provider as part of the
+      configuration of a REST Export Views Display.
+    * Added a cors.config service parameter for enabling and configuring
+      cross-origin resource sharing (CORS).
+    * Simplified REST configuration with per-resource configuration entities
+      and less verbose configuration structure. (The previous, advanced
+      configuration structure is also still supported.)
+    * Improved the response messages and status codes for requests with missing
+      or incorrect headers.
+    * Improved responses to PATCH requests to entity resources to contain the
+      updated entity in the response body.
+- Improved developer APIs:
+    * Added support for specifying the field item delta as part of an entity
+      query condition. This was possible in Drupal 7 via
+      EntityFieldQuery::fieldDeltaCondition(), but missing from earlier
+      versions of Drupal 8.
+- Improved performance/scalability:
+    * In the internal page cache, 404 responses are now cached for a shorter
+      time (1 hour by default), to consume less space.
+    * Breadcrumbs are now cached by the parent of the path rather than the full
+      path, for fewer cache entries and higher cache hit rates.
+- Changed coding standards:
+    * Local variables and parameters can now use camelCase.
+    * A blank line is now required after the <?php opening tag.
+- Testing improvements:
+    * Increased feature parity of BrowserTestBase with WebTestBase, including a
+      deprecated AssertLegacyTrait for easier conversions.
+    * Converted all kernel tests to the PHPUnit-based kernel test API.
+    * Improved error reporting for all PHPUnit tests (including unit, kernel,
+      browser, and JavaScript tests).
+
 Drupal 8.1.0, 2016-04-20
 ------------------------
 - Removed Composer-managed vendor from the git repository:
