@@ -306,7 +306,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
           return $this->fetchOptions['object'];
         case \PDO::FETCH_COLUMN:
           if (isset($this->columnNames[$this->fetchOptions['column']])) {
-            return $this->currentRow[$k][$this->columnNames[$this->fetchOptions['column']]];
+            return $this->currentRow[$this->columnNames[$this->fetchOptions['column']]];
           }
           else {
             return;
