@@ -1,5 +1,5 @@
 
-Drupal 7.51, xxxx-xx-xx (development version)
+Drupal 7.51, 2016-10-05
 -----------------------
 - The Update module now also checks for updates to a disabled theme that is
   used as an admin theme.
