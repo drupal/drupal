@@ -1,22 +1,24 @@
 
 Drupal 7.51, xxxx-xx-xx (development version)
 -----------------------
-- The update module now also checks for updates to a disabled themes that are
+- The Update module now also checks for updates to a disabled theme that is
   used as an admin theme.
 - Exceptions thrown in dblog_watchdog() are now caught and ignored.
 - Clarified the warning that appears when modules are missing or have moved.
 - Log messages are now XSS filtered on display.
-- Draggable tables do now work on touch screen devices.
-- Added setting for allowing double underscores in CSS identifiers.
-- If a user navigates away from a page while an AJAX request is running they
-  will no longer get an error message saying "An AJAX HTTP request terminated
-  abnormally"
+- Draggable tables now work on touch screen devices.
+- Added a setting for allowing double underscores in CSS identifiers
+  (https://www.drupal.org/node/2810369).
+- If a user navigates away from a page while an Ajax request is running they
+  will no longer get an error message saying "An Ajax HTTP request terminated
+  abnormally".
 - The system_region_list() API function now takes an optional third parameter
   which allows region name translations to be skipped when they are not needed
   (API addition: https://www.drupal.org/node/2810365).
 - Numerous performance improvements.
-- Numerous small bugfixes.
+- Numerous bug fixes.
 - Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.50, 2016-07-07 
 -----------------------
