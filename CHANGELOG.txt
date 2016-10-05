@@ -1,4 +1,7 @@
 
+Drupal 7.52 (development version), xxxx-xx-xx
+---------------------------------------------
+
 Drupal 7.51, 2016-10-05
 -----------------------
 - The Update module now also checks for updates to a disabled theme that is
