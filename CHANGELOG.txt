@@ -11,6 +11,9 @@ Drupal 7.51, xxxx-xx-xx (development version)
 - If a user navigates away from a page while an AJAX request is running they
   will no longer get an error message saying "An AJAX HTTP request terminated
   abnormally"
+- The system_region_list() API function now takes an optional third parameter
+  which allows region name translations to be skipped when they are not needed
+  (API addition: https://www.drupal.org/node/2810365).
 - Numerous performance improvements.
 - Numerous small bugfixes.
 - Numerous API documentation improvements.
