@@ -2760,8 +2760,7 @@ function system_system_info_alter(&$info, $file, $type) {
  */
 function system_default_region($theme) {
   $regions = system_region_list($theme, REGIONS_VISIBLE, FALSE);
-  $region_0 = current($regions);
-  return isset($region_0) ? $region_0 : '';
+  return $regions ? reset($regions) : '';
 }
 
 /**
