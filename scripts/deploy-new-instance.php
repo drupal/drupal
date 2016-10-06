@@ -17,7 +17,7 @@ $result = $api->instance()->create(
   MY_APP_ID,
   'test-' . $_SERVER['BUILD_NUMBER'],
   Entity\Instance::TYPE_STAGE,
-  $_SERVER['GIT_BRANCH'],
+  $_SERVER['GIT_COMMIT'],
   MY_SERVER_ID,
   "[Jenkins] Test Build {$_SERVER['BUILD_DISPLAY_NAME']}",
   [
