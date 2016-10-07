@@ -23,7 +23,7 @@ class NegotiationUrlForm extends ConfigFormBase {
   protected $languageManager;
 
   /**
-   * Constructs a new LanguageDeleteForm object.
+   * Constructs a new NegotiationUrlForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
