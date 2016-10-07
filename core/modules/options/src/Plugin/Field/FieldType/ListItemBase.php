@@ -168,7 +168,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @return array|null
    *   The array of extracted key/value pairs, or NULL if the string is invalid.
    *
-   * @see \Drupal\options\Plugin\Field\FieldType\ListTextItem::allowedValuesString()
+   * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::allowedValuesString()
    */
   protected static function extractAllowedValues($string, $has_data) {
     $values = array();
