@@ -323,7 +323,7 @@ class BlockForm extends EntityForm {
       // However, certain form elements may return it as 0/1. Cast here to
       // ensure the data is in the expected type.
       if (array_key_exists('negate', $values)) {
-        $form_state->setValue(['visibility', $condition_id, 'negate'], (bool) $values['negate']);
+        $values['negate'] = (bool) $values['negate'];
       }
 
       // Allow the condition to validate the form.
