@@ -23,6 +23,10 @@ class ModerationStateFieldItemList extends EntityReferenceFieldItemList {
   protected function getModerationState() {
     $entity = $this->getEntity();
 
+    if (!\Drupal::service('content_moderation.moderation_information')->shouldModerateEntitiesOfBundle($entity->getEntityType(), $entity->bundle())) {
+      return NULL;
+    }
+
     if ($entity->id() && $entity->getRevisionId()) {
       $revisions = \Drupal::service('entity.query')->get('content_moderation_state')
         ->condition('content_entity_type_id', $entity->getEntityTypeId())
