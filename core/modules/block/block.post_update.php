@@ -77,3 +77,36 @@ function block_post_update_disable_blocks_with_missing_contexts() {
 /**
  * @} End of "addtogroup updates-8.0.0-beta".
  */
+
+/**
+ * @addtogroup updates-8.2.x
+ * @{
+ */
+
+/**
+ * Fix invalid 'negate' values in block visibility conditions.
+ */
+function block_post_update_fix_negate_in_conditions() {
+  $block_storage = \Drupal::entityTypeManager()->getStorage('block');
+  /** @var \Drupal\block\BlockInterface[] $blocks */
+  $blocks = $block_storage->loadMultiple();
+  foreach ($blocks as $block) {
+    $block_needs_saving = FALSE;
+    // Check each visibility condition for an invalid negate value, and fix it.
+    foreach ($block->getVisibilityConditions() as $condition_id => $condition) {
+      $configuration = $condition->getConfiguration();
+      if (array_key_exists('negate', $configuration) && !is_bool($configuration['negate'])) {
+        $configuration['negate'] = (bool) $configuration['negate'];
+        $condition->setConfiguration($configuration);
+        $block_needs_saving = TRUE;
+      }
+    }
+    if ($block_needs_saving) {
+      $block->save();
+    }
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-8.2.x".
+ */

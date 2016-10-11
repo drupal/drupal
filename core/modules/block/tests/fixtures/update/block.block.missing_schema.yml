@@ -1,0 +1,28 @@
+uuid: 1a6c0f14-78dc-4ede-bade-b8ce83881453
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_test
+    - system
+  theme:
+    - bartik
+id: missing_schema
+theme: bartik
+region: sidebar_first
+weight: 0
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Test missing schema on conditions'
+  provider: system
+  label_display: visible
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: true
+visibility:
+  missing_schema:
+    id: missing_schema
+    negate: 0
+    context_mapping: {  }
