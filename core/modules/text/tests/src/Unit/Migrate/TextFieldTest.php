@@ -5,17 +5,17 @@ namespace Drupal\Tests\text\Unit\Migrate;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
-use Drupal\text\Plugin\migrate\field\TextField;
+use Drupal\text\Plugin\migrate\cckfield\TextField;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\text\Plugin\migrate\field\TextField
+ * @coversDefaultClass \Drupal\text\Plugin\migrate\cckfield\TextField
  * @group text
  */
 class TextFieldTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
+   * @var \Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface
    */
   protected $plugin;
 
@@ -32,7 +32,7 @@ class TextFieldTest extends UnitTestCase {
 
     $migration = $this->prophesize(MigrationInterface::class);
 
-    // The plugin's processFieldValues() method will call
+    // The plugin's processCckFieldValues() method will call
     // setProcessOfProperty() and return nothing. So, in order to examine the
     // process pipeline created by the plugin, we need to ensure that
     // getProcess() always returns the last input to setProcessOfProperty().
@@ -45,13 +45,13 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::processFieldValues
+   * @covers ::processCckFieldValues
    */
   public function testProcessFilteredTextFieldValues() {
     $field_info = [
       'widget_type' => 'text_textfield',
     ];
-    $this->plugin->processFieldValues($this->migration, 'body', $field_info);
+    $this->plugin->processCckFieldValues($this->migration, 'body', $field_info);
 
     $process = $this->migration->getProcess();
     $this->assertSame('iterator', $process['plugin']);
@@ -68,7 +68,7 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::processFieldValues
+   * @covers ::processCckFieldValues
    */
   public function testProcessBooleanTextImplicitValues() {
     $info = array(
@@ -77,7 +77,7 @@ class TextFieldTest extends UnitTestCase {
         'allowed_values' => "foo\nbar",
       )
     );
-    $this->plugin->processFieldValues($this->migration, 'field', $info);
+    $this->plugin->processCckFieldValues($this->migration, 'field', $info);
 
     $expected = [
       'value' => [
@@ -93,7 +93,7 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::processFieldValues
+   * @covers ::processCckFieldValues
    */
   public function testProcessBooleanTextExplicitValues() {
     $info = array(
@@ -102,7 +102,7 @@ class TextFieldTest extends UnitTestCase {
         'allowed_values' => "foo|Foo\nbaz|Baz",
       )
     );
-    $this->plugin->processFieldValues($this->migration, 'field', $info);
+    $this->plugin->processCckFieldValues($this->migration, 'field', $info);
 
     $expected = [
       'value' => [

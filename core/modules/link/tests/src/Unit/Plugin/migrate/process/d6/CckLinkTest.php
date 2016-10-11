@@ -2,21 +2,21 @@
 
 namespace Drupal\Tests\link\Unit\Plugin\migrate\process\d6;
 
-use Drupal\link\Plugin\migrate\process\d6\FieldLink;
+use Drupal\link\Plugin\migrate\process\d6\CckLink;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * @group Link
  */
-class FieldLinkTest extends UnitTestCase {
+class CckLinkTest extends UnitTestCase {
 
   /**
-   * Test the url transformations in the FieldLink process plugin.
+   * Test the url transformations in the CckLink process plugin.
    *
    * @dataProvider canonicalizeUriDataProvider
    */
   public function testCanonicalizeUri($url, $expected) {
-    $link_plugin = new FieldLink([], '', [], $this->getMock('\Drupal\migrate\Plugin\MigrationInterface'));
+    $link_plugin = new CckLink([], '', [], $this->getMock('\Drupal\migrate\Plugin\MigrationInterface'));
     $transformed = $link_plugin->transform([
       'url' => $url,
       'title' => '',

@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\text\Plugin\migrate\field;
+namespace Drupal\text\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
 /**
- * @MigrateField(
+ * @MigrateCckField(
  *   id = "text",
  *   type_map = {
  *     "text" = "text",
@@ -17,7 +17,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *   core = {6,7}
  * )
  */
-class TextField extends FieldPluginBase {
+class TextField extends CckFieldPluginBase {
 
   /**
    * {@inheritdoc}
@@ -42,7 +42,7 @@ class TextField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processFieldValues(MigrationInterface $migration, $field_name, $field_info) {
+  public function processCckFieldValues(MigrationInterface $migration, $field_name, $field_info) {
     if ($field_info['widget_type'] == 'optionwidgets_onoff') {
       $process = [
         'value' => [

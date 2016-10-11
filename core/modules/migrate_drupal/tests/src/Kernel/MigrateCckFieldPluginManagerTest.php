@@ -5,25 +5,25 @@ namespace Drupal\Tests\migrate_drupal\Kernel;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 
 /**
- * Tests the field plugin manager.
+ * Tests the cck field plugin manager.
  *
  * @group migrate_drupal
  */
-class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
+class MigrateCckFieldPluginManagerTest extends MigrateDrupalTestBase {
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('system', 'user', 'field', 'migrate_drupal', 'options', 'file', 'text', 'migrate_field_plugin_manager_test');
+  public static $modules = array('system', 'user', 'field', 'migrate_drupal', 'options', 'file', 'text', 'migrate_cckfield_plugin_manager_test');
 
   /**
-   * Tests that the correct MigrateField plugins are used.
+   * Tests that the correct MigrateCckField plugins are used.
    */
   public function testPluginSelection() {
-    $plugin_manager = $this->container->get('plugin.manager.migrate.field');
+    $plugin_manager = \Drupal::service('plugin.manager.migrate.cckfield');
 
     $plugin_id = $plugin_manager->getPluginIdFromFieldType('filefield', ['core' => 6]);
-    $this->assertIdentical('Drupal\\file\\Plugin\\migrate\\field\\d6\\FileField', get_class($plugin_manager->createInstance($plugin_id, ['core' => 6])));
+    $this->assertIdentical('Drupal\\file\\Plugin\\migrate\\cckfield\\d6\\FileField', get_class($plugin_manager->createInstance($plugin_id, ['core' => 6])));
 
     try {
       // If this test passes, getPluginIdFromFieldType will raise a
