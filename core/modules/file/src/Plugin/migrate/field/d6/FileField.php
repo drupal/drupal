@@ -1,18 +1,18 @@
 <?php
 
-namespace Drupal\file\Plugin\migrate\cckfield\d6;
+namespace Drupal\file\Plugin\migrate\field\d6;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
-use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
- * @MigrateCckField(
+ * @MigrateField(
  *   id = "filefield",
  *   core = {6}
  * )
  */
-class FileField extends CckFieldPluginBase {
+class FileField extends FieldPluginBase {
 
   /**
    * {@inheritdoc}
@@ -40,9 +40,9 @@ class FileField extends CckFieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
+  public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
     $process = [
-      'plugin' => 'd6_cck_file',
+      'plugin' => 'd6_field_file',
       'source' => $field_name,
     ];
     $migration->mergeProcessOfProperty($field_name, $process);

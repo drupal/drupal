@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\file\Unit\Plugin\migrate\process\d6;
 
-use Drupal\file\Plugin\migrate\process\d6\CckFile;
+use Drupal\file\Plugin\migrate\process\d6\FieldFile;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
@@ -12,7 +12,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @group file
  */
-class CckFileTest extends UnitTestCase {
+class FieldFileTest extends UnitTestCase {
 
   /**
    * Tests that alt and title attributes are included in transformed values.
@@ -25,7 +25,7 @@ class CckFileTest extends UnitTestCase {
     $migration_plugin = $this->prophesize(MigrateProcessInterface::class);
     $migration_plugin->transform(1, $executable, $row, 'foo')->willReturn(1);
 
-    $plugin = new CckFile(array(), 'd6_cck_file', array(), $migration, $migration_plugin->reveal());
+    $plugin = new FieldFile(array(), 'd6_field_file', array(), $migration, $migration_plugin->reveal());
 
     $options = array(
       'alt' => 'Foobaz',

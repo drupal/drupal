@@ -8,7 +8,7 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrationDeriverTrait;
-use Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface;
+use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,30 +25,30 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
   protected $basePluginId;
 
   /**
-   * Already-instantiated cckfield plugins, keyed by ID.
+   * Already-instantiated field plugins, keyed by ID.
    *
-   * @var \Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface[]
+   * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface[]
    */
-  protected $cckPluginCache;
+  protected $fieldPluginCache;
 
   /**
-   * The CCK plugin manager.
+   * The field plugin manager.
    *
-   * @var \Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface
+   * @var \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface
    */
-  protected $cckPluginManager;
+  protected $fieldPluginManager;
 
   /**
    * D7NodeDeriver constructor.
    *
    * @param string $base_plugin_id
    *   The base plugin ID for the plugin ID.
-   * @param \Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface $cck_manager
-   *   The CCK plugin manager.
+   * @param \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface $field_manager
+   *   The field plugin manager.
    */
-  public function __construct($base_plugin_id, MigrateCckFieldPluginManagerInterface $cck_manager) {
+  public function __construct($base_plugin_id, MigrateFieldPluginManagerInterface $field_manager) {
     $this->basePluginId = $base_plugin_id;
-    $this->cckPluginManager = $cck_manager;
+    $this->fieldPluginManager = $field_manager;
   }
 
   /**
@@ -57,7 +57,7 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $base_plugin_id,
-      $container->get('plugin.manager.migrate.cckfield')
+      $container->get('plugin.manager.migrate.field')
     );
   }
 
@@ -100,12 +100,12 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
           foreach ($fields[$node_type] as $field_name => $info) {
             $field_type = $info['type'];
             try {
-              $plugin_id = $this->cckPluginManager->getPluginIdFromFieldType($field_type, ['core' => 7], $migration);
-              if (!isset($this->cckPluginCache[$field_type])) {
-                $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($plugin_id, ['core' => 7], $migration);
+              $plugin_id = $this->fieldPluginManager->getPluginIdFromFieldType($field_type, ['core' => 7], $migration);
+              if (!isset($this->fieldPluginCache[$field_type])) {
+                $this->fieldPluginCache[$field_type] = $this->fieldPluginManager->createInstance($plugin_id, ['core' => 7], $migration);
               }
-              $this->cckPluginCache[$field_type]
-                ->processCckFieldValues($migration, $field_name, $info);
+              $this->fieldPluginCache[$field_type]
+                ->processFieldValues($migration, $field_name, $info);
             }
             catch (PluginNotFoundException $ex) {
               $migration->setProcessOfProperty($field_name, $field_name);
