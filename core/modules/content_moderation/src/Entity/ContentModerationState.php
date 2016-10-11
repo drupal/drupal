@@ -4,7 +4,6 @@ namespace Drupal\content_moderation\Entity;
 
 use Drupal\content_moderation\ContentModerationStateInterface;
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\TypedData\TranslatableInterface;
@@ -41,8 +40,6 @@ use Drupal\user\UserInterface;
  * )
  */
 class ContentModerationState extends ContentEntityBase implements ContentModerationStateInterface {
-
-  use EntityChangedTrait;
 
   /**
    * {@inheritdoc}
