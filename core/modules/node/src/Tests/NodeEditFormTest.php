@@ -111,6 +111,10 @@ class NodeEditFormTest extends NodeTestBase {
     $first_node_version = node_revision_load($node->getRevisionId());
     $second_node_version = node_revision_load($revised_node->getRevisionId());
     $this->assertNotIdentical($first_node_version->getRevisionUser()->id(), $second_node_version->getRevisionUser()->id(), 'Each revision has a distinct user.');
+
+    // Check if the node revision checkbox is rendered on node edit form.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertFieldById('edit-revision', NULL, 'The revision field is present.');
   }
 
   /**

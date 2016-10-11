@@ -139,7 +139,7 @@ class NodeForm extends ContentEntityForm {
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $node->type->entity->isNewRevision(),
-      '#access' => $current_user->hasPermission('administer nodes'),
+      '#access' => $current_user->hasPermission('administer nodes') && !$node->isNew(),
       '#group' => 'revision_information',
     );
 
