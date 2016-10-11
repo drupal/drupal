@@ -1,0 +1,6 @@
+name: 'Migrate cck field plugin manager test'
+type: module
+description: 'Example module demonstrating the cck field plugin manager in the Migrate API.'
+package: Testing
+version: VERSION
+core: 8.x

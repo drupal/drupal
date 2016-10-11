@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\file\Plugin\migrate\field\d7;
+namespace Drupal\file\Plugin\migrate\cckfield\d7;
 
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
 /**
- * @MigrateField(
+ * @MigrateCckField(
  *   id = "image",
  *   core = {7}
  * )
  */
-class ImageField extends FieldPluginBase {
+class ImageField extends CckFieldPluginBase {
 
   /**
    * {@inheritdoc}
@@ -23,7 +23,7 @@ class ImageField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
+  public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
     $process = [
       'plugin' => 'iterator',
       'source' => $field_name,

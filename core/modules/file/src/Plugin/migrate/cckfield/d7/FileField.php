@@ -1,18 +1,18 @@
 <?php
 
-namespace Drupal\file\Plugin\migrate\field\d7;
+namespace Drupal\file\Plugin\migrate\cckfield\d7;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
 /**
- * @MigrateField(
+ * @MigrateCckField(
  *   id = "file",
  *   core = {7}
  * )
  */
-class FileField extends FieldPluginBase {
+class FileField extends CckFieldPluginBase {
 
   /**
    * {@inheritdoc}
@@ -40,7 +40,7 @@ class FileField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
+  public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
     $process = [
       'plugin' => 'iterator',
       'source' => $field_name,

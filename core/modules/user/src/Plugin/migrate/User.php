@@ -11,7 +11,7 @@ use Drupal\migrate\Plugin\Migration;
 class User extends Migration {
 
   /**
-   * Flag indicating whether the field data has been filled already.
+   * Flag indicating whether the CCK data has been filled already.
    *
    * @var bool
    */

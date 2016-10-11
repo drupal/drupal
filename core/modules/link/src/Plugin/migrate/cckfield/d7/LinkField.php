@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\link\Plugin\migrate\field\d7;
+namespace Drupal\link\Plugin\migrate\cckfield\d7;
 
-use Drupal\link\Plugin\migrate\field\LinkField as D6LinkField;
+use Drupal\link\Plugin\migrate\cckfield\LinkField as D6LinkField;
 
 /**
- * @MigrateField(
+ * @MigrateCckField(
  *   id = "link_field",
  *   core = {7},
  *   type_map = {
