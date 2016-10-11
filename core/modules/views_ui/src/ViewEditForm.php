@@ -266,7 +266,7 @@ class ViewEditForm extends ViewFormBase {
 
     // Rename display ids if needed.
     foreach ($executable->displayHandlers as $id => $display) {
-      if (!empty($display->display['new_id'])) {
+      if (!empty($display->display['new_id']) && empty($display->display['deleted'])) {
         $new_id = $display->display['new_id'];
         $display->display['id'] = $new_id;
         unset($display->display['new_id']);
