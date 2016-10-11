@@ -752,4 +752,29 @@ class BookTest extends WebTestBase {
     $this->assertEqual($book_node->book['bid'], $this->book->id());
   }
 
+  /**
+   * Tests the book navigation block when book is unpublished.
+   *
+   * There was a fatal error with "Show block only on book pages" block mode.
+   */
+  public function testBookNavigationBlockOnUnpublishedBook() {
+    // Create a new book.
+    $this->createBook();
+
+    // Create administrator user.
+    $administratorUser = $this->drupalCreateUser(['administer blocks', 'administer nodes', 'bypass node access']);
+    $this->drupalLogin($administratorUser);
+
+    // Enable the block with "Show block only on book pages" mode.
+    $this->drupalPlaceBlock('book_navigation', ['block_mode' => 'book pages']);
+
+    // Unpublish book node.
+    $edit = [];
+    $this->drupalPostForm('node/' . $this->book->id() . '/edit', $edit, t('Save and unpublish'));
+
+    // Test node page.
+    $this->drupalGet('node/' . $this->book->id());
+    $this->assertText($this->book->label(), 'Unpublished book with "Show block only on book pages" book navigation settings.');
+  }
+
 }
