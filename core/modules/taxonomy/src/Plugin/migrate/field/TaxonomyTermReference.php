@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\taxonomy\Plugin\migrate\cckfield;
+namespace Drupal\taxonomy\Plugin\migrate\field;
 
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
- * @MigrateCckField(
+ * @MigrateField(
  *   id = "taxonomy_term_reference",
  *   type_map = {
  *     "taxonomy_term_reference" = "entity_reference"
@@ -14,7 +14,7 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   core = {6,7}
  * )
  */
-class TaxonomyTermReference extends CckFieldPluginBase {
+class TaxonomyTermReference extends FieldPluginBase {
 
   /**
    * {@inheritdoc}
@@ -26,7 +26,7 @@ class TaxonomyTermReference extends CckFieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
+  public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
     $process = array(
       'plugin' => 'iterator',
       'source' => $field_name,

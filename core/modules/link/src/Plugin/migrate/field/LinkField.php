@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\link\Plugin\migrate\cckfield;
+namespace Drupal\link\Plugin\migrate\field;
 
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
- * @MigrateCckField(
+ * @MigrateField(
  *   id = "link",
  *   core = {6},
  *   type_map = {
@@ -14,13 +14,13 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   }
  * )
  */
-class LinkField extends CckFieldPluginBase {
+class LinkField extends FieldPluginBase {
 
   /**
    * {@inheritdoc}
    */
   public function getFieldFormatterMap() {
-    // See d6_field_formatter_settings.yml and CckFieldPluginBase
+    // See d6_field_formatter_settings.yml and FieldPluginBase
     // processFieldFormatter().
     return [
       'default' => 'link',
@@ -37,9 +37,9 @@ class LinkField extends CckFieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
+  public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
     $process = [
-      'plugin' => 'd6_cck_link',
+      'plugin' => 'd6_field_link',
       'source' => $field_name,
     ];
     $migration->mergeProcessOfProperty($field_name, $process);
