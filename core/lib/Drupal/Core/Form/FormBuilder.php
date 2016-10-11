@@ -316,7 +316,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // In case the post request exceeds the configured allowed size
     // (post_max_size), the post request is potentially broken. Add some
     // protection against that and at the same time have a nice error message.
-    if ($ajax_form_request && !isset($form_state->getUserInput()['form_id'])) {
+    if ($ajax_form_request && !$request->request->has('form_id')) {
       throw new BrokenPostRequestException($this->getFileUploadMaxSize());
     }
 
@@ -327,7 +327,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // then passed through
     // \Drupal\Core\Form\FormAjaxResponseBuilderInterface::buildResponse() to
     // build a proper AJAX response.
-    if ($ajax_form_request && $form_state->isProcessingInput()) {
+    // Only do this when the form ID matches, since there is no guarantee from
+    // $ajax_form_request that it's an AJAX request for this particular form.
+    if ($ajax_form_request && $form_state->isProcessingInput() && $request->request->get('form_id') == $form_id) {
       throw new FormAjaxException($form, $form_state);
     }
 
