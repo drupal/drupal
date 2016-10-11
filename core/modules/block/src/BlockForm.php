@@ -292,6 +292,7 @@ class BlockForm extends EntityForm {
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Save block');
+    $actions['delete']['#title'] = $this->t('Remove block');
     return $actions;
   }
 
