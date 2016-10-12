@@ -5,6 +5,7 @@ namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -369,7 +370,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       foreach ($possible_format_tags as $tag) {
         $input = '<' . $tag . '>TEST</' . $tag . '>';
         $output = trim(check_markup($input, $editor->id()));
-        if ($input == $output) {
+        if (Html::load($output)->getElementsByTagName($tag)->length !== 0) {
           $format_tags[] = $tag;
         }
       }
