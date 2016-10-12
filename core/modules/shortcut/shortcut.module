@@ -311,7 +311,8 @@ function shortcut_preprocess_page_title(&$variables) {
 
     // Replicate template_preprocess_html()'s processing to get the title in
     // string form, so we can set the default name for the shortcut.
-    $name = render($variables['title']);
+    // Strip HTML tags from the title.
+    $name = trim(strip_tags(render($variables['title'])));
     $query = array(
       'link' => $link,
       'name' => $name,
