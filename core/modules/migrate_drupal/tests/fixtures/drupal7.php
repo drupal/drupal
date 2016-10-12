@@ -41044,9 +41044,27 @@ $connection->insert('users')
   'login' => '0',
   'status' => '1',
   'timezone' => 'America/Chicago',
-  'language' => 'en',
+  'language' => 'is',
   'picture' => '0',
   'init' => 'odo@local.host',
+  'data' => 'a:1:{s:7:"contact";i:1;}',
+))
+->values(array(
+  'uid' => '3',
+  'name' => 'Bob',
+  'pass' => '$S$DGFZUE.FhrXbe4y52eC7p0ZVRGD/gOPtVctDlmC89qkujnBokAlJ',
+  'mail' => 'bob@local.host',
+  'theme' => '',
+  'signature' => '',
+  'signature_format' => 'filtered_html',
+  'created' => '1440532218',
+  'access' => '0',
+  'login' => '0',
+  'status' => '1',
+  'timezone' => 'America/New_York',
+  'language' => 'fr',
+  'picture' => '0',
+  'init' => 'bob@local.host',
   'data' => 'a:1:{s:7:"contact";i:1;}',
 ))
 ->execute();
@@ -41082,6 +41100,14 @@ $connection->insert('users_roles')
 ))
 ->values(array(
   'uid' => '1',
+  'rid' => '3',
+))
+->values(array(
+  'uid' => '2',
+  'rid' => '3',
+))
+->values(array(
+  'uid' => '3',
   'rid' => '3',
 ))
 ->execute();

@@ -15,10 +15,16 @@ class MigrateUserProfileValuesTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
+  public static $modules = ['language'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
     $this->executeMigrations([
+      'language',
       'user_profile_field',
       'user_profile_field_instance',
       'user_profile_entity_display',
