@@ -53,15 +53,15 @@ class EntityDisplayTest extends KernelTestBase {
     // Check that providing no 'weight' results in the highest current weight
     // being assigned. The 'name' field's formatter has weight -5, therefore
     // these follow.
-    $expected['component_1'] = array('weight' => -4, 'settings' => array(), 'third_party_settings' => array(), 'region' => 'content');
-    $expected['component_2'] = array('weight' => -3, 'settings' => array(), 'third_party_settings' => array(), 'region' => 'content');
+    $expected['component_1'] = array('weight' => -4, 'settings' => array(), 'third_party_settings' => array());
+    $expected['component_2'] = array('weight' => -3, 'settings' => array(), 'third_party_settings' => array());
     $display->setComponent('component_1');
     $display->setComponent('component_2');
     $this->assertEqual($display->getComponent('component_1'), $expected['component_1']);
     $this->assertEqual($display->getComponent('component_2'), $expected['component_2']);
 
     // Check that arbitrary options are correctly stored.
-    $expected['component_3'] = array('weight' => 10, 'third_party_settings' => array('field_test' => array('foo' => 'bar')), 'settings' => array(), 'region' => 'content');
+    $expected['component_3'] = array('weight' => 10, 'third_party_settings' => array('field_test' => array('foo' => 'bar')), 'settings' => array());
     $display->setComponent('component_3', $expected['component_3']);
     $this->assertEqual($display->getComponent('component_3'), $expected['component_3']);
 
@@ -86,7 +86,6 @@ class EntityDisplayTest extends KernelTestBase {
         'link_to_entity' => FALSE,
       ),
       'third_party_settings' => array(),
-      'region' => 'content',
     );
     $this->assertEqual($display->getComponents(), $expected);
 
@@ -149,7 +148,7 @@ class EntityDisplayTest extends KernelTestBase {
     $display = entity_get_display('entity_test', 'entity_test', 'default');
     $this->assertFalse($display->isNew());
     $this->assertEqual($display->id(), 'entity_test.entity_test.default');
-    $this->assertEqual($display->getComponent('component_1'), array( 'weight' => 10, 'settings' => array(), 'third_party_settings' => array(), 'region' => 'content'));
+    $this->assertEqual($display->getComponent('component_1'), array( 'weight' => 10, 'settings' => array(), 'third_party_settings' => array()));
   }
 
   /**
@@ -165,14 +164,14 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Check that the default visibility taken into account for extra fields
     // unknown in the display.
-    $this->assertEqual($display->getComponent('display_extra_field'), array('weight' => 5, 'type' => 'visible', 'region' => 'content'));
+    $this->assertEqual($display->getComponent('display_extra_field'), array('weight' => 5));
     $this->assertNull($display->getComponent('display_extra_field_hidden'));
 
     // Check that setting explicit options overrides the defaults.
     $display->removeComponent('display_extra_field');
     $display->setComponent('display_extra_field_hidden', array('weight' => 10));
     $this->assertNull($display->getComponent('display_extra_field'));
-    $this->assertEqual($display->getComponent('display_extra_field_hidden'), array('weight' => 10, 'settings' => array(), 'third_party_settings' => array(), 'region' => 'content'));
+    $this->assertEqual($display->getComponent('display_extra_field_hidden'), array('weight' => 10, 'settings' => array(), 'third_party_settings' => array()));
   }
 
   /**
@@ -210,7 +209,6 @@ class EntityDisplayTest extends KernelTestBase {
       'type' => $default_formatter,
       'settings' => $formatter_settings,
       'third_party_settings' => array(),
-      'region' => 'content',
     );
     $this->assertEqual($display->getComponent($field_name), $expected);
 
@@ -260,7 +258,6 @@ class EntityDisplayTest extends KernelTestBase {
         'settings' => $formatter_settings,
         'third_party_settings' => array(),
         'weight' => 10,
-        'region' => 'content',
       ),
       'test_display_non_configurable' => array(
         'label' => 'above',
@@ -268,7 +265,6 @@ class EntityDisplayTest extends KernelTestBase {
         'settings' => $formatter_settings,
         'third_party_settings' => array(),
         'weight' => 11,
-        'region' => 'content',
       ),
     );
     foreach ($expected as $field_name => $options) {

@@ -32,7 +32,6 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
       'type' => 'text_trimmed',
       'settings' => array('trim_length' => 600),
       'third_party_settings' => array(),
-      'region' => 'content',
     );
 
     // Can we load any entity display.
