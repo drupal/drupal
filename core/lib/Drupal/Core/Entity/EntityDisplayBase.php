@@ -245,17 +245,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage, $update = TRUE) {
-    // @todo For backwards compatibility, ensure that each component is properly
-    //   updated. Remove this in https://www.drupal.org/node/2799641.
-    foreach ($this->getComponents() as $name => $component) {
-      // Ensure that a region is set.
-      // @todo Make 'region' required in https://www.drupal.org/node/2799641.
-      if (!isset($component['region'])) {
-        // Directly set the component to bypass other changes in setComponent().
-        $this->content[$name]['region'] = (isset($component['type']) && $component['type'] === 'hidden') ? 'hidden' : $this->getDefaultRegion();
-      }
-    }
-
     ksort($this->content);
     ksort($this->hidden);
     parent::preSave($storage, $update);
