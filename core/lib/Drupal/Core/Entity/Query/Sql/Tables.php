@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
@@ -260,8 +261,7 @@ class Tables implements TablesInterface {
           $entity_type = $this->entityManager->getDefinition($entity_type_id);
           $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
           // Add the new entity base table using the table and sql column.
-          $join_condition = '%alias.' . $entity_type->getKey('id') . " = $table.$sql_column";
-          $base_table = $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
+          $base_table = $this->addNextBaseTable($entity_type, $table, $sql_column);
           $propertyDefinitions = array();
           $key++;
           $index_prefix .= "$next_index_prefix.";
@@ -365,6 +365,31 @@ class Tables implements TablesInterface {
       return FALSE;
     }
     return array_flip($mapping);
+  }
+
+  /**
+   * Add the next entity base table.
+   *
+   * For example, when building the SQL query for
+   * @code
+   * condition('uid.entity.name', 'foo', 'CONTAINS')
+   * @endcode
+   *
+   * this adds the users table.
+   *
+   * @param \Drupal\Core\Entity\EntityType $entity_type
+   *   The entity type being joined, in the above example, User.
+   * @param string $table
+   *   This is the table being joined, in the above example, {users}.
+   * @param string $sql_column
+   *   This is the SQL column in the existing table being joined to.
+   *
+   * @return string
+   *   The alias of the next entity table joined in.
+   */
+  protected function addNextBaseTable(EntityType $entity_type, $table, $sql_column) {
+    $join_condition = '%alias.' . $entity_type->getKey('id') . " = $table.$sql_column";
+    return $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
   }
 
 }
