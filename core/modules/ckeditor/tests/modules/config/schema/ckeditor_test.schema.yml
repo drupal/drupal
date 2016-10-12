@@ -5,3 +5,12 @@ ckeditor.plugin.llama_contextual_and_button:
     ultra_llama_mode:
       type: boolean
       label: 'Ultra llama mode'
+
+filter_settings.test_attribute_filter:
+  type: filter
+  label: 'Test Attribute Filter'
+  mapping:
+    tags:
+      type: sequence
+      sequence:
+        type: string
