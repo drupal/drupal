@@ -303,8 +303,8 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'destination_module' => 'node',
     ],
     'd6_node_translation' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
+      'source_module' => 'translation',
+      'destination_module' => 'content_translation',
     ],
     'd6_node_revision' => [
       'source_module' => 'node',
