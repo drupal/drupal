@@ -108,6 +108,10 @@ following the instructions in the INTRODUCTION section at the top of this file:
    directories. Copy the files into your Drupal installation directory:
 
      cp -R drupal-x.y.z/* drupal-x.y.z/.htaccess /path/to/your/installation
+   
+   Don't forget to delete the directory drupal-x.y.z directory and the drupal-x.y.z.tar.gz once the update process is done
+   rm -rf drupal-x.y.z/
+   rm drupal-x.y.z.tar.gz 
 
    If you do not have command line access to your server, download the archive
    from https://www.drupal.org using your web browser, extract it, and then use
