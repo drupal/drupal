@@ -1,8 +1,0 @@
-name: 'Boolean field Test'
-type: module
-description: 'Support module for the field and entity display tests.'
-core: 8.x
-package: Testing
-version: VERSION
-dependencies:
-  - field

@@ -1257,9 +1257,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           foreach ($storage_definition->getColumns() as $column => $attributes) {
             $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
             // Serialize the value if specified in the column schema.
-            $value = drupal_schema_get_field_value($attributes, $item->$column);
-            $record[$column_name] = !empty($attributes['serialize'])
-              ? serialize($value) : $value;
+            $record[$column_name] = !empty($attributes['serialize']) ? serialize($item->$column) : $item->$column;
           }
           $query->values($record);
           if ($this->entityType->isRevisionable()) {
