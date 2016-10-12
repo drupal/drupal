@@ -17,7 +17,7 @@ function block_place_help($route_name, RouteMatchInterface $route_match) {
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Place Blocks module allows you to place blocks from every page. For more information, see the <a href=":blocks-documentation">online documentation for the Place Blocks module</a>.', [':blocks-documentation' => 'https://www.drupal.org/documentation/modules/block_place/']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
-      $output .= '<p>' . t('Block placement is specific to each theme on your site. This module allows you to place blocks in the context of your content pages') . '</p>';
+      $output .= '<p>' . t('Block placement is specific to each theme on your site. This module allows you to place blocks in the context of your content pages.') . '</p>';
       return $output;
   }
 }
