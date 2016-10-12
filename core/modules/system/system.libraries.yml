@@ -59,6 +59,7 @@ drupal.system.modules:
     - core/drupal
     - core/drupal.debounce
     - core/jquery.once
+    - core/drupal.announce
 
 diff:
   version: VERSION
