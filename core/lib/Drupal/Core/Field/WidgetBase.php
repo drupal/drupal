@@ -311,8 +311,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    * Generates the form element for a single copy of the widget.
    */
   protected function formSingleElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $entity = $items->getEntity();
-
     $element += array(
       '#field_parents' => $form['#parents'],
       // Only the first widget should be required.
