@@ -22,6 +22,11 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
+  public static $modules = ['language'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -60,6 +65,7 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
     file_put_contents($file->getFileUri(), file_get_contents('core/modules/simpletest/files/image-2.jpg'));
     $file->save();
 
+    $this->executeMigration('language');
     $this->migrateUsers();
   }
 
@@ -91,28 +97,47 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
 
       /** @var \Drupal\user\UserInterface $user */
       $user = User::load($source->uid);
-      $this->assertIdentical($source->uid, $user->id());
-      $this->assertIdentical($source->name, $user->label());
-      $this->assertIdentical($source->mail, $user->getEmail());
-      $this->assertIdentical($source->created, $user->getCreatedTime());
-      $this->assertIdentical($source->access, $user->getLastAccessedTime());
-      $this->assertIdentical($source->login, $user->getLastLoginTime());
+      $this->assertSame($source->uid, $user->id());
+      $this->assertSame($source->name, $user->label());
+      $this->assertSame($source->mail, $user->getEmail());
+      $this->assertSame($source->created, $user->getCreatedTime());
+      $this->assertSame($source->access, $user->getLastAccessedTime());
+      $this->assertSame($source->login, $user->getLastLoginTime());
       $is_blocked = $source->status == 0;
-      $this->assertIdentical($is_blocked, $user->isBlocked());
+      $this->assertSame($is_blocked, $user->isBlocked());
+      $expected_timezone_name = $source->timezone_name ?: $this->config('system.date')->get('timezone.default');
+      $this->assertSame($expected_timezone_name, $user->getTimeZone());
+      $this->assertSame($source->init, $user->getInitialEmail());
+      $this->assertSame($roles, $user->getRoles());
+
+      // Ensure the user's langcode, preferred_langcode and
+      // preferred_admin_langcode are valid.
       // $user->getPreferredLangcode() might fallback to default language if the
       // user preferred language is not configured on the site. We just want to
       // test if the value was imported correctly.
-      $this->assertIdentical($source->language, $user->preferred_langcode->value);
-      $expected_timezone_name = $source->timezone_name ?: $this->config('system.date')->get('timezone.default');
-      $this->assertIdentical($expected_timezone_name, $user->getTimeZone());
-      $this->assertIdentical($source->init, $user->getInitialEmail());
-      $this->assertIdentical($roles, $user->getRoles());
+      $language_manager = $this->container->get('language_manager');
+      $default_langcode = $language_manager->getDefaultLanguage()->getId();
+      if (empty($source->language)) {
+        $this->assertSame('en', $user->langcode->value);
+        $this->assertSame($default_langcode, $user->preferred_langcode->value);
+        $this->assertSame($default_langcode, $user->preferred_admin_langcode->value);
+      }
+      elseif ($language_manager->getLanguage($source->language) === NULL) {
+        $this->assertSame($default_langcode, $user->langcode->value);
+        $this->assertSame($default_langcode, $user->preferred_langcode->value);
+        $this->assertSame($default_langcode, $user->preferred_admin_langcode->value);
+      }
+      else {
+        $this->assertSame($source->language, $user->langcode->value);
+        $this->assertSame($source->language, $user->preferred_langcode->value);
+        $this->assertSame($source->language, $user->preferred_admin_langcode->value);
+      }
 
       // We have one empty picture in the data so don't try load that.
       if (!empty($source->picture)) {
         // Test the user picture.
         $file = File::load($user->user_picture->target_id);
-        $this->assertIdentical(basename($source->picture), $file->getFilename());
+        $this->assertSame(basename($source->picture), $file->getFilename());
       }
       else {
         // Ensure the user does not have a picture.
