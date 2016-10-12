@@ -14,6 +14,11 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class StringFilter extends FilterPluginBase {
 
+  /**
+   * All words separated by spaces or sentences encapsulated by double quotes.
+   */
+  const WORDS_PATTERN = '/ (-?)("[^"]+"|[^" ]+)/i';
+
   // exposed filter options
   protected $alwaysMultiple = TRUE;
 
@@ -267,7 +272,7 @@ class StringFilter extends FilterPluginBase {
       return;
     }
 
-    preg_match_all('/ (-?)("[^"]+"|[^" ]+)/i', ' ' . $this->value, $matches, PREG_SET_ORDER);
+    preg_match_all(static::WORDS_PATTERN, ' ' . $this->value, $matches, PREG_SET_ORDER);
     foreach ($matches as $match) {
       $phrase = FALSE;
       // Strip off phrase quotes
