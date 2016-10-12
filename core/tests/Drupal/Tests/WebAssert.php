@@ -422,4 +422,83 @@ class WebAssert extends MinkWebAssert {
     return $node;
   }
 
+  /**
+   * Checks that specific hidden field exists.
+   *
+   * @param string $field
+   *   One of id|name|value for the hidden field.
+   * @param \Behat\Mink\Element\TraversableElement $container
+   *   (optional) The document to check against. Defaults to the current page.
+   *
+   * @return \Behat\Mink\Element\NodeElement
+   *   The matching element.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   */
+  public function hiddenFieldExists($field, TraversableElement $container = NULL) {
+    $container = $container ?: $this->session->getPage();
+    if ($node = $container->find('hidden_field_selector', ['hidden_field', $field])) {
+      return $node;
+    }
+    throw new ElementNotFoundException($this->session->getDriver(), 'form hidden field', 'id|name|value', $field);
+  }
+
+  /**
+   * Checks that specific hidden field does not exists.
+   *
+   * @param string $field
+   *   One of id|name|value for the hidden field.
+   * @param \Behat\Mink\Element\TraversableElement $container
+   *   (optional) The document to check against. Defaults to the current page.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function hiddenFieldNotExists($field, TraversableElement $container = NULL) {
+    $container = $container ?: $this->session->getPage();
+    $node = $container->find('hidden_field_selector', ['hidden_field', $field]);
+    $this->assert($node === NULL, "A hidden field '$field' exists on this page, but it should not.");
+  }
+
+  /**
+   * Checks that specific hidden field have provided value.
+   *
+   * @param string $field
+   *   One of id|name|value for the hidden field.
+   * @param string $value
+   *   The hidden field value that needs to be checked.
+   * @param \Behat\Mink\Element\TraversableElement $container
+   *   (optional) The document to check against. Defaults to the current page.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function hiddenFieldValueEquals($field, $value, TraversableElement $container = NULL) {
+    $node = $this->hiddenFieldExists($field, $container);
+    $actual = $node->getValue();
+    $regex = '/^' . preg_quote($value, '/') . '$/ui';
+    $message = "The hidden field '$field' value is '$actual', but '$value' expected.";
+    $this->assert((bool) preg_match($regex, $actual), $message);
+  }
+
+  /**
+   * Checks that specific hidden field doesn't have the provided value.
+   *
+   * @param string $field
+   *   One of id|name|value for the hidden field.
+   * @param string $value
+   *   The hidden field value that needs to be checked.
+   * @param \Behat\Mink\Element\TraversableElement $container
+   *   (optional) The document to check against. Defaults to the current page.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function hiddenFieldValueNotEquals($field, $value, TraversableElement $container = NULL) {
+    $node = $this->hiddenFieldExists($field, $container);
+    $actual = $node->getValue();
+    $regex = '/^' . preg_quote($value, '/') . '$/ui';
+    $message = "The hidden field '$field' value is '$actual', but it should not be.";
+    $this->assert(!preg_match($regex, $actual), $message);
+  }
+
 }

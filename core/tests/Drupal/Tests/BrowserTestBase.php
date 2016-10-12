@@ -5,6 +5,7 @@ namespace Drupal\Tests;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Mink;
+use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Json;
@@ -363,7 +364,10 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       $driver->getClient()->setClient($client);
     }
 
-    $session = new Session($driver);
+    $selectors_handler = new SelectorsHandler([
+      'hidden_field_selector' => new HiddenFieldSelector()
+    ]);
+    $session = new Session($driver, $selectors_handler);
     $this->mink = new Mink();
     $this->mink->registerSession('default', $session);
     $this->mink->setDefaultSessionName('default');

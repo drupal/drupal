@@ -74,6 +74,17 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSession()->elementExists('css', 'form#form-test-form-test-object');
     $this->assertSession()->fieldExists('bananas');
 
+    // Check that the hidden field exists and has a specific value.
+    $this->assertSession()->hiddenFieldExists('strawberry');
+    $this->assertSession()->hiddenFieldExists('red');
+    $this->assertSession()->hiddenFieldExists('redstrawberryhiddenfield');
+    $this->assertSession()->hiddenFieldValueNotEquals('strawberry', 'brown');
+    $this->assertSession()->hiddenFieldValueEquals('strawberry', 'red');
+
+    // Check that a hidden field does not exist.
+    $this->assertSession()->hiddenFieldNotExists('bananas');
+    $this->assertSession()->hiddenFieldNotExists('pineapple');
+
     $edit = ['bananas' => 'green'];
     $this->submitForm($edit, 'Save', 'form-test-form-test-object');
 
