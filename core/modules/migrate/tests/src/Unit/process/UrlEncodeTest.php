@@ -57,7 +57,7 @@ class UrlEncodeTest extends MigrateTestCase {
    */
   protected function doTransform($value) {
     $executable = new MigrateExecutable($this->getMigration(), new MigrateMessage());
-    $row = new Row([], []);
+    $row = new Row();
 
     return (new UrlEncode([], 'urlencode', []))
       ->transform($value, $executable, $row, 'foobaz');

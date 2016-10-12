@@ -286,7 +286,7 @@ class MigrateSourceTest extends MigrateTestCase {
     // Get a new migration with an id.
     $migration = $this->getMigration();
     $source = new StubSourcePlugin([], '', [], $migration);
-    $row = new Row([], []);
+    $row = new Row();
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $module_handler->invokeAll('migrate_prepare_row', [$row, $source, $migration])
@@ -328,7 +328,7 @@ class MigrateSourceTest extends MigrateTestCase {
 
     $migration = $this->getMigration();
     $source = new StubSourcePlugin([], '', [], $migration);
-    $row = new Row([], []);
+    $row = new Row();
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     // Return a failure from a prepare row hook.
@@ -357,7 +357,7 @@ class MigrateSourceTest extends MigrateTestCase {
 
     $migration = $this->getMigration();
     $source = new StubSourcePlugin([], '', [], $migration);
-    $row = new Row([], []);
+    $row = new Row();
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     // Return a failure from a prepare row hook.
@@ -386,7 +386,7 @@ class MigrateSourceTest extends MigrateTestCase {
 
     $migration = $this->getMigration();
     $source = new StubSourcePlugin([], '', [], $migration);
-    $row = new Row([], []);
+    $row = new Row();
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     // Return a failure from a prepare row hook.

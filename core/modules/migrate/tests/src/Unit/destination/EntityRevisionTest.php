@@ -67,7 +67,7 @@ class EntityRevisionTest extends UnitTestCase {
     $this->storage->loadRevision(12)
       ->shouldBeCalled()
       ->willReturn($entity->reveal());
-    $row = new Row([], []);
+    $row = new Row();
     $this->assertEquals($entity->reveal(), $destination->getEntity($row, [12, 13]));
   }
 

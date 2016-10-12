@@ -74,7 +74,7 @@ class EntityContentBaseTest extends UnitTestCase {
       ->willReturn(5);
     $destination->setEntity($entity->reveal());
     // Ensure the id is saved entity id is returned from import.
-    $this->assertEquals([5], $destination->import(new Row([], [])));
+    $this->assertEquals([5], $destination->import(new Row()));
     // Assert that import set the rollback action.
     $this->assertEquals(MigrateIdMapInterface::ROLLBACK_DELETE, $destination->rollbackAction());
   }
@@ -95,7 +95,7 @@ class EntityContentBaseTest extends UnitTestCase {
       $this->entityManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal());
     $destination->setEntity(FALSE);
-    $destination->import(new Row([], []));
+    $destination->import(new Row());
   }
 
   /**
