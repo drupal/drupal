@@ -23,12 +23,7 @@ class ProfileFieldValuesTest extends MigrateSqlSourceTestCase {
 
   protected $expectedResults = array(
     array(
-      'fid' => '8',
       'profile_color' => array('red'),
-      'uid' => '2',
-    ),
-    array(
-      'fid' => '9',
       'profile_biography' => array('Lorem ipsum dolor sit amet...'),
       'uid' => '2',
     ),

@@ -21,7 +21,7 @@ class ProfileFieldValues extends DrupalSqlBase {
   public function query() {
     $query = $this->select('profile_values', 'pv')
       ->distinct()
-      ->fields('pv', array('fid', 'uid'));
+      ->fields('pv', array('uid'));
 
     return $query;
   }

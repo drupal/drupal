@@ -147,7 +147,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
   public function testSourceCount() {
     $count = $this->source->count();
     $this->assertTrue(is_numeric($count));
-    $this->assertEquals($count, $this->expectedCount);
+    $this->assertEquals($this->expectedCount, $count);
   }
 
   /**
