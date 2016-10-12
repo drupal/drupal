@@ -123,7 +123,7 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
 
     // Import some rows.
     foreach ($destination_rows as $idx => $destination_row) {
-      $row = new Row([], []);
+      $row = new Row();
       foreach ($destination_row as $key => $value) {
         $row->setDestinationProperty($key, $value);
       }

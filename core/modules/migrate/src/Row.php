@@ -91,7 +91,7 @@ class Row {
    * @throws \InvalidArgumentException
    *   Thrown when a source ID property does not exist.
    */
-  public function __construct(array $values, array $source_ids, $is_stub = FALSE) {
+  public function __construct(array $values = [], array $source_ids = [], $is_stub = FALSE) {
     $this->source = $values;
     $this->sourceIds = $source_ids;
     $this->isStub = $is_stub;

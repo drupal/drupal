@@ -71,7 +71,7 @@ class FilterIdTest extends KernelTestBase {
         );
     }
 
-    $row = new Row([], []);
+    $row = new Row();
     $output_value = $plugin->transform($value, $this->executable, $row, 'foo');
 
     $this->assertSame($expected_value, $output_value);

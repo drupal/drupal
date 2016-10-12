@@ -29,7 +29,7 @@ class PerComponentEntityDisplayTest extends MigrateTestCase {
       'field_name' => 'field_name_test',
       'options' => array('test setting'),
     );
-    $row = new Row(array(), array());
+    $row = new Row();
     foreach ($values as $key => $value) {
       $row->setDestinationProperty($key, $value);
     }

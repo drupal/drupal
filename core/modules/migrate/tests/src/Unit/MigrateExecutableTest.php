@@ -398,7 +398,7 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->method('getProcessPlugins')
       ->with(NULL)
       ->will($this->returnValue($plugins));
-    $row = new Row(array(), array());
+    $row = new Row();
     $this->executable->processRow($row);
     foreach ($expected as $key => $value) {
       $this->assertSame($row->getDestinationProperty($key), $value);
@@ -414,7 +414,7 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->method('getProcessPlugins')
       ->with(NULL)
       ->will($this->returnValue(array('test' => array())));
-    $row = new Row(array(), array());
+    $row = new Row();
     $this->executable->processRow($row);
     $this->assertSame($row->getDestination(), array());
   }
