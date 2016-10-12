@@ -21,9 +21,6 @@ class FileStorageSchema extends SqlContentEntityStorageSchema {
       switch ($field_name) {
         case 'status':
         case 'changed':
-          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
-          break;
-
         case 'uri':
           $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
           break;
