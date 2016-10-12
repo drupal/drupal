@@ -165,4 +165,30 @@ class NestedFormTest extends FieldTestBase {
     $this->assertFieldValues($entity_2, 'field_unlimited', array(13, 14, 15));
   }
 
+  /**
+   * Tests entity level validation within subforms.
+   */
+  public function testNestedEntityFormEntityLevelValidation() {
+    // Create two entities.
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage('entity_test_constraints');
+
+    $entity_1 = $storage->create();
+    $entity_1->save();
+
+    $entity_2 = $storage->create();
+    $entity_2->save();
+
+    // Display the 'combined form'.
+    $this->drupalGet("test-entity-constraints/nested/{$entity_1->id()}/{$entity_2->id()}");
+    $this->assertFieldByName('entity_2[changed]', 0, 'Entity 2: changed value appears correctly in the form.');
+
+    // Submit the form and check that the entities are updated accordingly.
+    $edit = ['entity_2[changed]' => REQUEST_TIME - 86400];
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+
+    $elements = $this->cssSelect('.entity-2.error');
+    $this->assertEqual(1, count($elements), 'The whole nested entity form has been correctly flagged with an error class.');
+  }
+
 }
