@@ -206,6 +206,7 @@ Entity API
 - Wolfgang Ziegler 'fago' https://www.drupal.org/u/fago
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
+- Francesco Placella 'plach' https://www.drupal.org/u/plach
 
 Extension API
 - ?
