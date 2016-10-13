@@ -187,13 +187,12 @@
       // Bind AJAX behaviors to all items showing the class.
       $('a.views-ajax-link', context).once('views-ajax').each(function () {
         var element_settings = base_element_settings;
-        element_settings.base = base;
+        element_settings.base = $(this).attr('id');
         element_settings.element = this;
         // Set the URL to go to the anchor.
         if ($(this).attr('href')) {
           element_settings.url = $(this).attr('href');
         }
-        var base = $(this).attr('id');
         Drupal.ajax(element_settings);
       });
 
@@ -213,9 +212,8 @@
 
           element_settings.wrapper = 'views-preview-wrapper';
           element_settings.method = 'replaceWith';
-          element_settings.base = base;
+          element_settings.base = $(this).attr('id');
           element_settings.element = this;
-          var base = $(this).attr('id');
           Drupal.ajax(element_settings);
         });
 
@@ -239,10 +237,9 @@
           element_settings.wrapper = 'views-preview-wrapper';
           element_settings.method = 'replaceWith';
           element_settings.event = 'click';
-          element_settings.base = base;
+          element_settings.base = $(this).attr('id');
           element_settings.element = this;
 
-          var base = $(this).attr('id');
           Drupal.ajax(element_settings);
         });
 
