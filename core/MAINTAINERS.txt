@@ -367,11 +367,6 @@ Shortcut
 - Tobias Stöckler 'tstoeckler' https://www.drupal.org/u/tstoeckler
 - Jibran Ijaz 'jibran' https://www.drupal.org/u/jibran
 
-Simpletest
-- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
-- Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
-- Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
-
 Stable
 - Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
 
@@ -394,6 +389,12 @@ Taxonomy
 
 Telephone
 - Dave Reid 'dave-reid' https://www.drupal.org/u/dave-reid
+
+Testing framework
+- Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
+- Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
+- Klaus Purer 'klausi' https://www.drupal.org/u/klausi
+- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
 
 Text Field
 - ?
