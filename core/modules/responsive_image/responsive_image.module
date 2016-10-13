@@ -197,17 +197,13 @@ function template_preprocess_responsive_image(&$variables) {
   }
   else {
     $variables['output_image_tag'] = FALSE;
-    // Prepare the fallback image. Use srcset in the fallback image to avoid
-    // unnecessary preloading of images in older browsers. See
-    // http://scottjehl.github.io/picturefill/#using-picture and
-    // http://scottjehl.github.io/picturefill/#gotchas for more information.
+    // Prepare the fallback image. We use the src attribute, which might cause
+    // double downloads in browsers that don't support the picture tag (might,
+    // because when picturefill kicks in, it cancels the download and triggers
+    // the download for the correct image).
     $variables['img_element'] = array(
       '#theme' => 'image',
-      '#srcset' => array(
-        array(
-          'uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image->getSource()),
-        ),
-      ),
+      '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image->getSource()),
     );
   }
 
@@ -265,7 +261,7 @@ function template_preprocess_responsive_image(&$variables) {
  * <picture>
  *   <source media="(min-width: 0px)" srcset="sites/default/files/styles/thumbnail/image.jpeg" />
  *   <source media="(min-width: 560px)" sizes="(min-width: 700px) 700px, 100vw" srcset="sites/default/files/styles/large/image.jpeg 480w, sites/default/files/styles/medium/image.jpeg 220w" />
- *   <img srcset="fallback.jpeg" />
+ *   <img src="fallback.jpeg" />
  * </picture>
  * @endcode
  *
@@ -294,7 +290,7 @@ function template_preprocess_responsive_image(&$variables) {
  * <picture>
  *   <source [...] mime-type="image/webp" srcset="image1.webp 1x, image2.webp 2x, image3.webp 3x"/>
  *   <source [...] mime-type="image/jpeg" srcset="image1.jpeg 1x, image2.jpeg 2x, image3.jpeg 3x"/>
- *   <img srcset="fallback.jpeg" />
+ *   <img src="fallback.jpeg" />
  * </picture>
  * @endcode
  * This way a browser can decide which <source> tag is preferred based on the
