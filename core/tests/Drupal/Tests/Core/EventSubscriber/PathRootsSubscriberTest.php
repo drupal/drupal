@@ -43,6 +43,11 @@ class PathRootsSubscriberTest extends UnitTestCase {
    * @covers ::onRouteFinished
    */
   public function testSubscribing() {
+
+    // Ensure that onRouteFinished can be called without throwing notices
+    // when no path roots got set.
+    $this->pathRootsSubscriber->onRouteFinished();
+
     $route_collection = new RouteCollection();
     $route_collection->add('test_route1', new Route('/test/bar'));
     $route_collection->add('test_route2', new Route('/test/baz'));
