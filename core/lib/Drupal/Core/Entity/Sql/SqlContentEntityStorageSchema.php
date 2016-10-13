@@ -316,7 +316,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
       catch (\Exception $e) {
         if ($this->database->supportsTransactionalDDL()) {
-          $transaction->rollback();
+          $transaction->rollBack();
         }
         else {
           // Recreate original schema.
@@ -1271,7 +1271,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
       catch (\Exception $e) {
         if ($this->database->supportsTransactionalDDL()) {
-          $transaction->rollback();
+          $transaction->rollBack();
         }
         else {
           // Recreate tables.
@@ -1362,7 +1362,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
       catch (\Exception $e) {
         if ($this->database->supportsTransactionalDDL()) {
-          $transaction->rollback();
+          $transaction->rollBack();
         }
         else {
           // Recreate original schema.

@@ -432,7 +432,7 @@ class Connection extends DatabaseConnection {
    */
   public function rollbackSavepoint($savepoint_name = 'mimic_implicit_commit') {
     if (isset($this->transactionLayers[$savepoint_name])) {
-      $this->rollback($savepoint_name);
+      $this->rollBack($savepoint_name);
     }
   }
 

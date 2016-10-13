@@ -713,7 +713,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       db_ignore_replica();
     }
     catch (\Exception $e) {
-      $transaction->rollback();
+      $transaction->rollBack();
       watchdog_exception($this->entityTypeId, $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
@@ -765,7 +765,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       return $return;
     }
     catch (\Exception $e) {
-      $transaction->rollback();
+      $transaction->rollBack();
       watchdog_exception($this->entityTypeId, $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }

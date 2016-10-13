@@ -75,8 +75,8 @@ class TransactionTest extends DatabaseTestBase {
     if ($rollback) {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the last savepoint.
-      $txn->rollback();
-      $this->assertTrue(($connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollback().');
+      $txn->rollBack();
+      $this->assertTrue(($connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollBack().');
     }
   }
 
@@ -135,8 +135,8 @@ class TransactionTest extends DatabaseTestBase {
     if ($rollback) {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the last savepoint.
-      $txn->rollback();
-      $this->assertTrue(($connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollback().');
+      $txn->rollBack();
+      $this->assertTrue(($connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollBack().');
     }
   }
 
@@ -254,7 +254,7 @@ class TransactionTest extends DatabaseTestBase {
     unset($transaction2);
     $transaction3 = db_transaction();
     $this->insertRow('row');
-    $transaction3->rollback();
+    $transaction3->rollBack();
     unset($transaction3);
     unset($transaction);
     $this->assertRowAbsent('row');
@@ -267,7 +267,7 @@ class TransactionTest extends DatabaseTestBase {
       $transaction = db_transaction();
       $this->insertRow('row');
       $this->executeDDLStatement();
-      $transaction->rollback();
+      $transaction->rollBack();
       unset($transaction);
       $this->assertRowAbsent('row');
 
@@ -280,7 +280,7 @@ class TransactionTest extends DatabaseTestBase {
       $transaction3 = db_transaction();
       $this->insertRow('row');
       unset($transaction3);
-      $transaction->rollback();
+      $transaction->rollBack();
       unset($transaction);
       $this->assertRowAbsent('row');
     }
@@ -293,7 +293,7 @@ class TransactionTest extends DatabaseTestBase {
       $this->executeDDLStatement();
       // Rollback the outer transaction.
       try {
-        $transaction->rollback();
+        $transaction->rollBack();
         unset($transaction);
         // @TODO: an exception should be triggered here, but is not, because
         // "ROLLBACK" fails silently in MySQL if there is no transaction active.
@@ -424,7 +424,7 @@ class TransactionTest extends DatabaseTestBase {
     $transaction2 = db_transaction();
     $this->insertRow('inner');
     // Now rollback the inner transaction.
-    $transaction2->rollback();
+    $transaction2->rollBack();
     unset($transaction2);
     $this->assertTrue($database->inTransaction(), 'Still in a transaction after popping the outer transaction');
     // Pop the outer transaction, it should commit.
@@ -445,7 +445,7 @@ class TransactionTest extends DatabaseTestBase {
     unset($transaction);
     $this->assertTrue($database->inTransaction(), 'Still in a transaction after popping the outer transaction');
     // Now rollback the inner transaction, it should rollback.
-    $transaction2->rollback();
+    $transaction2->rollBack();
     unset($transaction2);
     $this->assertFalse($database->inTransaction(), 'Transaction closed after popping the inner transaction');
     $this->assertRowPresent('outer');
@@ -463,7 +463,7 @@ class TransactionTest extends DatabaseTestBase {
     $this->insertRow('inner2');
     // Rollback the outer transaction.
     try {
-      $transaction->rollback();
+      $transaction->rollBack();
       unset($transaction);
       $this->fail('Rolling back the outer transaction while the inner transaction is active resulted in an exception.');
     }
@@ -476,7 +476,7 @@ class TransactionTest extends DatabaseTestBase {
     $this->pass('Trying to commit an inner transaction resulted in an exception.');
     // Try to rollback one inner transaction.
     try {
-      $transaction->rollback();
+      $transaction->rollBack();
       unset($transaction2);
       $this->fail('Trying to commit an inner transaction resulted in an exception.');
     }

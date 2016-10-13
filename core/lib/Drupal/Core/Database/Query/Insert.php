@@ -91,7 +91,7 @@ class Insert extends Query implements \Countable {
     }
     catch (\Exception $e) {
       // One of the INSERTs failed, rollback the whole batch.
-      $transaction->rollback();
+      $transaction->rollBack();
       // Rethrow the exception for the calling code.
       throw $e;
     }

@@ -175,7 +175,7 @@
  *   }
  *   catch (Exception $e) {
  *     // Something went wrong somewhere, so roll back now.
- *     $txn->rollback();
+ *     $txn->rollBack();
  *     // Log the exception to watchdog.
  *     watchdog_exception('type', $e);
  *   }

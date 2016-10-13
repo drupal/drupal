@@ -315,7 +315,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $this->updateParentalStatus($link);
     }
     catch (\Exception $e) {
-      $transaction->rollback();
+      $transaction->rollBack();
       throw $e;
     }
     return $affected_menus;

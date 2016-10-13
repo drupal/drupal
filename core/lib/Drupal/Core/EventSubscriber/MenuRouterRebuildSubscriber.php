@@ -63,7 +63,7 @@ class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
         db_ignore_replica();
       }
       catch (\Exception $e) {
-        $transaction->rollback();
+        $transaction->rollBack();
         watchdog_exception('menu', $e);
       }
 

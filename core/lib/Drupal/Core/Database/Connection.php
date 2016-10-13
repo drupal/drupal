@@ -1083,9 +1083,9 @@ abstract class Connection {
    * @throws \Drupal\Core\Database\TransactionOutOfOrderException
    * @throws \Drupal\Core\Database\TransactionNoActiveException
    *
-   * @see \Drupal\Core\Database\Transaction::rollback()
+   * @see \Drupal\Core\Database\Transaction::rollBack()
    */
-  public function rollback($savepoint_name = 'drupal_transaction') {
+  public function rollBack($savepoint_name = 'drupal_transaction') {
     if (!$this->supportsTransactions()) {
       return;
     }
@@ -1179,7 +1179,7 @@ abstract class Connection {
     // The transaction has already been committed earlier. There is nothing we
     // need to do. If this transaction was part of an earlier out-of-order
     // rollback, an exception would already have been thrown by
-    // Database::rollback().
+    // Database::rollBack().
     if (!isset($this->transactionLayers[$name])) {
       return;
     }
