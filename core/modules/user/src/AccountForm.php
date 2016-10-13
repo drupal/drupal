@@ -106,7 +106,7 @@ abstract class AccountForm extends ContentEntityForm {
         'autocapitalize' => 'off',
         'spellcheck' => 'false',
       ),
-      '#default_value' => (!$register ? $account->getUsername() : ''),
+      '#default_value' => (!$register ? $account->getAccountName() : ''),
       '#access' => ($register || ($user->id() == $account->id() && $user->hasPermission('change own username')) || $admin),
     );
 
