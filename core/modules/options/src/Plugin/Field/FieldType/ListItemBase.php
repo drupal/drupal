@@ -277,7 +277,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    *   Allowed values were the array key is the 'value' value, the value is
    *   the 'label' value.
    *
-   * @see Drupal\options\Plugin\Field\FieldType\ListItemBase::structureAllowedValues()
+   * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::structureAllowedValues()
    */
   protected static function simplifyAllowedValues(array $structured_values) {
     $values = array();
@@ -302,7 +302,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    *   Array of items with a 'value' and 'label' key each for the allowed
    *   values.
    *
-   * @see Drupal\options\Plugin\Field\FieldType\ListItemBase::simplifyAllowedValues()
+   * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::simplifyAllowedValues()
    */
   protected static function structureAllowedValues(array $values) {
     $structured_values = array();
