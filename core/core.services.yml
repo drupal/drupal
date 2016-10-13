@@ -346,6 +346,9 @@ services:
     class: Drupal\Core\Database\Connection
     factory: Drupal\Core\Database\Database::getConnection
     arguments: [default]
+  datetime.time:
+    class: Drupal\Component\Datetime\Time
+    arguments: ['@request_stack']
   file_system:
     class: Drupal\Core\File\FileSystem
     arguments: ['@stream_wrapper_manager', '@settings', '@logger.channel.file']

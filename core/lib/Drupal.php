@@ -738,4 +738,14 @@ class Drupal {
     return static::getContainer()->get('entity.definition_update_manager');
   }
 
+  /**
+   * Returns the time service.
+   *
+   * @return \Drupal\Component\Datetime\TimeInterface
+   *   The time service.
+   */
+  public static function time() {
+    return static::getContainer()->get('datetime.time');
+  }
+
 }
