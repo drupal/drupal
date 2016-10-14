@@ -71,7 +71,24 @@ class ModerationStateFieldItemList extends EntityReferenceFieldItemList {
     if ($index !== 0) {
       throw new \InvalidArgumentException('An entity can not have multiple moderation states at the same time.');
     }
+    $this->computeModerationFieldItemList();
+    return isset($this->list[$index]) ? $this->list[$index] : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIterator() {
+    $this->computeModerationFieldItemList();
+    return parent::getIterator();
+  }
+
+  /**
+   * Recalculate the moderation field item list.
+   */
+  protected function computeModerationFieldItemList() {
     // Compute the value of the moderation state.
+    $index = 0;
     if (!isset($this->list[$index]) || $this->list[$index]->isEmpty()) {
       $moderation_state = $this->getModerationState();
       // Do not store NULL values in the static cache.
@@ -79,8 +96,6 @@ class ModerationStateFieldItemList extends EntityReferenceFieldItemList {
         $this->list[$index] = $this->createItem($index, ['entity' => $moderation_state]);
       }
     }
-
-    return isset($this->list[$index]) ? $this->list[$index] : NULL;
   }
 
 }
