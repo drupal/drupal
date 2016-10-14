@@ -510,4 +510,31 @@ class PageCacheTest extends WebTestBase {
     $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
   }
 
+  /**
+   * Tests that HEAD requests are treated the same as GET requests.
+   */
+  public function testHead() {
+    // GET, then HEAD.
+    $url_a = $this->buildUrl('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'bar']]);
+    $response_body = $this->curlExec([CURLOPT_HTTPGET => TRUE, CURLOPT_URL => $url_a, CURLOPT_CUSTOMREQUEST => 'GET', CURLOPT_NOBODY => FALSE]);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
+    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
+    $this->assertEqual('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">bar</em>', $response_body);
+    $response_body = $this->curlExec([CURLOPT_HTTPGET => FALSE, CURLOPT_URL => $url_a, CURLOPT_CUSTOMREQUEST => 'HEAD', CURLOPT_NOBODY => FALSE]);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
+    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
+    $this->assertEqual('', $response_body);
+
+    // HEAD, then GET.
+    $url_b = $this->buildUrl('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'baz']]);
+    $response_body = $this->curlExec([CURLOPT_HTTPGET => FALSE, CURLOPT_URL => $url_b, CURLOPT_CUSTOMREQUEST => 'HEAD', CURLOPT_NOBODY => FALSE]);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
+    $this->assertEqual($this->drupalGetHeader('Foo'), 'baz', 'Custom header was sent.');
+    $this->assertEqual('', $response_body);
+    $response_body = $this->curlExec([CURLOPT_HTTPGET => TRUE, CURLOPT_URL => $url_b, CURLOPT_CUSTOMREQUEST => 'GET', CURLOPT_NOBODY => FALSE]);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
+    $this->assertEqual($this->drupalGetHeader('Foo'), 'baz', 'Custom header was sent.');
+    $this->assertEqual('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">baz</em>', $response_body);
+  }
+
 }
