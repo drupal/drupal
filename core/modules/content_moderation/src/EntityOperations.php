@@ -4,7 +4,6 @@ namespace Drupal\content_moderation;
 
 use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -78,32 +77,6 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Determines the default moderation state on load for an entity.
-   *
-   * This method is only applicable when an entity is loaded that has
-   * no moderation state on it, but should. In those cases, failing to set
-   * one may result in NULL references elsewhere when other code tries to check
-   * the moderation state of the entity.
-   *
-   * The amount of indirection here makes performance a concern, but
-   * given how Entity API works I don't know how else to do it.
-   * This reliably gets us *A* valid state. However, that state may be
-   * not the ideal one. Suggestions on how to better select the default
-   * state here are welcome.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity for which we want a default state.
-   *
-   * @return string
-   *   The default state for the given entity.
-   */
-  protected function getDefaultLoadStateId(ContentEntityInterface $entity) {
-    return $this->moderationInfo
-      ->loadBundleEntity($entity->getEntityType()->getBundleEntityType(), $entity->bundle())
-      ->getThirdPartySetting('content_moderation', 'default_moderation_state');
-  }
-
-  /**
    * Acts on an entity and set published status based on the moderation state.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -170,8 +143,8 @@ class EntityOperations implements ContainerInjectionInterface {
     $moderation_state = $entity->moderation_state->target_id;
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if (!$moderation_state) {
-      $moderation_state = $this->moderationInfo
-        ->loadBundleEntity($entity->getEntityType()->getBundleEntityType(), $entity->bundle())
+      $moderation_state = $this->entityTypeManager
+        ->getStorage($entity->getEntityType()->getBundleEntityType())->load($entity->bundle())
         ->getThirdPartySetting('content_moderation', 'default_moderation_state');
     }
 

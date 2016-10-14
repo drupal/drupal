@@ -97,8 +97,8 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
       $new_state_id = $entity->moderation_state->target_id;
     }
     else {
-      $new_state_id = $default = $this->moderationInformation
-        ->loadBundleEntity($entity->getEntityType()->getBundleEntityType(), $entity->bundle())
+      $new_state_id = $default = $this->entityTypeManager
+        ->getStorage($entity->getEntityType()->getBundleEntityType())->load($entity->bundle())
         ->getThirdPartySetting('content_moderation', 'default_moderation_state');
     }
     if ($new_state_id) {
