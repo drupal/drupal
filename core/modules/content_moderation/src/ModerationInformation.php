@@ -52,18 +52,12 @@ class ModerationInformation implements ModerationInformationInterface {
   /**
    * {@inheritdoc}
    */
-  public function loadBundleEntity($bundle_entity_type_id, $bundle_id) {
-    if ($bundle_entity_type_id) {
-      return $this->entityTypeManager->getStorage($bundle_entity_type_id)->load($bundle_id);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function shouldModerateEntitiesOfBundle(EntityTypeInterface $entity_type, $bundle) {
-    if ($bundle_entity = $this->loadBundleEntity($entity_type->getBundleEntityType(), $bundle)) {
-      return $bundle_entity->getThirdPartySetting('content_moderation', 'enabled', FALSE);
+    if ($this->canModerateEntitiesOfEntityType($entity_type)) {
+      $bundle_entity = $this->entityTypeManager->getStorage($entity_type->getBundleEntityType())->load($bundle);
+      if ($bundle_entity) {
+        return $bundle_entity->getThirdPartySetting('content_moderation', 'enabled', FALSE);
+      }
     }
     return FALSE;
   }

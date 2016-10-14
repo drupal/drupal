@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\content_moderation\Unit;
 
+use Drupal\content_moderation\Entity\Handler\ModerationHandler;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityType;
@@ -70,6 +71,7 @@ class ModerationInformationTest extends \PHPUnit_Framework_TestCase {
     $entity_type = new ContentEntityType([
       'id' => 'test_entity_type',
       'bundle_entity_type' => 'entity_test_bundle',
+      'handlers' => ['moderation' => ModerationHandler::class],
     ]);
     $entity = $this->prophesize(ContentEntityInterface::class);
     $entity->getEntityType()->willReturn($entity_type);
@@ -104,6 +106,7 @@ class ModerationInformationTest extends \PHPUnit_Framework_TestCase {
     $entity_type = new ContentEntityType([
       'id' => 'test_entity_type',
       'bundle_entity_type' => 'entity_test_bundle',
+      'handlers' => ['moderation' => ModerationHandler::class],
     ]);
 
     $moderation_information = new ModerationInformation($this->setupModerationEntityManager($status), $this->getUser());

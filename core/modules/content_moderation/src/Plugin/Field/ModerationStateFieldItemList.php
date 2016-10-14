@@ -57,8 +57,9 @@ class ModerationStateFieldItemList extends EntityReferenceFieldItemList {
     // It is possible that the bundle does not exist at this point. For example,
     // the node type form creates a fake Node entity to get default values.
     // @see \Drupal\node\NodeTypeForm::form()
-    $bundle_entity = \Drupal::service('content_moderation.moderation_information')
-      ->loadBundleEntity($entity->getEntityType()->getBundleEntityType(), $entity->bundle());
+    $bundle_entity = \Drupal::entityTypeManager()
+      ->getStorage($entity->getEntityType()->getBundleEntityType())
+      ->load($entity->bundle());
     if ($bundle_entity && ($default = $bundle_entity->getThirdPartySetting('content_moderation', 'default_moderation_state'))) {
       return ModerationState::load($default);
     }
