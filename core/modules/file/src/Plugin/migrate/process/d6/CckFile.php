@@ -50,10 +50,10 @@ class CckFile extends ProcessPluginBase implements ContainerFactoryPluginInterfa
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     // Configure the migration process plugin to look up migrated IDs from
-    // the d6_file migration.
-    $migration_plugin_configuration = [
-      'source' => ['fid'],
+    // a d6 file migration.
+    $migration_plugin_configuration = $configuration + [
       'migration' => 'd6_file',
+      'source' => ['fid'],
     ];
 
     return new static(
