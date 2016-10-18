@@ -481,17 +481,11 @@ abstract class StylePluginBase extends PluginBase {
    *   - group: The group content.
    *   - level: The hierarchical level of the grouping.
    *   - rows: The result rows to be rendered in this group..
-   * @param $level
-   *   (deprecated) This is no longer used and will be removed in Drupal 9. The
-   *   'level' key in $sets is used to indicate the hierarchical level of the
-   *   grouping.
-   *
-   * @todo Remove the $level parameter in https://www.drupal.org/node/2633890.
    *
    * @return string
    *   Rendered output of given grouping sets.
    */
-  public function renderGroupingSets($sets, $level = 0) {
+  public function renderGroupingSets($sets) {
     $output = array();
     $theme_functions = $this->view->buildThemeFunctions($this->groupingTheme);
     foreach ($sets as $set) {
