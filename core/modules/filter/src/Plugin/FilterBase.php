@@ -16,13 +16,6 @@ use Drupal\Core\Plugin\PluginBase;
 abstract class FilterBase extends PluginBase implements FilterInterface {
 
   /**
-   * The plugin ID of this filter.
-   *
-   * @var string
-   */
-  protected $plugin_id;
-
-  /**
    * The name of the provider that owns this filter.
    *
    * @var string
