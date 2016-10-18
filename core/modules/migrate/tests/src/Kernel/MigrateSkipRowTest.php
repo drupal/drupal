@@ -62,6 +62,30 @@ class MigrateSkipRowTest extends KernelTestBase {
     $map_row = $id_map_plugin->getRowBySource(['id' => 2]);
     $this->assertFalse($map_row);
 
+    // Insert a custom processor in the process flow.
+    $definition['process']['value'] = [
+      'source' => 'data',
+      'plugin' => 'test_skip_row_process',
+    ];
+    // Change data to avoid triggering again hook_migrate_prepare_row().
+    $definition['source']['data_rows'] = [
+      ['id' => '1', 'data' => 'skip_and_record (use plugin)'],
+      ['id' => '2', 'data' => 'skip_and_dont_record (use plugin)'],
+    ];
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
+
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $result = $executable->import();
+    $this->assertEquals($result, MigrationInterface::RESULT_COMPLETED);
+
+    $id_map_plugin = $migration->getIdMap();
+
+    // The first row is recorded in the map as ignored.
+    $map_row = $id_map_plugin->getRowBySource(['id' => 1]);
+    $this->assertEquals(MigrateIdMapInterface::STATUS_IGNORED, $map_row['source_row_status']);
+    // The second row is not recorded in the map.
+    $map_row = $id_map_plugin->getRowBySource(['id' => 2]);
+    $this->assertFalse($map_row);
   }
 
 }
