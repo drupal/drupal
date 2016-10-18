@@ -432,6 +432,7 @@ function template_preprocess_form_element(&$variables) {
   $element += array(
     '#title_display' => 'before',
     '#wrapper_attributes' => array(),
+    '#label_attributes' => array(),
   );
   $variables['attributes'] = $element['#wrapper_attributes'];
 
@@ -479,6 +480,7 @@ function template_preprocess_form_element(&$variables) {
   $variables['label_display'] = $element['#title_display'];
   $variables['label'] = array('#theme' => 'form_element_label');
   $variables['label'] += array_intersect_key($element, array_flip(array('#id', '#required', '#title', '#title_display')));
+  $variables['label']['#attributes'] = $element['#label_attributes'];
 
   $variables['children'] = $element['#children'];
 }
