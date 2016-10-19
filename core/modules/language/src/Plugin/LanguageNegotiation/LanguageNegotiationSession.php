@@ -102,11 +102,6 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
       // enabled, and the corresponding option has been set, we must preserve
       // any explicit user language preference even with cookies disabled.
       if ($this->queryRewrite) {
-        if (isset($options['query']) && is_string($options['query'])) {
-          $query = array();
-          parse_str($options['query'], $query);
-          $options['query'] = $query;
-        }
         if (!isset($options['query'][$this->queryParam])) {
           $options['query'][$this->queryParam] = $this->queryValue;
         }

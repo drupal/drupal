@@ -2,7 +2,6 @@
 
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
@@ -118,20 +117,8 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
         unset($options['language']);
       }
 
-      if (isset($options['query']) && is_string($options['query'])) {
-        $query = [];
-        parse_str($options['query'], $query);
-        $options['query'] = $query;
-      }
-      else {
-        $options['query'] = [];
-      }
-
       if (!isset($options['query'][static::QUERY_PARAMETER])) {
-        $query_addon = [static::QUERY_PARAMETER => $langcode];
-        $options['query'] += $query_addon;
-        // @todo Remove this once https://www.drupal.org/node/2507005 lands.
-        $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . UrlHelper::buildQuery($query_addon);
+        $options['query'][static::QUERY_PARAMETER] = $langcode;
       }
 
       if ($bubbleable_metadata) {

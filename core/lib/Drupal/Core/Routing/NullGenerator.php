@@ -52,7 +52,7 @@ class NullGenerator extends UrlGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function getInternalPathFromRoute($name, Route $route, $parameters = array(), $query_params = array()) {
+  protected function getInternalPathFromRoute($name, Route $route, $parameters = array(), &$query_params = array()) {
     return $route->getPath();
   }
 

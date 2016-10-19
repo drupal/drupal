@@ -69,6 +69,13 @@ class UrlGeneratorTest extends UnitTestCase {
   protected $context;
 
   /**
+   * The path processor.
+   *
+   * @var \Drupal\Core\PathProcessor\PathProcessorManager
+   */
+  protected $processorManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -156,6 +163,7 @@ class UrlGeneratorTest extends UnitTestCase {
     $processor = new PathProcessorAlias($this->aliasManager);
     $processor_manager = new PathProcessorManager();
     $processor_manager->addOutbound($processor, 1000);
+    $this->processorManager = $processor_manager;
 
     $this->routeProcessorManager = $this->getMockBuilder('Drupal\Core\RouteProcessor\RouteProcessorManager')
       ->disableOriginalConstructor()
@@ -363,6 +371,13 @@ class UrlGeneratorTest extends UnitTestCase {
       ['query' => ['page' => '1/2'], 'fragment' => 'bottom'],
       '/test/two/7?page=1/2#bottom',
     ];
+    // A NULL query string.
+    $data['query-with-NULL'] = [
+      'test_2',
+      ['narf' => '7'],
+      ['query' => NULL, 'fragment' => 'bottom'],
+      '/test/two/7#bottom',
+    ];
     return $data;
   }
 
@@ -487,6 +502,26 @@ class UrlGeneratorTest extends UnitTestCase {
       // Multiple query parameters and fragment.
       [['query' => ['bar' => 'baz', 'foo' => 'bar'], 'fragment' => 'foo'], '?bar=baz&foo=bar#foo'],
     ];
+  }
+
+  /**
+   * @covers \Drupal\Core\Routing\UrlGenerator::generateFromRoute
+   *
+   * Note: We use absolute covers to let
+   * \Drupal\Tests\Core\Render\MetadataBubblingUrlGeneratorTest work.
+   */
+  public function testGenerateWithPathProcessorChangingQueryParameter() {
+    $path_processor = $this->getMock(OutboundPathProcessorInterface::CLASS);
+    $path_processor->expects($this->atLeastOnce())
+      ->method('processOutbound')
+      ->willReturnCallback(function ($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+        $options['query'] = ['zoo' => 5];
+        return $path;
+      });
+    $this->processorManager->addOutbound($path_processor);
+
+    $options = [];
+    $this->assertGenerateFromRoute('test_2', ['narf' => 5], $options, '/goodbye/cruel/world?zoo=5', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
   }
 
   /**

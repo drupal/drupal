@@ -3,6 +3,7 @@
 namespace Drupal\system\Tests\Path;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 use Drupal\taxonomy\Entity\Term;
 
@@ -74,6 +75,10 @@ class UrlAlterFunctionalTest extends WebTestBase {
     $this->drupalGet("community/" . $term->id());
     $this->assertText($term_name, 'The community/{tid} path gets resolved correctly');
     $this->assertUrlOutboundAlter("/forum/" . $term->id(), "/community/" . $term->id());
+
+    // Test outbound query string altering.
+    $url = Url::fromRoute('user.login');
+    $this->assertIdentical(\Drupal::request()->getBaseUrl() . '/user/login?foo=bar', $url->toString());
   }
 
   /**

@@ -49,6 +49,11 @@ class PathProcessorTest implements InboundPathProcessorInterface, OutboundPathPr
       }
     }
 
+    // Verify that $options are alterable.
+    if ($path == '/user/login') {
+      $options['query']['foo'] = 'bar';
+    }
+
     // Rewrite forum/ to community/.
     return preg_replace('@^/forum(.*)@', '/community$1', $path);
   }
