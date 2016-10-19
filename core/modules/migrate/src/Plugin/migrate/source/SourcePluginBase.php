@@ -207,6 +207,9 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
     catch (MigrateSkipRowException $e) {
       $skip = TRUE;
       $save_to_map = $e->getSaveToMap();
+      if ($message = trim($e->getMessage())) {
+        $this->idMap->saveMessage($row->getSourceIdValues(), $message, MigrationInterface::MESSAGE_INFORMATIONAL);
+      }
     }
 
     // We're explicitly skipping this row - keep track in the map table.
