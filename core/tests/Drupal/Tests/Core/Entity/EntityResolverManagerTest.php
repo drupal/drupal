@@ -417,6 +417,27 @@ class EntityResolverManagerTest extends UnitTestCase {
   }
 
   /**
+   * Tests setRouteOptions() with an _entity_form route for an add form.
+   *
+   * @covers ::setRouteOptions
+   * @covers ::getControllerClass
+   * @covers ::getEntityTypes
+   * @covers ::setParametersFromReflection
+   * @covers ::setParametersFromEntityInformation
+   */
+  public function testSetRouteOptionsWithEntityAddFormRoute() {
+    $this->setupEntityTypes();
+    $route = new Route('/example/add', array(
+      '_entity_form' => 'entity_test.add',
+    ));
+
+    $defaults = $route->getDefaults();
+    $this->entityResolverManager->setRouteOptions($route);
+    $this->assertEquals($defaults, $route->getDefaults());
+    $this->assertFalse($route->hasOption('parameters'));
+  }
+
+  /**
    * Creates the entity manager mock returning entity type objects.
    */
   protected function setupEntityTypes() {
