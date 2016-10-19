@@ -207,7 +207,7 @@ function template_preprocess_fieldset(&$variables) {
   $variables['legend']['attributes'] = new Attribute();
   // Add 'visually-hidden' class to legend span.
   if ($variables['title_display'] == 'invisible') {
-    $variables['legend_span']['attributes'] = new Attribute(array('class' => 'visually-hidden'));
+    $variables['legend_span']['attributes'] = new Attribute(['class' => ['visually-hidden']]);
   }
   else {
     $variables['legend_span']['attributes'] = new Attribute();

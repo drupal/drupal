@@ -618,11 +618,11 @@ function template_preprocess_views_view_table(&$variables) {
   if (empty($variables['rows']) && !empty($options['empty_table'])) {
     $build = $view->display_handler->renderArea('empty');
     $variables['rows'][0]['columns'][0]['content'][0]['field_output'] = $build;
-    $variables['rows'][0]['attributes'] = new Attribute(array('class' => 'odd'));
+    $variables['rows'][0]['attributes'] = new Attribute(['class' => ['odd']]);
     // Calculate the amounts of rows with output.
     $variables['rows'][0]['columns'][0]['attributes'] = new Attribute(array(
       'colspan' => count($variables['header']),
-      'class' => 'views-empty',
+      'class' => ['views-empty'],
     ));
   }
 

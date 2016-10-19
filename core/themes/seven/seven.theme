@@ -169,7 +169,7 @@ function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
       '#value' => $node->isPublished() ? t('Published') : t('Not published'),
       '#access' => !$node->isNew(),
       '#attributes' => array(
-        'class' => 'entity-meta__title',
+        'class' => ['entity-meta__title'],
       ),
     ),
     'changed' => array(

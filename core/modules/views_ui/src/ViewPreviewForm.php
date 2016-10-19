@@ -56,7 +56,7 @@ class ViewPreviewForm extends ViewFormBase {
       $form['preview'] = array(
         '#weight' => 110,
         '#theme_wrappers' => array('container'),
-        '#attributes' => array('id' => 'views-live-preview', 'class' => 'views-live-preview'),
+        '#attributes' => ['id' => 'views-live-preview', 'class' => ['views-live-preview']],
         'preview' => $view->renderPreview($this->displayID, $args),
       );
     }
