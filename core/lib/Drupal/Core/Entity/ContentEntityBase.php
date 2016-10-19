@@ -9,6 +9,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\TranslationStatusInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
@@ -16,22 +17,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
  *
  * @ingroup entity_api
  */
-abstract class ContentEntityBase extends Entity implements \IteratorAggregate, ContentEntityInterface {
-
-  /**
-   * Status code identifying a removed translation.
-   */
-  const TRANSLATION_REMOVED = 0;
-
-  /**
-   * Status code identifying an existing translation.
-   */
-  const TRANSLATION_EXISTING = 1;
-
-  /**
-   * Status code identifying a newly created translation.
-   */
-  const TRANSLATION_CREATED = 2;
+abstract class ContentEntityBase extends Entity implements \IteratorAggregate, ContentEntityInterface, TranslationStatusInterface {
 
   /**
    * The plain data values of the contained fields.
@@ -220,7 +206,10 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
     // Initialize translations. Ensure we have at least an entry for the default
     // language.
-    $data = array('status' => static::TRANSLATION_EXISTING);
+    // We determine if the entity is new by checking in the entity values for
+    // the presence of the id entity key, as the usage of ::isNew() is not
+    // possible in the constructor.
+    $data = isset($values[$this->getEntityType()->getKey('id')]) ? ['status' => static::TRANSLATION_EXISTING] : ['status' => static::TRANSLATION_CREATED];
     $this->translations[LanguageInterface::LANGCODE_DEFAULT] = $data;
     $this->setDefaultLangcode();
     if ($translations) {
@@ -363,6 +352,25 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+
+    // Update the status of all saved translations.
+    $removed = [];
+    foreach ($this->translations as $langcode => &$data) {
+      if ($data['status'] == static::TRANSLATION_REMOVED) {
+        $removed[$langcode] = TRUE;
+      }
+      else {
+        $data['status'] = static::TRANSLATION_EXISTING;
+      }
+    }
+    $this->translations = array_diff_key($this->translations, $removed);
   }
 
   /**
@@ -829,7 +837,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // Initialize the translation object.
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->entityManager()->getStorage($this->getEntityTypeId());
-    $this->translations[$langcode]['status'] = static::TRANSLATION_CREATED;
+    $this->translations[$langcode]['status'] = !isset($this->translations[$langcode]['status_existed']) ? static::TRANSLATION_CREATED : static::TRANSLATION_EXISTING;
     return $storage->createTranslation($this, $langcode, $values);
   }
 
@@ -844,11 +852,32 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
           unset($this->fields[$name][$langcode]);
         }
       }
-      $this->translations[$langcode]['status'] = static::TRANSLATION_REMOVED;
+      // If removing a translation which has not been saved yet, then we have
+      // to remove it completely so that ::getTranslationStatus returns the
+      // proper status.
+      if ($this->translations[$langcode]['status'] == static::TRANSLATION_CREATED) {
+        unset($this->translations[$langcode]);
+      }
+      else {
+        if ($this->translations[$langcode]['status'] == static::TRANSLATION_EXISTING) {
+          $this->translations[$langcode]['status_existed'] = TRUE;
+        }
+        $this->translations[$langcode]['status'] = static::TRANSLATION_REMOVED;
+      }
     }
     else {
       throw new \InvalidArgumentException("The specified translation ($langcode) cannot be removed.");
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTranslationStatus($langcode) {
+    if ($langcode == $this->defaultLangcode) {
+      $langcode = LanguageInterface::LANGCODE_DEFAULT;
+    }
+    return isset($this->translations[$langcode]) ? $this->translations[$langcode]['status'] : NULL;
   }
 
   /**

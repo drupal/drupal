@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\TypedData\TranslationStatusInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -929,6 +930,87 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     sort($actual);
     sort($expected_untranslatable);
     $this->assertEqual($actual, $expected_untranslatable);
+  }
+
+  /**
+   * Tests the getTranslationStatus method.
+   */
+  public function testTranslationStatus() {
+    $entity_type = 'entity_test_mul';
+    $storage = $this->entityManager->getStorage($entity_type);
+
+    // Create an entity with both translatable and untranslatable test fields.
+    $values = array(
+      'name' => $this->randomString(),
+      'translatable_test_field' => $this->randomString(),
+      'untranslatable_test_field' => $this->randomString(),
+    );
+
+    /** @var \Drupal\Core\Entity\ContentEntityInterface|\Drupal\Core\TypedData\TranslationStatusInterface $entity */
+    // Test that newly created entity has the translation status
+    // TRANSLATION_CREATED.
+    $entity = $storage->create($values);
+    $this->assertEquals(TranslationStatusInterface::TRANSLATION_CREATED, $entity->getTranslationStatus($entity->language()->getId()));
+
+    // Test that after saving a newly created entity it has the translation
+    // status TRANSLATION_EXISTING.
+    $entity->save();
+    $this->assertEquals(TranslationStatusInterface::TRANSLATION_EXISTING, $entity->getTranslationStatus($entity->language()->getId()));
+
+    // Test that after loading an existing entity it has the translation status
+    // TRANSLATION_EXISTING.
+    $storage->resetCache();
+    $entity = $storage->load($entity->id());
+    $this->assertEquals(TranslationStatusInterface::TRANSLATION_EXISTING, $entity->getTranslationStatus($entity->language()->getId()));
+
+    foreach ($this->langcodes as $key => $langcode) {
+      // Test that after adding a new translation it has the translation status
+      // TRANSLATION_CREATED.
+      $entity->addTranslation($langcode, $values);
+      $this->assertEquals(TranslationStatusInterface::TRANSLATION_CREATED, $entity->getTranslationStatus($langcode));
+
+      // Test that after removing a newly added and not yet saved translation
+      // it does not have any translation status for the removed translation.
+      $entity->removeTranslation($langcode);
+      $this->assertEquals(NULL, $entity->getTranslationStatus($langcode));
+
+      // Test that after adding a new translation and saving the entity it has
+      // the translation status TRANSLATION_EXISTING.
+      $entity->addTranslation($langcode, $values)
+        ->save();
+      $this->assertEquals(TranslationStatusInterface::TRANSLATION_EXISTING, $entity->getTranslationStatus($langcode));
+
+      // Test that after removing an existing translation its translation
+      // status has changed to TRANSLATION_REMOVED.
+      $entity->removeTranslation($langcode);
+      $this->assertEquals(TranslationStatusInterface::TRANSLATION_REMOVED, $entity->getTranslationStatus($langcode));
+
+      // Test that after removing an existing translation and adding it again
+      // its translation status has changed back to TRANSLATION_EXISTING.
+      $entity->addTranslation($langcode, $values);
+      $this->assertEquals(TranslationStatusInterface::TRANSLATION_EXISTING, $entity->getTranslationStatus($langcode));
+
+      // Test that after removing an existing translation and saving the entity
+      // it does not have any translation status for the removed translation.
+      $entity->removeTranslation($langcode);
+      $entity->save();
+      $this->assertEquals(NULL, $entity->getTranslationStatus($langcode));
+
+      // Tests that after removing an existing translation, saving the entity,
+      // adding the translation again, the translation status of this
+      // translation is TRANSLATION_CREATED.
+      $entity->addTranslation($langcode, $values);
+      $this->assertEquals(TranslationStatusInterface::TRANSLATION_CREATED, $entity->getTranslationStatus($langcode));
+      $entity->save();
+    }
+
+    // Test that after loading an existing entity it has the translation status
+    // TRANSLATION_EXISTING for all of its translations.
+    $storage->resetCache();
+    $entity = $storage->load($entity->id());
+    foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
+      $this->assertEquals(TranslationStatusInterface::TRANSLATION_EXISTING, $entity->getTranslationStatus($langcode));
+    }
   }
 
 }
