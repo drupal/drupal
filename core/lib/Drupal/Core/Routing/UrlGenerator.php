@@ -20,6 +20,13 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 class UrlGenerator implements UrlGeneratorInterface {
 
   /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $provider;
+
+  /**
    * @var RequestContext
    */
   protected $context;
