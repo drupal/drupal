@@ -232,6 +232,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
         if ($e->getSaveToMap()) {
           $id_map->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_IGNORED);
         }
+        if ($message = trim($e->getMessage())) {
+          $this->saveMessage($message, MigrationInterface::MESSAGE_INFORMATIONAL);
+        }
         $save = FALSE;
       }
 
