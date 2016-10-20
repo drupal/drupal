@@ -4,6 +4,7 @@ namespace Drupal\node\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
+use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -73,6 +74,7 @@ use Drupal\user\UserInterface;
 class Node extends ContentEntityBase implements NodeInterface {
 
   use EntityChangedTrait;
+  use EntityPublishedTrait;
 
   /**
    * Whether the node is being previewed or not.
@@ -242,20 +244,6 @@ class Node extends ContentEntityBase implements NodeInterface {
     $this->set('sticky', $sticky ? NODE_STICKY : NODE_NOT_STICKY);
     return $this;
   }
-  /**
-   * {@inheritdoc}
-   */
-  public function isPublished() {
-    return (bool) $this->getEntityKey('status');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setPublished($published) {
-    $this->set('status', $published ? NODE_PUBLISHED : NODE_NOT_PUBLISHED);
-    return $this;
-  }
 
   /**
    * {@inheritdoc}
@@ -367,6 +355,7 @@ class Node extends ContentEntityBase implements NodeInterface {
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
+    $fields += static::publishedBaseFieldDefinitions($entity_type);
 
     $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Title'))
@@ -407,13 +396,6 @@ class Node extends ContentEntityBase implements NodeInterface {
         ),
       ))
       ->setDisplayConfigurable('form', TRUE);
-
-    $fields['status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Publishing status'))
-      ->setDescription(t('A boolean indicating whether the node is published.'))
-      ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE)
-      ->setDefaultValue(TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))

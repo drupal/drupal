@@ -179,3 +179,20 @@ function comment_update_8200() {
 /**
  * @} End of "addtogroup updates-8.2.x".
  */
+
+/**
+ * @addtogroup updates-8.3.x
+ * @{
+ */
+
+/**
+ * Update status field.
+ */
+function comment_update_8300() {
+  $field_definitions = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('comment');
+  \Drupal::service('entity.definition_update_manager')->updateFieldStorageDefinition($field_definitions['status']);
+}
+
+/**
+ * @} End of "addtogroup updates-8.3.x".
+ */

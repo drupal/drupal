@@ -292,10 +292,10 @@ class UpdateTest extends RESTTestBase {
     $this->pass('Test case 1: PATCH comment using HAL+JSON.');
     $comment->setSubject('Initial subject')->save();
     $read_only_fields = [
+      'status',
       'name',
       'created',
       'changed',
-      'status',
       'thread',
       'entity_type',
       'field_name',
@@ -311,6 +311,7 @@ class UpdateTest extends RESTTestBase {
     $this->pass('Test case 1: PATCH comment using JSON.');
     $comment->setSubject('Initial subject')->save();
     $read_only_fields = [
+      'status',
       'pid', // Extra compared to HAL+JSON.
       'entity_id',
       'uid',
@@ -318,7 +319,6 @@ class UpdateTest extends RESTTestBase {
       'homepage', // Extra compared to HAL+JSON.
       'created',
       'changed',
-      'status',
       'thread',
       'entity_type',
       'field_name',

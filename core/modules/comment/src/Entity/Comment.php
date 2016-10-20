@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
+use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -66,6 +67,7 @@ use Drupal\user\UserInterface;
 class Comment extends ContentEntityBase implements CommentInterface {
 
   use EntityChangedTrait;
+  use EntityPublishedTrait;
 
   /**
    * The thread for which a lock was acquired.
@@ -216,6 +218,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     $fields = parent::baseFieldDefinitions($entity_type);
+    $fields += static::publishedBaseFieldDefinitions($entity_type);
 
     $fields['cid']->setLabel(t('Comment ID'))
       ->setDescription(t('The comment ID.'));
@@ -290,12 +293,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the comment was last edited.'))
       ->setTranslatable(TRUE);
-
-    $fields['status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Publishing status'))
-      ->setDescription(t('A boolean indicating whether the comment is published.'))
-      ->setTranslatable(TRUE)
-      ->setDefaultValue(TRUE);
 
     $fields['thread'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Thread place'))
@@ -476,23 +473,8 @@ class Comment extends ContentEntityBase implements CommentInterface {
   /**
    * {@inheritdoc}
    */
-  public function isPublished() {
-    return $this->get('status')->value == CommentInterface::PUBLISHED;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getStatus() {
     return $this->get('status')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setPublished($status) {
-    $this->set('status', $status ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED);
-    return $this;
   }
 
   /**
