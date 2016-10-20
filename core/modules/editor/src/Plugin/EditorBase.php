@@ -31,21 +31,51 @@ abstract class EditorBase extends PluginBase implements EditorPluginInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove in Drupal 9.0.0.
    */
   public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 8.3.x and will be removed in 9.0.0.', E_USER_DEPRECATED);
     return $form;
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove in Drupal 9.0.0.
    */
   public function settingsFormValidate(array $form, FormStateInterface $form_state) {
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 8.3.x and will be removed in 9.0.0.', E_USER_DEPRECATED);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove in Drupal 9.0.0.
+   */
+  public function settingsFormSubmit(array $form, FormStateInterface $form_state) {
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 8.3.x and will be removed in 9.0.0.', E_USER_DEPRECATED);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function settingsFormSubmit(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    return $this->settingsForm($form, $form_state, $form_state->get('editor'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    return $this->settingsFormValidate($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    return $this->settingsFormSubmit($form, $form_state);
   }
 
 }

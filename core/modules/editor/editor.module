@@ -168,12 +168,13 @@ function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_s
 
   // Add editor-specific validation and submit handlers.
   if ($editor) {
+    /** @var $plugin \Drupal\editor\Plugin\EditorPluginInterface */
     $plugin = $manager->createInstance($editor->getEditor());
     $settings_form = array();
-    $settings_form['#element_validate'][] = array($plugin, 'settingsFormValidate');
-    $form['editor']['settings']['subform'] = $plugin->settingsForm($settings_form, $form_state, $editor);
+    $settings_form['#element_validate'][] = array($plugin, 'validateConfigurationForm');
+    $form['editor']['settings']['subform'] = $plugin->buildConfigurationForm($settings_form, $form_state);
     $form['editor']['settings']['subform']['#parents'] = array('editor', 'settings');
-    $form['actions']['submit']['#submit'][] = array($plugin, 'settingsFormSubmit');
+    $form['actions']['submit']['#submit'][] = array($plugin, 'submitConfigurationForm');
   }
 
   $form['#validate'][] = 'editor_form_filter_admin_format_validate';
