@@ -146,7 +146,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    *
    * @var array
    */
-  public static $modules = array();
+  protected static $modules = array();
 
   /**
    * The virtual filesystem root directory.
