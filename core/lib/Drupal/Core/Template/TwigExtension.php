@@ -135,6 +135,7 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFunction('attach_library', [$this, 'attachLibrary']),
       new \Twig_SimpleFunction('active_theme_path', [$this, 'getActiveThemePath']),
       new \Twig_SimpleFunction('active_theme', [$this, 'getActiveTheme']),
+      new \Twig_SimpleFunction('create_attribute', [$this, 'createAttribute']),
     ];
   }
 
@@ -598,6 +599,20 @@ class TwigExtension extends \Twig_Extension {
       // If $item is not marked safe then it will be escaped.
       return $this->escapeFilter($env, $item, 'html', NULL, TRUE);
     }, (array) $value));
+  }
+
+  /**
+   * Creates an Attribute object.
+   *
+   * @param array $attributes
+   *   (optional) An associative array of key-value pairs to be converted to
+   *   HTML attributes.
+   *
+   * @return \Drupal\Core\Template\Attribute
+   *   An attributes object that has the given attributes.
+   */
+  public function createAttribute(array $attributes = []) {
+    return new Attribute($attributes);
   }
 
 }

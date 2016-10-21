@@ -299,6 +299,33 @@ class TwigExtensionTest extends UnitTestCase {
     $this->assertEquals('<a href="http://example.com"></a>', $result);
   }
 
+  /**
+   * Tests creating attributes within a Twig template.
+   *
+   * @covers ::createAttribute
+   */
+  public function testCreateAttribute() {
+    $renderer = $this->prophesize(RendererInterface::class);
+    $extension = new TwigExtension($renderer->reveal());
+    $loader = new StringLoader();
+    $twig = new \Twig_Environment($loader);
+    $twig->addExtension($extension);
+
+    $iterations = [
+      ['class' => ['kittens'], 'data-toggle' => 'modal', 'data-lang' => 'es'],
+      ['id' => 'puppies', 'data-value' => 'foo', 'data-lang' => 'en'],
+      [],
+    ];
+    $result = $twig->render("{% for iteration in iterations %}<div{{ create_attribute(iteration) }}></div>{% endfor %}", ['iterations' => $iterations]);
+    $expected = '<div class="kittens" data-toggle="modal" data-lang="es"></div><div id="puppies" data-value="foo" data-lang="en"></div><div></div>';
+    $this->assertEquals($expected, $result);
+
+    // Test default creation of empty attribute object and using its method.
+    $result = $twig->render("<div{{ create_attribute().addClass('meow') }}></div>");
+    $expected = '<div class="meow"></div>';
+    $this->assertEquals($expected, $result);
+  }
+
 }
 
 class TwigExtensionTestString {
