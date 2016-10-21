@@ -13,7 +13,7 @@
     var parsedAttributes = {};
 
     var domElement = element.$;
-    var attribute = null;
+    var attribute;
     var attributeName;
     for (var attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
       attribute = domElement.attributes.item(attrIndex);
