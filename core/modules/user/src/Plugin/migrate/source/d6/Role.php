@@ -69,7 +69,15 @@ class Role extends DrupalSqlBase {
       ->condition('rid', $rid)
       ->execute()
       ->fetchField();
-    $row->setSourceProperty('permissions', explode(', ', $permissions));
+
+    // If a role has no permissions then set to an empty array. The role will
+    // be migrated and given the default D8 permissions.
+    if ($permissions) {
+      $row->setSourceProperty('permissions', explode(', ', $permissions));
+    }
+    else {
+      $row->setSourceProperty('permissions', []);
+    }
     if (isset($this->filterPermissions[$rid])) {
       $row->setSourceProperty("filter_permissions:$rid", $this->filterPermissions[$rid]);
     }
