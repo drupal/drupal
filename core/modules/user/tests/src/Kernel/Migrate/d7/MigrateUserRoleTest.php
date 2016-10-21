@@ -56,6 +56,50 @@ class MigrateUserRoleTest extends MigrateDrupal7TestBase {
     $this->assertEntity('anonymous', 'anonymous user', 1);
     $this->assertEntity('authenticated', 'authenticated user', 2);
     $this->assertEntity('administrator', 'administrator', 3);
+    // Test there are no duplicated roles.
+    $roles = [
+      'anonymous1',
+      'authenticated1',
+      'administrator1',
+    ];
+    $this->assertEmpty(Role::loadMultiple($roles));
+
+    // Remove the map row for the administrator role and rerun the migration.
+    // This will re-import the administrator role again.
+    $id_map = $this->getMigration('d7_user_role')->getIdMap();
+    $id_map->delete(['rid' => 3]);
+
+    $this->sourceDatabase->insert('role')
+      ->fields([
+        'rid' => 4,
+        'name' => 'test role',
+        'weight' => 10,
+      ])
+      ->execute();
+    $this->sourceDatabase->insert('role_permission')
+      ->fields([
+        'rid' => 4,
+        'permission' => 'access content',
+        'module' => 'node',
+      ])
+      ->execute();
+    $this->executeMigration('d7_user_role');
+
+    // Test there are no duplicated roles.
+    $roles = [
+      'anonymous1',
+      'authenticated1',
+      'administrator1',
+    ];
+    $this->assertEmpty(Role::loadMultiple($roles));
+
+    // Test that the existing roles have not changed.
+    $this->assertEntity('administrator', 'administrator', 3);
+    $this->assertEntity('anonymous', 'anonymous user', 1);
+    $this->assertEntity('authenticated', 'authenticated user', 2);
+
+    // Test the migration of the new role, test role.
+    $this->assertEntity('test_role', 'test role', 4);
   }
 
 }
