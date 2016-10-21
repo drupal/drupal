@@ -2,7 +2,7 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\views\Plugin\views\field\Field;
+use Drupal\views\Plugin\views\field\EntityField;
 
 /**
  * Provides a class for assertions to check for the expected result of a View.
@@ -91,7 +91,7 @@ trait ViewResultAssertionTrait {
         // The comparison will be done on the string representation of the value.
         // For entity fields we don't have the raw value. Let's try to fetch it
         // using the entity itself.
-        elseif (empty($value->$view_column) && isset($view->field[$expected_column]) && ($field = $view->field[$expected_column]) && $field instanceof Field) {
+        elseif (empty($value->$view_column) && isset($view->field[$expected_column]) && ($field = $view->field[$expected_column]) && $field instanceof EntityField) {
           $column = NULL;
           if (count(explode(':', $view_column)) == 2) {
             $column = explode(':', $view_column)[1];

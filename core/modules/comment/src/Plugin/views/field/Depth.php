@@ -2,7 +2,7 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
-use Drupal\views\Plugin\views\field\Field;
+use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\views\ResultRow;
 
 /**
@@ -12,7 +12,7 @@ use Drupal\views\ResultRow;
  *
  * @ViewsField("comment_depth")
  */
-class Depth extends Field {
+class Depth extends EntityField {
 
   /**
    * {@inheritdoc}

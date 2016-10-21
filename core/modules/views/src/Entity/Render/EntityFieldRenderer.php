@@ -7,7 +7,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\views\Plugin\views\field\Field;
+use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
@@ -111,13 +111,13 @@ class EntityFieldRenderer extends RendererBase {
    *
    * @param \Drupal\views\ResultRow $row
    *   A single row of the query result.
-   * @param \Drupal\views\Plugin\views\field\Field $field
+   * @param \Drupal\views\Plugin\views\field\EntityField $field
    *   (optional) A field to be rendered.
    *
    * @return array
    *   A renderable array for the entity data contained in the result row.
    */
-  public function render(ResultRow $row, Field $field = NULL) {
+  public function render(ResultRow $row, EntityField $field = NULL) {
     // The method is called for each field in each result row. In order to
     // leverage multiple-entity building of formatter output, we build the
     // render arrays for all fields in all rows on the first call.
@@ -259,7 +259,7 @@ class EntityFieldRenderer extends RendererBase {
   protected function getRenderableFieldIds() {
     $field_ids = [];
     foreach ($this->view->field as $field_id => $field) {
-      if ($field instanceof Field && $field->relationship == $this->relationship) {
+      if ($field instanceof EntityField && $field->relationship == $this->relationship) {
         $field_ids[] = $field_id;
       }
     }

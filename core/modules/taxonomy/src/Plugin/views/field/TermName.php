@@ -3,7 +3,7 @@
 namespace Drupal\taxonomy\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\field\Field;
+use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\views\ResultRow;
 
 /**
@@ -13,7 +13,7 @@ use Drupal\views\ResultRow;
  *
  * @ViewsField("term_name")
  */
-class TermName extends Field {
+class TermName extends EntityField {
 
   /**
    * {@inheritdoc}

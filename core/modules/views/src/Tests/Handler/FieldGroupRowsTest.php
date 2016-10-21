@@ -11,7 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 /**
  * Tests the "Display all values in the same row" setting.
  *
- * @see \Drupal\views\Plugin\views\field\Field
+ * @see \Drupal\views\Plugin\views\field\EntityField
  *
  * @group views
  */

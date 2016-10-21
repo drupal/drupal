@@ -35,11 +35,11 @@ class EntityViewsDataUpdateTest extends UpdatePathTestBase {
     $view->initHandlers();
 
     // Extract the fields from the test view that were updated.
-    /** @var \Drupal\views\Plugin\views\field\Field $field */
+    /** @var \Drupal\views\Plugin\views\field\EntityField $field */
     $created = $view->field['created'];
-    /** @var \Drupal\views\Plugin\views\field\Field $field */
+    /** @var \Drupal\views\Plugin\views\field\EntityField $field */
     $created_1 = $view->field['created_1'];
-    /** @var \Drupal\views\Plugin\views\field\Field $field */
+    /** @var \Drupal\views\Plugin\views\field\EntityField $field */
     $created_2 = $view->field['created_2'];
 
     // Make sure the plugins were converted from date to field.
