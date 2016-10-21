@@ -68,7 +68,7 @@ class Term extends ContentEntityBase implements TermInterface {
           // If the term has multiple parents, we don't delete it.
           $parents = $storage->loadParents($child->id());
           if (empty($parents)) {
-            $orphans[] = $child->id();
+            $orphans[] = $child;
           }
         }
       }
@@ -79,7 +79,7 @@ class Term extends ContentEntityBase implements TermInterface {
     $storage->deleteTermHierarchy(array_keys($entities));
 
     if (!empty($orphans)) {
-      entity_delete_multiple('taxonomy_term', $orphans);
+      $storage->delete($orphans);
     }
   }
 
