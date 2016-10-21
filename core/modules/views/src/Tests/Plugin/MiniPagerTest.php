@@ -70,6 +70,18 @@ class MiniPagerTest extends PluginTestBase {
     $this->assertText($this->nodes[18]->label());
     $this->assertText($this->nodes[19]->label());
 
+    // Test @total value in result summary
+    $view = Views::getView('test_mini_pager');
+    $view->setDisplay('page_4');
+    $this->executeView($view);
+    $this->assertIdentical($view->get_total_rows, TRUE, 'The query was set to calculate the total number of rows.');
+    $this->assertEqual(count($this->nodes), $view->total_rows, 'The total row count is equal to the number of nodes.');
+
+    $this->drupalGet('test_mini_pager_total', array('query' => array('page' => 1)));
+    $this->assertText('of ' . count($this->nodes), 'The first page shows the total row count.');
+    $this->drupalGet('test_mini_pager_total', array('query' => array('page' => 6)));
+    $this->assertText('of ' . count($this->nodes), 'The last page shows the total row count.');
+
     // Test a mini pager with just one item per page.
     $this->drupalGet('test_mini_pager_one');
     $this->assertText('››');
