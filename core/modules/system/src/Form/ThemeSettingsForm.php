@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * Displays theme configuration for entire site and individual themes.
@@ -47,6 +48,13 @@ class ThemeSettingsForm extends ConfigFormBase {
   protected $editableConfig = [];
 
   /**
+   * The theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
    * Constructs a ThemeSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -58,12 +66,13 @@ class ThemeSettingsForm extends ConfigFormBase {
    * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $mime_type_guesser
    *   The MIME type guesser instance to use.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, MimeTypeGuesserInterface $mime_type_guesser) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, MimeTypeGuesserInterface $mime_type_guesser, ThemeManagerInterface $theme_manager) {
     parent::__construct($config_factory);
 
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;
     $this->mimeTypeGuesser = $mime_type_guesser;
+    $this->themeManager = $theme_manager;
   }
 
   /**
@@ -74,7 +83,8 @@ class ThemeSettingsForm extends ConfigFormBase {
       $container->get('config.factory'),
       $container->get('module_handler'),
       $container->get('theme_handler'),
-      $container->get('file.mime_type.guesser')
+      $container->get('file.mime_type.guesser'),
+      $container->get('theme.manager')
     );
   }
 
@@ -269,7 +279,7 @@ class ThemeSettingsForm extends ConfigFormBase {
           $local_file = drupal_get_path('theme', $theme) . '/' . $default;
         }
         else {
-          $local_file = \Drupal::theme()->getActiveTheme()->getPath() . '/' . $default;
+          $local_file = $this->themeManager->getActiveTheme()->getPath() . '/' . $default;
         }
 
         $element['#description'] = t('Examples: <code>@implicit-public-file</code> (for a file in the public filesystem), <code>@explicit-file</code>, or <code>@local-file</code>.', array(
@@ -305,11 +315,11 @@ class ThemeSettingsForm extends ConfigFormBase {
       // Save the name of the current theme (if any), so that we can temporarily
       // override the current theme and allow theme_get_setting() to work
       // without having to pass the theme name to it.
-      $default_active_theme = \Drupal::theme()->getActiveTheme();
+      $default_active_theme = $this->themeManager->getActiveTheme();
       $default_theme = $default_active_theme->getName();
       /** @var \Drupal\Core\Theme\ThemeInitialization $theme_initialization */
       $theme_initialization = \Drupal::service('theme.initialization');
-      \Drupal::theme()->setActiveTheme($theme_initialization->getActiveThemeByName($theme));
+      $this->themeManager->setActiveTheme($theme_initialization->getActiveThemeByName($theme));
 
       // Process the theme and all its base themes.
       foreach ($theme_keys as $theme) {
@@ -328,10 +338,10 @@ class ThemeSettingsForm extends ConfigFormBase {
 
       // Restore the original current theme.
       if (isset($default_theme)) {
-        \Drupal::theme()->setActiveTheme($default_active_theme);
+        $this->themeManager->setActiveTheme($default_active_theme);
       }
       else {
-        \Drupal::theme()->resetActiveTheme();
+        $this->themeManager->resetActiveTheme();
       }
     }
 

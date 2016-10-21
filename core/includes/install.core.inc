@@ -1542,7 +1542,7 @@ function install_profile_themes(&$install_state) {
 
   // Ensure that the install profile's theme is used.
   // @see _drupal_maintenance_theme()
-  \Drupal::service('theme.manager')->resetActiveTheme();
+  \Drupal::theme()->resetActiveTheme();
 }
 
 /**
@@ -1564,7 +1564,7 @@ function install_install_profile(&$install_state) {
 
   // Ensure that the install profile's theme is used.
   // @see _drupal_maintenance_theme()
-  \Drupal::service('theme.manager')->resetActiveTheme();
+  \Drupal::theme()->resetActiveTheme();
 }
 
 /**
