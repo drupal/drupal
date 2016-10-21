@@ -118,3 +118,26 @@ display:
         type: mini
         options:
           items_per_page: 0
+  page_4:
+    display_plugin: page
+    id: page_4
+    display_title: 'Page 4'
+    position: 4
+    display_options:
+      display_extenders: {  }
+      path: test_mini_pager_total
+      empty: {  }
+      defaults:
+        empty: false
+        header: false
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          content: 'Displaying @start - @end of @total'
+          plugin_id: result
