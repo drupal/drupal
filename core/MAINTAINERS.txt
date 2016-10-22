@@ -207,6 +207,7 @@ Entity API
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
 - Francesco Placella 'plach' https://www.drupal.org/u/plach
+- Tobias Stöckler 'tstoeckler' https://www.drupal.org/u/tstoeckler
 
 Extension API
 - ?
