@@ -182,7 +182,7 @@ function template_preprocess_responsive_image(&$variables) {
 
   if (isset($variables['sources']) && count($variables['sources']) === 1 && !isset($variables['sources'][0]['media'])) {
     // There is only one source tag with an empty media attribute. This means
-    // we can output an image tag with the srcset attribute in stead of a
+    // we can output an image tag with the srcset attribute instead of a
     // picture tag.
     $variables['output_image_tag'] = TRUE;
     foreach ($variables['sources'][0] as $attribute => $value) {
