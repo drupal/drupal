@@ -37,7 +37,7 @@ function simpletest_requirements($phase) {
   );
   if (!$has_curl) {
     $requirements['curl']['severity'] = REQUIREMENT_ERROR;
-    $requirements['curl']['description'] = t('The testing framework could not be installed because the PHP <a href="http://php.net/manual/curl.setup.php">cURL</a> library is not available.');
+    $requirements['curl']['description'] = t('The testing framework requires the <a href="https://secure.php.net/manual/en/curl.setup.php">PHP cURL library</a>. For more information, see the <a href="https://www.drupal.org/requirements/php/curl">online information on installing the PHP cURL extension</a>.');
   }
 
   // SimpleTest currently needs 2 cURL options which are incompatible with
