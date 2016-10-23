@@ -92,7 +92,7 @@ class Link extends RenderElement {
       /** @var \Drupal\Core\Utility\LinkGenerator $link_generator */
       $link_generator = \Drupal::service('link_generator');
       $generated_link = $link_generator->generate($element['#title'], $element['#url']->setOptions($options));
-      $element['#markup'] = $generated_link->getGeneratedLink();
+      $element['#markup'] = $generated_link;
       $generated_link->merge(BubbleableMetadata::createFromRenderArray($element))
         ->applyTo($element);
     }
