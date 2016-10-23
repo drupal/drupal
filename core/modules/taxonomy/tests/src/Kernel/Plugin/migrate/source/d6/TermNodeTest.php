@@ -1,59 +1,48 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Unit\Migrate\d6;
+namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d6;
 
-use Drupal\taxonomy\Plugin\migrate\source\d6\TermNode;
-use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
+use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests d6_term_node source plugin.
  *
+ * @covers \Drupal\taxonomy\Plugin\migrate\source\d6\TermNode
  * @group taxonomy
  */
-class TermNodeTest extends MigrateSqlSourceTestCase {
-
-  const PLUGIN_CLASS = TermNode::class;
-
-  protected $migrationConfiguration = array(
-    'id' => 'test',
-    'source' => array(
-      'plugin' => 'd6_term_node',
-      'vid' => 3,
-    ),
-  );
-
-  protected $expectedResults = array(
-    array(
-      'nid' => 1,
-      'vid' => 1,
-      'type' => 'story',
-      'tid' => array(1, 4, 5),
-    ),
-  );
+class TermNodeTest extends MigrateSqlSourceTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    $this->databaseContents['term_node'] = array(
-      array(
+  public static $modules = ['taxonomy', 'migrate_drupal'];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function providerSource() {
+    $tests = [];
+
+    // The source data.
+    $tests[0]['source_data']['term_node'] = [
+      [
         'nid' => '1',
         'vid' => '1',
         'tid' => '1',
-      ),
-      array(
+      ],
+      [
         'nid' => '1',
         'vid' => '1',
         'tid' => '4',
-      ),
-      array(
+      ],
+      [
         'nid' => '1',
         'vid' => '1',
         'tid' => '5',
-      ),
-    );
-    $this->databaseContents['node'] = array(
-      array(
+      ],
+    ];
+    $tests[0]['source_data']['node'] = [
+      [
         'nid' => '1',
         'vid' => '1',
         'type' => 'story',
@@ -69,32 +58,51 @@ class TermNodeTest extends MigrateSqlSourceTestCase {
         'sticky' => '0',
         'tnid' => '0',
         'translate' => '0',
-      ),
-    );
-    $this->databaseContents['term_data'] = array(
-      array(
+      ],
+    ];
+    $tests[0]['source_data']['term_data'] = [
+      [
         'tid' => '1',
         'vid' => '3',
         'name' => 'term 1 of vocabulary 3',
         'description' => 'description of term 1 of vocabulary 3',
         'weight' => '0',
-      ),
-      array(
+      ],
+      [
         'tid' => '4',
         'vid' => '3',
         'name' => 'term 4 of vocabulary 3',
         'description' => 'description of term 4 of vocabulary 3',
         'weight' => '6',
-      ),
-      array(
+      ],
+      [
         'tid' => '5',
         'vid' => '3',
         'name' => 'term 5 of vocabulary 3',
         'description' => 'description of term 5 of vocabulary 3',
         'weight' => '7',
-      ),
-    );
-    parent::setUp();
+      ],
+    ];
+
+    // The expected results.
+    $tests[0]['expected_data'] = [
+      [
+        'nid' => 1,
+        'vid' => 1,
+        'type' => 'story',
+        'tid' => [1, 4, 5],
+      ],
+    ];
+
+    // Set default value for expected count.
+    $tests[0]['expected_count'] = NULL;
+
+    // Set plugin configuration.
+    $tests[0]['configuration'] = [
+      'vid' => 3,
+    ];
+
+    return $tests;
   }
 
 }
