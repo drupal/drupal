@@ -100,6 +100,7 @@ class User extends DrupalSqlBase {
       'name' => $this->t('Username'),
       'pass' => $this->t('Password'),
       'mail' => $this->t('Email address'),
+      'theme' => $this->t('Theme'),
       'signature' => $this->t('Signature'),
       'signature_format' => $this->t('Signature format'),
       'created' => $this->t('Registered timestamp'),
