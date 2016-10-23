@@ -1,52 +1,44 @@
 <?php
 
-namespace Drupal\Tests\user\Unit\Migrate\d6;
+namespace Drupal\Tests\user\Kernel\Plugin\migrate\source\d6;
 
-use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
-use Drupal\user\Plugin\migrate\source\d6\ProfileFieldValues;
+use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests the d6_profile_field_values source plugin.
  *
+ * @covers \Drupal\user\Plugin\migrate\source\d6\ProfileFieldValues
  * @group user
  */
-class ProfileFieldValuesTest extends MigrateSqlSourceTestCase {
-
-  const PLUGIN_CLASS = ProfileFieldValues::class;
-
-  protected $migrationConfiguration = array(
-    'id' => 'test',
-    'source' => array(
-      'plugin' => 'd6_profile_field_values',
-    ),
-  );
-
-  protected $expectedResults = array(
-    array(
-      'profile_color' => array('red'),
-      'profile_biography' => array('Lorem ipsum dolor sit amet...'),
-      'uid' => '2',
-    ),
-  );
+class ProfileFieldValuesTest extends MigrateSqlSourceTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    $this->databaseContents['profile_values'] = array(
-      array(
+  public static $modules = ['user', 'migrate_drupal'];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function providerSource() {
+    $tests = [];
+
+    // The source data.
+    $tests[0]['source_data']['profile_values'] = [
+      [
         'fid' => '8',
         'uid' => '2',
         'value' => 'red',
-      ),
-      array(
+      ],
+      [
         'fid' => '9',
         'uid' => '2',
         'value' => 'Lorem ipsum dolor sit amet...',
-      ),
-    );
-    $this->databaseContents['profile_fields'] = array(
-      array(
+      ],
+    ];
+
+    $tests[0]['source_data']['profile_fields'] = [
+      [
         'fid' => '8',
         'title' => 'Favorite color',
         'name' => 'profile_color',
@@ -60,8 +52,8 @@ class ProfileFieldValuesTest extends MigrateSqlSourceTestCase {
         'visibility' => '2',
         'autocomplete' => '1',
         'options' => '',
-      ),
-      array(
+      ],
+      [
         'fid' => '9',
         'title' => 'Biography',
         'name' => 'profile_biography',
@@ -75,9 +67,19 @@ class ProfileFieldValuesTest extends MigrateSqlSourceTestCase {
         'visibility' => '2',
         'autocomplete' => '0',
         'options' => '',
-      ),
-    );
-    parent::setUp();
+      ],
+    ];
+
+    // The expected results.
+    $tests[0]['expected_data'] = [
+      [
+        'profile_color' => ['red'],
+        'profile_biography' => ['Lorem ipsum dolor sit amet...'],
+        'uid' => '2',
+      ],
+    ];
+
+    return $tests;
   }
 
 }
