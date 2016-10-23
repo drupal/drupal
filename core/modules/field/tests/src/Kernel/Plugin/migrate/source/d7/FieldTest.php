@@ -1,100 +1,36 @@
 <?php
 
-namespace Drupal\Tests\field\Unit\Plugin\migrate\source\d7;
+namespace Drupal\Tests\field\Kernel\Plugin\migrate\source\d7;
 
-use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
+use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D7 field source plugin.
  *
+ * @covers \Drupal\field\Plugin\migrate\source\d7\Field
  * @group field
  */
-class FieldTest extends MigrateSqlSourceTestCase {
-
-  const PLUGIN_CLASS = 'Drupal\field\Plugin\migrate\source\d7\Field';
-
-  protected $migrationConfiguration = array(
-    'id' => 'test_field',
-    'source' => array(
-      'plugin' => 'd7_field',
-    ),
-  );
-
-  protected $expectedResults = array(
-    array(
-      'field_name' => 'field_file',
-      'type' => 'file',
-      'global_settings' => '',
-      'storage' => array(
-        'active' => 1,
-        'details' => array(
-          'sql' => array(
-            'FIELD_LOAD_CURRENT' => array(
-              'field_data_field_file' => array(
-                'description' => 'field_file_description',
-                'display' => 'field_file_display',
-                'fid' => 'field_file_fid',
-              ),
-            ),
-            'FIELD_LOAD_REVISION' => array(
-              'field_revision_field_file' => array(
-                'description' => 'field_file_description',
-                'display' => 'field_file_display',
-                'fid' => 'field_file_fid',
-              ),
-            ),
-          ),
-        ),
-        'module' => 'field_sql_storage',
-        'settings' => array(),
-        'type' => 'field_sql_storage',
-      ),
-      'module' => 'file',
-      'db_columns' => '',
-      'locked' => 0,
-      'entity_type' => 'node',
-    ),
-    array(
-      'field_name' => 'field_file',
-      'type' => 'file',
-      'global_settings' => '',
-      'storage' => array(
-        'active' => 1,
-        'details' => array(
-          'sql' => array(
-            'FIELD_LOAD_CURRENT' => array(
-              'field_data_field_file' => array(
-                'description' => 'field_file_description',
-                'display' => 'field_file_display',
-                'fid' => 'field_file_fid',
-              ),
-            ),
-            'FIELD_LOAD_REVISION' => array(
-              'field_revision_field_file' => array(
-                'description' => 'field_file_description',
-                'display' => 'field_file_display',
-                'fid' => 'field_file_fid',
-              ),
-            ),
-          ),
-        ),
-        'module' => 'field_sql_storage',
-        'settings' => array(),
-        'type' => 'field_sql_storage',
-      ),
-      'module' => 'file',
-      'db_columns' => '',
-      'locked' => 0,
-      'entity_type' => 'user',
-    ),
-  );
+class FieldTest extends MigrateSqlSourceTestBase {
 
   /**
-   * Prepopulate contents with results.
+   * {@inheritdoc}
    */
-  protected function setUp() {
-    $this->databaseContents['field_config'] = array(
-      array(
+  public static $modules = ['field', 'migrate_drupal'];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function providerSource() {
+    $tests = [
+      [
+        'source_data' => [],
+        'expected_data' => [],
+      ],
+    ];
+
+    // The source data.
+    $tests[0]['source_data']['field_config'] = [
+      [
         'id' => '11',
         'field_name' => 'field_file',
         'type' => 'file',
@@ -108,10 +44,10 @@ class FieldTest extends MigrateSqlSourceTestCase {
         'cardinality' => '1',
         'translatable' => '0',
         'deleted' => '0',
-      ),
-    );
-    $this->databaseContents['field_config_instance'] = array(
-      array(
+      ],
+    ];
+    $tests[0]['source_data']['field_config_instance'] = [
+      [
         'id' => '33',
         'field_id' => '11',
         'field_name' => 'field_file',
@@ -119,8 +55,8 @@ class FieldTest extends MigrateSqlSourceTestCase {
         'bundle' => 'user',
         'data' => 'a:6:{s:5:"label";s:4:"File";s:6:"widget";a:5:{s:6:"weight";s:1:"8";s:4:"type";s:12:"file_generic";s:6:"module";s:4:"file";s:6:"active";i:1;s:8:"settings";a:1:{s:18:"progress_indicator";s:8:"throbber";}}s:8:"settings";a:5:{s:14:"file_directory";s:0:"";s:15:"file_extensions";s:3:"txt";s:12:"max_filesize";s:0:"";s:17:"description_field";i:0;s:18:"user_register_form";i:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"file_default";s:8:"settings";a:0:{}s:6:"module";s:4:"file";s:6:"weight";i:0;}}s:8:"required";i:0;s:11:"description";s:0:"";}',
         'deleted' => '0',
-      ),
-      array(
+      ],
+      [
         'id' => '21',
         'field_id' => '11',
         'field_name' => 'field_file',
@@ -128,9 +64,76 @@ class FieldTest extends MigrateSqlSourceTestCase {
         'bundle' => 'test_content_type',
         'data' => 'a:6:{s:5:"label";s:4:"File";s:6:"widget";a:5:{s:6:"weight";s:1:"5";s:4:"type";s:12:"file_generic";s:6:"module";s:4:"file";s:6:"active";i:1;s:8:"settings";a:1:{s:18:"progress_indicator";s:8:"throbber";}}s:8:"settings";a:5:{s:14:"file_directory";s:0:"";s:15:"file_extensions";s:15:"txt pdf ods odf";s:12:"max_filesize";s:5:"10 MB";s:17:"description_field";i:1;s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"file_default";s:6:"weight";s:1:"5";s:8:"settings";a:0:{}s:6:"module";s:4:"file";}}s:8:"required";i:0;s:11:"description";s:0:"";}',
         'deleted' => '0',
-      ),
-    );
-    parent::setUp();
+      ],
+    ];
+
+    // The expected results.
+    $tests[0]['expected_data'] = [
+      [
+        'field_name' => 'field_file',
+        'type' => 'file',
+        'storage' => [
+          'active' => 1,
+          'details' => [
+            'sql' => [
+              'FIELD_LOAD_CURRENT' => [
+                'field_data_field_file' => [
+                  'description' => 'field_file_description',
+                  'display' => 'field_file_display',
+                  'fid' => 'field_file_fid',
+                ],
+              ],
+              'FIELD_LOAD_REVISION' => [
+                'field_revision_field_file' => [
+                  'description' => 'field_file_description',
+                  'display' => 'field_file_display',
+                  'fid' => 'field_file_fid',
+                ],
+              ],
+            ],
+          ],
+          'module' => 'field_sql_storage',
+          'settings' => [],
+          'type' => 'field_sql_storage',
+        ],
+        'module' => 'file',
+        'locked' => 0,
+        'entity_type' => 'node',
+      ],
+      [
+        'field_name' => 'field_file',
+        'type' => 'file',
+        'storage' => [
+          'active' => 1,
+          'details' => [
+            'sql' => [
+              'FIELD_LOAD_CURRENT' => [
+                'field_data_field_file' => [
+                  'description' => 'field_file_description',
+                  'display' => 'field_file_display',
+                  'fid' => 'field_file_fid',
+                ],
+              ],
+              'FIELD_LOAD_REVISION' => [
+                'field_revision_field_file' => [
+                  'description' => 'field_file_description',
+                  'display' => 'field_file_display',
+                  'fid' => 'field_file_fid',
+                ],
+              ],
+            ],
+          ],
+          'module' => 'field_sql_storage',
+          'settings' => [],
+          'type' => 'field_sql_storage',
+        ],
+        'module' => 'file',
+        'locked' => 0,
+        'entity_type' => 'user',
+      ],
+    ];
+
+    return $tests;
   }
 
 }
