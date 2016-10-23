@@ -1,84 +1,36 @@
 <?php
 
-namespace Drupal\Tests\field\Unit\Plugin\migrate\source\d7;
+namespace Drupal\Tests\field\Kernel\Plugin\migrate\source\d7;
 
-use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
+use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D7 field instance per form display source plugin.
  *
+ * @covers \Drupal\field\Plugin\migrate\source\d7\FieldInstancePerFormDisplay
  * @group field
  */
-class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestCase {
-
-  const PLUGIN_CLASS = 'Drupal\field\Plugin\migrate\source\d7\FieldInstancePerFormDisplay';
-
-  protected $migrationConfiguration = array(
-    'id' => 'test_fieldinstance',
-    'source' => array(
-      'plugin' => 'd7_field_instance_per_form_display',
-    ),
-  );
-
-  // We need to set up the database contents; it's easier to do that below.
-  // These are sample result queries.
-  protected $expectedResults = array(
-    array(
-      'field_name' => 'body',
-      'entity_type' => 'node',
-      'bundle' => 'page',
-      'widget_settings' => array(
-      ),
-      'display_settings' => array(
-      ),
-      'description' => '',
-      'required' => FALSE,
-      'global_settings' => array(),
-    ),
-    array(
-      'field_name' => 'field_file',
-      'entity_type' => 'user',
-      'bundle' => 'user',
-      'widget_settings' => array(
-      ),
-      'display_settings' => array(
-      ),
-      'description' => '',
-      'required' => FALSE,
-      'global_settings' => array(),
-    ),
-    array(
-      'field_name' => 'field_integer',
-      'entity_type' => 'comment',
-      'bundle' => 'comment_node_test_content_type',
-      'widget_settings' => array(
-      ),
-      'display_settings' => array(
-      ),
-      'description' => '',
-      'required' => FALSE,
-      'global_settings' => array(),
-    ),
-    array(
-      'field_name' => 'field_link',
-      'entity_type' => 'taxonomy_term',
-      'bundle' => 'test_vocabulary',
-      'widget_settings' => array(
-      ),
-      'display_settings' => array(
-      ),
-      'description' => '',
-      'required' => FALSE,
-      'global_settings' => array(),
-    ),
-  );
+class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestBase {
 
   /**
-   * Prepopulate contents with results.
+   * {@inheritdoc}
    */
-  protected function setUp() {
-    $this->databaseContents['field_config_instance'] = array(
-      array(
+  public static $modules = ['field', 'migrate_drupal'];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function providerSource() {
+    $tests = [
+      [
+        'source_data' => [],
+        'expected_data' => [],
+      ],
+    ];
+
+    // The source data.
+    $tests[0]['source_data']['field_config_instance'] = [
+      [
         'id' => '2',
         'field_id' => '2',
         'field_name' => 'body',
@@ -86,8 +38,8 @@ class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestCase {
         'bundle' => 'page',
         'data' => 'a:6:{s:5:"label";s:4:"Body";s:6:"widget";a:4:{s:4:"type";s:26:"text_textarea_with_summary";s:8:"settings";a:2:{s:4:"rows";i:20;s:12:"summary_rows";i:5;}s:6:"weight";i:-4;s:6:"module";s:4:"text";}s:8:"settings";a:3:{s:15:"display_summary";b:1;s:15:"text_processing";i:1;s:18:"user_register_form";b:0;}s:7:"display";a:2:{s:7:"default";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:12:"text_default";s:8:"settings";a:0:{}s:6:"module";s:4:"text";s:6:"weight";i:0;}s:6:"teaser";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:23:"text_summary_or_trimmed";s:8:"settings";a:1:{s:11:"trim_length";i:600;}s:6:"module";s:4:"text";s:6:"weight";i:0;}}s:8:"required";b:0;s:11:"description";s:0:"";}',
         'deleted' => '0',
-      ),
-      array(
+      ],
+      [
         'id' => '33',
         'field_id' => '11',
         'field_name' => 'field_file',
@@ -95,8 +47,8 @@ class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestCase {
         'bundle' => 'user',
         'data' => 'a:6:{s:5:"label";s:4:"File";s:6:"widget";a:5:{s:6:"weight";s:1:"8";s:4:"type";s:12:"file_generic";s:6:"module";s:4:"file";s:6:"active";i:1;s:8:"settings";a:1:{s:18:"progress_indicator";s:8:"throbber";}}s:8:"settings";a:5:{s:14:"file_directory";s:0:"";s:15:"file_extensions";s:3:"txt";s:12:"max_filesize";s:0:"";s:17:"description_field";i:0;s:18:"user_register_form";i:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"file_default";s:8:"settings";a:0:{}s:6:"module";s:4:"file";s:6:"weight";i:0;}}s:8:"required";i:0;s:11:"description";s:0:"";}',
         'deleted' => '0',
-      ),
-      array(
+      ],
+      [
         'id' => '32',
         'field_id' => '14',
         'field_name' => 'field_integer',
@@ -104,8 +56,8 @@ class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestCase {
         'bundle' => 'comment_node_test_content_type',
         'data' => 'a:7:{s:5:"label";s:7:"Integer";s:6:"widget";a:5:{s:6:"weight";s:1:"2";s:4:"type";s:6:"number";s:6:"module";s:6:"number";s:6:"active";i:0;s:8:"settings";a:0:{}}s:8:"settings";a:5:{s:3:"min";s:0:"";s:3:"max";s:0:"";s:6:"prefix";s:0:"";s:6:"suffix";s:0:"";s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:14:"number_integer";s:8:"settings";a:4:{s:18:"thousand_separator";s:1:" ";s:17:"decimal_separator";s:1:".";s:5:"scale";i:0;s:13:"prefix_suffix";b:1;}s:6:"module";s:6:"number";s:6:"weight";i:1;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
         'deleted' => '0',
-      ),
-      array(
+      ],
+      [
         'id' => '25',
         'field_id' => '15',
         'field_name' => 'field_link',
@@ -113,10 +65,10 @@ class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestCase {
         'bundle' => 'test_vocabulary',
         'data' => 'a:7:{s:5:"label";s:4:"Link";s:6:"widget";a:5:{s:6:"weight";s:2:"10";s:4:"type";s:10:"link_field";s:6:"module";s:4:"link";s:6:"active";i:0;s:8:"settings";a:0:{}}s:8:"settings";a:12:{s:12:"absolute_url";i:1;s:12:"validate_url";i:1;s:3:"url";i:0;s:5:"title";s:8:"optional";s:11:"title_value";s:19:"Unused Static Title";s:27:"title_label_use_field_label";i:0;s:15:"title_maxlength";s:3:"128";s:7:"display";a:1:{s:10:"url_cutoff";s:2:"81";}s:10:"attributes";a:6:{s:6:"target";s:6:"_blank";s:3:"rel";s:8:"nofollow";s:18:"configurable_class";i:0;s:5:"class";s:7:"classes";s:18:"configurable_title";i:1;s:5:"title";s:0:"";}s:10:"rel_remove";s:19:"rel_remove_external";s:13:"enable_tokens";i:1;s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"link_default";s:6:"weight";s:1:"9";s:8:"settings";a:0:{}s:6:"module";s:4:"link";}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
         'deleted' => '0',
-      ),
-    );
-    $this->databaseContents['field_config'] = array(
-      array(
+      ],
+    ];
+    $tests[0]['source_data']['field_config'] = [
+      [
         'id' => '2',
         'field_name' => 'body',
         'type' => 'text_with_summary',
@@ -130,8 +82,8 @@ class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestCase {
         'cardinality' => '1',
         'translatable' => '0',
         'deleted' => '0',
-      ),
-      array(
+      ],
+      [
         'id' => '11',
         'field_name' => 'field_file',
         'type' => 'file',
@@ -145,8 +97,8 @@ class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestCase {
         'cardinality' => '1',
         'translatable' => '0',
         'deleted' => '0',
-      ),
-      array(
+      ],
+      [
         'id' => '14',
         'field_name' => 'field_integer',
         'type' => 'number_integer',
@@ -160,8 +112,8 @@ class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestCase {
         'cardinality' => '1',
         'translatable' => '0',
         'deleted' => '0',
-      ),
-      array(
+      ],
+      [
         'id' => '15',
         'field_name' => 'field_link',
         'type' => 'link_field',
@@ -175,10 +127,43 @@ class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestCase {
         'cardinality' => '1',
         'translatable' => '0',
         'deleted' => '0',
-      ),
-    );
+      ],
+    ];
 
-    parent::setUp();
+    // The expected results.
+    $tests[0]['expected_data'] = [
+      [
+        'field_name' => 'body',
+        'entity_type' => 'node',
+        'bundle' => 'page',
+        'widget_settings' => [
+          'rows' => 20,
+          'summary_rows' => 5,
+        ],
+      ],
+      [
+        'field_name' => 'field_file',
+        'entity_type' => 'user',
+        'bundle' => 'user',
+        'widget_settings' => [
+          'progress_indicator' => 'throbber',
+        ],
+      ],
+      [
+        'field_name' => 'field_integer',
+        'entity_type' => 'comment',
+        'bundle' => 'comment_node_test_content_type',
+        'widget_settings' => [],
+      ],
+      [
+        'field_name' => 'field_link',
+        'entity_type' => 'taxonomy_term',
+        'bundle' => 'test_vocabulary',
+        'widget_settings' => [],
+      ],
+    ];
+
+    return $tests;
   }
 
 }
