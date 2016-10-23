@@ -5,12 +5,15 @@
   "private": true,
   "scripts": {
     "build:js": "./scripts/js/babel-es6-compile.sh",
-    "watch:js": "node ./scripts/js/babel-es6-watch.js"
+    "watch:js": "node ./scripts/js/babel-es6-watch.js",
+    "lint:js": "eslint . || exit 0"
   },
   "devDependencies": {
     "babel-cli": "6.16.0",
+    "babel-core": "6.17.0",
     "babel-preset-es2015": "6.16.0",
-    "chokidar": "1.6.0"
+    "chokidar": "1.6.0",
+    "eslint": "3.8.1"
   },
   "babel": {
     "presets": [
