@@ -358,6 +358,14 @@ form_test.label:
   requirements:
     _access: 'TRUE'
 
+form_test.machine_name:
+  path: '/form-test/machine-name'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestMachineNameForm'
+    _title: 'Machine name fields'
+  requirements:
+    _access: 'TRUE'
+
 form_test.state_persistence:
   path: '/form-test/state-persist'
   defaults:
