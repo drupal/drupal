@@ -30,13 +30,11 @@ const watcher = chokidar.watch(fileMatch, {
   ignored: 'node_modules/**'
 });
 
-const babelOptions = {
-  sourceMaps: true,
-  comments: false
-};
-
 const changedOrAdded = (filePath) => {
-  babel.transformFile(filePath, babelOptions, (err, result) => {
+  babel.transformFile(filePath, {
+    sourceMaps: true,
+    comments: false
+  }, (err, result) => {
     const fileName = filePath.slice(0, -7);
     // we've requested for a sourcemap to be written to disk
     const mapLoc = `${fileName}.js.map`;
