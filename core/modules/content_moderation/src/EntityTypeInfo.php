@@ -299,7 +299,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       ->setSetting('target_type', 'moderation_state')
       ->setDisplayOptions('view', [
         'label' => 'hidden',
-        'type' => 'hidden',
+        'region' => 'hidden',
         'weight' => -5,
       ])
       ->setDisplayOptions('form', [

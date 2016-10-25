@@ -81,6 +81,7 @@ class RssTest extends TaxonomyTestBase {
     $this->drupalGet("admin/structure/types/manage/article/display/rss");
     $edit = array(
       "fields[taxonomy_" . $this->vocabulary->id() . "][type]" => 'entity_reference_rss_category',
+      "fields[taxonomy_" . $this->vocabulary->id() . "][region]" => 'content',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
 

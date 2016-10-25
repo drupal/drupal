@@ -172,6 +172,13 @@ abstract class EntityDisplayFormBase extends EntityForm {
           'subgroup' => 'field-parent',
           'source' => 'field-name',
         ),
+        array(
+          'action' => 'match',
+          'relationship' => 'parent',
+          'group' => 'field-region',
+          'subgroup' => 'field-region',
+          'source' => 'field-name',
+        ),
       ),
     );
 
@@ -309,6 +316,14 @@ abstract class EntityDisplayFormBase extends EntityForm {
           '#attributes' => array('class' => array('field-name')),
         ),
       ),
+      'region' => array(
+        '#type' => 'select',
+        '#title' => $this->t('Region for @title', array('@title' => $label)),
+        '#title_display' => 'invisible',
+        '#options' => $this->getRegionOptions(),
+        '#default_value' => $display_options ? $display_options['region'] : 'hidden',
+        '#attributes' => array('class' => array('field-region')),
+      ),
     );
 
     $field_row['plugin'] = array(
@@ -316,7 +331,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         '#type' => 'select',
         '#title' => $this->t('Plugin for @title', array('@title' => $label)),
         '#title_display' => 'invisible',
-        '#options' => $this->getPluginOptions($field_definition),
+        '#options' => $this->getApplicablePluginOptions($field_definition),
         '#default_value' => $display_options ? $display_options['type'] : 'hidden',
         '#parents' => array('fields', $field_name, 'type'),
         '#attributes' => array('class' => array('field-plugin-type')),
@@ -474,6 +489,14 @@ abstract class EntityDisplayFormBase extends EntityForm {
           '#attributes' => array('class' => array('field-name')),
         ),
       ),
+      'region' => array(
+        '#type' => 'select',
+        '#title' => $this->t('Region for @title', array('@title' => $extra_field['label'])),
+        '#title_display' => 'invisible',
+        '#options' => $this->getRegionOptions(),
+        '#default_value' => $display_options ? $display_options['region'] : 'hidden',
+        '#attributes' => array('class' => array('field-region')),
+      ),
       'plugin' => array(
         'type' => array(
           '#type' => 'select',
@@ -550,7 +573,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
     foreach ($form['#fields'] as $field_name) {
       $values = $form_values['fields'][$field_name];
 
-      if ($values['type'] == 'hidden') {
+      if ($values['region'] == 'hidden') {
         $entity->removeComponent($field_name);
       }
       else {
@@ -567,6 +590,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
         $options['type'] = $values['type'];
         $options['weight'] = $values['weight'];
+        $options['region'] = $values['region'];
         // Only formatters have configurable label visibility.
         if (isset($values['label'])) {
           $options['label'] = $values['label'];
@@ -577,12 +601,13 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
     // Collect data for 'extra' fields.
     foreach ($form['#extra'] as $name) {
-      if ($form_values['fields'][$name]['type'] == 'hidden') {
+      if ($form_values['fields'][$name]['region'] == 'hidden') {
         $entity->removeComponent($name);
       }
       else {
         $entity->setComponent($name, array(
           'weight' => $form_values['fields'][$name]['weight'],
+          'region' => $form_values['fields'][$name]['region'],
         ));
       }
     }
@@ -752,20 +777,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
   }
 
   /**
-   * Returns an array of widget or formatter options for a field.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition.
-   *
-   * @return array
-   *   An array of widget or formatter options.
-   */
-  protected function getPluginOptions(FieldDefinitionInterface $field_definition) {
-    $applicable_options = $this->getApplicablePluginOptions($field_definition);
-    return $applicable_options + array('hidden' => '- ' . $this->t('Hidden') . ' -');
-  }
-
-  /**
    * Returns the ID of the default widget or formatter plugin for a field type.
    *
    * @param string $field_type
@@ -813,7 +824,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
     switch ($row['#row_type']) {
       case 'field':
       case 'extra_field':
-        return ($row['plugin']['type']['#value'] == 'hidden' ? 'hidden' : 'content');
+        return $row['region']['#value'] ?: 'hidden';
     }
   }
 
@@ -826,7 +837,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
   protected function getExtraFieldVisibilityOptions() {
     return array(
       'visible' => $this->t('Visible'),
-      'hidden' => '- ' . $this->t('Hidden') . ' -',
     );
   }
 

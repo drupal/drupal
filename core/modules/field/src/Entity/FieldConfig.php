@@ -306,7 +306,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    */
   public function getDisplayOptions($display_context) {
     // Hide configurable fields by default.
-    return array('type' => 'hidden');
+    return array('region' => 'hidden');
   }
 
   /**

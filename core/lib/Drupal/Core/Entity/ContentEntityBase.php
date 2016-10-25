@@ -1171,7 +1171,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       $fields[$entity_type->getKey('langcode')] = BaseFieldDefinition::create('language')
         ->setLabel(new TranslatableMarkup('Language'))
         ->setDisplayOptions('view', [
-          'type' => 'hidden',
+          'region' => 'hidden',
         ])
         ->setDisplayOptions('form', [
           'type' => 'language_select',

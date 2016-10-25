@@ -14,6 +14,7 @@ content:
   body:
     type: text_textarea_with_summary
     weight: -4
+    region: content
     settings:
       rows: 9
       summary_rows: 3
@@ -22,6 +23,7 @@ content:
   info:
     type: string_textfield
     weight: -5
+    region: content
     settings:
       size: 60
       placeholder: ''

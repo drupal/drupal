@@ -15,8 +15,10 @@ content:
     label: hidden
     type: text_default
     weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
   links:
     weight: 100
+    region: content
 hidden: {  }

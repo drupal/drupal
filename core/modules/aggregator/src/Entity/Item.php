@@ -76,7 +76,7 @@ class Item extends ContentEntityBase implements ItemInterface {
       ->setLabel(t('Link'))
       ->setDescription(t('The link of the feed item.'))
       ->setDisplayOptions('view', array(
-        'type' => 'hidden',
+        'region' => 'hidden',
       ))
       ->setDisplayConfigurable('view', TRUE);
 

@@ -43,7 +43,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     $form_display = entity_get_form_display('entity_test', 'entity_test', 'default');
     $this->assertFalse($form_display->isNew());
     $this->assertEqual($form_display->id(), 'entity_test.entity_test.default');
-    $this->assertEqual($form_display->getComponent('component_1'), array('weight' => 10, 'settings' => array(), 'third_party_settings' => array()));
+    $this->assertEqual($form_display->getComponent('component_1'), array('weight' => 10, 'settings' => array(), 'third_party_settings' => array(), 'region' => 'content'));
   }
 
   /**
@@ -134,12 +134,14 @@ class EntityFormDisplayTest extends KernelTestBase {
         'settings' => $formatter_settings,
         'third_party_settings' => array(),
         'weight' => 10,
+        'region' => 'content',
       ),
       'test_display_non_configurable' => array(
         'type' => 'text_textfield',
         'settings' => $formatter_settings,
         'third_party_settings' => array(),
         'weight' => 11,
+        'region' => 'content',
       ),
     );
     foreach ($expected as $field_name => $options) {

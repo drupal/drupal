@@ -75,7 +75,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     $language_display = $this->xpath('//*[@id="langcode"]');
     $this->assert(!empty($language_display), 'Language field is visible on manage display tab.');
     // Tests if the language field is hidden by default.
-    $this->assertOptionSelected('edit-fields-langcode-type', 'hidden', 'Language is hidden by default on manage display tab.');
+    $this->assertOptionSelected('edit-fields-langcode-region', 'hidden', 'Language is hidden by default on manage display tab.');
 
     // Changes the initial language settings.
     $edit = array(
@@ -109,6 +109,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     // Configures Language field formatter and check if it is saved.
     $edit = array(
       'fields[langcode][type]' => 'language',
+      'fields[langcode][region]' => 'content',
     );
     $this->drupalPostForm('admin/structure/types/manage/article/display', $edit, t('Save'));
     $this->drupalGet('admin/structure/types/manage/article/display');

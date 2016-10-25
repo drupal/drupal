@@ -265,10 +265,15 @@
     this.name = data.name;
     this.region = data.region;
     this.tableDrag = data.tableDrag;
+    this.defaultPlugin = data.defaultPlugin;
 
     // Attach change listener to the 'plugin type' select.
     this.$pluginSelect = $(row).find('select.field-plugin-type');
     this.$pluginSelect.on('change', Drupal.fieldUIOverview.onChange);
+
+    // Attach change listener to the 'region' select.
+    this.$regionSelect = $(row).find('select.field-region');
+    this.$regionSelect.on('change', Drupal.fieldUIOverview.onChange);
 
     return this;
   };
@@ -282,7 +287,7 @@
      *   Either 'hidden' or 'content'.
      */
     getRegion: function () {
-      return (this.$pluginSelect.val() === 'hidden') ? 'hidden' : 'content';
+      return this.$regionSelect.val();
     },
 
     /**
@@ -305,24 +310,16 @@
      *   {@link Drupal.fieldUIOverview.AJAXRefreshRows}.
      */
     regionChange: function (region) {
+      // Replace dashes with underscores.
+      region = region.replace(/-/g, '_');
 
-      // When triggered by a row drag, the 'format' select needs to be adjusted
-      // to the new region.
-      var currentValue = this.$pluginSelect.val();
-      var value;
-      // @TODO Check if this couldn't just be like
-      // if (region !== 'hidden') {
-      if (region === 'content') {
-        if (currentValue === 'hidden') {
-          // Restore the formatter back to the default formatter. Pseudo-fields
-          // do not have default formatters, we just return to 'visible' for
-          // those.
-          value = (typeof this.defaultPlugin !== 'undefined') ? this.defaultPlugin : this.$pluginSelect.find('option').val();
-        }
-      }
-      else {
-        value = 'hidden';
-      }
+      // Set the region of the select list.
+      this.$regionSelect.val(region);
+
+      // Restore the formatter back to the default formatter. Pseudo-fields
+      // do not have default formatters, we just return to 'visible' for
+      // those.
+      var value = (typeof this.defaultPlugin !== 'undefined') ? this.defaultPlugin : this.$pluginSelect.find('option').val();
 
       if (typeof value !== 'undefined') {
         this.$pluginSelect.val(value);

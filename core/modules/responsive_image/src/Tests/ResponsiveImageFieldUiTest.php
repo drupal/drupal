@@ -52,7 +52,11 @@ class ResponsiveImageFieldUiTest extends WebTestBase {
     $this->drupalGet($manage_display);
 
     // Change the formatter and check that the summary is updated.
-    $edit = array('fields[field_image][type]' => 'responsive_image', 'refresh_rows' => 'field_image');
+    $edit = array(
+      'fields[field_image][type]' => 'responsive_image',
+      'fields[field_image][region]' => 'content',
+      'refresh_rows' => 'field_image',
+    );
     $this->drupalPostAjaxForm(NULL, $edit, array('op' => t('Refresh')));
     $this->assertText("Select a responsive image style.", 'The expected summary is displayed.');
 

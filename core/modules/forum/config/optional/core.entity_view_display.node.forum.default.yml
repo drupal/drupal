@@ -20,21 +20,25 @@ content:
     label: hidden
     type: text_default
     weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
   comment_forum:
     label: hidden
     type: comment_default
     weight: 20
+    region: content
     settings:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
   links:
     weight: 100
+    region: content
   taxonomy_forums:
     type: entity_reference_label
     weight: -1
+    region: content
     label: above
     settings:
       link: true

@@ -69,6 +69,7 @@ class EntityDisplayTest extends KernelTestBase {
     $display->save();
     $display = EntityViewDisplay::load($display->id());
     foreach (array('component_1', 'component_2', 'component_3') as $name) {
+      $expected[$name]['region'] = 'content';
       $this->assertEqual($display->getComponent($name), $expected[$name]);
     }
 
@@ -86,6 +87,7 @@ class EntityDisplayTest extends KernelTestBase {
         'link_to_entity' => FALSE,
       ),
       'third_party_settings' => array(),
+      'region' => 'content'
     );
     $this->assertEqual($display->getComponents(), $expected);
 
@@ -148,7 +150,7 @@ class EntityDisplayTest extends KernelTestBase {
     $display = entity_get_display('entity_test', 'entity_test', 'default');
     $this->assertFalse($display->isNew());
     $this->assertEqual($display->id(), 'entity_test.entity_test.default');
-    $this->assertEqual($display->getComponent('component_1'), array( 'weight' => 10, 'settings' => array(), 'third_party_settings' => array()));
+    $this->assertEqual($display->getComponent('component_1'), array( 'weight' => 10, 'settings' => array(), 'third_party_settings' => array(), 'region' => 'content'));
   }
 
   /**
@@ -164,7 +166,36 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Check that the default visibility taken into account for extra fields
     // unknown in the display.
-    $this->assertEqual($display->getComponent('display_extra_field'), array('weight' => 5));
+    $this->assertEqual($display->getComponent('display_extra_field'), array('weight' => 5, 'region' => 'content'));
+    $this->assertNull($display->getComponent('display_extra_field_hidden'));
+
+    // Check that setting explicit options overrides the defaults.
+    $display->removeComponent('display_extra_field');
+    $display->setComponent('display_extra_field_hidden', array('weight' => 10));
+    $this->assertNull($display->getComponent('display_extra_field'));
+    $this->assertEqual($display->getComponent('display_extra_field_hidden'), array('weight' => 10, 'settings' => array(), 'third_party_settings' => array()));
+  }
+
+  /**
+   * Tests the behavior of an extra field component with initial invalid values.
+   */
+  public function testExtraFieldComponentInitialInvalidConfig() {
+    entity_test_create_bundle('bundle_with_extra_fields');
+    $display = EntityViewDisplay::create(array(
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'bundle_with_extra_fields',
+      'mode' => 'default',
+      // Add the extra field to the initial config, without a 'type'.
+      'content' => [
+        'display_extra_field' => [
+          'weight' => 5,
+        ],
+      ],
+    ));
+
+    // Check that the default visibility taken into account for extra fields
+    // unknown in the display that were included in the initial config.
+    $this->assertEqual($display->getComponent('display_extra_field'), array('weight' => 5, 'region' => 'content'));
     $this->assertNull($display->getComponent('display_extra_field_hidden'));
 
     // Check that setting explicit options overrides the defaults.
@@ -258,6 +289,7 @@ class EntityDisplayTest extends KernelTestBase {
         'settings' => $formatter_settings,
         'third_party_settings' => array(),
         'weight' => 10,
+        'region' => 'content',
       ),
       'test_display_non_configurable' => array(
         'label' => 'above',
@@ -265,6 +297,7 @@ class EntityDisplayTest extends KernelTestBase {
         'settings' => $formatter_settings,
         'third_party_settings' => array(),
         'weight' => 11,
+        'region' => 'content',
       ),
     );
     foreach ($expected as $field_name => $options) {

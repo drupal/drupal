@@ -21,6 +21,7 @@ content:
   body:
     type: text_textarea_with_summary
     weight: 1
+    region: content
     settings:
       rows: 9
       summary_rows: 3
@@ -29,16 +30,19 @@ content:
   comment:
     type: comment_default
     weight: 20
+    region: content
     settings: {  }
     third_party_settings: {  }
   created:
     type: datetime_timestamp
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
   field_image:
     type: image_image
     weight: 4
+    region: content
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -46,11 +50,13 @@ content:
   field_tags:
     type: entity_reference_autocomplete_tags
     weight: 3
+    region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
     weight: 30
+    region: content
     settings: {  }
     third_party_settings: {  }
   promote:
@@ -58,16 +64,19 @@ content:
     settings:
       display_label: true
     weight: 15
+    region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
     weight: 16
+    region: content
     third_party_settings: {  }
   title:
     type: string_textfield
     weight: 0
+    region: content
     settings:
       size: 60
       placeholder: ''
@@ -75,6 +84,7 @@ content:
   uid:
     type: entity_reference_autocomplete
     weight: 5
+    region: content
     settings:
       match_operator: CONTAINS
       size: 60

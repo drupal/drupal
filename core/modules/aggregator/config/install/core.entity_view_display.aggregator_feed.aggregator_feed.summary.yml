@@ -12,8 +12,10 @@ mode: summary
 content:
   items:
     weight: 0
+    region: content
   more_link:
     weight: 1
+    region: content
 hidden:
   checked: true
   description: true

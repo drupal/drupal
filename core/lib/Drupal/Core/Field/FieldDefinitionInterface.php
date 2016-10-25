@@ -137,10 +137,13 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
    *   - label: (string) Position of the field label. The default 'field' theme
    *     implementation supports the values 'inline', 'above' and 'hidden'.
    *     Defaults to 'above'. Only applies to 'view' context.
+   *   - region: (string) The region the field is in, or 'hidden'. If not
+   *     specified, the default region will be used.
    *   - type: (string) The plugin (widget or formatter depending on
-   *     $display_context) to use, or 'hidden'. If not specified or if the
-   *     requested plugin is unknown, the 'default_widget' / 'default_formatter'
-   *     for the field type will be used.
+   *     $display_context) to use. If not specified or if the requested plugin
+   *     is unknown, the 'default_widget' / 'default_formatter' for the field
+   *     type will be used. Previously 'hidden' was a valid value, it is now
+   *     deprecated in favor of specifying 'region' => 'hidden'.
    *   - settings: (array) Settings for the plugin specified above. The default
    *     settings for the plugin will be used for settings left unspecified.
    *   - third_party_settings: (array) Settings provided by other extensions
