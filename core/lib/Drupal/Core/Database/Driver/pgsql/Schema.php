@@ -20,8 +20,8 @@ class Schema extends DatabaseSchema {
   /**
    * A cache of information about blob columns and sequences of tables.
    *
-   * This is collected by DatabaseConnection_pgsql->queryTableInformation(),
-   * by introspecting the database.
+   * This is collected by Schema::queryTableInformation(), by introspecting the
+   * database.
    *
    * @see \Drupal\Core\Database\Driver\pgsql\Schema::queryTableInformation()
    * @var array
