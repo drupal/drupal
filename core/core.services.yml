@@ -1553,13 +1553,9 @@ services:
       - { name: service_collector, tag: 'twig.extension', call: addExtension }
   twig.extension:
     class: Drupal\Core\Template\TwigExtension
-    arguments: ['@renderer']
+    arguments: ['@renderer', '@url_generator', '@theme.manager', '@date.formatter']
     tags:
       - { name: twig.extension, priority: 100 }
-    calls:
-      - [setUrlGenerator, ['@url_generator']]
-      - [setThemeManager, ['@theme.manager']]
-      - [setDateFormatter, ['@date.formatter']]
   # @todo Figure out what to do about debugging functions.
   # @see https://www.drupal.org/node/1804998
   twig.extension.debug:

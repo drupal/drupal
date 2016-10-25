@@ -58,9 +58,18 @@ class TwigExtension extends \Twig_Extension {
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   *   The URL generator.
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter.
    */
-  public function __construct(RendererInterface $renderer) {
+  public function __construct(RendererInterface $renderer, UrlGeneratorInterface $url_generator, ThemeManagerInterface $theme_manager, DateFormatterInterface $date_formatter) {
     $this->renderer = $renderer;
+    $this->urlGenerator = $url_generator;
+    $this->themeManager = $theme_manager;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -72,7 +81,6 @@ class TwigExtension extends \Twig_Extension {
    * @return $this
    *
    * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
-   *   Use \Drupal\Core\Template\TwigExtension::setUrlGenerator().
    */
   public function setGenerators(UrlGeneratorInterface $url_generator) {
     return $this->setUrlGenerator($url_generator);
@@ -85,6 +93,8 @@ class TwigExtension extends \Twig_Extension {
    *   The URL generator.
    *
    * @return $this
+   *
+   * @deprecated in Drupal 8.3.x-dev, will be removed before Drupal 9.0.0.
    */
   public function setUrlGenerator(UrlGeneratorInterface $url_generator) {
     $this->urlGenerator = $url_generator;
@@ -98,6 +108,8 @@ class TwigExtension extends \Twig_Extension {
    *   The theme manager.
    *
    * @return $this
+   *
+   * @deprecated in Drupal 8.3.x-dev, will be removed before Drupal 9.0.0.
    */
   public function setThemeManager(ThemeManagerInterface $theme_manager) {
     $this->themeManager = $theme_manager;
@@ -111,6 +123,8 @@ class TwigExtension extends \Twig_Extension {
    *   The date formatter.
    *
    * @return $this
+   *
+   * @deprecated in Drupal 8.3.x-dev, will be removed before Drupal 9.0.0.
    */
   public function setDateFormatter(DateFormatterInterface $date_formatter) {
     $this->dateFormatter = $date_formatter;
