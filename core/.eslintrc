@@ -80,7 +80,7 @@
     "space-infix-ops": 2,
     "space-unary-ops": [2, { "words": true, "nonwords": false }],
     "spaced-comment": [2, "always"],
-    "strict": 2,
+    "strict": [2, "function"],
     "yoda": [2, "never"],
     // Warnings.
     "max-nested-callbacks": [1, 3],
