@@ -15,8 +15,8 @@
  result printer that links to the html output results for functional tests.
  Unfortunately, this breaks the output of PHPStorm's PHPUnit runner. However, if
  using the command line you can add
- - -printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter" to use it (note
- there should be no spaces between the hyphens).
+ - -printer="\Drupal\Tests\Listeners\HtmlOutputPrinter" to use it (note there
+ should be no spaces between the hyphens).
 -->
   <php>
     <!-- Set error reporting to E_ALL. -->
