@@ -36,6 +36,19 @@ class Connection extends DatabaseConnection {
   const CONNECTION_FAILURE = '08006';
 
   /**
+   * A map of condition operators to PostgreSQL operators.
+   *
+   * In PostgreSQL, 'LIKE' is case-sensitive. ILKE should be used for
+   * case-insensitive statements.
+   */
+  protected static $postgresqlConditionOperatorMap = [
+    'LIKE' => ['operator' => 'ILIKE'],
+    'LIKE BINARY' => ['operator' => 'LIKE'],
+    'NOT LIKE' => ['operator' => 'NOT ILIKE'],
+    'REGEXP' => ['operator' => '~*'],
+  ];
+
+  /**
    * The list of PostgreSQL reserved key words.
    *
    * @see http://www.postgresql.org/docs/9.4/static/sql-keywords-appendix.html
@@ -323,15 +336,7 @@ class Connection extends DatabaseConnection {
   }
 
   public function mapConditionOperator($operator) {
-    static $specials = array(
-      // In PostgreSQL, 'LIKE' is case-sensitive. For case-insensitive LIKE
-      // statements, we need to use ILIKE instead.
-      'LIKE' => array('operator' => 'ILIKE'),
-      'LIKE BINARY' => array('operator' => 'LIKE'),
-      'NOT LIKE' => array('operator' => 'NOT ILIKE'),
-      'REGEXP' => array('operator' => '~*'),
-    );
-    return isset($specials[$operator]) ? $specials[$operator] : NULL;
+    return isset(static::$postgresqlConditionOperatorMap[$operator]) ? static::$postgresqlConditionOperatorMap[$operator] : NULL;
   }
 
   /**

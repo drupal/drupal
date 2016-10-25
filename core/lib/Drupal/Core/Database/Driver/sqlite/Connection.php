@@ -24,6 +24,18 @@ class Connection extends DatabaseConnection {
   protected $willRollback;
 
   /**
+   * A map of condition operators to SQLite operators.
+   *
+   * We don't want to override any of the defaults.
+   */
+  protected static $sqliteConditionOperatorMap = [
+    'LIKE' => ['postfix' => " ESCAPE '\\'"],
+    'NOT LIKE' => ['postfix' => " ESCAPE '\\'"],
+    'LIKE BINARY' => ['postfix' => " ESCAPE '\\'", 'operator' => 'GLOB'],
+    'NOT LIKE BINARY' => ['postfix' => " ESCAPE '\\'", 'operator' => 'NOT GLOB'],
+  ];
+
+  /**
    * All databases attached to the current database. This is used to allow
    * prefixes to be safely handled without locking the table
    *
@@ -382,14 +394,7 @@ class Connection extends DatabaseConnection {
   }
 
   public function mapConditionOperator($operator) {
-    // We don't want to override any of the defaults.
-    static $specials = array(
-      'LIKE' => array('postfix' => " ESCAPE '\\'"),
-      'NOT LIKE' => array('postfix' => " ESCAPE '\\'"),
-      'LIKE BINARY' => array('postfix' => " ESCAPE '\\'", 'operator' => 'GLOB'),
-      'NOT LIKE BINARY' => array('postfix' => " ESCAPE '\\'", 'operator' => 'NOT GLOB'),
-    );
-    return isset($specials[$operator]) ? $specials[$operator] : NULL;
+    return isset(static::$sqliteConditionOperatorMap[$operator]) ? static::$sqliteConditionOperatorMap[$operator] : NULL;
   }
 
   /**

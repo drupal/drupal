@@ -11,6 +11,31 @@ use Drupal\Core\Database\InvalidQueryException;
 class Condition implements ConditionInterface, \Countable {
 
   /**
+   * Provides a map of condition operators to condition operator options.
+   */
+  protected static $conditionOperatorMap = array(
+    'BETWEEN' => array('delimiter' => ' AND '),
+    'NOT BETWEEN' => array('delimiter' => ' AND '),
+    'IN' => array('delimiter' => ', ', 'prefix' => '(', 'postfix' => ')'),
+    'NOT IN' => array('delimiter' => ', ', 'prefix' => '(', 'postfix' => ')'),
+    'IS NULL' => array('use_value' => FALSE),
+    'IS NOT NULL' => array('use_value' => FALSE),
+    // Use backslash for escaping wildcard characters.
+    'LIKE' => array('postfix' => " ESCAPE '\\\\'"),
+    'NOT LIKE' => array('postfix' => " ESCAPE '\\\\'"),
+    // Exists expects an already bracketed subquery as right hand part. Do
+    // not define additional brackets.
+    'EXISTS' => array(),
+    'NOT EXISTS' => array(),
+    // These ones are here for performance reasons.
+    '=' => array(),
+    '<' => array(),
+    '>' => array(),
+    '>=' => array(),
+    '<=' => array(),
+  );
+
+  /**
    * Array of conditions.
    *
    * @var array
@@ -345,36 +370,14 @@ class Condition implements ConditionInterface, \Countable {
    *   array if there are no extra handling directives.
    */
   protected function mapConditionOperator($operator) {
-    // $specials does not use drupal_static as its value never changes.
-    static $specials = array(
-      'BETWEEN' => array('delimiter' => ' AND '),
-      'NOT BETWEEN' => array('delimiter' => ' AND '),
-      'IN' => array('delimiter' => ', ', 'prefix' => '(', 'postfix' => ')'),
-      'NOT IN' => array('delimiter' => ', ', 'prefix' => '(', 'postfix' => ')'),
-      'IS NULL' => array('use_value' => FALSE),
-      'IS NOT NULL' => array('use_value' => FALSE),
-      // Use backslash for escaping wildcard characters.
-      'LIKE' => array('postfix' => " ESCAPE '\\\\'"),
-      'NOT LIKE' => array('postfix' => " ESCAPE '\\\\'"),
-      // Exists expects an already bracketed subquery as right hand part. Do
-      // not define additional brackets.
-      'EXISTS' => array(),
-      'NOT EXISTS' => array(),
-      // These ones are here for performance reasons.
-      '=' => array(),
-      '<' => array(),
-      '>' => array(),
-      '>=' => array(),
-      '<=' => array(),
-    );
-    if (isset($specials[$operator])) {
-      $return = $specials[$operator];
+    if (isset(static::$conditionOperatorMap[$operator])) {
+      $return = static::$conditionOperatorMap[$operator];
     }
     else {
       // We need to upper case because PHP index matches are case sensitive but
       // do not need the more expensive Unicode::strtoupper() because SQL statements are ASCII.
       $operator = strtoupper($operator);
-      $return = isset($specials[$operator]) ? $specials[$operator] : array();
+      $return = isset(static::$conditionOperatorMap[$operator]) ? static::$conditionOperatorMap[$operator] : array();
     }
 
     $return += array('operator' => $operator);
