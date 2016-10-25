@@ -13,6 +13,7 @@ use Drupal\simpletest\TestBase;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\simpletest\TestDiscovery;
 use Symfony\Component\Process\PhpExecutableFinder;
+use Drupal\Core\Test\TestStatus;
 
 /**
  * Implements hook_help().
@@ -183,16 +184,15 @@ function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames
   $phpunit_file = simpletest_phpunit_xml_filepath($test_id);
   simpletest_phpunit_run_command($unescaped_test_classnames, $phpunit_file, $status, $output);
 
-  $rows = simpletest_phpunit_xml_to_rows($test_id, $phpunit_file);
-  // A $status of 0 = passed test, 1 = failed test, > 1 indicates segfault
-  // timeout, or other type of failure.
-  if ($status > 1) {
-    // Something broke during the execution of phpunit.
-    // Return an error record of all failed classes.
+  $rows = [];
+  if ($status == TestStatus::PASS) {
+    $rows = simpletest_phpunit_xml_to_rows($test_id, $phpunit_file);
+  }
+  else {
     $rows[] = [
       'test_id' => $test_id,
       'test_class' => implode(",", $unescaped_test_classnames),
-      'status' => 'fail',
+      'status' => TestStatus::label($status),
       'message' => 'PHPunit Test failed to complete; Error: ' . implode("\n", $output),
       'message_group' => 'Other',
       'function' => implode(",", $unescaped_test_classnames),
@@ -200,20 +200,6 @@ function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames
       'file' => $phpunit_file,
     ];
   }
-
-  if ($status === 1) {
-    $rows[] = [
-      'test_id' => $test_id,
-      'test_class' => implode(",", $unescaped_test_classnames),
-      'status' => 'fail',
-      'message' => 'PHPunit Test failed to complete; Error: ' . implode("\n", $output),
-      'message_group' => 'Other',
-      'function' => implode(",", $unescaped_test_classnames),
-      'line' => '0',
-      'file' => $phpunit_file,
-    ];
-  }
-
   return $rows;
 }
 
