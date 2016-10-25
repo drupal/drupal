@@ -5,6 +5,7 @@ namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 use Drupal\link\Plugin\Validation\Constraint\LinkAccessConstraint;
 use Drupal\link\Plugin\Validation\Constraint\LinkAccessConstraintValidator;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Tests the LinkAccessConstraintValidator validator.
@@ -29,7 +30,7 @@ class LinkAccessConstraintValidatorTest extends UnitTestCase {
    * @dataProvider providerValidate
    */
   public function testValidate($value, $user, $valid) {
-    $context = $this->getMock('Symfony\Component\Validator\ExecutionContextInterface');
+    $context = $this->getMock(ExecutionContextInterface::class);
 
     if ($valid) {
       $context->expects($this->never())

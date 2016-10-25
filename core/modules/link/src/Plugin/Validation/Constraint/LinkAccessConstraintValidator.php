@@ -6,20 +6,12 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidatorInterface;
-use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\ConstraintValidator;
 
 /**
  * Validates the LinkAccess constraint.
  */
-class LinkAccessConstraintValidator implements ConstraintValidatorInterface, ContainerInjectionInterface {
-
-  /**
-   * Stores the validator's state during validation.
-   *
-   * @var \Symfony\Component\Validator\ExecutionContextInterface
-   */
-  protected $context;
+class LinkAccessConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
    * Proxy for the current user account.
@@ -45,13 +37,6 @@ class LinkAccessConstraintValidator implements ConstraintValidatorInterface, Con
     return new static(
       $container->get('current_user')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function initialize(ExecutionContextInterface $context) {
-    $this->context = $context;
   }
 
   /**
