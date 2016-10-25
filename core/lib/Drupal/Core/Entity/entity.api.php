@@ -358,11 +358,18 @@ use Drupal\node\Entity\NodeType;
  *   \Drupal\Core\Entity\EntityType.
  *
  * @section sec_routes Entity routes
- * Entity routes, like other routes, are defined in *.routing.yml files; see
- * the @link routing Routing API @endlink topic for more information. Entities
- * may alternatively use an auto route provider class; there is an example of
- * this at the end of this section. If providing routes directly, here is a
- * typical entry, for the block configure form:
+ * Entity routes can be defined in *.routing.yml files, like any other route:
+ * see the @link routing Routing API @endlink topic for more information.
+ * Another option for entity routes is to use a route provider class, and
+ * reference it in the annotations on the entity class: see the end of this
+ * section for an example.
+ *
+ * It's possible to use both a YAML file and a provider class for entity
+ * routes, at the same time. Avoid duplicating route names between the two:
+ * if a duplicate route name is found in both locations, the one in the YAML
+ * file takes precedence; regardless, such duplication can be confusing.
+ *
+ * Here's an example YAML route specification, for the block configure form:
  * @code
  * entity.block.edit_form:
  *   path: '/admin/structure/block/manage/{block}'
@@ -372,7 +379,7 @@ use Drupal\node\Entity\NodeType;
  *   requirements:
  *     _entity_access: 'block.update'
  * @endcode
- * Some notes:
+ * Some notes on this example:
  * - path: The {block} in the path is a placeholder, which (for an entity) must
  *   always take the form of {machine_name_of_entity_type}. In the URL, the
  *   placeholder value will be the ID of an entity item. When the route is used,
@@ -389,19 +396,21 @@ use Drupal\node\Entity\NodeType;
  *     "form" = {
  *       "default" = "Drupal\block\BlockForm",
  *   @endcode
- * - Instead of putting the routes for your entity in a *.routing.yml file, you
- *   can instead use a route provider class.
- *   \Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider provides canonical,
- *   edit-form, and delete-form routes;
- *   \Drupal\Core\Entity\Routing\AdminHtmlRouteProvider provides the same
+ * If instead of YAML you want to use a route provider class:
+ * - \Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider provides canonical,
+ *   edit-form, and delete-form routes.
+ * - \Drupal\Core\Entity\Routing\AdminHtmlRouteProvider provides the same
  *   routes, set up to use the administrative theme for edit and delete pages.
- *   You can also create your own class. To use a route provider class, add
- *   lines like the following to your entity annotation:
- *   @code
- *   handlers = {
- *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
- *   @endcode
+ * - You can also create your own class, extending one of these two classes if
+ *   you only want to modify their behaviour slightly.
+ *
+ * To register any route provider class, add lines like the following to your
+ * entity class annotation:
+ * @code
+ * handlers = {
+ *   "route_provider" = {
+ *     "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ * @endcode
  *
  * @section bundle Defining a content entity bundle
  * For entity types that use bundles, such as Node (bundles are content types)
