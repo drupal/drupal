@@ -4,6 +4,7 @@ namespace Drupal\simpletest\Tests;
 
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\simpletest\Functional\ThroughUITest;
 
 /**
  * Tests the Simpletest UI internal browser.
@@ -131,7 +132,7 @@ class SimpleTestBrowserTest extends WebTestBase {
       // A PHPUnit unit test.
       'Drupal\Tests\action\Unit\Menu\ActionLocalTasksTest',
       // A PHPUnit functional test.
-      'Drupal\FunctionalTests\BrowserTestBaseTest',
+      ThroughUITest::class,
     );
 
     foreach ($tests as $test) {
