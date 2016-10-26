@@ -265,7 +265,7 @@ abstract class AccountForm extends ContentEntityForm {
     // language. This entity builder provides that synchronization. For
     // use-cases where this synchronization is not desired, a module can alter
     // or remove this item.
-    $form['#entity_builders']['sync_user_langcode'] = [$this, 'syncUserLangcode'];
+    $form['#entity_builders']['sync_user_langcode'] = '::syncUserLangcode';
 
     return parent::form($form, $form_state, $account);
   }

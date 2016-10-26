@@ -133,7 +133,7 @@ class BundleModerationConfigurationForm extends EntityForm {
         ],
       ],
     ];
-    $form['#entity_builders'][] = [$this, 'formBuilderCallback'];
+    $form['#entity_builders'][] = '::formBuilderCallback';
 
     return parent::form($form, $form_state);
   }

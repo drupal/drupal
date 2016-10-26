@@ -294,7 +294,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
     // properties.
     if (isset($form['#entity_builders'])) {
       foreach ($form['#entity_builders'] as $function) {
-        call_user_func_array($function, array($entity->getEntityTypeId(), $entity, &$form, &$form_state));
+        call_user_func_array($form_state->prepareCallback($function), array($entity->getEntityTypeId(), $entity, &$form, &$form_state));
       }
     }
 

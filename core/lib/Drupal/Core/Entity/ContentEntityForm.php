@@ -53,7 +53,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
 
     $this->getFormDisplay($form_state)->buildForm($this->entity, $form, $form_state);
     // Allow modules to act before and after form language is updated.
-    $form['#entity_builders']['update_form_langcode'] = [$this, 'updateFormLangcode'];
+    $form['#entity_builders']['update_form_langcode'] = '::updateFormLangcode';
     return $form;
   }
 

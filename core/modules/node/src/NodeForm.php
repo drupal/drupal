@@ -200,7 +200,7 @@ class NodeForm extends ContentEntityForm {
 
     $form['#attached']['library'][] = 'node/form';
 
-    $form['#entity_builders']['update_status'] = [$this, 'updateStatus'];
+    $form['#entity_builders']['update_status'] = '::updateStatus';
 
     return $form;
   }
