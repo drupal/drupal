@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the node module.
  */
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\user\RoleInterface;
 
@@ -63,6 +64,7 @@ function node_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 1,
+        'size' => 'tiny',
       ),
       'gid' => array(
         'description' => "The grant ID a user must possess in the specified realm to gain this row's privileges on the node.",
@@ -217,4 +219,18 @@ function node_update_8003() {
   foreach (array('status', 'uid') as $field_name) {
     $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition($field_name, 'node'));
   }
+}
+
+/**
+ * Change {node_access}.fallback from an int to a tinyint as it is a boolean.
+ */
+function node_update_8300() {
+  Database::getConnection()->schema()->changeField('node_access', 'fallback', 'fallback', [
+    'description' => 'Boolean indicating whether this record should be used as a fallback if a language condition is not provided.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 1,
+    'size' => 'tiny',
+  ]);
 }
