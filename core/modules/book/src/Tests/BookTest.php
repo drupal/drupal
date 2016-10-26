@@ -571,34 +571,6 @@ class BookTest extends WebTestBase {
   }
 
   /**
-   * Tests re-ordering of books.
-   */
-  public function testBookOrdering() {
-    // Create new book.
-    $this->createBook();
-    $book = $this->book;
-
-    $this->drupalLogin($this->adminUser);
-    $node1 = $this->createBookNode($book->id());
-    $node2 = $this->createBookNode($book->id());
-    $pid = $node1->book['nid'];
-
-    // Head to admin screen and attempt to re-order.
-    $this->drupalGet('admin/structure/book/' . $book->id());
-    $edit = array(
-      "table[book-admin-{$node1->id()}][weight]" => 1,
-      "table[book-admin-{$node2->id()}][weight]" => 2,
-      // Put node 2 under node 1.
-      "table[book-admin-{$node2->id()}][pid]" => $pid,
-    );
-    $this->drupalPostForm(NULL, $edit, t('Save book pages'));
-    // Verify weight was updated.
-    $this->assertFieldByName("table[book-admin-{$node1->id()}][weight]", 1);
-    $this->assertFieldByName("table[book-admin-{$node2->id()}][weight]", 2);
-    $this->assertFieldByName("table[book-admin-{$node2->id()}][pid]", $pid);
-  }
-
-  /**
    * Tests outline of a book.
    */
   public function testBookOutline() {
