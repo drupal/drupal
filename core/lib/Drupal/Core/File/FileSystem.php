@@ -181,8 +181,10 @@ class FileSystem implements FileSystemInterface {
     // If recursive, create each missing component of the parent directory
     // individually and set the mode explicitly to override the umask.
     if ($recursive) {
-      // Ensure the path is using DIRECTORY_SEPARATOR.
-      $uri = str_replace('/', DIRECTORY_SEPARATOR, $uri);
+      // Ensure the path is using DIRECTORY_SEPARATOR, and trim off any trailing
+      // slashes because they can throw off the loop when creating the parent
+      // directories.
+      $uri = rtrim(str_replace('/', DIRECTORY_SEPARATOR, $uri), DIRECTORY_SEPARATOR);
       // Determine the components of the path.
       $components = explode(DIRECTORY_SEPARATOR, $uri);
       // If the filepath is absolute the first component will be empty as there
