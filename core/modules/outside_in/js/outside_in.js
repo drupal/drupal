@@ -7,7 +7,7 @@
 
   'use strict';
 
-  var blockConfigureSelector = '[data-dialog-renderer="offcanvas"]';
+  var blockConfigureSelector = '[data-outside-in-edit]';
   var toggleEditSelector = '[data-drupal-outsidein="toggle"]';
   var itemsToToggleSelector = '#main-canvas, #toolbar-bar, [data-drupal-outsidein="editable"] a, [data-drupal-outsidein="editable"] button';
   var contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
