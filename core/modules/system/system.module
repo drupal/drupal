@@ -251,12 +251,7 @@ function system_hook_info() {
  * Implements hook_theme_suggestions_HOOK().
  */
 function system_theme_suggestions_html(array $variables) {
-  if (\Drupal::service('path.matcher')->isFrontPage()) {
-    $path_args = [''];
-  }
-  else {
-    $path_args = explode('/', ltrim(\Drupal::service('path.current')->getPath(), '/'));
-  }
+  $path_args = explode('/', trim(\Drupal::service('path.current')->getPath(), '/'));
   return theme_get_suggestions($path_args, 'html');
 }
 
@@ -264,12 +259,7 @@ function system_theme_suggestions_html(array $variables) {
  * Implements hook_theme_suggestions_HOOK().
  */
 function system_theme_suggestions_page(array $variables) {
-  if (\Drupal::service('path.matcher')->isFrontPage()) {
-    $path_args = [''];
-  }
-  else {
-    $path_args = explode('/', Url::fromRoute('<current>')->getInternalPath());
-  }
+  $path_args = explode('/', trim(\Drupal::service('path.current')->getPath(), '/'));
   return theme_get_suggestions($path_args, 'page');
 }
 
