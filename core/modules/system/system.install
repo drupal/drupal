@@ -257,6 +257,44 @@ function system_requirements($phase) {
     $requirements['php_opcache']['title'] = t('PHP OPcode caching');
   }
 
+  if ($phase != 'update') {
+    // Test whether we have a good source of random bytes.
+    $requirements['php_random_bytes'] = array(
+      'title' => t('Random number generation'),
+    );
+    try {
+      $bytes = random_bytes(10);
+      if (strlen($bytes) != 10) {
+        throw new \Exception(t('Tried to generate 10 random bytes, generated @count', array('@count' => strlen($bytes))));
+      }
+      $requirements['php_random_bytes']['value'] = t('Successful');
+    }
+    catch (\Exception $e) {
+      // If /dev/urandom is not available on a UNIX-like system, check whether
+      // open_basedir restrictions are the cause.
+      $open_basedir_blocks_urandom = FALSE;
+      if (DIRECTORY_SEPARATOR === '/' && !@is_readable('/dev/urandom')) {
+        $open_basedir = ini_get('open_basedir');
+        if ($open_basedir) {
+          $open_basedir_paths = explode(PATH_SEPARATOR, $open_basedir);
+          $open_basedir_blocks_urandom = !array_intersect(array('/dev', '/dev/', '/dev/urandom'), $open_basedir_paths);
+        }
+      }
+      $args = array(
+        ':drupal-php' => 'https://www.drupal.org/docs/7/system-requirements/php#csprng',
+        '%exception_message' => $e->getMessage(),
+      );
+      if ($open_basedir_blocks_urandom) {
+        $requirements['php_random_bytes']['description'] = t('Drupal is unable to generate highly randomized numbers, which means certain security features like password reset URLs are not as secure as they should be. Instead, only a slow, less-secure fallback generator is available. The most likely cause is that open_basedir restrictions are in effect and /dev/urandom is not on the whitelist. See the <a href=":drupal-php">system requirements</a> page for more information. %exception_message', $args);
+      }
+      else {
+        $requirements['php_random_bytes']['description'] = t('Drupal is unable to generate highly randomized numbers, which means certain security features like password reset URLs are not as secure as they should be. Instead, only a slow, less-secure fallback generator is available. See the <a href=":drupal-php">system requirements</a> page for more information. %exception_message', $args);
+      }
+      $requirements['php_random_bytes']['value'] = t('Less secure');
+      $requirements['php_random_bytes']['severity'] = REQUIREMENT_ERROR;
+    }
+  }
+
   if ($phase == 'install' || $phase == 'update') {
     // Test for PDO (database).
     $requirements['database_extensions'] = array(
