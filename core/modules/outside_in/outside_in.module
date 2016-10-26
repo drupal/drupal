@@ -38,6 +38,7 @@ function outside_in_contextual_links_view_alter(&$element, $items) {
       'class' => ['use-ajax'],
       'data-dialog-type' => 'dialog',
       'data-dialog-renderer' => 'offcanvas',
+      'data-outside-in-edit' => TRUE,
     ];
 
     $element['#attached']['library'][] = 'outside_in/drupal.off_canvas';
