@@ -279,11 +279,13 @@ Migrate
 - Ben Dougherty 'benjy' https://www.drupal.org/u/benjy
 - Michael Anello 'ultimike' https://www.drupal.org/u/ultimike
 - Mike Ryan 'mikeryan' https://www.drupal.org/u/mikeryan
+- Vicki Spagnolo 'quietone' https://www.drupal.org/u/quietone
 
 Migrate (Drupal)
 - Ben Dougherty 'benjy' https://www.drupal.org/u/benjy
 - Michael Anello 'ultimike' https://www.drupal.org/u/ultimike
 - Mike Ryan 'mikeryan' https://www.drupal.org/u/mikeryan
+- Vicki Spagnolo 'quietone' https://www.drupal.org/u/quietone
 
 Menu
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
