@@ -161,4 +161,17 @@ class DirectoryTest extends FileTestBase {
     $this->assertEqual($config->get('path.temporary'), $tmp_directory);
   }
 
+  /**
+   * Tests directory creation.
+   */
+  public function testDirectoryCreation() {
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = $this->container->get('file_system');
+
+    // mkdir() recursion should work with or without a trailing slash.
+    $dir = $this->siteDirectory . '/files';
+    $this->assertTrue($file_system->mkdir($dir . '/foo/bar', 0775, TRUE));
+    $this->assertTrue($file_system->mkdir($dir . '/foo/baz/', 0775, TRUE));
+  }
+
 }
