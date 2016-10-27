@@ -129,49 +129,6 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
-   * Tests adding a block from the library page with a destination query string.
-   */
-  public function testAddBlockFromLibrary() {
-    $default_theme = $this->config('system.theme')->get('default');
-    $help_url = Url::fromRoute('help.page', ['name' => 'block']);
-    // Set up the request so we land on the block help page after creation.
-    $options = [
-      'query' => [
-        'region' => 'sidebar_first',
-        'destination' => $help_url->toString(),
-      ],
-    ];
-    $this->drupalGet(Url::fromRoute('block.admin_library', ['theme' => $default_theme], $options));
-
-    $block_name = 'system_powered_by_block';
-    $add_url = Url::fromRoute('block.admin_add', ['plugin_id' => $block_name, 'theme' => $default_theme]);
-    $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
-    $this->assertEqual(1, count($links), 'Found one matching link');
-
-    list($path, $query_string) = explode('?', $links[0]['href'], 2);
-    parse_str($query_string, $query_parts);
-    $this->assertEqual(t('Place block'), (string) $links[0]);
-    $this->assertEqual($help_url->toString(), $query_parts['destination'], 'Expected destination query string is in href');
-
-    // Create a random title for the block.
-    $title = $this->randomMachineName(8);
-    $block_id = strtolower($this->randomMachineName(8));
-    $edit = [
-      'id' => $block_id,
-      'settings[label]' => $title,
-    ];
-    // Create the block using the link parsed from the library page.
-    $this->drupalPostForm($this->getAbsoluteUrl($links[0]['href']), $edit, t('Save block'));
-    // Verify that we are redirected according to the original request.
-    $this->assertUrl($help_url);
-
-    // Ensure that the block was created.
-    /** @var \Drupal\block\BlockInterface $block */
-    $block = Block::load($block_id);
-    $this->assertEqual($title, $block->label(), 'Found the block with expected title.');
-  }
-
-  /**
    * Tests adding a block from the library page with a weight query string.
    */
   public function testAddBlockFromLibraryWithWeight() {
