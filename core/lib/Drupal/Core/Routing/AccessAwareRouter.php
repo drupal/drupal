@@ -5,10 +5,12 @@ namespace Drupal\Core\Routing;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
+use Symfony\Component\Routing\RequestContextAwareInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * A router class for Drupal with access check and upcasting.
@@ -16,11 +18,11 @@ use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 class AccessAwareRouter implements AccessAwareRouterInterface {
 
   /**
-   * The chain router doing the actual routing.
+   * The router doing the actual routing.
    *
-   * @var \Symfony\Cmf\Component\Routing\ChainRouter
+   * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface
    */
-  protected $chainRouter;
+  protected $router;
 
   /**
    * The access manager.
@@ -39,15 +41,15 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
   /**
    * Constructs a router for Drupal with access check and upcasting.
    *
-   * @param \Symfony\Cmf\Component\Routing\ChainRouter $chain_router
-   *   The chain router doing the actual routing.
+   * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
+   *   The router doing the actual routing.
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account to use in access checks.
    */
-  public function __construct(ChainRouter $chain_router, AccessManagerInterface $access_manager, AccountInterface $account) {
-    $this->chainRouter = $chain_router;
+  public function __construct(RequestMatcherInterface $router, AccessManagerInterface $access_manager, AccountInterface $account) {
+    $this->router = $router;
     $this->accessManager = $access_manager;
     $this->account = $account;
   }
@@ -56,23 +58,26 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    * {@inheritdoc}
    */
   public function __call($name, $arguments) {
-    // Ensure to call every other function to the chained router.
-    // @todo Sadly does the ChainRouter not implement an interface in CMF.
-    return call_user_func_array([$this->chainRouter, $name], $arguments);
+    // Ensure to call every other function to the router.
+    return call_user_func_array([$this->router, $name], $arguments);
   }
 
   /**
    * {@inheritdoc}
    */
   public function setContext(SymfonyRequestContext $context) {
-    $this->chainRouter->setContext($context);
+    if ($this->router instanceof RequestContextAwareInterface) {
+      $this->router->setContext($context);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function getContext() {
-    return $this->chainRouter->getContext();
+    if ($this->router instanceof RequestContextAwareInterface) {
+      return $this->router->getContext();
+    }
   }
 
   /**
@@ -82,7 +87,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    *   Thrown when access checking failed.
    */
   public function matchRequest(Request $request) {
-    $parameters = $this->chainRouter->matchRequest($request);
+    $parameters = $this->router->matchRequest($request);
     $request->attributes->add($parameters);
     $this->checkAccess($request);
     // We can not return $parameters because the access check can change the
@@ -114,14 +119,18 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    * {@inheritdoc}
    */
   public function getRouteCollection() {
-    return $this->chainRouter->getRouteCollection();
+    if ($this->router instanceof RouterInterface) {
+      return $this->router->getRouteCollection();
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH) {
-    return $this->chainRouter->generate($name, $parameters, $referenceType);
+    if ($this->router instanceof UrlGeneratorInterface) {
+      return $this->router->generate($name, $parameters, $referenceType);
+    }
   }
 
   /**

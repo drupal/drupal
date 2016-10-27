@@ -801,6 +801,7 @@ services:
   router.matcher.final_matcher:
     class: Drupal\Core\Routing\UrlMatcher
     arguments: ['@path.current']
+    deprecated: The "%service_id%" service is deprecated. You should use the 'router.no_access_checks' service instead.
   router.matcher:
     class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
     arguments: ['@router.route_provider']
@@ -808,6 +809,7 @@ services:
       - [setFinalMatcher, ['@router.matcher.final_matcher']]
     tags:
       - { name: service_collector, tag: non_lazy_route_filter, call: addRouteFilter }
+    deprecated: The "%service_id%" service is deprecated. You should use the 'router.no_access_checks' service instead.
   route_filter.lazy_collector:
     class: Drupal\Core\Routing\LazyRouteFilter
     tags:
@@ -846,11 +848,15 @@ services:
     arguments: ['@router.request_context', '@router.matcher', '@url_generator']
     tags:
       - { name: service_collector, tag: non_lazy_route_enhancer, call: addRouteEnhancer }
+    deprecated: The "%service_id%" service is deprecated. You should use the 'router.no_access_checks' service instead.
   router.no_access_checks:
-    class: Symfony\Cmf\Component\Routing\ChainRouter
+    class: \Drupal\Core\Routing\Router
+    arguments: ['@router.route_provider', '@path.current', '@url_generator']
+    tags:
+      - { name: service_collector, tag: non_lazy_route_enhancer, call: addRouteEnhancer }
+      - { name: service_collector, tag: non_lazy_route_filter, call: addRouteFilter }
     calls:
       - [setContext, ['@router.request_context']]
-      - [add, ['@router.dynamic']]
   router.path_roots_subscriber:
     class: Drupal\Core\EventSubscriber\PathRootsSubscriber
     arguments: ['@state']
