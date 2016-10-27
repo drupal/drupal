@@ -8,7 +8,6 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Menu\LocalActionManagerInterface;
 use Drupal\Core\Plugin\Context\LazyContextRepository;
-use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -48,13 +47,6 @@ class BlockLibraryController extends ControllerBase {
   protected $localActionManager;
 
   /**
-   * The redirect destination.
-   *
-   * @var \Drupal\Core\Routing\RedirectDestinationInterface
-   */
-  protected $redirectDestination;
-
-  /**
    * Constructs a BlockLibraryController object.
    *
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
@@ -65,15 +57,12 @@ class BlockLibraryController extends ControllerBase {
    *   The current route match.
    * @param \Drupal\Core\Menu\LocalActionManagerInterface $local_action_manager
    *   The local action manager.
-   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
-   *   The redirect destination.
    */
-  public function __construct(BlockManagerInterface $block_manager, LazyContextRepository $context_repository, RouteMatchInterface $route_match, LocalActionManagerInterface $local_action_manager, RedirectDestinationInterface $redirect_destination) {
+  public function __construct(BlockManagerInterface $block_manager, LazyContextRepository $context_repository, RouteMatchInterface $route_match, LocalActionManagerInterface $local_action_manager) {
     $this->blockManager = $block_manager;
     $this->routeMatch = $route_match;
     $this->localActionManager = $local_action_manager;
     $this->contextRepository = $context_repository;
-    $this->redirectDestination = $redirect_destination;
   }
 
   /**
@@ -84,8 +73,7 @@ class BlockLibraryController extends ControllerBase {
       $container->get('plugin.manager.block'),
       $container->get('context.repository'),
       $container->get('current_route_match'),
-      $container->get('plugin.manager.menu.local_action'),
-      $container->get('redirect.destination')
+      $container->get('plugin.manager.menu.local_action')
     );
   }
 
@@ -147,10 +135,6 @@ class BlockLibraryController extends ControllerBase {
       }
       if (isset($weight)) {
         $links['add']['query']['weight'] = $weight;
-      }
-      $destination = $this->redirectDestination->get();
-      if ($destination) {
-        $links['add']['query']['destination'] = $destination;
       }
       $row['operations']['data'] = [
         '#type' => 'operations',
