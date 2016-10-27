@@ -1045,18 +1045,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $tokens = $this->view->build_info['substitutions'];
     }
 
-    // Add tokens for every argument (contextual filter) and path arg.
-    $handlers = count($this->view->display_handler->getHandlers('argument'));
-    for ($count = 1; $count <= $handlers; $count++) {
-      if (!isset($tokens["%$count"])) {
-        $tokens["%$count"] = '';
-      }
-      // Use strip tags as there should never be HTML in the path.
-      // However, we need to preserve special characters like " that
-      // were encoded by \Drupal\Component\Utility\Html::escape().
-      $tokens["!$count"] = isset($this->view->args[$count - 1]) ? strip_tags(Html::decodeEntities($this->view->args[$count - 1])) : '';
-    }
-
     return $tokens;
   }
 
