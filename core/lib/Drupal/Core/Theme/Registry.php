@@ -141,6 +141,13 @@ class Registry implements DestructableInterface {
   protected $themeManager;
 
   /**
+   * The runtime cache.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $runtimeCache;
+
+  /**
    * Constructs a \Drupal\Core\Theme\Registry object.
    *
    * @param string $root
@@ -157,8 +164,10 @@ class Registry implements DestructableInterface {
    *   The theme initialization.
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $runtime_cache
+   *   The cache backend interface to use for the runtime theme registry data.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, $theme_name = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, $theme_name = NULL, CacheBackendInterface $runtime_cache = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -166,6 +175,7 @@ class Registry implements DestructableInterface {
     $this->themeName = $theme_name;
     $this->themeHandler = $theme_handler;
     $this->themeInitialization = $theme_initialization;
+    $this->runtimeCache = $runtime_cache;
   }
 
   /**
@@ -239,7 +249,7 @@ class Registry implements DestructableInterface {
   public function getRuntime() {
     $this->init($this->themeName);
     if (!isset($this->runtimeRegistry[$this->theme->getName()])) {
-      $this->runtimeRegistry[$this->theme->getName()] = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->cache, $this->lock, array('theme_registry'), $this->moduleHandler->isLoaded());
+      $this->runtimeRegistry[$this->theme->getName()] = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->runtimeCache ?: $this->cache, $this->lock, array('theme_registry'), $this->moduleHandler->isLoaded());
     }
     return $this->runtimeRegistry[$this->theme->getName()];
   }
