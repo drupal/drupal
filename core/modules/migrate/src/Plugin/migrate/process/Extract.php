@@ -14,7 +14,8 @@ use Drupal\migrate\Row;
  * @link https://www.drupal.org/node/2152731 Online handbook documentation for extract process plugin @endlink
  *
  * @MigrateProcessPlugin(
- *   id = "extract"
+ *   id = "extract",
+ *   handle_multiples = TRUE
  * )
  */
 class Extract extends ProcessPluginBase {
