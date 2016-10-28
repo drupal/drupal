@@ -95,6 +95,15 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected $eventDispatcher;
 
   /**
+   * Migration message service.
+   *
+   * @todo https://www.drupal.org/node/2822663 Make this protected.
+   *
+   * @var \Drupal\migrate\MigrateMessageInterface
+   */
+  public $message;
+
+  /**
    * Constructs a MigrateExecutable and verifies and sets the memory limit.
    *
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
