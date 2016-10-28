@@ -17,15 +17,15 @@
  */
 #}
 {% if data.width and data.height -%}
-  {{ data.width|e }}×{{ data.height|e }}
+  {{ data.width }}×{{ data.height }}
 {%- else -%}
   {% if data.width %}
     {% trans %}
-      width {{ data.width|e }}
+      width {{ data.width }}
     {% endtrans %}
   {% elseif data.height %}
     {% trans %}
-      height {{ data.height|e }}
+      height {{ data.height }}
     {% endtrans %}
   {% endif %}
 {%- endif %}
