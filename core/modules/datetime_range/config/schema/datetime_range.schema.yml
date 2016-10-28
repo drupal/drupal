@@ -32,24 +32,27 @@ field.formatter.settings.daterange_default:
   label: 'Date range default display format settings'
   mapping:
     separator:
-      type: string
+      type: label
       label: 'Separator'
+      translation context: 'Date range separator'
 
 field.formatter.settings.daterange_plain:
   type: field.formatter.settings.datetime_plain
   label: 'Date range plain display format settings'
   mapping:
     separator:
-      type: string
+      type: label
       label: 'Separator'
+      translation context: 'Date range separator'
 
 field.formatter.settings.daterange_custom:
   type: field.formatter.settings.datetime_custom
   label: 'Date range custom display format settings'
   mapping:
     separator:
-      type: string
+      type: label
       label: 'Separator'
+      translation context: 'Date range separator'
 
 field.widget.settings.daterange_datelist:
   type: mapping
