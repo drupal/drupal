@@ -1,0 +1,20 @@
+id: d7_menu
+label: Menus
+migration_tags:
+  - Drupal 7
+source:
+  plugin: menu
+process:
+  id:
+    plugin: static_map
+    bypass: true
+    source: menu_name
+    map:
+      main-menu: main
+      management: admin
+      navigation: tools
+      user-menu: account
+  label: title
+  description: description
+destination:
+  plugin: entity:menu
