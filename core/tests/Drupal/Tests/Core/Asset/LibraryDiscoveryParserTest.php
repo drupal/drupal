@@ -86,7 +86,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'example_module', $path);
 
-    $libraries = $this->libraryDiscoveryParser->buildByExtension('example_module', 'example');
+    $libraries = $this->libraryDiscoveryParser->buildByExtension('example_module');
     $library = $libraries['example'];
 
     $this->assertCount(0, $library['js']);
