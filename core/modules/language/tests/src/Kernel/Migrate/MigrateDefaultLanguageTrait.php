@@ -38,7 +38,7 @@ trait MigrateDefaultLanguageTrait {
       // default_langcode config should be set.
       $default_language = ConfigurableLanguage::load($langcode);
       $this->assertNotNull($default_language);
-      $this->assertIdentical($langcode, $this->config('system.site')->get('default_langcode'));
+      $this->assertSame($langcode, $this->config('system.site')->get('default_langcode'));
     }
     else {
       // Otherwise, the migration log should contain an error message.
@@ -46,11 +46,31 @@ trait MigrateDefaultLanguageTrait {
       $count = 0;
       foreach ($messages as $message) {
         $count++;
-        $this->assertEqual($message->message, "The language '$langcode' does not exist on this site.");
-        $this->assertEqual($message->level, MigrationInterface::MESSAGE_ERROR);
+        $this->assertSame($message->message, "The language '$langcode' does not exist on this site.");
+        $this->assertSame((int) $message->level, MigrationInterface::MESSAGE_ERROR);
       }
-      $this->assertEqual($count, 1);
+      $this->assertSame($count, 1);
     }
+  }
+
+  /**
+   * Helper method to test migrating the default language when no default language is set.
+   */
+  protected function doTestMigrationWithUnsetVariable() {
+    // Delete the language_default variable.
+    $this->sourceDatabase->delete('variable')
+      ->condition('name', 'language_default' )
+      ->execute();
+
+    $this->startCollectingMessages();
+    $this->executeMigrations(['language', 'default_language']);
+    $messages = $this->migration->getIdMap()->getMessageIterator()->fetchAll();
+
+    // Make sure there's no migration exceptions.
+    $this->assertEmpty($messages);
+
+    // Make sure the default langcode is 'en', since it was the default on D6 & D7.
+    $this->assertSame('en', $this->config('system.site')->get('default_langcode'));
   }
 
 }

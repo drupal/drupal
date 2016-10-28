@@ -10,9 +10,22 @@ source:
 process:
   default_langcode:
     -
-      plugin: callback
-      callable: get_object_vars
+      plugin: default_value
       source: language_default
+      default_value:
+        'language': 'en'
+    # Encode and decode to turn the default_language variable, which is
+    # an stdClass, into an array so it can be passed to extract.
+    -
+      plugin: callback
+      callable:
+        - '\Drupal\Component\Serialization\Json'
+        - 'encode'
+    -
+      plugin: callback
+      callable:
+        - '\Drupal\Component\Serialization\Json'
+        - 'decode'
     -
       plugin: extract
       index:
