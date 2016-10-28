@@ -1,9 +1,8 @@
 # The menu_settings migration is in the menu_ui module.
-id: menu
+id: d6_menu
 label: Menus
 migration_tags:
   - Drupal 6
-  - Drupal 7
 source:
   plugin: menu
 process:

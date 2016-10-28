@@ -290,13 +290,17 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'locale',
       'destination_module' => 'locale',
     ],
-    'menu_links' => [
+    'd6_menu_links' => [
       'source_module' => 'menu',
       'destination_module' => 'menu_link_content',
     ],
     'menu_settings' => [
       'source_module' => 'menu',
       'destination_module' => 'menu_ui',
+    ],
+    'd7_menu_links' => [
+      'source_module' => 'menu',
+      'destination_module' => 'menu_link_content',
     ],
     'd6_node' => [
       'source_module' => 'node',
@@ -474,7 +478,11 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'system',
       'destination_module' => 'system',
     ],
-    'menu' => [
+    'd6_menu' => [
+      'source_module' => 'menu',
+      'destination_module' => 'system',
+    ],
+    'd7_menu' => [
       'source_module' => 'menu',
       'destination_module' => 'system',
     ],
