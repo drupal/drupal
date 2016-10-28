@@ -93,7 +93,7 @@ class AjaxTestDialogForm extends FormBase {
   protected function dialog($is_modal = FALSE) {
     $content = AjaxTestController::dialogContents();
     $response = new AjaxResponse();
-    $title = $this->t('AJAX Dialog contents');
+    $title = $this->t('AJAX Dialog & contents');
 
     // Attach the library necessary for using the Open(Modal)DialogCommand and
     // set the attachments for this Ajax response.

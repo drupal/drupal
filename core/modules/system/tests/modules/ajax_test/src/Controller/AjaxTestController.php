@@ -23,7 +23,7 @@ class AjaxTestController {
   public static function dialogContents() {
     // This is a regular render array; the keys do not have special meaning.
     $content = array(
-      '#title' => 'AJAX Dialog contents',
+      '#title' => '<em>AJAX Dialog & contents</em>',
       'content' => array(
         '#markup' => 'Example message',
       ),
