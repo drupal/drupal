@@ -39,7 +39,7 @@ class OffCanvasDialogTest extends AjaxTestBase {
       'data' => $dialog_contents,
       'dialogOptions' =>
         [
-          'title' => 'AJAX Dialog contents',
+          'title' => 'AJAX Dialog & contents',
           'modal' => FALSE,
           'autoResize' => FALSE,
           'resizable' => 'w',

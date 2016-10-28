@@ -39,7 +39,7 @@ class DialogTest extends AjaxTestBase {
       'data' => $dialog_contents,
       'dialogOptions' => array(
         'modal' => TRUE,
-        'title' => 'AJAX Dialog contents',
+        'title' => 'AJAX Dialog & contents',
       ),
     );
     $form_expected_response = array(
@@ -67,7 +67,7 @@ class DialogTest extends AjaxTestBase {
       'data' => $dialog_contents,
       'dialogOptions' => array(
         'modal' => FALSE,
-        'title' => 'AJAX Dialog contents',
+        'title' => 'AJAX Dialog & contents',
       ),
     );
     $no_target_expected_response = array(
@@ -77,7 +77,7 @@ class DialogTest extends AjaxTestBase {
       'data' => $dialog_contents,
       'dialogOptions' => array(
         'modal' => FALSE,
-        'title' => 'AJAX Dialog contents',
+        'title' => 'AJAX Dialog & contents',
       ),
     );
     $close_expected_response = array(
@@ -97,6 +97,9 @@ class DialogTest extends AjaxTestBase {
     // Emulate going to the JS version of the page and check the JSON response.
     $ajax_result = $this->drupalGetAjax('ajax-test/dialog-contents', array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal')));
     $this->assertEqual($modal_expected_response, $ajax_result[3], 'Modal dialog JSON response matches.');
+    // Test the HTML escaping of & character.
+    $this->assertEqual($ajax_result[3]['dialogOptions']['title'], 'AJAX Dialog & contents');
+    $this->assertNotEqual($ajax_result[3]['dialogOptions']['title'], 'AJAX Dialog &amp; contents');
 
     // Check that requesting a "normal" dialog without JS goes to a page.
     $this->drupalGet('ajax-test/dialog-contents');
@@ -152,6 +155,8 @@ class DialogTest extends AjaxTestBase {
 
     // Check that the response matches the expected value.
     $this->assertEqual($modal_expected_response, $ajax_result[4], 'POST request modal dialog JSON response matches.');
+    // Test the HTML escaping of & character.
+    $this->assertNotEqual($ajax_result[4]['dialogOptions']['title'], 'AJAX Dialog &amp; contents');
 
     // Abbreviated test for "normal" dialogs, testing only the difference.
     $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(), 'button2');
