@@ -58,13 +58,12 @@ class DateRangeDefaultFormatter extends DateTimeDefaultFormatter {
         }
         else {
           $elements[$delta] = $this->buildDateWithIsoAttribute($start_date);
-        }
-
-        if (!empty($item->_attributes)) {
-          $elements[$delta]['#attributes'] += $item->_attributes;
-          // Unset field item attributes since they have been included in the
-          // formatter output and should not be rendered in the field template.
-          unset($item->_attributes);
+          if (!empty($item->_attributes)) {
+            $elements[$delta]['#attributes'] += $item->_attributes;
+            // Unset field item attributes since they have been included in the
+            // formatter output and should not be rendered in the field template.
+            unset($item->_attributes);
+          }
         }
       }
     }

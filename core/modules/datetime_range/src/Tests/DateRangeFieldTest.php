@@ -140,6 +140,11 @@ class DateRangeFieldTest extends DateTestBase {
       ]));
       $this->assertText(' THESEPARATOR ', 'Found proper separator');
 
+      // Verify that hook_entity_prepare_view can add attributes.
+      // @see entity_test_entity_prepare_view()
+      $this->drupalGet('entity_test/' . $id);
+      $this->assertFieldByXPath('//div[@data-field-item-attr="foobar"]');
+
       // Verify that the plain formatter works.
       $this->displayOptions['type'] = 'daterange_plain';
       $this->displayOptions['settings'] = $this->defaultSettings;
@@ -202,6 +207,11 @@ class DateRangeFieldTest extends DateTestBase {
         '%expected_iso' => $start_expected_iso,
       ]));
       $this->assertNoText(' THESEPARATOR ', 'Separator not found on page');
+
+      // Verify that hook_entity_prepare_view can add attributes.
+      // @see entity_test_entity_prepare_view()
+      $this->drupalGet('entity_test/' . $id);
+      $this->assertFieldByXPath('//time[@data-field-item-attr="foobar"]');
 
       $this->displayOptions['type'] = 'daterange_plain';
       $this->displayOptions['settings'] = $this->defaultSettings;
@@ -289,6 +299,11 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertFieldByXPath('//time[@datetime="' . $end_expected_iso . '"]', $end_expected, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $end_expected, '%expected_iso' => $end_expected_iso]));
     $this->assertText(' THESEPARATOR ', 'Found proper separator');
 
+    // Verify that hook_entity_prepare_view can add attributes.
+    // @see entity_test_entity_prepare_view()
+    $this->drupalGet('entity_test/' . $id);
+    $this->assertFieldByXPath('//div[@data-field-item-attr="foobar"]');
+
     // Verify that the plain formatter works.
     $this->displayOptions['type'] = 'daterange_plain';
     $this->displayOptions['settings'] = $this->defaultSettings;
@@ -359,6 +374,11 @@ class DateRangeFieldTest extends DateTestBase {
     $this->renderTestEntity($id);
     $this->assertFieldByXPath('//time[@datetime="' . $start_expected_iso . '"]', $start_expected, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $start_expected, '%expected_iso' => $start_expected_iso]));
     $this->assertNoText(' THESEPARATOR ', 'Separator not found on page');
+
+    // Verify that hook_entity_prepare_view can add attributes.
+    // @see entity_test_entity_prepare_view()
+    $this->drupalGet('entity_test/' . $id);
+    $this->assertFieldByXPath('//time[@data-field-item-attr="foobar"]');
 
     $this->displayOptions['type'] = 'daterange_plain';
     $this->displayOptions['settings'] = $this->defaultSettings;
@@ -440,6 +460,11 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertFieldByXPath('//time[@datetime="' . $end_expected_iso . '"]', $end_expected, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $end_expected, '%expected_iso' => $end_expected_iso]));
     $this->assertText(' THESEPARATOR ', 'Found proper separator');
 
+    // Verify that hook_entity_prepare_view can add attributes.
+    // @see entity_test_entity_prepare_view()
+    $this->drupalGet('entity_test/' . $id);
+    $this->assertFieldByXPath('//div[@data-field-item-attr="foobar"]');
+
     // Verify that the plain formatter works.
     $this->displayOptions['type'] = 'daterange_plain';
     $this->displayOptions['settings'] = $this->defaultSettings;
@@ -512,6 +537,11 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertFieldByXPath('//time[@datetime="' . $start_expected_iso . '"]', $start_expected, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $start_expected, '%expected_iso' => $start_expected_iso]));
     $this->assertFieldByXPath('//time[@datetime="' . $end_expected_iso . '"]', $end_expected, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $end_expected, '%expected_iso' => $end_expected_iso]));
     $this->assertText(' THESEPARATOR ', 'Found proper separator');
+
+    // Verify that hook_entity_prepare_view can add attributes.
+    // @see entity_test_entity_prepare_view()
+    $this->drupalGet('entity_test/' . $id);
+    $this->assertFieldByXPath('//div[@data-field-item-attr="foobar"]');
 
     $this->displayOptions['type'] = 'daterange_plain';
     entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
