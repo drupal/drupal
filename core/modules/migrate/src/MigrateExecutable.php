@@ -67,25 +67,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected $counts = array();
 
   /**
-   * The object currently being constructed.
-   *
-   * @var \stdClass
-   */
-  protected $destinationValues;
-
-  /**
    * The source.
    *
    * @var \Drupal\migrate\Plugin\MigrateSourceInterface
    */
   protected $source;
-
-  /**
-   * The current data row retrieved from the source.
-   *
-   * @var \stdClass
-   */
-  protected $sourceValues;
 
   /**
    * The event dispatcher.
@@ -277,8 +263,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
       }
 
-      // Reset row properties.
-      unset($sourceValues, $destinationValues);
       $this->sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
 
       // Check for memory exhaustion.
