@@ -17,7 +17,7 @@ class BlockUiTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test', 'help');
+  public static $modules = array('block', 'block_test', 'help', 'condition_test');
 
   protected $regions;
 
@@ -248,6 +248,11 @@ class BlockUiTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertText('No context mapping selected.');
     $this->assertNoText('User context found.');
+
+    // Tests that conditions with missing context are not displayed.
+    $this->drupalGet('admin/structure/block/manage/testcontextawareblock');
+    $this->assertNoRaw('No existing type');
+    $this->assertNoFieldByXPath('//*[@name="visibility[condition_test_no_existing_type][negate]"]');
   }
 
   /**
