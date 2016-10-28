@@ -52,10 +52,13 @@ class OffCanvasTest extends OutsideInJavascriptTestBase {
         $tray_text = $offcanvas_tray->findById('drupal-offcanvas')->getText();
         $this->assertEquals("Thing $link_index says hello", $tray_text);
 
-        // Check no title behavior.
         if ($link_index == '2') {
+          // Check no title behavior.
           $web_assert->elementExists('css', '.ui-dialog-empty-title');
           $this->assertEquals('', $header_text);
+
+          $style = $page->find('css', '.ui-dialog-offcanvas')->getAttribute('style');
+          self::assertTrue(strstr($style, 'width: 555px;') !== FALSE, 'Dialog width respected.');
         }
         else {
           // Check that header is correct.

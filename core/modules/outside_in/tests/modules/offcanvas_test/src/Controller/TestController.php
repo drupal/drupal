@@ -2,6 +2,7 @@
 
 namespace Drupal\offcanvas_test\Controller;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 
 /**
@@ -66,6 +67,9 @@ class TestController {
           'class' => ['use-ajax'],
           'data-dialog-type' => 'dialog',
           'data-dialog-renderer' => 'offcanvas',
+          'data-dialog-options' => Json::encode([
+            'width' => 555,
+          ]),
         ],
         '#attached' => [
           'library' => [

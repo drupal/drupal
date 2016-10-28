@@ -186,7 +186,11 @@
           // @todo Move logic for data-dialog-renderer attribute into ajax.js
           //   https://www.drupal.org/node/2784443
           instance.options.url = instance.options.url.replace(search, replace);
-          instance.options.data.dialogOptions = {outsideInActiveEditableId: $(instance.element).parents('.outside-in-editable').attr('id')};
+          // Check to make sure existing dialogOptions aren't overridden.
+          if (!('dialogOptions' in instance.options.data)) {
+            instance.options.data.dialogOptions = {};
+          }
+          instance.options.data.dialogOptions.outsideInActiveEditableId = $(instance.element).parents('.outside-in-editable').attr('id');
           instance.progress = {type: 'fullscreen'};
         });
     }
