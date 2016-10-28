@@ -237,7 +237,7 @@ class BlockForm extends EntityForm {
     // @todo Allow list of conditions to be configured in
     //   https://www.drupal.org/node/2284687.
     $visibility = $this->entity->getVisibility();
-    foreach ($this->manager->getDefinitions() as $condition_id => $definition) {
+    foreach ($this->manager->getDefinitionsForContexts($form_state->getTemporaryValue('gathered_contexts')) as $condition_id => $definition) {
       // Don't display the current theme condition.
       if ($condition_id == 'current_theme') {
         continue;
