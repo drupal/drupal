@@ -4,6 +4,8 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -154,6 +156,52 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     $this->assertTranslations(3, 'en', ['fr']);
     // No change, can't remove default translation.
     $this->assertTranslations(4, 'fr');
+  }
+
+  /**
+   * Tests creation of ID columns table with definitions taken from entity type.
+   */
+  public function testEntityWithStringId() {
+    $this->enableModules(['migrate_entity_test']);
+    $this->installEntitySchema('migrate_string_id_entity_test');
+
+    $definition = [
+      'source' => [
+        'plugin' => 'embedded_data',
+        'data_rows' => [
+          ['id' => 123, 'version' => 'foo'],
+          // This integer needs an 'int' schema with 'big' size. If 'destid1'
+          // is not correctly taking the definition from the destination entity
+          // type, the import will fail with a SQL exception.
+          ['id' => 123456789012, 'version' => 'bar'],
+        ],
+        'ids' => [
+          'id' => ['type' => 'integer', 'size' => 'big'],
+          'version' => ['type' => 'string'],
+        ],
+      ],
+      'process' => [
+        'id' => 'id',
+        'version' => 'version',
+      ],
+      'destination' => [
+        'plugin' => 'entity:migrate_string_id_entity_test',
+      ],
+    ];
+
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $result = $executable->import();
+    $this->assertEquals(MigrationInterface::RESULT_COMPLETED, $result);
+
+    /** @var \Drupal\migrate\Plugin\MigrateIdMapInterface $id_map_plugin */
+    $id_map_plugin = $migration->getIdMap();
+
+    // Check that the destination has been stored.
+    $map_row = $id_map_plugin->getRowBySource(['id' => 123, 'version' => 'foo']);
+    $this->assertEquals(123, $map_row['destid1']);
+    $map_row = $id_map_plugin->getRowBySource(['id' => 123456789012, 'version' => 'bar']);
+    $this->assertEquals(123456789012, $map_row['destid1']);
   }
 
 }
