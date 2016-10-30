@@ -73,7 +73,8 @@ class EntityRevision extends EntityContentBase {
    */
   public function getIds() {
     if ($key = $this->getKey('revision')) {
-      return [$key => $this->getDefinitionFromEntity($key)];
+      $ids[$key]['type'] = 'integer';
+      return $ids;
     }
     throw new MigrateException('This entity type does not support revisions.');
   }
