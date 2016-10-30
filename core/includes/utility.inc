@@ -9,19 +9,20 @@ use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
-use Composer\Autoload\ClassLoader;
 
 /**
  * Rebuilds all caches even when Drupal itself does not work.
  *
- * @param \Composer\Autoload\ClassLoader $class_loader
- *   The class loader.
+ * @param $class_loader
+ *   The class loader. Normally Composer's ClassLoader, as included by the
+ *   front controller, but may also be decorated; e.g.,
+ *   \Symfony\Component\ClassLoader\ApcClassLoader, \Symfony\Component\ClassLoader\WinCacheClassLoader, or \Symfony\Component\ClassLoader\XcacheClassLoader
  * @param \Symfony\Component\HttpFoundation\Request $request
  *   The current request.
  *
  * @see rebuild.php
  */
-function drupal_rebuild(ClassLoader $class_loader, Request $request) {
+function drupal_rebuild($class_loader, Request $request) {
   // Remove Drupal's error and exception handlers; they rely on a working
   // service container and other subsystems and will only cause a fatal error
   // that hides the actual error.

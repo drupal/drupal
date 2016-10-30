@@ -23,6 +23,8 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\ClassLoader\ApcClassLoader;
+use Symfony\Component\ClassLoader\WinCacheClassLoader;
+use Symfony\Component\ClassLoader\XcacheClassLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1028,16 +1030,29 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
     }
 
-    // If the class loader is still the same, possibly upgrade to the APC class
-    // loader.
+    // If the class loader is still the same, possibly
+    // upgrade to an optimized class loader.
     if ($class_loader_class == get_class($this->classLoader)
-        && Settings::get('class_loader_auto_detect', TRUE)
-        && function_exists('apcu_fetch')) {
+        && Settings::get('class_loader_auto_detect', TRUE)) {
       $prefix = Settings::getApcuPrefix('class_loader', $this->root);
-      $apc_loader = new ApcClassLoader($prefix, $this->classLoader);
-      $this->classLoader->unregister();
-      $apc_loader->register();
-      $this->classLoader = $apc_loader;
+      $loader = NULL;
+
+      // We autodetect one of the following three optimized classloaders, if
+      // their underlying extension exists.
+      if (function_exists('apcu_fetch')) {
+        $loader = new ApcClassLoader($prefix, $this->classLoader);
+      }
+      elseif (extension_loaded('wincache')) {
+        $loader = new WinCacheClassLoader($prefix, $this->classLoader);
+      }
+      elseif (extension_loaded('xcache')) {
+        $loader = new XcacheClassLoader($prefix, $this->classLoader);
+      }
+      if (!empty($loader)) {
+        $this->classLoader->unregister();
+        $loader->register();
+        $this->classLoader = $loader;
+      }
     }
   }
 

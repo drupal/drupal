@@ -42,10 +42,14 @@ if (Settings::get('rebuild_access', FALSE) ||
     ((REQUEST_TIME - $request->query->get('timestamp')) < 300) &&
     Crypt::hashEquals(Crypt::hmacBase64($request->query->get('timestamp'), Settings::get('hash_salt')), $request->query->get('token'))
   )) {
-  // Clear the APCu cache to ensure APCu class loader is reset.
-  if (function_exists('apcu_clear_cache')) {
-    apcu_clear_cache();
-  }
+  // Clear user cache for all major platforms.
+  $user_caches = [
+    'apcu_clear_cache',
+    'wincache_ucache_clear',
+    'xcache_clear_cache',
+  ];
+  array_walk(array_filter($user_caches, 'is_callable'), 'call_user_func');
+
   drupal_rebuild($autoloader, $request);
   drupal_set_message('Cache rebuild complete.');
 }
