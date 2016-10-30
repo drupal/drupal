@@ -11,7 +11,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
@@ -110,8 +109,6 @@ class EntityContentBaseTest extends UnitTestCase {
     $entity_type = $this->prophesize(ContentEntityType::class);
     $entity_type->getKey('langcode')->willReturn('');
     $entity_type->getKey('id')->willReturn('id');
-    $this->entityManager->getBaseFieldDefinitions('foo')
-      ->willReturn(['id' => BaseFieldDefinitionTest::create('integer')]);
 
     $this->storage->getEntityType()->willReturn($entity_type->reveal());
 
@@ -145,29 +142,6 @@ class EntityTestDestination extends EntityContentBase {
 
   protected function getEntity(Row $row, array $old_destination_id_values) {
     return $this->entity;
-  }
-
-  public static function getEntityTypeId() {
-    return 'foo';
-  }
-
-}
-
-/**
- * Stub class for BaseFieldDefinition.
- */
-class BaseFieldDefinitionTest extends BaseFieldDefinition {
-
-  public static function create($type) {
-    return new static([]);
-  }
-
-  public function getSettings() {
-    return [];
-  }
-
-  public function getType() {
-    return 'integer';
   }
 
 }
