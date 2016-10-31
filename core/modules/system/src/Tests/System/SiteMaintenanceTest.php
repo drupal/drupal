@@ -39,6 +39,15 @@ class SiteMaintenanceTest extends WebTestBase {
    * Verifies site maintenance mode functionality.
    */
   protected function testSiteMaintenance() {
+
+    // Verify that permission message is displayed.
+    $permission_handler = $this->container->get('user.permissions');
+    $permissions = $permission_handler->getPermissions();
+    $permission_label = $permissions['access site in maintenance mode']['title'];
+    $permission_message = t('Visitors will only see the maintenance mode message. Only users with the "@permission-label" <a href=":permissions-url">permission</a> will be able to access the site. Authorized users can log in directly via the <a href=":user-login">user login</a> page.', array('@permission-label' => $permission_label, ':permissions-url' => \Drupal::url('user.admin_permissions'), ':user-login' => \Drupal::url('user.login')));
+    $this->drupalGet(Url::fromRoute('system.site_maintenance_mode'));
+    $this->assertRaw($permission_message, 'Found the permission message.');
+
     $this->drupalGet(Url::fromRoute('user.page'));
     // JS should be aggregated, so drupal.js is not in the page source.
     $links = $this->xpath('//script[contains(@src, :href)]', array(':href' => '/core/misc/drupal.js'));
