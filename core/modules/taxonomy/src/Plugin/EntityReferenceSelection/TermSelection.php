@@ -49,6 +49,7 @@ class TermSelection extends DefaultSelection {
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     if ($match || $limit) {
+      $this->configuration['handler_settings']['sort'] = ['field' => 'name', 'direction' => 'asc'];
       return parent::getReferenceableEntities($match, $match_operator, $limit);
     }
 
