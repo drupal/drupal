@@ -54,6 +54,14 @@ class HtmlResponseAttachmentsTest extends WebTestBase {
     // Repeat for the cache.
     $this->drupalGet('/render_attached_test/head');
     $this->assertHeader('X-Drupal-Cache', 'HIT');
+
+    // Test ['#attached']['html_head_link'] when outputted as HTTP header.
+    $this->drupalGet('/render_attached_test/html_header_link');
+    $expected_link_headers = [
+      '</foo?bar=&lt;baz&gt;&amp;baz=false>; rel="alternate"',
+      '</foo/bar>; hreflang="nl"; rel="alternate"',
+    ];
+    $this->assertEqual($this->drupalGetHeader('link'), implode(',', $expected_link_headers));
   }
 
   /**
