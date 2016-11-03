@@ -37,6 +37,16 @@ class DiffFormatter {
   public $trailing_context_lines = 0;
 
   /**
+   * The line stats.
+   *
+   * @var array
+   */
+  protected $line_stats = array(
+    'counter' => array('x' => 0, 'y' => 0),
+    'offset' => array('x' => 0, 'y' => 0),
+  );
+
+  /**
    * Format a diff.
    *
    * @param \Drupal\Component\Diff\Diff $diff
