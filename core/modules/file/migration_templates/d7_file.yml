@@ -13,6 +13,8 @@ source:
     # configuration in this migration's process pipeline as an example.
     source_base_path: ''
 process:
+  # If you are using this file to build a custom migration consider removing
+  # the fid field to allow incremental migrations.
   fid: fid
   filename: filename
   source_full_path:

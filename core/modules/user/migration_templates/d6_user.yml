@@ -5,6 +5,8 @@ migration_tags:
 source:
   plugin: d6_user
 process:
+  # If you are using this file to build a custom migration consider removing
+  # the uid field to allow incremental migrations.
   uid: uid
   name: name
   pass: pass
