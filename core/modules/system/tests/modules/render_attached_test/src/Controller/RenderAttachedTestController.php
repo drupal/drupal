@@ -69,4 +69,18 @@ class RenderAttachedTestController {
     return $render;
   }
 
+  /**
+   * Test HTTP header rendering for link.
+   *
+   * @return array
+   *   A render array using the 'html_head_link' directive.
+   */
+  public function htmlHeaderLink() {
+    $render = [];
+    $render['#attached']['html_head_link'][] = [['href' => '/foo?bar=<baz>&baz=false', 'rel' => 'alternate'], TRUE];
+    $render['#attached']['html_head_link'][] = [['href' => '/not-added-to-http-headers', 'rel' => 'alternate'], FALSE];
+    $render['#attached']['html_head_link'][] = [['href' => '/foo/bar', 'hreflang' => 'nl', 'rel' => 'alternate'], TRUE];
+    return $render;
+  }
+
 }

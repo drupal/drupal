@@ -19,6 +19,13 @@ render_attached.head:
   requirements:
     _access: 'TRUE'
 
+render_attached.html_header_link:
+  path: '/render_attached_test/html_header_link'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\RenderAttachedTestController::htmlHeaderLink'
+  requirements:
+    _access: 'TRUE'
+
 render_attached.feed_single:
   path: '/render_attached_test/feed'
   defaults:

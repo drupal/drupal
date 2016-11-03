@@ -2,6 +2,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Component\Utility\Html;
+
 /**
  * Tests the node/{node} page.
  *
@@ -61,6 +63,24 @@ class NodeViewTest extends NodeTestBase {
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
     $this->assertEqual($result[0]['href'], $node->url('edit-form'));
+  }
+
+  /**
+   * Tests the Link header.
+   */
+  public function testLinkHeader() {
+    $node = $this->drupalCreateNode();
+
+    $expected = [
+      '<' . Html::escape($node->url('canonical')) . '>; rel="canonical"',
+      '<' . Html::escape($node->url('canonical'), ['alias' => TRUE]) . '>; rel="shortlink"',
+      '<' . Html::escape($node->url('revision')) . '>; rel="revision"',
+    ];
+
+    $this->drupalGet($node->urlInfo());
+
+    $links = explode(',', $this->drupalGetHeader('Link'));
+    $this->assertEqual($links, $expected);
   }
 
   /**
