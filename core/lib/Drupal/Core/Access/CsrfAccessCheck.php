@@ -54,7 +54,7 @@ class CsrfAccessCheck implements RoutingAccessInterface {
       $path = str_replace("{{$param}}", $value, $path);
     }
 
-    if ($this->csrfToken->validate($request->query->get('token'), $path)) {
+    if ($this->csrfToken->validate($request->query->get('token', ''), $path)) {
       $result = AccessResult::allowed();
     }
     else {
