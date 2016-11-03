@@ -14,6 +14,7 @@ process:
       entity_type: taxonomy_vocabulary
       field: vid
       length: 32
+      migrated: true
   label: name
   name: name
   description: description

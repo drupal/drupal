@@ -58,7 +58,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
       'action' => 22,
       'menu' => 8,
       'taxonomy_term' => 6,
-      'taxonomy_vocabulary' => 6,
+      'taxonomy_vocabulary' => 5,
       'tour' => 4,
       'user' => 7,
       'user_role' => 6,
