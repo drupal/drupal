@@ -158,7 +158,6 @@ function template_preprocess_responsive_image(&$variables) {
     unset($variables['height']);
   }
 
-  $image = \Drupal::service('image.factory')->get($variables['uri']);
   $responsive_image_style = ResponsiveImageStyle::load($variables['responsive_image_style_id']);
   // If a responsive image style is not selected, log the error and stop
   // execution.
@@ -176,7 +175,7 @@ function template_preprocess_responsive_image(&$variables) {
   $breakpoints = array_reverse(\Drupal::service('breakpoint.manager')->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup()));
   foreach ($responsive_image_style->getKeyedImageStyleMappings() as $breakpoint_id => $multipliers) {
     if (isset($breakpoints[$breakpoint_id])) {
-      $variables['sources'][] = responsive_image_build_source_attributes($image, $variables, $breakpoints[$breakpoint_id], $multipliers);
+      $variables['sources'][] = _responsive_image_build_source_attributes($variables, $breakpoints[$breakpoint_id], $multipliers);
     }
   }
 
@@ -192,7 +191,7 @@ function template_preprocess_responsive_image(&$variables) {
     }
     $variables['img_element'] = array(
       '#theme' => 'image',
-      '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image->getSource()),
+      '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
     );
   }
   else {
@@ -205,7 +204,7 @@ function template_preprocess_responsive_image(&$variables) {
       '#theme' => 'image',
       '#srcset' => array(
         array(
-          'uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image->getSource()),
+          'uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
         ),
       ),
     );
@@ -222,6 +221,32 @@ function template_preprocess_responsive_image(&$variables) {
     }
     $variables['img_element']['#attributes'] = $variables['attributes'];
   }
+}
+
+/**
+ * Helper function for template_preprocess_responsive_image().
+ *
+ * @param \Drupal\Core\Image\ImageInterface $image
+ *   The image to build the <source> tags for.
+ * @param array $variables
+ *   An array with the following keys:
+ *     - responsive_image_style_id: The \Drupal\responsive_image\Entity\ResponsiveImageStyle
+ *       ID.
+ *     - width: The width of the image (if known).
+ *     - height: The height of the image (if known).
+ *     - uri: The URI of the image file.
+ * @param \Drupal\breakpoint\BreakpointInterface $breakpoint
+ *   The breakpoint for this source tag.
+ * @param array $multipliers
+ *   An array with multipliers as keys and image style mappings as values.
+ *
+ * @return \Drupal\Core\Template\Attribute[]
+ *   An array of attributes for the source tag.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before 9.0.0.
+ */
+function responsive_image_build_source_attributes(ImageInterface $image, array $variables, BreakpointInterface $breakpoint, array $multipliers) {
+  return _responsive_image_build_source_attributes($variables, $breakpoint, $multipliers);
 }
 
 /**
@@ -346,8 +371,6 @@ function template_preprocess_responsive_image(&$variables) {
  * See http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#image-candidate-string
  * for further information.
  *
- * @param \Drupal\Core\Image\ImageInterface $image
- *   The image to build the <source> tags for.
  * @param array $variables
  *   An array with the following keys:
  *     - responsive_image_style_id: The \Drupal\responsive_image\Entity\ResponsiveImageStyle
@@ -363,10 +386,17 @@ function template_preprocess_responsive_image(&$variables) {
  * @return \Drupal\Core\Template\Attribute[]
  *   An array of attributes for the source tag.
  */
-function responsive_image_build_source_attributes(ImageInterface $image, array $variables, BreakpointInterface $breakpoint, array $multipliers) {
-  $width = isset($variables['width']) && !empty($variables['width']) ? $variables['width'] : $image->getWidth();
-  $height = isset($variables['height']) && !empty($variables['height']) ? $variables['height'] : $image->getHeight();
-  $extension = pathinfo($image->getSource(), PATHINFO_EXTENSION);
+function _responsive_image_build_source_attributes(array $variables, BreakpointInterface $breakpoint, array $multipliers) {
+  if ((empty($variables['width']) || empty($variables['height']))) {
+    $image = \Drupal::service('image.factory')->get($variables['uri']);
+    $width = $image->getWidth();
+    $height = $image->getHeight();
+  }
+  else {
+    $width = $variables['width'];
+    $height = $variables['height'];
+  }
+  $extension = pathinfo($variables['uri'], PATHINFO_EXTENSION);
   $sizes = array();
   $srcset = array();
   $derivative_mime_types = array();
@@ -388,12 +418,12 @@ function responsive_image_build_source_attributes(ImageInterface $image, array $
           // this breakpoint should be merged into one srcset and the sizes
           // attribute should be merged as well.
           if (is_null($dimensions['width'])) {
-            throw new \LogicException("Could not determine image width for '{$image->getSource()}' using image style with ID: $image_style_name. This image style can not be used for a responsive image style mapping using the 'sizes' attribute.");
+            throw new \LogicException("Could not determine image width for '{$variables['uri']}' using image style with ID: $image_style_name. This image style can not be used for a responsive image style mapping using the 'sizes' attribute.");
           }
           // Use the image width as key so we can sort the array later on.
           // Images within a srcset should be sorted from small to large, since
           // the first matching source will be used.
-          $srcset[intval($dimensions['width'])] = _responsive_image_image_style_url($image_style_name, $image->getSource()) . ' ' . $dimensions['width'] . 'w';
+          $srcset[intval($dimensions['width'])] = _responsive_image_image_style_url($image_style_name, $variables['uri']) . ' ' . $dimensions['width'] . 'w';
           $sizes = array_merge(explode(',', $image_style_mapping['image_mapping']['sizes']), $sizes);
         }
         break;
@@ -407,7 +437,7 @@ function responsive_image_build_source_attributes(ImageInterface $image, array $
         // be sorted from small to large, since the first matching source will
         // be used. We multiply it by 100 so multipliers with up to two decimals
         // can be used.
-        $srcset[intval(Unicode::substr($multiplier, 0, -1) * 100)] = _responsive_image_image_style_url($image_style_mapping['image_mapping'], $image->getSource()) . ' ' . $multiplier;
+        $srcset[intval(Unicode::substr($multiplier, 0, -1) * 100)] = _responsive_image_image_style_url($image_style_mapping['image_mapping'], $variables['uri']) . ' ' . $multiplier;
         break;
     }
   }
