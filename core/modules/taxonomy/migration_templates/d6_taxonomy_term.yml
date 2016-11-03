@@ -5,6 +5,8 @@ migration_tags:
 source:
   plugin: taxonomy_term
 process:
+  # If you are using this file to build a custom migration consider removing
+  # the tid field to allow incremental migrations.
   tid: tid
   vid:
     plugin: migration

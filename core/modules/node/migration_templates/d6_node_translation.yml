@@ -7,6 +7,8 @@ source:
   plugin: d6_node
   translations: true
 process:
+  # If you are using this file to build a custom migration consider removing
+  # the nid field to allow incremental migrations.
   nid: tnid
   type: type
   langcode:

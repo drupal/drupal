@@ -6,6 +6,8 @@ deriver: Drupal\node\Plugin\migrate\D6NodeDeriver
 source:
   plugin: d6_node_revision
 process:
+  # If you are using this file to build a custom migration consider removing
+  # the nid and vid fields to allow incremental migrations.
   nid: nid
   vid: vid
   langcode:
