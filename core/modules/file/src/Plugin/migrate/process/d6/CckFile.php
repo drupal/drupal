@@ -5,7 +5,6 @@ namespace Drupal\file\Plugin\migrate\process\d6;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
-use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -76,18 +75,7 @@ class CckFile extends ProcessPluginBase implements ContainerFactoryPluginInterfa
     // some reason -- file migration is notoriously brittle -- and we do NOT
     // want to send invalid file references into the field system (it causes
     // fatals), so return an empty item instead.
-    try {
-      $fid = $this->migrationPlugin->transform($value['fid'], $migrate_executable, $row, $destination_property);
-    }
-    // If the migration plugin completely fails its lookup process, it will
-    // throw a MigrateSkipRowException. It shouldn't, but that is being dealt
-    // with at https://www.drupal.org/node/2487568. Until that lands, return
-    // an empty item.
-    catch (MigrateSkipRowException $e) {
-      return [];
-    }
-
-    if ($fid) {
+    if ($fid = $this->migrationPlugin->transform($value['fid'], $migrate_executable, $row, $destination_property)) {
       return [
         'target_id' => $fid,
         'display' => $value['list'],
