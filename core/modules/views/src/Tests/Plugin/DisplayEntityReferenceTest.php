@@ -103,6 +103,21 @@ class DisplayEntityReferenceTest extends PluginTestBase {
         $this->fieldName => 'text' . $i,
       ])->save();
     }
+    EntityTest::create([
+      'bundle' => 'entity_test',
+      'name' => 'name',
+      $this->fieldName => 'tex',
+    ])->save();
+    EntityTest::create([
+      'bundle' => 'entity_test',
+      'name' => 'name',
+      $this->fieldName => 'TEX',
+    ])->save();
+    EntityTest::create([
+      'bundle' => 'entity_test',
+      'name' => 'name',
+      $this->fieldName => 'sometext',
+    ])->save();
   }
 
   /**
@@ -137,6 +152,48 @@ class DisplayEntityReferenceTest extends PluginTestBase {
     $this->executeView($view);
 
     // Test that we have searched in both fields.
+    $this->assertEqual(count($view->result), 2, 'Search returned two rows');
+    $view->destroy();
+
+    // Test the 'CONTAINS' match_operator.
+    $view = Views::getView('test_display_entity_reference');
+    $view->setDisplay('entity_reference_1');
+    $options = [
+      'match' => 'tex',
+      'match_operator' => 'CONTAINS',
+      'limit' => 0,
+      'ids' => NULL,
+    ];
+    $view->display_handler->setOption('entity_reference_options', $options);
+    $this->executeView($view);
+    $this->assertEqual(count($view->result), 13, 'Search returned thirteen rows');
+    $view->destroy();
+
+    // Test the 'STARTS_WITH' match_operator.
+    $view = Views::getView('test_display_entity_reference');
+    $view->setDisplay('entity_reference_1');
+    $options = [
+      'match' => 'tex',
+      'match_operator' => 'STARTS_WITH',
+      'limit' => 0,
+      'ids' => NULL,
+    ];
+    $view->display_handler->setOption('entity_reference_options', $options);
+    $this->executeView($view);
+    $this->assertEqual(count($view->result), 12, 'Search returned twelve rows');
+    $view->destroy();
+
+    // Test the '=' match_operator.
+    $view = Views::getView('test_display_entity_reference');
+    $view->setDisplay('entity_reference_1');
+    $options = [
+      'match' => 'tex',
+      'match_operator' => '=',
+      'limit' => 0,
+      'ids' => NULL,
+    ];
+    $view->display_handler->setOption('entity_reference_options', $options);
+    $this->executeView($view);
     $this->assertEqual(count($view->result), 2, 'Search returned two rows');
     $view->destroy();
 

@@ -122,9 +122,12 @@ class EntityReference extends DisplayPluginBase {
     // Restrict the autocomplete options based on what's been typed already.
     if (isset($options['match'])) {
       $style_options = $this->getOption('style');
-      $value = db_like($options['match']) . '%';
-      if ($options['match_operator'] != 'STARTS_WITH') {
-        $value = '%' . $value;
+      $value = db_like($options['match']);
+      if ($options['match_operator'] !== '=') {
+        $value = $value . '%';
+        if ($options['match_operator'] != 'STARTS_WITH') {
+          $value = '%' . $value;
+        }
       }
 
       // Multiple search fields are OR'd together.
