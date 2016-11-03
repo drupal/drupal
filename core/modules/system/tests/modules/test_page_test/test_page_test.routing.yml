@@ -66,3 +66,11 @@ test_page_test.encoded:
     _controller: '\Drupal\test_page_test\Controller\Test::renderEncodedMarkup'
   requirements:
     _access: 'TRUE'
+
+test_page_test.pipe:
+  path: '/test-pipe-char'
+  defaults:
+    _title: 'Page with pipe char in link'
+    _controller: '\Drupal\test_page_test\Controller\Test::renderPipeInLink'
+  requirements:
+    _access: 'TRUE'

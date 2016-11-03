@@ -124,6 +124,16 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests linkExists() with pipe character (|) in locator.
+   *
+   * @see \Drupal\Tests\WebAssert::linkExists()
+   */
+  public function testPipeCharInLocator() {
+    $this->drupalGet('test-pipe-char');
+    $this->assertSession()->linkExists('foo|bar|baz');
+  }
+
+  /**
    * Tests legacy asserts.
    */
   public function testLegacyAsserts() {

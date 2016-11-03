@@ -98,4 +98,14 @@ class Test {
     return ['#plain_text' => 'Bad html <script>alert(123);</script>'];
   }
 
+  /**
+   * Renders a page with pipe character in link test.
+   *
+   * @return array
+   *   A render array as expected by drupal_render()
+   */
+  public function renderPipeInLink() {
+    return ['#markup' => '<a href="http://example.com">foo|bar|baz</a>'];
+  }
+
 }
