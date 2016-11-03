@@ -71,22 +71,22 @@
           xhr = null;
         }
 
-        // Wait 300 milliseconds since the last event to update the machine name
-        // i.e., after the user has stopped typing.
+        // Wait 300 milliseconds for Ajax request since the last event to update
+        // the machine name i.e., after the user has stopped typing.
         if (timeout) {
           clearTimeout(timeout);
           timeout = null;
         }
-        timeout = setTimeout(function () {
-          if (baseValue.toLowerCase() !== expected) {
+        if (baseValue.toLowerCase() !== expected) {
+          timeout = setTimeout(function () {
             xhr = self.transliterate(baseValue, options).done(function (machine) {
               self.showMachineName(machine.substr(0, options.maxlength), data);
             });
-          }
-          else {
-            self.showMachineName(expected, data);
-          }
-        }, 300);
+          }, 300);
+        }
+        else {
+          self.showMachineName(expected, data);
+        }
       }
 
       Object.keys(settings.machineName).forEach(function (source_id) {
