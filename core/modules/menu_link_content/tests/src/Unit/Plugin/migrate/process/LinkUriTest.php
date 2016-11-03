@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\menu_link_content\Unit\Plugin\migrate\process\d6;
+namespace Drupal\Tests\menu_link_content\Unit\Plugin\migrate\process;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Url;
-use Drupal\menu_link_content\Plugin\migrate\process\d6\LinkUri;
+use Drupal\menu_link_content\Plugin\migrate\process\LinkUri;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
@@ -12,11 +12,11 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Path\PathValidator;
 
 /**
- * Tests \Drupal\menu_link_content\Plugin\migrate\process\d6\LinkUri.
+ * Tests \Drupal\menu_link_content\Plugin\migrate\process\LinkUri.
  *
  * @group menu_link_content
  *
- * @coversDefaultClass \Drupal\menu_link_content\Plugin\migrate\process\d6\LinkUri
+ * @coversDefaultClass \Drupal\menu_link_content\Plugin\migrate\process\LinkUri
  */
 class LinkUriTest extends UnitTestCase {
 
@@ -30,7 +30,7 @@ class LinkUriTest extends UnitTestCase {
   /**
    * The 'link_uri' process plugin being tested.
    *
-   * @var \Drupal\menu_link_content\Plugin\migrate\process\d6\LinkUri
+   * @var \Drupal\menu_link_content\Plugin\migrate\process\LinkUri
    */
   protected $processPlugin;
 
