@@ -497,17 +497,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         '#default_value' => $display_options ? $display_options['region'] : 'hidden',
         '#attributes' => array('class' => array('field-region')),
       ),
-      'plugin' => array(
-        'type' => array(
-          '#type' => 'select',
-          '#title' => $this->t('Visibility for @title', array('@title' => $extra_field['label'])),
-          '#title_display' => 'invisible',
-          '#options' => $this->getExtraFieldVisibilityOptions(),
-          '#default_value' => $display_options ? 'visible' : 'hidden',
-          '#parents' => array('fields', $field_id, 'type'),
-          '#attributes' => array('class' => array('field-plugin-type')),
-        ),
-      ),
+      'plugin' => array(),
       'settings_summary' => array(),
       'settings_edit' => array(),
     );
@@ -826,18 +816,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
       case 'extra_field':
         return $row['region']['#value'] ?: 'hidden';
     }
-  }
-
-  /**
-   * Returns an array of visibility options for extra fields.
-   *
-   * @return array
-   *   An array of visibility options.
-   */
-  protected function getExtraFieldVisibilityOptions() {
-    return array(
-      'visible' => $this->t('Visible'),
-    );
   }
 
   /**
