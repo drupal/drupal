@@ -169,6 +169,67 @@ class FieldKernelTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Tests rewriting of the output with HTML.
+   */
+  public function testRewriteHtmlWithTokens() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
+    $view = Views::getView('test_view');
+    $view->initHandlers();
+    $this->executeView($view);
+    $row = $view->result[0];
+    $id_field = $view->field['id'];
+
+    $id_field->options['alter']['text'] = '<p>{{ id }}</p>';
+    $id_field->options['alter']['alter_text'] = TRUE;
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
+      return $id_field->theme($row);
+    });
+    $this->assertSubString($output, '<p>1</p>');
+
+    // Add a non-safe HTML tag and make sure this gets removed.
+    $id_field->options['alter']['text'] = '<p>{{ id }} <script>alert("Script removed")</script></p>';
+    $id_field->options['alter']['alter_text'] = TRUE;
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
+      return $id_field->theme($row);
+    });
+    $this->assertSubString($output, '<p>1 alert("Script removed")</p>');
+  }
+
+  /**
+   * Tests rewriting of the output with HTML and aggregation.
+   */
+  public function testRewriteHtmlWithTokensAndAggregation() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+    $view->displayHandlers->get('default')->options['fields']['id']['group_type'] = 'sum';
+    $view->displayHandlers->get('default')->setOption('group_by', TRUE);
+    $view->initHandlers();
+    $this->executeView($view);
+    $row = $view->result[0];
+    $id_field = $view->field['id'];
+
+    $id_field->options['alter']['text'] = '<p>{{ id }}</p>';
+    $id_field->options['alter']['alter_text'] = TRUE;
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
+      return $id_field->theme($row);
+    });
+    $this->assertSubString($output, '<p>1</p>');
+
+    // Add a non-safe HTML tag and make sure this gets removed.
+    $id_field->options['alter']['text'] = '<p>{{ id }} <script>alert("Script removed")</script></p>';
+    $id_field->options['alter']['alter_text'] = TRUE;
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
+      return $id_field->theme($row);
+    });
+    $this->assertSubString($output, '<p>1 alert("Script removed")</p>');
+  }
+
+  /**
    * Tests the arguments tokens on field level.
    */
   public function testArgumentTokens() {
