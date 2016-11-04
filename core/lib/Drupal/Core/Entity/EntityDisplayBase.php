@@ -94,7 +94,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   protected $plugins = array();
 
   /**
-   * Context in which this entity will be used (e.g. 'display', 'form').
+   * Context in which this entity will be used (e.g. 'view', 'form').
    *
    * @var string
    */
