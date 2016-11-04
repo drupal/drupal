@@ -85,6 +85,17 @@
   }
 
   /**
+   * Close any active toolbar tray before entering edit mode.
+   */
+  function closeToolbarTrays() {
+    $('#toolbar-bar')
+      .find('.toolbar-tab')
+      .not('.contextual-toolbar-tab')
+      .has('.toolbar-tray.is-active')
+      .find('.toolbar-item').click();
+  }
+
+  /**
    *  Helper to switch edit mode state.
    *
    * @param {boolean} editMode
@@ -97,10 +108,7 @@
     // Turn on edit mode.
     if (editMode) {
       $editButton.text(Drupal.t('Editing'));
-      // Close the Manage tray if open when entering edit mode.
-      if ($('#toolbar-item-administration-tray').hasClass('is-active')) {
-        $('#toolbar-item-administration').trigger('click');
-      }
+      closeToolbarTrays();
 
       $editables = $('[data-drupal-outsidein="editable"]').once('outsidein');
       if ($editables.length) {

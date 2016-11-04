@@ -51,18 +51,21 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    * Tests opening Offcanvas tray by click blocks and elements in the blocks.
    */
   public function testBlocks() {
+    $web_assert = $this->assertSession();
     $blocks = [
       [
         'id' => 'block-powered',
         'new_page_text' => 'Can you imagine anyone showing the label on this block?',
         'element_selector' => '.content a',
         'button_text' => 'Save Powered by Drupal',
+        'toolbar_item' => '#toolbar-item-user',
       ],
       [
         'id' => 'block-branding',
         'new_page_text' => 'The site that will live a very short life.',
         'element_selector' => 'a[rel="home"]:nth-child(2)',
         'button_text' => 'Save Site branding',
+        'toolbar_item' => '#toolbar-item-administration',
       ],
       [
         'id' => 'block-search',
@@ -74,7 +77,22 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     foreach ($blocks as $block) {
       $block_selector = '#' . $block['id'];
       $this->drupalGet('user');
+      if (isset($block['toolbar_item'])) {
+        // Check that you can open a toolbar tray and it will be closed after
+        // entering edit mode.
+        if ($element = $page->find('css', "#toolbar-administration a.is-active")) {
+          // If a tray was open from page load close it.
+          $element->click();
+          $this->waitForNoElement("#toolbar-administration a.is-active");
+        }
+        $page->find('css', $block['toolbar_item'])->click();
+        $this->waitForElement("{$block['toolbar_item']}.is-active");
+      }
       $this->toggleEditingMode();
+      if (isset($block['toolbar_item'])) {
+        $this->waitForNoElement("{$block['toolbar_item']}.is-active");
+      }
+
       $this->openBlockForm($block_selector);
 
       switch ($block['id']) {
@@ -94,7 +112,6 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
         $page->pressButton($block['button_text']);
         // Make sure the changes are present.
         $this->getSession()->wait(500);
-        $web_assert = $this->assertSession();
         $web_assert->pageTextContains($block['new_page_text']);
       }
 
@@ -155,4 +172,5 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $this->waitForOffCanvasToOpen();
     $this->assertOffCanvasBlockFormIsValid();
   }
+
 }
