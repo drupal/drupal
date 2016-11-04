@@ -42,7 +42,7 @@ class InstallerTranslationTest extends InstallerTestBase {
   }
 
   /**
-   * @{inheritdoc}
+   * {@inheritdoc}
    */
   protected function setUpSettings() {
     // We are creating a table here to force an error in the installer because

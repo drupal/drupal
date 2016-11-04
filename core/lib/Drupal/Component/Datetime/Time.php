@@ -27,28 +27,28 @@ class Time implements TimeInterface {
   }
 
   /**
-   * @{inheritdoc}
+   * {@inheritdoc}
    */
   public function getRequestTime() {
     return $this->requestStack->getCurrentRequest()->server->get('REQUEST_TIME');
   }
 
   /**
-   * @{inheritdoc}
+   * {@inheritdoc}
    */
   public function getRequestMicroTime() {
     return $this->requestStack->getCurrentRequest()->server->get('REQUEST_TIME_FLOAT');
   }
 
   /**
-   * @{inheritdoc}
+   * {@inheritdoc}
    */
   public function getCurrentTime() {
     return time();
   }
 
   /**
-   * @{inheritdoc}
+   * {@inheritdoc}
    */
   public function getCurrentMicroTime() {
     return microtime(TRUE);

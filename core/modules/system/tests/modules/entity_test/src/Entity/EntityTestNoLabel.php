@@ -19,7 +19,7 @@ namespace Drupal\entity_test\Entity;
 class EntityTestNoLabel extends EntityTest {
 
   /**
-   * @{inheritdoc}
+   * {@inheritdoc}
    */
   public function label() {
     return $this->getName();
