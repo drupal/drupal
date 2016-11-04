@@ -1222,6 +1222,12 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if (!empty($alter['alter_text']) && $alter['text'] !== '') {
       $tokens = $this->getRenderTokens($alter);
       $value = $this->renderAltered($alter, $tokens);
+      // $alter['text'] is entered through the views admin UI and will be safe
+      // because the output of $this->renderAltered() is run through
+      // Xss::filterAdmin().
+      // @see \Drupal\views\Plugin\views\PluginBase::viewsTokenReplace()
+      // @see \Drupal\Component\Utility\Xss::filterAdmin()
+      $value_is_safe = TRUE;
     }
 
     if (!empty($this->options['alter']['trim_whitespace'])) {
