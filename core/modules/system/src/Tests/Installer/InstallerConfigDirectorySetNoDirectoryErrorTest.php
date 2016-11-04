@@ -44,7 +44,7 @@ class InstallerConfigDirectorySetNoDirectoryErrorTest extends InstallerTestBase 
   }
 
   /**
-   * @{inheritdoc}
+   * {@inheritdoc}
    */
   protected function setUpSite() {
     // This step should not appear as we had a failure prior to the settings
