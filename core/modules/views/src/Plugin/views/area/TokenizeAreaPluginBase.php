@@ -79,7 +79,7 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
           foreach ($options[$type] as $key => $value) {
             $items[] = $key . ' == ' . $value;
           }
-          $form['tokens']['tokens'] = array(
+          $form['tokens'][$type]['tokens'] = array(
             '#theme' => 'item_list',
             '#items' => $items,
           );
