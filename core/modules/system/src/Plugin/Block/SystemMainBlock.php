@@ -20,7 +20,7 @@ class SystemMainBlock extends BlockBase implements MainContentBlockPluginInterfa
    *
    * @var array
    */
-  protected $mainContent = [];
+  protected $mainContent;
 
   /**
    * {@inheritdoc}
