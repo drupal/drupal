@@ -3,6 +3,9 @@ encouraged to submit issues and changes (patches) to improve Drupal, and to
 contribute in other ways -- see https://www.drupal.org/contribute to find out
 how.
 
+This file lists the active maintainers. For a list of past maintainers, see:
+https://www.drupal.org/core/maintainers/past
+
 
 Core committers
 ---------------
@@ -53,11 +56,10 @@ Actions
 - ?
 
 Aggregator
-- Paris Liakos 'ParisLiakos' https://www.drupal.org/u/parisliakos
+- ?
 
 Ajax
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
-- Earl Miles 'merlinofchaos' https://www.drupal.org/u/merlinofchaos
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 
 Asset Library API
@@ -73,19 +75,17 @@ Ban
 - ?
 
 Bartik
-- Jen Simmons 'jensimmons' https://www.drupal.org/u/jensimmons
 - Emma Maria Karayiannis 'emma.maria' https://www.drupal.org/u/emma.maria
 
 Base system
-- Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
-- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
+- ?
 
 Basic Auth
 - Klaus Purer 'klausi' https://www.drupal.org/u/klausi
 - Juampy Novillo Requena 'juampy' https://www.drupal.org/u/juampy
 
 Batch API
-- Yves Chedemois 'yched' https://www.drupal.org/u/yched
+- ?
 
 BigPipe
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
@@ -109,9 +109,7 @@ Breakpoint
 - Marc Drummond 'mdrummond' https://www.drupal.org/u/mdrummond
 
 Cache
-- Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
-- Mark Sonnabaum 'msonnabaum' https://www.drupal.org/u/msonnabaum
 
 CKEditor
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
@@ -130,13 +128,11 @@ Comment
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
 Configuration API
-- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
 - Matthew Tift 'mtift' https://www.drupal.org/u/mtift
 
 Configuration Entity API
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
-- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 
 Configuration UI
@@ -159,10 +155,10 @@ Content Translation
 - Francesco Placella 'plach' https://www.drupal.org/u/plach
 
 Contextual
-- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
+- ?
 
 Cron
-- Derek Wright 'dww' https://www.drupal.org/u/dww
+- ?
 
 CSS
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
@@ -175,14 +171,13 @@ Database API
   - David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
 
   PostgreSQL DB driver
-  - Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
-  - Josh Waihi 'fiasco' https://www.drupal.org/u/fiasco
+  - ?
 
   Sqlite DB driver
-  - Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
+  - ?
 
 Database Logging
-- Khalid Baheyeldin 'kbahey' https://www.drupal.org/u/kbahey
+- ?
 
 Database Update API
 - ?
@@ -203,7 +198,6 @@ Editor
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Entity API
-- Wolfgang Ziegler 'fago' https://www.drupal.org/u/fago
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
 - Francesco Placella 'plach' https://www.drupal.org/u/plach
@@ -213,7 +207,6 @@ Extension API
 - ?
 
 Field API
-- Yves Chedemois 'yched' https://www.drupal.org/u/yched
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 
 Field UI
@@ -221,19 +214,16 @@ Field UI
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 
 File
-- Andrew Morton 'drewish' https://www.drupal.org/u/drewish
-- Aaron Winborn 'aaron' https://www.drupal.org/u/aaron
+- ?
 
 Filter
-- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
+- ?
 
 Forum
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
 Form API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
-- Wolfgang Ziegler 'fago' https://www.drupal.org/u/fago
-- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 
 History
@@ -266,13 +256,13 @@ Link Field
 - Weber Macedo 'Mac_Weber' https://www.drupal.org/u/mac_weber
 
 Lock
-- Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
+- ?
 
 Mail
 - ?
 
 Markup
-- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
+- ?
 
 Migrate
 - Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
@@ -301,16 +291,15 @@ Menu UI
 - ?
 
 Node
-- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
-- David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
+- ?
 
 Node Access
-- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
 - Ken Rickard 'agentrickard' https://www.drupal.org/u/agentrickard
+- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 
 Options
-- Yves Chedemois 'yched' https://www.drupal.org/u/yched
+- ?
 
 Outside In
 - Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
@@ -329,7 +318,6 @@ Plugin
 
 Queue
 - James Gilliland 'neclimdul' https://www.drupal.org/u/neclimdul
-- Mark Sonnabaum 'msonnabaum' https://www.drupal.org/u/msonnabaum
 
 Quick Edit
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
@@ -339,8 +327,8 @@ RDF
 - Stéphane Corlosquet 'scor' https://www.drupal.org/u/scor
 
 Render API
-- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
+- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
 
 Request Processing
 - Larry Garfield 'Crell' https://www.drupal.org/u/crell
@@ -390,10 +378,9 @@ System (module)
 Taxonomy
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
-- Benjamin Doherty 'bangpound' https://www.drupal.org/u/bangpound
 
 Telephone
-- Dave Reid 'dave-reid' https://www.drupal.org/u/dave-reid
+- ?
 
 Testing framework
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
@@ -411,7 +398,7 @@ Theme API
 - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 
 Token
-- Dave Reid 'davereid' https://www.drupal.org/u/davereid
+- ?
 
 Toolbar
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
@@ -420,22 +407,19 @@ Tour
 - Nick Schuch 'nick_schuch' https://www.drupal.org/u/nick_schuch
 
 Tracker
-- David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
+- ?
 
 Transliteration
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
-- Damien Tournoud 'damien-tournoud' https://www.drupal.org/u/damien-tournoud
-- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
 
 Typed Data
 - Wolfgang Ziegler 'fago' https://www.drupal.org/u/fago
 
 Update UI
-- Derek Wright 'dww' https://www.drupal.org/u/dww
+- ?
 
 User
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
-- David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
 
 Views
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
@@ -449,7 +433,6 @@ Topic maintainers
 
 Accessibility
 - Mike Gifford 'mgifford' https://www.drupal.org/u/mgifford
-- Jesse Renée Beach 'jessebeach' https://www.drupal.org/u/jessebeach
 - Andrew Macpherson 'andrewmacpherson' https://www.drupal.org/u/andrewmacpherson
 
 Documentation
@@ -488,20 +471,8 @@ re-architect or otherwise improve large areas of Drupal core. See
 https://www.drupal.org/community-initiatives/drupal-core for more information on
 their responsibilities. The initiative coordinators for Drupal 8 are:
 
-Configuration management
-- Greg Dunlap 'heyrocker' https://www.drupal.org/u/heyrocker
-
-Design
-- Jeff Burns 'Jeff Burnz' https://www.drupal.org/u/jeff-burnz
-
-Mobile
-- John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
-
 Multi-lingual
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
-
-Web services
-- Larry Garfield 'Crell' https://www.drupal.org/u/crell
 
 Workflow Initiative
 - Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
