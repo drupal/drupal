@@ -65,6 +65,16 @@ class CommentAnonymousTest extends CommentTestBase {
     $anonymous_comment1 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
     $this->assertTrue($this->commentExists($anonymous_comment1), 'Anonymous comment without contact info found.');
 
+    // Ensure anonymous users cannot post in the name of registered users.
+    $edit = array(
+      'name' => $this->adminUser->getUsername(),
+      'comment_body[0][value]' => $this->randomMachineName(),
+    );
+    $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', $edit, t('Save'));
+    $this->assertRaw(t('The name you used (%name) belongs to a registered user.', [
+      '%name' => $this->adminUser->getUsername(),
+    ]));
+
     // Allow contact info.
     $this->drupalLogin($this->adminUser);
     $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAY_CONTACT);
