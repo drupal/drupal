@@ -23,15 +23,6 @@ class TextareaWidget extends StringTextareaWidget {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element = parent::settingsForm($form, $form_state);
-    $element['rows']['#description'] = $this->t('Text editors (like CKEditor) may override this setting.');
-    return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $main_widget = parent::formElement($items, $delta, $element, $form, $form_state);
 
