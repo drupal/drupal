@@ -49,7 +49,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
       'image_style' => 5,
       'language_content_settings' => 2,
       'migration' => 105,
-      'node' => 10,
+      'node' => 11,
       'node_type' => 11,
       'rdf_mapping' => 5,
       'search_page' => 2,
