@@ -199,6 +199,19 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
       $this->assertResponse('403', 'Access denied to image style thumbnail as anonymous user.');
     }
+
+    // Test the image URL formatter without an image style.
+    $display_options = [
+      'type' => 'image_url',
+      'settings' => ['image_style' => ''],
+    ];
+    $expected_url = file_url_transform_relative(file_create_url($image_uri));
+    $this->assertEqual($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
+
+    // Test the image URL formatter with an image style.
+    $display_options['settings']['image_style'] = 'thumbnail';
+    $expected_url = file_url_transform_relative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
+    $this->assertEqual($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
   }
 
   /**

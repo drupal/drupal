@@ -139,6 +139,14 @@ field.formatter.settings.image:
       type: string
       label: 'Image style'
 
+field.formatter.settings.image_url:
+  type: mapping
+  label: 'Image URL formatter settings'
+  mapping:
+    image_style:
+      type: string
+      label: 'Image style'
+
 field.widget.settings.image_image:
   type: mapping
   label: 'Image field display format settings'
