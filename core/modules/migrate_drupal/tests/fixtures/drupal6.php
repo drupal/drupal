@@ -41378,6 +41378,40 @@ $connection->insert('node')
   'tnid' => '10',
   'translate' => '0',
 ))
+->values(array(
+  'nid' => '12',
+  'vid' => '15',
+  'type' => 'page',
+  'language' => 'zu',
+  'title' => 'Abantu zulu',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1444238800',
+  'changed' => '1444238808',
+  'comment' => '0',
+  'promote' => '0',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '12',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '13',
+  'vid' => '16',
+  'type' => 'page',
+  'language' => 'en',
+  'title' => 'The Zulu People',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1444239050',
+  'changed' => '1444239050',
+  'comment' => '0',
+  'promote' => '0',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '12',
+  'translate' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('node_access', array(
@@ -41803,6 +41837,28 @@ $connection->insert('node_revisions')
   'title' => 'Le Vrai McCoy',
   'body' => 'Ooh là là!',
   'teaser' => 'Ooh là là!',
+  'log' => '',
+  'timestamp' => '1444239050',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '12',
+  'vid' => '15',
+  'uid' => '1',
+  'title' => 'Abantu zulu',
+  'body' => "Mr. Crusher, ready a collision course with the Borg ship.",
+  'teaser' => "Mr. Crusher, ready a collision course with the Borg ship.",
+  'log' => '',
+  'timestamp' => '1444238808',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '13',
+  'vid' => '16',
+  'uid' => '1',
+  'title' => 'The Zulu People',
+  'body' => 'Mr. Crusher, ready a collision course with the Borg ship.',
+  'teaser' => 'Mr. Crusher, ready a collision course with the Borg ship.',
   'log' => '',
   'timestamp' => '1444239050',
   'format' => '1',

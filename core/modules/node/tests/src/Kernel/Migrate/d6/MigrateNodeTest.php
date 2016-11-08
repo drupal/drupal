@@ -28,7 +28,12 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     parent::setUp();
     $this->setUpMigratedFiles();
     $this->installSchema('file', ['file_usage']);
-    $this->executeMigrations(['language', 'd6_node', 'd6_node_translation']);
+    $this->executeMigrations([
+      'language',
+      'd6_language_content_settings',
+      'd6_node',
+      'd6_node_translation',
+    ]);
   }
 
   /**
@@ -95,6 +100,14 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertIdentical('en', $node->langcode->value);
     $this->assertIdentical('The Real McCoy', $node->title->value);
     $this->assertTrue($node->hasTranslation('fr'), "Node 10 has french translation");
+
+    // Test that content_translation_source is set.
+    $manager = $this->container->get('content_translation.manager');
+    $this->assertIdentical('en', $manager->getTranslationMetadata($node->getTranslation('fr'))->getSource());
+
+    // Test that content_translation_source for a source other than English.
+    $node = Node::load(12);
+    $this->assertIdentical('zu', $manager->getTranslationMetadata($node->getTranslation('en'))->getSource());
 
     // Node 11 is a translation of node 10, and should not be imported separately.
     $this->assertNull(Node::load(11), "Node 11 doesn't exist in D8, it was a translation");
