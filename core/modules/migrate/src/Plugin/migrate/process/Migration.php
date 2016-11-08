@@ -39,6 +39,13 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
   protected $migrationPluginManager;
 
   /**
+   * The migration to be executed.
+   *
+   * @var \Drupal\migrate\Plugin\MigrationInterface
+   */
+  protected $migration;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MigrationPluginManagerInterface $migration_plugin_manager, MigratePluginManagerInterface $process_plugin_manager) {
