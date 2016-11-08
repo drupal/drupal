@@ -95,9 +95,23 @@ function entity_test_entity_type_alter(array &$entity_types) {
   // Allow entity_test_update tests to override the entity type definition.
   $entity_types['entity_test_update'] = $state->get('entity_test_update.entity_type', $entity_types['entity_test_update']);
 
+  // Allow entity_test_with_bundle tests to override the entity type definition.
+  $entity_types['entity_test_with_bundle'] = $state->get('entity_test_with_bundle.entity_type', $entity_types['entity_test_with_bundle']);
+
   // Enable the entity_test_new only when needed.
   if (!$state->get('entity_test_new')) {
     unset($entity_types['entity_test_new']);
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function entity_test_module_implements_alter(&$implementations, $hook) {
+  // Move our hook_entity_type_alter() implementation to the beginning of the
+  // list in order to run before content_moderation_entity_type_alter().
+  if ($hook === 'entity_type_alter') {
+    $implementations = ['entity_test' => $implementations['entity_test']] + $implementations;
   }
 }
 

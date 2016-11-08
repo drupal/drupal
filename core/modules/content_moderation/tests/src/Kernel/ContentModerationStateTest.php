@@ -4,6 +4,8 @@ namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\content_moderation\Entity\ModerationState;
+use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -21,12 +23,14 @@ class ContentModerationStateTest extends KernelTestBase {
    * {@inheritdoc}
    */
   public static $modules = [
+    'entity_test',
     'node',
     'content_moderation',
     'user',
     'system',
     'language',
     'content_translation',
+    'text',
   ];
 
   /**
@@ -38,6 +42,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->installSchema('node', 'node_access');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
+    $this->installEntitySchema('entity_test_with_bundle');
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
   }
@@ -208,6 +213,91 @@ class ContentModerationStateTest extends KernelTestBase {
     $english_node = $this->reloadNode($english_node);
     $this->assertTrue($english_node->isPublished());
     $this->assertEquals(6, $english_node->getRevisionId());
+  }
+
+  /**
+   * Tests that a non-translatable entity type with a langcode can be moderated.
+   */
+  public function testNonTranslatableEntityTypeModeration() {
+    // Make the 'entity_test_with_bundle' entity type revisionable.
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_with_bundle');
+    $keys = $entity_type->getKeys();
+    $keys['revision'] = 'revision_id';
+    $entity_type->set('entity_keys', $keys);
+    \Drupal::state()->set('entity_test_with_bundle.entity_type', $entity_type);
+    \Drupal::entityDefinitionUpdateManager()->applyUpdates();
+
+    // Create a test bundle.
+    $entity_test_bundle = EntityTestBundle::create([
+      'id' => 'example',
+    ]);
+    $entity_test_bundle->setThirdPartySetting('content_moderation', 'enabled', TRUE);
+    $entity_test_bundle->setThirdPartySetting('content_moderation', 'allowed_moderation_states', [
+      'draft',
+      'published'
+    ]);
+    $entity_test_bundle->setThirdPartySetting('content_moderation', 'default_moderation_state', 'draft');
+    $entity_test_bundle->save();
+
+    // Check that the tested entity type is not translatable.
+    $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_with_bundle');
+    $this->assertFalse($entity_type->isTranslatable(), 'The test entity type is not translatable.');
+
+    // Create a test entity.
+    $entity_test_with_bundle = EntityTestWithBundle::create([
+      'type' => 'example'
+    ]);
+    $entity_test_with_bundle->save();
+    $this->assertEquals('draft', $entity_test_with_bundle->moderation_state->entity->id());
+
+    $entity_test_with_bundle->moderation_state->target_id = 'published';
+    $entity_test_with_bundle->save();
+
+    $this->assertEquals('published', EntityTestWithBundle::load($entity_test_with_bundle->id())->moderation_state->entity->id());
+  }
+
+  /**
+   * Tests that a non-translatable entity type without a langcode can be
+   * moderated.
+   */
+  public function testNonLangcodeEntityTypeModeration() {
+    // Make the 'entity_test_with_bundle' entity type revisionable and unset
+    // the langcode entity key.
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_with_bundle');
+    $keys = $entity_type->getKeys();
+    $keys['revision'] = 'revision_id';
+    unset($keys['langcode']);
+    $entity_type->set('entity_keys', $keys);
+    \Drupal::state()->set('entity_test_with_bundle.entity_type', $entity_type);
+    \Drupal::entityDefinitionUpdateManager()->applyUpdates();
+
+    // Create a test bundle.
+    $entity_test_bundle = EntityTestBundle::create([
+      'id' => 'example',
+    ]);
+    $entity_test_bundle->setThirdPartySetting('content_moderation', 'enabled', TRUE);
+    $entity_test_bundle->setThirdPartySetting('content_moderation', 'allowed_moderation_states', [
+      'draft',
+      'published'
+    ]);
+    $entity_test_bundle->setThirdPartySetting('content_moderation', 'default_moderation_state', 'draft');
+    $entity_test_bundle->save();
+
+    // Check that the tested entity type is not translatable.
+    $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_with_bundle');
+    $this->assertFalse($entity_type->isTranslatable(), 'The test entity type is not translatable.');
+
+    // Create a test entity.
+    $entity_test_with_bundle = EntityTestWithBundle::create([
+      'type' => 'example'
+    ]);
+    $entity_test_with_bundle->save();
+    $this->assertEquals('draft', $entity_test_with_bundle->moderation_state->entity->id());
+
+    $entity_test_with_bundle->moderation_state->target_id = 'published';
+    $entity_test_with_bundle->save();
+
+    $this->assertEquals('published', EntityTestWithBundle::load($entity_test_with_bundle->id())->moderation_state->entity->id());
   }
 
   /**
