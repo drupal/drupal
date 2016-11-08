@@ -39,6 +39,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
       '#type' => 'number',
       '#title' => t('Summary rows'),
       '#default_value' => $this->getSetting('summary_rows'),
+      '#description' => $element['rows']['#description'],
       '#required' => TRUE,
       '#min' => 1,
     );
