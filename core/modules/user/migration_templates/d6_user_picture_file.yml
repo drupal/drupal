@@ -11,6 +11,9 @@ source:
     # table are specified, and must end with a /.
     source_base_path: ''
 process:
+    # If you are using both this migration and d6_file in a custom migration
+    # and executing migrations incrementally, it is recommended that you
+    # remove the fid mapping from d6_file to avoid potential ID conflicts.
   filename: filename
   uid: uid
   source_full_path:
