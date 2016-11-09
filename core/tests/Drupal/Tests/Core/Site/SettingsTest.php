@@ -126,4 +126,21 @@ class SettingsTest extends UnitTestCase {
     $this->assertNotEquals($settings::getApcuPrefix('cache_test', '/test/a'), $settings::getApcuPrefix('cache_test', '/test/b'));
   }
 
+  /**
+   * Tests that an exception is thrown when settings are not initialized yet.
+   *
+   * @covers ::getInstance
+   */
+  public function testGetInstanceReflection() {
+    $settings = new Settings(array());
+
+    $class = new \ReflectionClass(Settings::class);
+    $instace_property = $class->getProperty("instance");
+    $instace_property->setAccessible(TRUE);
+    $instace_property->setValue(NULL);
+
+    $this->setExpectedException(\BadMethodCallException::class);
+    $settings->getInstance();
+  }
+
 }
