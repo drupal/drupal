@@ -60,7 +60,7 @@ class DownloadTest extends FileTestBase {
   /**
    * Tests that an exception is thrown if the destination URI is not writable.
    */
-  public function testWriteProectedDestination() {
+  public function testWriteProtectedDestination() {
     // Create a pre-existing file at the destination, to test overwrite behavior.
     $destination_uri = $this->createUri('not-writable.txt');
 
