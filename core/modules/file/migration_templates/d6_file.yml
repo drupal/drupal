@@ -13,6 +13,9 @@ source:
     # configuration in this migration's process pipeline as an example.
     source_base_path: ''
 process:
+    # If you are using both this migration and d6_user_picture_file in a custom
+    # migration and executing migrations incrementally, it is recommended that
+    # you remove the fid mapping here to avoid potential ID conflicts.
   fid: fid
   filename: filename
   source_full_path:
