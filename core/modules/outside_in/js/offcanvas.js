@@ -120,6 +120,9 @@
           of: window
         };
         settings.dialogClass = 'ui-dialog-offcanvas';
+        // Applies initial height to dialog based on window height.
+        // See http://api.jqueryui.com/dialog for all dialog options.
+        settings.height = $(window).height();
       }
     },
     'dialog:beforeclose': function (event, dialog, $element) {

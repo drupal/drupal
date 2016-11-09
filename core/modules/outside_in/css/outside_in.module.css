@@ -38,12 +38,3 @@
 [dir="rtl"] .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
   float: right;
 }
-
-.offcanvas-lining {
-  background: #333;
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  z-index: -1;
-}
