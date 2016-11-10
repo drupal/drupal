@@ -1091,7 +1091,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $block = $form_state->getValue('block');
     $display_options['title'] = $block['title'];
     $display_options['style'] = array('type' => $block['style']['style_plugin']);
-    $display_options['row'] = array('type' => isset($block['style']['row_plugin']) ? $block['style']['row_plugin'] : 'fields');
+    $options = $this->rowStyleOptions();
+    $display_options['row'] = array('type' => (isset($block['style']['row_plugin']) && isset($options[$block['style']['row_plugin']])) ? $block['style']['row_plugin'] : 'fields');
     $display_options['pager']['type'] = $block['pager'] ? 'full' : (empty($block['items_per_page']) ? 'none' : 'some');
     $display_options['pager']['options']['items_per_page'] = $block['items_per_page'];
     return $display_options;
