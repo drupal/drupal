@@ -27,11 +27,6 @@ class ViewsBlock extends ViewsBlockBase {
     // entry for the view output by passing FALSE, because we're going to cache
     // the whole block instead.
     if ($output = $this->view->buildRenderable($this->displayID, [], FALSE)) {
-      // Override the label to the dynamic title configured in the view.
-      if (empty($this->configuration['views_label']) && $this->view->getTitle()) {
-        $output['#title'] = ['#markup' => $this->view->getTitle(), '#allowed_tags' => Xss::getHtmlTagList()];
-      }
-
       // Before returning the block output, convert it to a renderable array
       // with contextual links.
       $this->addContextualLinks($output);
@@ -40,6 +35,11 @@ class ViewsBlock extends ViewsBlockBase {
       // top-level #pre_render callback. So, here we make sure that Views'
       // #pre_render callback has already been applied.
       $output = View::preRenderViewElement($output);
+
+      // Override the label to the dynamic title configured in the view.
+      if (empty($this->configuration['views_label']) && $this->view->getTitle()) {
+        $output['#title'] = ['#markup' => $this->view->getTitle(), '#allowed_tags' => Xss::getHtmlTagList()];
+      }
 
       // When view_build is empty, the actual render array output for this View
       // is going to be empty. In that case, return just #cache, so that the
