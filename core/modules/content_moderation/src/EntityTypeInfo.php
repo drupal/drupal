@@ -292,8 +292,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
 
     $fields = [];
     $fields['moderation_state'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Moderation state'))
-      ->setDescription(t('The moderation state of this piece of content.'))
+      ->setLabel($this->t('Moderation state'))
+      ->setDescription($this->t('The moderation state of this piece of content.'))
       ->setComputed(TRUE)
       ->setClass(ModerationStateFieldItemList::class)
       ->setSetting('target_type', 'moderation_state')
@@ -310,6 +310,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       ->addConstraint('ModerationState', [])
       ->setDisplayConfigurable('form', FALSE)
       ->setDisplayConfigurable('view', FALSE)
+      ->setReadOnly(FALSE)
       ->setTranslatable(TRUE);
 
     return $fields;
