@@ -15,7 +15,7 @@ class ViewsWizardTest extends JavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'views', 'views_ui', 'block'];
+  public static $modules = ['node', 'views', 'views_ui', 'block', 'user'];
 
   /**
    * {@inheritdoc}
@@ -56,6 +56,27 @@ class ViewsWizardTest extends JavascriptTestBase {
     // Add a block display.
     $page->findField('block[create]')->click();
     $this->assertEquals($label_value, $page->findField('block[title]')->getValue());
+
+    // Select the entity type to display and test that the type selector is
+    // shown when expected.
+    $page->selectFieldOption('show[wizard_key]', 'node');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNull($page->findField('show[type]'), 'The "of type" filter is not added for nodes when there are no node types.');
+    $this->assertEquals('teasers', $page->findField('page[style][row_plugin]')->getValue(), 'The page display format shows the expected default value.');
+    $this->assertEquals('titles_linked', $page->findField('block[style][row_plugin]')->getValue(), 'The block display format shows the expected default value.');
+
+    $page->selectFieldOption('show[wizard_key]', 'users');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNull($page->findField('show[type]'), 'The "of type" filter is not added for users.');
+    $this->assertEquals('fields', $page->findField('page[style][row_plugin]')->getValue(), 'The page display format was updated to a valid value.');
+    $this->assertEquals('fields', $page->findField('block[style][row_plugin]')->getValue(), 'The block display format was updated to a valid value.');
+
+    $this->drupalCreateContentType(['type' => 'page']);
+    $page->selectFieldOption('show[wizard_key]', 'node');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNotNull($page->findField('show[type]'), 'The "of type" filter is added for nodes when there is at least one node type.');
+    $this->assertEquals('fields', $page->findField('page[style][row_plugin]')->getValue(), 'The page display format was not changed from a valid value.');
+    $this->assertEquals('fields', $page->findField('block[style][row_plugin]')->getValue(), 'The block display format was not changed from a valid value.');
   }
 
 }
