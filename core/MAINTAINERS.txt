@@ -477,10 +477,6 @@ Multi-lingual
 Workflow Initiative
 - Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
 
-PHPUnit Initiative
-- Klaus Purer 'klausi' https://www.drupal.org/u/klausi
-- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
-
 Provisional membership: None at this time.
 
 
