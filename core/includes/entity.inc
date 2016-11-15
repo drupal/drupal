@@ -539,12 +539,12 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
  *   When the entity form display is not available in configuration, you can
  *   create a new EntityFormDisplay object using:
  * @code
- * $values = ('entity_form_display', array(
+ * $values = array(
  *  'targetEntityType' => $entity_type,
  *  'bundle' => $bundle,
  *  'mode' => $form_mode,
  *  'status' => TRUE,
- * ));
+ * );
  * \Drupal::entityTypeManager()
  *   ->getStorage('entity_form_display')
  *   ->create($values);
