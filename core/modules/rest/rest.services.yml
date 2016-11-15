@@ -28,3 +28,8 @@ services:
   logger.channel.rest:
     parent: logger.channel_base
     arguments: ['rest']
+  rest.resource_response.subscriber:
+    class: Drupal\rest\EventSubscriber\ResourceResponseSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@serializer', '@renderer', '@current_route_match']
