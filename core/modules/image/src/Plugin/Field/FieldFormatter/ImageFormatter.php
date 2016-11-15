@@ -22,6 +22,9 @@ use Drupal\Core\Cache\Cache;
  *   label = @Translation("Image"),
  *   field_types = {
  *     "image"
+ *   },
+ *   quickedit = {
+ *     "editor" = "image"
  *   }
  * )
  */

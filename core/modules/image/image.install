@@ -61,3 +61,10 @@ function image_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+ * Flush caches as we changed field formatter metadata.
+ */
+function image_update_8201() {
+  // Empty update to trigger a cache flush.
+}

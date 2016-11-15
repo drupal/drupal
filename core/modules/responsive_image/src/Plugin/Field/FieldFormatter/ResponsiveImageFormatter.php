@@ -23,6 +23,9 @@ use Drupal\Core\Utility\LinkGeneratorInterface;
  *   label = @Translation("Responsive image"),
  *   field_types = {
  *     "image",
+ *   },
+ *   quickedit = {
+ *     "editor" = "image"
  *   }
  * )
  */

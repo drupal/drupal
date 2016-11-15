@@ -98,6 +98,12 @@ libraries-override:
     css:
       theme:
         css/image.admin.css: css/image/image.admin.css
+  image/quickedit.inPlaceEditor.image:
+    css:
+      component:
+        css/editors/image.css: css/image/editors/image.css
+      theme:
+        css/editors/image.theme.css: css/image/editors/image.theme.css
 
   language/drupal.language.admin:
     css:
