@@ -132,7 +132,7 @@ class NodeTermData extends RelationshipPluginBase {
       $query = db_select('taxonomy_term_field_data', 'td');
       $query->addJoin($def['type'], 'taxonomy_index', 'tn', 'tn.tid = td.tid');
       $query->condition('td.vid', array_filter($this->options['vids']), 'IN');
-      $query->addTag('term_access');
+      $query->addTag('taxonomy_term_access');
       $query->fields('td');
       $query->fields('tn', array('nid'));
       $def['table formula'] = $query;

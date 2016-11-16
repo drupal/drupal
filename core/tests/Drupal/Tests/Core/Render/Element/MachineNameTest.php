@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Render\Element;
 
+use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -78,8 +79,12 @@ class MachineNameTest extends UnitTestCase {
     $language_manager = $this->prophesize(LanguageManagerInterface::class);
     $language_manager->getCurrentLanguage()->willReturn($language);
 
+    $csrf_token = $this->prophesize(CsrfTokenGenerator::class);
+    $csrf_token->get('[^a-z0-9_]+')->willReturn('tis-a-fine-token');
+
     $container = $this->prophesize(ContainerInterface::class);
     $container->get('language_manager')->willReturn($language_manager->reveal());
+    $container->get('csrf_token')->willReturn($csrf_token->reveal());
     \Drupal::setContainer($container->reveal());
 
     $element = MachineName::processMachineName($element, $form_state, $complete_form);
@@ -93,7 +98,8 @@ class MachineNameTest extends UnitTestCase {
       'label',
       'field_prefix',
       'field_suffix',
-      'suffix'
+      'suffix',
+      'replace_token',
     ];
     $this->assertEmpty(array_diff_key($settings, array_flip($allowed_options)));
     foreach ($allowed_options as $key) {
