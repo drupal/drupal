@@ -292,6 +292,9 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     unset($edit['pass']);
     $this->drupalGet('user/password', array('query' => array('name' => $edit['name'])));
     $this->assertFieldByName('name', $edit['name'], 'User name found.');
+    // Ensure the name field value is not cached.
+    $this->drupalGet('user/password');
+    $this->assertNoFieldByName('name', $edit['name'], 'User name not found.');
   }
 
   /**

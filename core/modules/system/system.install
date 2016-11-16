@@ -1730,3 +1730,19 @@ function system_update_8201() {
 /**
  * @} End of "addtogroup updates-8.2.0".
  */
+
+/**
+ * @addtogroup updates-8.2.3
+ * @{
+ */
+
+/**
+ * Clear caches due to behavior change in MachineName element.
+ */
+function system_update_8202() {
+  // Empty update to cause a cache rebuild.
+}
+
+/**
+ * @} End of "addtogroup updates-8.2.3".
+ */
