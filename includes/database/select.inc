@@ -1231,6 +1231,21 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
     // Modules may alter all queries or only those having a particular tag.
     if (isset($this->alterTags)) {
+      // Many contrib modules assume that query tags used for access-checking
+      // purposes follow the pattern $entity_type . '_access'. But this is
+      // not the case for taxonomy terms, since core used to add term_access
+      // instead of taxonomy_term_access to its queries. Provide backwards
+      // compatibility by adding both tags here instead of attempting to fix
+      // all contrib modules in a coordinated effort.
+      // TODO:
+      // - Extract this mechanism into a hook as part of a public (non-security)
+      //   issue.
+      // - Emit E_USER_DEPRECATED if term_access is used.
+      //   https://www.drupal.org/node/2575081
+      $term_access_tags = array('term_access' => 1, 'taxonomy_term_access' => 1);
+      if (array_intersect_key($this->alterTags, $term_access_tags)) {
+        $this->alterTags += $term_access_tags;
+      }
       $hooks = array('query');
       foreach ($this->alterTags as $tag => $value) {
         $hooks[] = 'query_' . $tag;

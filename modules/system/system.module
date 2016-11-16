@@ -2883,7 +2883,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 
   // Prepare cancel link.
   if (isset($_GET['destination'])) {
-    $options = drupal_parse_url(urldecode($_GET['destination']));
+    $options = drupal_parse_url($_GET['destination']);
   }
   elseif (is_array($path)) {
     $options = $path;

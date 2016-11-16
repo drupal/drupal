@@ -1,6 +1,10 @@
 
-Drupal 7.52 (development version), xxxx-xx-xx
----------------------------------------------
+Drupal 7.53, xxxx-xx-xx (development version)
+-----------------------
+
+Drupal 7.52, 2016-11-16
+-----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2016-005.
 
 Drupal 7.51, 2016-10-05
 -----------------------
