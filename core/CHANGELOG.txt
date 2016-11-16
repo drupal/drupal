@@ -1,3 +1,7 @@
+Drupal 8.2.3, 2016-11-16
+------------------------
+- Fixed security issues. See SA-CORE-2016-005.
+
 Drupal 8.2.0, 2016-10-05
 ------------------------
 - Updated the git repository configuration to not normalize line endings for
