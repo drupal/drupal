@@ -190,6 +190,7 @@ class MachineName extends Textfield {
     $element['#attached']['library'][] = 'core/drupal.machine-name';
     $options = [
       'replace_pattern',
+      'replace_token',
       'replace',
       'maxlength',
       'target',
@@ -198,6 +199,11 @@ class MachineName extends Textfield {
       'field_suffix',
       'suffix',
     ];
+
+    /** @var \Drupal\Core\Access\CsrfTokenGenerator $token_generator */
+    $token_generator = \Drupal::service('csrf_token');
+    $element['#machine_name']['replace_token'] = $token_generator->get($element['#machine_name']['replace_pattern']);
+
     $element['#attached']['drupalSettings']['machineName']['#' . $source['#id']] = array_intersect_key($element['#machine_name'], array_flip($options));
     $element['#attached']['drupalSettings']['langcode'] = $language->getId();
 

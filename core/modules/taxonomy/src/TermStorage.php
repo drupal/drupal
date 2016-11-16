@@ -126,7 +126,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       $query->addField('t', 'tid');
       $query->condition('h.tid', $tid);
       $query->condition('t.default_langcode', 1);
-      $query->addTag('term_access');
+      $query->addTag('taxonomy_term_access');
       $query->orderBy('t.weight');
       $query->orderBy('t.name');
       if ($ids = $query->execute()->fetchCol()) {
@@ -178,7 +178,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         $query->condition('t.vid', $vid);
       }
       $query->condition('t.default_langcode', 1);
-      $query->addTag('term_access');
+      $query->addTag('taxonomy_term_access');
       $query->orderBy('t.weight');
       $query->orderBy('t.name');
       if ($ids = $query->execute()->fetchCol()) {
@@ -204,7 +204,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         $query = $this->database->select('taxonomy_term_field_data', 't');
         $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
         $result = $query
-          ->addTag('term_access')
+          ->addTag('taxonomy_term_access')
           ->fields('t')
           ->fields('h', array('parent'))
           ->condition('t.vid', $vid)
@@ -320,7 +320,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $query->orderby('td.weight');
     $query->orderby('td.name');
     $query->condition('tn.nid', $nids, 'IN');
-    $query->addTag('term_access');
+    $query->addTag('taxonomy_term_access');
     if (!empty($vocabs)) {
       $query->condition('td.vid', $vocabs, 'IN');
     }

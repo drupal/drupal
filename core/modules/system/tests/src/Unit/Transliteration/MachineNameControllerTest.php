@@ -2,9 +2,12 @@
 
 namespace Drupal\Tests\system\Unit\Transliteration;
 
+use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Transliteration\PhpTransliteration;
 use Drupal\system\MachineNameController;
+use Prophecy\Argument;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -21,10 +24,22 @@ class MachineNameControllerTest extends UnitTestCase {
    */
   protected $machineNameController;
 
+  /**
+   * The CSRF token generator.
+   *
+   * @var \Drupal\Core\Access\CsrfTokenGenerator
+   */
+  protected $tokenGenerator;
+
   protected function setUp() {
     parent::setUp();
     // Create the machine name controller.
-    $this->machineNameController = new MachineNameController(new PhpTransliteration());
+    $this->tokenGenerator = $this->prophesize(CsrfTokenGenerator::class);
+    $this->tokenGenerator->validate(Argument::cetera())->will(function ($args) {
+      return $args[0] === 'token-' . $args[1];
+    });
+
+    $this->machineNameController = new MachineNameController(new PhpTransliteration(), $this->tokenGenerator->reveal());
   }
 
   /**
@@ -38,7 +53,7 @@ class MachineNameControllerTest extends UnitTestCase {
    *     - The expected content of the JSONresponse.
    */
   public function providerTestMachineNameController() {
-    return array(
+    $valid_data = array(
       array(array('text' => 'Bob', 'langcode' => 'en'), '"Bob"'),
       array(array('text' => 'Bob', 'langcode' => 'en', 'lowercase' => TRUE), '"bob"'),
       array(array('text' => 'Bob', 'langcode' => 'en', 'replace' => 'Alice', 'replace_pattern' => 'Bob'), '"Alice"'),
@@ -53,6 +68,15 @@ class MachineNameControllerTest extends UnitTestCase {
       array(array('text' => 'Bob', 'langcode' => 'en', 'lowercase' => TRUE, 'replace' => 'fail()', 'replace_pattern' => ".*@e\0"), '"bob"'),
       array(array('text' => 'Bob@e', 'langcode' => 'en', 'lowercase' => TRUE, 'replace' => 'fail()', 'replace_pattern' => ".*@e\0"), '"fail()"'),
     );
+
+    $valid_data = array_map(function ($data) {
+      if (isset($data[0]['replace_pattern'])) {
+        $data[0]['replace_token'] = 'token-' . $data[0]['replace_pattern'];
+      }
+      return $data;
+    }, $valid_data);
+
+    return $valid_data;
   }
 
   /**
@@ -71,6 +95,26 @@ class MachineNameControllerTest extends UnitTestCase {
     $request = Request::create('', 'GET', $request_params);
     $json = $this->machineNameController->transliterate($request);
     $this->assertEquals($expected_content, $json->getContent());
+  }
+
+  /**
+   * Tests the pattern validation.
+   */
+  public function testMachineNameControllerWithInvalidReplacePattern() {
+    $request = Request::create('', 'GET', ['text' => 'Bob', 'langcode' => 'en', 'replace' => 'Alice', 'replace_pattern' => 'Bob', 'replace_token' => 'invalid']);
+
+    $this->setExpectedException(AccessDeniedException::class, "Invalid 'replace_token' query parameter.");
+    $this->machineNameController->transliterate($request);
+  }
+
+  /**
+   * Tests the pattern validation with a missing token.
+   */
+  public function testMachineNameControllerWithMissingToken() {
+    $request = Request::create('', 'GET', ['text' => 'Bob', 'langcode' => 'en', 'replace' => 'Alice', 'replace_pattern' => 'Bob']);
+
+    $this->setExpectedException(AccessDeniedException::class, "Missing 'replace_token' query parameter.");
+    $this->machineNameController->transliterate($request);
   }
 
 }

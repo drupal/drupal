@@ -16,7 +16,7 @@ class TermViewsData extends EntityViewsData {
     $data = parent::getViewsData();
 
     $data['taxonomy_term_field_data']['table']['base']['help'] = $this->t('Taxonomy terms are attached to nodes.');
-    $data['taxonomy_term_field_data']['table']['base']['access query tag'] = 'term_access';
+    $data['taxonomy_term_field_data']['table']['base']['access query tag'] = 'taxonomy_term_access';
     $data['taxonomy_term_field_data']['table']['wizard_id'] = 'taxonomy_term';
 
     $data['taxonomy_term_field_data']['table']['join'] = array(

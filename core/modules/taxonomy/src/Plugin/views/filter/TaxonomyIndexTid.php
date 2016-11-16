@@ -192,7 +192,7 @@ class TaxonomyIndexTid extends ManyToOne {
           //   https://www.drupal.org/node/1821274.
           ->sort('weight')
           ->sort('name')
-          ->addTag('term_access');
+          ->addTag('taxonomy_term_access');
         if ($this->options['limit']) {
           $query->condition('vid', $vocabulary->id());
         }
