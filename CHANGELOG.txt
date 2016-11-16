@@ -1,4 +1,8 @@
 
+Drupal 7.52, 2016-11-16
+-----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2016-005.
+
 Drupal 7.51, 2016-10-05
 -----------------------
 - The Update module now also checks for updates to a disabled theme that is
