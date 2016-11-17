@@ -143,28 +143,4 @@ abstract class JavascriptTestBase extends BrowserTestBase {
     return new JSWebAssert($this->getSession($name), $this->baseUrl);
   }
 
-  /**
-   * Gets the current Drupal javascript settings and parses into an array.
-   *
-   * Unlike BrowserTestBase::getDrupalSettings(), this implementation reads the
-   * current values of drupalSettings, capturing all changes made via javascript
-   * after the page was loaded.
-   *
-   * @return array
-   *   The Drupal javascript settings array.
-   *
-   * @see \Drupal\Tests\BrowserTestBase::getDrupalSettings()
-   */
-  protected function getDrupalSettings() {
-    $script = <<<EndOfScript
-(function () {
-  if (typeof drupalSettings !== 'undefined') {
-    return drupalSettings;
-  }
-})();
-EndOfScript;
-
-    return $this->getSession()->evaluateScript($script) ?: [];
-  }
-
 }
