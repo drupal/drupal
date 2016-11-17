@@ -1,0 +1,46 @@
+<?php
+
+namespace Drupal\Tests\simpletest\FunctionalJavascript;
+
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+
+/**
+ * Tests Drupal settings retrieval in JavascriptTestBase tests.
+ *
+ * @group javascript
+ */
+class JavascriptGetDrupalSettingsTest extends JavascriptTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['test_page_test'];
+
+  /**
+   * Tests retrieval of Drupal settings.
+   *
+   * @see \Drupal\FunctionalJavascriptTests\JavascriptTestBase::getDrupalSettings()
+   */
+  public function testGetDrupalSettings() {
+    $this->drupalLogin($this->drupalCreateUser());
+    $this->drupalGet('test-page');
+
+    // Check that we can read the JS settings.
+    $js_settings = $this->getDrupalSettings();
+    $this->assertSame('azAZ09();.,\\\/-_{}', $js_settings['test-setting']);
+
+    // Dynamically change the setting using Javascript.
+    $script = <<<EndOfScript
+(function () {
+  drupalSettings['test-setting'] = 'foo';
+})();
+EndOfScript;
+
+    $this->getSession()->evaluateScript($script);
+
+    // Check that the setting has been changed.
+    $js_settings = $this->getDrupalSettings();
+    $this->assertSame('foo', $js_settings['test-setting']);
+  }
+
+}
