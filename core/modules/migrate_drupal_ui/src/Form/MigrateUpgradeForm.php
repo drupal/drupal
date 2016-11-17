@@ -286,6 +286,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'locale',
       'destination_module' => 'language',
     ],
+    'd7_language_types' => [
+      'source_module' => 'locale',
+      'destination_module' => 'language',
+    ],
     'locale_settings' => [
       'source_module' => 'locale',
       'destination_module' => 'locale',

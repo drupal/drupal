@@ -41750,7 +41750,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'language_negotiation_language',
-  'value' => 'a:0:{}',
+  'value' => 'a:3:{s:11:"locale-user";a:2:{s:9:"callbacks";a:1:{s:8:"language";s:25:"locale_language_from_user";}s:4:"file";s:19:"includes/locale.inc";}s:10:"locale-url";a:2:{s:9:"callbacks";a:3:{s:8:"language";s:24:"locale_language_from_url";s:8:"switcher";s:28:"locale_language_switcher_url";s:11:"url_rewrite";s:31:"locale_language_url_rewrite_url";}s:4:"file";s:19:"includes/locale.inc";}s:16:"language-default";a:1:{s:9:"callbacks";a:1:{s:8:"language";s:21:"language_from_default";}}}',
 ))
 ->values(array(
   'name' => 'language_negotiation_language_content',
@@ -41771,6 +41771,10 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'locale_language_negotiation_url_part',
   'value' => 's:6:"domain";',
+))
+->values(array(
+  'name' => 'locale_language_providers_weight_language',
+  'value' => 'a:5:{s:10:"locale-url";s:2:"-9";s:14:"locale-session";s:2:"-8";s:11:"locale-user";s:3:"-10";s:14:"locale-browser";s:2:"-7";s:16:"language-default";s:2:"-6";}',
 ))
 ->values(array(
   'name' => 'mail_system',
