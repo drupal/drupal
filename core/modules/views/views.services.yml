@@ -58,7 +58,7 @@ services:
     arguments: [wizard, '@container.namespaces', '@cache.discovery', '@module_handler']
   views.views_data:
     class: Drupal\views\ViewsData
-    arguments: ['@cache.discovery', '@config.factory', '@module_handler', '@language_manager']
+    arguments: ['@cache.default', '@config.factory', '@module_handler', '@language_manager']
   views.views_data_helper:
     class: Drupal\views\ViewsDataHelper
     arguments: ['@views.views_data']
