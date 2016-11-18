@@ -77,3 +77,34 @@ display:
           operator: '='
           value: 'not an existing name'
       path: test_tokens_empty
+  page_3:
+    display_plugin: page
+    id: page_3
+    display_title: Page
+    position: 1
+    display_options:
+      defaults:
+        title: false
+        pager: false
+        header: false
+      pager:
+        type: mini
+        options:
+          items_per_page: 2
+      title: 'Test token page with minipager'
+      path: test_tokens_minipager
+      display_extenders: {  }
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          tokenize: false
+          content:
+            value: "Total rows: [view:total-rows] - Page count: [view:page-count]"
+            format: basic_html
+          plugin_id: text

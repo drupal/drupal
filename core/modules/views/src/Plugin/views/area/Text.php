@@ -46,6 +46,17 @@ class Text extends TokenizeAreaPluginBase {
   /**
    * {@inheritdoc}
    */
+  public function preQuery() {
+    $content = $this->options['content']['value'];
+    // Check for tokens that require a total row count.
+    if (strpos($content, '[view:page-count]') !== FALSE || strpos($content, '[view:total-rows]') !== FALSE) {
+      $this->view->get_total_rows = TRUE;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function render($empty = FALSE) {
     $format = isset($this->options['content']['format']) ? $this->options['content']['format'] : filter_default_format();
     if (!$empty || !empty($this->options['empty'])) {
