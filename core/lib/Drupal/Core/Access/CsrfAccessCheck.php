@@ -58,7 +58,7 @@ class CsrfAccessCheck implements RoutingAccessInterface {
       $result = AccessResult::allowed();
     }
     else {
-      $result = AccessResult::forbidden();
+      $result = AccessResult::forbidden($request->query->has('token') ? "'csrf_token' URL query argument is invalid." : "'csrf_token' URL query argument is missing.");
     }
     // Not cacheable because the CSRF token is highly dynamic.
     return $result->setCacheMaxAge(0);

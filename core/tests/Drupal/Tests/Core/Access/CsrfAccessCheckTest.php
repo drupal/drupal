@@ -65,9 +65,9 @@ class CsrfAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * Tests the access() method with an invalid token.
+   * @covers ::access
    */
-  public function testAccessTokenFail() {
+  public function testCsrfTokenInvalid() {
     $this->csrfToken->expects($this->once())
       ->method('validate')
       ->with('test_query', 'test-path')
@@ -80,7 +80,25 @@ class CsrfAccessCheckTest extends UnitTestCase {
     $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'));
     $request = Request::create('/test-path?token=test_query');
 
-    $this->assertEquals(AccessResult::forbidden()->setCacheMaxAge(0), $this->accessCheck->access($route, $request, $this->routeMatch));
+    $this->assertEquals(AccessResult::forbidden("'csrf_token' URL query argument is invalid.")->setCacheMaxAge(0), $this->accessCheck->access($route, $request, $this->routeMatch));
+  }
+
+  /**
+   * @covers ::access
+   */
+  public function testCsrfTokenMissing() {
+    $this->csrfToken->expects($this->once())
+      ->method('validate')
+      ->with('', 'test-path')
+      ->will($this->returnValue(FALSE));
+
+    $this->routeMatch->expects($this->once())
+      ->method('getRawParameters')
+      ->will($this->returnValue(array()));
+
+    $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'));
+    $request = Request::create('/test-path');
+    $this->assertEquals(AccessResult::forbidden("'csrf_token' URL query argument is missing.")->setCacheMaxAge(0), $this->accessCheck->access($route, $request, $this->routeMatch));
   }
 
 }
