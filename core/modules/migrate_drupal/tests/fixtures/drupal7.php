@@ -8335,7 +8335,7 @@ $connection->insert('languages')
   'enabled' => '1',
   'plurals' => '0',
   'formula' => '',
-  'domain' => '',
+  'domain' => 'is.drupal.org',
   'prefix' => 'is',
   'weight' => '0',
   'javascript' => '',
@@ -41770,7 +41770,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'locale_language_negotiation_url_part',
-  'value' => 's:6:"domain";',
+  'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'locale_language_providers_weight_language',
