@@ -102,6 +102,13 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   protected $renderer;
 
   /**
+   * Keeps track of the last render index.
+   *
+   * @var int|NULL
+   */
+  protected $lastRenderIndex;
+
+  /**
    * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
@@ -1122,6 +1129,10 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function advancedRender(ResultRow $values) {
+    // Clean up values from previous render calls.
+    if ($this->lastRenderIndex != $values->index) {
+      $this->last_render_text = '';
+    }
     if ($this->allowAdvancedRender() && $this instanceof MultiItemsFieldHandlerInterface) {
       $raw_items = $this->getItems($values);
       // If there are no items, set the original value to NULL.
@@ -1181,7 +1192,10 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         $this->last_render = $this->renderText($alter);
       }
     }
-
+    // If we rendered something, update the last render index.
+    if ((string) $this->last_render !== '') {
+      $this->lastRenderIndex = $values->index;
+    }
     return $this->last_render;
   }
 
