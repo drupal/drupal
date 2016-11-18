@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
@@ -547,7 +548,7 @@ abstract class WebTestBase extends TestBase {
       $content = file_get_contents($directory . '/services.yml');
       $services = $yaml->parse($content);
       $services['services']['simpletest.config_schema_checker'] = [
-        'class' => 'Drupal\Core\Config\Testing\ConfigSchemaChecker',
+        'class' => ConfigSchemaChecker::class,
         'arguments' => ['@config.typed', $this->getConfigSchemaExclusions()],
         'tags' => [['name' => 'event_subscriber']]
       ];

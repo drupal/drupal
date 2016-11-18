@@ -288,7 +288,7 @@ abstract class TestBase {
   /**
    * Set to TRUE to strict check all configuration saved.
    *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
    *
    * @var bool
    */

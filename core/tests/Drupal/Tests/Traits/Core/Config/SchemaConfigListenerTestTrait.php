@@ -10,7 +10,7 @@ use \Drupal\Core\Config\Schema\SchemaIncompleteException;
 trait SchemaConfigListenerTestTrait {
 
   /**
-   * Tests \Drupal\Core\Config\Testing\ConfigSchemaChecker.
+   * Tests \Drupal\Core\Config\Development\ConfigSchemaChecker.
    */
   public function testConfigSchemaChecker() {
     // Test a non-existing schema.

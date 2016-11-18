@@ -13,7 +13,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Config\Testing\ConfigSchemaChecker;
+use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Serialization\Yaml;
@@ -163,7 +163,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   /**
    * Set to TRUE to strict check all configuration saved.
    *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
    *
    * @var bool
    */
