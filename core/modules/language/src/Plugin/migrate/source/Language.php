@@ -2,6 +2,7 @@
 
 namespace Drupal\language\Plugin\migrate\source;
 
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -47,6 +48,29 @@ class Language extends DrupalSqlBase {
    */
   public function query() {
     return $this->select('languages')->fields('languages');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareRow(Row $row) {
+    if (!empty($this->configuration['fetch_all'])) {
+      // Get an array of all languages.
+      $languages = $this->query()->execute()->fetchAll();
+      $row->setSourceProperty('languages', $languages);
+    }
+
+    if (!empty($this->configuration['domain_negotiation'])) {
+      // Check if domain negotiation is used to be able to fill in the default
+      // language domain, which may be empty. In D6, domain negotiation is used
+      // when the 'language_negotiation' variable is set to '3', and in D7, when
+      // the 'locale_language_negotiation_url_part' variable is set to '1'.
+      if ($this->variableGet('language_negotiation', 0) == 3 || $this->variableGet('locale_language_negotiation_url_part', 0) == 1) {
+        $row->setSourceProperty('domain_negotiation', TRUE);
+      }
+    }
+
+    return parent::prepareRow($row);
   }
 
 }

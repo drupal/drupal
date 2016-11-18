@@ -1,29 +1,31 @@
-id: d7_language_negotiation_settings
+id: d6_language_negotiation_settings
 label: Language negotiation settings
 migration_tags:
-  - Drupal 7
+  - Drupal 6
 source:
   plugin: variable
   variables:
-    - locale_language_negotiation_session_param
-    - locale_language_negotiation_url_part
+    - language_negotiation
 process:
   session/parameter:
     plugin: default_value
-    source: locale_language_negotiation_session_param
     default_value: 'language'
   selected_langcode:
     plugin: default_value
     default_value: 'site_default'
   url/source:
     plugin: static_map
-    source: locale_language_negotiation_url_part
+    source: language_negotiation
     default_value: path_prefix
     map:
-      # LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX = 0
-      # LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN = 1
+      # LANGUAGE_NEGOTIATION_NONE = 0
+      # LANGUAGE_NEGOTIATION_PATH_DEFAULT = 1
+      # LANGUAGE_NEGOTIATION_PATH = 2
+      # LANGUAGE_NEGOTIATION_DOMAIN = 3
       0: path_prefix
-      1: domain
+      1: path_prefix
+      2: path_prefix
+      3: domain
 destination:
   plugin: config
   config_name: language.negotiation
