@@ -151,7 +151,7 @@ function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\Core\Block\B
 function hook_block_build_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
   // Add the 'user' cache context to some blocks.
   if ($some_condition) {
-    $build['#contexts'][] = 'user';
+    $build['#cache']['contexts'][] = 'user';
   }
 }
 
