@@ -44094,6 +44094,10 @@ $connection->insert('variable')
   'value' => 's:6:"bartik";',
 ))
 ->values(array(
+  'name' => 'theme_settings',
+  'value' => 'a:16:{s:11:"toggle_logo";i:0;s:11:"toggle_name";i:1;s:13:"toggle_slogan";i:0;s:24:"toggle_node_user_picture";i:0;s:27:"toggle_comment_user_picture";i:0;s:32:"toggle_comment_user_verification";i:0;s:14:"toggle_favicon";i:0;s:16:"toggle_main_menu";i:0;s:21:"toggle_secondary_menu";i:0;s:12:"default_logo";i:1;s:9:"logo_path";s:23:"public://customlogo.png";s:11:"logo_upload";s:0:"";s:15:"default_favicon";i:0;s:12:"favicon_path";s:24:"public://somefavicon.png";s:14:"favicon_upload";s:0:"";s:16:"favicon_mimetype";s:9:"image/png";}',
+))
+->values(array(
   'name' => 'tracker_batch_size',
   'value' => 'i:999;',
 ))

@@ -258,6 +258,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'forum',
       'destination_module' => 'forum',
     ],
+    'd7_global_theme_settings' => [
+      'source_module' => 'system',
+      'destination_module' => 'system',
+    ],
     'd6_imagecache_presets' => [
       'source_module' => 'imagecache',
       'destination_module' => 'image',
