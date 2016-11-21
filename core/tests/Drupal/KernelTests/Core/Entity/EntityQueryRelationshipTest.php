@@ -1,6 +1,8 @@
 <?php
 
 namespace Drupal\KernelTests\Core\Entity;
+
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\Unicode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
@@ -115,7 +117,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
    * Tests querying.
    */
   public function testQuery() {
-    // This returns the 0th entity as that's only one pointing to the 0th
+    // This returns the 0th entity as that's the only one pointing to the 0th
     // account.
     $this->queryResults = $this->factory->get('entity_test')
       ->condition("user_id.entity.name", $this->accounts[0]->getUsername())
@@ -154,6 +156,56 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
       ->condition("$this->fieldName.entity.name", $this->terms[0]->name->value, '<>')
       ->execute();
     $this->assertResults(array(1, 2));
+    // This returns the 0th entity as that's only one pointing to the 0th
+    // account.
+    $this->queryResults = $this->factory->get('entity_test')
+      ->condition("user_id.entity:user.name", $this->accounts[0]->getUsername())
+      ->execute();
+    $this->assertResults(array(0));
+    // This returns the 1st and 2nd entity as those point to the 1st account.
+    $this->queryResults = $this->factory->get('entity_test')
+      ->condition("user_id.entity:user.name", $this->accounts[0]->getUsername(), '<>')
+      ->execute();
+    $this->assertResults(array(1, 2));
+    // This returns all three entities because all of them point to an
+    // account.
+    $this->queryResults = $this->factory->get('entity_test')
+      ->exists("user_id.entity:user.name")
+      ->execute();
+    $this->assertResults(array(0, 1, 2));
+    // This returns no entities because all of them point to an account.
+    $this->queryResults = $this->factory->get('entity_test')
+      ->notExists("user_id.entity:user.name")
+      ->execute();
+    $this->assertEqual(count($this->queryResults), 0);
+    // This returns the 0th entity as that's only one pointing to the 0th
+    // term (test without specifying the field column).
+    $this->queryResults = $this->factory->get('entity_test')
+      ->condition("$this->fieldName.entity:taxonomy_term.name", $this->terms[0]->name->value)
+      ->execute();
+    $this->assertResults(array(0));
+    // This returns the 0th entity as that's only one pointing to the 0th
+    // term (test with specifying the column name).
+    $this->queryResults = $this->factory->get('entity_test')
+      ->condition("$this->fieldName.target_id.entity:taxonomy_term.name", $this->terms[0]->name->value)
+      ->execute();
+    $this->assertResults(array(0));
+    // This returns the 1st and 2nd entity as those point to the 1st term.
+    $this->queryResults = $this->factory->get('entity_test')
+      ->condition("$this->fieldName.entity:taxonomy_term.name", $this->terms[0]->name->value, '<>')
+      ->execute();
+    $this->assertResults(array(1, 2));
+  }
+
+  /**
+   * Tests the invalid specifier in the query relationship.
+   */
+  public function testInvalidSpecifier() {
+    $this->setExpectedException(PluginNotFoundException::class);
+    $this->factory
+      ->get('taxonomy_term')
+      ->condition('langcode.language.foo', 'bar')
+      ->execute();
   }
 
   /**

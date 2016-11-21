@@ -35,13 +35,18 @@ interface QueryInterface extends AlterableInterface {
    *
    * @param $field
    *   Name of the field being queried. It must contain a field name, optionally
-   *   followed by a column name. The column can be "entity" for reference
-   *   fields and that can be followed similarly by a field name and so on. Some
-   *   examples:
+   *   followed by a column name. The column can be the reference property,
+   *   usually "entity", for reference fields and that can be followed
+   *   similarly by a field name and so on. Additionally, the target entity type
+   *   can be specified by appending the ":target_entity_type_id" to "entity".
+   *   Some examples:
    *   - nid
    *   - tags.value
    *   - tags
+   *   - tags.entity.name
+   *   - tags.entity:taxonomy_term.name
    *   - uid.entity.name
+   *   - uid.entity:user.name
    *   "tags" "is the same as "tags.value" as value is the default column.
    *   If two or more conditions have the same field names they apply to the
    *   same delta within that field. In order to limit the condition to a
