@@ -6,6 +6,8 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
+use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
+use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 
 /**
  * Adds tables and fields to the SQL entity query.
@@ -253,10 +255,20 @@ class Tables implements TablesInterface {
           $relationship_specifier = $specifiers[$key + 1];
           $next_index_prefix = $relationship_specifier;
         }
+        $entity_type_id = NULL;
+        // Relationship specifier can also contain the entity type ID, i.e.
+        // entity:node, entity:user or entity:taxonomy.
+        if (strpos($relationship_specifier, ':') !== FALSE) {
+          list($relationship_specifier, $entity_type_id) = explode(':', $relationship_specifier, 2);
+        }
         // Check for a valid relationship.
-        if (isset($propertyDefinitions[$relationship_specifier]) && $field_storage->getPropertyDefinition('entity')->getDataType() == 'entity_reference' ) {
-          // If it is, use the entity type.
-          $entity_type_id = $propertyDefinitions[$relationship_specifier]->getTargetDefinition()->getEntityTypeId();
+        if (isset($propertyDefinitions[$relationship_specifier]) && $propertyDefinitions[$relationship_specifier] instanceof DataReferenceDefinitionInterface) {
+          // If it is, use the entity type if specified already, otherwise use
+          // the definition.
+          $target_definition = $propertyDefinitions[$relationship_specifier]->getTargetDefinition();
+          if (!$entity_type_id && $target_definition instanceof EntityDataDefinitionInterface) {
+            $entity_type_id = $target_definition->getEntityTypeId();
+          }
           $entity_type = $this->entityManager->getDefinition($entity_type_id);
           $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
           // Add the new entity base table using the table and sql column.
