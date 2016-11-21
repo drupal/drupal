@@ -21,6 +21,7 @@ process:
     source:
       - instance_settings
       - widget_settings
+      - field_settings
   default_value_function: ''
   default_value:
     plugin: d7_field_instance_defaults

@@ -28,7 +28,7 @@ class FieldInstanceSettingsTest extends MigrateTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $value = $plugin->transform([[], ['type' => 'image_image']], $executable, $row, 'foo');
+    $value = $plugin->transform([[], ['type' => 'image_image'], []], $executable, $row, 'foo');
     $this->assertInternalType('array', $value['default_image']);
     $this->assertSame('', $value['default_image']['alt']);
     $this->assertSame('', $value['default_image']['title']);

@@ -276,6 +276,9 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
     $this->assertComponent('node.test_content_type.default', 'field_text_list', 'list_default', 'above', 10);
     $this->assertComponent('node.test_content_type.default', 'field_integer_list', 'list_default', 'above', 11);
     $this->assertComponent('node.test_content_type.default', 'field_long_text', 'text_default', 'above', 12);
+    $this->assertComponent('node.test_content_type.default', 'field_node_entityreference', 'entity_reference_label', 'above', 15);
+    $this->assertComponent('node.test_content_type.default', 'field_user_entityreference', 'entity_reference_label', 'above', 16);
+    $this->assertComponent('node.test_content_type.default', 'field_term_entityreference', 'entity_reference_label', 'above', 17);
     $this->assertComponentNotExists('node.test_content_type.default', 'field_term_reference');
     $this->assertComponentNotExists('node.test_content_type.default', 'field_text');
 
