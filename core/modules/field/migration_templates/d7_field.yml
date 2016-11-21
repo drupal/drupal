@@ -22,6 +22,7 @@ process:
       datestamp: datetime
       datetime: datetime
       email: email
+      entityreference: entity_reference
       file: file
       image: image
       link_field: link

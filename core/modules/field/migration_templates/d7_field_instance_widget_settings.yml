@@ -46,6 +46,7 @@ process:
         phone_textfield: telephone_default
         options_onoff: boolean_checkbox
         entityreference_autocomplete: entity_reference_autocomplete
+        entityreference_autocomplete_tags: entity_reference_autocomplete_tags
         taxonomy_autocomplete: entity_reference_autocomplete
   'options/settings':
     plugin: field_instance_widget_settings

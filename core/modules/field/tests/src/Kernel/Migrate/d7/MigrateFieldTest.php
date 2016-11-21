@@ -100,12 +100,24 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.field_phone', 'telephone', FALSE, 1);
     $this->assertEntity('node.field_date', 'datetime', FALSE, 1);
     $this->assertEntity('node.field_date_with_end_time', 'datetime', FALSE, 1);
+    $this->assertEntity('node.field_node_entityreference', 'entity_reference', FALSE, -1);
+    $this->assertEntity('node.field_user_entityreference', 'entity_reference', FALSE, 1);
+    $this->assertEntity('node.field_term_entityreference', 'entity_reference', FALSE, -1);
 
     // Assert that the taxonomy term reference fields are referencing the
     // correct entity type.
     $field = FieldStorageConfig::load('node.field_term_reference');
     $this->assertIdentical('taxonomy_term', $field->getSetting('target_type'));
     $field = FieldStorageConfig::load('node.taxonomy_forums');
+    $this->assertIdentical('taxonomy_term', $field->getSetting('target_type'));
+
+    // Assert that the entityreference fields are referencing the correct
+    // entity type.
+    $field = FieldStorageConfig::load('node.field_node_entityreference');
+    $this->assertIdentical('node', $field->getSetting('target_type'));
+    $field = FieldStorageConfig::load('node.field_user_entityreference');
+    $this->assertIdentical('user', $field->getSetting('target_type'));
+    $field = FieldStorageConfig::load('node.field_term_entityreference');
     $this->assertIdentical('taxonomy_term', $field->getSetting('target_type'));
 
     // Validate that the source count and processed count match up.
