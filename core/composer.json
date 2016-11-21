@@ -31,7 +31,7 @@
         "symfony/psr-http-message-bridge": "v0.2",
         "zendframework/zend-diactoros": "~1.1",
         "composer/semver": "~1.0",
-        "paragonie/random_compat": "~1.0",
+        "paragonie/random_compat": "^1|^2",
         "asm89/stack-cors": "~1.0"
     },
     "require-dev": {
