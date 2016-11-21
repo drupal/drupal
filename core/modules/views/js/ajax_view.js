@@ -128,13 +128,11 @@
   /**
    * @return {bool}
    *   If there is at least one parent with a view class return false.
-   *
-   * @todo remove .size() replace with .length.
    */
   Drupal.views.ajaxView.prototype.filterNestedViews = function () {
     // If there is at least one parent with a view class, this view
     // is nested (e.g., an attachment). Bail.
-    return !this.$view.parents('.view').size();
+    return !this.$view.parents('.view').length;
   };
 
   /**
