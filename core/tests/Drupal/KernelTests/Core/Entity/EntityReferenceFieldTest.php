@@ -2,7 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\BaseFieldDefinition;

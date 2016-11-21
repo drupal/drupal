@@ -3,7 +3,7 @@
 namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;

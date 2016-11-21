@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\user\Kernel;
 
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 

@@ -2,7 +2,7 @@
 
 namespace Drupal\views_ui\Tests;
 
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 
 /**
  * Tests the numeric filter UI.

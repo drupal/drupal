@@ -3,7 +3,7 @@
 namespace Drupal\system\Tests\Update;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**

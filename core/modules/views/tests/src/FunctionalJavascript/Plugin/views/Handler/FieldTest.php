@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\node\Entity\NodeType;

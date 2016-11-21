@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel;
 
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\config_test\TestInstallStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\TypedConfigManager;

@@ -2,7 +2,7 @@
 
 namespace Drupal\language\Tests;
 
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**

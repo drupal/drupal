@@ -3,7 +3,7 @@
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 
 /**

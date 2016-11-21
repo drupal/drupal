@@ -3,7 +3,7 @@
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\content_moderation\Entity\ModerationState;
