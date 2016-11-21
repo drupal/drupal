@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\migrate_drupal_ui;
+namespace Drupal\migrate_drupal_ui\Batch;
 
 use Drupal\migrate\MigrateMessageInterface;
 

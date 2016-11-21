@@ -9,7 +9,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
-use Drupal\migrate_drupal_ui\MigrateUpgradeRunBatch;
+use Drupal\migrate_drupal_ui\Batch\MigrateUpgradeImportBatch;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -1125,13 +1125,12 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'progress_message' => '',
       'operations' => [
         [
-          [MigrateUpgradeRunBatch::class, 'run'],
-          [array_keys($migrations), 'import', $config],
+          [MigrateUpgradeImportBatch::class, 'run'],
+          [array_keys($migrations), $config],
         ],
       ],
       'finished' => [
-        MigrateUpgradeRunBatch::class,
-        'finished',
+        MigrateUpgradeImportBatch::class, 'finished',
       ],
     ];
     batch_set($batch);
