@@ -111,5 +111,28 @@ function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, Migr
 }
 
 /**
+ * Allows altering the list of discovered migration plugins.
+ *
+ * Modules are able to alter specific migrations structures or even remove or
+ * append additional migrations to the discovery. For example, this
+ * implementation filters out Drupal 6 migrations from the discovered migration
+ * list. This is done by checking the migration tags.
+ *
+ * @param array[] $migrations
+ *   An associative array of migrations keyed by migration ID. Each value is the
+ *   migration array, obtained by decoding the migration YAML file and enriched
+ *   with some meta information added during discovery phase, like migration
+ *   'class', 'provider' or '_discovered_file_path'.
+ *
+ * @ingroup migration
+ */
+function hook_migration_plugins_alter(array &$migrations) {
+  $migrations = array_filter($migrations, function (array $migration) {
+    $tags = isset($migration['migration_tags']) ? (array) $migration['migration_tags'] : [];
+    return !in_array('Drupal 6', $tags);
+  });
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
