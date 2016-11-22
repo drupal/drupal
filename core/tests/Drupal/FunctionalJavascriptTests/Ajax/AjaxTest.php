@@ -53,7 +53,7 @@ class AjaxTest extends JavascriptTestBase {
     $session = $this->getSession();
 
     // Insert a fake library into the already loaded library settings.
-    $fake_library = 'core/fakeLibrary';
+    $fake_library = 'fakeLibrary/fakeLibrary';
     $session->evaluateScript("drupalSettings.ajaxPageState.libraries = drupalSettings.ajaxPageState.libraries + ',$fake_library';");
 
     $libraries = $session->evaluateScript('drupalSettings.ajaxPageState.libraries');

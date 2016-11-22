@@ -1543,7 +1543,7 @@ services:
       - { name: needs_destruction }
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
-    arguments: ['@app.root', '@module_handler', '@theme.manager', '@theme_handler']
+    arguments: ['@app.root', '@module_handler', '@theme.manager']
   library.dependency_resolver:
     class: Drupal\Core\Asset\LibraryDependencyResolver
     arguments: ['@library.discovery']

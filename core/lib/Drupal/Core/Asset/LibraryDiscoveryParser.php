@@ -11,7 +11,6 @@ use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Extension\ThemeHandlerInterface;
 
 /**
  * Parses library files to get extension data.
@@ -33,13 +32,6 @@ class LibraryDiscoveryParser {
   protected $themeManager;
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * The app root.
    *
    * @var string
@@ -55,14 +47,11 @@ class LibraryDiscoveryParser {
    *   The module handler.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, ThemeHandlerInterface $theme_handler) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
-    $this->themeHandler = $theme_handler;
   }
 
   /**
@@ -74,8 +63,6 @@ class LibraryDiscoveryParser {
    * @return array
    *   All library definitions of the passed extension.
    *
-   * @throws \AssertionError
-   *   When the extension (theme, module, library) is not available.
    * @throws \Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException
    *   Thrown when a library has no js/css/setting.
    * @throws \UnexpectedValueException
@@ -92,10 +79,9 @@ class LibraryDiscoveryParser {
       if ($this->moduleHandler->moduleExists($extension)) {
         $extension_type = 'module';
       }
-      elseif ($this->themeHandler->themeExists($extension)) {
+      else {
         $extension_type = 'theme';
       }
-      assert(isset($extension_type), sprintf('The extension "%s" is not available.', $extension));
       $path = $this->drupalGetPath($extension_type, $extension);
     }
 
