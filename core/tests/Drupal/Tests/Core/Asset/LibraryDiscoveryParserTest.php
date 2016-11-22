@@ -45,6 +45,13 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   protected $themeManager;
 
   /**
+   * The mocked theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $themeHandler;
+
+  /**
    * The mocked lock backend.
    *
    * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -59,6 +66,8 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
+    $this->themeHandler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
+
     $mock_active_theme = $this->getMockBuilder('Drupal\Core\Theme\ActiveTheme')
       ->disableOriginalConstructor()
       ->getMock();
@@ -68,7 +77,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->themeManager->expects($this->any())
       ->method('getActiveTheme')
       ->willReturn($mock_active_theme);
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->themeHandler);
   }
 
   /**
@@ -108,6 +117,11 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->method('moduleExists')
       ->with('example_theme')
       ->will($this->returnValue(FALSE));
+
+    $this->themeHandler->expects($this->atLeastOnce())
+      ->method('themeExists')
+      ->with('example_theme')
+      ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
     $path = substr($path, strlen($this->root) + 1);
@@ -158,6 +172,28 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->libraryDiscoveryParser->setPaths('module', 'invalid_file', $path);
 
     $this->libraryDiscoveryParser->buildByExtension('invalid_file');
+  }
+
+  /**
+   * Tests that an exception is thrown when the extension is not a valid
+   * module, theme or library.
+   *
+   * @covers ::buildByExtension
+   */
+  public function testMissingExtension() {
+    $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('moduleExists')
+      ->with('missing_extension')
+      ->will($this->returnValue(FALSE));
+
+    $this->themeHandler->expects($this->atLeastOnce())
+      ->method('themeExists')
+      ->with('missing_extension')
+      ->will($this->returnValue(FALSE));
+
+    assert_options(ASSERT_ACTIVE, 1);
+    $this->setExpectedException('\AssertionError', 'The extension "missing_extension" is not available.');
+    $this->libraryDiscoveryParser->buildByExtension('missing_extension');
   }
 
   /**
