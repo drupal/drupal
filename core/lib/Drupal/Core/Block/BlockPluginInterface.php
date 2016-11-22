@@ -23,6 +23,11 @@ use Drupal\Core\Session\AccountInterface;
 interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface, CacheableDependencyInterface, DerivativeInspectionInterface {
 
   /**
+   * Indicates the block label (title) should be displayed to end users.
+   */
+  const BLOCK_LABEL_VISIBLE = 'visible';
+
+  /**
    * Returns the user-facing block label.
    *
    * @todo Provide other specific label-related methods in

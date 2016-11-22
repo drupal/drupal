@@ -2,7 +2,7 @@
 
 namespace Drupal\block\Plugin\migrate\process;
 
-use Drupal\block\BlockInterface;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -24,7 +24,7 @@ class BlockSettings extends ProcessPluginBase {
     $settings = array();
     $settings['label'] = $title;
     if ($title) {
-      $settings['label_display'] = BlockInterface::BLOCK_LABEL_VISIBLE;
+      $settings['label_display'] = BlockPluginInterface::BLOCK_LABEL_VISIBLE;
     }
     else {
       $settings['label_display'] = '0';

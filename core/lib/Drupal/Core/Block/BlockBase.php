@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Block;
 
-use Drupal\block\BlockInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
@@ -87,7 +86,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       'id' => $this->getPluginId(),
       'label' => '',
       'provider' => $this->pluginDefinition['provider'],
-      'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
+      'label_display' => static::BLOCK_LABEL_VISIBLE,
     );
   }
 
@@ -172,8 +171,8 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     $form['label_display'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Display title'),
-      '#default_value' => ($this->configuration['label_display'] === BlockInterface::BLOCK_LABEL_VISIBLE),
-      '#return_value' => BlockInterface::BLOCK_LABEL_VISIBLE,
+      '#default_value' => ($this->configuration['label_display'] === static::BLOCK_LABEL_VISIBLE),
+      '#return_value' => static::BLOCK_LABEL_VISIBLE,
     );
 
     // Add context mapping UI form elements.

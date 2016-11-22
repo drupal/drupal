@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\block\Kernel;
 
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormState;
-use Drupal\block\BlockInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -38,7 +38,7 @@ class BlockInterfaceTest extends KernelTestBase {
       'id' => 'test_block_instantiation',
       'label' => 'Custom Display Message',
       'provider' => 'block_test',
-      'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
+      'label_display' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
       'display_message' => 'no message set',
     );
     // Initial configuration of the block at construction time.

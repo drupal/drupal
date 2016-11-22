@@ -2,12 +2,12 @@
 
 namespace Drupal\Tests\block\Kernel;
 
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\block_test\Plugin\Block\TestHtmlBlock;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\block\Entity\Block;
-use Drupal\block\BlockInterface;
 
 /**
  * Tests the storage of blocks.
@@ -95,7 +95,7 @@ class BlockStorageUnitTest extends KernelTestBase {
         'id' => 'test_html',
         'label' => '',
         'provider' => 'block_test',
-        'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
+        'label_display' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
       ),
       'visibility' => array(),
     );
