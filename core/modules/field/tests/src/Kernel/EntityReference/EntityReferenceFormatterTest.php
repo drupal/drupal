@@ -278,6 +278,49 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   }
 
   /**
+   * Renders the same entity referenced from different places.
+   */
+  public function testEntityReferenceRecursiveProtectionWithManyRenderedEntities() {
+    $formatter = 'entity_reference_entity_view';
+    $view_builder = $this->entityManager->getViewBuilder($this->entityType);
+
+    // Set the default view mode to use the 'entity_reference_entity_view'
+    // formatter.
+    entity_get_display($this->entityType, $this->bundle, 'default')
+      ->setComponent($this->fieldName, [
+        'type' => $formatter,
+      ])
+      ->save();
+
+    $storage = $this->entityManager->getStorage($this->entityType);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $referenced_entity */
+    $referenced_entity = $storage->create(['name' => $this->randomMachineName()]);
+
+    $range = range(0, 30);
+    $referencing_entities = array_map(function () use ($storage, $referenced_entity) {
+      $referencing_entity = $storage->create([
+        'name' => $this->randomMachineName(),
+        $this->fieldName => $referenced_entity,
+      ]);
+      $referencing_entity->save();
+      return $referencing_entity;
+    }, $range);
+
+    $build = $view_builder->viewMultiple($referencing_entities, 'default');
+    $output = $this->render($build);
+
+    // The title of entity_test entities is printed twice by default, so we have
+    // to multiply the formatter's recursive rendering protection limit by 2.
+    // Additionally, we have to take into account 2 additional occurrences of
+    // the entity title because we're rendering the full entity, not just the
+    // reference field.
+    $expected_occurrences = 30 * 2 + 2;
+    $actual_occurrences = substr_count($output, $referenced_entity->get('name')->value);
+    $this->assertEquals($expected_occurrences, $actual_occurrences);
+  }
+
+
+  /**
    * Tests the label formatter.
    */
   public function testLabelFormatter() {
