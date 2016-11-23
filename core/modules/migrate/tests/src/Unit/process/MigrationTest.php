@@ -89,7 +89,7 @@ class MigrationTest extends MigrateProcessTestCase {
 
   /**
    * Tests that processing is skipped when the input value is empty.
-  *
+   *
    * @expectedException \Drupal\migrate\MigrateSkipProcessException
    */
   public function testSkipOnEmpty() {
@@ -107,8 +107,19 @@ class MigrationTest extends MigrateProcessTestCase {
 
   /**
    * Tests a successful lookup.
+   *
+   * @dataProvider successfulLookupDataProvider
+   *
+   * @param array $source_id_values
+   *   The source id(s) of the migration map.
+   * @param array $destination_id_values
+   *   The destination id(s) of the migration map.
+   * @param string|array $source_value
+   *   The source value(s) for the migration process plugin.
+   * @param string|array $expected_value
+   *   The expected value(s) of the migration process plugin.
    */
-  public function testSuccessfulLookup() {
+  public function testSuccessfulLookup($source_id_values, $destination_id_values, $source_value, $expected_value) {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
     $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
@@ -119,7 +130,7 @@ class MigrationTest extends MigrateProcessTestCase {
     $migration_plugin->id()->willReturn(uniqid());
 
     $id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $id_map->lookupDestinationId([1])->willReturn([3]);
+    $id_map->lookupDestinationId($source_id_values)->willReturn($destination_id_values);
     $migration_plugin->getIdMap()->willReturn($id_map->reveal());
 
     $migration_plugin_manager->createInstances(['foobaz'])
@@ -131,7 +142,61 @@ class MigrationTest extends MigrateProcessTestCase {
       ->willReturn([$migration_plugin->reveal()]);
 
     $migration = new Migration($configuration, 'migration', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
-    $this->assertSame(3, $migration->transform(1, $this->migrateExecutable, $this->row, 'foo'));
+    $this->assertSame($expected_value, $migration->transform($source_value, $this->migrateExecutable, $this->row, 'foo'));
+  }
+
+  /**
+   * Provides data for the successful lookup test.
+   *
+   * @return array
+   */
+  public function successfulLookupDataProvider() {
+    return [
+      // Test data for scalar to scalar.
+      [
+        // Source ID of the migration map.
+        [1],
+        // Destination ID of the migration map.
+        [3],
+        // Input value for the migration plugin.
+        1,
+        // Expected output value of the migration plugin.
+        3,
+      ],
+      // Test data for scalar to array.
+      [
+        // Source ID of the migration map.
+        [1],
+        // Destination IDs of the migration map.
+        [3, 'foo'],
+        // Input value for the migration plugin.
+        1,
+        // Expected output values of the migration plugin.
+        [3, 'foo'],
+      ],
+      // Test data for array to scalar.
+      [
+        // Source IDs of the migration map.
+        [1, 3],
+        // Destination ID of the migration map.
+        ['foo'],
+        // Input values for the migration plugin.
+        [1, 3],
+        // Expected output value of the migration plugin.
+        'foo',
+      ],
+      // Test data for array to array.
+      [
+        // Source IDs of the migration map.
+        [1, 3],
+        // Destination IDs of the migration map.
+        [3, 'foo'],
+        // Input values for the migration plugin.
+        [1, 3],
+        // Expected output values of the migration plugin.
+        [3, 'foo'],
+      ],
+    ];
   }
 
 }
