@@ -13,7 +13,10 @@ process:
   type: 'constants/type'
   'settings/comment_type': comment_type
 destination:
-  plugin: md_entity:field_storage_config
+  plugin: entity:field_storage_config
+  dependencies:
+    module:
+      - comment
 migration_dependencies:
   required:
     - d6_comment_type
