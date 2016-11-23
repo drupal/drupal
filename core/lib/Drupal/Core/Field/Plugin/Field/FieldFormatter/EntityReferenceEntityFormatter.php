@@ -168,6 +168,10 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase implem
       $recursive_render_id = $items->getFieldDefinition()->getTargetEntityTypeId()
         . $items->getFieldDefinition()->getTargetBundle()
         . $items->getName()
+        // We include the referencing entity, so we can render default images
+        // without hitting recursive protections.
+        . $items->getEntity()->id()
+        . $entity->getEntityTypeId()
         . $entity->id();
 
       if (isset(static::$recursiveRenderDepth[$recursive_render_id])) {
