@@ -48,7 +48,7 @@ if (Settings::get('rebuild_access', FALSE) ||
     'wincache_ucache_clear',
     'xcache_clear_cache',
   ];
-  array_walk(array_filter($user_caches, 'is_callable'), 'call_user_func');
+  array_map('call_user_func', array_filter($user_caches, 'is_callable'));
 
   drupal_rebuild($autoloader, $request);
   drupal_set_message('Cache rebuild complete.');
