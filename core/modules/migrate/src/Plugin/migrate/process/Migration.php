@@ -77,9 +77,7 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
     if (!is_array($migration_ids)) {
       $migration_ids = array($migration_ids);
     }
-    $scalar = FALSE;
     if (!is_array($value)) {
-      $scalar = TRUE;
       $value = array($value);
     }
     $this->skipOnEmpty($value);
@@ -152,10 +150,8 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
       }
     }
     if ($destination_ids) {
-      if ($scalar) {
-        if (count($destination_ids) == 1) {
-          return reset($destination_ids);
-        }
+      if (count($destination_ids) == 1) {
+        return reset($destination_ids);
       }
       else {
         return $destination_ids;
