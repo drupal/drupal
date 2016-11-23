@@ -32,4 +32,4 @@ process:
     map:
       list: -1
 destination:
-  plugin: md_entity:field_storage_config
+  plugin: entity:field_storage_config

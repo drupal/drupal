@@ -22,7 +22,10 @@ process:
   'settings/target_type': 'constants/target_entity_type'
   cardinality: cardinality
 destination:
-  plugin: md_entity:field_storage_config
+  plugin: entity:field_storage_config
+  dependencies:
+    module:
+      - entity_reference
 migration_dependencies:
   required:
     - d6_taxonomy_vocabulary
