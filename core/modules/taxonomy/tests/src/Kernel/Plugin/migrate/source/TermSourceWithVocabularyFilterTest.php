@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d6;
+namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source;
 
 /**
  * Tests the taxonomy term source with vocabulary filter.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d6\Term
+ * @covers \Drupal\taxonomy\Plugin\migrate\source\Term
  * @group taxonomy
  */
 class TermSourceWithVocabularyFilterTest extends TermTest {
@@ -47,7 +47,7 @@ class TermSourceWithVocabularyFilterTest extends TermTest {
 
     // Set up source plugin configuration.
     $tests[0]['configuration'] = [
-      'bundle' => [5],
+      'vocabulary' => [5],
     ];
 
     return $tests;

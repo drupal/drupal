@@ -2,9 +2,8 @@ id: d7_taxonomy_term
 label: Taxonomy terms
 migration_tags:
   - Drupal 7
-deriver: Drupal\taxonomy\Plugin\migrate\D7TaxonomyTermDeriver
 source:
-  plugin: d7_taxonomy_term
+  plugin: taxonomy_term
 process:
   # If you are using this file to build a custom migration consider removing
   # the tid field to allow incremental migrations.
@@ -36,5 +35,3 @@ destination:
 migration_dependencies:
   required:
     - d7_taxonomy_vocabulary
-  optional:
-    - d7_field_instance
