@@ -74,7 +74,7 @@ class TextTrimmedFormatter extends FormatterBase {
       // because text_pre_render_summary() must run last.
       $element += \Drupal::service('element_info')->getInfo($element['#type']);
       // Add the #pre_render callback that renders the text into a summary.
-      $element['#pre_render'][] = '\Drupal\text\Plugin\field\FieldFormatter\TextTrimmedFormatter::preRenderSummary';
+      $element['#pre_render'][] = [TextTrimmedFormatter::class, 'preRenderSummary'];
       // Pass on the trim length to the #pre_render callback via a property.
       $element['#text_summary_trim_length'] = $this->getSetting('trim_length');
     };
