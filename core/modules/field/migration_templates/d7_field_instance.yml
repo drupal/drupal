@@ -36,3 +36,4 @@ migration_dependencies:
   optional:
     - d7_node_type
     - d7_comment_type
+    - d7_taxonomy_vocabulary
