@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Plugin\migrate\source;
+namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
@@ -11,50 +11,23 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * @todo Support term_relation, term_synonym table if possible.
  *
  * @MigrateSource(
- *   id = "taxonomy_term",
+ *   id = "d6_taxonomy_term",
  *   source_provider = "taxonomy"
  * )
- *
- * @deprecated in Drupal 8.3.0, intended to be removed in Drupal 9.0.0.
- *   Use \Drupal\taxonomy\Plugin\migrate\source\d6\Term or
- *   \Drupal\taxonomy\Plugin\migrate\source\d7\Term.
  */
 class Term extends DrupalSqlBase {
-
-  /**
-   * Name of the term data table.
-   *
-   * @var string
-   */
-  protected $termDataTable;
-
-  /**
-   * Name of the term hierarchy table.
-   *
-   * @var string
-   */
-  protected $termHierarchyTable;
 
   /**
    * {@inheritdoc}
    */
   public function query() {
-    if ($this->getModuleSchemaVersion('taxonomy') >= 7000) {
-      $this->termDataTable = 'taxonomy_term_data';
-      $this->termHierarchyTable = 'taxonomy_term_hierarchy';
-    }
-    else {
-      $this->termDataTable = 'term_data';
-      $this->termHierarchyTable = 'term_hierarchy';
-    }
-
-    $query = $this->select($this->termDataTable, 'td')
+    $query = $this->select('term_data', 'td')
       ->fields('td')
       ->distinct()
       ->orderBy('td.tid');
 
-    if (isset($this->configuration['vocabulary'])) {
-      $query->condition('td.vid', $this->configuration['vocabulary'], 'IN');
+    if (isset($this->configuration['bundle'])) {
+      $query->condition('td.vid', $this->configuration['bundle'], 'IN');
     }
 
     return $query;
@@ -64,17 +37,14 @@ class Term extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    $fields = array(
+    $fields = [
       'tid' => $this->t('The term ID.'),
       'vid' => $this->t('Existing term VID'),
       'name' => $this->t('The name of the term.'),
       'description' => $this->t('The term description.'),
       'weight' => $this->t('Weight'),
       'parent' => $this->t("The Drupal term IDs of the term's parents."),
-    );
-    if ($this->getModuleSchemaVersion('taxonomy') >= 7000) {
-      $fields['format'] = $this->t('Format of the term description.');
-    }
+    ];
     return $fields;
   }
 
@@ -83,8 +53,8 @@ class Term extends DrupalSqlBase {
    */
   public function prepareRow(Row $row) {
     // Find parents for this row.
-    $parents = $this->select($this->termHierarchyTable, 'th')
-      ->fields('th', array('parent', 'tid'))
+    $parents = $this->select('term_hierarchy', 'th')
+      ->fields('th', ['parent', 'tid'])
       ->condition('tid', $row->getSourceProperty('tid'))
       ->execute()
       ->fetchCol();
