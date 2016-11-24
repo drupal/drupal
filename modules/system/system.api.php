@@ -2051,6 +2051,22 @@ function hook_system_theme_info() {
 }
 
 /**
+ * Return additional theme engines provided by modules.
+ *
+ * This hook is invoked from _system_rebuild_theme_data() and allows modules to
+ * register additional theme engines outside of the regular 'themes/engines'
+ * directories of a Drupal installation.
+ *
+ * @return
+ *   An associative array. Each key is the system name of a theme engine and
+ *   each value is the corresponding path to the theme engine's .engine file.
+ */
+function hook_system_theme_engine_info() {
+  $theme_engines['izumi'] = drupal_get_path('module', 'mymodule') . '/izumi/izumi.engine';
+  return $theme_engines;
+}
+
+/**
  * Alter the information parsed from module and theme .info files
  *
  * This hook is invoked in _system_rebuild_module_data() and in

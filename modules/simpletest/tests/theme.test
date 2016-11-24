@@ -646,3 +646,34 @@ class ThemeDebugMarkupTestCase extends DrupalWebTestCase {
   }
 
 }
+
+/**
+ * Tests module-provided theme engines.
+ */
+class ModuleProvidedThemeEngineTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Theme engine test',
+      'description' => 'Tests module-provided theme engines.',
+      'group' => 'Theme',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('theme_test');
+    theme_enable(array('test_theme', 'test_theme_nyan_cat'));
+  }
+
+  /**
+   * Ensures that the module provided theme engine is found and used by core.
+   */
+  function testEngineIsFoundAndWorking() {
+    variable_set('theme_default', 'test_theme_nyan_cat');
+    variable_set('admin_theme', 'test_theme_nyan_cat');
+
+    $this->drupalGet('theme-test/engine-info-test');
+    $this->assertText('Miaou');
+  }
+
+}

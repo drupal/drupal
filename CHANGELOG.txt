@@ -2,6 +2,8 @@
 Drupal 7.53, xxxx-xx-xx (development version)
 -----------------------
 
+- Modules are now able to define theme engines.
+
 Drupal 7.52, 2016-11-16
 -----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2016-005.

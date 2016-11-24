@@ -2521,6 +2521,16 @@ function _system_rebuild_theme_data() {
 
   // Find theme engines
   $engines = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.engine$/', 'themes/engines');
+  // Allow modules to add further theme engines.
+  if ($module_engines = module_invoke_all('system_theme_engine_info')) {
+    foreach ($module_engines as $name => $theme_engine_path) {
+      $engines[$name] = (object) array(
+        'uri' => $theme_engine_path,
+        'filename' => basename($theme_engine_path),
+        'name' => $name,
+      );
+    }
+  }
 
   // Set defaults for theme info.
   $defaults = array(

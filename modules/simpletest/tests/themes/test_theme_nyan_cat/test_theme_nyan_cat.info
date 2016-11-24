@@ -1,0 +1,5 @@
+name = Nyan cat engine based test theme
+description = Theme for testing the module-provided theme engines.
+core = 7.x
+hidden = TRUE
+engine = nyan_cat

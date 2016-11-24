@@ -27,7 +27,16 @@ function theme_test_system_theme_info() {
   $themes['test_theme'] = drupal_get_path('module', 'theme_test') . '/themes/test_theme/test_theme.info';
   $themes['test_basetheme'] = drupal_get_path('module', 'theme_test') . '/themes/test_basetheme/test_basetheme.info';
   $themes['test_subtheme'] = drupal_get_path('module', 'theme_test') . '/themes/test_subtheme/test_subtheme.info';
+  $themes['test_theme_nyan_cat'] = drupal_get_path('module', 'theme_test') . '/themes/test_theme_nyan_cat/test_theme_nyan_cat.info';
   return $themes;
+}
+
+/**
+ * Implements hook_system_theme_engine_info().
+ */
+function theme_test_system_theme_engine_info() {
+  $theme_engines['nyan_cat'] = drupal_get_path('module', 'theme_test') . '/themes/engines/nyan_cat/nyan_cat.engine';
+  return $theme_engines;
 }
 
 /**
@@ -55,6 +64,12 @@ function theme_test_menu() {
   );
   $items['theme-test/drupal-add-region-content'] = array(
     'page callback' => '_theme_test_drupal_add_region_content',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['theme-test/engine-info-test'] = array(
+    'description' => "Serves a simple page rendered using a Nyan Cat theme engine template.",
+    'page callback' => '_theme_test_engine_info_test',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -137,6 +152,15 @@ function _theme_test_suggestion() {
 function _theme_test_drupal_add_region_content() {
   drupal_add_region_content('content', 'World');
   return 'Hello';
+}
+
+/**
+ * Serves a simple page renderered using a Nyan Cat theme engine template.
+ */
+function _theme_test_engine_info_test() {
+  return array(
+    '#markup' => theme('theme_test_template_test'),
+  );
 }
 
 /**
