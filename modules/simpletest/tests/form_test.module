@@ -37,6 +37,13 @@ function form_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['form-test/validate-no-token'] = array(
+    'title' => 'Form validation without a CSRF token',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_validate_no_token'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   $items['form-test/limit-validation-errors'] = array(
     'title' => 'Form validation with some error suppression',
     'page callback' => 'drupal_get_form',
@@ -452,6 +459,27 @@ function form_test_validate_required_form_no_title($form, &$form_state) {
  */
 function form_test_validate_required_form_no_title_submit($form, &$form_state) {
   drupal_set_message('The form_test_validate_required_form_no_title form was submitted successfully.');
+}
+
+/**
+ * Form builder for testing submission of a form without a CSRF token.
+ */
+function form_test_validate_no_token($form, &$form_state) {
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Save',
+  );
+
+  $form['#token'] = FALSE;
+
+  return $form;
+}
+
+/**
+ * Form submission handler for form_test_validate_no_token().
+ */
+function form_test_validate_no_token_submit($form, &$form_state) {
+  drupal_set_message('The form_test_validate_no_token form has been submitted successfully.');
 }
 
 /**
