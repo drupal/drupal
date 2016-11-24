@@ -1784,3 +1784,13 @@ function system_update_8202() {
 /**
  * @} End of "addtogroup updates-8.2.3".
  */
+
+/**
+ * Add detailed cron logging configuration.
+ */
+function system_update_8203() {
+  $config_factory = \Drupal::configFactory();
+  $system_cron_config = $config_factory->getEditable('system.cron')
+    ->set('logging', 1)
+    ->save(TRUE);
+}

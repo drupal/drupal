@@ -10,11 +10,13 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Form\ConfigFormBaseTrait;
 
 /**
  * Configure cron settings for this site.
  */
 class CronForm extends FormBase {
+  use ConfigFormBaseTrait;
 
   /**
    * Stores the state storage service.
@@ -68,6 +70,13 @@ class CronForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['system.cron'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
@@ -107,10 +116,30 @@ class CronForm extends FormBase {
     );
 
     if (!$this->moduleHandler->moduleExists('automated_cron')) {
-      $form['cron'] = array(
+      $form['automated_cron'] = array(
         '#markup' => $this->t('Enable the <em>Automated Cron</em> module to allow cron execution at the end of a server response.'),
       );
     }
+
+    $form['cron'] = [
+      '#title' => t('Cron settings'),
+      '#type' => 'details',
+      '#open' => TRUE,
+    ];
+
+    $form['cron']['logging'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Detailed cron logging'),
+      '#default_value' => $this->config('system.cron')->get('logging'),
+      '#description' => 'Run times of individual cron jobs will be written to watchdog',
+    );
+
+    $form['actions']['#type'] = 'actions';
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => t('Save configuration'),
+      '#button_type' => 'primary',
+    ];
 
     return $form;
   }
@@ -119,6 +148,11 @@ class CronForm extends FormBase {
    * Runs cron and reloads the page.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $this->config('system.cron')
+      ->set('logging', $form_state->getValue('logging'))
+      ->save();
+    drupal_set_message(t('The configuration options have been saved.'));
+
     // Run cron manually from Cron form.
     if ($this->cron->run()) {
       drupal_set_message(t('Cron ran successfully.'));

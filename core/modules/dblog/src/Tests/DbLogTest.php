@@ -147,6 +147,25 @@ class DbLogTest extends WebTestBase {
     $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
     $this->assertTrue($count > $row_limit, format_string('Dblog row count of @count exceeds row limit of @limit', array('@count' => $count, '@limit' => $row_limit)));
 
+    // Get the number of enabled modules. Cron adds a log entry for each module.
+    $list = \Drupal::moduleHandler()->getImplementations('cron');
+    $module_count = count($list);
+    $cron_detailed_count = $this->runCron();
+    $this->assertTrue($cron_detailed_count == $module_count + 2, format_string('Cron added @count of @expected new log entries', array('@count' => $cron_detailed_count, '@expected' => $module_count + 2)));
+
+    // Test disabling of detailed cron logging.
+    $this->config('system.cron')->set('logging', 0)->save();
+    $cron_count = $this->runCron();
+    $this->assertTrue($cron_count = 1, format_string('Cron added @count of @expected new log entries', array('@count' => $cron_count, '@expected' => 1)));
+  }
+
+  /**
+   * Runs cron and returns number of new log entries.
+   *
+   * @return int
+   *   Number of new watchdog entries.
+   */
+  private function runCron() {
     // Get last ID to compare against; log entries get deleted, so we can't
     // reliably add the number of newly created log entries to the current count
     // to measure number of log entries created by cron.
@@ -158,12 +177,7 @@ class DbLogTest extends WebTestBase {
     // Get last ID after cron was run.
     $current_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
 
-    // Get the number of enabled modules. Cron adds a log entry for each module.
-    $list = \Drupal::moduleHandler()->getImplementations('cron');
-    $module_count = count($list);
-
-    $count = $current_id - $last_id;
-    $this->assertTrue(($current_id - $last_id) == $module_count + 2, format_string('Cron added @count of @expected new log entries', array('@count' => $count, '@expected' => $module_count + 2)));
+    return $current_id - $last_id;
   }
 
   /**

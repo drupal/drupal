@@ -24,6 +24,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
         'requirements_warning' => 172800,
         'requirements_error' => 1209600,
       ],
+      'logging' => 1,
     ],
     'system.date' => [
       'country' => [
