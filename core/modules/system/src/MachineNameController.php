@@ -6,9 +6,9 @@ use Drupal\Component\Transliteration\TransliterationInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -78,10 +78,10 @@ class MachineNameController implements ContainerInjectionInterface {
 
     if (isset($replace_pattern) && isset($replace)) {
       if (!isset($replace_token)) {
-        throw new AccessDeniedException("Missing 'replace_token' query parameter.");
+        throw new AccessDeniedHttpException("Missing 'replace_token' query parameter.");
       }
       elseif (!$this->tokenGenerator->validate($replace_token, $replace_pattern)) {
-        throw new AccessDeniedException("Invalid 'replace_token' query parameter.");
+        throw new AccessDeniedHttpException("Invalid 'replace_token' query parameter.");
       }
 
       // Quote the pattern delimiter and remove null characters to avoid the e
