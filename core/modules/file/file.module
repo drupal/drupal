@@ -66,7 +66,7 @@ function file_help($route_name, RouteMatchInterface $route_match) {
  *
  * @see hook_ENTITY_TYPE_load()
  * @see file_load()
- * @see entity_load()
+ * @see \Drupal\Core\Entity\EntityStorageInterface
  * @see \Drupal\Core\Entity\Query\EntityQueryInterface
  */
 function file_load_multiple(array $fids = NULL, $reset = FALSE) {
@@ -158,7 +158,8 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
     // @todo Do not create a new entity in order to update it. See
     //   https://www.drupal.org/node/2241865.
     if ($replace == FILE_EXISTS_REPLACE) {
-      $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
+      $existing_files = \Drupal::entityTypeManager()->getStorage('file')
+        ->loadByProperties(['uri' => $uri]);
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $file->fid = $existing->id();
@@ -232,7 +233,8 @@ function file_move(FileInterface $source, $destination = NULL, $replace = FILE_E
     $file->setFileUri($uri);
     // If we are replacing an existing file re-use its database record.
     if ($replace == FILE_EXISTS_REPLACE) {
-      $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
+      $existing_files = \Drupal::entityTypeManager()->getStorage('file')
+        ->loadByProperties(['uri' => $uri]);
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $delete_source = TRUE;
@@ -511,7 +513,8 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
     // @todo Do not create a new entity in order to update it. See
     //   https://www.drupal.org/node/2241865.
     if ($replace == FILE_EXISTS_REPLACE) {
-      $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
+      $existing_files = \Drupal::entityTypeManager()->getStorage('file')
+        ->loadByProperties(array('uri' => $uri));
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $file->fid = $existing->id();
@@ -582,7 +585,8 @@ function file_theme() {
 function file_file_download($uri) {
   // Get the file record based on the URI. If not in the database just return.
   /** @var \Drupal\file\FileInterface[] $files */
-  $files = entity_load_multiple_by_properties('file', array('uri' => $uri));
+  $files = \Drupal::entityTypeManager()->getStorage('file')
+    ->loadByProperties(array('uri' => $uri));
   if (count($files)) {
     foreach ($files as $item) {
       // Since some database servers sometimes use a case-insensitive comparison
@@ -885,7 +889,8 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     // @todo Do not create a new entity in order to update it. See
     //   https://www.drupal.org/node/2241865.
     if ($replace == FILE_EXISTS_REPLACE) {
-      $existing_files = entity_load_multiple_by_properties('file', array('uri' => $file->getFileUri()));
+      $existing_files = \Drupal::entityTypeManager()->getStorage('file')
+        ->loadByProperties(['uri' => $file->getFileUri()]);
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $file->fid = $existing->id();
@@ -1474,7 +1479,8 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
     $usage_list = \Drupal::service('file.usage')->listUsage($file);
     $file_usage_list = isset($usage_list['file']) ? $usage_list['file'] : array();
     foreach ($file_usage_list as $entity_type_id => $entity_ids) {
-      $entities = entity_load_multiple($entity_type_id, array_keys($entity_ids));
+      $entities = \Drupal::entityTypeManager()->getStorage($entity_type_id)
+        ->loadMultiple(array_keys($entity_ids));
       foreach ($entities as $entity) {
         $bundle = $entity->bundle();
         // We need to find file fields for this entity type and bundle.

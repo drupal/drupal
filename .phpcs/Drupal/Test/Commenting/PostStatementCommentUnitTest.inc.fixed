@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ */
+
+// Comment should be on the line before.
+foo();
+
+$x = array(
+  'a' => 'b',
+// Comment should be on the line before.
+  'c' => 'd',
+);

@@ -134,7 +134,9 @@ class ConfigImporterFieldPurger {
 
     // Gather deleted fields from modules that are being uninstalled.
     /** @var \Drupal\field\FieldStorageConfigInterface[] $field_storages */
-    $field_storages = entity_load_multiple_by_properties('field_storage_config', array('deleted' => TRUE, 'include_deleted' => TRUE));
+    $field_storages = \Drupal::entityTypeManager()
+      ->getStorage('field_storage_config')
+      ->loadByProperties(['deleted' => TRUE, 'include_deleted' => TRUE]);
     foreach ($field_storages as $field_storage) {
       if (!in_array($field_storage->getTypeProvider(), $providers)) {
         $storages_to_delete[$field_storage->id()] = $field_storage;

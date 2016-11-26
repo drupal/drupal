@@ -334,7 +334,8 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
       return array();
     }
   }
-  return entity_load_multiple_by_properties('taxonomy_term', $values);
+  return \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+    ->loadByProperties($values);
 }
 
 /**
@@ -344,7 +345,7 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  * from the database. Terms are loaded into memory and will not require
  * database access if loaded again during the same page request.
  *
- * @see entity_load_multiple()
+ * @see \Drupal\Core\Entity\EntityStorageInterface
  * @see \Drupal\Core\Entity\Query\EntityQueryInterface
  *
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
@@ -368,7 +369,7 @@ function taxonomy_term_load_multiple(array $tids = NULL) {
  * vocabulary from the database. Terms are loaded into memory and will not
  * require database access if loaded again during the same page request.
  *
- * @see entity_load_multiple()
+ * @see \Drupal\Core\Entity\EntityStorageInterface
  *
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
  *   Use \Drupal\taxonomy\Entity\Vocabulary::loadMultiple().

@@ -207,7 +207,8 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
       }
 
       // Try to load an existing entry.
-      if ($entry = entity_load_multiple_by_properties('aggregator_item', $values)) {
+      if ($entry = \Drupal::entityTypeManager()->getStorage('aggregator_item')
+        ->loadByProperties($values)) {
         $entry = reset($entry);
       }
       else {
