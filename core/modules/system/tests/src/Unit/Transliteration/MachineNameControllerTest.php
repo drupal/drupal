@@ -7,8 +7,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Transliteration\PhpTransliteration;
 use Drupal\system\MachineNameController;
 use Prophecy\Argument;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Tests that the machine name controller can transliterate strings as expected.
@@ -103,7 +103,7 @@ class MachineNameControllerTest extends UnitTestCase {
   public function testMachineNameControllerWithInvalidReplacePattern() {
     $request = Request::create('', 'GET', ['text' => 'Bob', 'langcode' => 'en', 'replace' => 'Alice', 'replace_pattern' => 'Bob', 'replace_token' => 'invalid']);
 
-    $this->setExpectedException(AccessDeniedException::class, "Invalid 'replace_token' query parameter.");
+    $this->setExpectedException(AccessDeniedHttpException::class, "Invalid 'replace_token' query parameter.");
     $this->machineNameController->transliterate($request);
   }
 
@@ -113,7 +113,7 @@ class MachineNameControllerTest extends UnitTestCase {
   public function testMachineNameControllerWithMissingToken() {
     $request = Request::create('', 'GET', ['text' => 'Bob', 'langcode' => 'en', 'replace' => 'Alice', 'replace_pattern' => 'Bob']);
 
-    $this->setExpectedException(AccessDeniedException::class, "Missing 'replace_token' query parameter.");
+    $this->setExpectedException(AccessDeniedHttpException::class, "Missing 'replace_token' query parameter.");
     $this->machineNameController->transliterate($request);
   }
 
