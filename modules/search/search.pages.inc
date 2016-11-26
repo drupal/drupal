@@ -18,7 +18,7 @@ function search_view($module = NULL, $keys = '') {
   $keys = trim($keys);
   // Also try to pull search keywords out of the $_REQUEST variable to
   // support old GET format of searches for existing links.
-  if (!$keys && !empty($_REQUEST['keys'])) {
+  if (!$keys && isset($_REQUEST['keys'])) {
     $keys = trim($_REQUEST['keys']);
   }
 
@@ -49,14 +49,15 @@ function search_view($module = NULL, $keys = '') {
   // which will get us back to this page callback. In other words, the search
   // form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle.
-  if (empty($_POST['form_id']) || ($_POST['form_id'] != 'search_form' && $_POST['form_id'] != 'search_block_form')) {
+  if (empty($_POST['form_id']) ||
+      ($_POST['form_id'] != 'search_form' && $_POST['form_id'] != 'search_block_form')) {
     $conditions =  NULL;
     if (isset($info['conditions_callback']) && function_exists($info['conditions_callback'])) {
       // Build an optional array of more search conditions.
       $conditions = call_user_func($info['conditions_callback'], $keys);
     }
     // Only search if there are keywords or non-empty conditions.
-    if ($keys || !empty($conditions)) {
+    if ($keys || $keys === "0" || !empty($conditions)) {
       // Log the search keys.
       watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $info['path'] . '/' . $keys));
 
