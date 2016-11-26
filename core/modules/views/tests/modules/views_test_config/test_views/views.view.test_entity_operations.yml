@@ -123,3 +123,46 @@ display:
     position: null
     display_options:
       path: test-entity-operations
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: 'Page 2'
+    position: null
+    display_options:
+      path: test-entity-operations-table
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          caption: ''
+          summary: ''
+          description: ''
+          columns:
+            title: title
+            operations: operations
+          info:
+            title:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            operations:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          default: '-1'
+          empty_table: false
+      row:
+        type: fields
+        options: {  }
+      display_extenders: {  }
+      defaults:
+        style: false
+        row: false

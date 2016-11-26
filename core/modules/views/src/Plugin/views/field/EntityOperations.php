@@ -165,4 +165,11 @@ class EntityOperations extends FieldPluginBase {
     return $this->view;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function clickSortable() {
+    return FALSE;
+  }
+
 }

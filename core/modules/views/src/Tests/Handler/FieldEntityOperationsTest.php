@@ -25,7 +25,7 @@ class FieldEntityOperationsTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'language');
+  public static $modules = array('node', 'language', 'views_ui');
 
   function setUp() {
     parent::setUp();
@@ -83,6 +83,11 @@ class FieldEntityOperationsTest extends HandlerTestBase {
         }
       }
     }
+
+    // Test that we can't enable click sorting on the operation field.
+    $this->drupalGet('admin/structure/views/nojs/display/test_entity_operations/page_2/style_options');
+    $this->assertField('style_options[info][title][sortable]');
+    $this->assertNoField('style_options[info][operations][sortable]');
   }
 
 }
