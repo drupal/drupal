@@ -239,6 +239,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $root;
 
   /**
+   * The state whether initializeSettings() has been called or not.
+   *
+   * @var bool
+   */
+  protected $settingsInitialized = false;
+
+  /**
    * Create a DrupalKernel object from a request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -624,7 +631,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     static::bootEnvironment();
 
     try {
-      $this->initializeSettings($request);
+      if ($this->settingsInitialized){
+          $this->initializeSettings($request);
+      }
 
       // Redirect the user to the installation script if Drupal has not been
       // installed yet (i.e., if no $databases array has been defined in the
@@ -954,6 +963,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   In case the host name in the request is not trusted.
    */
   protected function initializeSettings(Request $request) {
+    if ($this->settingsInitialized) {
+        throw new \LogicException('Can not initialize the kernel twice.');
+    }
+    $this->settingsInitialized = true;
+
     $site_path = static::findSitePath($request);
     $this->setSitePath($site_path);
     $class_loader_class = get_class($this->classLoader);
