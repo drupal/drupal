@@ -1,0 +1,9 @@
+; core appears twice here.
+core = 7.x
+name = Test
+core = 7.x
+
+; These should not be here, will be added by drupal.org packaging.
+project = test
+timestamp = 1234567
+version = 1.2
