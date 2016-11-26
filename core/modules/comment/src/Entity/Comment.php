@@ -20,6 +20,12 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "comment",
  *   label = @Translation("Comment"),
+ *   label_singular = @Translation("comment"),
+ *   label_plural = @Translation("comments"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count comment",
+ *     plural = "@count comments",
+ *   ),
  *   bundle_label = @Translation("Comment type"),
  *   handlers = {
  *     "storage" = "Drupal\comment\CommentStorage",

@@ -1,0 +1,118 @@
+/**
+ * @file
+ * Valid example CSS file.
+ */
+
+#forum .description {
+  color: #efefef;
+  font-size: 0.9em;
+  margin: 0.5em;
+}
+
+.testselector {
+  border: none;
+  display: table;
+}
+
+#forum td.posts,
+#forum td.pager {
+  color: #efefef;
+}
+
+@media screen and (max-device-width: 769px) {
+
+  header #logo img {
+    max-width: 100%;
+  }
+
+  .inner {
+    max-width: 1500px;
+    min-width: 1281px;
+  }
+
+}
+
+.progressive-enhancement {
+  background: #000 none;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+.progressive-prefixes {
+  background-color: #003471;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#003471), to(#448ccb));
+  background-image: -webkit-linear-gradient(top, #003471, #448ccb);
+  background-image: -moz-linear-gradient(top, #003471, #448ccb);
+  background-image: -ms-linear-gradient(top, #003471, #448ccb);
+  background-image: -o-linear-gradient(top, #003471, #448ccb);
+  background-image: linear-gradient(to bottom, #003471, #448ccb);
+}
+.vendor-prefixes {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-box-shadow: 0 3px 20px #000;
+  -webkit-box-shadow: 0 3px 20px #000;
+  box-shadow: 0 3px 20px #000;
+}
+
+#node-admin-buttons {
+  clear: right; /* LTR */
+  float: left; /* LTR */
+  margin-left: 0.5em; /* LTR */
+}
+
+.gigantic {
+  /* 110px / 120px */
+  font-size: 6.875em;
+  line-height: 1.0909090909090908em;
+}
+
+/* A comment describing the ruleset. */
+.selector-1,
+.selector-2,
+.selector-3[type="text"] {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  margin: 0;
+  font-family: Times, "Times New Roman", sans-serif;
+  color: #333;
+  background: #fff;
+  background: linear-gradient(#fff, rgba(0, 0, 0, 0.8));
+}
+
+/**
+* A longer comment describing this ruleset. Note
+* the blank line before the docblock.
+*/
+.selector-4,
+.selector-5 {
+  padding: 10px;
+}
+
+/* This logical grouping of rulesets has no interleaving blank lines. */
+.profile {
+  margin: 1em 0;
+}
+.profile__picture {
+  float: right; /* LTR */
+}
+
+@media screen and (max-width: 1152px) {
+  #wrapper {
+    max-width: 960px;
+  }
+  #top-area .column:last-child {
+    margin-right: 0;
+  }
+  #copyright {
+    padding: 0 10px;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 961px) {
+  .tooltipsrt:hover span.tltp,
+  .tooltipstp:hover span.tltp {
+    visibility: hidden;
+  }
+}
