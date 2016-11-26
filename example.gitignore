@@ -12,8 +12,9 @@
 # vendor
 
 # Ignore configuration files that may contain sensitive information.
-sites/*/settings*.php
-sites/*/services*.yml
+sites/**/*settings*.php
+sites/**/*services*.yml
+!example.settings.local.php
 
 # Ignore paths that contain user-generated content.
 sites/*/files
@@ -34,3 +35,9 @@ sites/simpletest
 
 # Ignore SimpleTest multi-site environment.
 # simpletest
+
+# Ignore SASS generated cache
+.sass-cache
+
+# Ignore Mac Finder configuration files
+.DS_Store
