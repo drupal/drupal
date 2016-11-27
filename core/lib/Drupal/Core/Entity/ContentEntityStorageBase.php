@@ -627,6 +627,46 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * {@inheritdoc}
    */
+  public function loadUnchanged($id) {
+    $ids = [$id];
+
+    // The cache invalidation in the parent has the side effect that loading the
+    // same entity again during the save process (for example in
+    // hook_entity_presave()) will load the unchanged entity. Simulate this
+    // by explicitly removing the entity from the static cache.
+    parent::resetCache($ids);
+
+    // The default implementation in the parent class unsets the current cache
+    // and then reloads the entity. That is slow, especially if this is done
+    // repeatedly in the same request, e.g. when validating and then saving
+    // an entity. Optimize this for content entities by trying to load them
+    // directly from the persistent cache again, as in contrast to the static
+    // cache the persistent one will never be changed until the entity is saved.
+    $entities = $this->getFromPersistentCache($ids);
+
+    if (!$entities) {
+      $entities[$id] = $this->load($id);
+    }
+    else {
+      // As the entities are put into the persistent cache before the post load
+      // has been executed we have to execute it if we have retrieved the
+      // entity directly from the persistent cache.
+      $this->postLoad($entities);
+
+      if ($this->entityType->isStaticallyCacheable()) {
+        // As we've removed the entity from the static cache already we have to
+        // put the loaded unchanged entity there to simulate the behavior of the
+        // parent.
+        $this->setStaticCache($entities);
+      }
+    }
+
+    return $entities[$id];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function resetCache(array $ids = NULL) {
     if ($ids) {
       $cids = array();
