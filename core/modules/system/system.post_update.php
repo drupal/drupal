@@ -57,3 +57,11 @@ function system_post_update_add_region_to_entity_displays() {
   array_map($entity_save, EntityViewDisplay::loadMultiple());
   array_map($entity_save, EntityFormDisplay::loadMultiple());
 }
+
+
+/**
+ * Force Twig PHP file cache to be cleared.
+ */
+function system_post_update_clear_twig_cache() {
+  // Empty post-update hook.
+}
