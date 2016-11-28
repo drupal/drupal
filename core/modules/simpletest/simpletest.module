@@ -317,6 +317,7 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
   // this variable.
   if ($base_url) {
     putenv('SIMPLETEST_BASE_URL=' . $base_url);
+    putenv('BROWSERTEST_OUTPUT_DIRECTORY=' . \Drupal::service('file_system')->realpath('public://simpletest'));
   }
   $phpunit_bin = simpletest_phpunit_command();
 
@@ -324,6 +325,8 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
     $phpunit_bin,
     '--log-junit',
     escapeshellarg($phpunit_file),
+    '--printer',
+    '\\\Drupal\\\Tests\\\Listeners\\\SimpletestUiPrinter',
   );
 
   // Optimized for running a single test.
@@ -357,6 +360,7 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
   putenv('SIMPLETEST_DB=');
   if ($base_url) {
     putenv('SIMPLETEST_BASE_URL=');
+    putenv('BROWSERTEST_OUTPUT_DIRECTORY=');
   }
   return $ret;
 }
