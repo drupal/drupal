@@ -3,13 +3,14 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Provides an interface defining a comment entity.
  */
-interface CommentInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
+interface CommentInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface, EntityPublishedInterface {
 
   /**
    * Comment is awaiting approval.
@@ -192,31 +193,15 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
   public function setCreatedTime($created);
 
   /**
-   * Checks if the comment is published.
-   *
-   * @return bool
-   *   TRUE if the comment is published.
-   */
-  public function isPublished();
-
-  /**
    * Returns the comment's status.
    *
    * @return int
    *   One of CommentInterface::PUBLISHED or CommentInterface::NOT_PUBLISHED
+   *
+   * @deprecated in Drupal 8.3.0, will be removed before Drupal 9.0.0. Use
+   *   \Drupal\Core\Entity\EntityPublishedInterface::isPublished() instead.
    */
   public function getStatus();
-
-  /**
-   * Sets the published status of the comment entity.
-   *
-   * @param bool $status
-   *   Set to TRUE to publish the comment, FALSE to unpublish.
-   *
-   * @return \Drupal\comment\CommentInterface
-   *   The class instance that this method is called on.
-   */
-  public function setPublished($status);
 
   /**
    * Returns the alphadecimal representation of the comment's place in a thread.

@@ -194,5 +194,17 @@ function comment_update_8300() {
 }
 
 /**
+ * Set the 'published' entity key.
+ */
+function comment_update_8301() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $definition_update_manager->getEntityType('comment');
+  $keys = $entity_type->getKeys();
+  $keys['published'] = 'status';
+  $entity_type->set('entity_keys', $keys);
+  $definition_update_manager->updateEntityType($entity_type);
+}
+
+/**
  * @} End of "addtogroup updates-8.3.x".
  */
