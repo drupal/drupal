@@ -2,7 +2,6 @@
 
 namespace Drupal\node;
 
-use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -11,7 +10,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 /**
  * Provides an interface defining a node entity.
  */
-interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface, RevisionLogInterface, EntityPublishedInterface {
+interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface, RevisionLogInterface {
 
   /**
    * Gets the node type.
@@ -96,6 +95,27 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   The called node entity.
    */
   public function setSticky($sticky);
+
+  /**
+   * Returns the node published status indicator.
+   *
+   * Unpublished nodes are only visible to their authors and to administrators.
+   *
+   * @return bool
+   *   TRUE if the node is published.
+   */
+  public function isPublished();
+
+  /**
+   * Sets the published status of a node..
+   *
+   * @param bool $published
+   *   TRUE to set this node to published, FALSE to set it to unpublished.
+   *
+   * @return \Drupal\node\NodeInterface
+   *   The called node entity.
+   */
+  public function setPublished($published);
 
   /**
    * Gets the node revision creation timestamp.

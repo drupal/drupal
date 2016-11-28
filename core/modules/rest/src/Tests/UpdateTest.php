@@ -311,6 +311,7 @@ class UpdateTest extends RESTTestBase {
     $this->pass('Test case 1: PATCH comment using JSON.');
     $comment->setSubject('Initial subject')->save();
     $read_only_fields = [
+      'status',
       'pid', // Extra compared to HAL+JSON.
       'entity_id',
       'uid',

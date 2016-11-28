@@ -222,11 +222,6 @@ function node_update_8003() {
 }
 
 /**
- * @addtogroup updates-8.3.x
- * @{
- */
-
-/**
  * Change {node_access}.fallback from an int to a tinyint as it is a boolean.
  */
 function node_update_8300() {
@@ -239,19 +234,3 @@ function node_update_8300() {
     'size' => 'tiny',
   ]);
 }
-
-/**
- * Set the 'published' entity key.
- */
-function node_update_8301() {
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $entity_type = $definition_update_manager->getEntityType('node');
-  $keys = $entity_type->getKeys();
-  $keys['published'] = 'status';
-  $entity_type->set('entity_keys', $keys);
-  $definition_update_manager->updateEntityType($entity_type);
-}
-
-/**
- * @} End of "addtogroup updates-8.3.x".
- */
