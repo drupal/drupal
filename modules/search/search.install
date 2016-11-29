@@ -12,6 +12,7 @@ function search_uninstall() {
   variable_del('minimum_word_size');
   variable_del('overlap_cjk');
   variable_del('search_cron_limit');
+  variable_del('search_logging');
 }
 
 /**

@@ -125,6 +125,16 @@ function search_admin_settings($form) {
     '#options' => $module_options,
     '#description' => t('Choose which search module is the default.')
   );
+  $form['logging'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Logging')
+  );
+  $form['logging']['search_logging'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Log searches'),
+    '#default_value' => variable_get('search_logging', 1),
+    '#description' => t('If checked, all searches will be logged. Uncheck to skip logging. Logging may affect performance.'),
+  );
   $form['#validate'][] = 'search_admin_settings_validate';
   $form['#submit'][] = 'search_admin_settings_submit';
 
