@@ -5,6 +5,11 @@
  * Contains hook implementations for testing REST module.
  */
 
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Access\AccessResult;
+
 /**
  * Implements hook_rest_type_uri_alter().
  */
@@ -21,4 +26,25 @@ function rest_test_rest_relation_uri_alter(&$uri, $context = array()) {
   if (!empty($context['rest_test'])) {
     $uri = 'rest_test_relation';
   }
+}
+
+/**
+ * Implements hook_entity_field_access().
+ *
+ * @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::setUp()
+ * @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::testPost()
+ */
+function rest_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($field_definition->getName() === 'field_rest_test') {
+    switch ($operation) {
+      case 'view':
+        // Never ever allow this field to be viewed: this lets EntityResourceTestBase::testGet() test in a "vanilla" way.
+        return AccessResult::forbidden();
+      case 'edit':
+        return AccessResult::forbidden();
+    }
+  }
+
+  // No opinion.
+  return AccessResult::neutral();
 }

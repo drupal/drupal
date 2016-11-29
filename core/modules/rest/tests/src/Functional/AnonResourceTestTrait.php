@@ -1,0 +1,36 @@
+<?php
+
+namespace Drupal\Tests\rest\Functional;
+
+use Drupal\Core\Url;
+use Psr\Http\Message\ResponseInterface;
+
+/**
+ * Trait for ResourceTestBase subclasses testing $auth=NULL, i.e. authless/anon.
+ *
+ * Characteristics:
+ * - When no authentication provider is being used, there also cannot be any
+ *   particular error response for missing authentication, since by definition
+ *   there is not any authentication.
+ * - For the same reason, there are no authentication edge cases to test.
+ * - Because no authentication is required, this is vulnerable to CSRF attacks
+ *   by design. Hence a REST resource should probably only allow for anonymous
+ *   for safe (GET/HEAD) HTTP methods, and only with extreme care should unsafe
+ *   (POST/PATCH/DELETE) HTTP methods be allowed for a REST resource that allows
+ *   anonymous access.
+ */
+trait AnonResourceTestTrait {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function assertResponseWhenMissingAuthentication(ResponseInterface $response) {
+    throw new \LogicException('When testing for anonymous users, authentication cannot be missing.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options) {}
+
+}
