@@ -303,7 +303,7 @@ services:
       - { name: event_subscriber }
   config.installer:
     class: Drupal\Core\Config\ConfigInstaller
-    arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher']
+    arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher', '%install_profile%']
     lazy: true
   config.storage:
     class: Drupal\Core\Config\CachedStorage
@@ -328,7 +328,7 @@ services:
       - { name: backend_overridable }
   config.storage.schema:
     class: Drupal\Core\Config\ExtensionInstallStorage
-    arguments: ['@config.storage', 'config/schema']
+    arguments: ['@config.storage', '%install_profile%', 'config/schema']
   config.typed:
     class: Drupal\Core\Config\TypedConfigManager
     arguments: ['@config.storage', '@config.storage.schema', '@cache.discovery', '@module_handler']

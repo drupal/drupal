@@ -182,6 +182,16 @@ class Drupal {
   }
 
   /**
+   * Gets the active install profile.
+   *
+   * @return string|null
+   *   The name of the active install profile.
+   */
+  public static function installProfile() {
+    return static::getContainer()->getParameter('install_profile');
+  }
+
+  /**
    * Indicates if there is a currently active request object.
    *
    * @return bool
