@@ -580,12 +580,20 @@ Drupal.tableDrag.prototype.dropRow = function (event, self) {
  * Get the mouse coordinates from the event (allowing for browser differences).
  */
 Drupal.tableDrag.prototype.mouseCoords = function (event) {
+  // Complete support for pointer events was only introduced to jQuery in
+  // version 1.11.1; between versions 1.7 and 1.11.0 pointer events have the
+  // clientX and clientY properties undefined. In those cases, the properties
+  // must be retrieved from the event.originalEvent object instead.
+  var clientX = event.clientX || event.originalEvent.clientX;
+  var clientY = event.clientY || event.originalEvent.clientY;
+
   if (event.pageX || event.pageY) {
     return { x: event.pageX, y: event.pageY };
   }
+
   return {
-    x: event.clientX + document.body.scrollLeft - document.body.clientLeft,
-    y: event.clientY + document.body.scrollTop  - document.body.clientTop
+    x: clientX + document.body.scrollLeft - document.body.clientLeft,
+    y: clientY + document.body.scrollTop  - document.body.clientTop
   };
 };
 

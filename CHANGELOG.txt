@@ -1,4 +1,9 @@
 
+Drupal 7.53, xxxx-xx-xx (development version)
+-----------------------
+- Fixed drag and drop support on newer Chrome/IE 11+ versions after 7.51 update
+  when jQuery is updated to 1.7-1.11.0.
+
 Drupal 7.52, 2016-11-16
 -----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2016-005.
