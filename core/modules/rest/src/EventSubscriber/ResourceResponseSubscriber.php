@@ -196,8 +196,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    // Run shortly before \Drupal\Core\EventSubscriber\FinishResponseSubscriber.
-    $events[KernelEvents::RESPONSE][] = ['onResponse', 5];
+    $events[KernelEvents::RESPONSE][] = ['onResponse'];
     return $events;
   }
 
