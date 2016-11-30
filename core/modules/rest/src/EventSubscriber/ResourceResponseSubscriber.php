@@ -185,7 +185,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
     $final_response->setStatusCode($response->getStatusCode());
     $final_response->setProtocolVersion($response->getProtocolVersion());
     $final_response->setCharset($response->getCharset());
-    $final_response->headers->add($response->headers->all());
+    $final_response->headers = clone $response->headers;
     if ($final_response instanceof CacheableResponseInterface) {
       $final_response->addCacheableDependency($response->getCacheableMetadata());
     }
@@ -196,7 +196,8 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::RESPONSE][] = ['onResponse'];
+    // Run shortly before \Drupal\Core\EventSubscriber\FinishResponseSubscriber.
+    $events[KernelEvents::RESPONSE][] = ['onResponse', 5];
     return $events;
   }
 
