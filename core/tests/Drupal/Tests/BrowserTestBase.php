@@ -1845,16 +1845,27 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    */
   protected function getTestMethodCaller() {
     $backtrace = debug_backtrace();
-
-    // Remove all calls until we reach the current test class.
-    while (($caller = $backtrace[1]) &&
-      (!isset($caller['class']) || $caller['class'] !== get_class($this))
-    ) {
-      // We remove that call.
+    // Find the test class that has the test method.
+    while ($caller = Error::getLastCaller($backtrace)) {
+      if (isset($caller['class']) && $caller['class'] === get_class($this)) {
+        break;
+      }
+      // If the test method is implemented by a test class's parent then the
+      // class name of $this will not be part of the backtrace.
+      // In that case we process the backtrace until the caller is not a
+      // subclass of $this and return the previous caller.
+      if (isset($last_caller) && (!isset($caller['class']) || !is_subclass_of($this, $caller['class']))) {
+        // Return the last caller since that has to be the test class.
+        $caller = $last_caller;
+        break;
+      }
+      // Otherwise we have not reached our test class yet: save the last caller
+      // and remove an element from to backtrace to process the next call.
+      $last_caller = $caller;
       array_shift($backtrace);
     }
 
-    return Error::getLastCaller($backtrace);
+    return $caller;
   }
 
 }
