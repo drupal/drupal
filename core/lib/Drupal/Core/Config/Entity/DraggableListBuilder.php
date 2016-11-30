@@ -35,6 +35,11 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
   protected $weightKey = FALSE;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $limit = FALSE;
+
+  /**
    * The form builder.
    *
    * @var \Drupal\Core\Form\FormBuilderInterface
