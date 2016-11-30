@@ -243,24 +243,16 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
   }
 
   /**
-   * Normalizes the method to upper case and check validity.
+   * Normalizes the method.
    *
    * @param string $method
    *   The request method.
    *
    * @return string
-   *   The normalised request method.
-   *
-   * @throws \InvalidArgumentException
-   *   If the method is not supported.
+   *   The normalized request method.
    */
   protected function normalizeRestMethod($method) {
-    $valid_methods = ['GET', 'POST', 'PATCH', 'DELETE'];
-    $normalised_method = strtoupper($method);
-    if (!in_array($normalised_method, $valid_methods)) {
-      throw new \InvalidArgumentException('The method is not supported.');
-    }
-    return $normalised_method;
+    return strtoupper($method);
   }
 
 }
