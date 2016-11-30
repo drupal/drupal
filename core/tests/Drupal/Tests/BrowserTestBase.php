@@ -258,7 +258,9 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   /**
    * Mink session manager.
    *
-   * @var \Behat\Mink\Mink
+   * This will not be initialized if there was an error during the test setup.
+   *
+   * @var \Behat\Mink\Mink|null
    */
   protected $mink;
 
