@@ -9,7 +9,6 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Render\Markup;
 use Drupal\Component\Render\MarkupInterface;
@@ -728,20 +727,12 @@ function drupal_installation_attempted() {
  * When this function is called during Drupal's initial installation process,
  * the name of the profile that's about to be installed is stored in the global
  * installation state. At all other times, the "install_profile" setting will be
- * available in container as a parameter.
+ * available in settings.php.
  *
  * @return string|null $profile
  *   The name of the installation profile or NULL if no installation profile is
  *   currently active. This is the case for example during the first steps of
  *   the installer or during unit tests.
- *
- * @deprecated in Drupal 8.3.0, will be removed before Drupal 9.0.0.
- *   Use the install_profile container parameter or \Drupal::installProfile()
- *   instead. If you are accessing the value before it is written to
- *   configuration during the installer use the $install_state global. If you
- *   need to access the value before container is available you can use
- *   BootstrapConfigStorageFactory to load the value directly from
- *   configuration.
  */
 function drupal_get_profile() {
   global $install_state;
@@ -756,18 +747,8 @@ function drupal_get_profile() {
     }
   }
   else {
-    if (\Drupal::hasContainer()) {
-      $profile = \Drupal::installProfile();
-    }
-    else {
-      $profile = BootstrapConfigStorageFactory::getDatabaseStorage()->read('core.extension')['profile'];
-    }
-
-    // A BC layer just in in case this only exists in Settings. Introduced in
-    // Drupal 8.3.x and will be removed before Drupal 9.0.0.
-    if (empty($profile)) {
-      $profile = Settings::get('install_profile');
-    }
+    // Fall back to NULL, if there is no 'install_profile' setting.
+    $profile = Settings::get('install_profile');
   }
 
   return $profile;

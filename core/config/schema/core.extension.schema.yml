@@ -14,6 +14,3 @@ core.extension:
       sequence:
         type: integer
         label: 'Weight'
-    profile:
-      type: string
-      label: 'Install profile'

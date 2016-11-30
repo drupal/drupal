@@ -1,7 +1,7 @@
 services:
   locale.default.config.storage:
     class: Drupal\locale\LocaleDefaultConfigStorage
-    arguments: ['@config.storage', '@language_manager', '%install_profile%']
+    arguments: ['@config.storage', '@language_manager']
     public: false
   locale.config_manager:
     class: Drupal\locale\LocaleConfigManager

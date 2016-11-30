@@ -3,6 +3,7 @@
 namespace Drupal\system\Tests\Installer;
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Site\Settings;
 use Drupal\simpletest\InstallerTestBase;
 use Drupal\Core\Database\Database;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,7 +65,7 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
   public function testInstaller() {
     $this->assertUrl('user/1');
     $this->assertResponse(200);
-    $this->assertEqual('testing', \Drupal::installProfile());
+    $this->assertEqual('testing', Settings::get('install_profile'));
   }
 
 }

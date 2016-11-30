@@ -2,7 +2,6 @@
 
 namespace Drupal\system\Tests\Installer;
 
-use Drupal\Core\Site\Settings;
 use Drupal\simpletest\InstallerTestBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
@@ -75,8 +74,7 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
   public function testInstaller() {
     $this->assertUrl('user/1');
     $this->assertResponse(200);
-    $this->assertEqual('testing', \Drupal::installProfile(), 'Profile was changed from minimal to testing during interactive install.');
-    $this->assertEqual('testing', Settings::get('install_profile'), 'Profile was correctly changed to testing in Settings.php');
+    $this->assertEqual('testing', drupal_get_profile(), 'Profile was changed from minimal to testing during interactive install.');
   }
 
 }

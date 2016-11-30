@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Bootstrap;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -18,18 +17,14 @@ class GetFilenameTest extends KernelTestBase {
   public static $modules = ['system'];
 
   /**
-   * {@inheritdoc}
-   */
-  public function register(ContainerBuilder $container) {
-    parent::register($container);
-    // Use the testing install profile.
-    $container->setParameter('install_profile', 'testing');
-  }
-
-  /**
    * Tests that drupal_get_filename() works when the file is not in database.
    */
   function testDrupalGetFilename() {
+    // drupal_get_profile() is using obtaining the profile from state if the
+    // install_state global is not set.
+    global $install_state;
+    $install_state['parameters']['profile'] = 'testing';
+
     // Rebuild system.module.files state data.
     // @todo Remove as part of https://www.drupal.org/node/2186491
     drupal_static_reset('system_rebuild_module_data');

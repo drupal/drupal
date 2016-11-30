@@ -392,7 +392,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $this->container->get('config.storage')->write('core.extension', array(
       'module' => array_fill_keys($modules, 0),
       'theme' => array(),
-      'profile' => '',
     ));
 
     $settings = Settings::getAll();
