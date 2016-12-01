@@ -111,7 +111,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       if (isset($block['new_page_text'])) {
         $page->pressButton($block['button_text']);
         // Make sure the changes are present.
-        $this->getSession()->wait(500);
+        $this->assertSession()->assertWaitOnAjaxRequest();
         $web_assert->pageTextContains($block['new_page_text']);
       }
 
@@ -141,7 +141,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
   protected function toggleEditingMode() {
     $this->waitForElement('div[data-contextual-id="block:block=powered:langcode=en|outside_in::langcode=en"] .contextual-links a');
 
-    $this->waitForElement('#toolbar-bar', 3000);
+    $this->waitForElement('#toolbar-bar');
 
     $edit_button = $this->getSession()->getPage()->find('css', '#toolbar-bar div.contextual-toolbar-tab button');
 

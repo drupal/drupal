@@ -86,7 +86,7 @@ class MachineNameTest extends JavascriptTestBase {
       $title_1->setValue($test_info['input']);
 
       // Wait the set timeout for fetching the machine name.
-      $this->getSession()->wait(1000, 'jQuery("#edit-machine-name-1-label-machine-name-suffix .machine-name-value").html() == "' . $test_info['expected'] . '"');
+      $this->assertJsCondition('jQuery("#edit-machine-name-1-label-machine-name-suffix .machine-name-value").html() == "' . $test_info['expected'] . '"');
 
       // Validate the generated machine name.
       $this->assertEquals($test_info['expected'], $machine_name_1_value->getHtml(), $test_info['message']);
