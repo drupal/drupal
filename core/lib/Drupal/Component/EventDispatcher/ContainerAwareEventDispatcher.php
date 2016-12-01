@@ -2,7 +2,7 @@
 
 namespace Drupal\Component\EventDispatcher;
 
-use Symfony\Component\DependencyInjection\IntrospectableContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -36,7 +36,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
   /**
    * The service container.
    *
-   * @var \Symfony\Component\DependencyInjection\IntrospectableContainerInterface;
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface;
    */
   protected $container;
 
@@ -66,7 +66,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
   /**
    * Constructs a container aware event dispatcher.
    *
-   * @param \Symfony\Component\DependencyInjection\IntrospectableContainerInterface $container
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The service container.
    * @param array $listeners
    *   A nested array of listener definitions keyed by event name and priority.
@@ -77,7 +77,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
    *   A service entry will be resolved to a callable only just before its
    *   invocation.
    */
-  public function __construct(IntrospectableContainerInterface $container, array $listeners = []) {
+  public function __construct(ContainerInterface $container, array $listeners = []) {
     $this->container = $container;
     $this->listeners = $listeners;
     $this->unsorted = [];
@@ -90,9 +90,6 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
     if ($event === NULL) {
       $event = new Event();
     }
-
-    $event->setDispatcher($this);
-    $event->setName($event_name);
 
     if (isset($this->listeners[$event_name])) {
       // Sort listeners if necessary.

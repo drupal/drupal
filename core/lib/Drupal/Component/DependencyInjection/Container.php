@@ -3,9 +3,7 @@
 namespace Drupal\Component\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\IntrospectableContainerInterface;
 use Symfony\Component\DependencyInjection\ResettableContainerInterface;
-use Symfony\Component\DependencyInjection\ScopeInterface;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
@@ -50,7 +48,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceExce
  *
  * @ingroup container
  */
-class Container implements IntrospectableContainerInterface, ResettableContainerInterface {
+class Container implements ContainerInterface, ResettableContainerInterface {
 
   /**
    * The parameters of the container.
@@ -361,11 +359,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
   /**
    * {@inheritdoc}
    */
-  public function set($id, $service, $scope = ContainerInterface::SCOPE_CONTAINER) {
-    if (!in_array($scope, array('container', 'request')) || ('request' === $scope && 'request' !== $id)) {
-      @trigger_error('The concept of container scopes is deprecated since version 2.8 and will be removed in 3.0. Omit the third parameter.', E_USER_DEPRECATED);
-    }
-
+  public function set($id, $service) {
     $this->services[$id] = $service;
   }
 
@@ -585,61 +579,6 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
    */
   protected function getParameterAlternatives($name) {
     return $this->getAlternatives($name, array_keys($this->parameters));
-  }
-
-
-  /**
-   * {@inheritdoc}
-   */
-  public function enterScope($name) {
-    if ('request' !== $name) {
-      @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
-    }
-
-    throw new \BadMethodCallException(sprintf("'%s' is not supported by Drupal 8.", __FUNCTION__));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function leaveScope($name) {
-    if ('request' !== $name) {
-      @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
-    }
-
-    throw new \BadMethodCallException(sprintf("'%s' is not supported by Drupal 8.", __FUNCTION__));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addScope(ScopeInterface $scope) {
-
-    $name = $scope->getName();
-    if ('request' !== $name) {
-      @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
-    }
-    throw new \BadMethodCallException(sprintf("'%s' is not supported by Drupal 8.", __FUNCTION__));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function hasScope($name) {
-    if ('request' !== $name) {
-      @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
-    }
-
-    throw new \BadMethodCallException(sprintf("'%s' is not supported by Drupal 8.", __FUNCTION__));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isScopeActive($name) {
-    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
-
-    throw new \BadMethodCallException(sprintf("'%s' is not supported by Drupal 8.", __FUNCTION__));
   }
 
   /**

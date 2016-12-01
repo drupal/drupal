@@ -152,6 +152,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $classLoader;
 
   /**
+   * The class loader class before including settings.php.
+   *
+   * @var string
+   */
+  protected $preSettingsClassLoaderClass;
+
+  /**
    * Config storage object used for reading enabled modules configuration.
    *
    * @var \Drupal\Core\Config\StorageInterface
@@ -890,6 +897,34 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $container = new $class($container_definition);
     }
 
+    // If the class loader is still the same as before including settings.php
+    // use an optimised classloader if possible.
+    if ($this->preSettingsClassLoaderClass == get_class($this->classLoader)
+      && Settings::get('class_loader_auto_detect', TRUE)) {
+      $prefix = Settings::getApcuPrefix('class_loader', $this->root);
+      // We have to key by module list since if this changes the classloader
+      // might have negative caches for classes that now exist.
+      $prefix .= '.' . hash('sha1', serialize(array_keys($container->getParameter('container.modules'))));
+      $loader = NULL;
+
+      // We autodetect one of the following three optimized classloaders, if
+      // their underlying extension exists.
+      if (function_exists('apcu_fetch')) {
+        $loader = new ApcClassLoader($prefix, $this->classLoader);
+      }
+      elseif (extension_loaded('wincache')) {
+        $loader = new WinCacheClassLoader($prefix, $this->classLoader);
+      }
+      elseif (extension_loaded('xcache')) {
+        $loader = new XcacheClassLoader($prefix, $this->classLoader);
+      }
+      if (!empty($loader)) {
+        $this->classLoader->unregister();
+        $loader->register();
+        $this->classLoader = $loader;
+      }
+    }
+
     $this->attachSynthetic($container);
 
     $this->container = $container;
@@ -1018,7 +1053,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function initializeSettings(Request $request) {
     $site_path = static::findSitePath($request);
     $this->setSitePath($site_path);
-    $class_loader_class = get_class($this->classLoader);
+    $this->preSettingsClassLoaderClass = get_class($this->classLoader);
     Settings::initialize($this->root, $site_path, $this->classLoader);
 
     // Initialize our list of trusted HTTP Host headers to protect against
@@ -1027,31 +1062,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (PHP_SAPI !== 'cli' && !empty($host_patterns)) {
       if (static::setupTrustedHosts($request, $host_patterns) === FALSE) {
         throw new BadRequestHttpException('The provided host name is not valid for this server.');
-      }
-    }
-
-    // If the class loader is still the same, possibly
-    // upgrade to an optimized class loader.
-    if ($class_loader_class == get_class($this->classLoader)
-        && Settings::get('class_loader_auto_detect', TRUE)) {
-      $prefix = Settings::getApcuPrefix('class_loader', $this->root);
-      $loader = NULL;
-
-      // We autodetect one of the following three optimized classloaders, if
-      // their underlying extension exists.
-      if (function_exists('apcu_fetch')) {
-        $loader = new ApcClassLoader($prefix, $this->classLoader);
-      }
-      elseif (extension_loaded('wincache')) {
-        $loader = new WinCacheClassLoader($prefix, $this->classLoader);
-      }
-      elseif (extension_loaded('xcache')) {
-        $loader = new XcacheClassLoader($prefix, $this->classLoader);
-      }
-      if (!empty($loader)) {
-        $this->classLoader->unregister();
-        $loader->register();
-        $this->classLoader = $loader;
       }
     }
   }

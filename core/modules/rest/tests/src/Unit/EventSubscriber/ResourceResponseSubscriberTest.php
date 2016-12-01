@@ -79,11 +79,6 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    * @dataProvider providerTestResponseFormat
    */
   public function testResponseFormat($methods, array $supported_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content) {
-    $parameters = [];
-    if ($request_format !== FALSE) {
-      $parameters['_format'] = $request_format;
-    }
-
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
       $key = strtoupper(str_replace('-', '_', $key));
@@ -91,8 +86,13 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
     }
 
     foreach ($methods as $method) {
-      $request = Request::create('/rest/test', $method, $parameters, [], [], $request_headers, $request_body);
-      $route_requirement_key_format = $request->isMethodSafe() ? '_format' : '_content_type_format';
+      $request = Request::create('/rest/test', $method, [], [], [], $request_headers, $request_body);
+      // \Drupal\Core\StackMiddleware\NegotiationMiddleware normally takes care
+      // of this so we'll hard code it here.
+      if ($request_format) {
+        $request->setRequestFormat($request_format);
+      }
+      $route_requirement_key_format = $request->isMethodCacheable() ? '_format' : '_content_type_format';
       $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => $this->randomMachineName()], [$route_requirement_key_format => implode('|', $supported_formats)]));
 
       $resource_response_subscriber = new ResourceResponseSubscriber(
@@ -116,11 +116,6 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   public function testOnResponseWithCacheableResponse($methods, array $supported_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content) {
     $rest_config_name = $this->randomMachineName();
 
-    $parameters = [];
-    if ($request_format !== FALSE) {
-      $parameters['_format'] = $request_format;
-    }
-
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
       $key = strtoupper(str_replace('-', '_', $key));
@@ -128,8 +123,13 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
     }
 
     foreach ($methods as $method) {
-      $request = Request::create('/rest/test', $method, $parameters, [], [], $request_headers, $request_body);
-      $route_requirement_key_format = $request->isMethodSafe() ? '_format' : '_content_type_format';
+      $request = Request::create('/rest/test', $method, [], [], [], $request_headers, $request_body);
+      // \Drupal\Core\StackMiddleware\NegotiationMiddleware normally takes care
+      // of this so we'll hard code it here.
+      if ($request_format) {
+        $request->setRequestFormat($request_format);
+      }
+      $route_requirement_key_format = $request->isMethodCacheable() ? '_format' : '_content_type_format';
       $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => $rest_config_name], [$route_requirement_key_format => implode('|', $supported_formats)]));
 
       // The RequestHandler must return a ResourceResponseInterface object.
@@ -166,11 +166,6 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   public function testOnResponseWithUncacheableResponse($methods, array $supported_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content) {
     $rest_config_name = $this->randomMachineName();
 
-    $parameters = [];
-    if ($request_format !== FALSE) {
-      $parameters['_format'] = $request_format;
-    }
-
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
       $key = strtoupper(str_replace('-', '_', $key));
@@ -178,8 +173,13 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
     }
 
     foreach ($methods as $method) {
-      $request = Request::create('/rest/test', $method, $parameters, [], [], $request_headers, $request_body);
-      $route_requirement_key_format = $request->isMethodSafe() ? '_format' : '_content_type_format';
+      $request = Request::create('/rest/test', $method, [], [], [], $request_headers, $request_body);
+      // \Drupal\Core\StackMiddleware\NegotiationMiddleware normally takes care
+      // of this so we'll hard code it here.
+      if ($request_format) {
+        $request->setRequestFormat($request_format);
+      }
+      $route_requirement_key_format = $request->isMethodCacheable() ? '_format' : '_content_type_format';
       $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => $rest_config_name], [$route_requirement_key_format => implode('|', $supported_formats)]));
 
       // The RequestHandler must return a ResourceResponseInterface object.

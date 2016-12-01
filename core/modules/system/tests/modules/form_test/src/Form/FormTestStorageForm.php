@@ -86,7 +86,7 @@ class FormTestStorageForm extends FormBase {
     //   that issue.
     if ($this->getRequest()->get('immutable')) {
       $form_state->addBuildInfo('immutable', TRUE);
-      if ($this->getRequest()->get('cache') && $this->getRequest()->isMethodSafe()) {
+      if ($this->getRequest()->get('cache') && $this->getRequest()->isMethodCacheable()) {
         $form_state->setRequestMethod('FAKE');
         $form_state->setCached();
       }

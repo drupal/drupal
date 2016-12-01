@@ -25,7 +25,10 @@ class DefaultExceptionSubscriberTest extends UnitTestCase {
 
     // Format 'bananas' requested, yet only 'json' allowed.
     $kernel = $this->prophesize(HttpKernelInterface::class);
-    $request = Request::create('/test?_format=bananas');
+    $request = Request::create('/test');
+    // \Drupal\Core\StackMiddleware\NegotiationMiddleware normally takes care
+    // of this so we'll hard code it here.
+    $request->setRequestFormat('bananas');
     $e = new MethodNotAllowedHttpException(['json'], 'test message');
     $event = new GetResponseForExceptionEvent($kernel->reveal(), $request, 'GET', $e);
     $subscriber = new DefaultExceptionSubscriber($config_factory);

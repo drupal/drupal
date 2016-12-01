@@ -46,20 +46,12 @@ class ContainerBuilder extends SymfonyContainerBuilder {
   }
 
   /**
-   * Direct copy of the parent function.
+   * {@inheritdoc}
    */
   protected function shareService(Definition $definition, $service, $id)
   {
-    if ($definition->isShared() && self::SCOPE_PROTOTYPE !== $scope = $definition->getScope(false)) {
-      if (self::SCOPE_CONTAINER !== $scope && !isset($this->scopedServices[$scope])) {
-        throw new InactiveScopeException($id, $scope);
-      }
-
+    if ($definition->isShared()) {
       $this->services[$lowerId = strtolower($id)] = $service;
-
-      if (self::SCOPE_CONTAINER !== $scope) {
-        $this->scopedServices[$scope][$lowerId] = $service;
-      }
     }
   }
 
@@ -74,11 +66,11 @@ class ContainerBuilder extends SymfonyContainerBuilder {
    *   ContainerBuilder class should be fixed to allow setting synthetic
    *   services in a frozen builder.
    */
-  public function set($id, $service, $scope = self::SCOPE_CONTAINER) {
+  public function set($id, $service) {
     if (strtolower($id) !== $id) {
       throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
     }
-    SymfonyContainer::set($id, $service, $scope);
+    SymfonyContainer::set($id, $service);
 
     // Ensure that the _serviceId property is set on synthetic services as well.
     if (isset($this->services[$id]) && is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {
