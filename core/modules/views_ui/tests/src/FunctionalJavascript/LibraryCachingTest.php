@@ -39,12 +39,12 @@ class LibraryCachingTest extends JavascriptTestBase {
     $add_link = $page->findById('views-add-field');
     $this->assertTrue($add_link->isVisible(), 'Add fields button found.');
     $add_link->click();
-    $this->getSession()->wait(5000, "jQuery('.ui-dialog-titlebar').length > 0");
+    $this->assertJsCondition("jQuery('.ui-dialog-titlebar').length > 0");
     // Close the dialog and open it again. No no libraries will be loaded, but a
     // cache entry will be made for not loading any libraries.
     $page->pressButton('Close');
     $add_link->click();
-    $this->getSession()->wait(5000, "jQuery('.ui-dialog-titlebar').length > 0");
+    $this->assertJsCondition("jQuery('.ui-dialog-titlebar').length > 0");
     $page->pressButton('Close');
 
     // Reload the page.
@@ -55,14 +55,14 @@ class LibraryCachingTest extends JavascriptTestBase {
     $preview = $page->findById('preview-submit');
     // The first click will load all the libraries.
     $preview->click();
-    $this->getSession()->wait(5000, "jQuery('.ajax-progress').length === 0");
+    $this->assertJsCondition("jQuery('.ajax-progress').length === 0");
     // The second click will not load any new libraries.
     $preview->click();
-    $this->getSession()->wait(5000, "jQuery('.ajax-progress').length === 0");
+    $this->assertJsCondition("jQuery('.ajax-progress').length === 0");
     // Check to see if the dialogs still open.
     $add_link = $page->findById('views-add-field');
     $add_link->click();
-    $this->getSession()->wait(5000, "jQuery('.ui-dialog-titlebar').length > 0");
+    $this->assertJsCondition("jQuery('.ui-dialog-titlebar').length > 0");
     $page->pressButton('Close');
   }
 

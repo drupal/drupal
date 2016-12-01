@@ -99,7 +99,7 @@ abstract class JavascriptTestBase extends BrowserTestBase {
    * @param string $condition
    *   JS condition to wait until it becomes TRUE.
    * @param int $timeout
-   *   (Optional) Timeout in milliseconds, defaults to 1000.
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
    * @param string $message
    *   (optional) A message to display with the assertion. If left blank, a
    *   default message will be displayed.
@@ -108,7 +108,7 @@ abstract class JavascriptTestBase extends BrowserTestBase {
    *
    * @see \Behat\Mink\Driver\DriverInterface::evaluateScript()
    */
-  protected function assertJsCondition($condition, $timeout = 1000, $message = '') {
+  protected function assertJsCondition($condition, $timeout = 10000, $message = '') {
     $message = $message ?: "Javascript condition met:\n" . $condition;
     $result = $this->getSession()->getDriver()->wait($timeout, $condition);
     $this->assertTrue($result, $message);

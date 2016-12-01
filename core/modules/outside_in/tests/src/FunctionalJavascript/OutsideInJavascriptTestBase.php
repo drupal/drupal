@@ -45,9 +45,9 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
    * @param string $selector
    *   CSS selector.
    * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 1000.
+   *   (optional) Timeout in milliseconds, defaults to 10000.
    */
-  protected function waitForElement($selector, $timeout = 1000) {
+  protected function waitForElement($selector, $timeout = 10000) {
     $condition = "(jQuery('$selector').length > 0)";
     $this->assertJsCondition($condition, $timeout);
   }
@@ -69,9 +69,9 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
    * @param string $selector
    *   CSS selector.
    * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 1000.
+   *   (optional) Timeout in milliseconds, defaults to 10000.
    */
-  protected function waitForNoElement($selector, $timeout = 1000) {
+  protected function waitForNoElement($selector, $timeout = 10000) {
     $condition = "(jQuery('$selector').length == 0)";
     $this->assertJsCondition($condition, $timeout);
   }
