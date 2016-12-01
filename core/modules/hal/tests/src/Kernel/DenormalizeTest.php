@@ -7,7 +7,7 @@ use Drupal\field\Entity\FieldConfig;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
- * Tests that entities can be denormalized from HAL.
+ * Tests HAL denormalization edge cases for EntityResource.
  *
  * @group hal
  */
@@ -108,100 +108,6 @@ class DenormalizeTest extends NormalizerTestBase {
     );
     $entity = $this->serializer->denormalize($data, get_class($entity), $this->format, [ 'target_instance' => $entity ]);
     $this->assertEqual($entity->field_test_text->count(), 0);
-  }
-
-  /**
-   * Test that non-reference fields can be denormalized.
-   */
-  public function testBasicFieldDenormalization() {
-    $data = array(
-      '_links' => array(
-        'type' => array(
-          'href' => Url::fromUri('base:rest/type/entity_test/entity_test', array('absolute' => TRUE))->toString(),
-        ),
-      ),
-      'uuid' => array(
-        array(
-          'value' => 'e5c9fb96-3acf-4a8d-9417-23de1b6c3311',
-        ),
-      ),
-      'field_test_text' => array(
-        array(
-          'value' => $this->randomMachineName(),
-          'format' => 'full_html',
-        ),
-      ),
-      'field_test_translatable_text' => array(
-        array(
-          'value' => $this->randomMachineName(),
-          'format' => 'full_html',
-        ),
-        array(
-          'value' => $this->randomMachineName(),
-          'format' => 'filtered_html',
-        ),
-        array(
-          'value' => $this->randomMachineName(),
-          'format' => 'filtered_html',
-          'lang' => 'de',
-        ),
-        array(
-          'value' => $this->randomMachineName(),
-          'format' => 'full_html',
-          'lang' => 'de',
-        ),
-      ),
-    );
-
-    $expected_value_default = array(
-      array (
-        'value' => $data['field_test_translatable_text'][0]['value'],
-        'format' => 'full_html',
-      ),
-      array (
-        'value' => $data['field_test_translatable_text'][1]['value'],
-        'format' => 'filtered_html',
-      ),
-    );
-    $expected_value_de = array(
-      array (
-        'value' => $data['field_test_translatable_text'][2]['value'],
-        'format' => 'filtered_html',
-      ),
-      array (
-        'value' => $data['field_test_translatable_text'][3]['value'],
-        'format' => 'full_html',
-      ),
-    );
-    $denormalized = $this->serializer->denormalize($data, $this->entityClass, $this->format);
-    $this->assertEqual($data['uuid'], $denormalized->get('uuid')->getValue(), 'A preset value (e.g. UUID) is overridden by incoming data.');
-    $this->assertEqual($data['field_test_text'], $denormalized->get('field_test_text')->getValue(), 'A basic text field is denormalized.');
-    $this->assertEqual($expected_value_default, $denormalized->get('field_test_translatable_text')->getValue(), 'Values in the default language are properly handled for a translatable field.');
-    $this->assertEqual($expected_value_de, $denormalized->getTranslation('de')->get('field_test_translatable_text')->getValue(), 'Values in a translation language are properly handled for a translatable field.');
-  }
-
-  /**
-   * Verifies that the denormalized entity is correct in the PATCH context.
-   */
-  public function testPatchDenormalization() {
-    $data = array(
-      '_links' => array(
-        'type' => array(
-          'href' => Url::fromUri('base:rest/type/entity_test/entity_test', array('absolute' => TRUE))->toString(),
-        ),
-      ),
-      'field_test_text' => array(
-        array(
-          'value' => $this->randomMachineName(),
-          'format' => 'full_html',
-        ),
-      ),
-    );
-    $denormalized = $this->serializer->denormalize($data, $this->entityClass, $this->format, array('request_method' => 'patch'));
-    // Check that the one field got populated as expected.
-    $this->assertEqual($data['field_test_text'], $denormalized->get('field_test_text')->getValue());
-    // Check the custom property that contains the list of fields to merge.
-    $this->assertEqual($denormalized->_restSubmittedFields, ['field_test_text']);
   }
 
 }

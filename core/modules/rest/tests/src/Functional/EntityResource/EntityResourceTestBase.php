@@ -977,6 +977,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
         // DX: 400 when incorrect entity type bundle is specified.
+        // @todo Change to 422 in https://www.drupal.org/node/2827084.
         $response = $this->request($method, $url, $request_options);
         // @todo use this commented line instead of the 3 lines thereafter once https://www.drupal.org/node/2813853 lands.
         //      $this->assertResourceErrorResponse(400, '"bad_bundle_name" is not a valid bundle type for denormalization.', $response);
@@ -991,6 +992,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
       // DX: 400 when no entity type bundle is specified.
+      // @todo Change to 422 in https://www.drupal.org/node/2827084.
       $response = $this->request($method, $url, $request_options);
       // @todo use this commented line instead of the 3 lines thereafter once https://www.drupal.org/node/2813853 lands.
       // $this->assertResourceErrorResponse(400, 'A string must be provided as a bundle value.', $response);
