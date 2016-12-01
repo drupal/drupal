@@ -2,12 +2,15 @@
 
 namespace Drupal\Core\Plugin\Context;
 
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\TypedData\TypedDataTrait;
 
 /**
  * Defines a class for context definitions.
  */
 class ContextDefinition implements ContextDefinitionInterface {
+
+  use DependencySerializationTrait;
 
   use TypedDataTrait;
 
