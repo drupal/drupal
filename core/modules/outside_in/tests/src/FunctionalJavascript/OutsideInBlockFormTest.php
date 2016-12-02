@@ -51,6 +51,9 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    * Tests opening Offcanvas tray by click blocks and elements in the blocks.
    */
   public function testBlocks() {
+    // @todo: re-enable once https://www.drupal.org/node/2830485 is resolved.
+    $this->markTestSkipped('Test skipped due to random failures in DrupalCI, see https://www.drupal.org/node/2830485');
+
     $web_assert = $this->assertSession();
     $blocks = [
       [
