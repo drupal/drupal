@@ -6,10 +6,9 @@ namespace Drupal\Tests\Component\EventDispatcher;
 use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\Tests\CallableClass;
-use Symfony\Component\EventDispatcher\Tests\ContainerAwareEventDispatcherTest as SymfonyContainerAwareEventDispatcherTest;
 use Symfony\Component\EventDispatcher\Tests\TestEventListener;
+use Symfony\Component\EventDispatcher\Tests\ContainerAwareEventDispatcherTest as SymfonyContainerAwareEventDispatcherTest;
 
 /**
  * Unit tests for the ContainerAwareEventDispatcher.
@@ -38,7 +37,7 @@ class ContainerAwareEventDispatcherTest extends SymfonyContainerAwareEventDispat
         // When passing in callables exclusively as listeners into the event
         // dispatcher constructor, the event dispatcher must not attempt to
         // resolve any services.
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMock('Symfony\Component\DependencyInjection\IntrospectableContainerInterface');
         $container->expects($this->never())->method($this->anything());
 
         $firstListener = new CallableClass();
@@ -73,7 +72,7 @@ class ContainerAwareEventDispatcherTest extends SymfonyContainerAwareEventDispat
         // When passing in callables exclusively as listeners into the event
         // dispatcher constructor, the event dispatcher must not attempt to
         // resolve any services.
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMock('Symfony\Component\DependencyInjection\IntrospectableContainerInterface');
         $container->expects($this->never())->method($this->anything());
 
         $firstListener = new CallableClass();

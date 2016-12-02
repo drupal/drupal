@@ -5,7 +5,6 @@ namespace Drupal\Component\Serialization;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
-use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 
 /**
  * Default serialization for YAML using the Symfony component.
@@ -19,7 +18,7 @@ class YamlSymfony implements SerializationInterface {
     try {
       $yaml = new Dumper();
       $yaml->setIndentation(2);
-      return $yaml->dump($data, PHP_INT_MAX, 0, SymfonyYaml::DUMP_EXCEPTION_ON_INVALID_TYPE);
+      return $yaml->dump($data, PHP_INT_MAX, 0, TRUE, FALSE);
     }
     catch (\Exception $e) {
       throw new InvalidDataTypeException($e->getMessage(), $e->getCode(), $e);
@@ -34,7 +33,7 @@ class YamlSymfony implements SerializationInterface {
       $yaml = new Parser();
       // Make sure we have a single trailing newline. A very simple config like
       // 'foo: bar' with no newline will fail to parse otherwise.
-      return $yaml->parse($raw, SymfonyYaml::PARSE_EXCEPTION_ON_INVALID_TYPE);
+      return $yaml->parse($raw, TRUE, FALSE);
     }
     catch (\Exception $e) {
       throw new InvalidDataTypeException($e->getMessage(), $e->getCode(), $e);

@@ -663,6 +663,47 @@ class ContainerTest extends \PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Tests that unsupported methods throw an Exception.
+   *
+   * @covers ::enterScope
+   * @covers ::leaveScope
+   * @covers ::addScope
+   * @covers ::hasScope
+   * @covers ::isScopeActive
+   *
+   * @expectedException \BadMethodCallException
+   *
+   * @dataProvider scopeExceptionTestProvider
+   */
+  public function testScopeFunctionsWithException($method, $argument) {
+    $callable = array(
+      $this->container,
+      $method,
+    );
+
+    $callable($argument);
+  }
+
+  /**
+   * Data provider for scopeExceptionTestProvider().
+   *
+   * @return array[]
+   *   Returns per data set an array with:
+   *     - method name to call
+   *     - argument to pass
+   */
+  public function scopeExceptionTestProvider() {
+    $scope = $this->prophesize('\Symfony\Component\DependencyInjection\ScopeInterface')->reveal();
+    return array(
+      array('enterScope', 'test_scope'),
+      array('leaveScope', 'test_scope'),
+      array('hasScope', 'test_scope'),
+      array('isScopeActive', 'test_scope'),
+      array('addScope', $scope),
+    );
+  }
+
+  /**
    * Tests that Container::getServiceIds() works properly.
    *
    * @covers ::getServiceIds

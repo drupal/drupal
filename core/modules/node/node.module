@@ -1080,7 +1080,7 @@ function node_query_node_access_alter(AlterableInterface $query) {
   // context.
   $request = \Drupal::requestStack()->getCurrentRequest();
   $renderer = \Drupal::service('renderer');
-  if ($request->isMethodCacheable() && $renderer->hasRenderContext()) {
+  if ($request->isMethodSafe() && $renderer->hasRenderContext()) {
     $build = ['#cache' => ['contexts' => ['user.node_grants:' . $op]]];
     $renderer->render($build);
   }

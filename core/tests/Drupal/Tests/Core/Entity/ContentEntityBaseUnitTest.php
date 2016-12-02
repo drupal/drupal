@@ -10,7 +10,6 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Language\Language;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\ContentEntityBase
@@ -322,7 +321,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::validate
    */
   public function testValidate() {
-    $validator = $this->getMock(ValidatorInterface::class);
+    $validator = $this->getMock('\Symfony\Component\Validator\ValidatorInterface');
     /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit_Framework_MockObject_MockObject $empty_violation_list */
     $empty_violation_list = $this->getMockBuilder('\Symfony\Component\Validator\ConstraintViolationList')
       ->setMethods(NULL)
@@ -358,7 +357,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @expectedExceptionMessage Entity validation was skipped.
    */
   public function testRequiredValidation() {
-    $validator = $this->getMock(ValidatorInterface::class);
+    $validator = $this->getMock('\Symfony\Component\Validator\ValidatorInterface');
     /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit_Framework_MockObject_MockObject $empty_violation_list */
     $empty_violation_list = $this->getMockBuilder('\Symfony\Component\Validator\ConstraintViolationList')
       ->setMethods(NULL)
