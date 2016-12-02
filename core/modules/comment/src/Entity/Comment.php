@@ -50,7 +50,8 @@ use Drupal\user\UserInterface;
  *     "bundle" = "comment_type",
  *     "label" = "subject",
  *     "langcode" = "langcode",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "published" = "status",
  *   },
  *   links = {
  *     "canonical" = "/comment/{comment}",
@@ -81,8 +82,12 @@ class Comment extends ContentEntityBase implements CommentInterface {
     parent::preSave($storage);
 
     if (is_null($this->get('status')->value)) {
-      $published = \Drupal::currentUser()->hasPermission('skip comment approval') ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED;
-      $this->setPublished($published);
+      if (\Drupal::currentUser()->hasPermission('skip comment approval')) {
+        $this->setPublished();
+      }
+      else {
+        $this->setUnpublished();
+      }
     }
     if ($this->isNew()) {
       // Add the comment to database. This next section builds the thread field.

@@ -50,4 +50,22 @@ class CommentUpdateTest extends UpdatePathTestBase {
     $this->assertIdentical($config->get('content.comment_forum.settings.view_mode'), 'default');
   }
 
+  /**
+   * Tests that the comment entity type has a 'published' entity key.
+   *
+   * @see comment_update_8301()
+   */
+  public function testPublishedEntityKey() {
+    // Check that the 'published' entity key does not exist prior to the update.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('comment');
+    $this->assertFalse($entity_type->getKey('published'));
+
+    // Run updates.
+    $this->runUpdates();
+
+    // Check that the entity key exists and it has the correct value.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('comment');
+    $this->assertEqual('status', $entity_type->getKey('published'));
+  }
+
 }

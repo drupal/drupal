@@ -213,6 +213,13 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       // them. However, rather than throwing an error, we just ignore them as
       // long as their specified values match their current values.
       if (in_array($field_name, $entity_keys, TRUE)) {
+        // @todo Work around the wrong assumption that entity keys need special
+        // treatment, when only read-only fields need it.
+        // This will be fixed in https://www.drupal.org/node/2824851.
+        if ($entity->getEntityTypeId() == 'comment' && $field_name == 'status' && !$original_entity->get($field_name)->access('edit')) {
+          throw new AccessDeniedHttpException("Access denied on updating field '$field_name'.");
+        }
+
         // Unchanged values for entity keys don't need access checking.
         if ($original_entity->get($field_name)->getValue() === $entity->get($field_name)->getValue()) {
           continue;

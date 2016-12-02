@@ -56,6 +56,7 @@ use Drupal\user\UserInterface;
  *     "langcode" = "langcode",
  *     "uuid" = "uuid",
  *     "status" = "status",
+ *     "published" = "status",
  *     "uid" = "uid",
  *   },
  *   bundle_entity_type = "node_type",
