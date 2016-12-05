@@ -348,13 +348,10 @@ class EntityAutocomplete extends Textfield {
   public static function extractEntityIdFromAutocompleteInput($input) {
     $match = NULL;
 
-    // Take "label (entity id)', match the ID from parenthesis when it's a
-    // number.
-    if (preg_match("/.+\s\((\d+)\)/", $input, $matches)) {
-      $match = $matches[1];
-    }
-    // Match the ID when it's a string (e.g. for config entity types).
-    elseif (preg_match("/.+\s\(([\w.]+)\)/", $input, $matches)) {
+    // Take "label (entity id)', match the ID from inside the parentheses.
+    // @todo Add support for entities containing parentheses in their ID.
+    // @see https://www.drupal.org/node/2520416
+    if (preg_match("/.+\s\(([^\)]+)\)/", $input, $matches)) {
       $match = $matches[1];
     }
 

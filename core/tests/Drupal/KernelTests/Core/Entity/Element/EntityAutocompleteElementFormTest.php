@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\user\Entity\User;
 
@@ -46,6 +47,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     parent::setUp();
 
     $this->installSchema('system', ['key_value_expire']);
+    $this->installEntitySchema('entity_test_string_id');
     \Drupal::service('router.builder')->rebuild();
 
     $this->testUser = User::create(array(
@@ -65,6 +67,17 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
       $entity = EntityTest::create(array(
         'name' => $this->randomMachineName()
       ));
+      $entity->save();
+      $this->referencedEntities[] = $entity;
+    }
+
+    // Use special characters in the ID of some of the test entities so we can
+    // test if these are handled correctly.
+    for ($i = 0; $i < 2; $i++) {
+      $entity = EntityTestStringId::create([
+        'name' => $this->randomMachineName(),
+        'id' => $this->randomMachineName() . '&</\\:?',
+      ]);
       $entity->save();
       $this->referencedEntities[] = $entity;
     }
@@ -150,6 +163,16 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
       '#default_value' => array($this->referencedEntities[0], $this->referencedEntities[1]),
     );
 
+    $form['single_string_id'] = array(
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'entity_test_string_id',
+    );
+    $form['tags_string_id'] = array(
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'entity_test_string_id',
+      '#tags' => TRUE,
+    );
+
     return $form;
   }
 
@@ -181,6 +204,8 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
           $this->getAutocompleteInput($this->referencedEntities[0])
           . ', tags - autocreated entity label with specific uid, '
           . $this->getAutocompleteInput($this->referencedEntities[1]),
+        'single_string_id' => $this->getAutocompleteInput($this->referencedEntities[2]),
+        'tags_string_id' => $this->getAutocompleteInput($this->referencedEntities[2]) . ', ' . $this->getAutocompleteInput($this->referencedEntities[3]),
       ]);
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);
@@ -231,6 +256,16 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     $this->assertEqual($value[1]['entity']->getOwnerId(), $this->testAutocreateUser->id());
     // Third value is an existing entity.
     $this->assertEqual($value[2]['target_id'], $this->referencedEntities[1]->id());
+
+    // Test the 'single_string_id' element.
+    $this->assertEquals($this->referencedEntities[2]->id(), $form_state->getValue('single_string_id'));
+
+    // Test the 'tags_string_id' element.
+    $expected = [
+      ['target_id' => $this->referencedEntities[2]->id()],
+      ['target_id' => $this->referencedEntities[3]->id()],
+    ];
+    $this->assertEquals($expected, $form_state->getValue('tags_string_id'));
   }
 
   /**
