@@ -1073,8 +1073,9 @@
  *   yourmodule/tests/src/Unit directory, according to the PSR-4 standard.
  * - Your test class needs a phpDoc comment block with a description and
  *   a @group annotation, which gives information about the test.
- * - Methods in your test class whose names start with 'test' are the actual
- *   test cases. Each one should test a logical subset of the functionality.
+ * - Add test cases by adding method names that start with 'test' and have no
+ *   arguments, for example testYourTestCase(). Each one should test a logical
+ *   subset of the functionality.
  * For more details, see:
  * - https://www.drupal.org/phpunit for full documentation on how to write
  *   PHPUnit tests for Drupal.
@@ -1110,9 +1111,9 @@
  *   set up content types and similar procedures.
  * - In some cases, you may need to write a test module to support your test;
  *   put such modules under the yourmodule/tests/modules directory.
- * - Methods in your test class whose names start with 'test', and which have
- *   no arguments, are the actual test cases. Each one should test a logical
- *   subset of the functionality, and each one runs in a new, isolated test
+ * - Add test cases by adding method names that start with 'test' and have no
+ *   arguments, for example testYourTestCase(). Each one should test a logical
+ *   subset of the functionality. Each method runs in a new, isolated test
  *   environment, so it can only rely on the setUp() method, not what has
  *   been set up by other test methods.
  * For more details, see:
@@ -1120,6 +1121,52 @@
  *   functional tests for Drupal.
  * - @link oo_conventions Object-oriented programming topic @endlink for more
  *   on PSR-4, namespaces, and where to place classes.
+ *
+ * @section write_functional_phpunit Write functional PHP tests (phpunit)
+ * Functional tests extend the BrowserTestBase base class, and use PHPUnit as
+ * their underlying framework. They use a simulated browser, in which the test
+ * can click links, visit URLs, post to forms, etc. To write a functional test:
+ * - Extend \Drupal\Tests\BrowserTestBase.
+ * - Place the test in the yourmodule/tests/src/Functional/ directory and use
+ *   the \Drupal\Tests\yourmodule\Functional namespace.
+ * - Add a @group annotation. For example, if the test is for a Drupal 6
+ *   migration process, the group core uses is migrate_drupal_6. Use yourmodule
+ *   as the group name if the test does not belong to another larger group.
+ * - You may also override the default setUp() method, which can be used to set
+ *   up content types and similar procedures. Don't forget to call the parent
+ *   method.
+ * - In some cases, you may need to write a test module to support your test;
+ *   put such modules under the yourmodule/tests/modules directory.
+ * - Add test cases by adding method names that start with 'test' and have no
+ *   arguments, for example testYourTestCase(). Each one should test a logical
+ *   subset of the functionality. Each method runs in a new, isolated test
+ *   environment, so it can only rely on the setUp() method, not what has
+ *   been set up by other test methods.
+ * For more details, see:
+ * - https://www.drupal.org/docs/8/phpunit/phpunit-browser-test-tutorial for
+ *   a full tutorial on how to write functional PHPUnit tests for Drupal.
+ * - https://www.drupal.org/phpunit for the full documentation on how to write
+ *   PHPUnit tests for Drupal.
+ *
+ * @section write_jsfunctional_phpunit Write functional JavaScript tests (phpunit)
+ * To write a functional test that relies on JavaScript:
+ * - Extend \Drupal\FunctionalJavaScriptTests\JavascriptTestBase.
+ * - Place the test into the yourmodule/tests/src/FunctionalJavascript/
+ *   directory and use the \Drupal\Tests\yourmodule\FunctionalJavascript
+ *   namespace.
+ * - Add a @group annotation. Use yourmodule as the group name if the test does
+ *   not belong to another larger group.
+ * - Set up PhantomJS; see http://phantomjs.org/download.html.
+ * - To run tests, see core/tests/README.md.
+ * - When clicking a link/button with Ajax behavior attached, keep in mind that
+ *   the underlying browser might take time to deliver changes to the HTML. Use
+ *   $this->assertSession()->assertWaitOnAjaxRequest() to wait for the Ajax
+ *   request to finish.
+ * For more details, see:
+ * - https://www.drupal.org/docs/8/phpunit/phpunit-javascript-testing-tutorial
+ *   for a full tutorial on how to write PHPUnit JavaScript tests for Drupal.
+ * - https://www.drupal.org/phpunit for the full documentation on how to write
+ *   PHPUnit tests for Drupal.
  *
  * @section running Running tests
  * You can run both Simpletest and PHPUnit tests by enabling the core Testing
