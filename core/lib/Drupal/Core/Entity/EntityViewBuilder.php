@@ -9,6 +9,7 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Theme\Registry;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -55,6 +56,13 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   protected $languageManager;
 
   /**
+   * The theme registry.
+   *
+   * @var \Drupal\Core\Theme\Registry
+   */
+  protected $themeRegistry;
+
+  /**
    * The EntityViewDisplay objects created for individual field rendering.
    *
    * @see \Drupal\Core\Entity\EntityViewBuilder::getSingleFieldDisplay()
@@ -72,12 +80,15 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    *   The entity manager service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Theme\Registry $theme_registry
+   *   The theme registry.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, Registry $theme_registry = NULL) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->entityManager = $entity_manager;
     $this->languageManager = $language_manager;
+    $this->themeRegistry = $theme_registry ?: \Drupal::service('theme.registry');
   }
 
   /**
@@ -87,7 +98,8 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     return new static(
       $entity_type,
       $container->get('entity.manager'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('theme.registry')
     );
   }
 
@@ -148,7 +160,6 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     $this->moduleHandler()->alter('entity_view_mode', $view_mode, $entity, $context);
 
     $build = array(
-      '#theme' => $this->entityTypeId,
       "#{$this->entityTypeId}" => $entity,
       '#view_mode' => $view_mode,
       // Collect cache defaults for this entity.
@@ -158,6 +169,11 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
         'max-age' => $entity->getCacheMaxAge(),
       ),
     );
+
+    // Add the default #theme key if a template exists for it.
+    if ($this->themeRegistry->getRuntime()->has($this->entityTypeId)) {
+      $build['#theme'] = $this->entityTypeId;
+    }
 
     // Cache the rendered output if permitted by the view mode and global entity
     // type configuration.
