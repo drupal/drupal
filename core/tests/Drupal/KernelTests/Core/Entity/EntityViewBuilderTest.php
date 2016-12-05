@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\Core\Cache\Cache;
@@ -208,6 +209,25 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
       'name' => $this->randomMachineName(),
     );
     return $this->container->get('entity.manager')->getStorage($entity_type)->create($data);
+  }
+
+  /**
+   * Tests that viewing an entity without template does not specify #theme.
+   */
+  public function testNoTemplate() {
+    // Ensure that an entity type without explicit view builder uses the
+    // default.
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $entity_type = $entity_type_manager->getDefinition('entity_test_base_field_display');
+    $this->assertTrue($entity_type->hasViewBuilderClass());
+    $this->assertEquals(EntityViewBuilder::class, $entity_type->getViewBuilderClass());
+
+    // Ensure that an entity without matching template does not have a #theme
+    // key.
+    $entity = $this->createTestEntity('entity_test');
+    $build = $entity_type_manager->getViewBuilder('entity_test')->view($entity);
+    $this->assertEquals($entity, $build['#entity_test']);
+    $this->assertFalse(array_key_exists('#theme', $build));
   }
 
 }
