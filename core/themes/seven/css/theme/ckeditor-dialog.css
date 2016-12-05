@@ -139,7 +139,7 @@
 [dir="rtl"] .cke_reset_all .cke_dialog .cke_dialog_footer {
   text-align: right;
 }
-.cke_reset_all .cke_resizer {
+.cke_reset_all .cke_dialog .cke_resizer {
   display: none;
 }
 .cke_reset_all .cke_dialog_footer_buttons {
