@@ -32,8 +32,8 @@
 
 /* Transition the editables on the page, their contextual links and their hover states. */
 #main-canvas-wrapper .contextual,
-#main-canvas-wrapper .outside-in-editable,
-#main-canvas-wrapper.js-tray-open .outside-in-editable {
+#main-canvas-wrapper .js-outside-in-edit-mode .outside-in-editable,
+#main-canvas-wrapper.js-tray-open .js-outside-in-edit-mode .outside-in-editable {
   -webkit-transition: all .7s ease;
   -moz-transition: all .7s ease;
   transition: all .7s ease;
