@@ -51,7 +51,7 @@ process:
     -
       plugin: static_map
       bypass: true
-      source: type
+      source: formatter_type
       map:
         date_default: datetime_default
         email_default: email_mailto
