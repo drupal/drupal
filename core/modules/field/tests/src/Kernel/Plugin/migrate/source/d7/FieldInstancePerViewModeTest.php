@@ -41,6 +41,24 @@ class FieldInstancePerViewModeTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
+    $tests[0]['source_data']['field_config'] = [
+      [
+        'id' => '2',
+        'field_name' => 'body',
+        'type' => 'text_with_summary',
+        'module' => 'text',
+        'active' => '1',
+        'storage_type' => 'field_sql_storage',
+        'storage_module' => 'field_sql_storage',
+        'storage_active' => '1',
+        'locked' => '0',
+        'data' => 'a:7:{s:12:"entity_types";a:1:{i:0;s:4:"node";}s:7:"indexes";a:1:{s:6:"format";a:1:{i:0;s:6:"format";}}s:8:"settings";a:0:{}s:12:"translatable";i:0;s:12:"foreign keys";a:1:{s:6:"format";a:2:{s:5:"table";s:13:"filter_format";s:7:"columns";a:1:{s:6:"format";s:6:"format";}}}s:7:"storage";a:4:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";}s:2:"id";s:2:"25";}',
+        'cardinality' => '1',
+        'translatable' => '0',
+        'deleted' => '0',
+      ],
+    ];
+
     // The expected results.
     $tests[0]['expected_data'] = [
       [
@@ -48,7 +66,8 @@ class FieldInstancePerViewModeTest extends MigrateSqlSourceTestBase {
         'bundle' => 'page',
         'field_name' => 'body',
         'label' => 'hidden',
-        'type' => 'text_default',
+        'type' => 'text_with_summary',
+        'formatter_type' => 'text_default',
         'settings' => [],
         'module' => 'text',
         'weight' => 0,
@@ -59,7 +78,8 @@ class FieldInstancePerViewModeTest extends MigrateSqlSourceTestBase {
         'bundle' => 'page',
         'field_name' => 'body',
         'label' => 'hidden',
-        'type' => 'text_summary_or_trimmed',
+        'type' => 'text_with_summary',
+        'formatter_type' => 'text_summary_or_trimmed',
         'settings' => [
           'trim_length' => 600,
         ],
