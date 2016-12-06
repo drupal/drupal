@@ -137,10 +137,6 @@ class DataFieldRow extends RowPluginBase {
     $output = array();
 
     foreach ($this->view->field as $id => $field) {
-      // Don't render anything if this field is excluded.
-      if (!empty($field->options['exclude'])) {
-        continue;
-      }
       // If the raw output option has been set, just get the raw value.
       if (!empty($this->rawOutputOptions[$id])) {
         $value = $field->getValue($row);
@@ -150,7 +146,10 @@ class DataFieldRow extends RowPluginBase {
         $value = $field->advancedRender($row);
       }
 
-      $output[$this->getFieldKeyAlias($id)] = $value;
+      // Omit excluded fields from the rendered output.
+      if (empty($field->options['exclude'])) {
+        $output[$this->getFieldKeyAlias($id)] = $value;
+      }
     }
 
     return $output;
