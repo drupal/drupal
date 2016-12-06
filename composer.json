@@ -28,6 +28,13 @@
             "recurse": false,
             "replace": false,
             "merge-extra": false
+        },
+        "installer-paths": {
+            "core": ["type:drupal-core"],
+            "modules/contrib/{$name}": ["type:drupal-module"],
+            "profiles/contrib/{$name}": ["type:drupal-profile"],
+            "themes/contrib/{$name}": ["type:drupal-theme"],
+            "drush/contrib/{$name}": ["type:drupal-drush"]
         }
     },
     "autoload": {
