@@ -120,6 +120,14 @@ class ExperimentalModuleTest extends WebTestBase {
     $this->drupalPostForm(NULL, [], 'Continue');
     $this->assertText('2 modules have been enabled: Experimental Test, Experimental Dependency Test');
 
+    // Try to enable an experimental module that can not be due to
+    // hook_requirements().
+    \Drupal::state()->set('experimental_module_requirements_test_requirements', TRUE);
+    $edit = [];
+    $edit["modules[Core (Experimental)][experimental_module_requirements_test][enable]"] = TRUE;
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->assertUrl('admin/modules', [], 'If the module can not be installed we are not taken to the confirm form.');
+    $this->assertText('The Experimental Test Requirements module can not be installed.');
   }
 
 }

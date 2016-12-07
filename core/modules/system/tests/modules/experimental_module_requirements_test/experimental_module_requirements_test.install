@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Experimental Test Requirements module to test hook_requirements().
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function experimental_module_requirements_test_requirements() {
+  $requirements = [];
+  if (\Drupal::state()->get('experimental_module_requirements_test_requirements', FALSE)) {
+    $requirements['experimental_module_requirements_test_requirements'] = [
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('The Experimental Test Requirements module can not be installed.'),
+    ];
+  }
+  return $requirements;
+}

@@ -1,0 +1,6 @@
+name: 'Experimental Requirements Test'
+type: module
+description: 'Module in the experimental package to test hook_requirements() with an experimental module.'
+package: Core (Experimental)
+version: VERSION
+core: 8.x
