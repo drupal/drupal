@@ -5,6 +5,7 @@ namespace Drupal\migrate\Plugin\migrate\source;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\id_map\Sql;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -41,6 +42,22 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
+
+  /**
+   * The count of the number of batches run.
+   *
+   * @var int
+   */
+  protected $batch = 0;
+
+  /**
+   * Number of records to fetch from the database during each batch.
+   *
+   * A value of zero indicates no batching is to be done.
+   *
+   * @var int
+   */
+  protected $batchSize = 0;
 
   /**
    * {@inheritdoc}
@@ -160,68 +177,108 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    * we will take advantage of the PDO-based API to optimize the query up-front.
    */
   protected function initializeIterator() {
-    $this->prepareQuery();
+    // Initialize the batch size.
+    if ($this->batchSize == 0 && isset($this->configuration['batch_size'])) {
+      // Valid batch sizes are integers >= 0.
+      if (is_int($this->configuration['batch_size']) && ($this->configuration['batch_size']) >= 0) {
+        $this->batchSize = $this->configuration['batch_size'];
+      }
+      else {
+        throw new MigrateException("batch_size must be greater than or equal to zero");
+      }
+    }
 
-    // Get the key values, for potential use in joining to the map table.
-    $keys = array();
+    // If a batch has run the query is already setup.
+    if ($this->batch == 0) {
+      $this->prepareQuery();
 
-    // The rules for determining what conditions to add to the query are as
-    // follows (applying first applicable rule):
-    // 1. If the map is joinable, join it. We will want to accept all rows
-    //    which are either not in the map, or marked in the map as NEEDS_UPDATE.
-    //    Note that if high water fields are in play, we want to accept all rows
-    //    above the high water mark in addition to those selected by the map
-    //    conditions, so we need to OR them together (but AND with any existing
-    //    conditions in the query). So, ultimately the SQL condition will look
-    //    like (original conditions) AND (map IS NULL OR map needs update
-    //      OR above high water).
-    $conditions = $this->query->orConditionGroup();
-    $condition_added = FALSE;
-    if (empty($this->configuration['ignore_map']) && $this->mapJoinable()) {
-      // Build the join to the map table. Because the source key could have
-      // multiple fields, we need to build things up.
-      $count = 1;
-      $map_join = '';
-      $delimiter = '';
-      foreach ($this->getIds() as $field_name => $field_schema) {
-        if (isset($field_schema['alias'])) {
-          $field_name = $field_schema['alias'] . '.' . $this->query->escapeField($field_name);
+      // Get the key values, for potential use in joining to the map table.
+      $keys = array();
+
+      // The rules for determining what conditions to add to the query are as
+      // follows (applying first applicable rule):
+      // 1. If the map is joinable, join it. We will want to accept all rows
+      //    which are either not in the map, or marked in the map as NEEDS_UPDATE.
+      //    Note that if high water fields are in play, we want to accept all rows
+      //    above the high water mark in addition to those selected by the map
+      //    conditions, so we need to OR them together (but AND with any existing
+      //    conditions in the query). So, ultimately the SQL condition will look
+      //    like (original conditions) AND (map IS NULL OR map needs update
+      //      OR above high water).
+      $conditions = $this->query->orConditionGroup();
+      $condition_added = FALSE;
+      if (empty($this->configuration['ignore_map']) && $this->mapJoinable()) {
+        // Build the join to the map table. Because the source key could have
+        // multiple fields, we need to build things up.
+        $count = 1;
+        $map_join = '';
+        $delimiter = '';
+        foreach ($this->getIds() as $field_name => $field_schema) {
+          if (isset($field_schema['alias'])) {
+            $field_name = $field_schema['alias'] . '.' . $this->query->escapeField($field_name);
+          }
+          $map_join .= "$delimiter$field_name = map.sourceid" . $count++;
+          $delimiter = ' AND ';
         }
-        $map_join .= "$delimiter$field_name = map.sourceid" . $count++;
-        $delimiter = ' AND ';
-      }
 
-      $alias = $this->query->leftJoin($this->migration->getIdMap()->getQualifiedMapTableName(), 'map', $map_join);
-      $conditions->isNull($alias . '.sourceid1');
-      $conditions->condition($alias . '.source_row_status', MigrateIdMapInterface::STATUS_NEEDS_UPDATE);
-      $condition_added = TRUE;
+        $alias = $this->query->leftJoin($this->migration->getIdMap()
+          ->getQualifiedMapTableName(), 'map', $map_join);
+        $conditions->isNull($alias . '.sourceid1');
+        $conditions->condition($alias . '.source_row_status', MigrateIdMapInterface::STATUS_NEEDS_UPDATE);
+        $condition_added = TRUE;
 
-      // And as long as we have the map table, add its data to the row.
-      $n = count($this->getIds());
-      for ($count = 1; $count <= $n; $count++) {
-        $map_key = 'sourceid' . $count;
-        $this->query->addField($alias, $map_key, "migrate_map_$map_key");
-      }
-      if ($n = count($this->migration->getDestinationIds())) {
+        // And as long as we have the map table, add its data to the row.
+        $n = count($this->getIds());
         for ($count = 1; $count <= $n; $count++) {
-          $map_key = 'destid' . $count++;
+          $map_key = 'sourceid' . $count;
           $this->query->addField($alias, $map_key, "migrate_map_$map_key");
         }
+        if ($n = count($this->migration->getDestinationIds())) {
+          for ($count = 1; $count <= $n; $count++) {
+            $map_key = 'destid' . $count++;
+            $this->query->addField($alias, $map_key, "migrate_map_$map_key");
+          }
+        }
+        $this->query->addField($alias, 'source_row_status', 'migrate_map_source_row_status');
       }
-      $this->query->addField($alias, 'source_row_status', 'migrate_map_source_row_status');
-    }
-    // 2. If we are using high water marks, also include rows above the mark.
-    //    But, include all rows if the high water mark is not set.
-    if ($this->getHighWaterProperty() && ($high_water = $this->getHighWater()) !== '') {
-      $high_water_field = $this->getHighWaterField();
-      $conditions->condition($high_water_field, $high_water, '>');
-      $this->query->orderBy($high_water_field);
-    }
-    if ($condition_added) {
-      $this->query->condition($conditions);
+      // 2. If we are using high water marks, also include rows above the mark.
+      //    But, include all rows if the high water mark is not set.
+      if ($this->getHighWaterProperty() && ($high_water = $this->getHighWater()) !== '') {
+        $high_water_field = $this->getHighWaterField();
+        $conditions->condition($high_water_field, $high_water, '>');
+        $this->query->orderBy($high_water_field);
+      }
+      if ($condition_added) {
+        $this->query->condition($conditions);
+      }
     }
 
+    // Download data in batches for performance.
+    if (($this->batchSize > 0)) {
+      $this->query->range($this->batch * $this->batchSize, $this->batchSize);
+    }
     return new \IteratorIterator($this->query->execute());
+  }
+
+  /**
+   * Position the iterator to the following row.
+   */
+  protected function fetchNextRow() {
+    $this->getIterator()->next();
+    // We might be out of data entirely, or just out of data in the current
+    // batch. Attempt to fetch the next batch and see.
+    if ($this->batchSize > 0 && !$this->getIterator()->valid()) {
+      $this->fetchNextBatch();
+    }
+  }
+
+  /**
+   * Prepares query for the next set of data from the source database.
+   */
+  protected function fetchNextBatch() {
+    $this->batch++;
+    unset($this->iterator);
+    $this->getIterator()->rewind();
   }
 
   /**
@@ -247,6 +304,14 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    */
   protected function mapJoinable() {
     if (!$this->getIds()) {
+      return FALSE;
+    }
+    // With batching, we want a later batch to return the same rows that would
+    // have been returned at the same point within a monolithic query. If we
+    // join to the map table, the first batch is writing to the map table and
+    // thus affecting the results of subsequent batches. To be safe, we avoid
+    // joining to the map table when batching.
+    if ($this->batchSize > 0) {
       return FALSE;
     }
     $id_map = $this->migration->getIdMap();
