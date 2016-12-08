@@ -310,13 +310,13 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
     while (!isset($this->currentRow) && $this->getIterator()->valid()) {
 
       $row_data = $this->getIterator()->current() + $this->configuration;
-      $this->getIterator()->next();
+      $this->fetchNextRow();
       $row = new Row($row_data, $this->migration->getSourcePlugin()->getIds(), $this->migration->getDestinationIds());
 
       // Populate the source key for this row.
       $this->currentSourceIds = $row->getSourceIdValues();
 
-      // Pick up the existing map row, if any, unless getNextRow() did it.
+      // Pick up the existing map row, if any, unless fetchNextRow() did it.
       if (!$this->mapRowAdded && ($id_map = $this->idMap->getRowBySource($this->currentSourceIds))) {
         $row->setIdMap($id_map);
       }
@@ -348,7 +348,14 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   }
 
   /**
-   * Checks if the incoming data is newer than what we've previously imported.
+   * Position the iterator to the following row.
+   */
+  protected function fetchNextRow() {
+    $this->getIterator()->next();
+  }
+
+  /**
+   * Check if the incoming data is newer than what we've previously imported.
    *
    * @param \Drupal\migrate\Row $row
    *   The row we're importing.
