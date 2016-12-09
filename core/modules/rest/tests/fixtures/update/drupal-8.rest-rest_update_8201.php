@@ -17,16 +17,6 @@ $connection->insert('key_value')
     'name' => 'rest',
     'value' => 'i:8000;',
   ])
-  ->fields([
-    'collection' => 'system.schema',
-    'name' => 'serialization',
-    'value' => 'i:8000;',
-  ])
-  ->fields([
-    'collection' => 'system.schema',
-    'name' => 'basic_auth',
-    'value' => 'i:8000;',
-  ])
   ->execute();
 
 // Update core.extension.
@@ -37,9 +27,9 @@ $extensions = $connection->select('config')
   ->execute()
   ->fetchField();
 $extensions = unserialize($extensions);
-$extensions['module']['basic_auth'] = 8000;
-$extensions['module']['rest'] = 8000;
-$extensions['module']['serialization'] = 8000;
+$extensions['module']['basic_auth'] = 0;
+$extensions['module']['rest'] = 0;
+$extensions['module']['serialization'] = 0;
 $connection->update('config')
   ->fields([
     'data' => serialize($extensions),
@@ -58,7 +48,7 @@ $config = [
       ],
     ],
   ],
-  'link_domain' => '~',
+  'link_domain' => NULL,
 ];
 $data = $connection->insert('config')
   ->fields([
