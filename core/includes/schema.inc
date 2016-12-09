@@ -74,7 +74,7 @@ function drupal_get_schema_versions($module) {
  *   module is not installed.
  */
 function drupal_get_installed_schema_version($module, $reset = FALSE, $array = FALSE) {
-  static $versions = array();
+  $versions = &drupal_static(__FUNCTION__, array());
 
   if ($reset) {
     $versions = array();
