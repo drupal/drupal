@@ -61,6 +61,7 @@ class ConfigOtherModuleTest extends WebTestBase {
     // installed once all the dependencies are met.
     $this->assertNull(entity_load('config_test', 'other_module_test_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_unmet whose dependencies are not met is not created.');
     $this->assertNull(entity_load('config_test', 'other_module_test_optional_entity_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are not met is not created.');
+    $this->installModule('config_test_language');
     $this->installModule('config_install_dependency_test');
     $this->assertTrue(entity_load('config_test', 'other_module_test_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_unmet whose dependencies are met is now created.');
     // Although the following configuration entity's are now met it is not
