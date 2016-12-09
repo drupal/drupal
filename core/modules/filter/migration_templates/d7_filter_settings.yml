@@ -1,0 +1,13 @@
+id: d7_filter_settings
+label: Drupal 7 filter settings
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - filter_fallback_format
+process:
+  fallback_format: filter_fallback_format
+destination:
+  plugin: config
+  config_name: filter.settings

@@ -250,6 +250,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'filter',
       'destination_module' => 'filter',
     ],
+    'd7_filter_settings' => [
+      'source_module' => 'filter',
+      'destination_module' => 'filter',
+    ],
     'd6_forum_settings' => [
       'source_module' => 'forum',
       'destination_module' => 'forum',
