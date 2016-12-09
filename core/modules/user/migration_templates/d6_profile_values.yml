@@ -3,12 +3,8 @@ label: Profile values
 class: Drupal\user\Plugin\migrate\ProfileValues
 migration_tags:
   - Drupal 6
-builder:
-  plugin: d6_profile_values
 source:
   plugin: d6_profile_field_values
-load:
-  plugin: drupal_entity
 process:
   uid: uid
 destination:
