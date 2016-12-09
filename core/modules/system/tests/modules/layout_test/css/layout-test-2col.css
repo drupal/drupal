@@ -1,0 +1,16 @@
+
+.layout-example-2col .region-left {
+  float: left;
+  width: 50%;
+}
+* html .layout-example-2col .region-left {
+  width: 49.9%;
+}
+
+.layout-example-2col .region-right {
+  float: left;
+  width: 50%;
+}
+* html .layout-example-2col .region-right {
+  width: 49.9%;
+}

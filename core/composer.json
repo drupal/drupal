@@ -105,6 +105,7 @@
         "drupal/image": "self.version",
         "drupal/inline_form_errors": "self.version",
         "drupal/language": "self.version",
+        "drupal/layout_discovery": "self.version",
         "drupal/link": "self.version",
         "drupal/locale": "self.version",
         "drupal/minimal": "self.version",

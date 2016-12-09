@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Layout Discovery module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function layout_discovery_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'install') {
+    if (\Drupal::moduleHandler()->moduleExists('layout_plugin')) {
+      $requirements['layout_discovery'] = [
+        'description' => t('Layout Discovery cannot be installed because the Layout Plugin module is installed and incompatible.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+  return $requirements;
+}

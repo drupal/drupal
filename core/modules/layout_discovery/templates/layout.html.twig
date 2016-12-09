@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Template for a generic layout.
+ */
+#}
+{% set classes = [
+  'layout--' ~ layout.id|clean_class,
+] %}
+{% if content %}
+<div{{ attributes.addClass(classes) }}>
+{% for region in layout.getRegionNames %}
+  <div class="{{ 'region--' ~ region|clean_class }}">
+    {{ content[region] }}
+  </div>
+{% endfor %}
+</div>
+{% endif %}

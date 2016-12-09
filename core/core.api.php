@@ -2179,6 +2179,17 @@ function hook_display_variant_plugin_alter(array &$definitions) {
 }
 
 /**
+ * Allow modules to alter layout plugin definitions.
+ *
+ * @param \Drupal\Core\Layout\LayoutDefinition[] $definitions
+ *   The array of layout definitions, keyed by plugin ID.
+ */
+function hook_layout_alter(&$definitions) {
+  // Remove a layout.
+  unset($definitions['twocol']);
+}
+
+/**
  * Flush all persistent and static caches.
  *
  * This hook asks your module to clear all of its static caches,

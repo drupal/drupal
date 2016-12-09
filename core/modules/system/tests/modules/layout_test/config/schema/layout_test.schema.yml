@@ -1,0 +1,7 @@
+layout_plugin.settings.layout_test_plugin:
+  type: layout_plugin.settings
+  label: 'Layout test plugin settings'
+  mapping:
+    setting_1:
+      type: string
+      label: 'Setting 1'

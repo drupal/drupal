@@ -361,6 +361,13 @@ display_variant.plugin:
       type: string
       label: 'UUID'
 
+layout_plugin.settings:
+  type: mapping
+  label: 'Layout settings'
+
+layout_plugin.settings.*:
+  type: layout_plugin.settings
+
 base_entity_reference_field_settings:
   type: mapping
   mapping:

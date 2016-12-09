@@ -1,0 +1,5 @@
+layout_test_2col:
+  version: 1.x
+  css:
+    theme:
+      css/layout-test-2col.css: {}

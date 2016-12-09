@@ -1,0 +1,29 @@
+layout_test_1col:
+  label: 1 column layout
+  category: Layout test
+  template: templates/layout-test-1col
+  regions:
+    top:
+      label: Top region
+    bottom:
+      label: Bottom region
+
+layout_test_2col:
+  label: 2 column layout
+  category: Layout test
+  template: templates/layout-test-2col
+  library: layout_test/layout_test_2col
+  regions:
+    left:
+      label: Left region
+    right:
+      label: Right region
+
+layout_test_1col_no_template:
+  label: 1 column layout (No template)
+  category: Layout test
+  regions:
+    top:
+      label: Top region
+    bottom:
+      label: Bottom region
