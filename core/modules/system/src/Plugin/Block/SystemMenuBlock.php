@@ -89,10 +89,10 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
 
     $form['menu_levels']['level'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Initial menu level'),
+      '#title' => $this->t('Initial visibility level'),
       '#default_value' => $config['level'],
       '#options' => $options,
-      '#description' => $this->t('The menu will only be visible if the menu item for the current page is at or below the selected starting level. Select level 1 to always keep this menu visible.'),
+      '#description' => $this->t('The menu is only visible if the menu item for the current page is at this level or below it. Use level 1 to always display this menu.'),
       '#required' => TRUE,
     );
 
@@ -100,10 +100,10 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
 
     $form['menu_levels']['depth'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Maximum number of menu levels to display'),
+      '#title' => $this->t('Number of levels to display'),
       '#default_value' => $config['depth'],
       '#options' => $options,
-      '#description' => $this->t('The maximum number of menu levels to show, starting from the initial menu level. For example: with an initial level 2 and a maximum number of 3, menu levels 2, 3 and 4 can be displayed.'),
+      '#description' => $this->t('This maximum number includes the initial level.'),
       '#required' => TRUE,
     );
 
