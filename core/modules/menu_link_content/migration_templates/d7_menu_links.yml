@@ -20,7 +20,7 @@ process:
       plugin: skip_on_empty
       method: row
   'link/uri':
-    plugin: d7_internal_uri
+    plugin: link_uri
     source:
       - link_path
   'link/options': options
