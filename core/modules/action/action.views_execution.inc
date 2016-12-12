@@ -15,6 +15,6 @@ function action_views_form_substitutions() {
     '#attributes' => array('class' => array('action-table-select-all')),
   );
   return array(
-    '<!--action-bulk-form-select-all-->' => drupal_render($select_all),
+    '<!--action-bulk-form-select-all-->' => \Drupal::service('renderer')->render($select_all),
   );
 }

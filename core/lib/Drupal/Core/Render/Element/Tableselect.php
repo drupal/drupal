@@ -159,7 +159,7 @@ class Tableselect extends Table {
           $row += $element['#options'][$key]['#attributes'];
         }
         // Render the checkbox / radio element.
-        $row['data'][] = drupal_render($element[$key]);
+        $row['data'][] = \Drupal::service('renderer')->render($element[$key]);
 
         // As table.html.twig only maps header and row columns by order, create
         // the correct order by iterating over the header fields.

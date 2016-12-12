@@ -437,7 +437,7 @@ function template_preprocess_book_navigation(&$variables) {
   }
 
   if (!empty($build)) {
-    drupal_render($build);
+    \Drupal::service('renderer')->render($build);
   }
 
   $variables['has_links'] = FALSE;

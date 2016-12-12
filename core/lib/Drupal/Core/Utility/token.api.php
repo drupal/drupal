@@ -166,7 +166,7 @@ function hook_tokens_alter(array &$replacements, array $context, \Drupal\Core\Re
     // of a field (field_title).
     if (isset($context['tokens']['title'])) {
       $title = $node->field_title->view('default');
-      $replacements[$context['tokens']['title']] = drupal_render($title);
+      $replacements[$context['tokens']['title']] = \Drupal::service('renderer')->render($title);
     }
   }
 }

@@ -153,7 +153,7 @@ function template_preprocess_theme_test_render_element(&$variables) {
  *   - element: An associative array containing the properties of the element.
  */
 function theme_theme_test_render_element_children($variables) {
-  return drupal_render($variables['element']);
+  return \Drupal::service('renderer')->render($variables['element']);
 }
 
 /**

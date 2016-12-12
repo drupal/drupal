@@ -69,7 +69,7 @@ class UpdateManagerUpdate extends FormBase {
       '#last' => $this->state->get('update.last_check') ?: 0,
     );
     $form['last_check'] = array(
-      '#markup' => drupal_render($last_markup),
+      '#markup' => \Drupal::service('renderer')->render($last_markup),
     );
 
     if (!_update_manager_check_backends($form, 'update')) {
