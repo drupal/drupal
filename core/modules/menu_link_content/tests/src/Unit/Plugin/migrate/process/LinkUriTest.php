@@ -117,6 +117,10 @@ class LinkUriTest extends UnitTestCase {
     $expected = 'internal:/test';
     $tests['without_scheme'] = [$value, $expected];
 
+    $value = ['<front>'];
+    $expected = 'internal:/';
+    $tests['front'] = [$value, $expected];
+
     $url = Url::fromRoute('route_name');
     $tests['with_route'] = [$value, $expected, $url];
 

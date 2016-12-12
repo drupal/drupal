@@ -5,6 +5,7 @@ namespace Drupal\Tests\menu_link_content\Kernel\Migrate\d7;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\menu_link_content\MenuLinkContentInterface;
+use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
@@ -18,7 +19,7 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('link', 'menu_ui', 'menu_link_content');
+  public static $modules = array('link', 'menu_ui', 'menu_link_content', 'node');
 
   /**
    * {@inheritdoc}
@@ -26,6 +27,13 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('menu_link_content');
+    $this->installEntitySchema('node');
+    $node = Node::create([
+      'nid' => 3,
+      'title' => 'node link test',
+      'type' => 'article',
+    ]);
+    $node->save();
     $this->executeMigrations(['d7_menu', 'd7_menu_links']);
     \Drupal::service('router.builder')->rebuild();
   }

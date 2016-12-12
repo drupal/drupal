@@ -63,6 +63,9 @@ class LinkUri extends ProcessPluginBase implements ContainerFactoryPluginInterfa
     $path = ltrim($path, '/');
 
     if (parse_url($path, PHP_URL_SCHEME) === NULL) {
+      if ($path == '<front>') {
+        $path = '';
+      }
       $path = 'internal:/' . $path;
 
       // Convert entity URIs to the entity scheme, if the path matches a route
