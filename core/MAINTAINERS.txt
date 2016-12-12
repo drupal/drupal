@@ -123,7 +123,6 @@ Color
 - ?
 
 Comment
-- Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
