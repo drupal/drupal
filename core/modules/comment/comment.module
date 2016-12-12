@@ -631,7 +631,7 @@ function template_preprocess_comment(&$variables) {
     '#theme' => 'username',
     '#account' => $account,
   );
-  $variables['author'] = \Drupal::service('renderer')->render($username);
+  $variables['author'] = drupal_render($username);
   $variables['author_id'] = $comment->getOwnerId();
   $variables['new_indicator_timestamp'] = $comment->getChangedTime();
   $variables['created'] = format_date($comment->getCreatedTime());
@@ -677,7 +677,7 @@ function template_preprocess_comment(&$variables) {
       '#theme' => 'username',
       '#account' => $account_parent,
     );
-    $variables['parent_author'] = \Drupal::service('renderer')->render($username);
+    $variables['parent_author'] = drupal_render($username);
     $variables['parent_created'] = format_date($comment_parent->getCreatedTime());
     // Avoid calling format_date() twice on the same timestamp.
     if ($comment_parent->getChangedTime() == $comment_parent->getCreatedTime()) {

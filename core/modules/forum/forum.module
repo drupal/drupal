@@ -460,12 +460,12 @@ function template_preprocess_forums(&$variables) {
           'name' => $topic->getOwner()->getDisplayName(),
           'created' => $topic->getCreatedTime(),
         ));
-        $variables['topics'][$id]->submitted = \Drupal::service('renderer')->render($forum_submitted);
+        $variables['topics'][$id]->submitted = drupal_render($forum_submitted);
         $forum_submitted = array(
           '#theme' => 'forum_submitted',
           '#topic' => isset($topic->last_reply) ? $topic->last_reply : NULL,
         );
-        $variables['topics'][$id]->last_reply = \Drupal::service('renderer')->render($forum_submitted);
+        $variables['topics'][$id]->last_reply = drupal_render($forum_submitted);
 
         $variables['topics'][$id]->new_text = '';
         $variables['topics'][$id]->new_url = '';
@@ -569,7 +569,7 @@ function template_preprocess_forum_list(&$variables) {
       $variables['forums'][$id]->old_topics = $forum->num_topics - $variables['forums'][$id]->new_topics;
     }
     $forum_submitted = array('#theme' => 'forum_submitted', '#topic' => $forum->last_post);
-    $variables['forums'][$id]->last_reply = \Drupal::service('renderer')->render($forum_submitted);
+    $variables['forums'][$id]->last_reply = drupal_render($forum_submitted);
   }
 
   $variables['pager'] = array(
@@ -636,7 +636,7 @@ function template_preprocess_forum_submitted(&$variables) {
   $variables['author'] = '';
   if (isset($variables['topic']->uid)) {
     $username = array('#theme' => 'username', '#account' => User::load($variables['topic']->uid));
-    $variables['author'] = \Drupal::service('renderer')->render($username);
+    $variables['author'] = drupal_render($username);
   }
   $variables['time'] = isset($variables['topic']->created) ? \Drupal::service('date.formatter')->formatTimeDiffSince($variables['topic']->created) : '';
 }

@@ -218,7 +218,7 @@ class OverviewTerms extends FormBase {
         );
       }
       $form['terms'][$key]['term'] = array(
-        '#prefix' => !empty($indentation) ? \Drupal::service('renderer')->render($indentation) : '',
+        '#prefix' => !empty($indentation) ? drupal_render($indentation) : '',
         '#type' => 'link',
         '#title' => $term->getName(),
         '#url' => $term->urlInfo(),

@@ -201,7 +201,7 @@
  * // Finally, build a renderable array from the transformed tree.
  * $menu = $menu_tree->build($tree);
  *
- * $menu_html = \Drupal::service('renderer')->render($menu);
+ * $menu_html = drupal_render($menu);
  * @endcode
  *
  * @}

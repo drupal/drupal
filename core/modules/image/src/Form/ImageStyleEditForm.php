@@ -58,7 +58,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     $form['preview'] = array(
       '#type' => 'item',
       '#title' => $this->t('Preview'),
-      '#markup' => \Drupal::service('renderer')->render($preview_arguments),
+      '#markup' => drupal_render($preview_arguments),
       // Render preview above parent elements.
       '#weight' => -5,
     );

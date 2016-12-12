@@ -70,7 +70,7 @@ class StatisticsLastCommentName extends FieldPluginBase {
         '#theme' => 'username',
         '#account' => $account,
       );
-      return \Drupal::service('renderer')->render($username);
+      return drupal_render($username);
     }
     else {
       return $this->sanitizeValue($this->getValue($values));

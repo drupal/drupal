@@ -120,7 +120,7 @@ function callback_batch_finished($success, $results, $operations) {
       '#theme' => 'item_list',
       '#items' => $results,
     );
-    $message .= \Drupal::service('renderer')->render($list);
+    $message .= drupal_render($list);
     drupal_set_message($message);
   }
   else {

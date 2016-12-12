@@ -220,7 +220,7 @@ class BookAdminEditForm extends FormBase {
       }
 
       $form[$id]['title'] = [
-        '#prefix' => !empty($indentation) ? \Drupal::service('renderer')->render($indentation) : '',
+        '#prefix' => !empty($indentation) ? drupal_render($indentation) : '',
         '#type' => 'textfield',
         '#default_value' => $data['link']['title'],
         '#maxlength' => 255,

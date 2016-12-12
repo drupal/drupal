@@ -437,20 +437,20 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
       '#theme' => 'simpletest_result_summary',
       '#label' => t($test_results[$class]['#name'] . ':'),
     );
-    array_unshift($items, \Drupal::service('renderer')->render($class_test_result));
+    array_unshift($items, drupal_render($class_test_result));
   }
   $context['message'] = t('Processed test @num of @max - %test.', array('%test' => $info['name'], '@num' => $max - $size, '@max' => $max));
   $overall_results = $test_results + array(
     '#theme' => 'simpletest_result_summary',
     '#label' => t('Overall results:'),
   );
-  $context['message'] .= \Drupal::service('renderer')->render($overall_results);
+  $context['message'] .= drupal_render($overall_results);
 
   $item_list = array(
     '#theme' => 'item_list',
     '#items' => $items,
   );
-  $context['message'] .= \Drupal::service('renderer')->render($item_list);
+  $context['message'] .= drupal_render($item_list);
 
   // Save working values for the next iteration.
   $context['sandbox']['tests'] = $test_list;

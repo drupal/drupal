@@ -614,7 +614,7 @@ function views_pre_render_views_form_views_form($element) {
     $row_id = $substitution['row_id'];
 
     $search[] = $substitution['placeholder'];
-    $replace[] = isset($element[$field_name][$row_id]) ? \Drupal::service('renderer')->render($element[$field_name][$row_id]) : '';
+    $replace[] = isset($element[$field_name][$row_id]) ? drupal_render($element[$field_name][$row_id]) : '';
   }
   // Add in substitutions from hook_views_form_substitutions().
   $substitutions = \Drupal::moduleHandler()->invokeAll('views_form_substitutions');
@@ -628,7 +628,7 @@ function views_pre_render_views_form_views_form($element) {
   }
 
   // Apply substitutions to the rendered output.
-  $output = str_replace($search, $replace, \Drupal::service('renderer')->render($element['output']));
+  $output = str_replace($search, $replace, drupal_render($element['output']));
   $element['output'] = ['#markup' => ViewsRenderPipelineMarkup::create($output)];
 
   return $element;

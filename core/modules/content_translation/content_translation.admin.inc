@@ -209,7 +209,7 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
       $rows[] = array(
         'data' => array(
           array(
-            'data' => \Drupal::service('renderer')->render($field_element),
+            'data' => drupal_render($field_element),
             'class' => array('translatable'),
           ),
           array(
@@ -243,7 +243,7 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
           $rows[] = array(
             'data' => array(
               array(
-                'data' => \Drupal::service('renderer')->render($column_element[$key]),
+                'data' => drupal_render($column_element[$key]),
                 'class' => array('translatable'),
               ),
               array(
