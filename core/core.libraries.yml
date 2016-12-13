@@ -46,6 +46,7 @@ drupal:
   version: VERSION
   js:
     misc/drupal.js: { weight: -18 }
+    misc/drupal.init.js: { weight: -17 }
   dependencies:
     - core/domready
     - core/drupalSettings

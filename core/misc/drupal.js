@@ -40,17 +40,9 @@
  */
 window.Drupal = {behaviors: {}, locale: {}};
 
-// Class indicating that JavaScript is enabled; used for styling purpose.
-document.documentElement.className += ' js';
-
-// Allow other JavaScript libraries to use $.
-if (window.jQuery) {
-  jQuery.noConflict();
-}
-
 // JavaScript should be made compatible with libraries other than jQuery by
 // wrapping it in an anonymous closure.
-(function (domready, Drupal, drupalSettings, drupalTranslations) {
+(function (Drupal, drupalSettings, drupalTranslations) {
 
   'use strict';
 
@@ -173,9 +165,6 @@ if (window.jQuery) {
       }
     }
   };
-
-  // Attach all behaviors.
-  domready(function () { Drupal.attachBehaviors(document, drupalSettings); });
 
   /**
    * Detaches registered behaviors from a page element.
@@ -591,4 +580,4 @@ if (window.jQuery) {
     return '<em class="placeholder">' + Drupal.checkPlain(str) + '</em>';
   };
 
-})(domready, Drupal, window.drupalSettings, window.drupalTranslations);
+})(Drupal, window.drupalSettings, window.drupalTranslations);
