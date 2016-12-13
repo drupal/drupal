@@ -55,10 +55,17 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE);
 
-    $fields['moderation_state'] = BaseFieldDefinition::create('entity_reference')
+    $fields['workflow'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Workflow'))
+      ->setDescription(t('The workflow the moderation state is in.'))
+      ->setSetting('target_type', 'workflow')
+      ->setRequired(TRUE)
+      ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE);
+
+    $fields['moderation_state'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Moderation state'))
       ->setDescription(t('The moderation state of the referenced content.'))
-      ->setSetting('target_type', 'moderation_state')
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
@@ -155,7 +162,7 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
     if ($related_entity instanceof TranslatableInterface) {
       $related_entity = $related_entity->getTranslation($this->activeLangcode);
     }
-    $related_entity->moderation_state->target_id = $this->moderation_state->target_id;
+    $related_entity->moderation_state = $this->moderation_state;
     return $related_entity->save();
   }
 

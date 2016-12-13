@@ -1,0 +1,7 @@
+# Workflow menu items definition
+entity.workflow.collection:
+  title: 'Workflows'
+  route_name: entity.workflow.collection
+  description: 'Configure workflows.'
+  parent: system.admin_config_workflow
+

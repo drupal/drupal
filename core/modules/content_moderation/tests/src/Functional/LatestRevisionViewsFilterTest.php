@@ -5,6 +5,7 @@ namespace Drupal\Tests\content_moderation\Functional;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * Tests the "Latest Revision" views filter.
@@ -25,7 +26,7 @@ class LatestRevisionViewsFilterTest extends BrowserTestBase {
    * Tests view shows the correct node IDs.
    */
   public function testViewShowsCorrectNids() {
-    $node_type = $this->createNodeType('Test', 'test');
+    $this->createNodeType('Test', 'test');
 
     $permissions = [
       'access content',
@@ -45,8 +46,9 @@ class LatestRevisionViewsFilterTest extends BrowserTestBase {
     $node_0->save();
 
     // Now enable moderation for subsequent nodes.
-    $node_type->setThirdPartySetting('content_moderation', 'enabled', TRUE);
-    $node_type->save();
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'test');
+    $workflow->save();
 
     // Make a node that is only ever in Draft.
     /** @var Node $node_1 */
@@ -55,7 +57,7 @@ class LatestRevisionViewsFilterTest extends BrowserTestBase {
       'title' => 'Node 1 - Rev 1',
       'uid' => $editor1->id(),
     ]);
-    $node_1->moderation_state->target_id = 'draft';
+    $node_1->moderation_state->value = 'draft';
     $node_1->save();
 
     // Make a node that is in Draft, then Published.
@@ -65,11 +67,11 @@ class LatestRevisionViewsFilterTest extends BrowserTestBase {
       'title' => 'Node 2 - Rev 1',
       'uid' => $editor1->id(),
     ]);
-    $node_2->moderation_state->target_id = 'draft';
+    $node_2->moderation_state->value = 'draft';
     $node_2->save();
 
     $node_2->setTitle('Node 2 - Rev 2');
-    $node_2->moderation_state->target_id = 'published';
+    $node_2->moderation_state->value = 'published';
     $node_2->save();
 
     // Make a node that is in Draft, then Published, then Draft.
@@ -79,15 +81,15 @@ class LatestRevisionViewsFilterTest extends BrowserTestBase {
       'title' => 'Node 3 - Rev 1',
       'uid' => $editor1->id(),
     ]);
-    $node_3->moderation_state->target_id = 'draft';
+    $node_3->moderation_state->value = 'draft';
     $node_3->save();
 
     $node_3->setTitle('Node 3 - Rev 2');
-    $node_3->moderation_state->target_id = 'published';
+    $node_3->moderation_state->value = 'published';
     $node_3->save();
 
     $node_3->setTitle('Node 3 - Rev 3');
-    $node_3->moderation_state->target_id = 'draft';
+    $node_3->moderation_state->value = 'draft';
     $node_3->save();
 
     // Now show the View, and confirm that only the correct titles are showing.

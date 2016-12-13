@@ -59,12 +59,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
 
     // Enable moderation for custom blocks at
     // admin/structure/block/block-content/manage/basic/moderation.
-    $edit = [
-      'enable_moderation_state' => TRUE,
-      'allowed_moderation_states_unpublished[draft]' => TRUE,
-      'allowed_moderation_states_published[published]' => TRUE,
-      'default_moderation_state' => 'draft',
-    ];
+    $edit = ['workflow' => 'editorial'];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('Your settings have been saved.'));
 

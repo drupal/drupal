@@ -5,6 +5,7 @@ namespace Drupal\Tests\content_moderation\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList
@@ -22,6 +23,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     'user',
     'system',
     'language',
+    'workflows',
   ];
 
   /**
@@ -44,10 +46,11 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $node_type = NodeType::create([
       'type' => 'example',
     ]);
-    $node_type->setThirdPartySetting('content_moderation', 'enabled', TRUE);
-    $node_type->setThirdPartySetting('content_moderation', 'allowed_moderation_states', ['draft']);
-    $node_type->setThirdPartySetting('content_moderation', 'default_moderation_state', 'draft');
     $node_type->save();
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
+    $workflow->save();
+
     $this->testNode = Node::create([
       'type' => 'example',
       'title' => 'Test title',
@@ -61,7 +64,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
    * Test the field item list when accessing an index.
    */
   public function testArrayIndex() {
-    $this->assertEquals('draft', $this->testNode->moderation_state[0]->entity->id());
+    $this->assertEquals('draft', $this->testNode->moderation_state[0]->value);
   }
 
   /**
@@ -70,7 +73,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   public function testArrayIteration() {
     $states = [];
     foreach ($this->testNode->moderation_state as $item) {
-      $states[] = $item->entity->id();
+      $states[] = $item->value;
     }
     $this->assertEquals(['draft'], $states);
   }

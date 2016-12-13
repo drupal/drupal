@@ -300,9 +300,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: entity_reference_label
-          settings:
-            link: true
+          type: content_moderation_state
           group_column: target_id
           group_columns: {  }
           group_rows: true

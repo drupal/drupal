@@ -6,6 +6,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\ParamConverter\EntityRevisionConverter
@@ -19,6 +20,7 @@ class EntityRevisionConverterTest extends KernelTestBase {
     'system',
     'content_moderation',
     'node',
+    'workflows',
   ];
 
   /**
@@ -59,17 +61,21 @@ class EntityRevisionConverterTest extends KernelTestBase {
    * @covers ::convert
    */
   public function testConvertWithRevisionableEntityType() {
+    $this->installConfig(['content_moderation']);
     $node_type = NodeType::create([
       'type' => 'article',
     ]);
-    $node_type->setThirdPartySetting('content_moderation', 'enabled', TRUE);
     $node_type->save();
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'article');
+    $workflow->save();
 
     $revision_ids = [];
     $node = Node::create([
       'title' => 'test',
       'type' => 'article',
     ]);
+    $node->moderation_state->value = 'published';
     $node->save();
 
     $revision_ids[] = $node->getRevisionId();
@@ -79,7 +85,7 @@ class EntityRevisionConverterTest extends KernelTestBase {
     $revision_ids[] = $node->getRevisionId();
 
     $node->setNewRevision(TRUE);
-    $node->isDefaultRevision(FALSE);
+    $node->moderation_state->value = 'draft';
     $node->save();
     $revision_ids[] = $node->getRevisionId();
 

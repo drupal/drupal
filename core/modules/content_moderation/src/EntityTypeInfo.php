@@ -9,6 +9,7 @@ use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -50,6 +51,13 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   protected $entityTypeManager;
 
   /**
+   * The bundle information service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $bundleInfo;
+
+  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -77,11 +85,16 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   The moderation information service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity type manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info
+   *   Bundle information service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   Current user.
    */
-  public function __construct(TranslationInterface $translation, ModerationInformationInterface $moderation_information, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user) {
+  public function __construct(TranslationInterface $translation, ModerationInformationInterface $moderation_information, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info, AccountInterface $current_user) {
     $this->stringTranslation = $translation;
     $this->moderationInfo = $moderation_information;
     $this->entityTypeManager = $entity_type_manager;
+    $this->bundleInfo = $bundle_info;
     $this->currentUser = $current_user;
   }
 
@@ -93,6 +106,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       $container->get('string_translation'),
       $container->get('content_moderation.moderation_information'),
       $container->get('entity_type.manager'),
+      $container->get('entity_type.bundle.info'),
       $container->get('current_user')
     );
   }
@@ -196,7 +210,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
     $operations = [];
     $type = $entity->getEntityType();
     $bundle_of = $type->getBundleOf();
-    if ($this->currentUser->hasPermission('administer moderation states') && $bundle_of &&
+    if ($this->currentUser->hasPermission('administer content moderation') && $bundle_of &&
       $this->moderationInfo->canModerateEntitiesOfEntityType($this->entityTypeManager->getDefinition($bundle_of))
     ) {
       $operations['manage-moderation'] = [
@@ -262,16 +276,12 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   - bundle: The machine name of a bundle, such as "page" or "article".
    */
   protected function getModeratedBundles() {
-    /** @var ConfigEntityTypeInterface $type */
-    foreach ($this->filterNonRevisionableEntityTypes($this->entityTypeManager->getDefinitions()) as $type_name => $type) {
-      $result = $this->entityTypeManager
-        ->getStorage($type_name)
-        ->getQuery()
-        ->condition('third_party_settings.content_moderation.enabled', TRUE)
-        ->execute();
-
-      foreach ($result as $bundle_name) {
-        yield ['entity' => $type->getBundleOf(), 'bundle' => $bundle_name];
+    $entity_types = array_filter($this->entityTypeManager->getDefinitions(), [$this->moderationInfo, 'canModerateEntitiesOfEntityType']);
+    foreach ($entity_types as $type_name => $type) {
+      foreach ($this->bundleInfo->getBundleInfo($type_name) as $bundle_id => $bundle) {
+        if ($this->moderationInfo->shouldModerateEntitiesOfBundle($type, $bundle_id)) {
+          yield ['entity' => $type_name, 'bundle' => $bundle_id];
+        }
       }
     }
   }
@@ -291,9 +301,9 @@ class EntityTypeInfo implements ContainerInjectionInterface {
     }
 
     $fields = [];
-    $fields['moderation_state'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel($this->t('Moderation state'))
-      ->setDescription($this->t('The moderation state of this piece of content.'))
+    $fields['moderation_state'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Moderation state'))
+      ->setDescription(t('The moderation state of this piece of content.'))
       ->setComputed(TRUE)
       ->setClass(ModerationStateFieldItemList::class)
       ->setSetting('target_type', 'moderation_state')

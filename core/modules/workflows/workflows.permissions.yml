@@ -1,0 +1,4 @@
+'administer workflows':
+  title: 'Administer workflows'
+  description: 'Create and edit workflows.'
+  'restrict access': TRUE

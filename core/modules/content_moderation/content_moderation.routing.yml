@@ -1,7 +1,0 @@
-content_moderation.overview:
-  path: '/admin/config/workflow/moderation'
-  defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
-    _title: 'Content moderation'
-  requirements:
-    _permission: 'access administration pages'

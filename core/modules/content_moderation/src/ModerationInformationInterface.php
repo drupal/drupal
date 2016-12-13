@@ -126,4 +126,15 @@ interface ModerationInformationInterface {
    */
   public function isLiveRevision(ContentEntityInterface $entity);
 
+  /**
+   * Gets the workflow for the given content entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity to get the workflow for.
+   *
+   * @return \Drupal\workflows\WorkflowInterface|null
+   *   The workflow entity. NULL if there is no workflow.
+   */
+  public function getWorkFlowForEntity(ContentEntityInterface $entity);
+
 }

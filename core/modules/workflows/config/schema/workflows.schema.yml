@@ -1,0 +1,51 @@
+workflows.workflow.*:
+  type: config_entity
+  label: 'Workflow'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    type:
+      type: string
+      label: 'Workflow type'
+    type_settings:
+      type: workflow.type_settings.[%parent.type]
+      label: 'Custom settings for workflow type'
+    states:
+      type: sequence
+      label: 'States'
+      sequence:
+        type: mapping
+        label: 'State'
+        mapping:
+          label:
+            type: label
+            label: 'Label'
+          weight:
+            type: integer
+            label: 'Weight'
+    transitions:
+      type: sequence
+      label: 'Transitions'
+      sequence:
+        type: mapping
+        label: 'Transition from state to state'
+        mapping:
+          label:
+            type: label
+            label: 'Transition label'
+          from:
+            type: sequence
+            label: 'From state IDs'
+            sequence:
+              type: string
+              label: 'From state ID'
+          to:
+            type: string
+            label: 'To state ID'
+          weight:
+            type: integer
+            label: 'Weight'

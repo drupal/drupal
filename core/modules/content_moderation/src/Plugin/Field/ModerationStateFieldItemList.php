@@ -2,8 +2,7 @@
 
 namespace Drupal\content_moderation\Plugin\Field;
 
-use Drupal\content_moderation\Entity\ModerationState;
-use Drupal\Core\Field\EntityReferenceFieldItemList;
+use Drupal\Core\Field\FieldItemList;
 
 /**
  * A computed field that provides a content entity's moderation state.
@@ -11,19 +10,20 @@ use Drupal\Core\Field\EntityReferenceFieldItemList;
  * It links content entities to a moderation state configuration entity via a
  * moderation state content entity.
  */
-class ModerationStateFieldItemList extends EntityReferenceFieldItemList {
+class ModerationStateFieldItemList extends FieldItemList {
 
   /**
    * Gets the moderation state entity linked to a content entity revision.
    *
-   * @return \Drupal\content_moderation\ModerationStateInterface|null
-   *   The moderation state configuration entity linked to a content entity
-   *   revision.
+   * @return string|null
+   *   The moderation state linked to a content entity revision.
    */
   protected function getModerationState() {
     $entity = $this->getEntity();
 
-    if (!\Drupal::service('content_moderation.moderation_information')->shouldModerateEntitiesOfBundle($entity->getEntityType(), $entity->bundle())) {
+    /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
+    $moderation_info = \Drupal::service('content_moderation.moderation_information');
+    if (!$moderation_info->shouldModerateEntitiesOfBundle($entity->getEntityType(), $entity->bundle())) {
       return NULL;
     }
 
@@ -32,6 +32,7 @@ class ModerationStateFieldItemList extends EntityReferenceFieldItemList {
         ->condition('content_entity_type_id', $entity->getEntityTypeId())
         ->condition('content_entity_id', $entity->id())
         ->condition('content_entity_revision_id', $entity->getRevisionId())
+        ->condition('workflow', $moderation_info->getWorkFlowForEntity($entity)->id())
         ->allRevisions()
         ->sort('revision_id', 'DESC')
         ->execute();
@@ -53,17 +54,15 @@ class ModerationStateFieldItemList extends EntityReferenceFieldItemList {
           }
         }
 
-        return $content_moderation_state->get('moderation_state')->entity;
+        return $content_moderation_state->get('moderation_state')->value;
       }
     }
     // It is possible that the bundle does not exist at this point. For example,
     // the node type form creates a fake Node entity to get default values.
     // @see \Drupal\node\NodeTypeForm::form()
-    $bundle_entity = \Drupal::entityTypeManager()
-      ->getStorage($entity->getEntityType()->getBundleEntityType())
-      ->load($entity->bundle());
-    if ($bundle_entity && ($default = $bundle_entity->getThirdPartySetting('content_moderation', 'default_moderation_state'))) {
-      return ModerationState::load($default);
+    $workflow = $moderation_info->getWorkFlowForEntity($entity);
+    if ($workflow) {
+      return $workflow->getInitialState()->id();
     }
   }
 
@@ -93,10 +92,11 @@ class ModerationStateFieldItemList extends EntityReferenceFieldItemList {
     // Compute the value of the moderation state.
     $index = 0;
     if (!isset($this->list[$index]) || $this->list[$index]->isEmpty()) {
+
       $moderation_state = $this->getModerationState();
       // Do not store NULL values in the static cache.
       if ($moderation_state) {
-        $this->list[$index] = $this->createItem($index, ['entity' => $moderation_state]);
+        $this->list[$index] = $this->createItem($index, $moderation_state);
       }
     }
   }

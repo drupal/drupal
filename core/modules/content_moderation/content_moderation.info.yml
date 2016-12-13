@@ -5,3 +5,5 @@ version: VERSION
 core: 8.x
 package: Core (Experimental)
 configure: content_moderation.overview
+dependencies:
+  - workflows

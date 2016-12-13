@@ -142,7 +142,8 @@
         "drupal/update": "self.version",
         "drupal/user": "self.version",
         "drupal/views": "self.version",
-        "drupal/views_ui": "self.version"
+        "drupal/views_ui": "self.version",
+        "drupal/workflows": "self.version"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

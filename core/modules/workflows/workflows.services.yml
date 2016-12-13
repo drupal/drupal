@@ -1,0 +1,6 @@
+services:
+  plugin.manager.workflows.type:
+    class: Drupal\workflows\WorkflowTypeManager
+    parent: default_plugin_manager
+    tags:
+      - { name: plugin_manager_cache_clear }

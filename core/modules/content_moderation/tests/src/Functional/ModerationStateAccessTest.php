@@ -5,6 +5,7 @@ namespace Drupal\Tests\content_moderation\Functional;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * Tests the view access control handler for moderation state entities.
@@ -31,7 +32,7 @@ class ModerationStateAccessTest extends BrowserTestBase {
     $permissions = [
       'access content',
       'view all revisions',
-      'view moderation states',
+      'view content moderation',
     ];
     $editor1 = $this->drupalCreateUser($permissions);
     $this->drupalLogin($editor1);
@@ -41,7 +42,7 @@ class ModerationStateAccessTest extends BrowserTestBase {
       'title' => 'Draft node',
       'uid' => $editor1->id(),
     ]);
-    $node_1->moderation_state->target_id = 'draft';
+    $node_1->moderation_state->value = 'draft';
     $node_1->save();
 
     $node_2 = Node::create([
@@ -49,26 +50,26 @@ class ModerationStateAccessTest extends BrowserTestBase {
       'title' => 'Published node',
       'uid' => $editor1->id(),
     ]);
-    $node_2->moderation_state->target_id = 'published';
+    $node_2->moderation_state->value = 'published';
     $node_2->save();
 
     // Resave the node with a new state.
     $node_2->setTitle('Archived node');
-    $node_2->moderation_state->target_id = 'archived';
+    $node_2->moderation_state->value = 'archived';
     $node_2->save();
 
     // Now show the View, and confirm that the state labels are showing.
     $this->drupalGet('/latest');
     $page = $this->getSession()->getPage();
-    $this->assertTrue($page->hasLink('Draft'));
-    $this->assertTrue($page->hasLink('Archived'));
-    $this->assertFalse($page->hasLink('Published'));
+    $this->assertTrue($page->hasContent('Draft'));
+    $this->assertTrue($page->hasContent('Archived'));
+    $this->assertFalse($page->hasContent('Published'));
 
     // Now log in as an admin and test the same thing.
     $permissions = [
       'access content',
       'view all revisions',
-      'administer moderation states',
+      'administer content moderation',
     ];
     $admin1 = $this->drupalCreateUser($permissions);
     $this->drupalLogin($admin1);
@@ -76,9 +77,9 @@ class ModerationStateAccessTest extends BrowserTestBase {
     $this->drupalGet('/latest');
     $page = $this->getSession()->getPage();
     $this->assertEquals(200, $this->getSession()->getStatusCode());
-    $this->assertTrue($page->hasLink('Draft'));
-    $this->assertTrue($page->hasLink('Archived'));
-    $this->assertFalse($page->hasLink('Published'));
+    $this->assertTrue($page->hasContent('Draft'));
+    $this->assertTrue($page->hasContent('Archived'));
+    $this->assertFalse($page->hasContent('Published'));
   }
 
   /**
@@ -98,9 +99,11 @@ class ModerationStateAccessTest extends BrowserTestBase {
       'type' => $machine_name,
       'label' => $label,
     ]);
-    $node_type->setThirdPartySetting('content_moderation', 'enabled', TRUE);
     $node_type->save();
 
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', $machine_name);
+    $workflow->save();
     return $node_type;
   }
 

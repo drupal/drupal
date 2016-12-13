@@ -27,19 +27,3 @@ entity_test.entity_test_bundle.*:
     description:
       type: text
       label: 'Description'
-
-entity_test.entity_test_bundle.*.third_party.content_moderation:
-  type: mapping
-  label: 'Enable moderation states for this entity test type'
-  mapping:
-    enabled:
-      type: boolean
-      label: 'Moderation states enabled'
-    allowed_moderation_states:
-      type: sequence
-      sequence:
-        type: string
-        label: 'Moderation state'
-    default_moderation_state:
-      type: string
-      label: 'Moderation state for new entity test'

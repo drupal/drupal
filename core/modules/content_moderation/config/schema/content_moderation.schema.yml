@@ -1,75 +1,3 @@
-content_moderation.state.*:
-  type: config_entity
-  label: 'Moderation state config'
-  mapping:
-    id:
-      type: string
-      label: 'ID'
-    label:
-      type: label
-      label: 'Label'
-    published:
-      type: boolean
-      label: 'Is published'
-    default_revision:
-      type: boolean
-      label: 'Is default revision'
-    weight:
-      type: integer
-      label: 'Weight'
-
-content_moderation.state_transition.*:
-  type: config_entity
-  label: 'Moderation state transition config'
-  mapping:
-    id:
-      type: string
-      label: 'ID'
-    label:
-      type: label
-      label: 'Label'
-    stateFrom:
-      type: string
-      label: 'From state'
-    stateTo:
-      type: string
-      label: 'To state'
-    weight:
-      type: integer
-      label: 'Weight'
-
-node.type.*.third_party.content_moderation:
-  type: mapping
-  label: 'Enable moderation states for this node type'
-  mapping:
-    enabled:
-      type: boolean
-      label: 'Moderation states enabled'
-    allowed_moderation_states:
-      type: sequence
-      sequence:
-        type: string
-        label: 'Moderation state'
-    default_moderation_state:
-      type: string
-      label: 'Moderation state for new content'
-
-block_content.type.*.third_party.content_moderation:
-  type: mapping
-  label: 'Enable moderation states for this block content type'
-  mapping:
-    enabled:
-      type: boolean
-      label: 'Moderation states enabled'
-    allowed_moderation_states:
-      type: sequence
-      sequence:
-        type: string
-        label: 'Moderation state'
-    default_moderation_state:
-      type: string
-      label: 'Moderation state for new block content'
-
 views.filter.latest_revision:
   type: views_filter
   label: 'Latest revision'
@@ -77,3 +5,29 @@ views.filter.latest_revision:
     value:
       type: string
       label: 'Value'
+
+workflow.type_settings.content_moderation:
+  type: mapping
+  mapping:
+    states:
+      type: sequence
+      label: 'Additional state configuration for content moderation'
+      sequence:
+        type: mapping
+        label: 'States'
+        mapping:
+          published:
+            type: boolean
+            label: 'Is published'
+          default_revision:
+            type: boolean
+            label: 'Is default revision'
+    entity_types:
+      type: sequence
+      label: 'Entity types'
+      sequence:
+        type: sequence
+        label: 'Bundles'
+        sequence:
+          type: string
+          label: 'Bundle ID'

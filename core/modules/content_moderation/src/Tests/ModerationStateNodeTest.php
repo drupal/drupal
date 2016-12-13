@@ -4,6 +4,7 @@ namespace Drupal\content_moderation\Tests;
 
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * Tests general content moderation workflow for nodes.
@@ -18,13 +19,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
-    $this->createContentTypeFromUi(
-      'Moderated content',
-      'moderated_content',
-      TRUE,
-      ['draft', 'needs_review', 'published'],
-      'draft'
-    );
+    $this->createContentTypeFromUi('Moderated content', 'moderated_content', TRUE);
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'moderated_content');
   }
 
@@ -35,19 +30,11 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->drupalPostForm('node/add/moderated_content', [
       'title[0][value]' => 'moderated content',
     ], t('Save and Create New Draft'));
-    $nodes = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->loadByProperties([
-        'title' => 'moderated content',
-      ]);
-
-    if (!$nodes) {
+    $node = $this->getNodeByTitle('moderated content');
+    if (!$node) {
       $this->fail('Test node was not saved correctly.');
-      return;
     }
-
-    $node = reset($nodes);
-    $this->assertEqual('draft', $node->moderation_state->target_id);
+    $this->assertEqual('draft', $node->moderation_state->value);
 
     $path = 'node/' . $node->id() . '/edit';
     // Set up published revision.
@@ -56,7 +43,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     /* @var \Drupal\node\NodeInterface $node */
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
     $this->assertTrue($node->isPublished());
-    $this->assertEqual('published', $node->moderation_state->target_id);
+    $this->assertEqual('published', $node->moderation_state->value);
 
     // Verify that the state field is not shown.
     $this->assertNoText('Published');
@@ -65,30 +52,40 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/delete', array(), t('Delete'));
     $this->assertText(t('The Moderated content moderated content has been deleted.'));
 
+    // Disable content moderation.
+    $this->drupalPostForm('admin/structure/types/manage/moderated_content/moderation', ['workflow' => ''], t('Save'));
     $this->drupalGet('admin/structure/types/manage/moderated_content/moderation');
-    $this->assertFieldByName('enable_moderation_state');
-    $this->assertFieldChecked('edit-enable-moderation-state');
-    $this->drupalPostForm(NULL, ['enable_moderation_state' => FALSE], t('Save'));
-    $this->drupalGet('admin/structure/types/manage/moderated_content/moderation');
-    $this->assertFieldByName('enable_moderation_state');
-    $this->assertNoFieldChecked('edit-enable-moderation-state');
+    $this->assertOptionSelected('edit-workflow', '');
+    // Ensure the parent environment is up-to-date.
+    // @see content_moderation_workflow_insert()
+    \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+
+    // Create a new node.
     $this->drupalPostForm('node/add/moderated_content', [
       'title[0][value]' => 'non-moderated content',
     ], t('Save and publish'));
 
-    $nodes = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->loadByProperties([
-        'title' => 'non-moderated content',
-      ]);
-
-    if (!$nodes) {
+    $node = $this->getNodeByTitle('non-moderated content');
+    if (!$node) {
       $this->fail('Non-moderated test node was not saved correctly.');
-      return;
     }
+    $this->assertEqual(NULL, $node->moderation_state->value);
 
-    $node = reset($nodes);
-    $this->assertEqual(NULL, $node->moderation_state->target_id);
+    // \Drupal\content_moderation\Form\BundleModerationConfigurationForm()
+    // should not list workflows with no states.
+    $workflow = Workflow::create(['id' => 'stateless', 'label' => 'Stateless', 'type' => 'content_moderation']);
+    $workflow->save();
+
+    $this->drupalGet('admin/structure/types/manage/moderated_content/moderation');
+    $this->assertNoText('Stateless');
+    $workflow
+      ->addState('draft', 'Draft')
+      ->addState('published', 'Published')
+      ->addTransition('publish', 'Publish', ['draft', 'published'], 'published')
+      ->save();
+    $this->drupalGet('admin/structure/types/manage/moderated_content/moderation');
+    $this->assertText('Stateless');
   }
 
   /**

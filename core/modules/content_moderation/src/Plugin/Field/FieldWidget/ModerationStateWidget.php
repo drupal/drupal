@@ -3,9 +3,7 @@
 namespace Drupal\content_moderation\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsSelectWidget;
@@ -23,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "moderation_state_default",
  *   label = @Translation("Moderation state"),
  *   field_types = {
- *     "entity_reference"
+ *     "string"
  *   }
  * )
  */
@@ -35,20 +33,6 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
-
-  /**
-   * Moderation state transition entity query.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryInterface
-   */
-  protected $moderationStateTransitionEntityQuery;
-
-  /**
-   * Moderation state storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $moderationStateStorage;
 
   /**
    * Moderation information service.
@@ -63,13 +47,6 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
-
-  /**
-   * Moderation state transition storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $moderationStateTransitionStorage;
 
   /**
    * Moderation state transition validation service.
@@ -95,22 +72,13 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
    *   Current user service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity type manager.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $moderation_state_storage
-   *   Moderation state storage.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $moderation_state_transition_storage
-   *   Moderation state transition storage.
-   * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
-   *   Moderation transition entity query service.
    * @param \Drupal\content_moderation\ModerationInformation $moderation_information
    *   Moderation information service.
    * @param \Drupal\content_moderation\StateTransitionValidation $validator
    *   Moderation state transition validation service
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, EntityStorageInterface $moderation_state_storage, EntityStorageInterface $moderation_state_transition_storage, QueryInterface $entity_query, ModerationInformation $moderation_information, StateTransitionValidation $validator) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, ModerationInformation $moderation_information, StateTransitionValidation $validator) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
-    $this->moderationStateTransitionEntityQuery = $entity_query;
-    $this->moderationStateTransitionStorage = $moderation_state_transition_storage;
-    $this->moderationStateStorage = $moderation_state_storage;
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
     $this->moderationInformation = $moderation_information;
@@ -129,9 +97,6 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
       $configuration['third_party_settings'],
       $container->get('current_user'),
       $container->get('entity_type.manager'),
-      $container->get('entity_type.manager')->getStorage('moderation_state'),
-      $container->get('entity_type.manager')->getStorage('moderation_state_transition'),
-      $container->get('entity.query')->get('moderation_state_transition', 'AND'),
       $container->get('content_moderation.moderation_information'),
       $container->get('content_moderation.state_transition_validation')
     );
@@ -151,19 +116,18 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
       return $element + ['#access' => FALSE];
     }
 
-    $default = $items->get($delta)->value ?: $bundle_entity->getThirdPartySetting('content_moderation', 'default_moderation_state', FALSE);
-    /** @var \Drupal\content_moderation\ModerationStateInterface $default_state */
-    $default_state = $this->entityTypeManager->getStorage('moderation_state')->load($default);
-    if (!$default || !$default_state) {
+    $workflow = $this->moderationInformation->getWorkFlowForEntity($entity);
+    $default = $items->get($delta)->value ? $workflow->getState($items->get($delta)->value) : $workflow->getInitialState();
+    if (!$default) {
       throw new \UnexpectedValueException(sprintf('The %s bundle has an invalid moderation state configuration, moderation states are enabled but no default is set.', $bundle_entity->label()));
     }
 
+    /** @var \Drupal\workflows\Transition[] $transitions */
     $transitions = $this->validator->getValidTransitions($entity, $this->currentUser);
 
     $target_states = [];
-    /** @var \Drupal\content_moderation\Entity\ModerationStateTransition $transition */
     foreach ($transitions as $transition) {
-      $target_states[$transition->getToState()] = $transition->label();
+      $target_states[$transition->to()->id()] = $transition->label();
     }
 
     // @todo https://www.drupal.org/node/2779933 write a test for this.
@@ -171,8 +135,8 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
       '#access' => FALSE,
       '#type' => 'select',
       '#options' => $target_states,
-      '#default_value' => $default,
-      '#published' => $default ? $default_state->isPublishedState() : FALSE,
+      '#default_value' => $default->id(),
+      '#published' => $default->isPublishedState(),
       '#key_column' => $this->column,
     ];
     $element['#element_validate'][] = array(get_class($this), 'validateElement');
@@ -197,7 +161,7 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
   public static function updateStatus($entity_type_id, ContentEntityInterface $entity, array $form, FormStateInterface $form_state) {
     $element = $form_state->getTriggeringElement();
     if (isset($element['#moderation_state'])) {
-      $entity->moderation_state->target_id = $element['#moderation_state'];
+      $entity->moderation_state->value = $element['#moderation_state'];
     }
   }
 
@@ -249,7 +213,7 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
    * {@inheritdoc}
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    return parent::isApplicable($field_definition) && $field_definition->getName() === 'moderation_state';
+    return $field_definition->getName() === 'moderation_state';
   }
 
 }

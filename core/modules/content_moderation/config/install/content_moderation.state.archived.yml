@@ -1,8 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-id: archived
-label: Archived
-published: false
-default_revision: true
-weight: -8

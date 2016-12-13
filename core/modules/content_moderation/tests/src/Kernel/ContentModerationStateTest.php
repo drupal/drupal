@@ -3,7 +3,6 @@
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\content_moderation\Entity\ContentModerationState;
-use Drupal\content_moderation\Entity\ModerationState;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\KernelTests\KernelTestBase;
@@ -11,6 +10,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * Tests links between a content entity and a content_moderation_state entity.
@@ -31,6 +31,7 @@ class ContentModerationStateTest extends KernelTestBase {
     'language',
     'content_translation',
     'text',
+    'workflows',
   ];
 
   /**
@@ -54,24 +55,25 @@ class ContentModerationStateTest extends KernelTestBase {
     $node_type = NodeType::create([
       'type' => 'example',
     ]);
-    $node_type->setThirdPartySetting('content_moderation', 'enabled', TRUE);
-    $node_type->setThirdPartySetting('content_moderation', 'allowed_moderation_states', ['draft', 'published']);
-    $node_type->setThirdPartySetting('content_moderation', 'default_moderation_state', 'draft');
     $node_type->save();
+
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
+    $workflow->save();
+
     $node = Node::create([
       'type' => 'example',
       'title' => 'Test title',
     ]);
     $node->save();
     $node = $this->reloadNode($node);
-    $this->assertEquals('draft', $node->moderation_state->entity->id());
+    $this->assertEquals('draft', $node->moderation_state->value);
 
-    $published = ModerationState::load('published');
-    $node->moderation_state->entity = $published;
+    $node->moderation_state->value = 'published';
     $node->save();
 
     $node = $this->reloadNode($node);
-    $this->assertEquals('published', $node->moderation_state->entity->id());
+    $this->assertEquals('published', $node->moderation_state->value);
 
     // Change the state without saving the node.
     $content_moderation_state = ContentModerationState::load(1);
@@ -80,7 +82,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $content_moderation_state->save();
 
     $node = $this->reloadNode($node, 3);
-    $this->assertEquals('draft', $node->moderation_state->entity->id());
+    $this->assertEquals('draft', $node->moderation_state->value);
     $this->assertFalse($node->isPublished());
 
     // Get the default revision.
@@ -88,11 +90,11 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->assertTrue($node->isPublished());
     $this->assertEquals(2, $node->getRevisionId());
 
-    $node->moderation_state->target_id = 'published';
+    $node->moderation_state->value = 'published';
     $node->save();
 
     $node = $this->reloadNode($node, 4);
-    $this->assertEquals('published', $node->moderation_state->entity->id());
+    $this->assertEquals('published', $node->moderation_state->value);
 
     // Get the default revision.
     $node = $this->reloadNode($node);
@@ -110,10 +112,12 @@ class ContentModerationStateTest extends KernelTestBase {
     $node_type = NodeType::create([
       'type' => 'example',
     ]);
-    $node_type->setThirdPartySetting('content_moderation', 'enabled', TRUE);
-    $node_type->setThirdPartySetting('content_moderation', 'allowed_moderation_states', ['draft', 'published']);
-    $node_type->setThirdPartySetting('content_moderation', 'default_moderation_state', 'draft');
     $node_type->save();
+
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
+    $workflow->save();
+
     $english_node = Node::create([
       'type' => 'example',
       'title' => 'Test title',
@@ -122,7 +126,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $english_node
       ->setPublished(FALSE)
       ->save();
-    $this->assertEquals('draft', $english_node->moderation_state->entity->id());
+    $this->assertEquals('draft', $english_node->moderation_state->value);
     $this->assertFalse($english_node->isPublished());
 
     // Create a French translation.
@@ -131,34 +135,34 @@ class ContentModerationStateTest extends KernelTestBase {
     // Revision 1 (fr).
     $french_node->save();
     $french_node = $this->reloadNode($english_node)->getTranslation('fr');
-    $this->assertEquals('draft', $french_node->moderation_state->entity->id());
+    $this->assertEquals('draft', $french_node->moderation_state->value);
     $this->assertFalse($french_node->isPublished());
 
     // Move English node to create another draft.
     $english_node = $this->reloadNode($english_node);
-    $english_node->moderation_state->target_id = 'draft';
+    $english_node->moderation_state->value = 'draft';
     // Revision 2 (en, fr).
     $english_node->save();
     $english_node = $this->reloadNode($english_node);
-    $this->assertEquals('draft', $english_node->moderation_state->entity->id());
+    $this->assertEquals('draft', $english_node->moderation_state->value);
 
     // French node should still be in draft.
     $french_node = $this->reloadNode($english_node)->getTranslation('fr');
-    $this->assertEquals('draft', $french_node->moderation_state->entity->id());
+    $this->assertEquals('draft', $french_node->moderation_state->value);
 
     // Publish the French node.
-    $french_node->moderation_state->target_id = 'published';
+    $french_node->moderation_state->value = 'published';
     // Revision 3 (en, fr).
     $french_node->save();
     $french_node = $this->reloadNode($french_node)->getTranslation('fr');
     $this->assertTrue($french_node->isPublished());
-    $this->assertEquals('published', $french_node->moderation_state->entity->id());
+    $this->assertEquals('published', $french_node->moderation_state->value);
     $this->assertTrue($french_node->isPublished());
     $english_node = $french_node->getTranslation('en');
-    $this->assertEquals('draft', $english_node->moderation_state->entity->id());
+    $this->assertEquals('draft', $english_node->moderation_state->value);
 
     // Publish the English node.
-    $english_node->moderation_state->target_id = 'published';
+    $english_node->moderation_state->value = 'published';
     // Revision 4 (en, fr).
     $english_node->save();
     $english_node = $this->reloadNode($english_node);
@@ -167,7 +171,7 @@ class ContentModerationStateTest extends KernelTestBase {
     // Move the French node back to draft.
     $french_node = $this->reloadNode($english_node)->getTranslation('fr');
     $this->assertTrue($french_node->isPublished());
-    $french_node->moderation_state->target_id = 'draft';
+    $french_node->moderation_state->value = 'draft';
     // Revision 5 (en, fr).
     $french_node->save();
     $french_node = $this->reloadNode($english_node, 5)->getTranslation('fr');
@@ -175,7 +179,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->assertTrue($french_node->getTranslation('en')->isPublished());
 
     // Republish the French node.
-    $french_node->moderation_state->target_id = 'published';
+    $french_node->moderation_state->value = 'published';
     // Revision 6 (en, fr).
     $french_node->save();
     $french_node = $this->reloadNode($english_node)->getTranslation('fr');
@@ -189,9 +193,9 @@ class ContentModerationStateTest extends KernelTestBase {
     $content_moderation_state->save();
     $english_node = $this->reloadNode($french_node, $french_node->getRevisionId() + 1);
 
-    $this->assertEquals('draft', $english_node->moderation_state->entity->id());
+    $this->assertEquals('draft', $english_node->moderation_state->value);
     $french_node = $this->reloadNode($english_node)->getTranslation('fr');
-    $this->assertEquals('published', $french_node->moderation_state->entity->id());
+    $this->assertEquals('published', $french_node->moderation_state->value);
 
     // This should unpublish the French node.
     $content_moderation_state = ContentModerationState::load(1);
@@ -202,9 +206,9 @@ class ContentModerationStateTest extends KernelTestBase {
     $content_moderation_state->save();
 
     $english_node = $this->reloadNode($english_node, $english_node->getRevisionId());
-    $this->assertEquals('draft', $english_node->moderation_state->entity->id());
+    $this->assertEquals('draft', $english_node->moderation_state->value);
     $french_node = $this->reloadNode($english_node, '8')->getTranslation('fr');
-    $this->assertEquals('draft', $french_node->moderation_state->entity->id());
+    $this->assertEquals('draft', $french_node->moderation_state->value);
     // Switching the moderation state to an unpublished state should update the
     // entity.
     $this->assertFalse($french_node->isPublished());
@@ -231,13 +235,11 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity_test_bundle = EntityTestBundle::create([
       'id' => 'example',
     ]);
-    $entity_test_bundle->setThirdPartySetting('content_moderation', 'enabled', TRUE);
-    $entity_test_bundle->setThirdPartySetting('content_moderation', 'allowed_moderation_states', [
-      'draft',
-      'published'
-    ]);
-    $entity_test_bundle->setThirdPartySetting('content_moderation', 'default_moderation_state', 'draft');
     $entity_test_bundle->save();
+
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_with_bundle', 'example');
+    $workflow->save();
 
     // Check that the tested entity type is not translatable.
     $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_with_bundle');
@@ -248,12 +250,12 @@ class ContentModerationStateTest extends KernelTestBase {
       'type' => 'example'
     ]);
     $entity_test_with_bundle->save();
-    $this->assertEquals('draft', $entity_test_with_bundle->moderation_state->entity->id());
+    $this->assertEquals('draft', $entity_test_with_bundle->moderation_state->value);
 
-    $entity_test_with_bundle->moderation_state->target_id = 'published';
+    $entity_test_with_bundle->moderation_state->value = 'published';
     $entity_test_with_bundle->save();
 
-    $this->assertEquals('published', EntityTestWithBundle::load($entity_test_with_bundle->id())->moderation_state->entity->id());
+    $this->assertEquals('published', EntityTestWithBundle::load($entity_test_with_bundle->id())->moderation_state->value);
   }
 
   /**
@@ -275,13 +277,11 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity_test_bundle = EntityTestBundle::create([
       'id' => 'example',
     ]);
-    $entity_test_bundle->setThirdPartySetting('content_moderation', 'enabled', TRUE);
-    $entity_test_bundle->setThirdPartySetting('content_moderation', 'allowed_moderation_states', [
-      'draft',
-      'published'
-    ]);
-    $entity_test_bundle->setThirdPartySetting('content_moderation', 'default_moderation_state', 'draft');
     $entity_test_bundle->save();
+
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_with_bundle', 'example');
+    $workflow->save();
 
     // Check that the tested entity type is not translatable.
     $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_with_bundle');
@@ -292,12 +292,12 @@ class ContentModerationStateTest extends KernelTestBase {
       'type' => 'example'
     ]);
     $entity_test_with_bundle->save();
-    $this->assertEquals('draft', $entity_test_with_bundle->moderation_state->entity->id());
+    $this->assertEquals('draft', $entity_test_with_bundle->moderation_state->value);
 
-    $entity_test_with_bundle->moderation_state->target_id = 'published';
+    $entity_test_with_bundle->moderation_state->value = 'published';
     $entity_test_with_bundle->save();
 
-    $this->assertEquals('published', EntityTestWithBundle::load($entity_test_with_bundle->id())->moderation_state->entity->id());
+    $this->assertEquals('published', EntityTestWithBundle::load($entity_test_with_bundle->id())->moderation_state->value);
   }
 
   /**

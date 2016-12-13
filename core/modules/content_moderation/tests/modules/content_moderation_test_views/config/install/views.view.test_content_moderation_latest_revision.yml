@@ -306,7 +306,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: entity_reference_entity_id
+          type: string
           settings: {  }
           group_column: target_id
           group_columns: {  }
@@ -370,7 +370,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: entity_reference_entity_id
+          type: string
           settings: {  }
           group_column: target_id
           group_columns: {  }

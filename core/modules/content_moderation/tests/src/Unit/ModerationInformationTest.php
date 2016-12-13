@@ -3,13 +3,14 @@
 namespace Drupal\Tests\content_moderation\Unit;
 
 use Drupal\content_moderation\Entity\Handler\ModerationHandler;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\content_moderation\ModerationInformation;
+use Drupal\workflows\WorkflowInterface;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\ModerationInformation
@@ -30,43 +31,42 @@ class ModerationInformationTest extends \PHPUnit_Framework_TestCase {
   /**
    * Returns a mock Entity Type Manager.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_bundle_storage
-   *   Entity bundle storage.
-   *
    * @return EntityTypeManagerInterface
    *   The mocked entity type manager.
    */
-  protected function getEntityTypeManager(EntityStorageInterface $entity_bundle_storage) {
+  protected function getEntityTypeManager() {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
-    $entity_type_manager->getStorage('entity_test_bundle')->willReturn($entity_bundle_storage);
     return $entity_type_manager->reveal();
   }
 
   /**
    * Sets up content moderation and entity manager mocking.
    *
-   * @param bool $status
-   *   TRUE if content_moderation should be enabled, FALSE if not.
+   * @param string $bundle
+   *   The bundle ID.
+   * @param string|null $workflow
+   *   The workflow ID. If nul no workflow information is added to the bundle.
    *
    * @return \Drupal\Core\Entity\EntityTypeManagerInterface
    *   The mocked entity type manager.
    */
-  public function setupModerationEntityManager($status) {
-    $bundle = $this->prophesize(ConfigEntityInterface::class);
-    $bundle->getThirdPartySetting('content_moderation', 'enabled', FALSE)->willReturn($status);
+  public function setupModerationBundleInfo($bundle, $workflow = NULL) {
+    $bundle_info_array = [];
+    if ($workflow) {
+      $bundle_info_array['workflow'] = $workflow;
+    }
+    $bundle_info = $this->prophesize(EntityTypeBundleInfoInterface::class);
+    $bundle_info->getBundleInfo("test_entity_type")->willReturn([$bundle => $bundle_info_array]);
 
-    $entity_storage = $this->prophesize(EntityStorageInterface::class);
-    $entity_storage->load('test_bundle')->willReturn($bundle->reveal());
-
-    return $this->getEntityTypeManager($entity_storage->reveal());
+    return $bundle_info->reveal();
   }
 
   /**
-   * @dataProvider providerBoolean
+   * @dataProvider providerWorkflow
    * @covers ::isModeratedEntity
    */
-  public function testIsModeratedEntity($status) {
-    $moderation_information = new ModerationInformation($this->setupModerationEntityManager($status), $this->getUser());
+  public function testIsModeratedEntity($workflow, $expected) {
+    $moderation_information = new ModerationInformation($this->getEntityTypeManager(), $this->setupModerationBundleInfo('test_bundle', $workflow));
 
     $entity_type = new ContentEntityType([
       'id' => 'test_entity_type',
@@ -77,50 +77,55 @@ class ModerationInformationTest extends \PHPUnit_Framework_TestCase {
     $entity->getEntityType()->willReturn($entity_type);
     $entity->bundle()->willReturn('test_bundle');
 
-    $this->assertEquals($status, $moderation_information->isModeratedEntity($entity->reveal()));
+    $this->assertEquals($expected, $moderation_information->isModeratedEntity($entity->reveal()));
   }
 
   /**
-   * @covers ::isModeratedEntity
+   * @dataProvider providerWorkflow
+   * @covers ::getWorkFlowForEntity
    */
-  public function testIsModeratedEntityForNonBundleEntityType() {
-    $entity_type = new ContentEntityType([
-      'id' => 'test_entity_type',
-    ]);
+  public function testGetWorkFlowForEntity($workflow) {
+    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
+    if ($workflow) {
+      $workflow_entity = $this->prophesize(WorkflowInterface::class)->reveal();
+      $workflow_storage = $this->prophesize(EntityStorageInterface::class);
+      $workflow_storage->load('workflow')->willReturn($workflow_entity)->shouldBeCalled();
+      $entity_type_manager->getStorage('workflow')->willReturn($workflow_storage->reveal());
+    }
+    else {
+      $workflow_entity = NULL;
+    }
+    $moderation_information = new ModerationInformation($entity_type_manager->reveal(), $this->setupModerationBundleInfo('test_bundle', $workflow));
     $entity = $this->prophesize(ContentEntityInterface::class);
-    $entity->getEntityType()->willReturn($entity_type);
-    $entity->bundle()->willReturn('test_entity_type');
+    $entity->getEntityTypeId()->willReturn('test_entity_type');
+    $entity->bundle()->willReturn('test_bundle');
 
-    $entity_storage = $this->prophesize(EntityStorageInterface::class);
-    $entity_type_manager = $this->getEntityTypeManager($entity_storage->reveal());
-    $moderation_information = new ModerationInformation($entity_type_manager, $this->getUser());
-
-    $this->assertEquals(FALSE, $moderation_information->isModeratedEntity($entity->reveal()));
+    $this->assertEquals($workflow_entity, $moderation_information->getWorkFlowForEntity($entity->reveal()));
   }
 
   /**
-   * @dataProvider providerBoolean
+   * @dataProvider providerWorkflow
    * @covers ::shouldModerateEntitiesOfBundle
    */
-  public function testShouldModerateEntities($status) {
+  public function testShouldModerateEntities($workflow, $expected) {
     $entity_type = new ContentEntityType([
       'id' => 'test_entity_type',
       'bundle_entity_type' => 'entity_test_bundle',
       'handlers' => ['moderation' => ModerationHandler::class],
     ]);
 
-    $moderation_information = new ModerationInformation($this->setupModerationEntityManager($status), $this->getUser());
+    $moderation_information = new ModerationInformation($this->getEntityTypeManager(), $this->setupModerationBundleInfo('test_bundle', $workflow));
 
-    $this->assertEquals($status, $moderation_information->shouldModerateEntitiesOfBundle($entity_type, 'test_bundle'));
+    $this->assertEquals($expected, $moderation_information->shouldModerateEntitiesOfBundle($entity_type, 'test_bundle'));
   }
 
   /**
    * Data provider for several tests.
    */
-  public function providerBoolean() {
+  public function providerWorkflow() {
     return [
-      [FALSE],
-      [TRUE],
+      [NULL, FALSE],
+      ['workflow', TRUE],
     ];
   }
 

@@ -2,7 +2,6 @@
 
 namespace Drupal\content_moderation\Plugin\Validation\Constraint;
 
-use Drupal\content_moderation\Entity\ModerationState as ModerationStateEntity;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -93,21 +92,13 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
       $original_entity = $original_entity->getTranslation($entity->language()->getId());
     }
 
-    if ($entity->moderation_state->target_id) {
-      $new_state_id = $entity->moderation_state->target_id;
-    }
-    else {
-      $new_state_id = $default = $this->entityTypeManager
-        ->getStorage($entity->getEntityType()->getBundleEntityType())->load($entity->bundle())
-        ->getThirdPartySetting('content_moderation', 'default_moderation_state');
-    }
-    if ($new_state_id) {
-      $new_state = ModerationStateEntity::load($new_state_id);
-    }
-    // @todo - what if $new_state_id references something that does not exist or
+    $workflow = $this->moderationInformation->getWorkFlowForEntity($entity);
+    $new_state = $workflow->getState($entity->moderation_state->value) ?: $workflow->getInitialState();
+    $original_state = $workflow->getState($original_entity->moderation_state->value);
+    // @todo - what if $new_state references something that does not exist or
     //   is null.
-    if (!$this->validation->isTransitionAllowed($original_entity->moderation_state->entity, $new_state)) {
-      $this->context->addViolation($constraint->message, ['%from' => $original_entity->moderation_state->entity->label(), '%to' => $new_state->label()]);
+    if (!$original_state->canTransitionTo($new_state->id())) {
+      $this->context->addViolation($constraint->message, ['%from' => $original_state->label(), '%to' => $new_state->label()]);
     }
   }
 
@@ -126,9 +117,9 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
   protected function isFirstTimeModeration(EntityInterface $entity) {
     $original_entity = $this->moderationInformation->getLatestRevision($entity->getEntityTypeId(), $entity->id());
 
-    $original_id = $original_entity->moderation_state->target_id;
+    $original_id = $original_entity->moderation_state;
 
-    return !($entity->moderation_state->target_id && $original_entity && $original_id);
+    return !($entity->moderation_state && $original_entity && $original_id);
   }
 
 }

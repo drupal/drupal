@@ -1,0 +1,33 @@
+workflow.type_settings.workflow_type_test:
+  type: mapping
+  label: 'Workflow test type settings'
+  mapping:
+    states:
+      type: sequence
+      sequence:
+        type: ignore
+
+workflow.type_settings.workflow_type_complex_test:
+  type: mapping
+  label: 'Workflow complex test type settings'
+  mapping:
+    states:
+      type: sequence
+      label: 'Additional state configuration'
+      sequence:
+        type: mapping
+        label: 'States'
+        mapping:
+          extra:
+            type: string
+            label: 'Extra information'
+    transitions:
+      type: sequence
+      label: 'Additional transition configuration'
+      sequence:
+        type: mapping
+        label: 'Transitions'
+        mapping:
+          extra:
+            type: string
+            label: 'Extra information'

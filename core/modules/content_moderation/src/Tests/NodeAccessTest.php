@@ -15,13 +15,7 @@ class NodeAccessTest extends ModerationStateTestBase {
   protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
-    $this->createContentTypeFromUi(
-      'Moderated content',
-      'moderated_content',
-      TRUE,
-      ['draft', 'published'],
-      'draft'
-    );
+    $this->createContentTypeFromUi('Moderated content', 'moderated_content', TRUE);
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'moderated_content');
   }
 
@@ -35,19 +29,10 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->drupalPostForm('node/add/moderated_content', [
       'title[0][value]' => 'moderated content',
     ], t('Save and Create New Draft'));
-    $nodes = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->loadByProperties([
-        'title' => 'moderated content',
-      ]);
-
-    if (!$nodes) {
+    $node = $this->getNodeByTitle('moderated content');
+    if (!$node) {
       $this->fail('Test node was not saved correctly.');
-      return;
     }
-
-    /** @var \Drupal\node\NodeInterface $node */
-    $node = reset($nodes);
 
     $view_path = 'node/' . $node->id();
     $edit_path = 'node/' . $node->id() . '/edit';
@@ -75,8 +60,7 @@ class NodeAccessTest extends ModerationStateTestBase {
 
     // Now make a new user and verify that the new user's access is correct.
     $user = $this->createUser([
-      'use draft_draft transition',
-      'use published_draft transition',
+      'use editorial transition create_new_draft',
       'view latest version',
       'view any unpublished content',
     ]);
@@ -92,7 +76,7 @@ class NodeAccessTest extends ModerationStateTestBase {
 
     // Now make another user, who should not be able to see forward revisions.
     $user = $this->createUser([
-      'use published_draft transition',
+      'use editorial transition create_new_draft',
     ]);
     $this->drupalLogin($user);
 

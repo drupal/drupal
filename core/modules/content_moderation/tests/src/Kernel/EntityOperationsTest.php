@@ -4,9 +4,9 @@ namespace Drupal\Tests\content_moderation\Kernel;
 
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\content_moderation\Entity\ModerationState;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\EntityOperations
@@ -23,6 +23,7 @@ class EntityOperationsTest extends KernelTestBase {
     'node',
     'user',
     'system',
+    'workflows',
   ];
 
   /**
@@ -47,8 +48,10 @@ class EntityOperationsTest extends KernelTestBase {
       'type' => 'page',
       'label' => 'Page',
     ]);
-    $node_type->setThirdPartySetting('content_moderation', 'enabled', TRUE);
     $node_type->save();
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'page');
+    $workflow->save();
   }
 
   /**
@@ -60,7 +63,7 @@ class EntityOperationsTest extends KernelTestBase {
       'type' => 'page',
       'title' => 'A',
     ]);
-    $page->moderation_state->target_id = 'draft';
+    $page->moderation_state->value = 'draft';
     $page->save();
 
     $id = $page->id();
@@ -75,7 +78,7 @@ class EntityOperationsTest extends KernelTestBase {
 
     // Moderate the entity to published.
     $page->setTitle('B');
-    $page->moderation_state->target_id = 'published';
+    $page->moderation_state->value = 'published';
     $page->save();
 
     // Verify the entity is now published and public.
@@ -86,7 +89,7 @@ class EntityOperationsTest extends KernelTestBase {
 
     // Make a new forward-revision in Draft.
     $page->setTitle('C');
-    $page->moderation_state->target_id = 'draft';
+    $page->moderation_state->value = 'draft';
     $page->save();
 
     // Verify normal loads return the still-default previous version.
@@ -105,7 +108,7 @@ class EntityOperationsTest extends KernelTestBase {
     $this->assertEquals('C', $page->getTitle());
 
     $page->setTitle('D');
-    $page->moderation_state->target_id = 'published';
+    $page->moderation_state->value = 'published';
     $page->save();
 
     // Verify normal loads return the still-default previous version.
@@ -116,7 +119,7 @@ class EntityOperationsTest extends KernelTestBase {
 
     // Now check that we can immediately add a new published revision over it.
     $page->setTitle('E');
-    $page->moderation_state->target_id = 'published';
+    $page->moderation_state->value = 'published';
     $page->save();
 
     $page = Node::load($id);
@@ -134,7 +137,7 @@ class EntityOperationsTest extends KernelTestBase {
       'type' => 'page',
       'title' => 'A',
     ]);
-    $page->moderation_state->target_id = 'published';
+    $page->moderation_state->value = 'published';
     $page->save();
 
     $id = $page->id();
@@ -151,29 +154,12 @@ class EntityOperationsTest extends KernelTestBase {
    * Verifies that an unpublished state may be made the default revision.
    */
   public function testArchive() {
-    $published_id = $this->randomMachineName();
-    $published_state = ModerationState::create([
-      'id' => $published_id,
-      'label' => $this->randomString(),
-      'published' => TRUE,
-      'default_revision' => TRUE,
-    ]);
-    $published_state->save();
-
-    $archived_id = $this->randomMachineName();
-    $archived_state = ModerationState::create([
-      'id' => $archived_id,
-      'label' => $this->randomString(),
-      'published' => FALSE,
-      'default_revision' => TRUE,
-    ]);
-    $archived_state->save();
-
     $page = Node::create([
       'type' => 'page',
       'title' => $this->randomString(),
     ]);
-    $page->moderation_state->target_id = $published_id;
+
+    $page->moderation_state->value = 'published';
     $page->save();
 
     $id = $page->id();
@@ -184,7 +170,7 @@ class EntityOperationsTest extends KernelTestBase {
 
     // When the page is moderated to the archived state, then the latest
     // revision should be the default revision, and it should be unpublished.
-    $page->moderation_state->target_id = $archived_id;
+    $page->moderation_state->value = 'archived';
     $page->save();
     $new_revision_id = $page->getRevisionId();
 

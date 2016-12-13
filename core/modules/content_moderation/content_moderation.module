@@ -18,9 +18,11 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\workflows\WorkflowInterface;
 use Drupal\node\NodeInterface;
 use Drupal\node\Plugin\Action\PublishNode;
 use Drupal\node\Plugin\Action\UnpublishNode;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * Implements hook_help().
@@ -31,15 +33,13 @@ function content_moderation_help($route_name, RouteMatchInterface $route_match) 
     case 'help.page.content_moderation':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Content Moderation module provides basic moderation for content. This lets site admins define states for content, and then define transitions between those states. For more information, see the <a href=":content_moderation">online documentation for the Content Moderation module</a>.', [':content_moderation' => 'https://www.drupal.org/documentation/modules/content_moderation']) . '</p>';
+      $output .= '<p>' . t('The Content Moderation module provides moderation for content by applying workflows to content. For more information, see the <a href=":content_moderation">online documentation for the Content Moderation module</a>.', [':content_moderation' => 'https://www.drupal.org/documentation/modules/content_moderation']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Moderation states') . '</dt>';
-      $output .= '<dd>' . t('Moderation states provide the <em>Draft</em> and <em>Archived</em> states as additions to the basic <em>Published</em> option. You can click the blue <em>Add Moderation state</em> button and create new states.') . '</dd>';
-      $output .= '<dt>' . t('Moderation state transitions') . '</dt>';
-      $output .= '<dd>' . t('Using the "Moderation state transitions" screen, you can create the actual workflow. You decide the direction in which content moves from state to state, and which user roles are allowed to make that move.') . '</dd>';
+      $output .= '<dt>' . t('Configuring workflows') . '</dt>';
+      $output .= '<dd>' . t('Enable the Workflow UI module to create, edit and delete content moderation workflows.') . '</p>';
       $output .= '<dt>' . t('Configure Content Moderation permissions') . '</dt>';
-      $output .= '<dd>' . t('Each state is exposed as a permission. If a user has the permission for a transition, then they can move that node from the start state to the end state') . '</p>';
+      $output .= '<dd>' . t('Each transition is exposed as a permission. If a user has the permission for a transition, then they can move that node from the start state to the end state') . '</p>';
       $output .= '</dl>';
       return $output;
   }
@@ -182,15 +182,17 @@ function content_moderation_node_access(NodeInterface $node, $operation, Account
 
     $access_result->addCacheableDependency($node);
   }
-  elseif ($operation === 'update' && $moderation_info->isModeratedEntity($node) && $node->moderation_state && $node->moderation_state->target_id) {
+  elseif ($operation === 'update' && $moderation_info->isModeratedEntity($node) && $node->moderation_state) {
     /** @var \Drupal\content_moderation\StateTransitionValidation $transition_validation */
     $transition_validation = \Drupal::service('content_moderation.state_transition_validation');
 
-    $valid_transition_targets = $transition_validation->getValidTransitionTargets($node, $account);
+    $valid_transition_targets = $transition_validation->getValidTransitions($node, $account);
     $access_result = $valid_transition_targets ? AccessResult::neutral() : AccessResult::forbidden();
 
     $access_result->addCacheableDependency($node);
     $access_result->addCacheableDependency($account);
+    $workflow = \Drupal::service('content_moderation.moderation_information')->getWorkflowForEntity($node);
+    $access_result->addCacheableDependency($workflow);
     foreach ($valid_transition_targets as $valid_transition_target) {
       $access_result->addCacheableDependency($valid_transition_target);
     }
@@ -221,4 +223,40 @@ function content_moderation_action_info_alter(&$definitions) {
   if (isset($definitions['node_unpublish_action']['class']) && $definitions['node_unpublish_action']['class'] == UnpublishNode::class) {
     $definitions['node_unpublish_action']['class'] = ModerationOptOutUnpublishNode::class;
   }
+}
+
+/**
+ * Implements hook_entity_bundle_info_alter().
+ */
+function content_moderation_entity_bundle_info_alter(&$bundles) {
+  /** @var \Drupal\workflows\WorkflowInterface $workflow */
+  foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {
+    /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $plugin */
+    $plugin = $workflow->getTypePlugin();
+    foreach ($plugin->getEntityTypes() as $entity_type_id) {
+      foreach ($plugin->getBundlesForEntityType($entity_type_id) as $bundle_id) {
+        if (isset($bundles[$entity_type_id][$bundle_id])) {
+          $bundles[$entity_type_id][$bundle_id]['workflow'] = $workflow->id();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function content_moderation_workflow_insert(WorkflowInterface $entity) {
+  // Clear bundle cache so workflow gets added or removed from the bundle
+  // information.
+  \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
+  // Clear field cache so extra field is added or removed.
+  \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function content_moderation_workflow_update(WorkflowInterface $entity) {
+  content_moderation_workflow_insert($entity);
 }

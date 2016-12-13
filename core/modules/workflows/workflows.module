@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Provides hook implementations for the Workflow UI module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+use Drupal\workflows\Form\WorkflowAddForm;
+use Drupal\workflows\Form\WorkflowEditForm;
+use Drupal\workflows\Form\WorkflowDeleteForm;
+use Drupal\workflows\Form\WorkflowStateAddForm;
+use Drupal\workflows\Form\WorkflowStateEditForm;
+use Drupal\workflows\Form\WorkflowStateDeleteForm;
+use Drupal\workflows\Form\WorkflowTransitionAddForm;
+use Drupal\workflows\Form\WorkflowTransitionEditForm;
+use Drupal\workflows\Form\WorkflowTransitionDeleteForm;
+use Drupal\workflows\WorkflowListBuilder;
+
+/**
+ * Implements hook_help().
+ */
+function workflows_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the Workflow UI module.
+    case 'help.page.workflows':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Workflows module provides a UI and an API for creating workflows content. This lets site admins define workflows and their states, and then define transitions between those states. For more information, see the <a href=":workflow">online documentation for the Workflows module</a>.', [':workflow' => 'https://www.drupal.org/documentation/modules/workflows']) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function workflows_entity_type_build(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_types['workflow']
+    ->setFormClass('add', WorkflowAddForm::class)
+    ->setFormClass('edit', WorkflowEditForm::class)
+    ->setFormClass('delete', WorkflowDeleteForm::class)
+    ->setFormClass('add-state', WorkflowStateAddForm::class)
+    ->setFormClass('edit-state', WorkflowStateEditForm::class)
+    ->setFormClass('delete-state', WorkflowStateDeleteForm::class)
+    ->setFormClass('add-transition', WorkflowTransitionAddForm::class)
+    ->setFormClass('edit-transition', WorkflowTransitionEditForm::class)
+    ->setFormClass('delete-transition', WorkflowTransitionDeleteForm::class)
+    ->setListBuilderClass(WorkflowListBuilder::class)
+    ->set('admin_permission', 'administer workflows')
+    ->setLinkTemplate('add-form', '/admin/config/workflow/workflows/add')
+    ->setLinkTemplate('edit-form', '/admin/config/workflow/workflows/manage/{workflow}')
+    ->setLinkTemplate('delete-form', '/admin/config/workflow/workflows/manage/{workflow}/delete')
+    ->setLinkTemplate('add-state-form', '/admin/config/workflow/workflows/manage/{workflow}/add_state')
+    ->setLinkTemplate('add-transition-form', '/admin/config/workflow/workflows/manage/{workflow}/add_transition')
+    ->setLinkTemplate('collection', '/admin/config/workflow/workflows');
+}

@@ -47,7 +47,7 @@ class EntityTypeModerationRouteProvider implements EntityRouteProviderInterface 
           '_entity_form' => "{$entity_type_id}.moderation",
           '_title' => 'Moderation',
         ])
-        ->setRequirement('_permission', 'administer moderation states')
+        ->setRequirement('_permission', 'administer content moderation')
         ->setOption('parameters', [
           $entity_type_id => ['type' => 'entity:' . $entity_type_id],
         ]);

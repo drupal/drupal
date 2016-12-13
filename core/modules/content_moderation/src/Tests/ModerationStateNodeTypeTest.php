@@ -42,12 +42,16 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     ], t('Save and publish'));
     $this->assertText('Not moderated Test has been created.');
 
-    // Now enable moderation state.
-    $this->enableModerationThroughUi(
-      'not_moderated',
-      ['draft', 'needs_review', 'published'],
-      'draft'
-    );
+    // Now enable moderation state, ensuring all the expected links and tabs are
+    // present.
+    $this->drupalGet('admin/structure/types');
+    $this->assertLinkByHref('admin/structure/types/manage/not_moderated/moderation');
+    $this->drupalGet('admin/structure/types/manage/not_moderated');
+    $this->assertLinkByHref('admin/structure/types/manage/not_moderated/moderation');
+    $this->drupalGet('admin/structure/types/manage/not_moderated/moderation');
+    $this->assertOptionSelected('edit-workflow', '');
+    $edit['workflow'] = 'editorial';
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // And make sure it works.
     $nodes = \Drupal::entityTypeManager()->getStorage('node')

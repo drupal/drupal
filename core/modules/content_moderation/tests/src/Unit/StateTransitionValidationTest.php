@@ -2,13 +2,14 @@
 
 namespace Drupal\Tests\content_moderation\Unit;
 
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\content_moderation\ModerationStateInterface;
-use Drupal\content_moderation\ModerationStateTransitionInterface;
 use Drupal\content_moderation\StateTransitionValidation;
+use Drupal\workflows\Entity\Workflow;
+use Drupal\workflows\WorkflowTypeInterface;
+use Drupal\workflows\WorkflowTypeManager;
 use Prophecy\Argument;
 
 /**
@@ -16,216 +17,6 @@ use Prophecy\Argument;
  * @group content_moderation
  */
 class StateTransitionValidationTest extends \PHPUnit_Framework_TestCase {
-
-  /**
-   * Builds a mock storage object for Transitions.
-   *
-   * @return EntityStorageInterface
-   *   The mocked storage object for Transitions.
-   */
-  protected function setupTransitionStorage() {
-    $entity_storage = $this->prophesize(EntityStorageInterface::class);
-
-    $list = $this->setupTransitionEntityList();
-    $entity_storage->loadMultiple()->willReturn($list);
-    $entity_storage->loadMultiple(Argument::type('array'))->will(function ($args) use ($list) {
-      $keys = $args[0];
-      if (empty($keys)) {
-        return $list;
-      }
-
-      $return = array_map(function($key) use ($list) {
-        return $list[$key];
-      }, $keys);
-
-      return $return;
-    });
-    return $entity_storage->reveal();
-  }
-
-  /**
-   * Builds an array of mocked Transition objects.
-   *
-   * @return ModerationStateTransitionInterface[]
-   *   An array of mocked Transition objects.
-   */
-  protected function setupTransitionEntityList() {
-    $transition = $this->prophesize(ModerationStateTransitionInterface::class);
-    $transition->id()->willReturn('draft__needs_review');
-    $transition->getFromState()->willReturn('draft');
-    $transition->getToState()->willReturn('needs_review');
-    $list[$transition->reveal()->id()] = $transition->reveal();
-
-    $transition = $this->prophesize(ModerationStateTransitionInterface::class);
-    $transition->id()->willReturn('needs_review__staging');
-    $transition->getFromState()->willReturn('needs_review');
-    $transition->getToState()->willReturn('staging');
-    $list[$transition->reveal()->id()] = $transition->reveal();
-
-    $transition = $this->prophesize(ModerationStateTransitionInterface::class);
-    $transition->id()->willReturn('staging__published');
-    $transition->getFromState()->willReturn('staging');
-    $transition->getToState()->willReturn('published');
-    $list[$transition->reveal()->id()] = $transition->reveal();
-
-    $transition = $this->prophesize(ModerationStateTransitionInterface::class);
-    $transition->id()->willReturn('needs_review__draft');
-    $transition->getFromState()->willReturn('needs_review');
-    $transition->getToState()->willReturn('draft');
-    $list[$transition->reveal()->id()] = $transition->reveal();
-
-    $transition = $this->prophesize(ModerationStateTransitionInterface::class);
-    $transition->id()->willReturn('draft__draft');
-    $transition->getFromState()->willReturn('draft');
-    $transition->getToState()->willReturn('draft');
-    $list[$transition->reveal()->id()] = $transition->reveal();
-
-    $transition = $this->prophesize(ModerationStateTransitionInterface::class);
-    $transition->id()->willReturn('needs_review__needs_review');
-    $transition->getFromState()->willReturn('needs_review');
-    $transition->getToState()->willReturn('needs_review');
-    $list[$transition->reveal()->id()] = $transition->reveal();
-
-    $transition = $this->prophesize(ModerationStateTransitionInterface::class);
-    $transition->id()->willReturn('published__published');
-    $transition->getFromState()->willReturn('published');
-    $transition->getToState()->willReturn('published');
-    $list[$transition->reveal()->id()] = $transition->reveal();
-
-    return $list;
-  }
-
-  /**
-   * Builds a mock storage object for States.
-   *
-   * @return EntityStorageInterface
-   *   The mocked storage object for States.
-   */
-  protected function setupStateStorage() {
-    $entity_storage = $this->prophesize(EntityStorageInterface::class);
-
-    $state = $this->prophesize(ModerationStateInterface::class);
-    $state->id()->willReturn('draft');
-    $state->label()->willReturn('Draft');
-    $state->isPublishedState()->willReturn(FALSE);
-    $state->isDefaultRevisionState()->willReturn(FALSE);
-    $states['draft'] = $state->reveal();
-
-    $state = $this->prophesize(ModerationStateInterface::class);
-    $state->id()->willReturn('needs_review');
-    $state->label()->willReturn('Needs Review');
-    $state->isPublishedState()->willReturn(FALSE);
-    $state->isDefaultRevisionState()->willReturn(FALSE);
-    $states['needs_review'] = $state->reveal();
-
-    $state = $this->prophesize(ModerationStateInterface::class);
-    $state->id()->willReturn('staging');
-    $state->label()->willReturn('Staging');
-    $state->isPublishedState()->willReturn(FALSE);
-    $state->isDefaultRevisionState()->willReturn(FALSE);
-    $states['staging'] = $state->reveal();
-
-    $state = $this->prophesize(ModerationStateInterface::class);
-    $state->id()->willReturn('published');
-    $state->label()->willReturn('Published');
-    $state->isPublishedState()->willReturn(TRUE);
-    $state->isDefaultRevisionState()->willReturn(TRUE);
-    $states['published'] = $state->reveal();
-
-    $state = $this->prophesize(ModerationStateInterface::class);
-    $state->id()->willReturn('archived');
-    $state->label()->willReturn('Archived');
-    $state->isPublishedState()->willReturn(TRUE);
-    $state->isDefaultRevisionState()->willReturn(TRUE);
-    $states['archived'] = $state->reveal();
-
-    $entity_storage->loadMultiple()->willReturn($states);
-
-    foreach ($states as $id => $state) {
-      $entity_storage->load($id)->willReturn($state);
-    }
-
-    return $entity_storage->reveal();
-  }
-
-  /**
-   * Builds a mocked Entity Type Manager.
-   *
-   * @return EntityTypeManagerInterface
-   *   The mocked Entity Type Manager.
-   */
-  protected function setupEntityTypeManager(EntityStorageInterface $storage) {
-    $entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
-    $entityTypeManager->getStorage('moderation_state')->willReturn($storage);
-    $entityTypeManager->getStorage('moderation_state_transition')->willReturn($this->setupTransitionStorage());
-
-    return $entityTypeManager->reveal();
-  }
-
-  /**
-   * Builds a mocked query factory that does nothing.
-   *
-   * @return QueryFactory
-   *   The mocked query factory that does nothing.
-   */
-  protected function setupQueryFactory() {
-    $factory = $this->prophesize(QueryFactory::class);
-
-    return $factory->reveal();
-  }
-
-  /**
-   * @covers ::isTransitionAllowed
-   * @covers ::calculatePossibleTransitions
-   *
-   * @dataProvider providerIsTransitionAllowedWithValidTransition
-   */
-  public function testIsTransitionAllowedWithValidTransition($from_id, $to_id) {
-    $storage = $this->setupStateStorage();
-    $state_transition_validation = new StateTransitionValidation($this->setupEntityTypeManager($storage), $this->setupQueryFactory());
-    $this->assertTrue($state_transition_validation->isTransitionAllowed($storage->load($from_id), $storage->load($to_id)));
-  }
-
-  /**
-   * Data provider for self::testIsTransitionAllowedWithValidTransition().
-   */
-  public function providerIsTransitionAllowedWithValidTransition() {
-    return [
-      ['draft', 'draft'],
-      ['draft', 'needs_review'],
-      ['needs_review', 'needs_review'],
-      ['needs_review', 'staging'],
-      ['staging', 'published'],
-      ['needs_review', 'draft'],
-    ];
-  }
-
-  /**
-   * @covers ::isTransitionAllowed
-   * @covers ::calculatePossibleTransitions
-   *
-   * @dataProvider providerIsTransitionAllowedWithInValidTransition
-   */
-  public function testIsTransitionAllowedWithInValidTransition($from_id, $to_id) {
-    $storage = $this->setupStateStorage();
-    $state_transition_validation = new StateTransitionValidation($this->setupEntityTypeManager($storage), $this->setupQueryFactory());
-    $this->assertFalse($state_transition_validation->isTransitionAllowed($storage->load($from_id), $storage->load($to_id)));
-  }
-
-  /**
-   * Data provider for self::testIsTransitionAllowedWithInValidTransition().
-   */
-  public function providerIsTransitionAllowedWithInValidTransition() {
-    return [
-      ['published', 'needs_review'],
-      ['published', 'staging'],
-      ['staging', 'needs_review'],
-      ['staging', 'staging'],
-      ['needs_review', 'published'],
-      ['published', 'archived'],
-      ['archived', 'published'],
-    ];
-  }
 
   /**
    * Verifies user-aware transition validation.
@@ -239,7 +30,7 @@ class StateTransitionValidationTest extends \PHPUnit_Framework_TestCase {
    * @param bool $allowed
    *   Whether or not to grant a user this permission.
    * @param bool $result
-   *   Whether userMayTransition() is expected to return TRUE or FALSE.
+   *   Whether getValidTransitions() is expected to have the.
    *
    * @dataProvider userTransitionsProvider
    */
@@ -250,10 +41,45 @@ class StateTransitionValidationTest extends \PHPUnit_Framework_TestCase {
     $user->hasPermission($permission)->willReturn($allowed);
     $user->hasPermission(Argument::type('string'))->willReturn(FALSE);
 
-    $storage = $this->setupStateStorage();
-    $validator = new Validator($this->setupEntityTypeManager($storage), $this->setupQueryFactory());
+    $entity = $this->prophesize(ContentEntityInterface::class);
+    $entity = $entity->reveal();
+    $entity->moderation_state = new \stdClass();
+    $entity->moderation_state->value = $from_id;
 
-    $this->assertEquals($result, $validator->userMayTransition($storage->load($from_id), $storage->load($to_id), $user->reveal()));
+    $validator = new StateTransitionValidation($this->setUpModerationInformation($entity));
+    $has_transition = FALSE;
+    foreach ($validator->getValidTransitions($entity, $user->reveal()) as $transition) {
+      if ($transition->to()->id() === $to_id) {
+        $has_transition = TRUE;
+        break;
+      }
+    }
+    $this->assertSame($result, $has_transition);
+  }
+
+  protected function setUpModerationInformation(ContentEntityInterface $entity) {
+    // Create a container so that the plugin manager and workflow type can be
+    // mocked.
+    $container = new ContainerBuilder();
+    $workflow_type = $this->prophesize(WorkflowTypeInterface::class);
+    $workflow_type->decorateState(Argument::any())->willReturnArgument(0);
+    $workflow_type->decorateTransition(Argument::any())->willReturnArgument(0);
+    $workflow_manager = $this->prophesize(WorkflowTypeManager::class);
+    $workflow_manager->createInstance('content_moderation', Argument::any())->willReturn($workflow_type->reveal());
+    $container->set('plugin.manager.workflows.type', $workflow_manager->reveal());
+    \Drupal::setContainer($container);
+
+    $workflow = new Workflow(['id' => 'process', 'type' => 'content_moderation'], 'workflow');
+    $workflow
+      ->addState('draft', 'draft')
+      ->addState('needs_review', 'needs_review')
+      ->addState('published', 'published')
+      ->addTransition('draft', 'draft', ['draft'], 'draft')
+      ->addTransition('review', 'review', ['draft'], 'needs_review')
+      ->addTransition('publish', 'publish', ['needs_review', 'published'], 'published');
+    $moderation_info = $this->prophesize(ModerationInformationInterface::class);
+    $moderation_info->getWorkFlowForEntity($entity)->willReturn($workflow);
+    return $moderation_info->reveal();
   }
 
   /**
@@ -261,37 +87,15 @@ class StateTransitionValidationTest extends \PHPUnit_Framework_TestCase {
    */
   public function userTransitionsProvider() {
     // The user has the right permission, so let it through.
-    $ret[] = ['draft', 'draft', 'use draft__draft transition', TRUE, TRUE];
+    $ret[] = ['draft', 'draft', 'use process transition draft', TRUE, TRUE];
 
     // The user doesn't have the right permission, block it.
-    $ret[] = ['draft', 'draft', 'use draft__draft transition', FALSE, FALSE];
+    $ret[] = ['draft', 'draft', 'use process transition draft', FALSE, FALSE];
 
     // The user has some other permission that doesn't matter.
-    $ret[] = ['draft', 'draft', 'use draft__needs_review transition', TRUE, FALSE];
-
-    // The user has permission, but the transition isn't allowed anyway.
-    $ret[] = ['published', 'needs_review', 'use published__needs_review transition', TRUE, FALSE];
+    $ret[] = ['draft', 'draft', 'use process transition review', TRUE, FALSE];
 
     return $ret;
-  }
-
-}
-
-/**
- * Testable subclass for selected tests.
- *
- * EntityQuery is beyond untestable, so we have to subclass and override the
- * method that uses it.
- */
-class Validator extends StateTransitionValidation {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getTransitionFromStates(ModerationStateInterface $from, ModerationStateInterface $to) {
-    if ($from->id() === 'draft' && $to->id() === 'draft') {
-      return $this->transitionStorage()->loadMultiple(['draft__draft'])[0];
-    }
   }
 
 }
