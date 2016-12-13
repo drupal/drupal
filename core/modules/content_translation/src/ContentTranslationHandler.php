@@ -384,6 +384,16 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         '#multilingual' => TRUE,
       );
 
+      if (isset($form['advanced'])) {
+        $form['content_translation'] += array(
+          '#group' => 'advanced',
+          '#weight' => 100,
+          '#attributes' => array(
+            'class' => array('entity-translation-options'),
+          ),
+        );
+      }
+
       // A new translation is enabled by default.
       $metadata = $this->manager->getTranslationMetadata($entity);
       $status = $new_translation || $metadata->isPublished();

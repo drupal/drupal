@@ -4,37 +4,12 @@ namespace Drupal\block_content;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form handler for the custom block edit forms.
  */
 class BlockContentForm extends ContentEntityForm {
-
-  /**
-   * The custom block storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $blockContentStorage;
-
-  /**
-   * The custom block type storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $blockContentTypeStorage;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
 
   /**
    * The block content entity.
@@ -44,62 +19,12 @@ class BlockContentForm extends ContentEntityForm {
   protected $entity;
 
   /**
-   * Constructs a BlockContentForm object.
-   *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $block_content_storage
-   *   The custom block storage.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $block_content_type_storage
-   *   The custom block type storage.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   */
-  public function __construct(EntityManagerInterface $entity_manager, EntityStorageInterface $block_content_storage, EntityStorageInterface $block_content_type_storage, LanguageManagerInterface $language_manager) {
-    parent::__construct($entity_manager);
-    $this->blockContentStorage = $block_content_storage;
-    $this->blockContentTypeStorage = $block_content_type_storage;
-    $this->languageManager = $language_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    $entity_manager = $container->get('entity.manager');
-    return new static(
-      $entity_manager,
-      $entity_manager->getStorage('block_content'),
-      $entity_manager->getStorage('block_content_type'),
-      $container->get('language_manager')
-    );
-  }
-
-  /**
-   * Overrides \Drupal\Core\Entity\EntityForm::prepareEntity().
-   *
-   * Prepares the custom block object.
-   *
-   * Fills in a few default values, and then invokes
-   * hook_block_content_prepare() on all modules.
-   */
-  protected function prepareEntity() {
-    $block = $this->entity;
-    // Set up default values, if required.
-    $block_type = $this->blockContentTypeStorage->load($block->bundle());
-    if (!$block->isNew()) {
-      $block->setRevisionLogMessage(NULL);
-    }
-    // Always use the default revision setting.
-    $block->setNewRevision($block_type->shouldCreateNewRevision());
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
     $block = $this->entity;
-    $account = $this->currentUser();
+
+    $form = parent::form($form, $form_state);
 
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('Edit custom block %label', array('%label' => $block->label()));
@@ -109,56 +34,7 @@ class BlockContentForm extends ContentEntityForm {
     // names.
     $form['#attributes']['class'][0] = 'block-' . Html::getClass($block->bundle()) . '-form';
 
-    $form['advanced'] = array(
-      '#type' => 'vertical_tabs',
-      '#weight' => 99,
-    );
-
-    // Add a log field if the "Create new revision" option is checked, or if the
-    // current user has the ability to check that option.
-    $form['revision_information'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Revision information'),
-      // Open by default when "Create new revision" is checked.
-      '#open' => $block->isNewRevision(),
-      '#group' => 'advanced',
-      '#attributes' => array(
-        'class' => array('block-content-form-revision-information'),
-      ),
-      '#attached' => array(
-        'library' => array('block_content/drupal.block_content'),
-      ),
-      '#weight' => 20,
-      '#access' => $block->isNewRevision() || $account->hasPermission('administer blocks'),
-    );
-
-    $form['revision_information']['revision'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Create new revision'),
-      '#default_value' => $block->isNewRevision(),
-      '#access' => $account->hasPermission('administer blocks'),
-    );
-
-    // Check the revision log checkbox when the log textarea is filled in.
-    // This must not happen if "Create new revision" is enabled by default,
-    // since the state would auto-disable the checkbox otherwise.
-    if (!$block->isNewRevision()) {
-      $form['revision_information']['revision']['#states'] = array(
-        'checked' => array(
-          'textarea[name="revision_log"]' => array('empty' => FALSE),
-        ),
-      );
-    }
-
-    $form['revision_information']['revision_log'] = array(
-      '#type' => 'textarea',
-      '#title' => $this->t('Revision log message'),
-      '#rows' => 4,
-      '#default_value' => $block->getRevisionLog(),
-      '#description' => $this->t('Briefly describe the changes you have made.'),
-    );
-
-    return parent::form($form, $form_state, $block);
+    return $form;
   }
 
   /**
@@ -167,19 +43,11 @@ class BlockContentForm extends ContentEntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $block = $this->entity;
 
-    // Save as a new revision if requested to do so.
-    if (!$form_state->isValueEmpty('revision')) {
-      $block->setNewRevision();
-      // If a new revision is created, save the current user as revision author.
-      $block->setRevisionCreationTime(REQUEST_TIME);
-      $block->setRevisionUserId(\Drupal::currentUser()->id());
-    }
-
     $insert = $block->isNew();
     $block->save();
     $context = array('@type' => $block->bundle(), '%info' => $block->label());
     $logger = $this->logger('block_content');
-    $block_type = $this->blockContentTypeStorage->load($block->bundle());
+    $block_type = $this->getBundleEntity();
     $t_args = array('@type' => $block_type->label(), '%info' => $block->label());
 
     if ($insert) {

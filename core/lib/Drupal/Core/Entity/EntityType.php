@@ -175,6 +175,13 @@ class EntityType implements EntityTypeInterface {
   protected $translatable = FALSE;
 
   /**
+   * Indicates whether the revision form fields should be added to the form.
+   *
+   * @var bool
+   */
+  protected $show_revision_ui = FALSE;
+
+  /**
    * The human-readable name of the type.
    *
    * @var string
@@ -687,6 +694,13 @@ class EntityType implements EntityTypeInterface {
    */
   public function getBaseTable() {
     return $this->base_table;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function showRevisionUi() {
+    return $this->isRevisionable() && $this->show_revision_ui;
   }
 
   /**

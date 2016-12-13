@@ -3,11 +3,12 @@
 namespace Drupal\block_content;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 
 /**
  * Provides an interface defining a custom block type entity.
  */
-interface BlockContentTypeInterface extends ConfigEntityInterface {
+interface BlockContentTypeInterface extends ConfigEntityInterface, RevisionableEntityBundleInterface {
 
   /**
    * Returns the description of the block type.
@@ -16,13 +17,5 @@ interface BlockContentTypeInterface extends ConfigEntityInterface {
    *   The description of the type of this block.
    */
   public function getDescription();
-
-  /**
-   * Returns whether a new revision should be created by default.
-   *
-   * @return bool
-   *   TRUE if a new revision should be created by default.
-   */
-  public function shouldCreateNewRevision();
 
 }

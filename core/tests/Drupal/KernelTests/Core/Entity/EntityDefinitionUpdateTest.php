@@ -102,6 +102,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $expected = array(
       'entity_test_update' => array(
         t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityManager->getDefinition('entity_test_update')->getLabel()]),
+        // The revision key is now defined, so the revision field needs to be
+        // created.
+        t('The %field_name field needs to be installed.', ['%field_name' => 'Revision ID']),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected); //, 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -797,7 +800,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Check that field schema is correctly handled with long-named fields.
    */
-  function testLongNameFieldIndexes() {
+  public function testLongNameFieldIndexes() {
     $this->addLongNameBaseField();
     $entity_type_id = 'entity_test_update';
     $entity_type = $this->entityManager->getDefinition($entity_type_id);

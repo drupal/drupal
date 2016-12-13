@@ -574,6 +574,14 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function isTranslatable();
 
   /**
+   * Indicates whether the revision form fields should be added to the form.
+   *
+   * @return bool
+   *   TRUE if the form field should be added, FALSE otherwise.
+   */
+  public function showRevisionUi();
+
+  /**
    * Indicates whether entities of this type have revision support.
    *
    * @return bool

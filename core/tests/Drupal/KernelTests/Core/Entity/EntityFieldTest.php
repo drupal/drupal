@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -572,6 +573,12 @@ class EntityFieldTest extends EntityKernelTestBase {
       // Field format.
       NULL,
     );
+
+    if ($entity instanceof RevisionLogInterface) {
+      // Adding empty string for revision message.
+      $target_strings[] = '';
+    }
+
     asort($strings);
     asort($target_strings);
     $this->assertEqual(array_values($strings), array_values($target_strings), format_string('%entity_type: All contained strings found.', array('%entity_type' => $entity_type)));

@@ -27,6 +27,7 @@ namespace Drupal\entity_test\Entity;
  *   revision_data_table = "entity_test_mulrev_property_revision",
  *   admin_permission = "administer entity_test content",
  *   translatable = TRUE,
+ *   show_revision_ui = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",

@@ -89,6 +89,12 @@ class EntityViewsDataTest extends UnitTestCase {
     $typed_data_manager->expects($this->any())
         ->method('createDataDefinition')
         ->willReturn($this->getMock('Drupal\Core\TypedData\DataDefinitionInterface'));
+
+    $typed_data_manager->expects($this->any())
+      ->method('getDefinition')
+      ->with($this->equalTo('field_item:string_long'))
+      ->willReturn(array('class' => '\Drupal\Core\Field\Plugin\Field\FieldType\StringLongItem'));
+
     $this->baseEntityType = new TestEntityType([
       'base_table' => 'entity_test',
       'id' => 'entity_test',
@@ -1101,6 +1107,15 @@ class TestEntityType extends EntityType {
 }
 
 namespace Drupal\entity_test\Entity;
+
+if (!function_exists('t')) {
+  function t($string, array $args = []) {
+    return strtr($string, $args);
+  }
+}
+
+
+namespace Drupal\Core\Entity;
 
 if (!function_exists('t')) {
   function t($string, array $args = []) {

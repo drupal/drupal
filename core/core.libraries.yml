@@ -203,6 +203,13 @@ drupal.dropbutton:
     - core/drupalSettings
     - core/jquery.once
 
+drupal.entity-form:
+  version: VERSION
+  js:
+    misc/entity-form.js: {}
+  dependencies:
+    - core/drupal.form
+
 drupal.form:
   version: VERSION
   js:

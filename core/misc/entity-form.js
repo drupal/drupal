@@ -8,20 +8,20 @@
   'use strict';
 
   /**
-   * Sets summaries about revision and translation of block content.
+   * Sets summaries about revision and translation of entities.
    *
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches summary behaviour block content form tabs.
+   *   Attaches summary behaviour entity form tabs.
    *
    *   Specifically, it updates summaries to the revision information and the
    *   translation options.
    */
-  Drupal.behaviors.blockContentDetailsSummaries = {
+  Drupal.behaviors.entityContentDetailsSummaries = {
     attach: function (context) {
       var $context = $(context);
-      $context.find('.block-content-form-revision-information').drupalSetSummary(function (context) {
+      $context.find('.entity-content-form-revision-information').drupalSetSummary(function (context) {
         var $revisionContext = $(context);
         var revisionCheckbox = $revisionContext.find('.js-form-item-revision input');
 
@@ -36,7 +36,7 @@
         return Drupal.t('No revision');
       });
 
-      $context.find('fieldset.block-content-translation-options').drupalSetSummary(function (context) {
+      $context.find('details.entity-translation-options').drupalSetSummary(function (context) {
         var $translationContext = $(context);
         var translate;
         var $checkbox = $translationContext.find('.js-form-item-translation-translate input');

@@ -49,7 +49,7 @@ class MenuLinkContentForm extends ContentEntityForm {
    *   The path validator.
    */
   public function __construct(EntityManagerInterface $entity_manager, MenuParentFormSelectorInterface $menu_parent_selector, LanguageManagerInterface $language_manager, PathValidatorInterface $path_validator) {
-    parent::__construct($entity_manager, $language_manager);
+    parent::__construct($entity_manager);
     $this->menuParentSelector = $menu_parent_selector;
     $this->pathValidator = $path_validator;
   }
