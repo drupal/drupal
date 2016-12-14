@@ -254,13 +254,13 @@
  * form array, which specifies the form elements for an HTML form; see the
  * @link form_api Form generation topic @endlink for more information on forms.
  *
- * Render arrays (at each level in the hierarchy) will usually have one of the
- * following three properties defined:
+ * Render arrays (at any level of the hierarchy) will usually have one of the
+ * following properties defined:
  * - #type: Specifies that the array contains data and options for a particular
- *   type of "render element" (examples: 'form', for an HTML form; 'textfield',
- *   'submit', and other HTML form element types; 'table', for a table with
- *   rows, columns, and headers). See @ref elements below for more on render
- *   element types.
+ *   type of "render element" (for example, 'form', for an HTML form;
+ *   'textfield', 'submit', for HTML form element types; 'table', for a table
+ *   with rows, columns, and headers). See @ref elements below for more on
+ *   render element types.
  * - #theme: Specifies that the array contains data to be themed by a particular
  *   theme hook. Modules define theme hooks by implementing hook_theme(), which
  *   specifies the input "variables" used to provide data and options; if a
@@ -277,30 +277,29 @@
  *   can customize the markup. Note that the value is passed through
  *   \Drupal\Component\Utility\Xss::filterAdmin(), which strips known XSS
  *   vectors while allowing a permissive list of HTML tags that are not XSS
- *   vectors. (I.e, <script> and <style> are not allowed.) See
- *   \Drupal\Component\Utility\Xss::$adminTags for the list of tags that will
- *   be allowed. If your markup needs any of the tags that are not in this
- *   whitelist, then you can implement a theme hook and template file and/or
- *   an asset library. Aternatively, you can use the render array key
- *   #allowed_tags to alter which tags are filtered.
+ *   vectors. (For example, <script> and <style> are not allowed.) See
+ *   \Drupal\Component\Utility\Xss::$adminTags for the list of allowed tags. If
+ *   your markup needs any of the tags not in this whitelist, then you can
+ *   implement a theme hook and/or an asset library. Alternatively, you can use
+ *   the key #allowed_tags to alter which tags are filtered.
  * - #plain_text: Specifies that the array provides text that needs to be
- *   escaped. This value takes precedence over #markup if present.
- * - #allowed_tags: If #markup is supplied this can be used to change which tags
- *   are using to filter the markup. The value should be an array of tags that
- *   Xss::filter() would accept. If #plain_text is set this value is ignored.
+ *   escaped. This value takes precedence over #markup.
+ * - #allowed_tags: If #markup is supplied, this can be used to change which
+ *   tags are allowed in the markup. The value is an array of tags that
+ *   Xss::filter() would accept. If #plain_text is set, this value is ignored.
  *
  *   Usage example:
  *   @code
- *   $output['admin_filtered_string'] = array(
+ *   $output['admin_filtered_string'] = [
  *     '#markup' => '<em>This is filtered using the admin tag list</em>',
- *   );
- *   $output['filtered_string'] = array(
- *     '#markup' => '<em>This is filtered</em>',
- *     '#allowed_tags' => ['strong'],
- *   );
- *   $output['escaped_string'] = array(
+ *   ];
+ *   $output['filtered_string'] = [
+ *     '#markup' => '<video><source src="v.webm" type="video/webm"></video>',
+ *     '#allowed_tags' => ['video', 'source'],
+ *   ];
+ *   $output['escaped_string'] = [
  *     '#plain_text' => '<em>This is escaped</em>',
- *   );
+ *   ];
  *   @endcode
  *
  *   @see core.libraries.yml
