@@ -676,13 +676,13 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   protected function getFieldSchemaData($field_name, array $field_schema, array $column_mapping, $schema_key) {
     $data = array();
 
+    $entity_type_id = $this->entityType->id();
     foreach ($field_schema[$schema_key] as $key => $columns) {
       // To avoid clashes with entity-level indexes or unique keys we use
       // "{$entity_type_id}_field__" as a prefix instead of just
       // "{$entity_type_id}__". We additionally namespace the specifier by the
       // field name to avoid clashes when multiple fields of the same type are
       // added to an entity type.
-      $entity_type_id = $this->entityType->id();
       $real_key = $this->getFieldSchemaIdentifierName($entity_type_id, $field_name, $key);
       foreach ($columns as $column) {
         // Allow for indexes and unique keys to specified as an array of column
