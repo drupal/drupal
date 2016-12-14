@@ -138,6 +138,12 @@ interface BigPipeInterface {
    *   The HTML response content to send.
    * @param array $attachments
    *   The HTML response's attachments.
+   *
+   * @internal
+   *   This method should only be invoked by
+   *   \Drupal\big_pipe\Render\BigPipeResponse, which is itself an internal
+   *   class. Furthermore, the signature of this method will change in
+   *   https://www.drupal.org/node/2657684.
    */
   public function sendContent($content, array $attachments);
 
