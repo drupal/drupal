@@ -1235,11 +1235,6 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@logger.factory']
-  exception.custom_page_json:
-    class: Drupal\Core\EventSubscriber\ExceptionJsonSubscriber
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@config.factory', '@path.alias_manager', '@http_kernel']
   exception.custom_page_html:
     class: Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber
     tags:
