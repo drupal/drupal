@@ -32,8 +32,6 @@ class MigrateStatisticsConfigsTest extends MigrateDrupal7TestBase {
    */
   public function testStatisticsSettings() {
     $config = $this->config('statistics.settings');
-    $this->assertIdentical(TRUE, $config->get('access_log.enabled'));
-    $this->assertIdentical(3600, $config->get('access_log.max_lifetime'));
     $this->assertIdentical(1, $config->get('count_content_views'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'statistics.settings', $config->get());
   }

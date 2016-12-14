@@ -10,8 +10,6 @@ source:
     - statistics_flush_accesslog_timer
     - statistics_count_content_views
 process:
-  'access_log/enabled': statistics_enable_access_log
-  'access_log/max_lifetime': statistics_flush_accesslog_timer
   'count_content_views': statistics_count_content_views
 destination:
   plugin: config

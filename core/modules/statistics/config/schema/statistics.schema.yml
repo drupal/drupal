@@ -4,16 +4,6 @@ statistics.settings:
   type: config_object
   label: 'Statistics settings'
   mapping:
-    access_log:
-      type: mapping
-      label: 'Access log settings'
-      mapping:
-        enabled:
-          type: boolean
-          label: 'Enable'
-        max_lifetime:
-          type: integer
-          label: 'Maximum lifetime'
     count_content_views:
       type: integer
       label: 'Count content views'
