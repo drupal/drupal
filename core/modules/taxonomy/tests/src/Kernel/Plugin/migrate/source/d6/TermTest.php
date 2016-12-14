@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source;
+namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests taxonomy term source plugin.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\Term
+ * @covers \Drupal\taxonomy\Plugin\migrate\source\d6\Term
  * @group taxonomy
  */
 class TermTest extends MigrateSqlSourceTestBase {

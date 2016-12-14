@@ -22,15 +22,17 @@ class Iterator extends ProcessPluginBase {
    * Runs a process pipeline on each destination property per list item.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $return = array();
-    foreach ($value as $key => $new_value) {
-      $new_row = new Row($new_value, array());
-      $migrate_executable->processRow($new_row, $this->configuration['process']);
-      $destination = $new_row->getDestination();
-      if (array_key_exists('key', $this->configuration)) {
-        $key = $this->transformKey($key, $migrate_executable, $new_row);
+    $return = [];
+    if (!is_null($value)) {
+      foreach ($value as $key => $new_value) {
+        $new_row = new Row($new_value, []);
+        $migrate_executable->processRow($new_row, $this->configuration['process']);
+        $destination = $new_row->getDestination();
+        if (array_key_exists('key', $this->configuration)) {
+          $key = $this->transformKey($key, $migrate_executable, $new_row);
+        }
+        $return[$key] = $destination;
       }
-      $return[$key] = $destination;
     }
     return $return;
   }
