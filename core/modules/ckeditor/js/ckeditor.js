@@ -273,6 +273,20 @@
     }
   });
 
+  // Redirect on hash change when the original hash has an associated CKEditor.
+  function redirectTextareaFragmentToCKEditorInstance() {
+    var hash = location.hash.substr(1);
+    var element = document.getElementById(hash);
+    if (element) {
+      var editor = CKEDITOR.dom.element.get(element).getEditor();
+      if (editor) {
+        var id = editor.container.getAttribute('id');
+        location.replace('#' + id);
+      }
+    }
+  }
+  $(window).on('hashchange.ckeditor', redirectTextareaFragmentToCKEditorInstance);
+
   // Set the CKEditor cache-busting string to the same value as Drupal.
   CKEDITOR.timestamp = drupalSettings.ckeditor.timestamp;
 
