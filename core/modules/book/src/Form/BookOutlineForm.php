@@ -3,8 +3,10 @@
 namespace Drupal\book\Form;
 
 use Drupal\book\BookManagerInterface;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,9 +37,13 @@ class BookOutlineForm extends ContentEntityForm {
    *   The entity manager.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The BookManager service.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, BookManagerInterface $book_manager) {
-    parent::__construct($entity_manager);
+  public function __construct(EntityManagerInterface $entity_manager, BookManagerInterface $book_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+    parent::__construct($entity_manager, $entity_type_bundle_info, $time);
     $this->bookManager = $book_manager;
   }
 
@@ -47,7 +53,9 @@ class BookOutlineForm extends ContentEntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('book.manager')
+      $container->get('book.manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('datetime.time')
     );
   }
 
