@@ -298,6 +298,20 @@
     CKEDITOR.config.autoGrow_maxHeight = 0.7 * (window.innerHeight - displace.offsets.top - displace.offsets.bottom);
   });
 
+  // Redirect on hash change when the original hash has an associated CKEditor.
+  function redirectTextareaFragmentToCKEditorInstance() {
+    var hash = location.hash.substr(1);
+    var element = document.getElementById(hash);
+    if (element) {
+      var editor = CKEDITOR.dom.element.get(element).getEditor();
+      if (editor) {
+        var id = editor.container.getAttribute('id');
+        location.replace('#' + id);
+      }
+    }
+  }
+  $(window).on('hashchange.ckeditor', redirectTextareaFragmentToCKEditorInstance);
+
   // Set autoGrow to make the editor grow the moment it is created.
   CKEDITOR.config.autoGrow_onStartup = true;
 
