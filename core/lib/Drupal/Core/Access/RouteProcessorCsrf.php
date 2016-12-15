@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Access;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
 use Symfony\Component\Routing\Route;
@@ -45,7 +46,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface {
       }
       else {
         // Generate a placeholder and a render array to replace it.
-        $placeholder = hash('sha1', $path);
+        $placeholder = Crypt::hashBase64($path);
         $placeholder_render_array = [
           '#lazy_builder' => ['route_processor_csrf:renderPlaceholderCsrfToken', [$path]],
         ];

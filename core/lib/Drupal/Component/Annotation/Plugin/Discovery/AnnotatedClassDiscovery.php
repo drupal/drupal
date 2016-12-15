@@ -10,6 +10,7 @@ use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Reflection\StaticReflectionParser;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Defines a discovery mechanism to find annotated plugins in PSR-0 namespaces.
@@ -74,7 +75,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
     $this->annotationNamespaces = $annotation_namespaces;
 
     $file_cache_suffix = str_replace('\\', '_', $plugin_definition_annotation_name);
-    $file_cache_suffix .= ':' . hash('crc32b', serialize($annotation_namespaces));
+    $file_cache_suffix .= ':' . Crypt::hashBase64(serialize($annotation_namespaces));
     $this->fileCache = FileCacheFactory::get('annotation_discovery:' . $file_cache_suffix);
   }
 

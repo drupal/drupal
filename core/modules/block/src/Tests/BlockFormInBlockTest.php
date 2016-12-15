@@ -2,7 +2,9 @@
 
 namespace Drupal\block\Tests;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\simpletest\WebTestBase;
+
 
 /**
  * Tests form in block caching.
@@ -64,7 +66,7 @@ class BlockFormInBlockTest extends WebTestBase {
   public function testPlaceholders() {
     $this->drupalGet('test-multiple-forms');
 
-    $placeholder = 'form_action_' . hash('crc32b', 'Drupal\Core\Form\FormBuilder::prepareForm');
+    $placeholder = 'form_action_' . Crypt::hashBase64('Drupal\Core\Form\FormBuilder::prepareForm');
     $this->assertText('Form action: ' . $placeholder, 'placeholder found.');
   }
 

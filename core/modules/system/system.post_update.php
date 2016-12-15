@@ -60,8 +60,8 @@ function system_post_update_add_region_to_entity_displays() {
 
 
 /**
- * Force Twig PHP file cache to be cleared.
+ * Force caches using hashes to be cleared (Twig, render cache, etc.).
  */
-function system_post_update_clear_twig_cache() {
+function system_post_update_hashes_clear_cache() {
   // Empty post-update hook.
 }

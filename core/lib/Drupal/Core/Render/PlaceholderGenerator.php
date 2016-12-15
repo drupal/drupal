@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
@@ -84,7 +85,7 @@ class PlaceholderGenerator implements PlaceholderGeneratorInterface {
     // debugging.
     $callback = $placeholder_render_array['#lazy_builder'][0];
     $arguments = UrlHelper::buildQuery($placeholder_render_array['#lazy_builder'][1]);
-    $token = hash('crc32b', serialize($placeholder_render_array));
+    $token = Crypt::hashBase64(serialize($placeholder_render_array));
     $placeholder_markup = '<drupal-render-placeholder callback="' . Html::escape($callback) . '" arguments="' . Html::escape($arguments) . '" token="' . Html::escape($token) . '"></drupal-render-placeholder>';
 
     // Build the placeholder element to return.

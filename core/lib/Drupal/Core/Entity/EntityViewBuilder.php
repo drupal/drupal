@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -462,7 +463,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       // series of fields individually for cases such as views tables.
       $entity_type_id = $entity->getEntityTypeId();
       $bundle = $entity->bundle();
-      $key = $entity_type_id . ':' . $bundle . ':' . $field_name . ':' . hash('crc32b', serialize($display_options));
+      $key = $entity_type_id . ':' . $bundle . ':' . $field_name . ':' . Crypt::hashBase64(serialize($display_options));
       if (!isset($this->singleFieldDisplays[$key])) {
         $this->singleFieldDisplays[$key] = EntityViewDisplay::create(array(
           'targetEntityType' => $entity_type_id,

@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Markup;
@@ -71,7 +72,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
       if (is_array($cache_keys)) {
         $token_render_array['#cache']['keys'] = $cache_keys;
       }
-      $token = hash('crc32b', serialize($token_render_array));
+      $token = Crypt::hashBase64(serialize($token_render_array));
       // \Drupal\Core\Render\Markup::create() is necessary as the render
       // system would mangle this markup. As this is exactly what happens at
       // runtime this is a valid use-case.
@@ -618,7 +619,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     $this->setUpRequest('GET');
 
-    $token = hash('crc32b', serialize($expected_placeholder_render_array));
+    $token = Crypt::hashBase64(serialize($expected_placeholder_render_array));
     $placeholder_callback = $expected_placeholder_render_array['#lazy_builder'][0];
     $expected_placeholder_markup = '<drupal-render-placeholder callback="' . $placeholder_callback . '" arguments="0=' . $args[0] . '" token="' . $token . '"></drupal-render-placeholder>';
     $this->assertSame($expected_placeholder_markup, Html::normalize($expected_placeholder_markup), 'Placeholder unaltered by Html::normalize() which is used by FilterHtmlCorrector.');

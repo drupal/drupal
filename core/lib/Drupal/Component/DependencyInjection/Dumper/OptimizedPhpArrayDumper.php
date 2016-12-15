@@ -2,6 +2,7 @@
 
 namespace Drupal\Component\DependencyInjection\Dumper;
 
+use Drupal\Component\Utility\Crypt;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Parameter;
@@ -373,7 +374,7 @@ class OptimizedPhpArrayDumper extends Dumper {
   protected function getPrivateServiceCall($id, Definition $definition, $shared = FALSE) {
     $service_definition = $this->getServiceDefinition($definition);
     if (!$id) {
-      $hash = hash('sha1', serialize($service_definition));
+      $hash = Crypt::hashBase64(serialize($service_definition));
       $id = 'private__' . $hash;
     }
     return (object) array(

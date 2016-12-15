@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Component\DependencyInjection;
 
+use Drupal\Component\Utility\Crypt;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Prophecy\Argument;
@@ -1000,7 +1001,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase {
    */
   protected function getPrivateServiceCall($id, $service_definition, $shared = FALSE) {
     if (!$id) {
-      $hash = sha1(serialize($service_definition));
+      $hash = Crypt::hashBase64(serialize($service_definition));
       $id = 'private__' . $hash;
     }
     return (object) array(

@@ -2,6 +2,7 @@
 
 namespace Drupal\big_pipe\Render\Placeholder;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\Placeholder\PlaceholderStrategyInterface;
@@ -260,7 +261,7 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
     if (isset($placeholder_render_array['#lazy_builder'])) {
       $callback = $placeholder_render_array['#lazy_builder'][0];
       $arguments = $placeholder_render_array['#lazy_builder'][1];
-      $token = hash('crc32b', serialize($placeholder_render_array));
+      $token = Crypt::hashBase64(serialize($placeholder_render_array));
       return UrlHelper::buildQuery(['callback' => $callback, 'args' => $arguments, 'token' => $token]);
     }
     // When the placeholder's render array is not using a #lazy_builder,

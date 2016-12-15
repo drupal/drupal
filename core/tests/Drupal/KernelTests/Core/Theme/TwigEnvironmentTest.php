@@ -83,11 +83,11 @@ class TwigEnvironmentTest extends KernelTestBase {
     $this->assertEqual($renderer->renderRoot($element_copy), $expected);
 
     $name = '{# inline_template_start #}' . $element['test']['#template'];
-    $hash = $this->container->getParameter('twig_extension_hash');
+    $prefix = $environment->getTwigCachePrefix();
 
     $cache = $environment->getCache();
     $class = $environment->getTemplateClass($name);
-    $expected = $hash . '_inline-template' . '_' . hash('sha256', $class);
+    $expected = $prefix . '_inline-template' . '_' . hash('sha256', $class);
     $this->assertEqual($expected, $cache->generateKey($name, $class));
   }
 

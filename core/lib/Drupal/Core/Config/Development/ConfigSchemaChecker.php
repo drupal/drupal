@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Config\Development;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
@@ -79,7 +80,7 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
 
     $name = $saved_config->getName();
     $data = $saved_config->get();
-    $checksum = hash('crc32b', serialize($data));
+    $checksum = Crypt::hashBase64(serialize($data));
     if (!in_array($name, $this->exclude) && !isset($this->checked[$name . ':' . $checksum])) {
       $this->checked[$name . ':' . $checksum] = TRUE;
       $errors = $this->checkConfigSchema($this->typedManager, $name, $data);

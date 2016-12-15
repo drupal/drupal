@@ -158,9 +158,9 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
     // Root data type and settings.
     $parts[] = $root_definition->getDataType();
     if ($settings = $root_definition->getSettings()) {
-      // Hash the settings into a string. crc32 is the fastest way to hash
-      // something for non-cryptographic purposes.
-      $parts[] = hash('crc32b', serialize($settings));
+      // Include the settings serialized as JSON as part of the key. The JSON is
+      // a shorter string than the serialized form, so array access is faster.
+      $parts[] = json_encode($settings);
     }
     // Property path for the requested data object. When creating a list item,
     // use 0 in the key as all items look the same.

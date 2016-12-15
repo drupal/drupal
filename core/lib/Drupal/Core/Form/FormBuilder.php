@@ -683,8 +683,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // will be replaced at the very last moment. This ensures forms with
       // dynamically generated action URLs don't have poor cacheability.
       // Use the proper API to generate the placeholder, when we have one. See
-      // https://www.drupal.org/node/2562341.
-      $placeholder = 'form_action_' . hash('crc32b', __METHOD__);
+      // https://www.drupal.org/node/2562341. The placholder uses a fixed string
+      // that is Crypt::hashBase64('Drupal\Core\Form\FormBuilder::prepareForm');
+      $placeholder = 'form_action_p_pvdeGsVG5zNF_XLGPTvYSKCf43t8qZYSwcfZl2uzM';
 
       $form['#attached']['placeholders'][$placeholder] = [
         '#lazy_builder' => ['form_builder:renderPlaceholderFormAction', []],
@@ -744,7 +745,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       if ($user && $user->isAuthenticated()) {
         // Generate a public token based on the form id.
         // Generates a placeholder based on the form ID.
-        $placeholder = 'form_token_placeholder_' . hash('crc32b', $form_id);
+        $placeholder = 'form_token_placeholder_' . Crypt::hashBase64($form_id);
         $form['#token'] = $placeholder;
 
         $form['form_token'] = array(
