@@ -556,8 +556,7 @@ class Drupal {
    * Renders a link with a given link text and Url object.
    *
    * This method is a convenience wrapper for the link generator service's
-   * generate() method. For detailed documentation, see
-   * \Drupal\Core\Routing\LinkGeneratorInterface::generate().
+   * generate() method.
    *
    * @param string $text
    *   The link text for the anchor tag.
