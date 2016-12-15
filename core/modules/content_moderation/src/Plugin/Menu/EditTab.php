@@ -2,6 +2,8 @@
 
 namespace Drupal\content_moderation\Plugin\Menu;
 
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Menu\LocalTaskDefault;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -25,9 +27,9 @@ class EditTab extends LocalTaskDefault implements ContainerFactoryPluginInterfac
   protected $moderationInfo;
 
   /**
-   * The entity.
+   * The entity if determinable from the route or FALSE.
    *
-   * @var \Drupal\Core\Entity\ContentEntityInterface
+   * @var \Drupal\Core\Entity\ContentEntityInterface|FALSE
    */
   protected $entity;
 
@@ -69,8 +71,8 @@ class EditTab extends LocalTaskDefault implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function getRouteParameters(RouteMatchInterface $route_match) {
-    // Override the node here with the latest revision.
-    $this->entity = $route_match->getParameter($this->pluginDefinition['entity_type_id']);
+    $entity_parameter = $route_match->getParameter($this->pluginDefinition['entity_type_id']);
+    $this->entity = $entity_parameter instanceof ContentEntityInterface ? $route_match->getParameter($this->pluginDefinition['entity_type_id']) : FALSE;
     return parent::getRouteParameters($route_match);
   }
 
@@ -78,8 +80,8 @@ class EditTab extends LocalTaskDefault implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function getTitle() {
-    if (!$this->moderationInfo->isModeratedEntity($this->entity)) {
-      // Moderation isn't enabled.
+    // If the entity couldn't be loaded or moderation isn't enabled.
+    if (!$this->entity || !$this->moderationInfo->isModeratedEntity($this->entity)) {
       return parent::getTitle();
     }
 
@@ -96,8 +98,10 @@ class EditTab extends LocalTaskDefault implements ContainerFactoryPluginInterfac
     // @todo https://www.drupal.org/node/2779933 write a test for this.
     $tags = parent::getCacheTags();
     // Tab changes if node or node-type is modified.
-    $tags = array_merge($tags, $this->entity->getCacheTags());
-    $tags[] = $this->entity->getEntityType()->getBundleEntityType() . ':' . $this->entity->bundle();
+    if ($this->entity) {
+      $tags = array_merge($tags, $this->entity->getCacheTags());
+      $tags[] = $this->entity->getEntityType()->getBundleEntityType() . ':' . $this->entity->bundle();
+    }
     return $tags;
   }
 

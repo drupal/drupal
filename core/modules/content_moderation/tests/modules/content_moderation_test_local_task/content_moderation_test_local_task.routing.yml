@@ -1,0 +1,7 @@
+entity.node.test_local_task_without_upcast_node:
+  path: '/node/{node}/task-without-upcast-node'
+  defaults:
+    _title: 'Page Without Upcast Node'
+    _controller: '\Drupal\content_moderation_test_local_task\Controller\TestLocalTaskController::methodWithoutUpcastNode'
+  requirements:
+    _access: 'TRUE'
