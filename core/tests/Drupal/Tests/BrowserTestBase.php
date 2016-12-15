@@ -7,25 +7,20 @@ use Behat\Mink\Element\Element;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
-use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
-use Drupal\Core\DrupalKernel;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
-use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestRunnerKernel;
+use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
-use Drupal\Core\Test\TestDatabase;
 use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\simpletest\AssertHelperTrait;
 use Drupal\simpletest\ContentTypeCreationTrait;
@@ -47,6 +42,9 @@ use Psr\Http\Message\ResponseInterface;
  * @ingroup testing
  */
 abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
+
+  use FunctionalTestSetupTrait;
+  use TestSetupTrait;
   use AssertHelperTrait;
   use BlockCreationTrait {
     placeBlock as drupalPlaceBlock;
@@ -67,20 +65,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     createUser as drupalCreateUser;
   }
   use XdebugRequestTrait;
-
-  /**
-   * Class loader.
-   *
-   * @var object
-   */
-  protected $classLoader;
-
-  /**
-   * The site directory of this test run.
-   *
-   * @var string
-   */
-  protected $siteDirectory;
 
   /**
    * The database prefix of this test run.
@@ -104,33 +88,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   protected $timeLimit = 500;
 
   /**
-   * The public file directory for the test environment.
-   *
-   * This is set in BrowserTestBase::prepareEnvironment().
-   *
-   * @var string
-   */
-  protected $publicFilesDirectory;
-
-  /**
-   * The private file directory for the test environment.
-   *
-   * This is set in BrowserTestBase::prepareEnvironment().
-   *
-   * @var string
-   */
-  protected $privateFilesDirectory;
-
-  /**
-   * The temp file directory for the test environment.
-   *
-   * This is set in BrowserTestBase::prepareEnvironment().
-   *
-   * @var string
-   */
-  protected $tempFilesDirectory;
-
-  /**
    * The translation file directory for the test environment.
    *
    * This is set in BrowserTestBase::prepareEnvironment().
@@ -140,34 +97,11 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   protected $translationFilesDirectory;
 
   /**
-   * The DrupalKernel instance used in the test.
-   *
-   * @var \Drupal\Core\DrupalKernel
-   */
-  protected $kernel;
-
-  /**
-   * The dependency injection container used in the test.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
-
-  /**
    * The config importer that can be used in a test.
    *
    * @var \Drupal\Core\Config\ConfigImporter
    */
   protected $configImporter;
-
-  /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = TRUE;
 
   /**
    * Modules to enable.
@@ -183,22 +117,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   protected static $modules = [];
 
   /**
-   * An array of config object names that are excluded from schema checking.
-   *
-   * @var string[]
-   */
-  protected static $configSchemaCheckerExclusions = array(
-    // Following are used to test lack of or partial schema. Where partial
-    // schema is provided, that is explicitly tested in specific tests.
-    'config_schema_test.noschema',
-    'config_schema_test.someschema',
-    'config_schema_test.schema_data_types',
-    'config_schema_test.no_schema_data_types',
-    // Used to test application of schema to filtering of configuration.
-    'config_test.dynamic.system',
-  );
-
-  /**
    * The profile to install as a basis for testing.
    *
    * @var string
@@ -211,20 +129,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * @var \Drupal\user\UserInterface
    */
   protected $loggedInUser = FALSE;
-
-  /**
-   * The root user.
-   *
-   * @var \Drupal\Core\Session\UserSession
-   */
-  protected $rootUser;
-
-  /**
-   * The config directories used in this test.
-   *
-   * @var array
-   */
-  protected $configDirectories = array();
 
   /**
    * An array of custom translations suitable for drupal_rewrite_settings().
@@ -1037,161 +941,14 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * Installs Drupal into the Simpletest site.
    */
   public function installDrupal() {
-    // Define information about the user 1 account.
-    $this->rootUser = new UserSession(array(
-      'uid' => 1,
-      'name' => 'admin',
-      'mail' => 'admin@example.com',
-      'passRaw' => $this->randomMachineName(),
-    ));
-
-    // The child site derives its session name from the database prefix when
-    // running web tests.
-    $this->generateSessionName($this->databasePrefix);
-
-    // Get parameters for install_drupal() before removing global variables.
-    $parameters = $this->installParameters();
-
-    // Prepare installer settings that are not install_drupal() parameters.
-    // Copy and prepare an actual settings.php, so as to resemble a regular
-    // installation.
-    // Not using File API; a potential error must trigger a PHP warning.
-    $directory = DRUPAL_ROOT . '/' . $this->siteDirectory;
-    copy(DRUPAL_ROOT . '/sites/default/default.settings.php', $directory . '/settings.php');
-
-    // All file system paths are created by System module during installation.
-    // @see system_requirements()
-    // @see TestBase::prepareEnvironment()
-    $settings['settings']['file_public_path'] = (object) array(
-      'value' => $this->publicFilesDirectory,
-      'required' => TRUE,
-    );
-    $settings['settings']['file_private_path'] = (object) [
-      'value' => $this->privateFilesDirectory,
-      'required' => TRUE,
-    ];
-    $this->writeSettings($settings);
-    // Allow for test-specific overrides.
-    $settings_testing_file = DRUPAL_ROOT . '/' . $this->originalSiteDirectory . '/settings.testing.php';
-    if (file_exists($settings_testing_file)) {
-      // Copy the testing-specific settings.php overrides in place.
-      copy($settings_testing_file, $directory . '/settings.testing.php');
-      // Add the name of the testing class to settings.php and include the
-      // testing specific overrides.
-      file_put_contents($directory . '/settings.php', "\n\$test_class = '" . get_class($this) . "';\n" . 'include DRUPAL_ROOT . \'/\' . $site_path . \'/settings.testing.php\';' . "\n", FILE_APPEND);
-    }
-
-    $settings_services_file = DRUPAL_ROOT . '/' . $this->originalSiteDirectory . '/testing.services.yml';
-    if (!file_exists($settings_services_file)) {
-      // Otherwise, use the default services as a starting point for overrides.
-      $settings_services_file = DRUPAL_ROOT . '/sites/default/default.services.yml';
-    }
-    // Copy the testing-specific service overrides in place.
-    copy($settings_services_file, $directory . '/services.yml');
-    if ($this->strictConfigSchema) {
-      // Add a listener to validate configuration schema on save.
-      $content = file_get_contents($directory . '/services.yml');
-      $services = Yaml::decode($content);
-      $services['services']['simpletest.config_schema_checker'] = [
-        'class' => ConfigSchemaChecker::class,
-        'arguments' => ['@config.typed', $this->getConfigSchemaExclusions()],
-        'tags' => [['name' => 'event_subscriber']]
-      ];
-      file_put_contents($directory . '/services.yml', Yaml::encode($services));
-    }
-
-    // Since Drupal is bootstrapped already, install_begin_request() will not
-    // bootstrap into DRUPAL_BOOTSTRAP_CONFIGURATION (again). Hence, we have to
-    // reload the newly written custom settings.php manually.
-    Settings::initialize(DRUPAL_ROOT, $directory, $this->classLoader);
-
-    // Execute the non-interactive installer.
-    require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
-    install_drupal($parameters);
-
-    // Import new settings.php written by the installer.
-    Settings::initialize(DRUPAL_ROOT, $directory, $this->classLoader);
-    foreach ($GLOBALS['config_directories'] as $type => $path) {
-      $this->configDirectories[$type] = $path;
-    }
-
-    // After writing settings.php, the installer removes write permissions from
-    // the site directory. To allow drupal_generate_test_ua() to write a file
-    // containing the private key for drupal_valid_test_ua(), the site directory
-    // has to be writable.
-    // TestBase::restoreEnvironment() will delete the entire site directory. Not
-    // using File API; a potential error must trigger a PHP warning.
-    chmod($directory, 0777);
-
-    // During tests, cacheable responses should get the debugging cacheability
-    // headers by default.
-    $this->setContainerParameter('http.response.debug_cacheability_headers', TRUE);
-
-    $request = \Drupal::request();
-    $this->kernel = DrupalKernel::createFromRequest($request, $this->classLoader, 'prod', TRUE);
-    $this->kernel->prepareLegacyRequest($request);
-    // Force the container to be built from scratch instead of loaded from the
-    // disk. This forces us to not accidentally load the parent site.
-    $container = $this->kernel->rebuildContainer();
-
-    $config = $container->get('config.factory');
-
-    // Manually create and configure private and temporary files directories.
-    file_prepare_directory($this->privateFilesDirectory, FILE_CREATE_DIRECTORY);
-    file_prepare_directory($this->tempFilesDirectory, FILE_CREATE_DIRECTORY);
-    // While the temporary files path could be preset/enforced in settings.php
-    // like the public files directory above, some tests expect it to be
-    // configurable in the UI. If declared in settings.php, it would no longer
-    // be configurable.
-    $config->getEditable('system.file')
-      ->set('path.temporary', $this->tempFilesDirectory)
-      ->save();
-
-    // Manually configure the test mail collector implementation to prevent
-    // tests from sending out emails and collect them in state instead.
-    // While this should be enforced via settings.php prior to installation,
-    // some tests expect to be able to test mail system implementations.
-    $config->getEditable('system.mail')
-      ->set('interface.default', 'test_mail_collector')
-      ->save();
-
-    // By default, verbosely display all errors and disable all production
-    // environment optimizations for all tests to avoid needless overhead and
-    // ensure a sane default experience for test authors.
-    // @see https://www.drupal.org/node/2259167
-    $config->getEditable('system.logging')
-      ->set('error_level', 'verbose')
-      ->save();
-    $config->getEditable('system.performance')
-      ->set('css.preprocess', FALSE)
-      ->set('js.preprocess', FALSE)
-      ->save();
-
-    // Collect modules to install.
-    $class = get_class($this);
-    $modules = array();
-    while ($class) {
-      if (property_exists($class, 'modules')) {
-        $modules = array_merge($modules, $class::$modules);
-      }
-      $class = get_parent_class($class);
-    }
-    if ($modules) {
-      $modules = array_unique($modules);
-      $success = $container->get('module_installer')->install($modules, TRUE);
-      $this->assertTrue($success, SafeMarkup::format('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
-      $this->rebuildContainer();
-    }
-
-    // Reset/rebuild all data structures after enabling the modules, primarily
-    // to synchronize all data structures and caches between the test runner and
-    // the child site.
-    // Affects e.g. StreamWrapperManagerInterface::getWrappers().
-    // @see \Drupal\Core\DrupalKernel::bootCode()
-    // @todo Test-specific setUp() methods may set up further fixtures; find a
-    //   way to execute this after setUp() is done, or to eliminate it entirely.
-    $this->resetAll();
-    $this->kernel->prepareLegacyRequest($request);
+    $this->initUserSession();
+    $this->prepareSettings();
+    $this->doInstall();
+    $this->initSettings();
+    $container = $this->initKernel(\Drupal::request());
+    $this->initConfig($container);
+    $this->installModulesFromClassProperty($container);
+    $this->rebuildAll();
   }
 
   /**
@@ -1226,8 +983,8 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
             'name' => $this->rootUser->name,
             'mail' => $this->rootUser->getEmail(),
             'pass' => array(
-              'pass1' => $this->rootUser->passRaw,
-              'pass2' => $this->rootUser->passRaw,
+              'pass1' => $this->rootUser->pass_raw,
+              'pass2' => $this->rootUser->pass_raw,
             ),
           ),
           // form_type_checkboxes_value() requires NULL instead of FALSE values
@@ -1240,65 +997,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       ),
     );
     return $parameters;
-  }
-
-  /**
-   * Generates a database prefix for running tests.
-   *
-   * The database prefix is used by prepareEnvironment() to setup a public files
-   * directory for the test to be run, which also contains the PHP error log,
-   * which is written to in case of a fatal error. Since that directory is based
-   * on the database prefix, all tests (even unit tests) need to have one, in
-   * order to access and read the error log.
-   *
-   * The generated database table prefix is used for the Drupal installation
-   * being performed for the test. It is also used by the cookie value of
-   * SIMPLETEST_USER_AGENT by the Mink controlled browser. During early Drupal
-   * bootstrap, the cookie is parsed, and if it matches, all database queries
-   * use the database table prefix that has been generated here.
-   *
-   * @see drupal_valid_test_ua()
-   * @see BrowserTestBase::prepareEnvironment()
-   */
-  private function prepareDatabasePrefix() {
-    $test_db = new TestDatabase();
-    $this->siteDirectory = $test_db->getTestSitePath();
-    $this->databasePrefix = $test_db->getDatabasePrefix();
-  }
-
-  /**
-   * Changes the database connection to the prefixed one.
-   *
-   * @see BrowserTestBase::prepareEnvironment()
-   */
-  private function changeDatabasePrefix() {
-    if (empty($this->databasePrefix)) {
-      $this->prepareDatabasePrefix();
-    }
-
-    // If the test is run with argument dburl then use it.
-    $db_url = getenv('SIMPLETEST_DB');
-    if (!empty($db_url)) {
-      $database = Database::convertDbUrlToConnectionInfo($db_url, DRUPAL_ROOT);
-      Database::addConnectionInfo('default', 'default', $database);
-    }
-
-    // Clone the current connection and replace the current prefix.
-    $connection_info = Database::getConnectionInfo('default');
-    if (is_null($connection_info)) {
-      throw new \InvalidArgumentException('There is no database connection so no tests can be run. You must provide a SIMPLETEST_DB environment variable to run PHPUnit based functional tests outside of run-tests.sh.');
-    }
-    else {
-      Database::renameConnection('default', 'simpletest_original_default');
-      foreach ($connection_info as $target => $value) {
-        // Replace the full table prefix definition to ensure that no table
-        // prefixes of the test runner leak into the test.
-        $connection_info[$target]['prefix'] = array(
-          'default' => $value['prefix']['default'] . $this->databasePrefix,
-        );
-      }
-      Database::addConnectionInfo('default', 'default', $connection_info['default']);
-    }
   }
 
   /**
@@ -1381,163 +1079,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     $callbacks = &drupal_register_shutdown_function();
     $this->originalShutdownCallbacks = $callbacks;
     $callbacks = [];
-  }
-
-  /**
-   * Returns the database connection to the site running Simpletest.
-   *
-   * @return \Drupal\Core\Database\Connection
-   *   The database connection to use for inserting assertions.
-   */
-  public static function getDatabaseConnection() {
-    return TestDatabase::getConnection();
-  }
-
-  /**
-   * Rewrites the settings.php file of the test site.
-   *
-   * @param array $settings
-   *   An array of settings to write out, in the format expected by
-   *   drupal_rewrite_settings().
-   *
-   * @see drupal_rewrite_settings()
-   */
-  protected function writeSettings(array $settings) {
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    $filename = $this->siteDirectory . '/settings.php';
-
-    // system_requirements() removes write permissions from settings.php
-    // whenever it is invoked.
-    // Not using File API; a potential error must trigger a PHP warning.
-    chmod($filename, 0666);
-    drupal_rewrite_settings($settings, $filename);
-  }
-
-  /**
-   * Rebuilds \Drupal::getContainer().
-   *
-   * Use this to build a new kernel and service container. For example, when the
-   * list of enabled modules is changed via the Mink controlled browser, in
-   * which case the test process still contains an old kernel and service
-   * container with an old module list.
-   *
-   * @see BrowserTestBase::prepareEnvironment()
-   * @see BrowserTestBase::restoreEnvironment()
-   *
-   * @todo Fix https://www.drupal.org/node/2021959 so that module enable/disable
-   *   changes are immediately reflected in \Drupal::getContainer(). Until then,
-   *   tests can invoke this workaround when requiring services from newly
-   *   enabled modules to be immediately available in the same request.
-   */
-  protected function rebuildContainer() {
-    // Rebuild the kernel and bring it back to a fully bootstrapped state.
-    $this->container = $this->kernel->rebuildContainer();
-
-    // Make sure the url generator has a request object, otherwise calls to
-    // $this->drupalGet() will fail.
-    $this->prepareRequestForGenerator();
-  }
-
-  /**
-   * Creates a mock request and sets it on the generator.
-   *
-   * This is used to manipulate how the generator generates paths during tests.
-   * It also ensures that calls to $this->drupalGet() will work when running
-   * from run-tests.sh because the url generator no longer looks at the global
-   * variables that are set there but relies on getting this information from a
-   * request object.
-   *
-   * @param bool $clean_urls
-   *   Whether to mock the request using clean urls.
-   * @param array $override_server_vars
-   *   An array of server variables to override.
-   *
-   * @return Request
-   *   The mocked request object.
-   */
-  protected function prepareRequestForGenerator($clean_urls = TRUE, $override_server_vars = array()) {
-    $request = Request::createFromGlobals();
-    $server = $request->server->all();
-    if (basename($server['SCRIPT_FILENAME']) != basename($server['SCRIPT_NAME'])) {
-      // We need this for when the test is executed by run-tests.sh.
-      // @todo Remove this once run-tests.sh has been converted to use a Request
-      //   object.
-      $cwd = getcwd();
-      $server['SCRIPT_FILENAME'] = $cwd . '/' . basename($server['SCRIPT_NAME']);
-      $base_path = rtrim($server['REQUEST_URI'], '/');
-    }
-    else {
-      $base_path = $request->getBasePath();
-    }
-    if ($clean_urls) {
-      $request_path = $base_path ? $base_path . '/user' : 'user';
-    }
-    else {
-      $request_path = $base_path ? $base_path . '/index.php/user' : '/index.php/user';
-    }
-    $server = array_merge($server, $override_server_vars);
-
-    $request = Request::create($request_path, 'GET', array(), array(), array(), $server);
-    // Ensure the request time is REQUEST_TIME to ensure that API calls
-    // in the test use the right timestamp.
-    $request->server->set('REQUEST_TIME', REQUEST_TIME);
-    $this->container->get('request_stack')->push($request);
-
-    // The request context is normally set by the router_listener from within
-    // its KernelEvents::REQUEST listener. In the Simpletest parent site this
-    // event is not fired, therefore it is necessary to updated the request
-    // context manually here.
-    $this->container->get('router.request_context')->fromRequest($request);
-
-    return $request;
-  }
-
-  /**
-   * Resets all data structures after having enabled new modules.
-   *
-   * This method is called by \Drupal\simpletest\BrowserTestBase::setUp() after
-   * enabling the requested modules. It must be called again when additional
-   * modules are enabled later.
-   */
-  protected function resetAll() {
-    // Clear all database and static caches and rebuild data structures.
-    drupal_flush_all_caches();
-    $this->container = \Drupal::getContainer();
-
-    // Reset static variables and reload permissions.
-    $this->refreshVariables();
-  }
-
-  /**
-   * Refreshes in-memory configuration and state information.
-   *
-   * Useful after a page request is made that changes configuration or state in
-   * a different thread.
-   *
-   * In other words calling a settings page with $this->submitForm() with a
-   * changed value would update configuration to reflect that change, but in the
-   * thread that made the call (thread running the test) the changed values
-   * would not be picked up.
-   *
-   * This method clears the cache and loads a fresh copy.
-   */
-  protected function refreshVariables() {
-    // Clear the tag cache.
-    $this->container->get('cache_tags.invalidator')->resetChecksums();
-    // @todo Replace drupal_static() usage within classes and provide a
-    //   proper interface for invoking reset() on a cache backend:
-    //   https://www.drupal.org/node/2311945.
-    drupal_static_reset('Drupal\Core\Cache\CacheBackendInterface::tagCache');
-    drupal_static_reset('Drupal\Core\Cache\DatabaseBackend::deletedTags');
-    drupal_static_reset('Drupal\Core\Cache\DatabaseBackend::invalidatedTags');
-    foreach (Cache::getBins() as $backend) {
-      if (is_callable(array($backend, 'reset'))) {
-        $backend->reset();
-      }
-    }
-
-    $this->container->get('config.factory')->reset();
-    $this->container->get('state')->resetCache();
   }
 
   /**
@@ -1797,46 +1338,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     $expected = static::castSafeStrings($expected);
     $actual = static::castSafeStrings($actual);
     parent::assertEquals($expected, $actual, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
-  }
-
-  /**
-   * Changes parameters in the services.yml file.
-   *
-   * @param string $name
-   *   The name of the parameter.
-   * @param mixed $value
-   *   The value of the parameter.
-   */
-  protected function setContainerParameter($name, $value) {
-    $filename = $this->siteDirectory . '/services.yml';
-    chmod($filename, 0666);
-
-    $services = Yaml::decode(file_get_contents($filename));
-    $services['parameters'][$name] = $value;
-    file_put_contents($filename, Yaml::encode($services));
-
-    // Ensure that the cache is deleted for the yaml file loader.
-    $file_cache = FileCacheFactory::get('container_yaml_loader');
-    $file_cache->delete($filename);
-  }
-
-  /**
-   * Gets the config schema exclusions for this test.
-   *
-   * @return string[]
-   *   An array of config object names that are excluded from schema checking.
-   */
-  protected function getConfigSchemaExclusions() {
-    $class = get_class($this);
-    $exceptions = [];
-    while ($class) {
-      if (property_exists($class, 'configSchemaCheckerExclusions')) {
-        $exceptions = array_merge($exceptions, $class::$configSchemaCheckerExclusions);
-      }
-      $class = get_parent_class($class);
-    }
-    // Filter out any duplicates.
-    return array_unique($exceptions);
   }
 
   /**

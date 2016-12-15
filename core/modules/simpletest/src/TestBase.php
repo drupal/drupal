@@ -10,6 +10,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\TestDatabase;
+use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Core\Utility\Error;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
@@ -22,6 +23,7 @@ use Drupal\Tests\SessionTestTrait;
  */
 abstract class TestBase {
 
+  use TestSetupTrait;
   use SessionTestTrait;
   use RandomGeneratorTrait;
   use AssertHelperTrait;
@@ -30,20 +32,6 @@ abstract class TestBase {
     configImporter as public;
     copyConfig as public;
   }
-
-  /**
-   * The test run ID.
-   *
-   * @var string
-   */
-  protected $testId;
-
-  /**
-   * The site directory of this test run.
-   *
-   * @var string
-   */
-  protected $siteDirectory = NULL;
 
   /**
    * The database prefix of this test run.
@@ -178,13 +166,6 @@ abstract class TestBase {
   protected $originalPrefix;
 
   /**
-   * The original installation profile.
-   *
-   * @var string
-   */
-  protected $originalProfile;
-
-  /**
    * The name of the session cookie of the test-runner.
    *
    * @var string
@@ -206,45 +187,11 @@ abstract class TestBase {
   protected $originalShutdownCallbacks;
 
   /**
-   * The site directory of the original parent site.
-   *
-   * @var string
-   */
-  protected $originalSite;
-
-  /**
    * The original user, before testing began.
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $originalUser;
-
-  /**
-   * The public file directory for the test environment.
-   *
-   * This is set in TestBase::prepareEnvironment().
-   *
-   * @var string
-   */
-  protected $publicFilesDirectory;
-
-  /**
-   * The private file directory for the test environment.
-   *
-   * This is set in TestBase::prepareEnvironment().
-   *
-   * @var string
-   */
-  protected $privateFilesDirectory;
-
-  /**
-   * The temporary file directory for the test environment.
-   *
-   * This is set in TestBase::prepareEnvironment().
-   *
-   * @var string
-   */
-  protected $tempFilesDirectory;
 
   /**
    * The translation file directory for the test environment.
@@ -265,50 +212,11 @@ abstract class TestBase {
   public $dieOnFail = FALSE;
 
   /**
-   * The DrupalKernel instance used in the test.
-   *
-   * @var \Drupal\Core\DrupalKernel
-   */
-  protected $kernel;
-
-  /**
-   * The dependency injection container used in the test.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
-
-  /**
    * The config importer that can used in a test.
    *
    * @var \Drupal\Core\Config\ConfigImporter
    */
   protected $configImporter;
-
-  /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
-   * An array of config object names that are excluded from schema checking.
-   *
-   * @var string[]
-   */
-  protected static $configSchemaCheckerExclusions = array(
-    // Following are used to test lack of or partial schema. Where partial
-    // schema is provided, that is explicitly tested in specific tests.
-    'config_schema_test.noschema',
-    'config_schema_test.someschema',
-    'config_schema_test.schema_data_types',
-    'config_schema_test.no_schema_data_types',
-    // Used to test application of schema to filtering of configuration.
-    'config_test.dynamic.system',
-  );
 
   /**
    * HTTP authentication method (specified as a CURLAUTH_* constant).
@@ -503,16 +411,6 @@ abstract class TestBase {
       ->delete('simpletest')
       ->condition('message_id', $message_id)
       ->execute();
-  }
-
-  /**
-   * Returns the database connection to the site running Simpletest.
-   *
-   * @return \Drupal\Core\Database\Connection
-   *   The database connection to use for inserting assertions.
-   */
-  public static function getDatabaseConnection() {
-    return TestDatabase::getConnection();
   }
 
   /**
@@ -1125,36 +1023,6 @@ abstract class TestBase {
   }
 
   /**
-   * Changes the database connection to the prefixed one.
-   *
-   * @see TestBase::prepareEnvironment()
-   */
-  private function changeDatabasePrefix() {
-    if (empty($this->databasePrefix)) {
-      $this->prepareDatabasePrefix();
-    }
-    // If the backup already exists, something went terribly wrong.
-    // This case is possible, because database connection info is a static
-    // global state construct on the Database class, which at least persists
-    // for all test methods executed in one PHP process.
-    if (Database::getConnectionInfo('simpletest_original_default')) {
-      throw new \RuntimeException("Bad Database connection state: 'simpletest_original_default' connection key already exists. Broken test?");
-    }
-
-    // Clone the current connection and replace the current prefix.
-    $connection_info = Database::getConnectionInfo('default');
-    Database::renameConnection('default', 'simpletest_original_default');
-    foreach ($connection_info as $target => $value) {
-      // Replace the full table prefix definition to ensure that no table
-      // prefixes of the test runner leak into the test.
-      $connection_info[$target]['prefix'] = array(
-        'default' => $value['prefix']['default'] . $this->databasePrefix,
-      );
-    }
-    Database::addConnectionInfo('default', 'default', $connection_info['default']);
-  }
-
-  /**
    * Act on global state information before the environment is altered for a test.
    *
    * Allows e.g. KernelTestBase to prime system/extension info from the
@@ -1570,25 +1438,6 @@ abstract class TestBase {
    */
   public function getTempFilesDirectory() {
     return $this->tempFilesDirectory;
-  }
-
-  /**
-   * Gets the config schema exclusions for this test.
-   *
-   * @return string[]
-   *   An array of config object names that are excluded from schema checking.
-   */
-  protected function getConfigSchemaExclusions() {
-    $class = get_class($this);
-    $exceptions = [];
-    while ($class) {
-      if (property_exists($class, 'configSchemaCheckerExclusions')) {
-        $exceptions = array_merge($exceptions, $class::$configSchemaCheckerExclusions);
-      }
-      $class = get_parent_class($class);
-    }
-    // Filter out any duplicates.
-    return array_unique($exceptions);
   }
 
 }
