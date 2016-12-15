@@ -4,6 +4,7 @@ namespace Drupal\Tests\migrate\Kernel\process;
 
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\KernelTests\Core\File\FileTestBase;
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\FileCopy;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
@@ -11,6 +12,8 @@ use Drupal\migrate\Row;
 
 /**
  * Tests the file_copy process plugin.
+ *
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\FileCopy
  *
  * @group migrate
  */
@@ -118,6 +121,32 @@ class FileCopyTest extends FileTestBase {
   public function testNonExistentSourceFile() {
     $source = '/non/existent/file';
     $this->doTransform($source, 'public://wontmatter.jpg');
+  }
+
+  /**
+   * Tests that non-writable destination throw an exception.
+   *
+   * @covers ::transform
+   */
+  public function testNonWritableDestination() {
+    $source = $this->createUri('file.txt', NULL, 'temporary');
+
+    // Create the parent location.
+    $this->createDirectory('public://dir');
+
+    // Copy the file under public://dir/subdir1/.
+    $this->doTransform($source, 'public://dir/subdir1/file.txt');
+
+    // Check that 'subdir1' was created and the file was successfully migrated.
+    $this->assertFileExists('public://dir/subdir1/file.txt');
+
+    // Remove all permissions from public://dir to trigger a failure when
+    // trying to create a subdirectory 'subdir2' inside public://dir.
+    $this->fileSystem->chmod('public://dir', 0);
+
+    // Check that the proper exception is raised.
+    $this->setExpectedException(MigrateException::class, "Could not create or write to directory 'public://dir/subdir2'");
+    $this->doTransform($source, 'public://dir/subdir2/file.txt');
   }
 
   /**
