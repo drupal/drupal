@@ -292,6 +292,21 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function extractFormValues(FieldItemListInterface $items, array $form, FormStateInterface $form_state) {
+    parent::extractFormValues($items, $form, $form_state);
+
+    // Update reference to 'items' stored during upload to take into account
+    // changes to values like 'alt' etc.
+    // @see \Drupal\file\Plugin\Field\FieldWidget\FileWidget::submit()
+    $field_name = $this->fieldDefinition->getName();
+    $field_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
+    $field_state['items'] = $items->getValue();
+    static::setWidgetState($form['#parents'], $field_name, $form_state, $field_state);
+  }
+
+  /**
    * Form API callback. Retrieves the value for the file_generic field element.
    *
    * This method is assigned as a #value_callback in formElement() method.

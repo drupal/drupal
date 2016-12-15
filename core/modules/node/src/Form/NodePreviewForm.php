@@ -72,7 +72,7 @@ class NodePreviewForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $node = NULL) {
     $view_mode = $node->preview_view_mode;
 
-    $query_options = $node->isNew() ? array('query' => array('uuid' => $node->uuid())) : array();
+    $query_options = array('query' => array('uuid' => $node->uuid()));
     $form['backlink'] = array(
       '#type' => 'link',
       '#title' => $this->t('Back to content editing'),

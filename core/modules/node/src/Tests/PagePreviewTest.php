@@ -28,7 +28,7 @@ class PagePreviewTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'taxonomy', 'comment', 'image', 'file');
+  public static $modules = array('node', 'taxonomy', 'comment', 'image', 'file', 'text', 'node_test', 'menu_ui');
 
   /**
    * The name of the created field.
@@ -41,7 +41,7 @@ class PagePreviewTest extends NodeTestBase {
     parent::setUp();
     $this->addDefaultCommentField('node', 'page');
 
-    $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
+    $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content', 'administer menu'));
     $this->drupalLogin($web_user);
 
     // Add a vocabulary so we can test different view modes.
@@ -124,6 +124,34 @@ class PagePreviewTest extends NodeTestBase {
     entity_get_display('node', 'page', 'default')
       ->setComponent('field_image')
       ->save();
+
+    // Create a multi-value text field.
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'field_test_multi',
+      'entity_type' => 'node',
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'type' => 'text',
+      'settings' => [
+        'max_length' => 50,
+      ]
+    ]);
+    $field_storage->save();
+    FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'page',
+    ])->save();
+
+    entity_get_form_display('node', 'page', 'default')
+      ->setComponent('field_test_multi', array(
+        'type' => 'text_textfield',
+      ))
+      ->save();
+
+    entity_get_display('node', 'page', 'default')
+      ->setComponent('field_test_multi', array(
+        'type' => 'string',
+      ))
+      ->save();
   }
 
   /**
@@ -176,8 +204,11 @@ class PagePreviewTest extends NodeTestBase {
     $this->clickLink(t('Back to content editing'));
     $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
-    $this->assertFieldByName($term_key, $edit[$term_key] . ' (' . $this->term->id() . ')', 'Term field displayed.');
+    $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
     $this->assertFieldByName('field_image[0][alt]', 'Picture of llamas');
+    $this->drupalPostAjaxForm(NULL, array(), array('field_test_multi_add_more' => t('Add another item')), NULL, array(), array(), 'node-page-form');
+    $this->assertFieldByName('field_test_multi[0][value]');
+    $this->assertFieldByName('field_test_multi[1][value]');
 
     // Return to page preview to check everything is as expected.
     $this->drupalPostForm(NULL, array(), t('Preview'));
@@ -191,7 +222,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalGet('node/add/page', array('query' => array('uuid' => $uuid)));
     $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
-    $this->assertFieldByName($term_key, $edit[$term_key] . ' (' . $this->term->id() . ')', 'Term field displayed.');
+    $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
 
     // Save the node - this is a new POST, so we need to upload the image.
     $this->drupalPostForm('node/add/page', $edit, t('Upload'));
@@ -260,6 +291,80 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', array($title_key => 'Preview'), t('Preview'));
     $this->clickLink(t('Back to content editing'));
     $this->assertRaw('edit-submit');
+
+    // Assert multiple items can be added and are not lost when previewing.
+    $test_image_1 = current($this->drupalGetTestFiles('image', 39325));
+    $edit_image_1['files[field_image_0][]'] = drupal_realpath($test_image_1->uri);
+    $test_image_2 = current($this->drupalGetTestFiles('image', 39325));
+    $edit_image_2['files[field_image_1][]'] = drupal_realpath($test_image_2->uri);
+    $edit['field_image[0][alt]'] = 'Alt 1';
+
+    $this->drupalPostForm('node/add/page', $edit_image_1, t('Upload'));
+    $this->drupalPostForm(NULL, $edit, t('Preview'));
+    $this->clickLink(t('Back to content editing'));
+    $this->assertFieldByName('files[field_image_1][]');
+    $this->drupalPostForm(NULL, $edit_image_2, t('Upload'));
+    $this->assertNoFieldByName('files[field_image_1][]');
+
+    $title = 'node_test_title';
+    $example_text_1 = 'example_text_preview_1';
+    $example_text_2 = 'example_text_preview_2';
+    $example_text_3 = 'example_text_preview_3';
+    $this->drupalGet('node/add/page');
+    $edit = [
+      'title[0][value]' => $title,
+      'field_test_multi[0][value]' => $example_text_1,
+    ];
+    $this->assertRaw('Storage is not set');
+    $this->drupalPostForm(NULL, $edit, t('Preview'));
+    $this->clickLink(t('Back to content editing'));
+    $this->assertRaw('Storage is set');
+    $this->assertFieldByName('field_test_multi[0][value]');
+    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->assertText('Basic page ' . $title . ' has been created.');
+    $node = $this->drupalGetNodeByTitle($title);
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->drupalPostAjaxForm(NULL, [], array('field_test_multi_add_more' => t('Add another item')));
+    $this->drupalPostAjaxForm(NULL, [], array('field_test_multi_add_more' => t('Add another item')));
+    $edit = [
+      'field_test_multi[1][value]' => $example_text_2,
+      'field_test_multi[2][value]' => $example_text_3,
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Preview'));
+    $this->clickLink(t('Back to content editing'));
+    $this->drupalPostForm(NULL, $edit, t('Preview'));
+    $this->clickLink(t('Back to content editing'));
+    $this->assertFieldByName('field_test_multi[0][value]', $example_text_1);
+    $this->assertFieldByName('field_test_multi[1][value]', $example_text_2);
+    $this->assertFieldByName('field_test_multi[2][value]', $example_text_3);
+
+    // Now save the node and make sure all values got saved.
+    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->assertText($example_text_1);
+    $this->assertText($example_text_2);
+    $this->assertText($example_text_3);
+
+    // Edit again, change the menu_ui settings and click on preview.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $edit = [
+      'menu[enabled]' => TRUE,
+      'menu[title]' => 'Changed title',
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Preview'));
+    $this->clickLink(t('Back to content editing'));
+    $this->assertFieldChecked('edit-menu-enabled', 'Menu option is still checked');
+    $this->assertFieldByName('menu[title]', 'Changed title', 'Menu link title is correct after preview');
+
+    // Save, change the title while saving and make sure that it is correctly
+    // saved.
+    $edit = [
+      'menu[enabled]' => TRUE,
+      'menu[title]' => 'Second title change',
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertFieldByName('menu[title]', 'Second title change', 'Menu link title is correct after saving');
+
   }
 
   /**
