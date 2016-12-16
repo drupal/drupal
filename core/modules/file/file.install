@@ -96,13 +96,9 @@ function file_requirements($phase) {
       $value = t('Not enabled');
       $description = t('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php or PHP-FPM and not as FastCGI.');
     }
-    elseif (!$implementation && extension_loaded('apcu')) {
-      $value = t('Not enabled');
-      $description = t('Your server is capable of displaying file upload progress through APC, but it is not enabled. Add <code>apc.rfc1867 = 1</code> to your php.ini configuration. Alternatively, it is recommended to use <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>, which supports more than one simultaneous upload.');
-    }
     elseif (!$implementation) {
       $value = t('Not enabled');
-      $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a> (preferred) or to install <a href="http://php.net/apcu">APC</a>.');
+      $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a>.');
     }
     elseif ($implementation == 'apc') {
       $value = t('Enabled (<a href="http://php.net/manual/apcu.configuration.php#ini.apcu.rfc1867">APC RFC1867</a>)');

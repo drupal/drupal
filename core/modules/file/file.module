@@ -929,7 +929,7 @@ function file_progress_implementation() {
     if (extension_loaded('uploadprogress')) {
       $implementation = 'uploadprogress';
     }
-    elseif (extension_loaded('apc') && ini_get('apc.rfc1867')) {
+    elseif (version_compare(PHP_VERSION, '7', '<') && extension_loaded('apc') && ini_get('apc.rfc1867')) {
       $implementation = 'apc';
     }
   }
