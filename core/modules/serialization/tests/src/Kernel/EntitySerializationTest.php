@@ -29,7 +29,7 @@ class EntitySerializationTest extends NormalizerTestBase {
   /**
    * The test entity.
    *
-   * @var \Drupal\Core\Entity\ContentEntityInterface|\Drupal\Core\Entity\RevisionLogInterface
+   * @var \Drupal\Core\Entity\ContentEntityInterface
    */
   protected $entity;
 
@@ -76,10 +76,6 @@ class EntitySerializationTest extends NormalizerTestBase {
         'value' => $this->randomMachineName(),
         'format' => 'full_html',
       ),
-      'revision_log_message' => array(
-        'value' => 'Serialization revision message',
-      ),
-      'revision_user' => $this->user->id(),
     );
     $this->entity = EntityTestMulRev::create($this->values);
     $this->entity->save();
@@ -127,20 +123,6 @@ class EntitySerializationTest extends NormalizerTestBase {
         array('value' => TRUE),
       ),
       'non_rev_field' => array(),
-      'revision_created' => array(
-        array('value' => $this->entity->getRevisionCreationTime()),
-      ),
-      'revision_user' => array(
-        array(
-          'target_id' => $this->user->id(),
-          'target_type' => $this->user->getEntityTypeId(),
-          'target_uuid' => $this->user->uuid(),
-          'url' => $this->user->url(),
-        ),
-      ),
-      'revision_log_message' => array(
-        array('value' => $this->values['revision_log_message']['value']),
-      ),
       'field_test_text' => array(
         array(
           'value' => $this->values['field_test_text']['value'],
@@ -210,9 +192,6 @@ class EntitySerializationTest extends NormalizerTestBase {
       'revision_id' => '<revision_id><value>' . $this->entity->getRevisionId() . '</value></revision_id>',
       'default_langcode' => '<default_langcode><value>1</value></default_langcode>',
       'non_rev_field' => '<non_rev_field/>',
-      'revision_created' => '<revision_created><value>' . $this->entity->getRevisionCreationTime() . '</value></revision_created>',
-      'revision_user' => '<revision_user><target_id>' . $this->user->id() . '</target_id><target_type>' . $this->user->getEntityTypeId() . '</target_type><target_uuid>' . $this->user->uuid() . '</target_uuid><url>' . $this->user->url() . '</url></revision_user>',
-      'revision_log_message' => '<revision_log_message><value>' . $this->values['revision_log_message']['value'] . '</value></revision_log_message>',
       'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format></field_test_text>',
     );
     // Sort it in the same order as normalised.

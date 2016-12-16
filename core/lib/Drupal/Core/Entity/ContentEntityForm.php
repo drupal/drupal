@@ -78,7 +78,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     parent::prepareEntity();
 
     // Hide the current revision log message in UI.
-    if ($this->showRevisionUi() && !$this->entity->isNew()) {
+    if ($this->showRevisionUi() && !$this->entity->isNew() && $this->entity instanceof RevisionLogInterface) {
       $this->entity->setRevisionLogMessage(NULL);
     }
   }

@@ -3,8 +3,6 @@
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\RevisionLogEntityTrait;
-use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
@@ -48,17 +46,13 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   }
  * )
  */
-class EntityTestRev extends EntityTest implements RevisionLogInterface {
-
-  use RevisionLogEntityTrait;
+class EntityTestRev extends EntityTest {
 
   /**
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-
-    $fields += static::revisionLogBaseFieldDefinitions($entity_type);
 
     $fields['name']->setRevisionable(TRUE);
     $fields['user_id']->setRevisionable(TRUE);
