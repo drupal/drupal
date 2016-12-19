@@ -18,19 +18,24 @@ class FilterTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter');
+  public static $testViews = array('test_filter', 'test_filter_in_operator_ui');
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('views_ui');
+  public static $modules = array('views_ui', 'node');
 
   protected function setUp() {
     parent::setUp();
 
     $this->enableViewsTestModule();
+
+    $this->adminUser = $this->drupalCreateUser(array('administer views'));
+    $this->drupalLogin($this->adminUser);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
   }
 
   /**
@@ -138,4 +143,23 @@ class FilterTest extends PluginTestBase {
     $this->assertEqual(count($view->result), 5, format_string('All @count results returned', array('@count' => count($view->displayHandlers))));
   }
 
+  /**
+   * Test no error message is displayed when all options are selected in an
+   * exposed filter.
+   */
+  public function testInOperatorSelectAllOptions() {
+    $view = Views::getView('test_filter_in_operator_ui');
+    $row['row[type]'] = 'fields';
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_filter_in_operator_ui/default/row', $row, t('Apply'));
+    $field['name[node_field_data.nid]'] = TRUE;
+    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_filter_in_operator_ui/default/field', $field, t('Add and configure fields'));
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/field/nid', [], t('Apply'));
+    $edit['options[value][all]'] = TRUE;
+    $edit['options[value][article]'] = TRUE;
+    $edit['options[value][page]'] = TRUE;
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/type', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/view/test_filter_in_operator_ui/edit/default', [], t('Save'));
+    $this->drupalPostForm(NULL, [], t('Update preview'));
+    $this->assertNoText('An illegal choice has been detected.');
+  }
 }
