@@ -27,7 +27,7 @@ class Term extends DrupalSqlBase {
       ->orderBy('td.tid');
 
     if (isset($this->configuration['bundle'])) {
-      $query->condition('td.vid', $this->configuration['bundle'], 'IN');
+      $query->condition('td.vid', (array) $this->configuration['bundle'], 'IN');
     }
 
     return $query;

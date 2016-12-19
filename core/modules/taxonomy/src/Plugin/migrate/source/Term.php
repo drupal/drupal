@@ -54,7 +54,7 @@ class Term extends DrupalSqlBase {
       ->orderBy('td.tid');
 
     if (isset($this->configuration['vocabulary'])) {
-      $query->condition('td.vid', $this->configuration['vocabulary'], 'IN');
+      $query->condition('td.vid', (array) $this->configuration['vocabulary'], 'IN');
     }
 
     return $query;

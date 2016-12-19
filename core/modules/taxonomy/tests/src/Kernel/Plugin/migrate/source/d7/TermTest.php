@@ -67,6 +67,13 @@ class TermTest extends MigrateSqlSourceTestBase {
         'description' => 'description value 6',
         'weight' => 0,
       ],
+      [
+        'tid' => 7,
+        'vid' => 3,
+        'name' => 'name value 7',
+        'description' => 'description value 7',
+        'weight' => 0,
+      ],
     ];
     $tests[0]['source_data']['taxonomy_term_hierarchy'] = [
       [
@@ -96,6 +103,10 @@ class TermTest extends MigrateSqlSourceTestBase {
       [
         'tid' => 6,
         'parent' => 2,
+      ],
+      [
+        'tid' => 7,
+        'parent' => 0,
       ],
     ];
     $tests[0]['source_data']['taxonomy_vocabulary'] = [
@@ -189,7 +200,57 @@ class TermTest extends MigrateSqlSourceTestBase {
         'weight' => 0,
         'parent' => [3, 2],
       ],
+      [
+        'tid' => 7,
+        'vid' => 3,
+        'name' => 'name value 7',
+        'description' => 'description value 7',
+        'weight' => 0,
+        'parent' => [0],
+      ],
     ];
+
+    $tests[0]['expected_count'] = NULL;
+    // Empty configuration will return terms for all vocabularies.
+    $tests[0]['configuration'] = [];
+
+    // Change configuration to get one vocabulary, "tags".
+    $tests[1]['source_data'] = $tests[0]['source_data'];
+    $tests[1]['expected_data'] = [
+      [
+        'tid' => 1,
+        'vid' => 5,
+        'name' => 'name value 1',
+        'description' => 'description value 1',
+        'weight' => 0,
+        'parent' => [0],
+      ],
+      [
+        'tid' => 4,
+        'vid' => 5,
+        'name' => 'name value 4',
+        'description' => 'description value 4',
+        'weight' => 1,
+        'parent' => [1],
+      ],
+    ];
+    $tests[1]['expected_count'] = NULL;
+    $tests[1]['configuration']['bundle'] = ['tags'];
+
+    // Same as previous test, but with configuration vocabulary as a string
+    // instead of an array.
+    $tests[2]['source_data'] = $tests[0]['source_data'];
+    $tests[2]['expected_data'] = $tests[1]['expected_data'];
+    $tests[2]['expected_count'] = NULL;
+    $tests[2]['configuration']['bundle'] = 'tags';
+
+    // Change configuration to get two vocabularies, "tags" and "categories".
+    $tests[3]['source_data'] = $tests[0]['source_data'];
+    $tests[3]['expected_data'] = $tests[0]['expected_data'];
+    // Remove the last element because it is for vid 3.
+    array_pop($tests[3]['expected_data']);
+    $tests[3]['expected_count'] = NULL;
+    $tests[3]['configuration']['bundle'] = ['tags', 'categories'];
 
     return $tests;
   }
