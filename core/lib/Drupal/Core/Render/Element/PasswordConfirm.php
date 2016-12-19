@@ -10,6 +10,9 @@ use Drupal\Core\Form\FormStateInterface;
  * Formats as a pair of password fields, which do not validate unless the two
  * entered passwords match.
  *
+ * Properties:
+ * - #size: The size of the input element in characters.
+ *
  * Usage example:
  * @code
  * $form['pass'] = array(

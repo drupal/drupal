@@ -11,6 +11,7 @@ use Drupal\Core\Render\Element;
  * Properties:
  * - #default_value: An array with the keys: 'year', 'month', and 'day'.
  *   Defaults to the current date if no value is supplied.
+ * - #size: The size of the input element in characters.
  *
  * @code
  * $form['expiration'] = array(
