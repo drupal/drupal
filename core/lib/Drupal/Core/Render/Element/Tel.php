@@ -10,6 +10,9 @@ use Drupal\Core\Render\Element;
  * Provides an HTML5 input element with type of "tel". It provides no special
  * validation.
  *
+ * Properties:
+ * - #size: The size of the input element in characters.
+ *
  * Usage example:
  * @code
  * $form['phone'] = array(
