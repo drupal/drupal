@@ -427,7 +427,9 @@ services:
     factory: Drupal\Core\Site\Settings::getInstance
   state:
     class: Drupal\Core\State\State
-    arguments: ['@keyvalue']
+    arguments: ['@keyvalue', '@cache.bootstrap', '@lock']
+    tags:
+      - { name: needs_destruction }
   queue:
     class: Drupal\Core\Queue\QueueFactory
     arguments: ['@settings']

@@ -2,12 +2,15 @@
 
 namespace Drupal\Core\State;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\Core\Lock\LockBackendInterface;
 
 /**
  * Provides the state system using a key value store.
  */
-class State implements StateInterface {
+class State extends CacheCollector implements StateInterface {
 
   /**
    * The key value store to use.
@@ -17,19 +20,17 @@ class State implements StateInterface {
   protected $keyValueStore;
 
   /**
-   * Static state cache.
-   *
-   * @var array
-   */
-  protected $cache = array();
-
-  /**
    * Constructs a State object.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
    *   The key value store to use.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock
+   *   The lock backend.
    */
-  function __construct(KeyValueFactoryInterface $key_value_factory) {
+  public function __construct(KeyValueFactoryInterface $key_value_factory, CacheBackendInterface $cache, LockBackendInterface $lock) {
+    parent::__construct('state', $cache, $lock);
     $this->keyValueStore = $key_value_factory->get('state');
   }
 
@@ -37,8 +38,18 @@ class State implements StateInterface {
    * {@inheritdoc}
    */
   public function get($key, $default = NULL) {
-    $values = $this->getMultiple(array($key));
-    return isset($values[$key]) ? $values[$key] : $default;
+    $value = parent::get($key);
+    return $value !== NULL ? $value : $default;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function resolveCacheMiss($key) {
+    $value = $this->keyValueStore->get($key);
+    $this->storage[$key] = $value;
+    $this->persist($key);
+    return $value;
   }
 
   /**
@@ -46,33 +57,9 @@ class State implements StateInterface {
    */
   public function getMultiple(array $keys) {
     $values = array();
-    $load = array();
     foreach ($keys as $key) {
-      // Check if we have a value in the cache.
-      if (isset($this->cache[$key])) {
-        $values[$key] = $this->cache[$key];
-      }
-      // Load the value if we don't have an explicit NULL value.
-      elseif (!array_key_exists($key, $this->cache)) {
-        $load[] = $key;
-      }
+      $values[$key] = $this->get($key);
     }
-
-    if ($load) {
-      $loaded_values = $this->keyValueStore->getMultiple($load);
-      foreach ($load as $key) {
-        // If we find a value, even one that is NULL, add it to the cache and
-        // return it.
-        if (isset($loaded_values[$key]) || array_key_exists($key, $loaded_values)) {
-          $values[$key] = $loaded_values[$key];
-          $this->cache[$key] = $loaded_values[$key];
-        }
-        else {
-          $this->cache[$key] = NULL;
-        }
-      }
-    }
-
     return $values;
   }
 
@@ -80,7 +67,7 @@ class State implements StateInterface {
    * {@inheritdoc}
    */
   public function set($key, $value) {
-    $this->cache[$key] = $value;
+    parent::set($key, $value);
     $this->keyValueStore->set($key, $value);
   }
 
@@ -89,7 +76,7 @@ class State implements StateInterface {
    */
   public function setMultiple(array $data) {
     foreach ($data as $key => $value) {
-      $this->cache[$key] = $value;
+      parent::set($key, $value);
     }
     $this->keyValueStore->setMultiple($data);
   }
@@ -98,6 +85,7 @@ class State implements StateInterface {
    * {@inheritdoc}
    */
   public function delete($key) {
+    parent::delete($key);
     $this->deleteMultiple(array($key));
   }
 
@@ -106,7 +94,7 @@ class State implements StateInterface {
    */
   public function deleteMultiple(array $keys) {
     foreach ($keys as $key) {
-      unset($this->cache[$key]);
+      parent::delete($key);
     }
     $this->keyValueStore->deleteMultiple($keys);
   }
@@ -115,7 +103,7 @@ class State implements StateInterface {
    * {@inheritdoc}
    */
   public function resetCache() {
-    $this->cache = array();
+    $this->clear();
   }
 
 }

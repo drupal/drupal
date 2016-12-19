@@ -7,10 +7,12 @@
 
 namespace Drupal\Tests\Core\Extension;
 
+use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\ThemeHandler;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\State\State;
 use Drupal\Tests\UnitTestCase;
 
@@ -78,7 +80,7 @@ class ThemeHandlerTest extends UnitTestCase {
       ),
     ));
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->state = new State(new KeyValueMemoryFactory());
+    $this->state = new State(new KeyValueMemoryFactory(), new MemoryBackend('test'), new NullLockBackend());
     $this->infoParser = $this->getMock('Drupal\Core\Extension\InfoParserInterface');
     $this->extensionDiscovery = $this->getMockBuilder('Drupal\Core\Extension\ExtensionDiscovery')
       ->disableOriginalConstructor()

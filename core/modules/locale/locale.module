@@ -881,7 +881,7 @@ function locale_translation_file_history_delete($projects = array(), $langcodes 
  */
 function locale_translation_get_status($projects = NULL, $langcodes = NULL) {
   $result = array();
-  $status = \Drupal::state()->get('locale.translation_status');
+  $status = \Drupal::keyValue('locale.translation_status')->getAll();
   module_load_include('translation.inc', 'locale');
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
@@ -917,10 +917,6 @@ function locale_translation_get_status($projects = NULL, $langcodes = NULL) {
  *   File object also containing timestamp when the translation is last updated.
  */
 function locale_translation_status_save($project, $langcode, $type, $data) {
-  // Follow-up issue: https://www.drupal.org/node/1842362.
-  // Split status storage per module/language and expire individually. This will
-  // improve performance for large sites.
-
   // Load the translation status or build it if not already available.
   module_load_include('translation.inc', 'locale');
   $status = locale_translation_get_status();
@@ -959,7 +955,7 @@ function locale_translation_status_save($project, $langcode, $type, $data) {
         break;
     }
 
-    \Drupal::state()->set('locale.translation_status', $status);
+    \Drupal::keyValue('locale.translation_status')->set($project, $status[$project]);
     \Drupal::state()->set('locale.translation_last_checked', REQUEST_TIME);
   }
 }
@@ -978,8 +974,8 @@ function locale_translation_status_delete_languages($langcodes) {
           unset($status[$project][$langcode]);
         }
       }
+      \Drupal::keyValue('locale.translation_status')->set($project, $status[$project]);
     }
-    \Drupal::state()->set('locale.translation_status', $status);
   }
 }
 
@@ -990,21 +986,14 @@ function locale_translation_status_delete_languages($langcodes) {
  *   Project name(s) to be deleted from the cache.
  */
 function locale_translation_status_delete_projects($projects) {
-  $status = locale_translation_get_status();
-
-  foreach ($status as $project => $languages) {
-    if (in_array($project, $projects)) {
-      unset($status[$project]);
-    }
-  }
-  \Drupal::state()->set('locale.translation_status', $status);
+  \Drupal::keyValue('locale.translation_status')->deleteMultiple($projects);
 }
 
 /**
  * Clear the translation status cache.
  */
 function locale_translation_clear_status() {
-  \Drupal::state()->delete('locale.translation_status');
+  \Drupal::keyValue('locale.translation_status')->deleteAll();
   \Drupal::state()->delete('locale.translation_last_checked');
 }
 
