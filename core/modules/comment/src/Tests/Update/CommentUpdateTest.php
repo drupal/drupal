@@ -66,6 +66,9 @@ class CommentUpdateTest extends UpdatePathTestBase {
     // Check that the entity key exists and it has the correct value.
     $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('comment');
     $this->assertEqual('status', $entity_type->getKey('published'));
+
+    // Check that the {comment_field_data} table status index has been created.
+    $this->assertTrue(\Drupal::database()->schema()->indexExists('comment_field_data', 'comment__status_comment_type'));
   }
 
 }
