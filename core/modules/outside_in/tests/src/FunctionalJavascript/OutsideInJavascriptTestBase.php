@@ -10,6 +10,19 @@ use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function drupalGet($path, array $options = array(), array $headers = array()) {
+    $return = parent::drupalGet($path, $options, $headers);
+
+    // After the page loaded we need to additionally wait until the settings
+    // tray Ajax activity is done.
+    $this->assertSession()->assertWaitOnAjaxRequest();
+
+    return $return;
+  }
+
+  /**
    * Enables a theme.
    *
    * @param string $theme

@@ -49,93 +49,104 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
 
   /**
    * Tests opening Offcanvas tray by click blocks and elements in the blocks.
+   *
+   * @dataProvider providerTestBlocks
    */
-  public function testBlocks() {
-    // @todo: re-enable once https://www.drupal.org/node/2830485 is resolved.
-    $this->markTestSkipped('Test skipped due to random failures in DrupalCI, see https://www.drupal.org/node/2830485');
-
+  public function testBlocks($block_id, $new_page_text, $element_selector, $label_selector, $button_text, $toolbar_item) {
     $web_assert = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $block_selector = '#' . $block_id;
+    $this->drupalGet('user');
+    if (isset($toolbar_item)) {
+      // Check that you can open a toolbar tray and it will be closed after
+      // entering edit mode.
+      if ($element = $page->find('css', "#toolbar-administration a.is-active")) {
+        // If a tray was open from page load close it.
+        $element->click();
+        $this->waitForNoElement("#toolbar-administration a.is-active");
+      }
+      $page->find('css', $toolbar_item)->click();
+      $this->waitForElement("{$toolbar_item}.is-active");
+    }
+    $this->toggleEditingMode();
+    if (isset($toolbar_item)) {
+      $this->waitForNoElement("{$toolbar_item}.is-active");
+    }
+
+    $this->openBlockForm($block_selector);
+
+    switch ($block_id) {
+      case 'block-powered':
+        // Fill out form, save the form.
+        $page->fillField('settings[label]', $new_page_text);
+        $page->checkField('settings[label_display]');
+        break;
+
+      case 'block-branding':
+        // Fill out form, save the form.
+        $page->fillField('settings[site_information][site_name]', $new_page_text);
+        break;
+    }
+
+    if (isset($new_page_text)) {
+      $page->pressButton($button_text);
+      // Make sure the changes are present.
+      // @todo Use a wait method that will take into account the form submitting
+      //   and all JavaScript activity. https://www.drupal.org/node/2837676
+      //   The use \Behat\Mink\WebAssert::pageTextContains to check text.
+      $this->assertJsCondition('jQuery("' . $block_selector . ' ' . $label_selector . '").html() == "' . $new_page_text . '"');
+    }
+
+    $this->openBlockForm($block_selector);
+
+    $this->toggleEditingMode();
+    // Canvas should close when editing module is closed.
+    $this->waitForOffCanvasToClose();
+
+    // Go into Edit mode again.
+    $this->toggleEditingMode();
+
+    $element_selector = "$block_selector {$element_selector}";
+    // Open block form by clicking a element inside the block.
+    // This confirms that default action for links and form elements is
+    // suppressed.
+    $this->openBlockForm($element_selector);
+
+    // Exit edit mode.
+    $this->toggleEditingMode();
+  }
+
+  /**
+   * Dataprovider for testBlocks().
+   */
+  public function providerTestBlocks() {
     $blocks = [
-      [
+      'block-powered' => [
         'id' => 'block-powered',
         'new_page_text' => 'Can you imagine anyone showing the label on this block?',
         'element_selector' => '.content a',
+        'label_selector' => 'h2',
         'button_text' => 'Save Powered by Drupal',
         'toolbar_item' => '#toolbar-item-user',
       ],
-      [
+      'block-branding' => [
         'id' => 'block-branding',
         'new_page_text' => 'The site that will live a very short life.',
         'element_selector' => 'a[rel="home"]:nth-child(2)',
+        'label_selector' => '.site-branding__name a',
         'button_text' => 'Save Site branding',
         'toolbar_item' => '#toolbar-item-administration',
       ],
-      [
+      'block-search' => [
         'id' => 'block-search',
+        'new_page_text' => NULL,
         'element_selector' => '#edit-submit',
+        'label_selector' => 'h2',
         'button_text' => 'Save Search form',
+        'toolbar_item' => NULL,
       ],
     ];
-    $page = $this->getSession()->getPage();
-    foreach ($blocks as $block) {
-      $block_selector = '#' . $block['id'];
-      $this->drupalGet('user');
-      if (isset($block['toolbar_item'])) {
-        // Check that you can open a toolbar tray and it will be closed after
-        // entering edit mode.
-        if ($element = $page->find('css', "#toolbar-administration a.is-active")) {
-          // If a tray was open from page load close it.
-          $element->click();
-          $this->waitForNoElement("#toolbar-administration a.is-active");
-        }
-        $page->find('css', $block['toolbar_item'])->click();
-        $this->waitForElement("{$block['toolbar_item']}.is-active");
-      }
-      $this->toggleEditingMode();
-      if (isset($block['toolbar_item'])) {
-        $this->waitForNoElement("{$block['toolbar_item']}.is-active");
-      }
-
-      $this->openBlockForm($block_selector);
-
-      switch ($block['id']) {
-        case 'block-powered':
-          // Fill out form, save the form.
-          $page->fillField('settings[label]', $block['new_page_text']);
-          $page->checkField('settings[label_display]');
-          break;
-
-        case 'block-branding':
-          // Fill out form, save the form.
-          $page->fillField('settings[site_information][site_name]', $block['new_page_text']);
-          break;
-      }
-
-      if (isset($block['new_page_text'])) {
-        $page->pressButton($block['button_text']);
-        // Make sure the changes are present.
-        $this->assertSession()->assertWaitOnAjaxRequest();
-        $web_assert->pageTextContains($block['new_page_text']);
-      }
-
-      $this->openBlockForm($block_selector);
-
-      $this->toggleEditingMode();
-      // Canvas should close when editing module is closed.
-      $this->waitForOffCanvasToClose();
-
-      // Go into Edit mode again.
-      $this->toggleEditingMode();
-
-      $element_selector = "$block_selector {$block['element_selector']}";
-      // Open block form by clicking a element inside the block.
-      // This confirms that default action for links and form elements is
-      // suppressed.
-      $this->openBlockForm($element_selector);
-
-      // Exit edit mode.
-      $this->toggleEditingMode();
-    }
+    return $blocks;
   }
 
   /**
