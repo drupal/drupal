@@ -149,6 +149,13 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   protected $validationRequired = FALSE;
 
   /**
+   * The loaded revision ID before the new revision was set.
+   *
+   * @var int
+   */
+  protected $loadedRevisionId;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = array()) {
@@ -219,6 +226,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         }
       }
     }
+    if ($this->getEntityType()->isRevisionable()) {
+      // Store the loaded revision ID the entity has been loaded with to
+      // keep it safe from changes.
+      $this->updateLoadedRevisionId();
+    }
   }
 
   /**
@@ -268,6 +280,21 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     }
 
     $this->newRevision = $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLoadedRevisionId() {
+    return $this->loadedRevisionId;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateLoadedRevisionId() {
+    $this->loadedRevisionId = $this->getRevisionId() ?: $this->loadedRevisionId;
+    return $this;
   }
 
   /**
@@ -799,6 +826,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $translation->translatableEntityKeys = &$this->translatableEntityKeys;
     $translation->translationInitialize = FALSE;
     $translation->typedData = NULL;
+    $translation->loadedRevisionId = &$this->loadedRevisionId;
 
     return $translation;
   }
@@ -1025,6 +1053,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // Check whether the entity type supports revisions and initialize it if so.
     if ($entity_type->isRevisionable()) {
       $duplicate->{$entity_type->getKey('revision')}->value = NULL;
+      $duplicate->loadedRevisionId = NULL;
     }
 
     return $duplicate;
@@ -1066,6 +1095,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       // original reference with one pointing to a copy of it.
       $enforce_is_new = $this->enforceIsNew;
       $this->enforceIsNew = &$enforce_is_new;
+
+      // Ensure the loadedRevisionId property is actually cloned by
+      // overwriting the original reference with one pointing to a copy of it.
+      $original_revision_id = $this->loadedRevisionId;
+      $this->loadedRevisionId = &$original_revision_id;
     }
   }
 

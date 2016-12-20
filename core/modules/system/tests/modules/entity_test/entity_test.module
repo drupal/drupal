@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -409,6 +410,25 @@ function entity_test_mulrev_load($id, $reset = FALSE) {
 function entity_test_entity_test_insert($entity) {
   if ($entity->name->value == 'fail_insert') {
     throw new Exception("Test exception rollback.");
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function entity_test_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() == 'entity_test_mulrev' && $entity->label() == 'EntityLoadedRevisionTest') {
+    $entity->setNewRevision(FALSE);
+    $entity->save();
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function entity_test_entity_update(EntityInterface $entity) {
+  if ($entity instanceof ContentEntityInterface) {
+    \Drupal::state()->set('entity_test.loadedRevisionId', $entity->getLoadedRevisionId());
   }
 }
 
