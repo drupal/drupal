@@ -93,4 +93,15 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
     $event->setResponse($response);
   }
 
+  /**
+   * Handles a 422 error for JSON.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   *   The event to process.
+   */
+  public function on422(GetResponseForExceptionEvent $event) {
+    $response = new JsonResponse(['message' => $event->getException()->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+    $event->setResponse($response);
+  }
+
 }

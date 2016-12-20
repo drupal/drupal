@@ -48,7 +48,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
     $resource_response_subscriber->onResponse($event);
 
     // Content is a serialized version of the data we provided.
-    $this->assertEquals($expected_response !== FALSE ? $expected_response : json_encode($data), $event->getResponse()->getContent());
+    $this->assertEquals($expected_response !== FALSE ? $expected_response : Json::encode($data), $event->getResponse()->getContent());
   }
 
   public function providerTestSerialization() {

@@ -163,11 +163,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
     // DX: 422 when changing email without providing the password.
     $response = $this->request('PATCH', $url, $request_options);
-    // @todo use this commented line instead of the 3 lines thereafter once https://www.drupal.org/node/2813755 lands.
-    // $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Email</em>.\n", $response);
-    $this->assertSame(422, $response->getStatusCode());
-    $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
-    $this->assertSame($this->serializer->encode(['message' => "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Email</em>.\n"], static::$format), (string) $response->getBody());
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Email</em>.\n", $response);
 
 
     $normalization['pass'] = [['existing' => 'wrong']];
@@ -175,11 +171,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
     // DX: 422 when changing email while providing a wrong password.
     $response = $this->request('PATCH', $url, $request_options);
-    // @todo use this commented line instead of the 3 lines thereafter once https://www.drupal.org/node/2813755 lands.
-    // $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Email</em>.\n", $response);
-    $this->assertSame(422, $response->getStatusCode());
-    $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
-    $this->assertSame($this->serializer->encode(['message' => "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Email</em>.\n"], static::$format), (string) $response->getBody());
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Email</em>.\n", $response);
 
 
     $normalization['pass'] = [['existing' => $this->account->passRaw]];
@@ -200,11 +192,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
     // DX: 422 when changing password without providing the current password.
     $response = $this->request('PATCH', $url, $request_options);
-    // @todo use this commented line instead of the 3 lines thereafter once https://www.drupal.org/node/2813755 lands.
-    // $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\npass: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Password</em>.\n", $response);
-    $this->assertSame(422, $response->getStatusCode());
-    $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
-    $this->assertSame($this->serializer->encode(['message' => "Unprocessable Entity: validation failed.\npass: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Password</em>.\n"], static::$format), (string) $response->getBody());
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\npass: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Password</em>.\n", $response);
 
 
     $normalization['pass'][0]['existing'] = $this->account->pass_raw;

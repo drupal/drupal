@@ -340,9 +340,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   The error response to assert.
    */
   protected function assertResourceErrorResponse($expected_status_code, $expected_message, ResponseInterface $response) {
-    // @todo Fix this in https://www.drupal.org/node/2813755.
-    $encode_options = ['json_encode_options' => JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT];
-    $expected_body = $this->serializer->encode(['message' => $expected_message], static::$format, $encode_options);
+    $expected_body = $this->serializer->encode(['message' => $expected_message], static::$format);
     $this->assertResourceResponse($expected_status_code, $expected_body, $response);
   }
 
