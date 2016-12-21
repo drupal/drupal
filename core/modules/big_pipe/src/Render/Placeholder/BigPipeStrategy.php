@@ -150,7 +150,7 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
       // @see \Drupal\Core\Access\RouteProcessorCsrf::renderPlaceholderCsrfToken()
       // @see \Drupal\Core\Form\FormBuilder::renderFormTokenPlaceholder()
       // @see \Drupal\Core\Form\FormBuilder::renderPlaceholderFormAction()
-      if ($placeholder[0] !== '<' || $placeholder !== Html::normalize($placeholder)) {
+      if (static::placeholderIsAttributeSafe($placeholder)) {
         $overridden_placeholders[$placeholder] = static::createBigPipeNoJsPlaceholder($placeholder, $placeholder_elements, TRUE);
       }
       else {
@@ -167,6 +167,21 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
     }
 
     return $overridden_placeholders;
+  }
+
+  /**
+   * Determines whether the given placeholder is attribute-safe or not.
+   *
+   * @param string $placeholder
+   *   A placeholder.
+   *
+   * @return bool
+   *   Whether the placeholder is safe for use in a HTML attribute (in case it's
+   *   a placeholder for a HTML attribute value or a subset of it).
+   */
+  protected static function placeholderIsAttributeSafe($placeholder) {
+    assert('is_string($placeholder)');
+    return $placeholder[0] !== '<' || $placeholder !== Html::normalize($placeholder);
   }
 
   /**

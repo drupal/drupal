@@ -91,36 +91,22 @@ class HtmlResponseBigPipeSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $big_pipe_response = new BigPipeResponse();
-    $big_pipe_response->setBigPipeService($this->bigPipe);
-
-    // Clone the HtmlResponse's data into the new BigPipeResponse.
-    $big_pipe_response->headers = clone $response->headers;
-    $big_pipe_response
-      ->setStatusCode($response->getStatusCode())
-      ->setContent($response->getContent())
-      ->setAttachments($attachments)
-      ->addCacheableDependency($response->getCacheableMetadata());
-
-    // A BigPipe response can never be cached, because it is intended for a
-    // single user.
-    // @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9.1
-    $big_pipe_response->setPrivate();
-
-    // Inform surrogates how they should handle BigPipe responses:
-    // - "no-store" specifies that the response should not be stored in cache;
-    //   it is only to be used for the original request
-    // - "content" identifies what processing surrogates should perform on the
-    //   response before forwarding it. We send, "BigPipe/1.0", which surrogates
-    //   should not process at all, and in fact, they should not even buffer it
-    //   at all.
-    // @see http://www.w3.org/TR/edge-arch/
-    $big_pipe_response->headers->set('Surrogate-Control', 'no-store, content="BigPipe/1.0"');
-
-    // Add header to support streaming on NGINX + php-fpm (nginx >= 1.5.6).
-    $big_pipe_response->headers->set('X-Accel-Buffering', 'no');
-
+    $big_pipe_response = new BigPipeResponse($response);
+    $big_pipe_response->setBigPipeService($this->getBigPipeService($event));
     $event->setResponse($big_pipe_response);
+  }
+
+  /**
+   * Returns the BigPipe service to use to send the current response.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   *   A response event.
+   *
+   * @return \Drupal\big_pipe\Render\BigPipeInterface
+   *   A BigPipe service.
+   */
+  protected function getBigPipeService(FilterResponseEvent $event) {
+    return $this->bigPipe;
   }
 
   /**

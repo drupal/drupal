@@ -107,9 +107,48 @@ class BigPipe implements BigPipeInterface {
   }
 
   /**
+   * Performs tasks before sending content (and rendering placeholders).
+   */
+  protected function performPreSendTasks() {
+    // The content in the placeholders may depend on the session, and by the
+    // time the response is sent (see index.php), the session is already
+    // closed. Reopen it for the duration that we are rendering placeholders.
+    $this->session->start();
+  }
+
+  /**
+   * Performs tasks after sending content (and rendering placeholders).
+   */
+  protected function performPostSendTasks() {
+    // Close the session again.
+    $this->session->save();
+  }
+
+  /**
+   * Sends a chunk.
+   *
+   * @param string|\Drupal\Core\Render\HtmlResponse $chunk
+   *   The string or response to append. String if there's no cacheability
+   *   metadata or attachments to merge.
+   */
+  protected function sendChunk($chunk) {
+    assert(is_string($chunk) || $chunk instanceof HtmlResponse);
+    if ($chunk instanceof HtmlResponse) {
+      print $chunk->getContent();
+    }
+    else {
+      print $chunk;
+    }
+    flush();
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function sendContent($content, array $attachments) {
+  public function sendContent(BigPipeResponse $response) {
+    $content = $response->getContent();
+    $attachments = $response->getAttachments();
+
     // First, gather the BigPipe placeholders that must be replaced.
     $placeholders = isset($attachments['big_pipe_placeholders']) ? $attachments['big_pipe_placeholders'] : [];
     $nojs_placeholders = isset($attachments['big_pipe_nojs_placeholders']) ? $attachments['big_pipe_nojs_placeholders'] : [];
@@ -121,10 +160,7 @@ class BigPipe implements BigPipeInterface {
     $cumulative_assets = AttachedAssets::createFromRenderArray(['#attached' => $attachments]);
     $cumulative_assets->setAlreadyLoadedLibraries($attachments['library']);
 
-    // The content in the placeholders may depend on the session, and by the
-    // time the response is sent (see index.php), the session is already closed.
-    // Reopen it for the duration that we are rendering placeholders.
-    $this->session->start();
+    $this->performPreSendTasks();
 
     // Find the closing </body> tag and get the strings before and after. But be
     // careful to use the latest occurrence of the string "</body>", to ensure
@@ -137,10 +173,7 @@ class BigPipe implements BigPipeInterface {
     $this->sendPlaceholders($placeholders, $this->getPlaceholderOrder($pre_body, $placeholders), $cumulative_assets);
     $this->sendPostBody($post_body);
 
-    // Close the session again.
-    $this->session->save();
-
-    return $this;
+    $this->performPostSendTasks();
   }
 
   /**
@@ -158,8 +191,7 @@ class BigPipe implements BigPipeInterface {
     // If there are no no-JS BigPipe placeholders, we can send the pre-</body>
     // part of the page immediately.
     if (empty($no_js_placeholders)) {
-      print $pre_body;
-      flush();
+      $this->sendChunk($pre_body);
       return;
     }
 
@@ -202,8 +234,7 @@ class BigPipe implements BigPipeInterface {
       $scripts_bottom = $html_response->getContent();
     }
 
-    print $scripts_bottom;
-    flush();
+    $this->sendChunk($scripts_bottom);
   }
 
   /**
@@ -244,8 +275,7 @@ class BigPipe implements BigPipeInterface {
       // between placeholders and it must be printed & flushed immediately. The
       // rest of the logic in the loop handles the placeholders.
       if (!isset($no_js_placeholders[$fragment])) {
-        print $fragment;
-        flush();
+        $this->sendChunk($fragment);
         continue;
       }
 
@@ -253,8 +283,7 @@ class BigPipe implements BigPipeInterface {
       // this is the second occurrence, we can skip all calculations and just
       // send the same content.
       if ($placeholder_occurrences[$fragment] > 1 && isset($multi_occurrence_placeholders_content[$fragment])) {
-        print $multi_occurrence_placeholders_content[$fragment];
-        flush();
+        $this->sendChunk($multi_occurrence_placeholders_content[$fragment]);
         continue;
       }
 
@@ -324,8 +353,7 @@ class BigPipe implements BigPipeInterface {
 
 
       // Send this embedded HTML response.
-      print $html_response->getContent();
-      flush();
+      $this->sendChunk($html_response);
 
       // Another placeholder was rendered and sent, track the set of asset
       // libraries sent so far. Any new settings also need to be tracked, so
@@ -369,10 +397,7 @@ class BigPipe implements BigPipeInterface {
     }
 
     // Send the start signal.
-    print "\n";
-    print static::START_SIGNAL;
-    print "\n";
-    flush();
+    $this->sendChunk("\n" . static::START_SIGNAL . "\n");
 
     // A BigPipe response consists of a HTML response plus multiple embedded
     // AJAX responses. To process the attachments of those AJAX responses, we
@@ -444,8 +469,7 @@ class BigPipe implements BigPipeInterface {
     $json
     </script>
 EOF;
-      print $output;
-      flush();
+      $this->sendChunk($output);
 
       // Another placeholder was rendered and sent, track the set of asset
       // libraries sent so far. Any new settings are already sent; we don't need
@@ -456,10 +480,7 @@ EOF;
     }
 
     // Send the stop signal.
-    print "\n";
-    print static::STOP_SIGNAL;
-    print "\n";
-    flush();
+    $this->sendChunk("\n" . static::STOP_SIGNAL . "\n");
   }
 
   /**
@@ -479,8 +500,26 @@ EOF;
    */
   protected function filterEmbeddedResponse(Request $fake_request, Response $embedded_response) {
     assert('$embedded_response instanceof \Drupal\Core\Render\HtmlResponse || $embedded_response instanceof \Drupal\Core\Ajax\AjaxResponse');
-    $this->requestStack->push($fake_request);
-    $event = new FilterResponseEvent($this->httpKernel, $fake_request, HttpKernelInterface::SUB_REQUEST, $embedded_response);
+    return $this->filterResponse($fake_request, HttpKernelInterface::SUB_REQUEST, $embedded_response);
+  }
+
+  /**
+   * Filters the given response.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request for which a response is being sent.
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST|\Symfony\Component\HttpKernel\HttpKernelInterface::SUB_REQUEST $request_type
+   *   The request type.
+   * @param \Symfony\Component\HttpFoundation\Response $response
+   *   The response to filter.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The filtered response.
+   */
+  protected function filterResponse(Request $request, $request_type, Response $response) {
+    assert('$request_type === \Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST || $request_type === \Symfony\Component\HttpKernel\HttpKernelInterface::SUB_REQUEST');
+    $this->requestStack->push($request);
+    $event = new FilterResponseEvent($this->httpKernel, $request, $request_type, $response);
     $this->eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
     $filtered_response = $event->getResponse();
     $this->requestStack->pop();
@@ -494,9 +533,7 @@ EOF;
    *   The HTML response's content after the closing </body> tag.
    */
   protected function sendPostBody($post_body) {
-    print '</body>';
-    print $post_body;
-    flush();
+    $this->sendChunk('</body>' . $post_body);
   }
 
   /**

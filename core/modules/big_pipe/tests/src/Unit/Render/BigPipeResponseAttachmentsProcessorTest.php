@@ -51,7 +51,7 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
    * @dataProvider attachmentsProvider
    */
   public function testHtmlResponse(array $attachments) {
-    $big_pipe_response = new BigPipeResponse('original');
+    $big_pipe_response = new BigPipeResponse(new HtmlResponse('original'));
     $big_pipe_response->setAttachments($attachments);
 
     // This mock is the main expectation of this test: verify that the decorated
