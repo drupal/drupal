@@ -1,0 +1,46 @@
+language: php
+
+php:
+  - 5.4
+  # - 5.5
+
+services:
+  - mysql
+
+before_script:
+  # Repositories.
+  - sudo apt-add-repository 'deb http://us.archive.ubuntu.com/ubuntu/ precise multiverse'
+  - sudo apt-add-repository 'deb http://us.archive.ubuntu.com/ubuntu/ precise-updates multiverse'
+  - sudo apt-get update
+
+  # Permissions.
+  - CURRENT_USER=$(whoami)
+  - sudo chown -R ${CURRENT_USER}:${CURRENT_USER} $(pwd)
+
+  # Directory stucture.
+  - mkdir build
+
+  # Additional PHP config
+  - echo -e "apc.enable_cli = 1\napc.shm_size = 128M\napc.num_files_hint = 7000" > apc.ini
+  - if [ `expr "$(phpenv global)" "<" "5.5"` -eq 1 ]; then phpenv config-add apc.ini; fi
+  - phpenv config-add core/misc/travis-ci/php.ini
+  - phpenv config-rm xdebug.ini
+
+  # Apache.
+  - sudo apt-get install -y sudo apache2 libapache2-mod-fastcgi
+  - sudo a2enmod rewrite actions fastcgi alias
+
+  # FPM.
+  - cp $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - echo "cgi.fix_pathinfo = 1" >> $HOME/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - $HOME/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+
+  # vHost.
+  - sudo cp -f core/misc/travis-ci/vhost.conf /etc/apache2/sites-enabled/000-default
+  - sudo sed -e "s?%BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default
+
+  # Kick Apache!
+  - sudo service apache2 restart
+
+script:
+  - php core/scripts/run-tests.sh --verbose --color --concurrency 4 --php `which php` --url http://localhost --sqlite build/test.sqlite --dburl mysql://root:root@mysql/drupal --keep-results --class "Drupal\path\Tests\PathAliasTest"
