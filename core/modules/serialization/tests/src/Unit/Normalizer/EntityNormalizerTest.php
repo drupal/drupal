@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\serialization\Normalizer\EntityNormalizer;
 use Drupal\Tests\UnitTestCase;
 
@@ -104,6 +106,10 @@ class EntityNormalizerTest extends UnitTestCase {
     ];
 
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+
+    $entity_type->expects($this->once())
+      ->method('id')
+      ->willReturn('test');
     $entity_type->expects($this->once())
       ->method('hasKey')
       ->with('bundle')
@@ -112,6 +118,11 @@ class EntityNormalizerTest extends UnitTestCase {
       ->method('getKey')
       ->with('bundle')
       ->will($this->returnValue('test_type'));
+    $entity_type->expects($this->once())
+      ->method('isSubClassOf')
+      ->with(FieldableEntityInterface::class)
+      ->willReturn(TRUE);
+
     $entity_type->expects($this->once())
       ->method('getBundleEntityType')
       ->will($this->returnValue('test_bundle'));
@@ -154,23 +165,49 @@ class EntityNormalizerTest extends UnitTestCase {
       ->with('test_bundle')
       ->will($this->returnValue($entity_type_storage));
 
-    // The expected test data should have a modified test_type property.
+    $key_1 = $this->getMock(FieldItemListInterface::class);
+    $key_2 = $this->getMock(FieldItemListInterface::class);
+
+    $entity = $this->getMock(FieldableEntityInterface::class);
+    $entity->expects($this->at(0))
+      ->method('get')
+      ->with('key_1')
+      ->willReturn($key_1);
+    $entity->expects($this->at(1))
+      ->method('get')
+      ->with('key_2')
+      ->willReturn($key_2);
+
+    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    // Create should only be called with the bundle property at first.
     $expected_test_data = array(
-      'key_1' => 'value_1',
-      'key_2' => 'value_2',
       'test_type' => 'test_bundle',
     );
 
-    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
       ->method('create')
       ->with($expected_test_data)
-      ->will($this->returnValue($this->getMock('Drupal\Core\Entity\EntityInterface')));
+      ->will($this->returnValue($entity));
 
     $this->entityManager->expects($this->at(3))
       ->method('getStorage')
       ->with('test')
       ->will($this->returnValue($storage));
+
+    // Setup expectations for the serializer. This will be called for each field
+    // item.
+    $serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')
+      ->disableOriginalConstructor()
+      ->setMethods(array('denormalize'))
+      ->getMock();
+    $serializer->expects($this->at(0))
+      ->method('denormalize')
+      ->with('value_1', get_class($key_1), NULL, ['target_instance' => $key_1, 'entity_type' => 'test']);
+    $serializer->expects($this->at(1))
+      ->method('denormalize')
+      ->with('value_2', get_class($key_2), NULL, ['target_instance' => $key_2, 'entity_type' => 'test']);
+
+    $this->entityNormalizer->setSerializer($serializer);
 
     $this->assertNotNull($this->entityNormalizer->denormalize($test_data, 'Drupal\Core\Entity\ContentEntityBase', NULL, ['entity_type' => 'test']));
   }
@@ -192,6 +229,10 @@ class EntityNormalizerTest extends UnitTestCase {
     ];
 
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+
+    $entity_type->expects($this->once())
+      ->method('id')
+      ->willReturn('test');
     $entity_type->expects($this->once())
       ->method('hasKey')
       ->with('bundle')
@@ -200,6 +241,11 @@ class EntityNormalizerTest extends UnitTestCase {
       ->method('getKey')
       ->with('bundle')
       ->will($this->returnValue('test_type'));
+    $entity_type->expects($this->once())
+      ->method('isSubClassOf')
+      ->with(FieldableEntityInterface::class)
+      ->willReturn(TRUE);
+
     $entity_type->expects($this->once())
       ->method('getBundleEntityType')
       ->will($this->returnValue('test_bundle'));
@@ -242,8 +288,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->with('test_bundle')
       ->will($this->returnValue($entity_type_storage));
 
-
-    $this->entityNormalizer->denormalize($test_data, 'Drupal\Core\Entity\ContentEntityBase', NULL, ['entity_type' => 'test']);
+    $this->assertNotNull($this->entityNormalizer->denormalize($test_data, 'Drupal\Core\Entity\ContentEntityBase', NULL, ['entity_type' => 'test']));
   }
 
   /**

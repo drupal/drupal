@@ -7,12 +7,15 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\rest\LinkManager\LinkManagerInterface;
+use Drupal\serialization\Normalizer\FieldableEntityNormalizerTrait;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
  * Converts the Drupal entity object structure to a HAL array structure.
  */
 class ContentEntityNormalizer extends NormalizerBase {
+
+  use FieldableEntityNormalizerTrait;
 
   /**
    * The interface or class that this Normalizer supports.
@@ -29,19 +32,11 @@ class ContentEntityNormalizer extends NormalizerBase {
   protected $linkManager;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
-
 
   /**
    * Constructs an ContentEntityNormalizer object.
@@ -128,7 +123,7 @@ class ContentEntityNormalizer extends NormalizerBase {
 
     // Create the entity.
     $typed_data_ids = $this->getTypedDataIds($data['_links']['type'], $context);
-    $entity_type = $this->entityManager->getDefinition($typed_data_ids['entity_type']);
+    $entity_type = $this->getEntityTypeDefinition($typed_data_ids['entity_type']);
     $default_langcode_key = $entity_type->getKey('default_langcode');
     $langcode_key = $entity_type->getKey('langcode');
     $values = array();
@@ -174,23 +169,11 @@ class ContentEntityNormalizer extends NormalizerBase {
       }
     }
 
-    // Pass the names of the fields whose values can be merged.
-    $entity->_restSubmittedFields = array_keys($data);
+    $this->denormalizeFieldData($data, $entity, $format, $context);
 
-    // Iterate through remaining items in data array. These should all
-    // correspond to fields.
-    foreach ($data as $field_name => $field_data) {
-      $items = $entity->get($field_name);
-      // Remove any values that were set as a part of entity creation (e.g
-      // uuid). If the incoming field data is set to an empty array, this will
-      // also have the effect of emptying the field in REST module.
-      $items->setValue(array());
-      if ($field_data) {
-        // Denormalize the field data into the FieldItemList object.
-        $context['target_instance'] = $items;
-        $this->serializer->denormalize($field_data, get_class($items), $format, $context);
-      }
-    }
+    // Pass the names of the fields whose values can be merged.
+    // @todo https://www.drupal.org/node/2456257 remove this.
+    $entity->_restSubmittedFields = array_keys($data);
 
     return $entity;
   }

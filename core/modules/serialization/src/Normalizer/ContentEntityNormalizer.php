@@ -8,9 +8,7 @@ namespace Drupal\serialization\Normalizer;
 class ContentEntityNormalizer extends EntityNormalizer {
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected $supportedInterfaceOrClass = ['Drupal\Core\Entity\ContentEntityInterface'];
 
