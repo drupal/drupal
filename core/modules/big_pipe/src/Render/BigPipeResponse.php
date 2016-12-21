@@ -11,7 +11,7 @@ use Drupal\Core\Render\HtmlResponse;
  * it makes the content inaccessible (hidden behind a callback), which means no
  * middlewares are able to modify the content anymore.
  *
- * @see \Drupal\big_pipe\Render\BigPipeInterface
+ * @see \Drupal\big_pipe\Render\BigPipe
  *
  * @internal
  *   This is a temporary solution until a generic response emitter interface is
@@ -23,7 +23,7 @@ class BigPipeResponse extends HtmlResponse {
   /**
    * The BigPipe service.
    *
-   * @var \Drupal\big_pipe\Render\BigPipeInterface
+   * @var \Drupal\big_pipe\Render\BigPipe
    */
   protected $bigPipe;
 
@@ -98,10 +98,10 @@ class BigPipeResponse extends HtmlResponse {
   /**
    * Sets the BigPipe service to use.
    *
-   * @param \Drupal\big_pipe\Render\BigPipeInterface $big_pipe
+   * @param \Drupal\big_pipe\Render\BigPipe $big_pipe
    *   The BigPipe service.
    */
-  public function setBigPipeService(BigPipeInterface $big_pipe) {
+  public function setBigPipeService(BigPipe $big_pipe) {
     $this->bigPipe = $big_pipe;
   }
 

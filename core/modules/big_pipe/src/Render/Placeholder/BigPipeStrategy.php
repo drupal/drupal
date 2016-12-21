@@ -56,7 +56,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * See \Drupal\big_pipe\Render\BigPipe for detailed documentation on how those
  * different placeholders are actually replaced.
  *
- * @see \Drupal\big_pipe\Render\BigPipeInterface
+ * @see \Drupal\big_pipe\Render\BigPipe
  */
 class BigPipeStrategy implements PlaceholderStrategyInterface {
 

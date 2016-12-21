@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Processes attachments of HTML responses with BigPipe enabled.
  *
  * @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor
- * @see \Drupal\big_pipe\Render\BigPipeInterface
+ * @see \Drupal\big_pipe\Render\BigPipe
  */
 class BigPipeResponseAttachmentsProcessor extends HtmlResponseAttachmentsProcessor {
 

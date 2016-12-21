@@ -3,7 +3,7 @@
 namespace Drupal\big_pipe\EventSubscriber;
 
 use Drupal\Core\Render\HtmlResponse;
-use Drupal\big_pipe\Render\BigPipeInterface;
+use Drupal\big_pipe\Render\BigPipe;
 use Drupal\big_pipe\Render\BigPipeResponse;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Response subscriber to replace the HtmlResponse with a BigPipeResponse.
  *
- * @see \Drupal\big_pipe\Render\BigPipeInterface
+ * @see \Drupal\big_pipe\Render\BigPipe
  *
  * @todo Refactor once https://www.drupal.org/node/2577631 lands.
  */
@@ -21,17 +21,17 @@ class HtmlResponseBigPipeSubscriber implements EventSubscriberInterface {
   /**
    * The BigPipe service.
    *
-   * @var \Drupal\big_pipe\Render\BigPipeInterface
+   * @var \Drupal\big_pipe\Render\BigPipe
    */
   protected $bigPipe;
 
   /**
    * Constructs a HtmlResponseBigPipeSubscriber object.
    *
-   * @param \Drupal\big_pipe\Render\BigPipeInterface $big_pipe
+   * @param \Drupal\big_pipe\Render\BigPipe $big_pipe
    *   The BigPipe service.
    */
-  public function __construct(BigPipeInterface $big_pipe) {
+  public function __construct(BigPipe $big_pipe) {
     $this->bigPipe = $big_pipe;
   }
 
@@ -102,8 +102,8 @@ class HtmlResponseBigPipeSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
    *   A response event.
    *
-   * @return \Drupal\big_pipe\Render\BigPipeInterface
-   *   A BigPipe service.
+   * @return \Drupal\big_pipe\Render\BigPipe
+   *   The BigPipe service.
    */
   protected function getBigPipeService(FilterResponseEvent $event) {
     return $this->bigPipe;
