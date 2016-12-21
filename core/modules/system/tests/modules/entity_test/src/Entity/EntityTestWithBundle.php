@@ -21,7 +21,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *       "delete" = "\Drupal\Core\Entity\EntityDeleteForm"
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *       "html" = "Drupal\entity_test\Routing\HtmlRouteProvider",
  *     },
  *   },
  *   base_table = "entity_test_with_bundle",
