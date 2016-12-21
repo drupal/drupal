@@ -1,0 +1,7 @@
+ckeditor_test.ajax_css:
+  path: '/ckeditor_test/ajax_css'
+  defaults:
+    _title: 'AJAX CSS Test'
+    _form: '\Drupal\ckeditor_test\Form\AjaxCssForm'
+  requirements:
+    _access: 'TRUE'

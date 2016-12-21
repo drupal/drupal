@@ -3,7 +3,7 @@
  * CKEditor implementation of {@link Drupal.editors} API.
  */
 
-(function (Drupal, debounce, CKEDITOR, $, displace) {
+(function (Drupal, debounce, CKEDITOR, $, displace, AjaxCommands) {
 
   'use strict';
 
@@ -318,4 +318,33 @@
   // Set the CKEditor cache-busting string to the same value as Drupal.
   CKEDITOR.timestamp = drupalSettings.ckeditor.timestamp;
 
-})(Drupal, Drupal.debounce, CKEDITOR, jQuery, Drupal.displace);
+  if (AjaxCommands) {
+
+    /**
+     * Command to add style sheets to a CKEditor instance.
+     *
+     * Works for both iframe and inline CKEditor instances.
+     *
+     * @param {Drupal.Ajax} [ajax]
+     *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+     * @param {object} response
+     *   The response from the Ajax request.
+     * @param {string} response.editor_id
+     *   The CKEditor instance ID.
+     * @param {number} [status]
+     *   The XMLHttpRequest status.
+     *
+     * @see http://docs.ckeditor.com/#!/api/CKEDITOR.dom.document
+     */
+    AjaxCommands.prototype.ckeditor_add_stylesheet = function (ajax, response, status) {
+      var editor = CKEDITOR.instances[response.editor_id];
+
+      if (editor) {
+        response.stylesheets.forEach(function (url) {
+          editor.document.appendStyleSheet(url);
+        });
+      }
+    };
+  }
+
+})(Drupal, Drupal.debounce, CKEDITOR, jQuery, Drupal.displace, Drupal.AjaxCommands);
