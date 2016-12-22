@@ -7,8 +7,3 @@ parameters:
 services:
   cache.backend.null:
     class: Drupal\Core\Cache\NullBackendFactory
-  config.schema_checker:
-    class: Drupal\Core\Config\Development\ConfigSchemaChecker
-    arguments: ['@config.typed']
-    tags:
-      - { name: event_subscriber }
