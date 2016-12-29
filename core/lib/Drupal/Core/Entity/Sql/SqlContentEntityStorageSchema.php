@@ -7,6 +7,7 @@ use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
@@ -546,6 +547,24 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
       if (isset($tables['revision_data_table'])) {
         $this->processRevisionDataTable($entity_type, $schema[$tables['revision_data_table']]);
+      }
+
+      // Add an index for the 'published' entity key.
+      if (is_subclass_of($entity_type->getClass(), EntityPublishedInterface::class)) {
+        $published_key = $entity_type->getKey('published');
+        if ($published_key && !$storage_definitions[$published_key]->hasCustomStorage()) {
+          $published_field_table = $table_mapping->getFieldTableName($published_key);
+          $id_key = $entity_type->getKey('id');
+          if ($bundle_key = $entity_type->getKey('bundle')) {
+            $key = "{$published_key}_{$bundle_key}";
+            $columns = [$published_key, $bundle_key, $id_key];
+          }
+          else {
+            $key = $published_key;
+            $columns = [$published_key, $id_key];
+          }
+          $schema[$published_field_table]['indexes'][$this->getEntityIndexName($entity_type, $key)] = $columns;
+        }
       }
 
       $this->schema[$entity_type_id] = $schema;
