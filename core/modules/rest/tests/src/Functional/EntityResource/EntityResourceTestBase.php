@@ -383,8 +383,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $get_headers = $response->getHeaders();
 
     // Verify that the GET and HEAD responses are the same. The only difference
-    // is that there's no body.
-    $ignored_headers = ['Date', 'Content-Length', 'X-Drupal-Cache', 'X-Drupal-Dynamic-Cache'];
+    // is that there's no body. For this reason the 'Transfer-Encoding' header
+    // is also added to the list of headers to ignore, as this could be added to
+    // GET requests - depending on web server configuration. This would usually
+    // be 'Transfer-Encoding: chunked'.
+    $ignored_headers = ['Date', 'Content-Length', 'X-Drupal-Cache', 'X-Drupal-Dynamic-Cache', 'Transfer-Encoding'];
     foreach ($ignored_headers as $ignored_header) {
       unset($head_headers[$ignored_header]);
       unset($get_headers[$ignored_header]);
