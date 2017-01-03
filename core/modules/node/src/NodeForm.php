@@ -23,11 +23,6 @@ class NodeForm extends ContentEntityForm {
   protected $tempStoreFactory;
 
   /**
-   * Whether this node has been previewed or not.
-   */
-  protected $hasBeenPreviewed = FALSE;
-
-  /**
    * Constructs a NodeForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -84,7 +79,7 @@ class NodeForm extends ContentEntityForm {
       $this->entity = $preview->getFormObject()->getEntity();
       $this->entity->in_preview = NULL;
 
-      $this->hasBeenPreviewed = TRUE;
+      $form_state->set('has_been_previewed', TRUE);
     }
 
     /** @var \Drupal\node\NodeInterface $node */
@@ -186,7 +181,7 @@ class NodeForm extends ContentEntityForm {
     $node = $this->entity;
     $preview_mode = $node->type->entity->getPreviewMode();
 
-    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || $this->hasBeenPreviewed;
+    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || $form_state->get('has_been_previewed');
 
     // If saving is an option, privileged users get dedicated form submit
     // buttons to adjust the publishing status while saving in one go.
@@ -267,10 +262,19 @@ class NodeForm extends ContentEntityForm {
     $store = $this->tempStoreFactory->get('node_preview');
     $this->entity->in_preview = TRUE;
     $store->set($this->entity->uuid(), $form_state);
-    $form_state->setRedirect('entity.node.preview', array(
+
+    $route_parameters = [
       'node_preview' => $this->entity->uuid(),
       'view_mode_id' => 'default',
-    ));
+    ];
+
+    $options = [];
+    $query = $this->getRequest()->query;
+    if ($query->has('destination')) {
+      $options['query']['destination'] = $query->get('destination');
+      $query->remove('destination');
+    }
+    $form_state->setRedirect('entity.node.preview', $route_parameters, $options);
   }
 
   /**

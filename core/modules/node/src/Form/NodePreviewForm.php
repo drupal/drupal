@@ -73,6 +73,11 @@ class NodePreviewForm extends FormBase {
     $view_mode = $node->preview_view_mode;
 
     $query_options = array('query' => array('uuid' => $node->uuid()));
+    $query = $this->getRequest()->query;
+    if ($query->has('destination')) {
+      $query_options['query']['destination'] = $query->get('destination');
+    }
+
     $form['backlink'] = array(
       '#type' => 'link',
       '#title' => $this->t('Back to content editing'),
@@ -116,10 +121,18 @@ class NodePreviewForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('entity.node.preview', array(
+    $route_parameters = [
       'node_preview' => $form_state->getValue('uuid'),
       'view_mode_id' => $form_state->getValue('view_mode'),
-    ));
+    ];
+
+    $options = [];
+    $query = $this->getRequest()->query;
+    if ($query->has('destination')) {
+      $options['query']['destination'] = $query->get('destination');
+      $query->remove('destination');
+    }
+    $form_state->setRedirect('entity.node.preview', $route_parameters, $options);
   }
 
 }
