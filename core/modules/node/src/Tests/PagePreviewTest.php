@@ -6,6 +6,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -291,6 +292,29 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', array($title_key => 'Preview'), t('Preview'));
     $this->clickLink(t('Back to content editing'));
     $this->assertRaw('edit-submit');
+
+    // Check that destination is remembered when clicking on preview. When going
+    // back to the edit form and clicking save, we should go back to the
+    // original destination, if set.
+    $destination = 'node';
+    $this->drupalPostForm($node->toUrl('edit-form'), [], t('Preview'), ['query' => ['destination' => $destination]]);
+    $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'default'];
+    $options = ['absolute' => TRUE, 'query' => ['destination' => $destination]];
+    $this->assertUrl(Url::fromRoute('entity.node.preview', $parameters, $options));
+    $this->drupalPostForm(NULL, ['view_mode' => 'teaser'], t('Switch'));
+    $this->clickLink(t('Back to content editing'));
+    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->assertUrl($destination);
+
+    // Check that preview page works as expected without a destination set.
+    $this->drupalPostForm($node->toUrl('edit-form'), [], t('Preview'));
+    $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'default'];
+    $this->assertUrl(Url::fromRoute('entity.node.preview', $parameters, ['absolute' => TRUE]));
+    $this->drupalPostForm(NULL, ['view_mode' => 'teaser'], t('Switch'));
+    $this->clickLink(t('Back to content editing'));
+    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->assertUrl($node->toUrl());
+    $this->assertResponse(200);
 
     // Assert multiple items can be added and are not lost when previewing.
     $test_image_1 = current($this->drupalGetTestFiles('image', 39325));
