@@ -26,7 +26,7 @@ entity.workflow.add_transition_form:
   path: '/admin/config/workflow/workflows/manage/{workflow}/add_transition'
   defaults:
     _entity_form: 'workflow.add-transition'
-    _title: 'Add state'
+    _title: 'Add transition'
   requirements:
     _entity_access: 'workflow.edit'
 
@@ -34,7 +34,7 @@ entity.workflow.edit_transition_form:
   path: '/admin/config/workflow/workflows/manage/{workflow}/transition/{workflow_transition}'
   defaults:
     _entity_form: 'workflow.edit-transition'
-    _title: 'Edit state'
+    _title: 'Edit transition'
   requirements:
     _entity_access: 'workflow.edit'
 
@@ -42,6 +42,6 @@ entity.workflow.delete_transition_form:
   path: '/admin/config/workflow/workflows/manage/{workflow}/transition/{workflow_transition}/delete'
   defaults:
     _form: '\Drupal\workflows\Form\WorkflowTransitionDeleteForm'
-    _title: 'Delete state'
+    _title: 'Delete transition'
   requirements:
     _entity_access: 'workflow.edit'
