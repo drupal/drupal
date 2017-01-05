@@ -128,7 +128,7 @@ $status = simpletest_script_execute_batch($tests_to_run);
 simpletest_script_reporter_timer_stop();
 
 // Ensure all test locks are released once finished. If tests are run with a
-// concurrency of 1 the each test will clean up it's own lock. Test locks are
+// concurrency of 1 the each test will clean up its own lock. Test locks are
 // not released if using a higher concurrency to ensure each test method has
 // unique fixtures.
 TestDatabase::releaseAllTestLocks();
