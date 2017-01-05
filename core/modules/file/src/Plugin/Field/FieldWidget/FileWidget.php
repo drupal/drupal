@@ -558,7 +558,7 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     }
 
     // If there are more files uploaded via the same widget, we have to separate
-    // them, as we display each file in it's own widget.
+    // them, as we display each file in its own widget.
     $new_values = array();
     foreach ($submitted_values as $delta => $submitted_value) {
       if (is_array($submitted_value['fids'])) {
