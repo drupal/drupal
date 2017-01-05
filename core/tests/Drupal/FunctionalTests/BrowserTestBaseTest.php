@@ -134,14 +134,32 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
-   * Tests legacy asserts.
+   * Tests legacy text asserts.
    */
-  public function testLegacyAsserts() {
+  public function testLegacyTextAsserts() {
     $this->drupalGet('test-encoded');
     $dangerous = 'Bad html <script>alert(123);</script>';
     $sanitized = Html::escape($dangerous);
     $this->assertNoText($dangerous);
     $this->assertText($sanitized);
+  }
+
+  /**
+   * Tests legacy XPath asserts.
+   */
+  public function testLegacyXPathAsserts() {
+    $this->drupalGet('test-field-xpath');
+    $this->assertFieldsByValue($this->xpath("//h1[@class = 'page-title']"), NULL);
+    $this->assertFieldsByValue($this->xpath('//table/tbody/tr[2]/td[1]'), 'one');
+    $this->assertFieldByXPath('//table/tbody/tr[2]/td[1]', 'one');
+
+    $this->assertFieldsByValue($this->xpath("//input[@id = 'edit-name']"), 'Test name');
+    $this->assertFieldByXPath("//input[@id = 'edit-name']", 'Test name');
+    $this->assertFieldsByValue($this->xpath("//select[@id = 'edit-options']"), '2');
+    $this->assertFieldByXPath("//select[@id = 'edit-options']", '2');
+
+    $this->assertNoFieldByXPath('//notexisting');
+    $this->assertNoFieldByXPath("//input[@id = 'edit-name']", 'wrong value');
   }
 
 }
