@@ -56,88 +56,20 @@ class DefaultExceptionSubscriber extends HttpExceptionSubscriberBase {
   }
 
   /**
-   * Handles a 400 error for HTTP.
+   * Handles all 4xx errors for all serialization failures.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
    *   The event to process.
    */
-  public function on400(GetResponseForExceptionEvent $event) {
-    $this->setEventResponse($event, Response::HTTP_BAD_REQUEST);
-  }
+  public function on4xx(GetResponseForExceptionEvent $event) {
+    /** @var \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $exception */
+    $exception = $event->getException();
 
-  /**
-   * Handles a 403 error for HTTP.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on403(GetResponseForExceptionEvent $event) {
-    $this->setEventResponse($event, Response::HTTP_FORBIDDEN);
-  }
-
-  /**
-   * Handles a 404 error for HTTP.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on404(GetResponseForExceptionEvent $event) {
-    $this->setEventResponse($event, Response::HTTP_NOT_FOUND);
-  }
-
-  /**
-   * Handles a 405 error for HTTP.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on405(GetResponseForExceptionEvent $event) {
-    $this->setEventResponse($event, Response::HTTP_METHOD_NOT_ALLOWED);
-  }
-
-  /**
-   * Handles a 406 error for HTTP.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on406(GetResponseForExceptionEvent $event) {
-    $this->setEventResponse($event, Response::HTTP_NOT_ACCEPTABLE);
-  }
-
-  /**
-   * Handles a 422 error for HTTP.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on422(GetResponseForExceptionEvent $event) {
-    $this->setEventResponse($event, Response::HTTP_UNPROCESSABLE_ENTITY);
-  }
-
-  /**
-   * Handles a 429 error for HTTP.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on429(GetResponseForExceptionEvent $event) {
-    $this->setEventResponse($event, Response::HTTP_TOO_MANY_REQUESTS);
-  }
-
-  /**
-   * Sets the Response for the exception event.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The current exception event.
-   * @param int $status
-   *   The HTTP status code to set for the response.
-   */
-  protected function setEventResponse(GetResponseForExceptionEvent $event, $status) {
     $format = $event->getRequest()->getRequestFormat();
     $content = ['message' => $event->getException()->getMessage()];
     $encoded_content = $this->serializer->serialize($content, $format);
-    $response = new Response($encoded_content, $status);
+
+    $response = new Response($encoded_content, $exception->getStatusCode());
     $event->setResponse($response);
   }
 

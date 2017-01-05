@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\hal\Functional\EntityResource\Role;
 
-use Drupal\Tests\hal\Functional\HalJsonBasicAuthWorkaroundFor2805281Trait;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\Role\RoleResourceTestBase;
 
@@ -37,10 +36,5 @@ class RoleHalJsonBasicAuthTest extends RoleResourceTestBase {
    * {@inheritdoc}
    */
   protected static $auth = 'basic_auth';
-
-  // @todo Fix in https://www.drupal.org/node/2805281: remove this trait usage.
-  use HalJsonBasicAuthWorkaroundFor2805281Trait {
-    HalJsonBasicAuthWorkaroundFor2805281Trait::assertResponseWhenMissingAuthentication insteadof BasicAuthResourceTestTrait;
-  }
 
 }

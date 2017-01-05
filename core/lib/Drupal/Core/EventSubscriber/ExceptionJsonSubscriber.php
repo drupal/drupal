@@ -3,7 +3,6 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
@@ -28,79 +27,15 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
   }
 
   /**
-   * Handles a 400 error for JSON.
+   * Handles all 4xx errors for JSON.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
    *   The event to process.
    */
-  public function on400(GetResponseForExceptionEvent $event) {
-    $response = new JsonResponse(array('message' => $event->getException()->getMessage()), Response::HTTP_BAD_REQUEST);
-    $event->setResponse($response);
-  }
-
-  /**
-   * Handles a 403 error for JSON.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on403(GetResponseForExceptionEvent $event) {
-    $response = new JsonResponse(array('message' => $event->getException()->getMessage()), Response::HTTP_FORBIDDEN);
-    $event->setResponse($response);
-  }
-
-  /**
-   * Handles a 404 error for JSON.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on404(GetResponseForExceptionEvent $event) {
-    $response = new JsonResponse(array('message' => $event->getException()->getMessage()), Response::HTTP_NOT_FOUND);
-    $event->setResponse($response);
-  }
-
-  /**
-   * Handles a 405 error for JSON.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on405(GetResponseForExceptionEvent $event) {
-    $response = new JsonResponse(array('message' => $event->getException()->getMessage()), Response::HTTP_METHOD_NOT_ALLOWED);
-    $event->setResponse($response);
-  }
-
-  /**
-   * Handles a 406 error for JSON.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on406(GetResponseForExceptionEvent $event) {
-    $response = new JsonResponse(['message' => $event->getException()->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
-    $event->setResponse($response);
-  }
-
-  /**
-   * Handles a 415 error for JSON.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on415(GetResponseForExceptionEvent $event) {
-    $response = new JsonResponse(['message' => $event->getException()->getMessage()], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
-    $event->setResponse($response);
-  }
-
-  /**
-   * Handles a 422 error for JSON.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function on422(GetResponseForExceptionEvent $event) {
-    $response = new JsonResponse(['message' => $event->getException()->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+  public function on4xx(GetResponseForExceptionEvent $event) {
+    /** @var \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $exception */
+    $exception = $event->getException();
+    $response = new JsonResponse(['message' => $event->getException()->getMessage()], $exception->getStatusCode());
     $event->setResponse($response);
   }
 
