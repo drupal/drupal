@@ -26,7 +26,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['submit_button'] = array('default' => $this->t('Apply'));
+    $options['submit_button'] = array('default' => $this->t('Filter'));
     $options['reset_button'] = array('default' => FALSE);
     $options['reset_button_label'] = array('default' => $this->t('Reset'));
     $options['exposed_sorts_label'] = array('default' => $this->t('Sort by'));
