@@ -295,7 +295,22 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       $entity->updateLoadedRevisionId();
     }
 
-    return parent::doPreSave($entity);
+    $id = parent::doPreSave($entity);
+
+    if (!$entity->isNew()) {
+      // If the ID changed then original can't be loaded, throw an exception
+      // in that case.
+      if (empty($entity->original) || $entity->id() != $entity->original->id()) {
+        throw new EntityStorageException("Update existing '{$this->entityTypeId}' entity while changing the ID is not supported.");
+      }
+      // Do not allow changing the revision ID when resaving the current
+      // revision.
+      if (!$entity->isNewRevision() && $entity->getRevisionId() != $entity->getLoadedRevisionId()) {
+        throw new EntityStorageException("Update existing '{$this->entityTypeId}' entity revision while changing the revision ID is not supported.");
+      }
+    }
+
+    return $id;
   }
 
   /**

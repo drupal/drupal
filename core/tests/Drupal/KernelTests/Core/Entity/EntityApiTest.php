@@ -175,4 +175,38 @@ class EntityApiTest extends EntityKernelTestBase {
     }
   }
 
+  /**
+   * Tests that resaving a revision with a different revision ID throws an exception.
+   */
+  public function testUpdateWithRevisionId() {
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_mulrev');
+
+    // Create a new entity.
+    /** @var \Drupal\entity_test\Entity\EntityTestMulRev $entity */
+    $entity = $storage->create(['name' => 'revision_test']);
+    $entity->save();
+
+    $this->setExpectedException(EntityStorageException::class, "Update existing 'entity_test_mulrev' entity revision while changing the revision ID is not supported.");
+
+    $entity->revision_id = 60;
+    $entity->save();
+  }
+
+  /**
+   * Tests that resaving an entity with a different entity ID throws an exception.
+   */
+  public function testUpdateWithId() {
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_mulrev');
+
+    // Create a new entity.
+    /** @var \Drupal\entity_test\Entity\EntityTestMulRev $entity */
+    $entity = $storage->create(['name' => 'revision_test']);
+    $entity->save();
+
+    $this->setExpectedException(EntityStorageException::class, "Update existing 'entity_test_mulrev' entity while changing the ID is not supported.");
+
+    $entity->id = 60;
+    $entity->save();
+  }
+
 }

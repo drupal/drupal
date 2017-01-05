@@ -491,6 +491,10 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
       'Changed flag of French translation is set when adding the translation and a new revision.'
     );
 
+    // Since above a clone of the entity was saved and then this entity is saved
+    // again, we have to update the revision ID to the current one.
+    $german->set('revision_id', $form_entity_builder_clone->getRevisionId());
+    $german->updateLoadedRevisionId();
     $german->setOwner($user1);
     $german->setRevisionTranslationAffected(FALSE);
     $entity->save();
