@@ -27,8 +27,8 @@
  * Example .info.yml file properties for a custom module with a po file located
  * in the module's folder.
  * @code
- * interface translation project = example_module
- * interface translation server pattern = modules/custom/example_module/%project-%version.%language.po
+ * 'interface translation project': example_module
+ * 'interface translation server pattern': modules/custom/example_module/%project-%version.%language.po
  * @endcode
  *
  * Streamwrappers can be used in the server pattern definition. The interface
@@ -36,10 +36,10 @@
  * using the "translations://" streamwrapper. But also other streamwrappers can
  * be used.
  * @code
- * interface translation server pattern = translations://%project-%version.%language.po
+ * 'interface translation server pattern': translations://%project-%version.%language.po
  * @endcode
  * @code
- * interface translation server pattern = public://translations/%project-%version.%language.po
+ * 'interface translation server pattern': public://translations/%project-%version.%language.po
  * @endcode
  *
  * Multiple custom modules or themes sharing the same po file should have
@@ -51,8 +51,8 @@
  * Example .info.yml file properties for a custom module with a po file located
  * on a remote translation server.
  * @code
- * interface translation project = example_module
- * interface translation server pattern = http://example.com/files/translations/%core/%project/%project-%version.%language.po
+ * 'interface translation project': example_module
+ * 'interface translation server pattern': http://example.com/files/translations/%core/%project/%project-%version.%language.po
  * @endcode
  *
  * Custom themes, features and distributions can implement these .info.yml file
