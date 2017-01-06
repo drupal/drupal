@@ -50,6 +50,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     $this->assertLinkByHref('admin/structure/types/manage/not_moderated/moderation');
     $this->drupalGet('admin/structure/types/manage/not_moderated/moderation');
     $this->assertOptionSelected('edit-workflow', '');
+    $this->assertNoLink('Delete');
     $edit['workflow'] = 'editorial';
     $this->drupalPostForm(NULL, $edit, t('Save'));
 

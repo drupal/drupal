@@ -139,4 +139,17 @@ class BundleModerationConfigurationForm extends EntityForm {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Save'),
+      '#submit' => ['::submitForm', '::save'],
+    ];
+
+    return $actions;
+  }
+
 }
