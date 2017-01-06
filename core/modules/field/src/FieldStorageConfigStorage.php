@@ -150,8 +150,12 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
    * {@inheritdoc}
    */
   protected function mapFromStorageRecords(array $records) {
-    foreach ($records as &$record) {
+    foreach ($records as $id => &$record) {
       $class = $this->fieldTypeManager->getPluginClass($record['type']);
+      if (empty($class)) {
+        $config_id = $this->getPrefix() . $id;
+        throw new \RuntimeException("Unable to determine class for field type '{$record['type']}' found in the '$config_id' configuration");
+      }
       $record['settings'] = $class::storageSettingsFromConfigData($record['settings']);
     }
     return parent::mapFromStorageRecords($records);
