@@ -49,10 +49,6 @@ views.argument_default.user:
       type: boolean
       label: 'Also look for a node and use the node author'
 
-views.argument_default.current_user:
-  type: boolean
-  label: 'User ID from logged in user'
-
 views_field_user:
   type: views_field
   mapping:
