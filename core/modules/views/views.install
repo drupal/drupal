@@ -406,5 +406,12 @@ function views_update_8200() {
 }
 
 /**
+ * Rebuild cache to refresh the views config schema.
+ */
+function views_update_8201() {
+  // Empty update to cause a cache rebuild so that config schema get refreshed.
+}
+
+/**
  * @} End of "addtogroup updates-8.2.0".
  */
