@@ -66,13 +66,6 @@ views.argument.node_vid:
       type: boolean
       label: 'Exclude'
 
-views.argument_default.node:
-  type: sequence
-  label: 'Content ID from URL'
-  sequence:
-    type: string
-    label: 'Nid'
-
 views.field.node:
   type: views_field
   label: 'Node'

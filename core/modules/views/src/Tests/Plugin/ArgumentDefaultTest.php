@@ -2,10 +2,12 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\argument_default\ArgumentDefaultTest as ArgumentDefaultTestPlugin;
+use Symfony\Component\HttpFoundation\Request;
 
 
 /**
@@ -25,6 +27,7 @@ class ArgumentDefaultTest extends PluginTestBase {
     'test_argument_default_fixed',
     'test_argument_default_current_user',
     'test_argument_default_node',
+    'test_argument_default_query_param',
     );
 
   /**
@@ -161,6 +164,26 @@ class ArgumentDefaultTest extends PluginTestBase {
     $this->assertTrue(strpos($this->xpath($xpath)[0]->asXml(), $node1->getTitle()));
     $this->drupalGet('node/' . $node2->id());
     $this->assertTrue(strpos($this->xpath($xpath)[0]->asXml(), $node2->getTitle()));
+  }
+
+  /**
+   * Tests the query parameter default argument.
+   */
+  public function testArgumentDefaultQueryParameter() {
+    $view = Views::getView('test_argument_default_query_param');
+
+    $request = Request::create(Url::fromUri('internal:/whatever', ['absolute' => TRUE])->toString());
+
+    // Check the query parameter default argument fallback value.
+    $view->setRequest($request);
+    $view->initHandlers();
+    $this->assertEqual($view->argument['type']->getDefaultArgument(), 'all');
+
+    // Check the query parameter default argument with a value.
+    $request->query->add(['the_node_type' => 'page']);
+    $view->setRequest($request);
+    $view->initHandlers();
+    $this->assertEqual($view->argument['type']->getDefaultArgument(), 'page');
   }
 
 }
