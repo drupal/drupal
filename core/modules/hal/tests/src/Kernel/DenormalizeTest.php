@@ -75,6 +75,36 @@ class DenormalizeTest extends NormalizerTestBase {
   }
 
   /**
+   * Tests link relation handling with an invalid type.
+   */
+  public function testTypeHandlingWithInvalidType() {
+    $data_with_invalid_type = array(
+      '_links' => array(
+        'type' => array(
+          'href' => Url::fromUri('base:rest/type/entity_test/entity_test_invalid', array('absolute' => TRUE))->toString(),
+        ),
+      ),
+    );
+
+    $this->setExpectedException(UnexpectedValueException::class);
+    $this->serializer->denormalize($data_with_invalid_type, $this->entityClass, $this->format);
+  }
+
+  /**
+   * Tests link relation handling with no types.
+   */
+  public function testTypeHandlingWithNoTypes() {
+    $data_with_no_types = array(
+      '_links' => array(
+        'type' => array(),
+      ),
+    );
+
+    $this->setExpectedException(UnexpectedValueException::class);
+    $this->serializer->denormalize($data_with_no_types, $this->entityClass, $this->format);
+  }
+
+  /**
    * Test that a field set to an empty array is different than an absent field.
    */
   public function testMarkFieldForDeletion() {

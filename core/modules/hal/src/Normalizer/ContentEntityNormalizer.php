@@ -232,11 +232,17 @@ class ContentEntityNormalizer extends NormalizerBase {
       $types = array($types);
     }
 
+    if (empty($types)) {
+      throw new UnexpectedValueException('No entity type(s) specified');
+    }
+
     foreach ($types as $type) {
       if (!isset($type['href'])) {
         throw new UnexpectedValueException('Type must contain an \'href\' attribute.');
       }
+
       $type_uri = $type['href'];
+
       // Check whether the URI corresponds to a known type on this site. Break
       // once one does.
       if ($typed_data_ids = $this->linkManager->getTypeInternalIds($type['href'], $context)) {

@@ -97,21 +97,18 @@ trait HalEntityNormalizationTrait {
     if ($this->entity->getEntityType()->hasKey('bundle')) {
       $normalization = $this->getNormalizedPostEntity();
 
-      // @todo Uncomment this in https://www.drupal.org/node/2824827.
-      // @codingStandardsIgnoreStart
-/*
+
       $normalization['_links']['type'] = Url::fromUri('base:rest/type/' . static::$entityTypeId . '/bad_bundle_name');
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
 
       // DX: 400 when incorrect entity type bundle is specified.
       $response = $this->request($method, $url, $request_options);
       // @todo Uncomment, remove next 3 in https://www.drupal.org/node/2813853.
-//      $this->assertResourceErrorResponse(400, 'The type link relation must be specified.', $response);
+      // $this->assertResourceErrorResponse(400, 'No entity type(s) specified', $response);
       $this->assertSame(400, $response->getStatusCode());
       $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
-      $this->assertSame($this->serializer->encode(['error' => 'The type link relation must be specified.'], static::$format), (string) $response->getBody());
-*/
-      // @codingStandardsIgnoreEnd
+      $this->assertSame($this->serializer->encode(['error' => 'No entity type(s) specified'], static::$format), (string) $response->getBody());
+
 
       unset($normalization['_links']['type']);
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
