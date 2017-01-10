@@ -255,6 +255,21 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   }
 
   /**
+   * Tests storage required.
+   *
+   * @covers ::isStorageRequired
+   * @covers ::setStorageRequired
+   */
+  public function testFieldStorageRequired() {
+    $definition = BaseFieldDefinition::create($this->fieldType);
+    $this->assertFalse($definition->isStorageRequired());
+    $definition->setStorageRequired(TRUE);
+    $this->assertTrue($definition->isStorageRequired());
+    $definition->setStorageRequired(FALSE);
+    $this->assertFalse($definition->isStorageRequired());
+  }
+
+  /**
    * Tests provider.
    *
    * @covers ::getProvider
