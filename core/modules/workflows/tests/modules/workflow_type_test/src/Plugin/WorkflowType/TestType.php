@@ -13,4 +13,13 @@ use Drupal\workflows\Plugin\WorkflowTypeBase;
  * )
  */
 class TestType extends WorkflowTypeBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    // No configuration is stored for the test type.
+    return [];
+  }
+
 }

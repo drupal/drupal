@@ -26,6 +26,14 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   /**
    * {@inheritdoc}
    */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->setConfiguration($configuration);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function label() {
     $definition = $this->getPluginDefinition();
     // The label can be an object.
