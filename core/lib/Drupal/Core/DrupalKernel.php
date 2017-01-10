@@ -1051,7 +1051,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       if (!empty($loader)) {
         $this->classLoader->unregister();
         $loader->register();
+        $old_loader = $this->classLoader;
         $this->classLoader = $loader;
+        // The optimized classloader might be persistent and store cache misses.
+        // For example, once a cache miss is stored in APCu clearing it on a
+        // specific web-head will not clear any other web-heads. Therefore
+        // fallback to the composer class loader that only statically caches
+        // misses.
+        $old_loader->register();
       }
     }
   }
