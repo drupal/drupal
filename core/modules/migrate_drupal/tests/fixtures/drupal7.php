@@ -43860,7 +43860,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'menu_override_parent_selector',
-  'value' => 'b:0;',
+  'value' => 'b:1;',
 ))
 ->values(array(
   'name' => 'menu_parent_article',
