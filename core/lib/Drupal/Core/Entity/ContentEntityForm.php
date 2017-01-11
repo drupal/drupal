@@ -366,7 +366,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    *   The entity updated with the submitted values.
    */
   public function updateChangedTime(EntityInterface $entity) {
-    if ($entity->getEntityType()->isSubclassOf(EntityChangedInterface::class)) {
+    if ($entity instanceof EntityChangedInterface) {
       $entity->setChangedTime($this->time->getRequestTime());
     }
   }

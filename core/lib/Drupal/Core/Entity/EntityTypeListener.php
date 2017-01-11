@@ -74,7 +74,7 @@ class EntityTypeListener implements EntityTypeListenerInterface {
     $this->eventDispatcher->dispatch(EntityTypeEvents::CREATE, new EntityTypeEvent($entity_type));
 
     $this->entityLastInstalledSchemaRepository->setLastInstalledDefinition($entity_type);
-    if ($entity_type->isSubclassOf(FieldableEntityInterface::class)) {
+    if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       $this->entityLastInstalledSchemaRepository->setLastInstalledFieldStorageDefinitions($entity_type_id, $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id));
     }
   }

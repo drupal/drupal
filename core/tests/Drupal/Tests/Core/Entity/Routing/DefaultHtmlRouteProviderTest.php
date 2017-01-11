@@ -159,7 +159,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $entity_type5->getBundleEntityType()->willReturn('the_bundle_entity_type_id');
     $entity_type5->getLinkTemplate('add-form')->willReturn('/the/add/form/link/template/{the_bundle_entity_type_id}');
     $bundle_entity_type = $this->getEntityType();
-    $bundle_entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE);
+    $bundle_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $route->setPath('/the/add/form/link/template/{the_bundle_entity_type_id}');
     $route
       ->setDefault('bundle_parameter', 'the_bundle_entity_type_id')
@@ -171,7 +171,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
 
     $entity_type6 = $this->getEntityType($entity_type5);
     $bundle_entity_type = $this->getEntityType();
-    $bundle_entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(TRUE);
+    $bundle_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
     $field_storage_definition = $this->prophesize(FieldStorageDefinitionInterface::class);
     $field_storage_definition->getType()->willReturn('integer');
     $route->setRequirement('the_entity_type_id', '\d+');
@@ -179,7 +179,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
 
     $entity_type7 = $this->getEntityType($entity_type6);
     $bundle_entity_type = $this->prophesize(ConfigEntityTypeInterface::class);
-    $bundle_entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE);
+    $bundle_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $field_storage_definition = $this->prophesize(FieldStorageDefinitionInterface::class);
     $route
       // Unset the 'the_entity_type_id' requirement.
@@ -223,7 +223,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $entity_type3->hasViewBuilderClass()->willReturn(TRUE);
     $entity_type3->id()->willReturn('the_entity_type_id');
     $entity_type3->getLinkTemplate('canonical')->willReturn('/the/canonical/link/template');
-    $entity_type3->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE);
+    $entity_type3->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $route = (new Route('/the/canonical/link/template'))
       ->setDefaults([
         '_entity_view' => 'the_entity_type_id.full',
@@ -242,7 +242,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $data['id_key_type_null'] = [clone $route, $entity_type3->reveal()];
 
     $entity_type4 = $this->getEntityType($entity_type3);
-    $entity_type4->isSubclassOf(FieldableEntityInterface::class)->willReturn(TRUE);
+    $entity_type4->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
     $entity_type4->getKey('id')->willReturn('id');
     $route->setRequirement('the_entity_type_id', '\d+');
     $field_storage_definition = $this->prophesize(FieldStorageDefinitionInterface::class);
@@ -283,7 +283,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $entity_type4->id()->willReturn('the_entity_type_id');
     $entity_type4->getLabel()->willReturn('The entity type');
     $entity_type4->getLinkTemplate('collection')->willReturn('/the/collection/link/template');
-    $entity_type4->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE);
+    $entity_type4->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $route = (new Route('/the/collection/link/template'))
       ->setDefaults([
         '_entity_list' => 'the_entity_type_id',
@@ -303,7 +303,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    */
   public function testGetEntityTypeIdKeyType() {
     $entity_type = $this->prophesize(EntityTypeInterface::class);
-    $entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(TRUE);
+    $entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
     $entity_type->id()->willReturn('the_entity_type_id');
     $entity_type->getKey('id')->willReturn('id');
 
@@ -320,7 +320,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    */
   public function testGetEntityTypeIdKeyTypeNotFieldable() {
     $entity_type = $this->prophesize(EntityTypeInterface::class);
-    $entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE);
+    $entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $this->entityFieldManager->getFieldStorageDefinitions(Argument::any())->shouldNotBeCalled();
 
     $type = $this->routeProvider->getEntityTypeIdKeyType($entity_type->reveal());

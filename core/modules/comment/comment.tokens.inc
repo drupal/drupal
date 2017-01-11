@@ -24,7 +24,7 @@ function comment_token_info() {
   $tokens = [];
   // Provide a integration for each entity type except comment.
   foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
-    if ($entity_type_id == 'comment' || !$entity_type->isSubclassOf(ContentEntityInterface::class)) {
+    if ($entity_type_id == 'comment' || !$entity_type->entityClassImplements(ContentEntityInterface::class)) {
       continue;
     }
 

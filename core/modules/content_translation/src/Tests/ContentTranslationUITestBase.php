@@ -3,6 +3,7 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
@@ -599,7 +600,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     // Test only entities, which implement the EntityChangedInterface.
-    if ($entity->getEntityType()->isSubclassOf('Drupal\Core\Entity\EntityChangedInterface')) {
+    if ($entity instanceof EntityChangedInterface) {
       $changed_timestamp = $entity->getChangedTime();
 
       $entity->save();

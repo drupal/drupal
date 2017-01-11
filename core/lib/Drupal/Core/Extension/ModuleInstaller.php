@@ -218,7 +218,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
           if ($entity_type->getProvider() == $module) {
             $update_manager->installEntityType($entity_type);
           }
-          elseif ($entity_type->isSubclassOf(FieldableEntityInterface::CLASS)) {
+          elseif ($entity_type->entityClassImplements(FieldableEntityInterface::CLASS)) {
             // The module being installed may be adding new fields to existing
             // entity types. Field definitions for any entity type defined by
             // the module are handled in the if branch.
@@ -403,7 +403,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         if ($entity_type->getProvider() == $module) {
           $update_manager->uninstallEntityType($entity_type);
         }
-        elseif ($entity_type->isSubclassOf(FieldableEntityInterface::CLASS)) {
+        elseif ($entity_type->entityClassImplements(FieldableEntityInterface::CLASS)) {
           // The module being installed may be adding new fields to existing
           // entity types. Field definitions for any entity type defined by
           // the module are handled in the if branch.

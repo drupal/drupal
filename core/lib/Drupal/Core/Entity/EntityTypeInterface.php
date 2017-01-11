@@ -352,6 +352,17 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function setAccessClass($class);
 
   /**
+   * Indicates if the entity type class implements the given interface.
+   *
+   * @param string $interface
+   *   The class or interface to check.
+   *
+   * @return bool
+   *   TRUE if the entity type class implements the given interface.
+   */
+  public function entityClassImplements($interface);
+
+  /**
    * Indicates if the entity type is a subclass of the given class or interface.
    *
    * @param string $class
@@ -359,6 +370,10 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return bool
    *   TRUE if the entity type is a subclass of the class or interface.
+   *
+   * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0.
+   *   Use Drupal\Core\Entity\EntityTypeInterface::entityClassImpelments()
+   *   instead.
    */
   public function isSubclassOf($class);
 

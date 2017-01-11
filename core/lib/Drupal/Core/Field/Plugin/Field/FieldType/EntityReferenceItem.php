@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
@@ -66,7 +67,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     $target_type_info = \Drupal::entityManager()->getDefinition($settings['target_type']);
 
     $target_id_data_type = 'string';
-    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
+    if ($target_type_info->entityClassImplements(FieldableEntityInterface::class)) {
       $id_definition = \Drupal::entityManager()->getBaseFieldDefinitions($settings['target_type'])[$target_type_info->getKey('id')];
       if ($id_definition->getType() === 'integer') {
         $target_id_data_type = 'integer';
@@ -114,7 +115,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     $target_type = $field_definition->getSetting('target_type');
     $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
     $properties = static::propertyDefinitions($field_definition)['target_id'];
-    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface') && $properties->getDataType() === 'integer') {
+    if ($target_type_info->entityClassImplements(FieldableEntityInterface::class) && $properties->getDataType() === 'integer') {
       $columns = array(
         'target_id' => array(
           'description' => 'The ID of the target entity.',

@@ -4,6 +4,7 @@ namespace Drupal\content_translation;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -15,6 +16,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -174,7 +176,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // EntityOwnerInterface. This helps to exclude cases, where the uid is
     // defined as field name, but is not meant to be an owner field; for
     // instance, the User entity.
-    return $this->entityType->isSubclassOf('\Drupal\user\EntityOwnerInterface') && $this->checkFieldStorageDefinitionTranslatability('uid');
+    return $this->entityType->entityClassImplements(EntityOwnerInterface::class) && $this->checkFieldStorageDefinitionTranslatability('uid');
   }
 
   /**
@@ -194,7 +196,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *   TRUE if metadata is natively supported, FALSE otherwise.
    */
   protected function hasChangedTime() {
-    return $this->entityType->isSubclassOf('Drupal\Core\Entity\EntityChangedInterface') && $this->checkFieldStorageDefinitionTranslatability('changed');
+    return $this->entityType->entityClassImplements(EntityChangedInterface::class) && $this->checkFieldStorageDefinitionTranslatability('changed');
   }
 
   /**

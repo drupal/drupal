@@ -341,7 +341,7 @@ function comment_form_field_storage_config_edit_form_alter(&$form, FormStateInte
  */
 function comment_entity_storage_load($entities, $entity_type) {
   // Comments can only be attached to content entities, so skip others.
-  if (!\Drupal::entityManager()->getDefinition($entity_type)->isSubclassOf('Drupal\Core\Entity\FieldableEntityInterface')) {
+  if (!\Drupal::entityManager()->getDefinition($entity_type)->entityClassImplements(FieldableEntityInterface::class)) {
     return;
   }
   // @todo Investigate in https://www.drupal.org/node/2527866 why we need that.

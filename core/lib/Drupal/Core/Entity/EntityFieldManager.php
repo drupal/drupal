@@ -195,7 +195,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $keys = array_filter($entity_type->getKeys());
 
     // Fail with an exception for non-fieldable entity types.
-    if (!$entity_type->isSubclassOf(FieldableEntityInterface::class)) {
+    if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       throw new \LogicException("Getting the base fields is not supported for entity type {$entity_type->getLabel()}.");
     }
 
@@ -435,7 +435,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
         // bundles, and we do not expect to have so many different entity
         // types for this to become a bottleneck.
         foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
-          if ($entity_type->isSubclassOf(FieldableEntityInterface::class)) {
+          if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
             $bundles = array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type_id));
             foreach ($this->getBaseFieldDefinitions($entity_type_id) as $field_name => $base_field_definition) {
               $this->fieldMap[$entity_type_id][$field_name] = [

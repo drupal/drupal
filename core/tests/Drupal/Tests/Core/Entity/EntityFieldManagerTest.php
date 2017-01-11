@@ -543,7 +543,7 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $this->entityType->getClass()->willReturn($entity_class);
     $this->entityType->getKeys()->willReturn($entity_keys + ['default_langcode' => 'default_langcode']);
-    $this->entityType->isSubclassOf(FieldableEntityInterface::class)->willReturn(TRUE);
+    $this->entityType->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
     $this->entityType->isTranslatable()->willReturn(FALSE);
     $this->entityType->getProvider()->willReturn('the_provider');
     $this->entityType->id()->willReturn('the_entity_id');
@@ -652,13 +652,13 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $entity_type->getClass()->willReturn($entity_class);
     $entity_type->getKeys()->willReturn(['default_langcode' => 'default_langcode']);
-    $entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(TRUE);
+    $entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
     $entity_type->isTranslatable()->shouldBeCalled();
     $entity_type->getProvider()->shouldBeCalled();
 
-    $non_content_entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE);
+    $non_content_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
 
-    $override_entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE);
+    $override_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
 
     // Set up the entity type bundle info to return two bundles for the
     // fieldable entity type.
@@ -753,11 +753,11 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $entity_type->getClass()->willReturn($entity_class)->shouldBeCalled();
     $entity_type->getKeys()->willReturn(['default_langcode' => 'default_langcode'])->shouldBeCalled();
-    $entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(TRUE)->shouldBeCalled();
+    $entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE)->shouldBeCalled();
     $entity_type->isTranslatable()->shouldBeCalled();
     $entity_type->getProvider()->shouldBeCalled();
 
-    $override_entity_type->isSubclassOf(FieldableEntityInterface::class)->willReturn(FALSE)->shouldBeCalled();
+    $override_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE)->shouldBeCalled();
 
     $integerFields = $this->entityFieldManager->getFieldMapByFieldType('integer');
     $this->assertCount(1, $integerFields['test_entity_type']);

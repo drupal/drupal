@@ -341,7 +341,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
    *   type does not support fields.
    */
   protected function getEntityTypeIdKeyType(EntityTypeInterface $entity_type) {
-    if (!$entity_type->isSubclassOf(FieldableEntityInterface::class)) {
+    if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       return NULL;
     }
 

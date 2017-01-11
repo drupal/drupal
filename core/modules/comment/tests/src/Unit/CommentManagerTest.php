@@ -3,6 +3,7 @@
 namespace Drupal\Tests\comment\Unit;
 
 use Drupal\comment\CommentManager;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -23,8 +24,8 @@ class CommentManagerTest extends UnitTestCase {
       ->method('getClass')
       ->will($this->returnValue('Node'));
     $entity_type->expects($this->any())
-      ->method('isSubclassOf')
-      ->with('\Drupal\Core\Entity\FieldableEntityInterface')
+      ->method('entityClassImplements')
+      ->with(FieldableEntityInterface::class)
       ->will($this->returnValue(TRUE));
 
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');

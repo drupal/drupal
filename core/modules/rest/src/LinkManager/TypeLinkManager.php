@@ -5,6 +5,7 @@ namespace Drupal\rest\LinkManager;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -127,7 +128,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
     foreach ($this->bundleInfoService->getAllBundleInfo() as $entity_type_id => $bundles) {
       // Only content entities are supported currently.
       // @todo Consider supporting config entities.
-      if ($entity_types[$entity_type_id]->isSubclassOf('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
+      if ($entity_types[$entity_type_id]->entityClassImplements(ConfigEntityInterface::class)) {
         continue;
       }
       foreach ($bundles as $bundle => $bundle_info) {

@@ -263,7 +263,7 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
       $this->contentEntityPaths = [];
       $entity_types = $this->entityManager->getDefinitions();
       foreach ($entity_types as $entity_type_id => $entity_type) {
-        if ($entity_type->isSubclassOf(ContentEntityInterface::class)) {
+        if ($entity_type->entityClassImplements(ContentEntityInterface::class)) {
           $entity_paths = array_fill_keys($entity_type->getLinkTemplates(), $entity_type_id);
           $this->contentEntityPaths = array_merge($this->contentEntityPaths, $entity_paths);
         }

@@ -7,6 +7,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
@@ -157,7 +158,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
       );
     }
 
-    if ($entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
+    if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       $fields = array();
       foreach (array_keys($bundles) as $bundle) {
         $bundle_fields = array_filter($this->entityManager->getFieldDefinitions($entity_type_id, $bundle), function ($field_definition) {

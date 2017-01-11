@@ -6,6 +6,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -99,7 +100,7 @@ class CommentManager implements CommentManagerInterface {
    */
   public function getFields($entity_type_id) {
     $entity_type = $this->entityManager->getDefinition($entity_type_id);
-    if (!$entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
+    if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       return array();
     }
 
