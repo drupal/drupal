@@ -460,8 +460,6 @@ system.batch_page.html:
     _format: 'html'
   options:
     _admin_route: TRUE
-    # @todo Remove the '_no_big_pipe' route option when https://www.drupal.org/node/2589967 lands.
-    _no_big_pipe: TRUE
 
 system.batch_page.json:
   path: '/batch'
