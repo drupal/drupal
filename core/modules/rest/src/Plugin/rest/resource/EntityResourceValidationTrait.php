@@ -2,6 +2,7 @@
 
 namespace Drupal\rest\Plugin\rest\resource;
 
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -35,7 +36,9 @@ trait EntityResourceValidationTrait {
     if ($violations->count() > 0) {
       $message = "Unprocessable Entity: validation failed.\n";
       foreach ($violations as $violation) {
-        $message .= $violation->getPropertyPath() . ': ' . $violation->getMessage() . "\n";
+        // We strip every HTML from the error message to have a nicer to read
+        // message on REST responses.
+        $message .= $violation->getPropertyPath() . ': ' . PlainTextOutput::renderFromHtml($violation->getMessage()) . "\n";
       }
       throw new UnprocessableEntityHttpException($message);
     }

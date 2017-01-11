@@ -163,7 +163,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
     // DX: 422 when changing email without providing the password.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Email</em>.\n", $response);
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the Email.\n", $response);
 
 
     $normalization['pass'] = [['existing' => 'wrong']];
@@ -171,7 +171,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
     // DX: 422 when changing email while providing a wrong password.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Email</em>.\n", $response);
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the Email.\n", $response);
 
 
     $normalization['pass'] = [['existing' => $this->account->passRaw]];
@@ -192,7 +192,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
     // DX: 422 when changing password without providing the current password.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\npass: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Password</em>.\n", $response);
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\npass: Your current password is missing or incorrect; it's required to change the Password.\n", $response);
 
 
     $normalization['pass'][0]['existing'] = $this->account->pass_raw;

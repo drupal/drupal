@@ -568,7 +568,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('POST', $url, $request_options);
     $label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName;
     $label_field_capitalized = ucfirst($label_field);
-    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: <em class=\"placeholder\">$label_field_capitalized</em>: this field cannot hold more than 1 values.\n", $response);
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: $label_field_capitalized: this field cannot hold more than 1 values.\n", $response);
 
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_2;
@@ -576,7 +576,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 422 when invalid entity: UUID field too long.
     $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nuuid.0.value: <em class=\"placeholder\">UUID</em>: may not be longer than 128 characters.\n", $response);
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nuuid.0.value: UUID: may not be longer than 128 characters.\n", $response);
 
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_3;
@@ -760,7 +760,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     $label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName;
     $label_field_capitalized = ucfirst($label_field);
-    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: <em class=\"placeholder\">$label_field_capitalized</em>: this field cannot hold more than 1 values.\n", $response);
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: $label_field_capitalized: this field cannot hold more than 1 values.\n", $response);
 
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_2;
