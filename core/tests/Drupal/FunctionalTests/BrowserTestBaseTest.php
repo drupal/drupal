@@ -5,6 +5,7 @@ namespace Drupal\FunctionalTests;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Tests BrowserTestBase functionality.
@@ -12,6 +13,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group browsertestbase
  */
 class BrowserTestBaseTest extends BrowserTestBase {
+
+  use CronRunTrait;
 
   /**
    * Modules to enable.
@@ -160,6 +163,18 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     $this->assertNoFieldByXPath('//notexisting');
     $this->assertNoFieldByXPath("//input[@id = 'edit-name']", 'wrong value');
+  }
+
+  /**
+   * Tests the ::cronRun() method.
+   */
+  public function testCronRun() {
+    $last_cron_time = \Drupal::state()->get('system.cron_last');
+    $this->cronRun();
+    $this->assertSession()->statusCodeEquals(204);
+    $next_cron_time = \Drupal::state()->get('system.cron_last');
+
+    $this->assertGreaterThan($last_cron_time, $next_cron_time);
   }
 
 }

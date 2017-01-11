@@ -19,6 +19,7 @@ use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Url;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\XdebugRequestTrait;
 use Zend\Diactoros\Uri;
@@ -43,6 +44,7 @@ abstract class WebTestBase extends TestBase {
   use ContentTypeCreationTrait {
     createContentType as drupalCreateContentType;
   }
+  use CronRunTrait;
   use AssertMailTrait {
     getMails as drupalGetMails;
   }
@@ -1564,13 +1566,6 @@ abstract class WebTestBase extends TestBase {
       $edit[urldecode($key)] = urldecode($value);
     }
     return $edit;
-  }
-
-  /**
-   * Runs cron in the Drupal installed by Simpletest.
-   */
-  protected function cronRun() {
-    $this->drupalGet('cron/' . \Drupal::state()->get('system.cron_key'));
   }
 
   /**
