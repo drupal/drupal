@@ -5,19 +5,11 @@ namespace Drupal\serialization\EventSubscriber;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Alters user authentication routes to support additional serialization formats.
  */
 class UserRouteAlterSubscriber implements EventSubscriberInterface {
-
-  /**
-   * The serializer.
-   *
-   * @var \Symfony\Component\Serializer\Serializer
-   */
-  protected $serializer;
 
   /**
    * The available serialization formats.
@@ -29,13 +21,10 @@ class UserRouteAlterSubscriber implements EventSubscriberInterface {
   /**
    * UserRouteAlterSubscriber constructor.
    *
-   * @param \Symfony\Component\Serializer\SerializerInterface $serializer
-   *   The serializer service.
    * @param array $serializer_formats
    *   The available serializer formats.
    */
-  public function __construct(SerializerInterface $serializer, array $serializer_formats) {
-    $this->serializer = $serializer;
+  public function __construct(array $serializer_formats) {
     $this->serializerFormats = $serializer_formats;
   }
 
