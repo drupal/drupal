@@ -98,11 +98,13 @@ class DateTimePlusTest extends UnitTestCase {
    *   Input argument for DateTimePlus.
    * @param string $timezone
    *   Timezone argument for DateTimePlus.
+   * @param string $class
+   *   The Exception subclass to expect to be thrown.
    *
    * @dataProvider providerTestInvalidDateArrays
-   * @expectedException \Exception
    */
-  public function testInvalidDateArrays($input, $timezone) {
+  public function testInvalidDateArrays($input, $timezone, $class) {
+    $this->setExpectedException($class);
     $this->assertInstanceOf(
       '\Drupal\Component\DateTimePlus',
       DateTimePlus::createFromArray($input, $timezone)
@@ -234,11 +236,13 @@ class DateTimePlusTest extends UnitTestCase {
    *   Format argument for DateTimePlus.
    * @param string $message
    *   Message to print if no errors are thrown by the invalid dates.
+   * @param string $class
+   *   The Exception subclass to expect to be thrown.
    *
    * @dataProvider providerTestInvalidDates
-   * @expectedException \Exception
    */
-  public function testInvalidDates($input, $timezone, $format, $message) {
+  public function testInvalidDates($input, $timezone, $format, $message, $class) {
+    $this->setExpectedException($class);
     DateTimePlus::createFromFormat($format, $input, $timezone);
   }
 
@@ -371,15 +375,15 @@ class DateTimePlusTest extends UnitTestCase {
     return array(
       // Test for invalid month names when we are using a short version
       // of the month.
-      array('23 abc 2012', NULL, 'd M Y', "23 abc 2012 contains an invalid month name and did not produce errors."),
+      array('23 abc 2012', NULL, 'd M Y', "23 abc 2012 contains an invalid month name and did not produce errors.", \InvalidArgumentException::class),
       // Test for invalid hour.
-      array('0000-00-00T45:30:00', NULL, 'Y-m-d\TH:i:s', "0000-00-00T45:30:00 contains an invalid hour and did not produce errors."),
+      array('0000-00-00T45:30:00', NULL, 'Y-m-d\TH:i:s', "0000-00-00T45:30:00 contains an invalid hour and did not produce errors.", \UnexpectedValueException::class),
       // Test for invalid day.
-      array('0000-00-99T05:30:00', NULL, 'Y-m-d\TH:i:s', "0000-00-99T05:30:00 contains an invalid day and did not produce errors."),
+      array('0000-00-99T05:30:00', NULL, 'Y-m-d\TH:i:s', "0000-00-99T05:30:00 contains an invalid day and did not produce errors.", \UnexpectedValueException::class),
       // Test for invalid month.
-      array('0000-75-00T15:30:00', NULL, 'Y-m-d\TH:i:s', "0000-75-00T15:30:00 contains an invalid month and did not produce errors."),
+      array('0000-75-00T15:30:00', NULL, 'Y-m-d\TH:i:s', "0000-75-00T15:30:00 contains an invalid month and did not produce errors.", \UnexpectedValueException::class),
       // Test for invalid year.
-      array('11-08-01T15:30:00', NULL, 'Y-m-d\TH:i:s', "11-08-01T15:30:00 contains an invalid year and did not produce errors."),
+      array('11-08-01T15:30:00', NULL, 'Y-m-d\TH:i:s', "11-08-01T15:30:00 contains an invalid year and did not produce errors.", \UnexpectedValueException::class),
 
     );
   }
@@ -397,17 +401,17 @@ class DateTimePlusTest extends UnitTestCase {
   public function providerTestInvalidDateArrays() {
     return array(
       // One year larger than the documented upper limit of checkdate().
-      array(array('year' => 32768, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago'),
+      array(array('year' => 32768, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago', \InvalidArgumentException::class),
       // One year smaller than the documented lower limit of checkdate().
-      array(array('year' => 0, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago'),
+      array(array('year' => 0, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago', \InvalidArgumentException::class),
       // Test for invalid month from date array.
-      array(array('year' => 2010, 'month' => 27, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago'),
+      array(array('year' => 2010, 'month' => 27, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago', \InvalidArgumentException::class),
       // Test for invalid hour from date array.
-      array(array('year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 80, 'minute' => 0, 'second' => 0), 'America/Chicago'),
+      array(array('year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 80, 'minute' => 0, 'second' => 0), 'America/Chicago', \InvalidArgumentException::class),
       // Test for invalid minute from date array.
-      array(array('year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0), 'America/Chicago'),
+      array(array('year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0), 'America/Chicago', \InvalidArgumentException::class),
       // Regression test for https://www.drupal.org/node/2084455.
-      array(array('hour' => 59, 'minute' => 1, 'second' => 1), 'America/Chicago'),
+      array(array('hour' => 59, 'minute' => 1, 'second' => 1), 'America/Chicago', \InvalidArgumentException::class),
     );
   }
 

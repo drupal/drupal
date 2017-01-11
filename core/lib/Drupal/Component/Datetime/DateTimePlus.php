@@ -130,7 +130,7 @@ class DateTimePlus {
    * @return static
    *   A new DateTimePlus object.
    *
-   * @throws \Exception
+   * @throws \InvalidArgumentException
    *   If the array date values or value combination is not correct.
    */
   public static function createFromArray(array $date_parts, $timezone = NULL, $settings = array()) {
@@ -144,7 +144,7 @@ class DateTimePlus {
       return new static($iso_date, $timezone, $settings);
     }
     else {
-      throw new \Exception('The array contains invalid values.');
+      throw new \InvalidArgumentException('The array contains invalid values.');
     }
   }
 
@@ -164,12 +164,12 @@ class DateTimePlus {
    * @return static
    *   A new DateTimePlus object.
    *
-   * @throws \Exception
+   * @throws \InvalidArgumentException
    *   If the timestamp is not numeric.
    */
   public static function createFromTimestamp($timestamp, $timezone = NULL, $settings = array()) {
     if (!is_numeric($timestamp)) {
-      throw new \Exception('The timestamp must be numeric.');
+      throw new \InvalidArgumentException('The timestamp must be numeric.');
     }
     $datetime = new static('', $timezone, $settings);
     $datetime->setTimestamp($timestamp);
@@ -202,9 +202,10 @@ class DateTimePlus {
    * @return static
    *   A new DateTimePlus object.
    *
-   * @throws \Exception
-   *   If the a date cannot be created from the given format, or if the
-   *   created date does not match the input value.
+   * @throws \InvalidArgumentException
+   *   If the a date cannot be created from the given format.
+   * @throws \UnexpectedValueException
+   *   If the created date does not match the input value.
    */
   public static function createFromFormat($format, $time, $timezone = NULL, $settings = array()) {
     if (!isset($settings['validate_format'])) {
@@ -218,7 +219,7 @@ class DateTimePlus {
 
     $date = \DateTime::createFromFormat($format, $time, $datetimeplus->getTimezone());
     if (!$date instanceof \DateTime) {
-      throw new \Exception('The date cannot be created from a format.');
+      throw new \InvalidArgumentException('The date cannot be created from a format.');
     }
     else {
       // Functions that parse date is forgiving, it might create a date that
@@ -236,7 +237,7 @@ class DateTimePlus {
       $datetimeplus->setTimezone($date->getTimezone());
 
       if ($settings['validate_format'] && $test_time != $time) {
-        throw new \Exception('The created date does not match the input value.');
+        throw new \UnexpectedValueException('The created date does not match the input value.');
       }
     }
     return $datetimeplus;
