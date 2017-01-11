@@ -175,6 +175,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
       }
     }
     \Drupal::service('module_installer')->install(['forum']);
+    \Drupal::service('module_installer')->install(['book']);
   }
 
   /**
