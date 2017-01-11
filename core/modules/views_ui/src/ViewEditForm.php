@@ -4,7 +4,6 @@ namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -1056,7 +1055,7 @@ class ViewEditForm extends ViewFormBase {
         $field_name = '(' . $relationships[$field['relationship']] . ') ' . $field_name;
       }
 
-      $description = Xss::filterAdmin($handler->adminSummary());
+      $description = $handler->adminSummary();
       $link_text = $field_name . (empty($description) ? '' : " ($description)");
       $link_attributes = array('class' => array('views-ajax-link'));
       if (!empty($field['exclude'])) {

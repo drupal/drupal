@@ -66,6 +66,11 @@ class FilterCriteriaTest extends JavascriptTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $remove_link = $page->findLink('Remove group');
     $this->assertEmpty($remove_link, 'Remove button not available');
+
+    // Checks that the admin summary is not double escaped.
+    $this->drupalGet('admin/structure/views/view/who_s_online');
+    $page = $this->getSession()->getPage();
+    $this->assertNotNull($page->findLink('User: Last access (>= -15 minutes)'));
   }
 
 }
