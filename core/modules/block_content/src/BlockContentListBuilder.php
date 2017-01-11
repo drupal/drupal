@@ -4,6 +4,7 @@ namespace Drupal\block_content;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
+use Drupal\Core\Routing\RedirectDestinationTrait;
 
 /**
  * Defines a class to build a listing of custom block entities.
@@ -11,6 +12,8 @@ use Drupal\Core\Entity\EntityListBuilder;
  * @see \Drupal\block_content\Entity\BlockContent
  */
 class BlockContentListBuilder extends EntityListBuilder {
+
+  use RedirectDestinationTrait;
 
   /**
    * {@inheritdoc}
@@ -34,7 +37,7 @@ class BlockContentListBuilder extends EntityListBuilder {
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
     if (isset($operations['edit'])) {
-      $operations['edit']['query']['destination'] = $entity->url('collection');
+      $operations['edit']['query']['destination'] = $this->getRedirectDestination()->get();
     }
     return $operations;
   }
