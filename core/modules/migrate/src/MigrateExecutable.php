@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate;
 
+use Drupal\Component\Utility\Bytes;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Event\MigrateEvents;
@@ -112,23 +113,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       $this->memoryLimit = PHP_INT_MAX;
     }
     else {
-      if (!is_numeric($limit)) {
-        $last = strtolower(substr($limit, -1));
-        switch ($last) {
-          case 'g':
-            $limit *= 1024;
-          case 'm':
-            $limit *= 1024;
-          case 'k':
-            $limit *= 1024;
-            break;
-          default:
-            $limit = PHP_INT_MAX;
-            $this->message->display($this->t('Invalid PHP memory_limit @limit, setting to unlimited.',
-              array('@limit' => $limit)));
-        }
-      }
-      $this->memoryLimit = $limit;
+      $this->memoryLimit = Bytes::toInt($limit);
     }
   }
 
