@@ -27,9 +27,4 @@ class ConfigTestHalJsonAnonTest extends ConfigTestResourceTestBase {
    */
   protected static $mimeType = 'application/hal+json';
 
-  /**
-   * {@inheritdoc}
-   */
-  protected static $expectedErrorMimeType = 'application/json';
-
 }

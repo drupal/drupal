@@ -29,11 +29,6 @@ class EntityTestJsonBasicAuthTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $auth = 'basic_auth';
 
 }

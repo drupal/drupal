@@ -47,17 +47,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected static $mimeType = 'application/json';
 
   /**
-   * The expected MIME type in case of 4xx error responses.
-   *
-   * (Can be different, when $mimeType for example encodes a particular
-   * normalization, such as 'application/hal+json': its error response MIME
-   * type is 'application/json'.)
-   *
-   * @var string
-   */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
    * The authentication mechanism to use in this test.
    *
    * (The default is 'cookie' because that doesn't depend on any module.)
@@ -301,10 +290,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Asserts that a resource response has the given status code and body.
    *
-   * (Also asserts that the expected error MIME type is present, but this is
-   * defined globally for the test via static::$expectedErrorMimeType, because
-   * all error responses should use the same MIME type.)
-   *
    * @param int $expected_status_code
    *   The expected response status.
    * @param string|false $expected_body
@@ -318,7 +303,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
     }
     else {
-      $this->assertSame([static::$expectedErrorMimeType], $response->getHeader('Content-Type'));
+      $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
     }
     if ($expected_body !== FALSE) {
       $this->assertSame($expected_body, (string) $response->getBody());
@@ -327,10 +312,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
   /**
    * Asserts that a resource error response has the given message.
-   *
-   * (Also asserts that the expected error MIME type is present, but this is
-   * defined globally for the test via static::$expectedErrorMimeType, because
-   * all error responses should use the same MIME type.)
    *
    * @param int $expected_status_code
    *   The expected response status.

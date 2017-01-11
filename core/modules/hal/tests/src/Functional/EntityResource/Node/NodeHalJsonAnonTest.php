@@ -34,11 +34,6 @@ class NodeHalJsonAnonTest extends NodeResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $patchProtectedFieldNames = [
     'created',
     'changed',

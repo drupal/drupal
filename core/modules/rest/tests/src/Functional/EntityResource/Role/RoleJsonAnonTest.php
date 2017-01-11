@@ -21,9 +21,4 @@ class RoleJsonAnonTest extends RoleResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
-  /**
-   * {@inheritdoc}
-   */
-  protected static $expectedErrorMimeType = 'application/json';
-
 }

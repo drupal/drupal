@@ -33,11 +33,6 @@ class UserHalJsonAnonTest extends UserResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getExpectedNormalizedEntity() {
     $default_normalization = parent::getExpectedNormalizedEntity();
 

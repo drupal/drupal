@@ -29,11 +29,6 @@ abstract class CommentHalJsonTestBase extends CommentResourceTestBase {
 
   /**
    * {@inheritdoc}
-   */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
-   * {@inheritdoc}
    *
    * The HAL+JSON format causes different PATCH-protected fields. For some
    * reason, the 'pid' and 'homepage' fields are NOT PATCH-protected, even

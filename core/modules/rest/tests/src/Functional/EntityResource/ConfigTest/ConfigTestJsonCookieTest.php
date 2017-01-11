@@ -24,11 +24,6 @@ class ConfigTestJsonCookieTest extends ConfigTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $auth = 'cookie';
 
 }

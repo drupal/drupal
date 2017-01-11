@@ -23,11 +23,6 @@ class CommentJsonAnonTest extends CommentResourceTestBase {
 
   /**
    * {@inheritdoc}
-   */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
-   * {@inheritdoc}
    *
    * Anononymous users cannot edit their own comments.
    *

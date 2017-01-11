@@ -29,11 +29,6 @@ class ConfigTestJsonBasicAuthTest extends ConfigTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $auth = 'basic_auth';
 
 }

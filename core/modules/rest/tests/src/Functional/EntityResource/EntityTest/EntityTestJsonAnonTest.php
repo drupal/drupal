@@ -21,9 +21,4 @@ class EntityTestJsonAnonTest extends EntityTestResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
-  /**
-   * {@inheritdoc}
-   */
-  protected static $expectedErrorMimeType = 'application/json';
-
 }

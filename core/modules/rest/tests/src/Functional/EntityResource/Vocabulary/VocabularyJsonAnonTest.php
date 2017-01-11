@@ -22,11 +22,6 @@ class VocabularyJsonAnonTest extends VocabularyResourceTestBase {
   protected static $mimeType = 'application/json';
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
    * Disable the GET test coverage due to bug in taxonomy module.
    * @todo Fix in https://www.drupal.org/node/2805281: remove this override.
    */

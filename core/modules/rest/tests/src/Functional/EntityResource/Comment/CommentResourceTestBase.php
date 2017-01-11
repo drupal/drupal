@@ -278,8 +278,10 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     // DX: 422 when missing 'entity_type' field.
     $request_options[RequestOptions::BODY] = $this->serializer->encode(array_diff_key($this->getNormalizedPostEntity(), ['entity_type' => TRUE]), static::$format);
     $response = $this->request('POST', $url, $request_options);
-    // @todo Uncomment, remove next line in https://www.drupal.org/node/2820364.
-    $this->assertResourceErrorResponse(500, 'A fatal error occurred: Internal Server Error', $response);
+    // @todo Uncomment, remove next 3 lines in https://www.drupal.org/node/2820364.
+    $this->assertSame(500, $response->getStatusCode());
+    $this->assertSame(['application/json'], $response->getHeader('Content-Type'));
+    $this->assertSame('{"message":"A fatal error occurred: Internal Server Error"}', (string) $response->getBody());
     //$this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nentity_type: This value should not be null.\n", $response);
 
     // DX: 422 when missing 'entity_id' field.
@@ -301,8 +303,10 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     // DX: 422 when missing 'entity_type' field.
     $request_options[RequestOptions::BODY] = $this->serializer->encode(array_diff_key($this->getNormalizedPostEntity(), ['field_name' => TRUE]), static::$format);
     $response = $this->request('POST', $url, $request_options);
-    // @todo Uncomment, remove next line in https://www.drupal.org/node/2820364.
-    $this->assertResourceErrorResponse(500, 'A fatal error occurred: Field  is unknown.', $response);
+    // @todo Uncomment, remove next 3 lines in https://www.drupal.org/node/2820364.
+    $this->assertSame(500, $response->getStatusCode());
+    $this->assertSame(['application/json'], $response->getHeader('Content-Type'));
+    $this->assertSame('{"message":"A fatal error occurred: Field  is unknown."}', (string) $response->getBody());
     //$this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nfield_name: This value should not be null.\n", $response);
   }
 

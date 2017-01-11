@@ -30,11 +30,6 @@ class VocabularyHalJsonBasicAuthTest extends VocabularyResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $auth = 'basic_auth';
 
 }

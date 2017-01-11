@@ -24,11 +24,6 @@ class EntityTestJsonCookieTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $expectedErrorMimeType = 'application/json';
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $auth = 'cookie';
 
 }

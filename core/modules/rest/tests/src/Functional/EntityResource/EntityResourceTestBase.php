@@ -43,10 +43,9 @@ use Psr\Http\Message\ResponseInterface;
  *    (permissions or perhaps custom access control handling, such as node
  *    grants), plus
  * 2. a concrete subclass extending the abstract entity type-specific subclass
- *    that specifies the exact @code $format @endcode, @code $mimeType @endcode,
- *    @code $expectedErrorMimeType @endcode and @code $auth @endcode for this
- *    concrete test. Usually that's all that's necessary: most concrete
- *    subclasses will be very thin.
+ *    that specifies the exact @code $format @endcode, @code $mimeType @endcode
+ *    and @code $auth @endcode for this concrete test. Usually that's all that's
+ *    necessary: most concrete subclasses will be very thin.
  *
  * For every of these concrete subclasses, a comprehensive test scenario will
  * run per HTTP method:
@@ -420,7 +419,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 406 when requesting unsupported format.
     $response = $this->request('GET', $url, $request_options);
     $this->assert406Response($response);
-    $this->assertNotSame([static::$expectedErrorMimeType], $response->getHeader('Content-Type'));
+    $this->assertNotSame([static::$mimeType], $response->getHeader('Content-Type'));
 
 
     $request_options[RequestOptions::HEADERS]['Accept'] = static::$mimeType;
@@ -430,7 +429,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // @todo Update in https://www.drupal.org/node/2825347.
     $response = $this->request('GET', $url, $request_options);
     $this->assert406Response($response);
-    $this->assertSame([static::$expectedErrorMimeType], $response->getHeader('Content-Type'));
+    $this->assertSame(['application/json'], $response->getHeader('Content-Type'));
 
 
     $url = Url::fromRoute('rest.entity.' . static::$entityTypeId . '.GET.' . static::$format);
