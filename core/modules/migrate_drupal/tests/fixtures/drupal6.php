@@ -44405,6 +44405,30 @@ $connection->insert('url_alias')
   'dst' => 'alias-three',
   'language' => '',
 ))
+->values(array(
+  'pid' => '4',
+  'src' => 'node/10',
+  'dst' => 'the-real-mccoy',
+  'language' => 'en',
+))
+->values(array(
+  'pid' => '5',
+  'src' => 'node/11',
+  'dst' => 'le-vrai-mccoy',
+  'language' => 'fr',
+))
+->values(array(
+  'pid' => '6',
+  'src' => 'node/12',
+  'dst' => 'abantu-zulu',
+  'language' => 'zu',
+))
+->values(array(
+  'pid' => '7',
+  'src' => 'node/13',
+  'dst' => 'the-zulu-people',
+  'language' => 'en',
+))
 ->execute();
 
 $connection->schema()->createTable('users', array(

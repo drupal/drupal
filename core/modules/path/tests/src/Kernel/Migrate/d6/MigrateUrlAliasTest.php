@@ -16,14 +16,26 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('path');
+  public static $modules = ['language', 'content_translation', 'path'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('d6_url_alias');
+    $this->installEntitySchema('node');
+    $this->installConfig(['node']);
+    $this->installSchema('node', ['node_access']);
+    $this->migrateUsers(FALSE);
+    $this->migrateFields();
+
+    $this->executeMigrations([
+      'language',
+      'd6_node_settings',
+      'd6_node',
+      'd6_node_translation',
+      'd6_url_alias',
+    ]);
   }
 
   /**
@@ -91,6 +103,35 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
     );
     $path = \Drupal::service('path.alias_storage')->load($conditions);
     $this->assertPath('3', $conditions, $path);
+  }
+
+  /**
+   * Test the URL alias migration with translated nodes.
+   */
+  public function testUrlAliasWithTranslatedNodes() {
+    $alias_storage = $this->container->get('path.alias_storage');
+
+    // Alias for the 'The Real McCoy' node in English.
+    $path = $alias_storage->load(['alias' => '/the-real-mccoy']);
+    $this->assertSame('/node/10', $path['source']);
+    $this->assertSame('en', $path['langcode']);
+
+    // Alias for the 'The Real McCoy' French translation,
+    // which should now point to node/10 instead of node/11.
+    $path = $alias_storage->load(['alias' => '/le-vrai-mccoy']);
+    $this->assertSame('/node/10', $path['source']);
+    $this->assertSame('fr', $path['langcode']);
+
+    // Alias for the 'Abantu zulu' node in Zulu.
+    $path = $alias_storage->load(['alias' => '/abantu-zulu']);
+    $this->assertSame('/node/12', $path['source']);
+    $this->assertSame('zu', $path['langcode']);
+
+    // Alias for the 'Abantu zulu' English translation,
+    // which should now point to node/12 instead of node/13.
+    $path = $alias_storage->load(['alias' => '/the-zulu-people']);
+    $this->assertSame('/node/12', $path['source']);
+    $this->assertSame('en', $path['langcode']);
   }
 
 }
