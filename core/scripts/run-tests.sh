@@ -89,6 +89,36 @@ if ($args['list']) {
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
 
+// List-files and list-files-json provide a way for external tools such as the
+// testbot to prioritize running changed tests.
+// @see https://www.drupal.org/node/2569585
+if ($args['list-files'] || $args['list-files-json']) {
+  // List all files which could be run as tests.
+  $test_discovery = NULL;
+  try {
+    $test_discovery = \Drupal::service('test_discovery');
+  } catch (Exception $e) {
+    error_log((string) $e);
+    echo (string)$e;
+    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
+  }
+  // TestDiscovery::findAllClassFiles() gives us a classmap similar to a
+  // Composer 'classmap' array.
+  $test_classes = $test_discovery->findAllClassFiles();
+  // JSON output is the easiest.
+  if ($args['list-files-json']) {
+    echo json_encode($test_classes);
+    exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
+  }
+  // Output the list of files.
+  else {
+    foreach(array_values($test_classes) as $test_class) {
+      echo $test_class . "\n";
+    }
+  }
+  exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
+}
+
 simpletest_script_setup_database(TRUE);
 
 if ($args['clean']) {
@@ -177,6 +207,14 @@ All arguments are long options.
   --help      Print this page.
 
   --list      Display all available test groups.
+
+  --list-files
+              Display all discoverable test file paths.
+
+  --list-files-json
+              Display all discoverable test files as JSON. The array key will be
+              the test class name, and the value will be the file path of the
+              test.
 
   --clean     Cleans up database tables or directories from previous, failed,
               tests and then exits (no tests are run).
@@ -309,6 +347,8 @@ function simpletest_script_parse_args() {
     'script' => '',
     'help' => FALSE,
     'list' => FALSE,
+    'list-files' => FALSE,
+    'list-files-json' => FALSE,
     'clean' => FALSE,
     'url' => '',
     'sqlite' => NULL,
