@@ -20,5 +20,17 @@ process:
   langcode:
     plugin: d6_url_alias_language
     source: language
+  node_translation:
+    -
+      plugin: explode
+      source: src
+      delimiter: /
+    -
+      plugin: extract
+      index:
+        - 1
+    -
+      plugin: migration
+      migration: d6_node_translation
 destination:
   plugin: url_alias
