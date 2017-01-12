@@ -209,7 +209,7 @@ class TwigTransTest extends WebTestBase {
         $this->assertRaw('"edit-languages-' . $langcode . '-weight"', 'Language code found.');
 
         // Import the custom .po contents for the language.
-        $filename = tempnam('temporary://', "po_") . '.po';
+        $filename = \Drupal::service('file_system')->tempnam('temporary://', "po_") . '.po';
         file_put_contents($filename, $contents);
         $options = array(
           'files[file]' => $filename,
