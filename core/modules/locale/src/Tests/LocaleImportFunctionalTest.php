@@ -369,7 +369,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
    *   (optional) Additional options to pass to the translation import form.
    */
   public function importPoFile($contents, array $options = array()) {
-    $name = tempnam('temporary://', "po_") . '.po';
+    $name = \Drupal::service('file_system')->tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $contents);
     $options['files[file]'] = $name;
     $this->drupalPostForm('admin/config/regional/translate/import', $options, t('Import'));

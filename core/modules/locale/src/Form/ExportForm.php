@@ -3,6 +3,7 @@
 namespace Drupal\locale\Form;
 
 use Drupal\Component\Gettext\PoStreamWriter;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -24,13 +25,23 @@ class ExportForm extends FormBase {
   protected $languageManager;
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Constructs a new ExportForm.
    *
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
    */
-  public function __construct(LanguageManagerInterface $language_manager) {
+  public function __construct(LanguageManagerInterface $language_manager, FileSystemInterface $file_system) {
     $this->languageManager = $language_manager;
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -38,7 +49,8 @@ class ExportForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('file_system')
     );
   }
 
@@ -148,7 +160,7 @@ class ExportForm extends FormBase {
 
     $item = $reader->readItem();
     if (!empty($item)) {
-      $uri = tempnam('temporary://', 'po_');
+      $uri = $this->fileSystem->tempnam('temporary://', 'po_');
       $header = $reader->getHeader();
       $header->setProjectName($this->config('system.site')->get('name'));
       $header->setLanguageName($language_name);
