@@ -101,6 +101,20 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->assertTrue($node->isPublished());
     $this->assertEquals(4, $node->getRevisionId());
 
+    // Update the node to archived which will then be the default revision.
+    $node->moderation_state->value = 'archived';
+    $node->save();
+
+    // Revert to the previous (published) revision.
+    $previous_revision = \Drupal::entityTypeManager()->getStorage('node')->loadRevision(4);
+    $previous_revision->isDefaultRevision(TRUE);
+    $previous_revision->setNewRevision(TRUE);
+    $previous_revision->save();
+
+    // Get the default revision.
+    $node = $this->reloadNode($node);
+    $this->assertEquals('published', $node->moderation_state->value);
+    $this->assertTrue($node->isPublished());
   }
 
   /**
