@@ -26,7 +26,7 @@
  *   file is not controlled by the current module, the return value should be
  *   NULL.
  *
- * @see file_download()
+ * @see \Drupal\system\FileDownloadController::download()
  */
 function hook_file_download($uri) {
   // Check to see if this is a config download.
