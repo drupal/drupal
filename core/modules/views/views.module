@@ -353,7 +353,7 @@ function views_theme_suggestions_container_alter(array &$suggestions, array $var
  *       should be shown.
  *     - #view_display_plugin_id: The plugin ID of the display.
  *
- * @see \Drupal\views\Plugin\block\block\ViewsBlock::addContextualLinks()
+ * @see \Drupal\views\Plugin\Block\ViewsBlock::addContextualLinks()
  * @see views_preprocess_page()
  * @see template_preprocess_views_view()
  */
