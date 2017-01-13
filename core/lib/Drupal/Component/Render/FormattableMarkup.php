@@ -147,7 +147,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    *     A call like:
    *     @code
    *       $string = "%output_text";
-   *       $arguments = ['output_text' => 'text output here.'];
+   *       $arguments = ['%output_text' => 'text output here.'];
    *       $this->placeholderFormat($string, $arguments);
    *     @endcode
    *     makes the following HTML code:
