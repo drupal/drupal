@@ -47,7 +47,7 @@
 
     $element
       .dialog('option', adjustedOptions)
-      .trigger('dialogContentResize.outsidein');
+      .trigger('dialogContentResize.offcanvas');
   }
 
   /**
@@ -100,15 +100,15 @@
         $('.ui-dialog-offcanvas, .ui-dialog-offcanvas .ui-dialog-titlebar').toggleClass('ui-dialog-empty-title', !settings.title);
 
         $element
-          .on('dialogresize.outsidein', eventData, debounce(bodyPadding, 100))
-          .on('dialogContentResize.outsidein', eventData, handleDialogResize)
-          .trigger('dialogresize.outsidein');
+          .on('dialogresize.offcanvas', eventData, debounce(bodyPadding, 100))
+          .on('dialogContentResize.offcanvas', eventData, handleDialogResize)
+          .trigger('dialogresize.offcanvas');
 
         $element.dialog('widget').attr('data-offset-' + edge, '');
 
         $(window)
-          .on('resize.outsidein scroll.outsidein', eventData, debounce(resetSize, 100))
-          .trigger('resize.outsidein');
+          .on('resize.offcanvas scroll.offcanvas', eventData, debounce(resetSize, 100))
+          .trigger('resize.offcanvas');
       }
     },
     'dialog:beforecreate': function (event, dialog, $element, settings) {
@@ -127,8 +127,8 @@
     },
     'dialog:beforeclose': function (event, dialog, $element) {
       if ($element.is('#drupal-offcanvas')) {
-        $(document).off('.outsidein');
-        $(window).off('.outsidein');
+        $(document).off('.offcanvas');
+        $(window).off('.offcanvas');
         $mainCanvasWrapper.css('padding-' + edge, 0);
       }
     }
