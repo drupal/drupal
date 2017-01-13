@@ -123,9 +123,16 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @see hook_entity_type_alter()
    */
   public function entityTypeAlter(array &$entity_types) {
-    foreach ($this->filterNonRevisionableEntityTypes($entity_types) as $type_name => $type) {
-      $entity_types[$type_name] = $this->addModerationToEntityType($type);
-      $entity_types[$type->get('bundle_of')] = $this->addModerationToEntity($entity_types[$type->get('bundle_of')]);
+    foreach ($entity_types as $entity_type_id => $entity_type) {
+      // The ContentModerationState entity type should never be moderated.
+      if ($entity_type->isRevisionable() && $entity_type_id != 'content_moderation_state') {
+        $entity_types[$entity_type_id] = $this->addModerationToEntityType($entity_type);
+        // Add additional moderation support to entity types whose bundles are
+        // managed by a config entity type.
+        if ($entity_type->getBundleEntityType()) {
+          $entity_types[$entity_type->getBundleEntityType()] = $this->addModerationToBundleEntityType($entity_types[$entity_type->getBundleEntityType()]);
+        }
+      }
     }
   }
 
@@ -141,7 +148,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @return \Drupal\Core\Entity\ContentEntityTypeInterface
    *   The modified content entity definition.
    */
-  protected function addModerationToEntity(ContentEntityTypeInterface $type) {
+  protected function addModerationToEntityType(ContentEntityTypeInterface $type) {
     if (!$type->hasHandlerClass('moderation')) {
       $handler_class = !empty($this->moderationHandlers[$type->id()]) ? $this->moderationHandlers[$type->id()] : ModerationHandler::class;
       $type->setHandlerClass('moderation', $handler_class);
@@ -175,7 +182,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @return \Drupal\Core\Config\Entity\ConfigEntityTypeInterface
    *   The modified config entity definition.
    */
-  protected function addModerationToEntityType(ConfigEntityTypeInterface $type) {
+  protected function addModerationToBundleEntityType(ConfigEntityTypeInterface $type) {
     if ($type->hasLinkTemplate('edit-form') && !$type->hasLinkTemplate('moderation-form')) {
       $type->setLinkTemplate('moderation-form', $type->getLinkTemplate('edit-form') . '/moderation');
     }
@@ -396,23 +403,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       $entity_type_id = $entity->getEntityTypeId();
       $form_state->setRedirect("entity.$entity_type_id.latest_version", [$entity_type_id => $entity->id()]);
     }
-  }
-
-  /**
-   * Filters entity type lists to return only revisionable entity types.
-   *
-   * @param EntityTypeInterface[] $entity_types
-   *   The master entity type list filter.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityTypeInterface[]
-   *   An array of revisionable entity types which are configuration entities.
-   */
-  protected function filterNonRevisionableEntityTypes(array $entity_types) {
-    return array_filter($entity_types, function (EntityTypeInterface $type) use ($entity_types) {
-      return ($type instanceof ConfigEntityTypeInterface)
-      && ($bundle_of = $type->get('bundle_of'))
-      && $entity_types[$bundle_of]->isRevisionable();
-    });
   }
 
 }

@@ -4,6 +4,7 @@ namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -44,6 +45,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test_with_bundle');
+    $this->installEntitySchema('entity_test_rev');
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
   }
@@ -312,6 +314,32 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity_test_with_bundle->save();
 
     $this->assertEquals('published', EntityTestWithBundle::load($entity_test_with_bundle->id())->moderation_state->value);
+  }
+
+  /**
+   * Tests that entity types without config bundles can be moderated.
+   */
+  public function testNonBundleConfigEntityTypeModeration() {
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
+    $workflow->save();
+
+    // Check that the tested entity type does not have bundles managed by a
+    // config entity type.
+    $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_rev');
+    $this->assertNull($entity_type->getBundleEntityType(), 'The test entity type does not have config bundles.');
+
+    // Create a test entity.
+    $entity_test = EntityTestRev::create([
+      'type' => 'entity_test_rev'
+    ]);
+    $entity_test->save();
+    $this->assertEquals('draft', $entity_test->moderation_state->value);
+
+    $entity_test->moderation_state->value = 'published';
+    $entity_test->save();
+
+    $this->assertEquals('published', EntityTestRev::load($entity_test->id())->moderation_state->value);
   }
 
   /**
