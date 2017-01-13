@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides block plugin definitions for all Views block displays.
  *
- * @see \Drupal\views\Plugin\block\block\ViewsBlock
+ * @see \Drupal\views\Plugin\Block\ViewsBlock
  */
 class ViewsBlock implements ContainerDeriverInterface {
 

@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   admin = @Translation("Block")
  * )
  *
- * @see \Drupal\views\Plugin\block\block\ViewsBlock
+ * @see \Drupal\views\Plugin\Block\ViewsBlock
  * @see \Drupal\views\Plugin\Derivative\ViewsBlock
  */
 class Block extends DisplayPluginBase {
