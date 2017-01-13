@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\outside_in\FunctionalJavascript;
 
+use Drupal\user\Entity\Role;
+
 /**
  * Testing opening and saving block forms in the off-canvas tray.
  *
@@ -22,6 +24,9 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     'outside_in',
     'quickedit',
     'search',
+    // Add test module to override CSS pointer-events properties because they
+    // cause test failures.
+    'outside_in_test_css',
   ];
 
   /**
@@ -153,13 +158,15 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    * Enables Editing mode by pressing "Edit" button in the toolbar.
    */
   protected function toggleEditingMode() {
-    $this->waitForElement('div[data-contextual-id="block:block=powered:langcode=en|outside_in::langcode=en"] .contextual-links a');
-
-    $this->waitForElement('#toolbar-bar');
+    $this->waitForElement('div[data-contextual-id="block:block=powered:langcode=en|outside_in::langcode=en"] .contextual-links a', 10000);
+    // Waiting for QuickEdit icon animation.
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $edit_button = $this->getSession()->getPage()->find('css', '#toolbar-bar div.contextual-toolbar-tab button');
 
     $edit_button->press();
+    // Waiting for Toolbar animation.
+    $this->assertSession()->assertWaitOnAjaxRequest();
   }
 
   /**
@@ -185,6 +192,88 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $this->click($block_selector);
     $this->waitForOffCanvasToOpen();
     $this->assertOffCanvasBlockFormIsValid();
+  }
+
+  /**
+   * Tests QuickEdit links behavior.
+   */
+  public function testQuickEditLinks() {
+    $quick_edit_selector = '#quickedit-entity-toolbar';
+    $body_selector = '.field--name-body p';
+    $block_selector = '#block-powered';
+    $web_assert = $this->assertSession();
+    // Create a Content type and two test nodes.
+    $this->createContentType(['type' => 'page']);
+    $auth_role = Role::load(Role::AUTHENTICATED_ID);
+    $this->grantPermissions($auth_role, [
+      'edit any page content',
+      'access content',
+    ]);
+    $node = $this->createNode(
+      [
+        'title' => 'Page One',
+        'type' => 'page',
+        'body' => [
+          [
+            'value' => 'Regular NODE body for the test.',
+            'format' => 'plain_text',
+          ],
+        ],
+      ]
+    );
+    $page = $this->getSession()->getPage();
+    // Load the same page twice.
+    foreach ([1, 2] as $page_load_times) {
+      $this->drupalGet('node/' . $node->id());
+      // Waiting for Toolbar module.
+      // @todo Remove the hack after https://www.drupal.org/node/2542050.
+      $this->waitForElement('.toolbar-fixed');
+      // Waiting for Toolbar animation.
+      $web_assert->assertWaitOnAjaxRequest();
+      // The 2nd page load we should already be in edit mode.
+      if ($page_load_times == 1) {
+        $this->toggleEditingMode();
+      }
+      // In Edit mode clicking field should open QuickEdit toolbar.
+      $page->find('css', $body_selector)->click();
+      $this->waitForElement($quick_edit_selector);
+      // Exit Edit mode.
+      $this->toggleEditingMode();
+      // Exiting Edit mode should close QuickEdit toolbar.
+      $web_assert->elementNotExists('css', $quick_edit_selector);
+      // When not in Edit mode QuickEdit toolbar should not open.
+      $page->find('css', $body_selector)->click();
+      $web_assert->elementNotExists('css', $quick_edit_selector);
+
+      // Enter Edit mode.
+      $this->toggleEditingMode();
+      $this->openBlockForm($block_selector);
+      $page->find('css', $body_selector)->click();
+      $this->waitForElement($quick_edit_selector);
+      // Offcanvas should be closed when opening QuickEdit toolbar.
+      $this->waitForOffCanvasToClose();
+
+      $this->openBlockForm($block_selector);
+      // QuickEdit toolbar should be closed when opening Offcanvas.
+      $web_assert->elementNotExists('css', $quick_edit_selector);
+    }
+
+    // Check using contextual links to invoke QuickEdit and open the tray.
+    $this->drupalGet('node/' . $node->id());
+    $web_assert->assertWaitOnAjaxRequest();
+    $this->toggleEditingMode();
+    // Open QuickEdit toolbar before going into Edit mode.
+    $this->clickContextualLink('.node', "Quick edit");
+    $this->waitForElement($quick_edit_selector);
+    // Open off-canvas and enter Edit mode via contextual link.
+    $this->clickContextualLink($block_selector, "Quick edit");
+    $this->waitForOffCanvasToOpen();
+    // QuickEdit toolbar should be closed when opening Offcanvas.
+    $web_assert->elementNotExists('css', $quick_edit_selector);
+    // Open QuickEdit toolbar via contextual link while in Edit mode.
+    $this->clickContextualLink('.node', "Quick edit", FALSE);
+    $this->waitForOffCanvasToClose();
+    $this->waitForElement($quick_edit_selector);
   }
 
 }

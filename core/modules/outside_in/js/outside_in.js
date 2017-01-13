@@ -11,6 +11,7 @@
   var toggleEditSelector = '[data-drupal-outsidein="toggle"]';
   var itemsToToggleSelector = '#main-canvas, #toolbar-bar, [data-drupal-outsidein="editable"] a, [data-drupal-outsidein="editable"] button';
   var contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
+  var quickEditItemSelector = '[data-quickedit-entity-id]';
 
   /**
    * Reacts to contextual links being added.
@@ -36,6 +37,8 @@
         if (!isInEditMode()) {
           $(toggleEditSelector).trigger('click.outsidein');
         }
+        // Always disable QuickEdit regardless of whether "EditMode" was just enabled.
+        disableQuickEdit();
       });
   });
 
@@ -92,7 +95,21 @@
       .find('.toolbar-tab')
       .not('.contextual-toolbar-tab')
       .has('.toolbar-tray.is-active')
-      .find('.toolbar-item').click();
+      .find('.toolbar-item').trigger('click');
+  }
+
+  /**
+   * Disables the QuickEdit module editor if open.
+   */
+  function disableQuickEdit() {
+    $('.quickedit-toolbar button.action-cancel').trigger('click');
+  }
+
+  /**
+   * Closes/removes offcanvas.
+   */
+  function closeOffCanvas() {
+    $('.ui-dialog-offcanvas .ui-dialog-titlebar-close').trigger('click');
   }
 
   /**
@@ -124,8 +141,21 @@
             if ($(e.target).closest('.contextual').length || !localStorage.getItem('Drupal.contextualToolbar.isViewing')) {
               return;
             }
-
             $(e.currentTarget).find(blockConfigureSelector).trigger('click');
+            disableQuickEdit();
+          });
+        $(quickEditItemSelector)
+          .not(contextualItemsSelector)
+          .on('click.outsidein', function (e) {
+            // For all non-contextual links or the contextual QuickEdit link close the off-canvas tray.
+            if (!$(e.target).parent().hasClass('contextual') || $(e.target).parent().hasClass('quickedit')) {
+              closeOffCanvas();
+            }
+            // Do not trigger if target is quick edit link to avoid loop.
+            if ($(e.target).parent().hasClass('contextual') || $(e.target).parent().hasClass('quickedit')) {
+              return;
+            }
+            $(e.currentTarget).find('li.quickedit a').trigger('click');
           });
       }
     }
@@ -135,11 +165,12 @@
       if ($editables.length) {
         document.querySelector('#main-canvas').removeEventListener('click', preventClick, true);
         $editables.off('.outsidein');
+        $(quickEditItemSelector).off('.outsidein');
       }
 
       $editButton.text(Drupal.t('Edit'));
-      // Close/remove offcanvas.
-      $('.ui-dialog-offcanvas .ui-dialog-titlebar-close').trigger('click');
+      closeOffCanvas();
+      disableQuickEdit();
     }
     getItemsToToggle().toggleClass('js-outside-in-edit-mode', editMode);
     $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
