@@ -42,6 +42,15 @@
       });
   });
 
+  $(document).on('keyup.outsidein', function (e) {
+    if (isInEditMode() && e.keyCode === 27) {
+      Drupal.announce(
+        Drupal.t('Exited edit mode.')
+      );
+      toggleEditMode();
+    }
+  });
+
   /**
    * Gets all items that should be toggled with class during edit mode.
    *
