@@ -38,3 +38,12 @@
 [dir="rtl"] .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
   float: right;
 }
+
+#main-canvas.js-outside-in-edit-mode a,
+#main-canvas.js-outside-in-edit-mode input {
+  pointer-events: none;
+}
+#main-canvas.js-outside-in-edit-mode .contextual-links a {
+  pointer-events: inherit;
+}
+

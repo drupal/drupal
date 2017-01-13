@@ -1,0 +1,5 @@
+drupal.css_fix:
+  version: VERSION
+  css:
+    theme:
+      css/css_fix.theme.css: {}

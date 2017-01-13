@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Module for attaching CSS during tests.
+ *
+ * CSS pointer-events properties cause testing errors.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function outside_in_test_css_page_attachments(array &$attachments) {
+  // Unconditionally attach an asset to the page.
+  $attachments['#attached']['library'][] = 'outside_in_test_css/drupal.css_fix';
+}
