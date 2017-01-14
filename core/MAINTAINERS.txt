@@ -480,6 +480,9 @@ PHPUnit Initiative
 - Klaus Purer 'klausi' https://www.drupal.org/u/klausi
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
 
+Layout Initiative
+- Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
+
 Provisional membership: None at this time.
 
 
