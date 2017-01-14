@@ -103,10 +103,11 @@ class QuickEditLoadingTest extends WebTestBase {
     $this->assertNoRaw('core/modules/quickedit/js/quickedit.js', 'Quick Edit library not loaded.');
     $this->assertNoRaw('core/modules/quickedit/js/editors/formEditor.js', "'form' in-place editor not loaded.");
 
-    // HTML annotation does not exist for users without permission to in-place
-    // edit.
+    // HTML annotation and title class does not exist for users without
+    // permission to in-place edit.
     $this->assertNoRaw('data-quickedit-entity-id="node/1"');
     $this->assertNoRaw('data-quickedit-field-id="node/1/body/en/full"');
+    $this->assertNoFieldByXPath('//h1[contains(@class, "js-quickedit-page-title")]');
 
     // Retrieving the metadata should result in an empty 403 response.
     $post = array('fields[0]' => 'node/1/body/en/full');
@@ -157,9 +158,11 @@ class QuickEditLoadingTest extends WebTestBase {
     $this->assertTrue(in_array('quickedit/quickedit', $libraries), 'Quick Edit library loaded.');
     $this->assertFalse(in_array('quickedit/quickedit.inPlaceEditor.form', $libraries), "'form' in-place editor not loaded.");
 
-    // HTML annotation must always exist (to not break the render cache).
+    // HTML annotation and title class must always exist (to not break the
+    // render cache).
     $this->assertRaw('data-quickedit-entity-id="node/1"');
     $this->assertRaw('data-quickedit-field-id="node/1/body/en/full"');
+    $this->assertFieldByXPath('//h1[contains(@class, "js-quickedit-page-title")]');
 
     // There should be only one revision so far.
     $node = Node::load(1);
