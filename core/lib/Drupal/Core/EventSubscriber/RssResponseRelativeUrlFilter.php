@@ -44,7 +44,16 @@ class RssResponseRelativeUrlFilter implements EventSubscriberInterface {
    */
   protected function transformRootRelativeUrlsToAbsolute($rss_markup, Request $request) {
     $rss_dom = new \DOMDocument();
+
+    // Load the RSS, if there are parsing errors, abort and return the unchanged
+    // markup.
+    $previous_value = libxml_use_internal_errors(TRUE);
     $rss_dom->loadXML($rss_markup);
+    $errors = libxml_get_errors();
+    libxml_use_internal_errors($previous_value);
+    if ($errors) {
+      return $rss_markup;
+    }
 
     // Invoke Html::transformRootRelativeUrlsToAbsolute() on all HTML content
     // embedded in this RSS feed.
