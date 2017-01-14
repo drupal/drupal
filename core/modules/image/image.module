@@ -52,9 +52,6 @@ define('IMAGE_STORAGE_MODULE', IMAGE_STORAGE_OVERRIDE | IMAGE_STORAGE_DEFAULT);
  */
 define('IMAGE_DERIVATIVE_TOKEN', 'itok');
 
-// Load all Field module hooks for Image.
-require_once __DIR__ . '/image.field.inc';
-
 /**
  * Implements hook_help().
  */
