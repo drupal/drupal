@@ -69,6 +69,11 @@ function contact_entity_extra_field_info() {
         'weight' => -30,
       );
     }
+    $fields['contact_message'][$bundle]['form']['preview'] = array(
+      'label' => t('Preview sender message'),
+      'description' => t('Preview'),
+      'weight' => 40,
+    );
     $fields['contact_message'][$bundle]['form']['copy'] = array(
       'label' => t('Send copy to sender'),
       'description' => t('Option'),

@@ -50,6 +50,7 @@ class ContactSitewideTest extends WebTestBase {
       'administer users',
       'administer account settings',
       'administer contact_message fields',
+      'administer contact_message form display',
     ]);
     $this->drupalLogin($admin_user);
 
@@ -282,6 +283,10 @@ class ContactSitewideTest extends WebTestBase {
     $field_label = $this->randomMachineName();
     $this->fieldUIAddNewField(NULL, $field_name, $field_label, 'text');
     $field_name = 'field_' . $field_name;
+
+    // Check preview field can be ordered.
+    $this->drupalGet('admin/structure/contact/manage/' . $contact_form . '/form-display');
+    $this->assertText(t('Preview'));
 
     // Check that the field is displayed.
     $this->drupalGet('contact/' . $contact_form);
