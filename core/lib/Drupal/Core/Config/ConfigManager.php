@@ -297,13 +297,20 @@ class ConfigManager implements ConfigManagerInterface {
     $dependency_manager = $this->getConfigDependencyManager();
     $dependents = $this->findConfigEntityDependentsAsEntities($type, $names, $dependency_manager);
     $original_dependencies = $dependents;
-    $delete_uuids = $update_uuids = [];
+    $delete_uuids = [];
 
     $return = [
       'update' => [],
       'delete' => [],
       'unchanged' => [],
     ];
+
+    // Create a map of UUIDs to $original_dependencies key so that we can remove
+    // fixed dependencies.
+    $uuid_map = [];
+    foreach ($original_dependencies as $key => $entity) {
+      $uuid_map[$entity->uuid()] = $key;
+    }
 
     // Try to fix any dependencies and find out what will happen to the
     // dependency graph. Entities are processed in the order of most dependent
@@ -340,8 +347,9 @@ class ConfigManager implements ConfigManagerInterface {
           }
         }
         if ($fixed) {
+          // Remove the fixed dependency from the list of original dependencies.
+          unset($original_dependencies[$uuid_map[$dependent->uuid()]]);
           $return['update'][] = $dependent;
-          $update_uuids[] = $dependent->uuid();
         }
       }
       // If the entity cannot be fixed then it has to be deleted.
@@ -354,8 +362,8 @@ class ConfigManager implements ConfigManagerInterface {
     }
     // Use the lists of UUIDs to filter the original list to work out which
     // configuration entities are unchanged.
-    $return['unchanged'] = array_filter($original_dependencies, function ($dependent) use ($delete_uuids, $update_uuids) {
-      return !(in_array($dependent->uuid(), $delete_uuids) || in_array($dependent->uuid(), $update_uuids));
+    $return['unchanged'] = array_filter($original_dependencies, function ($dependent) use ($delete_uuids) {
+      return !(in_array($dependent->uuid(), $delete_uuids));
     });
 
     return $return;
