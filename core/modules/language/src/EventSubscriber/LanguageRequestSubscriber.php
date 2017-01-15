@@ -64,16 +64,14 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Sets the request on the language manager.
+   * Sets the default language and initializes configuration overrides.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onKernelRequestLanguage(GetResponseEvent $event) {
     if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
-      $request = $event->getRequest();
       $this->negotiator->setCurrentUser($this->currentUser);
-      $this->negotiator->reset();
       if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
         $this->languageManager->setNegotiator($this->negotiator);
         $this->languageManager->setConfigOverrideLanguage($this->languageManager->getCurrentLanguage());
