@@ -177,19 +177,11 @@ function system_requirements($phase) {
     // If PHP is old, it's not safe to continue with the requirements check.
     return $requirements;
   }
-  elseif (version_compare($phpversion, DRUPAL_MINIMUM_SECURE_PHP) < 0) {
-    $requirements['php']['description'] = t('Your PHP installation is running version %version, which is no longer receiving security support from the PHP development team. We recommend upgrading to version %recommended or higher.', ['%version' => $phpversion, '%recommended' => DRUPAL_RECOMMENDED_PHP]);
-    $requirements['php']['severity'] = REQUIREMENT_WARNING;
-  }
-  elseif (version_compare($phpversion, DRUPAL_RECOMMENDED_PHP) < 0) {
-    $requirements['php']['description'] = t('Your PHP installation is running version %version. We recommend upgrading to version %recommended or higher.', ['%version' => $phpversion, '%recommended' => DRUPAL_RECOMMENDED_PHP]);
-    $requirements['php']['severity'] = REQUIREMENT_INFO;
-  }
 
   // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple
   // statements.
   if (($phase === 'install' || \Drupal::database()->driver() === 'mysql') && !SystemRequirements::phpVersionWithPdoDisallowMultipleStatements($phpversion)) {
-    $requirements['php_mysql'] = array(
+    $requirements['php'] = array(
       'title' => t('PHP (multiple statement disabling)'),
       'value' => $phpversion_label,
       'description' => t('PHP versions higher than 5.6.5 or 5.5.21 provide built-in SQL injection protection for mysql databases. It is recommended to update.'),
