@@ -1,0 +1,23 @@
+/**
+ * @file
+ * CSS for Offcanvas tray.
+ *
+ * @todo Move CSS into core dialog library https://www.drupal.org/node/2784443.
+ */
+/* Position the dialog-offcanvas tray container outside the right of the viewport. */
+.ui-dialog-offcanvas {
+    box-sizing: border-box;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Wrap the form that's inside the dialog-offcanvas tray. */
+.ui-dialog-offcanvas .ui-dialog-content {
+    padding: 0 20px;
+    /* Prevent horizontal scrollbar. */
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+[dir="rtl"] .ui-dialog-offcanvas .ui-dialog-content {
+    text-align: right;
+}

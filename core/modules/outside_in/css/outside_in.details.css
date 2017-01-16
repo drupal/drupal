@@ -3,49 +3,50 @@
  * Visual styling for summary and details in the Settings Tray module's off canvas tray.
  */
 
-.ui-dialog-offcanvas details,
-.ui-dialog-offcanvas summary,
-.ui-dialog-offcanvas .ui-dialog-content {
+.ui-dialog-outside-in details,
+.ui-dialog-outside-in summary,
+.ui-dialog-outside-in .ui-dialog-content {
   background: #474747;
   color: #ddd;
 }
-.ui-dialog-offcanvas summary a {
+.ui-dialog-outside-in summary a {
   color: #ddd;
-  padding: 0 inherit;
+  padding-top: 0;
+  padding-bottom: 0;
 }
-.ui-dialog-offcanvas summary a:hover,
-.ui-dialog-offcanvas summary a:focus {
+.ui-dialog-outside-in summary a:hover,
+.ui-dialog-outside-in summary a:focus {
   color: #fff;
 }
-.ui-dialog-offcanvas details,
-.ui-dialog-offcanvas summary,
-.ui-dialog-offcanvas .details-wrapper {
+.ui-dialog-outside-in details,
+.ui-dialog-outside-in summary,
+.ui-dialog-outside-in .details-wrapper {
   border-width: 0;
   /* Cancel out the padding of the parent. */
   margin: 0 -20px;
   padding: 0 20px;
 }
-.ui-dialog-offcanvas summary {
+.ui-dialog-outside-in summary {
   text-shadow: none;
   outline: none;
   padding: 10px 20px;
   font-size: 14px;
   transition: all .5s ease;
 }
-.ui-dialog-offcanvas summary:hover,
-.ui-dialog-offcanvas summary:focus {
+.ui-dialog-outside-in summary:hover,
+.ui-dialog-outside-in summary:focus {
   background-color: #222;
   outline: none;
 }
-.ui-dialog-offcanvas details[open] {
+.ui-dialog-outside-in details[open] {
   background-color: #333;
   padding-bottom: 10px;
 }
-.ui-dialog-offcanvas details[open] > summary {
+.ui-dialog-outside-in details[open] > summary {
   background-color: #333;
   color: #eee;
 }
-.ui-dialog-offcanvas details[open] > summary:hover {
+.ui-dialog-outside-in details[open] > summary:hover {
   background-color: #222;
   color: #fff;
 }

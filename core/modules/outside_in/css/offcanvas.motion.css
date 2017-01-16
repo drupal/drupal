@@ -1,0 +1,32 @@
+/**
+ * @file
+ * Motion effects for off-canvas tray dialog.
+ *
+ * Motion effects are in a separate file so that they can be easily turned off
+ * to improve performance if desired.
+ *
+ * @todo Move motion effects file into a core Off-Canvas library and add a
+ *   configuration option for browser rendering performance to disable this
+ *   file: https://www.drupal.org/node/2784443.
+ */
+
+/* Transition the dialog-offcanvas tray container, with 2s delay to match main canvas speed. */
+.ui-dialog-offcanvas .ui-dialog-content {
+    -webkit-transition: all .7s ease 2s;
+    -moz-transition: all .7s ease 2s;
+    transition: all .7s ease 2s;
+}
+
+@media (max-width: 700px) {
+    .ui-dialog-offcanvas .ui-dialog-content {
+        -webkit-transition: all .7s ease;
+        -moz-transition: all .7s ease;
+        transition: all .7s ease;
+    }
+}
+
+.dialog-offcanvas__main-canvas {
+  -webkit-transition: all .7s ease;
+  -moz-transition: all .7s ease;
+  transition: all .7s ease;
+}

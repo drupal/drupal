@@ -3,40 +3,40 @@
  * Visual styling for forms in the Settings Tray module's off canvas tray.
  */
 
-.ui-dialog-offcanvas label {
+.ui-dialog-outside-in label {
   line-height: normal;
   font-size: 12px;
   font-weight: normal;
   color: #ddd;
 }
-.ui-dialog-offcanvas .description,
-.ui-dialog-offcanvas .form-item .description,
-.ui-dialog-offcanvas .details-description {
+.ui-dialog-outside-in .description,
+.ui-dialog-outside-in .form-item .description,
+.ui-dialog-outside-in .details-description {
   color: #ddd;
   margin-top: 5px;
   font-size: 12px;
   font-style: normal;
 }
-.ui-dialog-offcanvas .details-wrapper .description {
+.ui-dialog-outside-in .details-wrapper .description {
   color: #bbb;
 }
-.ui-dialog-offcanvas .form-item {
+.ui-dialog-outside-in .form-item {
   margin-bottom: 10px;
   margin-top: 10px;
 }
 /* Set size and position for all inputs. */
-.ui-dialog-offcanvas .form-select,
-.ui-dialog-offcanvas .form-text,
-.ui-dialog-offcanvas .form-tel,
-.ui-dialog-offcanvas .form-email,
-.ui-dialog-offcanvas .form-url,
-.ui-dialog-offcanvas .form-search,
-.ui-dialog-offcanvas .form-number,
-.ui-dialog-offcanvas .form-color,
-.ui-dialog-offcanvas .form-file,
-.ui-dialog-offcanvas .form-textarea,
-.ui-dialog-offcanvas .form-date,
-.ui-dialog-offcanvas .form-time {
+.ui-dialog-outside-in .form-select,
+.ui-dialog-outside-in .form-text,
+.ui-dialog-outside-in .form-tel,
+.ui-dialog-outside-in .form-email,
+.ui-dialog-outside-in .form-url,
+.ui-dialog-outside-in .form-search,
+.ui-dialog-outside-in .form-number,
+.ui-dialog-outside-in .form-color,
+.ui-dialog-outside-in .form-file,
+.ui-dialog-outside-in .form-textarea,
+.ui-dialog-outside-in .form-date,
+.ui-dialog-outside-in .form-time {
   box-sizing: border-box;
   max-width: 100%;
   padding: 6px;
@@ -53,58 +53,58 @@
   cursor: pointer;
 }
 /* Reduce contrast for fields against dark backround. */
-.ui-dialog-offcanvas .form-text,
-.ui-dialog-offcanvas .form-tel,
-.ui-dialog-offcanvas .form-email,
-.ui-dialog-offcanvas .form-url,
-.ui-dialog-offcanvas .form-search,
-.ui-dialog-offcanvas .form-number,
-.ui-dialog-offcanvas .form-color,
-.ui-dialog-offcanvas .form-file,
-.ui-dialog-offcanvas .form-textarea,
-.ui-dialog-offcanvas .form-date,
-.ui-dialog-offcanvas .form-time {
+.ui-dialog-outside-in .form-text,
+.ui-dialog-outside-in .form-tel,
+.ui-dialog-outside-in .form-email,
+.ui-dialog-outside-in .form-url,
+.ui-dialog-outside-in .form-search,
+.ui-dialog-outside-in .form-number,
+.ui-dialog-outside-in .form-color,
+.ui-dialog-outside-in .form-file,
+.ui-dialog-outside-in .form-textarea,
+.ui-dialog-outside-in .form-date,
+.ui-dialog-outside-in .form-time {
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, .125);
   background-color: #eee;
   border-color: #333;
   color: #595959;
 }
-.ui-dialog-offcanvas .form-text:focus,
-.ui-dialog-offcanvas .form-tel:focus,
-.ui-dialog-offcanvas .form-email:focus,
-.ui-dialog-offcanvas .form-url:focus,
-.ui-dialog-offcanvas .form-search:focus,
-.ui-dialog-offcanvas .form-number:focus,
-.ui-dialog-offcanvas .form-color:focus,
-.ui-dialog-offcanvas .form-file:focus,
-.ui-dialog-offcanvas .form-textarea:focus,
-.ui-dialog-offcanvas .form-date:focus,
-.ui-dialog-offcanvas .form-time:focus {
+.ui-dialog-outside-in .form-text:focus,
+.ui-dialog-outside-in .form-tel:focus,
+.ui-dialog-outside-in .form-email:focus,
+.ui-dialog-outside-in .form-url:focus,
+.ui-dialog-outside-in .form-search:focus,
+.ui-dialog-outside-in .form-number:focus,
+.ui-dialog-outside-in .form-color:focus,
+.ui-dialog-outside-in .form-file:focus,
+.ui-dialog-outside-in .form-textarea:focus,
+.ui-dialog-outside-in .form-date:focus,
+.ui-dialog-outside-in .form-time:focus {
   border-color: #40b6ff;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, .125), 0 0 8px #40b6ff;
   background-color: #fff;
 }
-.ui-dialog-offcanvas input[type="checkbox"],
-.ui-dialog-offcanvas .checkbox,
-.ui-dialog-offcanvas input[type="radio"],
-.ui-dialog-offcanvas .radio {
+.ui-dialog-outside-in input[type="checkbox"],
+.ui-dialog-outside-in .checkbox,
+.ui-dialog-outside-in input[type="radio"],
+.ui-dialog-outside-in .radio {
   position: static;
   margin: 0;
 }
-.ui-dialog-offcanvas td .checkbox {
+.ui-dialog-outside-in td .checkbox {
   display: table-cell;
   line-height: normal;
   vertical-align: middle;
 }
-.ui-dialog-offcanvas .form-checkbox,
-.ui-dialog-offcanvas .form-radio {
+.ui-dialog-outside-in .form-checkbox,
+.ui-dialog-outside-in .form-radio {
   /* Add contrast for dark background. */
   box-shadow: 0 0 2px 1px #000;
 }
-.ui-dialog-offcanvas input[type="radio"] {
+.ui-dialog-outside-in input[type="radio"] {
   /* Add full circular radius. */
   border-radius: 50%;
 }
-.ui-dialog-offcanvas .form-actions {
+.ui-dialog-outside-in .form-actions {
   text-align: center;
 }
