@@ -73,15 +73,6 @@ function content_moderation_entity_operation(EntityInterface $entity) {
 }
 
 /**
- * Sets required flag based on enabled state.
- */
-function content_moderation_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityBundleFieldInfoAlter($fields, $entity_type, $bundle);
-}
-
-/**
  * Implements hook_entity_presave().
  */
 function content_moderation_entity_presave(EntityInterface $entity) {

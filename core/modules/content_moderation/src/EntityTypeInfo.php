@@ -334,24 +334,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   }
 
   /**
-   * Adds ModerationState constraint to bundles whose entities are moderated.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface[] $fields
-   *   The array of bundle field definitions.
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition.
-   * @param string $bundle
-   *   The bundle.
-   *
-   * @see hook_entity_bundle_field_info_alter();
-   */
-  public function entityBundleFieldInfoAlter(&$fields, EntityTypeInterface $entity_type, $bundle) {
-    if (!empty($fields['moderation_state']) && $this->moderationInfo->shouldModerateEntitiesOfBundle($entity_type, $bundle)) {
-      $fields['moderation_state']->addConstraint('ModerationState', []);
-    }
-  }
-
-  /**
    * Alters bundle forms to enforce revision handling.
    *
    * @param array $form
