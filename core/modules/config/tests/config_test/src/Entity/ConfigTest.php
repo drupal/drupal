@@ -136,6 +136,10 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
         }
       }
     }
+    // If any of the dependencies removed still exists, return FALSE.
+    if (array_intersect_key(array_flip($this->dependencies['enforced']['config']), $dependencies['config'])) {
+      return FALSE;
+    }
     return $changed;
   }
 

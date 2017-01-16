@@ -33,6 +33,12 @@ config_test.dynamic.*.*:
   type: config_test_dynamic
   label: 'Config test dynamic settings'
 
+config_test.dynamic.*.third_party.node:
+  type: mapping
+  mapping:
+    foo:
+      type: string
+
 config_test.query.*:
   type: config_entity
   mapping:

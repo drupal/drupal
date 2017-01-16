@@ -1,0 +1,8 @@
+name: 'Entity test third-party settings module'
+type: module
+description: 'Provides third-party settings for test entity types.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - entity_test
