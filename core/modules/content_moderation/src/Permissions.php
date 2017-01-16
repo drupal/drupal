@@ -19,13 +19,11 @@ class Permissions {
    *   The transition permissions.
    */
   public function transitionPermissions() {
-    // @todo https://www.drupal.org/node/2779933 write a test for this.
-    $perms = [];
-
+    $permissions = [];
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     foreach (Workflow::loadMultipleByType('content_moderation') as $id => $workflow) {
       foreach ($workflow->getTransitions() as $transition) {
-        $perms['use ' . $workflow->id() . ' transition ' . $transition->id()] = [
+        $permissions['use ' . $workflow->id() . ' transition ' . $transition->id()] = [
           'title' => $this->t('Use %transition transition from %workflow workflow.', [
             '%transition' => $transition->label(),
             '%workflow' => $workflow->label(),
@@ -34,7 +32,7 @@ class Permissions {
       }
     }
 
-    return $perms;
+    return $permissions;
   }
 
 }
