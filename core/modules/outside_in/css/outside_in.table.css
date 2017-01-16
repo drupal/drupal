@@ -3,7 +3,7 @@
  * Visual styling for tables in the Settings Tray module's off canvas tray.
  */
 
-.ui-dialog-offcanvas table {
+.ui-dialog-outside-in table {
   border: 0;
   border-collapse: collapse;
   min-width: 300px;
@@ -13,7 +13,7 @@
   margin-left: -20px;
   margin-bottom: -10px;
 }
-.ui-dialog-offcanvas tr th {
+.ui-dialog-outside-in tr th {
   padding: 2px 4px;
   background-color: transparent;
   border: 0;
@@ -22,15 +22,14 @@
   color: #bbb;
   text-align: left; /* LTR */
 }
-[dir="rtl"] .ui-dialog-offcanvas tr th {
+[dir="rtl"] .ui-dialog-outside-in tr th {
   text-align: right;
 }
-.ui-dialog-offcanvas tr,
-.ui-dialog-offcanvas tr td {
+.ui-dialog-outside-in tr,
+.ui-dialog-outside-in tr td {
   padding: 2px 4px;
   height: 35px;
   vertical-align: middle;
-  font-size: 13px;
   text-align: left; /* LTR */
   border: 0px;
   border-style: solid;
@@ -40,29 +39,29 @@
   background-color: transparent;
   font-size: 12px;
 }
-[dir="rtl"] .ui-dialog-offcanvas tr th,
-[dir="rtl"] .ui-dialog-offcanvas tr td {
+[dir="rtl"] .ui-dialog-outside-in tr th,
+[dir="rtl"] .ui-dialog-outside-in tr td {
   text-align: right;
 }
-.ui-dialog-offcanvas td a {
+.ui-dialog-outside-in td a {
   display: block;
   max-width: 120px;
   overflow: hidden;
 }
-.ui-dialog.ui-dialog-offcanvas tr td:first-child,
-.ui-dialog.ui-dialog-offcanvas tr th:first-child {
+.ui-dialog.ui-dialog-outside-in tr td:first-child,
+.ui-dialog.ui-dialog-outside-in tr th:first-child {
   min-width: 120px;
   padding-left: 20px; /* LTR */
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
-[dir="rtl"] .ui-dialog.ui-dialog-offcanvas tr td:first-child,
-[dir="rtl"] .ui-dialog.ui-dialog-offcanvas tr th:first-child {
+[dir="rtl"] .ui-dialog.ui-dialog-outside-in tr td:first-child,
+[dir="rtl"] .ui-dialog.ui-dialog-outside-in tr th:first-child {
   padding-right: 20px;
 }
-.ui-dialog-offcanvas tr.odd,
-.ui-dialog-offcanvas tr.even {
+.ui-dialog-outside-in tr.odd,
+.ui-dialog-outside-in tr.even {
   background-image: none;
   background-color: transparent;
 }

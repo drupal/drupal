@@ -9,7 +9,7 @@
 
   var blockConfigureSelector = '[data-outside-in-edit]';
   var toggleEditSelector = '[data-drupal-outsidein="toggle"]';
-  var itemsToToggleSelector = '#main-canvas, #toolbar-bar, [data-drupal-outsidein="editable"] a, [data-drupal-outsidein="editable"] button';
+  var itemsToToggleSelector = '[data-offcanvas-main-canvas], #toolbar-bar, [data-drupal-outsidein="editable"] a, [data-drupal-outsidein="editable"] button';
   var contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
   var quickEditItemSelector = '[data-quickedit-entity-id]';
 
@@ -139,7 +139,7 @@
       $editables = $('[data-drupal-outsidein="editable"]').once('outsidein');
       if ($editables.length) {
         // Use event capture to prevent clicks on links.
-        document.querySelector('#main-canvas').addEventListener('click', preventClick, true);
+        document.querySelector('[data-offcanvas-main-canvas]').addEventListener('click', preventClick, true);
 
         // When a click occurs try and find the outside-in edit link
         // and click it.
@@ -172,7 +172,7 @@
     else {
       $editables = $('[data-drupal-outsidein="editable"]').removeOnce('outsidein');
       if ($editables.length) {
-        document.querySelector('#main-canvas').removeEventListener('click', preventClick, true);
+        document.querySelector('[data-offcanvas-main-canvas]').removeEventListener('click', preventClick, true);
         $editables.off('.outsidein');
         $(quickEditItemSelector).off('.outsidein');
       }
@@ -217,7 +217,7 @@
 
       var search = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog';
       var replace = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog_offcanvas';
-      // Loop through all Ajax links and change the format to offcanvas when
+      // Loop through all Ajax links and change the format to dialog-offcanvas when
       // needed.
       Drupal.ajax.instances
         .filter(function (instance) {
@@ -250,8 +250,9 @@
       if ($element.is('#drupal-offcanvas')) {
         $('body .outside-in-active-editable').removeClass('outside-in-active-editable');
         var $activeElement = $('#' + settings.outsideInActiveEditableId);
-        if ($activeElement) {
+        if ($activeElement.length) {
           $activeElement.addClass('outside-in-active-editable');
+          settings.dialogClass += ' ui-dialog-outside-in';
         }
       }
     },

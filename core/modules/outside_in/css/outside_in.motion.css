@@ -10,18 +10,6 @@
  *   file: https://www.drupal.org/node/2784443.
  */
 
-/* Transition the offcanvas tray container, with 2s delay to match main canvas speed. */
-#offcanvas {
-  -webkit-transition: all .7s ease 2s;
-  -moz-transition: all .7s ease 2s;
-  transition: all .7s ease 2s;
-}
-#main-canvas-wrapper #main-canvas,
-#main-canvas-wrapper.js-tray-open #main-canvas {
-  -webkit-transition: all .7s ease;
-  -moz-transition: all .7s ease;
-  transition: all .7s ease;
-}
 
 /* Transition the edit icon in the toolbar. */
 #toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
@@ -31,9 +19,9 @@
 }
 
 /* Transition the editables on the page, their contextual links and their hover states. */
-#main-canvas-wrapper .contextual,
-#main-canvas-wrapper .js-outside-in-edit-mode .outside-in-editable,
-#main-canvas-wrapper.js-tray-open .js-outside-in-edit-mode .outside-in-editable {
+.dialog-offcanvas__main-canvas .contextual,
+.dialog-offcanvas__main-canvas .js-outside-in-edit-mode .outside-in-editable,
+.dialog-offcanvas__main-canvas.js-tray-open .js-outside-in-edit-mode .outside-in-editable {
   -webkit-transition: all .7s ease;
   -moz-transition: all .7s ease;
   transition: all .7s ease;
@@ -45,19 +33,6 @@
   -webkit-transition: all .5s ease;
   -moz-transition: all .5s ease;
   transition: all .5s ease;
-}
-
-@media (max-width: 700px) {
-  #offcanvas {
-    -webkit-transition: all .7s ease;
-    -moz-transition: all .7s ease;
-    transition: all .7s ease;
-  }
-  #main-canvas-wrapper.js-tray-open #offcanvas {
-    -webkit-transition: all .7s ease;
-    -moz-transition: all .7s ease;
-    transition: all .7s ease;
-  }
 }
 
 /* Transition the administration tray.

@@ -18,7 +18,7 @@
    */
   var edge = document.documentElement.dir === 'rtl' ? 'left' : 'right';
 
-  var $mainCanvasWrapper = $('#main-canvas-wrapper');
+  var $mainCanvasWrapper = $('[data-offcanvas-main-canvas]');
 
   /**
    * Resets the size of the dialog.
@@ -119,7 +119,7 @@
           at: edge + ' top',
           of: window
         };
-        settings.dialogClass = 'ui-dialog-offcanvas';
+        settings.dialogClass += ' ui-dialog-offcanvas';
         // Applies initial height to dialog based on window height.
         // See http://api.jqueryui.com/dialog for all dialog options.
         settings.height = $(window).height();

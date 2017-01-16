@@ -8,40 +8,40 @@
 
 /* Because base font sizes will vary widely across themes, to maintain consistency outside-in uses only pixels. */
 
-.ui-dialog-offcanvas body.drag {
+.ui-dialog-outside-in body.drag {
   cursor: move;
 }
-.ui-dialog-offcanvas tr.region-title {
+.ui-dialog-outside-in tr.region-title {
   font-weight: normal;
 }
-.ui-dialog-offcanvas tr.region-message {
+.ui-dialog-outside-in tr.region-message {
   color: #fff;
 }
-.ui-dialog-offcanvas tr.region-populated {
+.ui-dialog-outside-in tr.region-populated {
   display: none;
 }
-.ui-dialog-offcanvas tr.add-new .tabledrag-changed {
+.ui-dialog-outside-in tr.add-new .tabledrag-changed {
   display: none;
 }
-.ui-dialog-offcanvas .draggable a.tabledrag-handle {
+.ui-dialog-outside-in .draggable a.tabledrag-handle {
   background-image: none;
   margin: 0;
   margin-left: 0; /* LTR */
   margin-right: 5px; /* LTR */
   height: auto;
   min-width: 20px;
-  padding: 0px;
+  padding: 0;
   overflow: hidden;
   float: left; /* LTR */
   text-decoration: none;
   cursor: move;
 }
-[dir="rtl"] .ui-dialog-offcanvas .draggable a.tabledrag-handle {
+[dir="rtl"] .ui-dialog-outside-in .draggable a.tabledrag-handle {
   float: right;
   margin-right: 0;
   margin-left: 5px;
 }
-.ui-dialog-offcanvas a.tabledrag-handle .handle {
+.ui-dialog-outside-in a.tabledrag-handle .handle {
   /* Use lighter drag icon against dark background. */
   background-image: url(../../../misc/icons/bebebe/move.svg);
   background-repeat: no-repeat;
@@ -51,54 +51,54 @@
   padding: 0;
   width: auto;
 }
-.ui-dialog-offcanvas .draggable a.tabledrag-handle:hover .handle,
-.ui-dialog-offcanvas .draggable a.tabledrag-handle:focus .handle {
+.ui-dialog-outside-in .draggable a.tabledrag-handle:hover .handle,
+.ui-dialog-outside-in .draggable a.tabledrag-handle:focus .handle {
   background-image: url(../../../misc/icons/787878/move.svg);
   text-decoration: none;
 }
 
-.ui-dialog-offcanvas .touchevents .draggable td {
+.ui-dialog-outside-in .touchevents .draggable td {
   padding: 0 10px;
 }
-.ui-dialog-offcanvas .touchevents .draggable .menu-item__link {
+.ui-dialog-outside-in .touchevents .draggable .menu-item__link {
   display: inline-block;
   padding: 10px 0;
 }
-.ui-dialog-offcanvas .touchevents a.tabledrag-handle {
+.ui-dialog-outside-in .touchevents a.tabledrag-handle {
   height: 44px;
   width: 40px;
 }
-.ui-dialog-offcanvas .touchevents a.tabledrag-handle .handle {
+.ui-dialog-outside-in .touchevents a.tabledrag-handle .handle {
   background-position: 40% 19px; /* LTR */
   height: 21px;
 }
-[dir="rtl"] .ui-dialog-offcanvas .touch a.tabledrag-handle .handle {
+[dir="rtl"] .ui-dialog-outside-in .touch a.tabledrag-handle .handle {
   background-position: right 40% top 19px;
 }
-.ui-dialog-offcanvas .touchevents .draggable.drag a.tabledrag-handle .handle {
+.ui-dialog-outside-in .touchevents .draggable.drag a.tabledrag-handle .handle {
   background-position: 50% -32px;
 }
-.ui-dialog-offcanvas .tabledrag-toggle-weight-wrapper {
+.ui-dialog-outside-in .tabledrag-toggle-weight-wrapper {
   text-align: right; /* LTR */
 }
-[dir="rtl"] .ui-dialog-offcanvas .tabledrag-toggle-weight-wrapper {
+[dir="rtl"] .ui-dialog-outside-in .tabledrag-toggle-weight-wrapper {
   text-align: left;
 }
-.ui-dialog-offcanvas .indentation {
+.ui-dialog-outside-in .indentation {
   float: left; /* LTR */
   height: auto;
   margin: 0 3px 0 -10px; /* LTR */
   padding: 0 0 0 10px; /* LTR */
   width: auto;
 }
-[dir="rtl"] .ui-dialog-offcanvas .indentation {
+[dir="rtl"] .ui-dialog-outside-in .indentation {
   float: right;
   margin: 0 -10px 0 3px;
   padding: 0 10px 0 0;
 }
-.ui-dialog-offcanvas tr.drag {
+.ui-dialog-outside-in tr.drag {
   background-color: #555;
 }
-.ui-dialog-offcanvas tr.drag-previous {
+.ui-dialog-outside-in tr.drag-previous {
   background-color: #000;
 }

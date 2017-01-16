@@ -60,19 +60,19 @@
 }
 
 /* Style the editables while in edit mode. */
-#main-canvas.js-outside-in-edit-mode .outside-in-editable {
+.dialog-offcanvas__main-canvas.js-outside-in-edit-mode .outside-in-editable {
   outline: 1px dashed rgba(0,0,0,0.5);
   box-shadow: 0 0 0 1px rgba(255,255,255,0.7);
 }
-#main-canvas.js-outside-in-edit-mode .outside-in-editable:hover,
-#main-canvas.js-outside-in-edit-mode .outside-in-editable.outside-in-active-editable {
+.dialog-offcanvas__main-canvas.js-outside-in-edit-mode .outside-in-editable:hover,
+.dialog-offcanvas__main-canvas.js-outside-in-edit-mode .outside-in-editable.outside-in-active-editable {
   background-color: rgba(0,0,0,0.2);
 }
 
-/* Style the offcanvas container. */
-.ui-dialog-offcanvas {
+/* Style the dialog-offcanvas container. */
+.ui-dialog-outside-in {
   background: #444;
-  border: 0px solid transparent;
+  border: 0 solid transparent;
   border-radius: 0;
   box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3333);
   padding: 0;
@@ -82,20 +82,20 @@
 }
 
 /* Style content in the tray. */
-.ui-dialog-offcanvas p,
-.ui-dialog-offcanvas h1,
-.ui-dialog-offcanvas h2,
-.ui-dialog-offcanvas h3,
-.ui-dialog-offcanvas h4,
-.ui-dialog-offcanvas h5,
-.ui-dialog-offcanvas h6,
-.ui-dialog-offcanvas pre,
-.ui-dialog-offcanvas legend,
-.ui-dialog-offcanvas cite,
-.ui-dialog-offcanvas span,
-.ui-dialog-offcanvas summary,
-.ui-dialog-offcanvas details,
-.ui-dialog-offcanvas .form-item {
+.ui-dialog-outside-in p,
+.ui-dialog-outside-in h1,
+.ui-dialog-outside-in h2,
+.ui-dialog-outside-in h3,
+.ui-dialog-outside-in h4,
+.ui-dialog-outside-in h5,
+.ui-dialog-outside-in h6,
+.ui-dialog-outside-in pre,
+.ui-dialog-outside-in legend,
+.ui-dialog-outside-in cite,
+.ui-dialog-outside-in span,
+.ui-dialog-outside-in summary,
+.ui-dialog-outside-in details,
+.ui-dialog-outside-in .form-item {
   color: #ddd;
   font-family: "Lucida Grande", 'Lucida Sans Unicode','liberation sans', sans-serif;
   font-size: 14px;
@@ -103,8 +103,8 @@
   background-color: transparent;
   text-shadow: none;
 }
-.ui-dialog-offcanvas a,
-.ui-dialog-offcanvas .link {
+.ui-dialog-outside-in a,
+.ui-dialog-outside-in .link {
   border-bottom: none;
   font-family: "Lucida Grande", 'Lucida Sans Unicode','liberation sans', sans-serif;
   font-size: 14px;
@@ -113,16 +113,16 @@
   text-decoration: none;
   transition: color .5s ease;
 }
-.ui-dialog-offcanvas a:focus,
-.ui-dialog-offcanvas .link:focus,
-.ui-dialog-offcanvas a:hover,
-.ui-dialog-offcanvas .link:hover {
+.ui-dialog-outside-in a:focus,
+.ui-dialog-outside-in .link:focus,
+.ui-dialog-outside-in a:hover,
+.ui-dialog-outside-in .link:hover {
   outline: none;
   color: #46a0f5;
 }
 
 /* Style the tray header. */
-.ui-dialog-offcanvas .ui-dialog-titlebar {
+.ui-dialog-outside-in .ui-dialog-titlebar {
   padding: 20px;
   background: #2d2d2d;
   border: 0;
@@ -131,11 +131,10 @@
   font-weight: normal;
   color: #fff;
 }
-.ui-dialog-offcanvas .ui-dialog-titlebar-close {
+.ui-dialog-outside-in .ui-dialog-titlebar-close {
   background-image: url(../../../misc/icons/bebebe/ex.svg);
-  background-position-x: center;
+  background-position: center center;
   background-repeat: no-repeat;
-  background-position-y: center;
   background-color: transparent;
   border: 0;
   position: absolute;
@@ -143,14 +142,14 @@
   -moz-transition: all .5s ease;
   transition: background .5s ease;
 }
-.ui-dialog-offcanvas .ui-dialog-titlebar-close:hover {
+.ui-dialog-outside-in .ui-dialog-titlebar-close:hover {
   background-image: url(../../../misc/icons/ffffff/ex.svg);
 }
-[dir="rtl"] .ui-dialog-offcanvas .ui-dialog-titlebar-close {
+[dir="rtl"] .ui-dialog-outside-in .ui-dialog-titlebar-close {
   left: 20px;
   right: auto;
 }
-.ui-dialog-offcanvas .ui-dialog-title {
+.ui-dialog-outside-in .ui-dialog-title {
   font-size: 16px;
   margin: 0;
   /* Push the text away from the icon. */
@@ -160,12 +159,12 @@
   max-width: 210px;
   text-align: left; /* LTR */
 }
-[dir="rtl"] .ui-dialog-offcanvas .ui-dialog-title {
+[dir="rtl"] .ui-dialog-outside-in .ui-dialog-title {
   text-align: right;
   padding-left: 0px;
   padding-right: 0px;
 }
-.ui-dialog-offcanvas .ui-dialog-title:before {
+.ui-dialog-outside-in .ui-dialog-title:before {
   background: transparent url(../../../misc/icons/ffffff/pencil.svg) no-repeat scroll center center;
   background-size: 100% auto;
   content: '';
@@ -176,7 +175,7 @@
   top: 0;
   width: 20px;
 }
-[dir="rtl"] .ui-dialog-offcanvas .ui-dialog-title:before {
+[dir="rtl"] .ui-dialog-outside-in .ui-dialog-title:before {
   left: auto;
   right: 20px;
 }
@@ -191,7 +190,7 @@
   color: #333;
 }
 /* Hide the defauld Jquery UI dialog close button. */
-.ui-dialog-offcanvas .ui-icon-closethick {
+.ui-dialog-outside-in .ui-icon-closethick {
   visibility: hidden;
 }
 
@@ -203,14 +202,14 @@
  *   https://www.drupal.org/node/1945262.
  */
 
-.ui-dialog-offcanvas button.link {
+.ui-dialog-outside-in button.link {
   background: transparent;
   border: 0;
   cursor: pointer;
   margin: 0;
   padding: 0;
 }
-.ui-dialog-offcanvas .button {
+.ui-dialog-outside-in .button {
   width: 100%;
   height: auto;
   margin: 1em auto;
@@ -221,18 +220,18 @@
   color: #fff;
   transition: all .5s ease;
 }
-.ui-dialog-offcanvas .button:hover,
-.ui-dialog-offcanvas .button:focus {
+.ui-dialog-outside-in .button:hover,
+.ui-dialog-outside-in .button:focus {
   background: #888;
 }
-.ui-dialog-offcanvas .button--primary {
+.ui-dialog-outside-in .button--primary {
   background: #277abd none;
   border: none;
   color: #fff;
   transition: all .5s ease;
 }
-.ui-dialog-offcanvas .button--primary:hover,
-.ui-dialog-offcanvas .button--primary:focus {
+.ui-dialog-outside-in .button--primary:hover,
+.ui-dialog-outside-in .button--primary:focus {
   background: #2b8bd8;
 }
 
@@ -243,17 +242,17 @@
  *   https://www.drupal.org/node/1945262.
  */
 
-.ui-dialog-offcanvas .dropbutton-widget {
+.ui-dialog-outside-in .dropbutton-widget {
   background: #7b7b7b none;
   border: 0;
   border-radius: 1em;
   color: #eee;
   transition: background .5s ease;
 }
-.ui-dialog-offcanvas .dropbutton-widget:hover {
+.ui-dialog-outside-in .dropbutton-widget:hover {
   box-shadow: 0 2px 2px 1px rgba(0,0,0,0.5);
 }
-.ui-dialog-offcanvas .dropbutton-toggle button {
+.ui-dialog-outside-in .dropbutton-toggle button {
   background: #7b7b7b none;
   border-bottom-right-radius: 1em; /* LTR */
   border-top-right-radius: 1em; /* LTR */
@@ -262,37 +261,37 @@
   border-left-width: 1px; /* LTR */
   transition: background .5s ease;
 }
-[dir="rtl"] .ui-dialog-offcanvas .dropbutton-toggle button {
+[dir="rtl"] .ui-dialog-outside-in .dropbutton-toggle button {
   border-radius: 0;
   border-bottom-left-radius: 1em;
   border-top-left-radius: 1em;
   border-width: 0;
   border-right-width: 1px;
 }
-.ui-dialog-offcanvas .dropbutton .dropbutton-action:hover,
-.ui-dialog-offcanvas .dropbutton a:hover {
+.ui-dialog-outside-in .dropbutton .dropbutton-action:hover,
+.ui-dialog-outside-in .dropbutton a:hover {
   background: #6b6b6b none;
   border-bottom-left-radius: 1em; /* LTR */
   border-top-left-radius: 1em; /* LTR */
 }
-[dir="rtl"] .ui-dialog-offcanvas .dropbutton .dropbutton-action:hover,
-[dir="rtl"] .ui-dialog-offcanvas .dropbutton a:hover {
+[dir="rtl"] .ui-dialog-outside-in .dropbutton .dropbutton-action:hover,
+[dir="rtl"] .ui-dialog-outside-in .dropbutton a:hover {
   border-radius: 0;
   border-bottom-right-radius: 1em;
   border-top-right-radius: 1em;
 }
-.ui-dialog-offcanvas .dropbutton a {
+.ui-dialog-outside-in .dropbutton a {
   padding: 0.1em 0.8em;
   color: #eee;
   font-size: 90%;
   line-height: 1.8;
   transition: all .5s ease;
 }
-.ui-dialog-offcanvas .dropbutton:hover a {
+.ui-dialog-outside-in .dropbutton:hover a {
   color: #fff;
 }
 /* Make an arrow out of borders with some fancy CSS. */
-.ui-dialog-offcanvas span.dropbutton-arrow {
+.ui-dialog-outside-in span.dropbutton-arrow {
   border-bottom-color: transparent;
   border-left-color: transparent;
   border-right-color: transparent;
@@ -309,21 +308,19 @@
   overflow: hidden;
   color: #fff;
 }
-.js .dropbutton-toggle .dropbutton-arrow:hover {
+.js .ui-dialog-outside-in .dropbutton-toggle .dropbutton-arrow:hover {
   background: transparent;
 }
-.ui-dialog-offcanvas td .dropbutton-multiple {
+.ui-dialog-outside-in td .dropbutton-multiple {
   padding-right: 0;
 }
-[dir="rtl"].ui-dialog-offcanvas td .dropbutton-multiple {
+[dir="rtl"].ui-dialog-outside-in td .dropbutton-multiple {
   padding-left: 0;
 }
-.ui-dialog-offcanvas td .dropbutton-multiple .dropbutton {
+.ui-dialog-outside-in td .dropbutton-multiple .dropbutton {
   border-right: 0;
   border-left: 0;
 }
-.ui-dialog-offcanvas td .dropbutton .secondary-action {
+.ui-dialog-outside-in td .dropbutton .secondary-action {
   border-top-color: #000;
 }
-
-

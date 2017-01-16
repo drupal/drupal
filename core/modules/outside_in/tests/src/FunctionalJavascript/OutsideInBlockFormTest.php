@@ -119,14 +119,14 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
 
     // Exit edit mode using ESC.
     $web_assert->elementTextContains('css', '.contextual-toolbar-tab button', 'Editing');
-    $web_assert->elementAttributeContains('css', '#main-canvas', 'class', 'js-outside-in-edit-mode');
+    $web_assert->elementAttributeContains('css', '.dialog-offcanvas__main-canvas', 'class', 'js-outside-in-edit-mode');
     // Simulate press the Escape key.
     $this->getSession()->executeScript('jQuery("body").trigger(jQuery.Event("keyup", { keyCode: 27 }));');
     $this->waitForOffCanvasToClose();
     $this->getSession()->wait(100);
     $web_assert->elementTextContains('css', '#drupal-live-announce', 'Exited edit mode.');
     $web_assert->elementTextNotContains('css', '.contextual-toolbar-tab button', 'Editing');
-    $web_assert->elementAttributeNotContains('css', '#main-canvas', 'class', 'js-outside-in-edit-mode');
+    $web_assert->elementAttributeNotContains('css', '.dialog-offcanvas__main-canvas', 'class', 'js-outside-in-edit-mode');
   }
 
   /**
