@@ -47,3 +47,14 @@
   pointer-events: inherit;
 }
 
+/* Force the tray to be 100% width at the same breakpoint the dialog system uses to expand dialog widths. */
+@media all and (max-width: 48em) { /* 768px */
+  .ui-dialog.ui-dialog-offcanvas {
+    width: 100% !important;
+  }
+  /* When tray is at 100% width stop the body from scrolling */
+  .js-tray-open {
+    height: 100%;
+    overflow-y: hidden;
+  }
+}
