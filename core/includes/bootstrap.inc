@@ -24,6 +24,18 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 const DRUPAL_MINIMUM_PHP = '5.5.9';
 
 /**
+ * Minimum version of PHP receiving security updates.
+ *
+ * @see https://secure.php.net/supported-versions.php
+ */
+const DRUPAL_MINIMUM_SECURE_PHP = '5.6';
+
+/**
+ * Minimum recommended version of PHP.
+ */
+const DRUPAL_RECOMMENDED_PHP = '7.0.0';
+
+/**
  * Minimum recommended value of PHP memory_limit.
  *
  * 64M was chosen as a minimum requirement in order to allow for additional
