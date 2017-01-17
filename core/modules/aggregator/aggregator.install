@@ -37,3 +37,24 @@ function aggregator_update_8001() {
 /**
  * @} End of "addtogroup updates-8.0.0-rc".
  */
+
+/**
+ * @addtogroup updates-8.2.x
+ * @{
+ */
+
+/**
+ * Make the 'Source feed' field for aggregator items required.
+ */
+function aggregator_update_8200() {
+  // aggregator_update_8001() did not update the last installed field storage
+  // definition for the aggregator item's 'Source feed' field.
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $field_definition = $definition_update_manager->getFieldStorageDefinition('fid', 'aggregator_item');
+  $field_definition->setRequired(TRUE);
+  $definition_update_manager->updateFieldStorageDefinition($field_definition);
+}
+
+/**
+ * @} End of "addtogroup updates-8.2.x".
+ */
