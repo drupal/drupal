@@ -320,7 +320,7 @@ class WebAssert extends MinkWebAssert {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
       if (is_object($value)) {
-        throw new \InvalidArgumentException('Just pass in scalar values.');
+        throw new \InvalidArgumentException('Just pass in scalar values for $args and remove all t() calls from your test.');
       }
       // XPath 1.0 doesn't support a way to escape single or double quotes in a
       // string literal. We split double quotes out of the string, and encode
