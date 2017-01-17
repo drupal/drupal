@@ -13,7 +13,11 @@ abstract class UrlAliasBase extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    return $this->select('url_alias', 'ua')->fields('ua');
+    // The order of the migration is significant since
+    // \Drupal\Core\Path\AliasStorage::lookupPathAlias() orders by pid before
+    // returning a result. Postgres does not automatically order by primary key
+    // therefore we need to add a specific order by.
+    return $this->select('url_alias', 'ua')->fields('ua')->orderBy('pid');
   }
 
   /**
