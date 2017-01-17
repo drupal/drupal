@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\DrupalKernel {
   use Drupal\Core\DrupalKernel;
   use Drupal\Tests\UnitTestCase;
   use org\bovigo\vfs\vfsStream;
+  use Symfony\Component\ClassLoader\ApcClassLoader;
   use Symfony\Component\HttpFoundation\Request;
 
   /**
@@ -44,6 +45,63 @@ namespace Drupal\Tests\Core\DrupalKernel {
       // Reset the trusted hosts because it is statically stored on the request.
       $method->invoke(NULL, $request, []);
       // Reset the request factory because it is statically stored on the request.
+      Request::setFactory(NULL);
+    }
+
+    /**
+     * Tests the reregistration of autoloaders if APCu available.
+     *
+     * This test runs in a separate process since it registers class loaders and
+     * results in statics being set.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     * @requires function apcu_fetch
+     * @covers ::initializeSettings
+     */
+    public function testInitializeSettings() {
+      $request = new Request();
+      $classloader = new fakeAutoloader();
+
+      // Create a kernel suitable for testing.
+      $kernel = $this->getMockBuilder(DrupalKernel::class)
+        ->disableOriginalConstructor()
+        ->setMethods(['do_not_mock_any_methods'])
+        ->getMock();
+      $classloader_property = new \ReflectionProperty($kernel, 'classLoader');
+      $classloader_property->setAccessible(TRUE);
+      $classloader_property->setValue($kernel, $classloader);
+      $method = new \ReflectionMethod($kernel, 'initializeSettings');
+      $method->setAccessible(TRUE);
+
+      // Prepend another autoloader to simulate Drush's autoloader.
+      $fake_drush_autoloader = function () {
+        return NULL;
+      };
+      spl_autoload_register($fake_drush_autoloader, TRUE, TRUE);
+
+      // Before calling DrupalKernel::initializeSettings() the first autoloader
+      // is the fake Drush autoloader.
+      $this->assertSame($fake_drush_autoloader, spl_autoload_functions()[0]);
+
+      // Call DrupalKernel::initializeSettings() to simulate part of a Drupal
+      // bootstrap. During the include of autoload.php Composer would prepend
+      // Drupal's autoloader and then this method should not result in Drush's
+      // autoloader becoming the first autoloader even if it swaps out
+      // Composer's autoloader for an optimised one.
+      $method->invoke($kernel, $request);
+
+      $autoloaders = spl_autoload_functions();
+      // The first autoloader should be the APCu based autoloader.
+      $this->assertInstanceOf(ApcClassLoader::class, $autoloaders[0][0]);
+      // The second autoloader should be the original autoloader the kernel was
+      // constructed with.
+      $this->assertSame($classloader, $autoloaders[1][0]);
+      // The third autoloader should be Drush's autoloader.
+      $this->assertSame($fake_drush_autoloader, $autoloaders[2]);
+
+      // Reset the request factory because it is statically stored on the
+      // request.
       Request::setFactory(NULL);
     }
 
@@ -136,6 +194,49 @@ EOD;
 
   }
 
+  /**
+   * A fake autoloader for testing
+   */
+  class fakeAutoloader {
+
+    /**
+     * Registers this instance as an autoloader.
+     *
+     * @param bool $prepend
+     *   Whether to prepend the autoloader or not
+     */
+    public function register($prepend = FALSE) {
+      spl_autoload_register(array($this, 'loadClass'), TRUE, $prepend);
+    }
+
+    /**
+     * Unregisters this instance as an autoloader.
+     */
+    public function unregister() {
+      spl_autoload_unregister(array($this, 'loadClass'));
+    }
+
+    /**
+     * Loads the given class or interface.
+     *
+     * @return null
+     *   This class never loads.
+     */
+    public function loadClass() {
+      return NULL;
+    }
+
+    /**
+     * Finds a file by class name while caching lookups to APC.
+     *
+     * @return null
+     *   This class never finds.
+     */
+    public function findFile() {
+      return NULL;
+    }
+
+  }
 }
 
 
