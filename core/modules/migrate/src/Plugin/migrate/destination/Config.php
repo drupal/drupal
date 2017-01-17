@@ -54,13 +54,16 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
    *   The migration entity.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
-   * @param \Drupal\Core\Language\ConfigurableLanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->config = $config_factory->getEditable($configuration['config_name']);
     $this->language_manager = $language_manager;
+    if ($this->isTranslationDestination()) {
+      $this->supportsRollback = TRUE;
+    }
   }
 
   /**
@@ -81,7 +84,7 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = array()) {
-    if ($row->hasDestinationProperty('langcode')) {
+    if ($this->isTranslationDestination()) {
       $this->config = $this->language_manager->getLanguageConfigOverride($row->getDestinationProperty('langcode'), $this->config->getName());
     }
 
@@ -91,7 +94,11 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
       }
     }
     $this->config->save();
-    return [$this->config->getName()];
+    $ids[] = $this->config->getName();
+    if ($this->isTranslationDestination()) {
+      $ids[] = $row->getDestinationProperty('langcode');
+    }
+    return $ids;
   }
 
   /**
@@ -106,6 +113,9 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
    */
   public function getIds() {
     $ids['config_name']['type'] = 'string';
+    if ($this->isTranslationDestination()) {
+      $ids['langcode']['type'] = 'string';
+    }
     return $ids;
   }
 
@@ -116,6 +126,27 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
     $provider = explode('.', $this->config->getName(), 2)[0];
     $this->addDependency('module', $provider);
     return $this->dependencies;
+  }
+
+  /**
+   * Get whether this destination is for translations.
+   *
+   * @return bool
+   *   Whether this destination is for translations.
+   */
+  protected function isTranslationDestination() {
+    return !empty($this->configuration['translations']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rollback(array $destination_identifier) {
+    if ($this->isTranslationDestination()) {
+      $language = $destination_identifier['langcode'];
+      $config = $this->language_manager->getLanguageConfigOverride($language, $this->config->getName());
+      $config->delete();
+    }
   }
 
 }

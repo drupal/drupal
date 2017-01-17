@@ -12,3 +12,4 @@ process:
 destination:
   plugin: config
   config_name: system.maintenance
+  translations: true
