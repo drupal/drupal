@@ -1,0 +1,6 @@
+name: 'HTTP Basic Authentication test'
+type: module
+description: 'Support module for HTTP Basic Authentication testing.'
+package: Testing
+version: VERSION
+core: 8.x
