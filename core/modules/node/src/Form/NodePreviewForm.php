@@ -85,9 +85,11 @@ class NodePreviewForm extends FormBase {
       '#options' => array('attributes' => array('class' => array('node-preview-backlink'))) + $query_options,
     );
 
-    $view_mode_options = $this->entityManager->getViewModeOptionsByBundle('node', $node->bundle());
+    // Always show full as an option, even if the display is not enabled.
+    $view_mode_options = ['full' => $this->t('Full')] + $this->entityManager->getViewModeOptionsByBundle('node', $node->bundle());
 
     // Unset view modes that are not used in the front end.
+    unset($view_mode_options['default']);
     unset($view_mode_options['rss']);
     unset($view_mode_options['search_index']);
 

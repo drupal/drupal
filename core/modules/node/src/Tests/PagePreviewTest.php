@@ -196,7 +196,7 @@ class PagePreviewTest extends NodeTestBase {
       ->save();
 
     $view_mode_edit = array('view_mode' => 'teaser');
-    $this->drupalPostForm('node/preview/' . $uuid . '/default', $view_mode_edit, t('Switch'));
+    $this->drupalPostForm('node/preview/' . $uuid . '/full', $view_mode_edit, t('Switch'));
     $this->assertRaw('view-mode-teaser', 'View mode teaser class found.');
     $this->assertNoText($edit[$body_key], 'Body not displayed.');
 
@@ -298,7 +298,7 @@ class PagePreviewTest extends NodeTestBase {
     // original destination, if set.
     $destination = 'node';
     $this->drupalPostForm($node->toUrl('edit-form'), [], t('Preview'), ['query' => ['destination' => $destination]]);
-    $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'default'];
+    $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'];
     $options = ['absolute' => TRUE, 'query' => ['destination' => $destination]];
     $this->assertUrl(Url::fromRoute('entity.node.preview', $parameters, $options));
     $this->drupalPostForm(NULL, ['view_mode' => 'teaser'], t('Switch'));
@@ -308,7 +308,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Check that preview page works as expected without a destination set.
     $this->drupalPostForm($node->toUrl('edit-form'), [], t('Preview'));
-    $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'default'];
+    $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'];
     $this->assertUrl(Url::fromRoute('entity.node.preview', $parameters, ['absolute' => TRUE]));
     $this->drupalPostForm(NULL, ['view_mode' => 'teaser'], t('Switch'));
     $this->clickLink(t('Back to content editing'));
@@ -442,7 +442,7 @@ class PagePreviewTest extends NodeTestBase {
     /** @var \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver */
     $controller_resolver = \Drupal::service('controller_resolver');
     $node_preview_controller = $controller_resolver->getControllerFromDefinition('\Drupal\node\Controller\NodePreviewController::view');
-    $node_preview_controller($node, 'default');
+    $node_preview_controller($node, 'full');
   }
 
   /**
@@ -463,7 +463,7 @@ class PagePreviewTest extends NodeTestBase {
 
     $edit2 = array($title_key => 'Another page title');
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit2, t('Preview'));
-    $this->assertUrl(\Drupal::url('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'default'], ['absolute' => TRUE]));
+    $this->assertUrl(\Drupal::url('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'], ['absolute' => TRUE]));
     $this->assertText($edit2[$title_key]);
   }
 

@@ -347,7 +347,7 @@ class NodeForm extends ContentEntityForm {
 
     $route_parameters = [
       'node_preview' => $this->entity->uuid(),
-      'view_mode_id' => 'default',
+      'view_mode_id' => 'full',
     ];
 
     $options = [];
