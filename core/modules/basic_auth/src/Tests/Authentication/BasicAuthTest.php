@@ -22,7 +22,7 @@ class BasicAuthTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('basic_auth', 'router_test', 'locale');
+  public static $modules = array('basic_auth', 'router_test', 'locale', 'basic_auth_test');
 
   /**
    * Test http basic authentication.
@@ -173,6 +173,27 @@ class BasicAuthTest extends WebTestBase {
     $this->basicAuthGet($url, $account->getUsername(), $this->randomMachineName());
     $this->assertResponse('403', 'The user is blocked when wrong credentials are passed.');
     $this->assertText('Access denied', "A user friendly access denied message is displayed");
+  }
+
+  /**
+   * Tests if the controller is called before authentication.
+   *
+   * @see https://www.drupal.org/node/2817727
+   */
+  public function testControllerNotCalledBeforeAuth() {
+    $this->drupalGet('/basic_auth_test/state/modify');
+    $this->assertResponse(401);
+    $this->drupalGet('/basic_auth_test/state/read');
+    $this->assertResponse(200);
+    $this->assertRaw('nope');
+
+    $account = $this->drupalCreateUser();
+    $this->basicAuthGet('/basic_auth_test/state/modify', $account->getUsername(), $account->pass_raw);
+    $this->assertResponse(200);
+    $this->assertRaw('Done');
+    $this->drupalGet('/basic_auth_test/state/read');
+    $this->assertResponse(200);
+    $this->assertRaw('yep');
   }
 
 }

@@ -1,0 +1,16 @@
+basic_auth_test.state.modify:
+  path: '/basic_auth_test/state/modify'
+  defaults:
+    _controller: '\Drupal\basic_auth_test\BasicAuthTestController::modifyState'
+  options:
+    _auth:
+      - basic_auth
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
+basic_auth_test.state.read:
+  path: '/basic_auth_test/state/read'
+  defaults:
+    _controller: '\Drupal\basic_auth_test\BasicAuthTestController::readState'
+  requirements:
+    _access: 'TRUE'
