@@ -187,6 +187,19 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ),
         '.utf16-byte-order-mark-test{content:"☃";}' . "\n",
       ),
+      array(
+        array(
+          'group' => -100,
+          'type' => 'file',
+          'weight' => 0.013,
+          'media' => 'all',
+          'preprocess' => TRUE,
+          'data' => $path . 'quotes.css',
+          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'basename' => 'quotes.css',
+        ),
+        file_get_contents($absolute_path . 'quotes.css.optimized.css'),
+      ),
     );
   }
 

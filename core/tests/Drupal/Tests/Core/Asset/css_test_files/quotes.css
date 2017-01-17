@@ -1,0 +1,31 @@
+/* Example from https://www.w3.org/TR/CSS2/syndata.html#rule-sets */
+q[example="public class foo\
+{\
+    private int x;\
+\
+    foo(int x) {\
+        this.x = x;\
+    }\
+\
+}"] { color: red }
+
+/* A pseudo selector with essential whitespace wrapped in quotes. */
+q[style*="quotes: none"] {
+    quotes: none;
+}
+
+q[style*='quotes: none'] {
+    quotes: none;
+}
+
+q:after {
+    content: ": colon & escaped double \" quotes \".";
+}
+
+q:after {
+    content: ' (brackets & escaped single \' quotes \') ';
+}
+
+q:after {
+    content: "I'm Quote";
+}
