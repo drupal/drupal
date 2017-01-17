@@ -20,10 +20,10 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
     $element['#element_validate'][] = [$this, 'validateStartEnd'];
-    $element['value']['#title'] = $this->t('Start');
+    $element['value']['#title'] = $this->t('Start date');
 
     $element['end_value'] = [
-      '#title' => $this->t('End'),
+      '#title' => $this->t('End date'),
     ] + $element['value'];
 
     if ($items[$delta]->start_date) {
