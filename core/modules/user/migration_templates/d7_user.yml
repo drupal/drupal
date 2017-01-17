@@ -48,6 +48,7 @@ migration_dependencies:
   required:
     - d7_user_role
   optional:
+    - d7_field_instance
     - d7_file
     - language
     - default_language
