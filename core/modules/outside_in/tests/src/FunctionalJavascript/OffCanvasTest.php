@@ -69,4 +69,38 @@ class OffCanvasTest extends OutsideInJavascriptTestBase {
     }
   }
 
+  /**
+   * Tests the body displacement behaves differently at a narrow width.
+   */
+  public function testNarrowWidth() {
+    $themes = ['stark', 'bartik'];
+    $narrow_width_breakpoint = 768;
+    $offset = 20;
+    $height = 800;
+    $page = $this->getSession()->getPage();
+    $web_assert = $this->assertSession();
+
+    // Test the same functionality on multiple themes.
+    foreach ($themes as $theme) {
+      $this->enableTheme($theme);
+      // Testing at the wider width.
+      $this->getSession()->resizeWindow($narrow_width_breakpoint + $offset, $height);
+      $this->drupalGet('/offcanvas-test-links');
+      $this->assertFalse($page->find('css', '.dialog-offcanvas__main-canvas')->hasAttribute('style'), 'Body not padded on wide page load.');
+      $page->clickLink("Click Me 1!");
+      $this->waitForOffCanvasToOpen();
+      // Check that the main canvas is padded when page is not narrow width and
+      // tray is open.
+      $web_assert->elementAttributeContains('css', '.dialog-offcanvas__main-canvas', 'style', 'padding-right');
+
+      // Testing at the narrower width.
+      $this->getSession()->resizeWindow($narrow_width_breakpoint - $offset, $height);
+      $this->drupalGet('/offcanvas-test-links');
+      $this->assertFalse($page->find('css', '.dialog-offcanvas__main-canvas')->hasAttribute('style'), 'Body not padded on narrow page load.');
+      $page->clickLink("Click Me 1!");
+      $this->waitForOffCanvasToOpen();
+      $this->assertFalse($page->find('css', '.dialog-offcanvas__main-canvas')->hasAttribute('style'), 'Body not padded on narrow page with tray open.');
+    }
+  }
+
 }
