@@ -351,7 +351,11 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     $driver = $this->getDefaultDriverInstance();
 
     if ($driver instanceof GoutteDriver) {
-      $driver->getClient()->setClient(\Drupal::httpClient());
+      // Turn off curl timeout. Having a timeout is not a problem in a normal
+      // test running, but it is a problem when debugging.
+      /** @var \GuzzleHttp\Client $client */
+      $client = $this->container->get('http_client_factory')->fromOptions(['timeout' => NULL]);
+      $driver->getClient()->setClient($client);
     }
 
     $session = new Session($driver);
