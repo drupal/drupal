@@ -470,7 +470,7 @@ re-architect or otherwise improve large areas of Drupal core. See
 https://www.drupal.org/community-initiatives/drupal-core for more information on
 their responsibilities. The initiative coordinators for Drupal 8 are:
 
-Multi-lingual
+Multilingual Initiative
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
 
 Workflow Initiative
@@ -482,6 +482,9 @@ PHPUnit Initiative
 
 Layout Initiative
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
+
+Media Initiative
+- Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
 
 Provisional membership: None at this time.
 
