@@ -469,6 +469,31 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests the setOptions() method.
+   *
+   * @covers ::setOptions
+   */
+  public function testSetOptions() {
+    $url = Url::fromRoute('test_route', []);
+    $this->assertEquals([], $url->getOptions());
+    $url->setOptions(['foo' => 'bar']);
+    $this->assertEquals(['foo' => 'bar'], $url->getOptions());
+    $url->setOptions([]);
+    $this->assertEquals([], $url->getOptions());
+  }
+
+  /**
+   * Tests the mergeOptions() method.
+   *
+   * @covers ::mergeOptions
+   */
+  public function testMergeOptions() {
+    $url = Url::fromRoute('test_route', [], ['foo' => 'bar', 'bar' => ['key' => 'value']]);
+    $url->mergeOptions(['bar' => ['key' => 'value1', 'key2' => 'value2']]);
+    $this->assertEquals(['foo' => 'bar', 'bar' => ['key' => 'value1', 'key2' => 'value2']], $url->getOptions());
+  }
+
+  /**
    * Tests the access() method for routed URLs.
    *
    * @param bool $access
