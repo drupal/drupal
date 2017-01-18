@@ -11,6 +11,10 @@
 
   'use strict';
 
+  // The minimum width to use body displace needs to match the width at which
+  // the tray will be %100 width. @see outside_in.module.css
+  var minDisplaceWidth = 768;
+
   /**
    * The edge of the screen that the dialog should appear on.
    *
@@ -81,6 +85,9 @@
    *   The event triggered.
    */
   function bodyPadding(event) {
+    if ($('body').outerWidth() < minDisplaceWidth) {
+      return;
+    }
     var $element = event.data.$element;
     var $widget = $element.dialog('widget');
 
@@ -102,6 +109,7 @@
         $element
           .on('dialogresize.offcanvas', eventData, debounce(bodyPadding, 100))
           .on('dialogContentResize.offcanvas', eventData, handleDialogResize)
+          .on('dialogContentResize.offcanvas', eventData, debounce(bodyPadding, 100))
           .trigger('dialogresize.offcanvas');
 
         $element.dialog('widget').attr('data-offset-' + edge, '');
@@ -113,6 +121,7 @@
     },
     'dialog:beforecreate': function (event, dialog, $element, settings) {
       if ($element.is('#drupal-offcanvas')) {
+        $('body').addClass('js-tray-open');
         // @see http://api.jqueryui.com/position/
         settings.position = {
           my: 'left top',
@@ -127,6 +136,7 @@
     },
     'dialog:beforeclose': function (event, dialog, $element) {
       if ($element.is('#drupal-offcanvas')) {
+        $('body').removeClass('js-tray-open');
         $(document).off('.offcanvas');
         $(window).off('.offcanvas');
         $mainCanvasWrapper.css('padding-' + edge, 0);
