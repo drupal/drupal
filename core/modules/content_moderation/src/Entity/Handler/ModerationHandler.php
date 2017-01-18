@@ -4,6 +4,7 @@ namespace Drupal\content_moderation\Entity\Handler;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -32,6 +33,11 @@ class ModerationHandler implements ModerationHandlerInterface, EntityHandlerInte
     // This is probably not necessary if configuration is setup correctly.
     $entity->setNewRevision(TRUE);
     $entity->isDefaultRevision($default_revision);
+
+    // Update publishing status if it can be updated and if it needs updating.
+    if (($entity instanceof EntityPublishedInterface) && $entity->isPublished() !== $published_state) {
+      $published_state ? $entity->setPublished() : $entity->setUnpublished();
+    }
   }
 
   /**
