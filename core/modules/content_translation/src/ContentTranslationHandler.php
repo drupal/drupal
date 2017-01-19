@@ -286,7 +286,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     if (isset($languages[$form_langcode]) && ($has_translations || $new_translation)) {
       $title = $this->entityFormTitle($entity);
       // When editing the original values display just the entity label.
-      if ($form_langcode != $entity_langcode) {
+      if ($is_translation) {
         $t_args = array('%language' => $languages[$form_langcode]->getName(), '%title' => $entity->label(), '@title' => $title);
         $title = empty($source_langcode) ? t('@title [%language translation]', $t_args) : t('Create %language translation of %title', $t_args);
       }

@@ -1070,6 +1070,12 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       // adapter object.
       $this->typedData = NULL;
       $definitions = $this->getFieldDefinitions();
+
+      // Ensure the fields array is actually cloned by overwriting the original
+      // reference with one pointing to a copy of the array.
+      $fields = $this->fields;
+      $this->fields = &$fields;
+
       foreach ($this->fields as $name => $values) {
         $this->fields[$name] = array();
         // Untranslatable fields may have multiple references for the same field
@@ -1091,13 +1097,15 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       $translations = $this->translations;
       $this->translations = &$translations;
 
-      // Ensure the enforceIsNew property is actually cloned by overwriting the
-      // original reference with one pointing to a copy of it.
+      // Ensure that the following properties are actually cloned by
+      // overwriting the original references with ones pointing to copies of
+      // them: enforceIsNew, newRevision and loadedRevisionId.
       $enforce_is_new = $this->enforceIsNew;
       $this->enforceIsNew = &$enforce_is_new;
 
-      // Ensure the loadedRevisionId property is actually cloned by
-      // overwriting the original reference with one pointing to a copy of it.
+      $new_revision = $this->newRevision;
+      $this->newRevision = &$new_revision;
+
       $original_revision_id = $this->loadedRevisionId;
       $this->loadedRevisionId = &$original_revision_id;
     }
