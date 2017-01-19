@@ -92,8 +92,12 @@ trait TestSetupTrait {
   /**
    * The temporary file directory for the test environment.
    *
+   * This value has to match the temporary directory created in
+   * install_base_system() for test installs.
+   *
    * @see \Drupal\simpletest\TestBase::prepareEnvironment()
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
+   * @see install_base_system()
    *
    * @var string
    */

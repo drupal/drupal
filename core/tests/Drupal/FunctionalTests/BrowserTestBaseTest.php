@@ -177,4 +177,12 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertGreaterThan($last_cron_time, $next_cron_time);
   }
 
+  /**
+   * Tests the Drupal install done in \Drupal\Tests\BrowserTestBase::setUp().
+   */
+  public function testInstall() {
+    $htaccess_filename = $this->tempFilesDirectory . '/.htaccess';
+    $this->assertTrue(file_exists($htaccess_filename), "$htaccess_filename exists");
+  }
+
 }
