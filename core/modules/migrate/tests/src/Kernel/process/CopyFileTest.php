@@ -3,7 +3,7 @@
 namespace Drupal\Tests\migrate\Kernel\process;
 
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
-use Drupal\KernelTests\Core\File\FileTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\migrate\process\FileCopy;
 use Drupal\migrate\Row;
@@ -13,7 +13,7 @@ use Drupal\migrate\Row;
  *
  * @group migrate
  */
-class CopyFileTest extends FileTestBase {
+class CopyFileTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -178,6 +178,41 @@ class CopyFileTest extends FileTestBase {
 
     // Return the imported file Uri.
     return $result;
+  }
+
+  /**
+   * Create a file and return the URI of it.
+   *
+   * @param $filepath
+   *   Optional string specifying the file path. If none is provided then a
+   *   randomly named file will be created in the site's files directory.
+   * @param $contents
+   *   Optional contents to save into the file. If a NULL value is provided an
+   *   arbitrary string will be used.
+   * @param $scheme
+   *   Optional string indicating the stream scheme to use. Drupal core includes
+   *   public, private, and temporary. The public wrapper is the default.
+   * @return
+   *   File URI.
+   */
+  protected function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
+    if (!isset($filepath)) {
+      // Prefix with non-latin characters to ensure that all file-related
+      // tests work with international filenames.
+      $filepath = 'Файл для тестирования ' . $this->randomMachineName();
+    }
+    if (empty($scheme)) {
+      $scheme = file_default_scheme();
+    }
+    $filepath = $scheme . '://' . $filepath;
+
+    if (empty($contents)) {
+      $contents = "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";
+    }
+
+    file_put_contents($filepath, $contents);
+    $this->assertFileExists($filepath, t('The test file exists on the disk.'));
+    return $filepath;
   }
 
 }
