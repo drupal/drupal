@@ -5,6 +5,7 @@ namespace Drupal\Tests\serialization\Kernel;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
  * Test field level normalization process.
@@ -115,6 +116,20 @@ class FieldItemSerializationTest extends NormalizerTestBase {
     // Even though field_test_text_default value was unset before
     // denormalization it should still have the default values for the field.
     $this->assertEquals($denormalized_without_all_fields->field_test_text_default[0]->getValue(), $this->entity->field_test_text_default[0]->getValue(), 'Text field item with default denormalized.');
+  }
+
+  /**
+   * Tests denormalizing using a scalar field value.
+   */
+  public function testFieldDenormalizeWithScalarValue() {
+    $this->setExpectedException(UnexpectedValueException::class, 'Field values for "uuid" must use an array structure');
+
+    $normalized = $this->serializer->normalize($this->entity, 'json');
+
+    // Change the UUID value to use the UUID directly. No array structure.
+    $normalized['uuid'] = $normalized['uuid'][0]['value'];
+
+    $this->serializer->denormalize($normalized, $this->entityClass, 'json');
   }
 
 }
