@@ -45954,8 +45954,32 @@ $connection->insert('variable')
   'value' => 's:1:"1";',
 ))
 ->values(array(
-  'name' => 'upload_page',
-  'value' => 'b:1;',
+  'name' => 'upload_employee',
+  'value' => 'b:0;',
+))
+->values(array(
+  'name' => 'upload_event',
+  'value' => 'b:0;',
+))
+->values(array(
+  'name' => 'upload_sponsor',
+  'value' => 'b:0;',
+))
+->values(array(
+  'name' => 'upload_test_page',
+  'value' => 'b:0;',
+))
+->values(array(
+  'name' => 'upload_test_event',
+  'value' => 'b:0;',
+))
+->values(array(
+  'name' => 'upload_test_planet',
+  'value' => 'b:0;',
+))
+->values(array(
+  'name' => 'upload_test_story',
+  'value' => 'b:0;',
 ))
 ->values(array(
   'name' => 'upload_story',
