@@ -41,7 +41,7 @@
         var translate;
         var $checkbox = $translationContext.find('.js-form-item-translation-translate input');
 
-        if ($checkbox.size()) {
+        if ($checkbox.length) {
           translate = $checkbox.is(':checked') ? Drupal.t('Needs to be updated') : Drupal.t('Does not need to be updated');
         }
         else {
