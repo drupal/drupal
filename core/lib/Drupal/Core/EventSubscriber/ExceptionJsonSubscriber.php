@@ -35,7 +35,7 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
   public function on4xx(GetResponseForExceptionEvent $event) {
     /** @var \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $exception */
     $exception = $event->getException();
-    $response = new JsonResponse(['message' => $event->getException()->getMessage()], $exception->getStatusCode());
+    $response = new JsonResponse(['message' => $event->getException()->getMessage()], $exception->getStatusCode(), $exception->getHeaders());
     $event->setResponse($response);
   }
 

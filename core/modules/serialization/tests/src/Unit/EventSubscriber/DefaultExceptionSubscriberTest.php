@@ -1,42 +1,42 @@
 <?php
 
-namespace Drupal\Tests\Core\EventSubscriber;
+namespace Drupal\Tests\serialization\Unit\EventSubscriber;
 
-use Drupal\Core\EventSubscriber\DefaultExceptionSubscriber;
+use Drupal\serialization\Encoder\JsonEncoder;
+use Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Serializer\Serializer;
 
 /**
- * @coversDefaultClass \Drupal\Core\EventSubscriber\DefaultExceptionSubscriber
- * @group EventSubscriber
+ * @coversDefaultClass \Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber
+ * @group serialization
  */
 class DefaultExceptionSubscriberTest extends UnitTestCase {
 
   /**
-   * @covers ::onException
-   * @covers ::onFormatUnknown
+   * @covers ::on4xx
    */
-  public function testOnExceptionWithUnknownFormat() {
-    $config_factory = $this->getConfigFactoryStub();
-
+  public function testOn4xx() {
     $kernel = $this->prophesize(HttpKernelInterface::class);
-    $request = Request::create('/test?_format=bananas');
+    $request = Request::create('/test');
+    $request->setRequestFormat('json');
+
     $e = new MethodNotAllowedHttpException(['POST', 'PUT'], 'test message');
     $event = new GetResponseForExceptionEvent($kernel->reveal(), $request, 'GET', $e);
-    $subscriber = new DefaultExceptionSubscriber($config_factory);
-    $subscriber->onException($event);
+    $subscriber = new DefaultExceptionSubscriber(new Serializer([], [new JsonEncoder()]), []);
+    $subscriber->on4xx($event);
     $response = $event->getResponse();
 
     $this->assertInstanceOf(Response::class, $response);
-    $this->assertEquals('test message', $response->getContent());
+    $this->assertEquals('{"message":"test message"}', $response->getContent());
     $this->assertEquals(405, $response->getStatusCode());
     $this->assertEquals('POST, PUT', $response->headers->get('Allow'));
-    // Also check that that text/plain content type was added.
-    $this->assertEquals('text/plain', $response->headers->get('Content-Type'));
+    $this->assertEquals('application/json', $response->headers->get('Content-Type'));
   }
 
 }

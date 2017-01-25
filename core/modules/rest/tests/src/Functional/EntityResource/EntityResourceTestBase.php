@@ -666,6 +666,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(405, $response->getStatusCode());
+      $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
       $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
     }
     else {
@@ -678,6 +679,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 405 when resource not provisioned.
     $response = $this->request('PATCH', $url, $request_options);
+    $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
     $this->assertResourceErrorResponse(405, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getUrl()->setAbsolute()->toString()) . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
 
 
@@ -861,6 +863,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('DELETE', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(405, $response->getStatusCode());
+      $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
       $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
     }
     else {
@@ -873,6 +876,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 405 when resource not provisioned.
     $response = $this->request('DELETE', $url, $request_options);
+    $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
     $this->assertResourceErrorResponse(405, 'No route found for "DELETE ' . str_replace($this->baseUrl, '', $this->getUrl()->setAbsolute()->toString()) . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
 
 

@@ -64,12 +64,17 @@ class DefaultExceptionSubscriber extends HttpExceptionSubscriberBase {
   public function on4xx(GetResponseForExceptionEvent $event) {
     /** @var \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $exception */
     $exception = $event->getException();
+    $request = $event->getRequest();
 
-    $format = $event->getRequest()->getRequestFormat();
+    $format = $request->getRequestFormat();
     $content = ['message' => $event->getException()->getMessage()];
     $encoded_content = $this->serializer->serialize($content, $format);
+    $headers = $exception->getHeaders();
 
-    $response = new Response($encoded_content, $exception->getStatusCode());
+    // Add the MIME type from the request to send back in the header.
+    $headers['Content-Type'] = $request->getMimeType($format);
+
+    $response = new Response($encoded_content, $exception->getStatusCode(), $headers);
     $event->setResponse($response);
   }
 
