@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
@@ -107,9 +107,7 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
           }
         }
         catch (UnexpectedValueException $e) {
-          $error['error'] = $e->getMessage();
-          $content = $serializer->serialize($error, $format);
-          return new Response($content, 400, array('Content-Type' => $request->getMimeType($format)));
+          throw new BadRequestHttpException($e->getMessage());
         }
       }
       else {

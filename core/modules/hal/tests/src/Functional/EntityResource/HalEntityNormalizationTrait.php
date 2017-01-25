@@ -103,11 +103,7 @@ trait HalEntityNormalizationTrait {
 
       // DX: 400 when incorrect entity type bundle is specified.
       $response = $this->request($method, $url, $request_options);
-      // @todo Uncomment, remove next 3 in https://www.drupal.org/node/2813853.
-      // $this->assertResourceErrorResponse(400, 'No entity type(s) specified', $response);
-      $this->assertSame(400, $response->getStatusCode());
-      $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
-      $this->assertSame($this->serializer->encode(['error' => 'No entity type(s) specified'], static::$format), (string) $response->getBody());
+      $this->assertResourceErrorResponse(400, 'No entity type(s) specified', $response);
 
 
       unset($normalization['_links']['type']);
@@ -116,11 +112,7 @@ trait HalEntityNormalizationTrait {
 
       // DX: 400 when no entity type bundle is specified.
       $response = $this->request($method, $url, $request_options);
-      // @todo Uncomment, remove next 3 in https://www.drupal.org/node/2813853.
-      // $this->assertResourceErrorResponse(400, 'The type link relation must be specified.', $response);
-      $this->assertSame(400, $response->getStatusCode());
-      $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
-      $this->assertSame($this->serializer->encode(['error' => 'The type link relation must be specified.'], static::$format), (string) $response->getBody());
+      $this->assertResourceErrorResponse(400, 'The type link relation must be specified.', $response);
     }
   }
 
