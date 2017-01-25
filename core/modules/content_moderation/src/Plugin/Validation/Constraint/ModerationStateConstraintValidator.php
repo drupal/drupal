@@ -92,7 +92,7 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
       $original_entity = $original_entity->getTranslation($entity->language()->getId());
     }
 
-    $workflow = $this->moderationInformation->getWorkFlowForEntity($entity);
+    $workflow = $this->moderationInformation->getWorkflowForEntity($entity);
     $new_state = $workflow->getState($entity->moderation_state->value) ?: $workflow->getInitialState();
     $original_state = $workflow->getState($original_entity->moderation_state->value);
     // @todo - what if $new_state references something that does not exist or

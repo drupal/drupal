@@ -82,9 +82,9 @@ class ModerationInformationTest extends \PHPUnit_Framework_TestCase {
 
   /**
    * @dataProvider providerWorkflow
-   * @covers ::getWorkFlowForEntity
+   * @covers ::getWorkflowForEntity
    */
-  public function testGetWorkFlowForEntity($workflow) {
+  public function testGetWorkflowForEntity($workflow) {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     if ($workflow) {
       $workflow_entity = $this->prophesize(WorkflowInterface::class)->reveal();
@@ -100,7 +100,7 @@ class ModerationInformationTest extends \PHPUnit_Framework_TestCase {
     $entity->getEntityTypeId()->willReturn('test_entity_type');
     $entity->bundle()->willReturn('test_bundle');
 
-    $this->assertEquals($workflow_entity, $moderation_information->getWorkFlowForEntity($entity->reveal()));
+    $this->assertEquals($workflow_entity, $moderation_information->getWorkflowForEntity($entity->reveal()));
   }
 
   /**

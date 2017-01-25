@@ -130,7 +130,7 @@ class ModerationInformation implements ModerationInformationInterface {
    * {@inheritdoc}
    */
   public function isLiveRevision(ContentEntityInterface $entity) {
-    $workflow = $this->getWorkFlowForEntity($entity);
+    $workflow = $this->getWorkflowForEntity($entity);
     return $this->isLatestRevision($entity)
       && $entity->isDefaultRevision()
       && $entity->moderation_state->value
@@ -140,7 +140,7 @@ class ModerationInformation implements ModerationInformationInterface {
   /**
    * {@inheritdoc}
    */
-  public function getWorkFlowForEntity(ContentEntityInterface $entity) {
+  public function getWorkflowForEntity(ContentEntityInterface $entity) {
     $bundles = $this->bundleInfo->getBundleInfo($entity->getEntityTypeId());
     if (isset($bundles[$entity->bundle()]['workflow'])) {
       return $this->entityTypeManager->getStorage('workflow')->load($bundles[$entity->bundle()]['workflow']);

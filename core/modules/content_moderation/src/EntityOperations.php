@@ -101,7 +101,7 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     if ($entity->moderation_state->value) {
-      $workflow = $this->moderationInfo->getWorkFlowForEntity($entity);
+      $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
       /** @var \Drupal\content_moderation\ContentModerationState $current_state */
       $current_state = $workflow->getState($entity->moderation_state->value);
 
@@ -154,7 +154,7 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   protected function updateOrCreateFromEntity(EntityInterface $entity) {
     $moderation_state = $entity->moderation_state->value;
-    $workflow = $this->moderationInfo->getWorkFlowForEntity($entity);
+    $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if (!$moderation_state) {
       $moderation_state = $workflow->getInitialState()->id();

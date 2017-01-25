@@ -78,7 +78,7 @@ class StateTransitionValidationTest extends \PHPUnit_Framework_TestCase {
       ->addTransition('review', 'review', ['draft'], 'needs_review')
       ->addTransition('publish', 'publish', ['needs_review', 'published'], 'published');
     $moderation_info = $this->prophesize(ModerationInformationInterface::class);
-    $moderation_info->getWorkFlowForEntity($entity)->willReturn($workflow);
+    $moderation_info->getWorkflowForEntity($entity)->willReturn($workflow);
     return $moderation_info->reveal();
   }
 

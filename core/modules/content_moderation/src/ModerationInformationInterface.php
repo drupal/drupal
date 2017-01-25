@@ -135,6 +135,6 @@ interface ModerationInformationInterface {
    * @return \Drupal\workflows\WorkflowInterface|null
    *   The workflow entity. NULL if there is no workflow.
    */
-  public function getWorkFlowForEntity(ContentEntityInterface $entity);
+  public function getWorkflowForEntity(ContentEntityInterface $entity);
 
 }
