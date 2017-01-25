@@ -23,13 +23,13 @@ transitions:
     to: archived
     weight: 2
   archived_draft:
-    label: 'Un-archive to Draft'
+    label: 'Restore to Draft'
     from:
       - archived
     to: draft
     weight: 3
   archived_published:
-    label: Un-archive
+    label: Restore
     from:
       - archived
     to: published
