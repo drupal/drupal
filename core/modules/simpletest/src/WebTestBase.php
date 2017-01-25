@@ -496,9 +496,15 @@ abstract class WebTestBase extends TestBase {
     $directory = DRUPAL_ROOT . '/' . $this->siteDirectory;
     copy(DRUPAL_ROOT . '/sites/default/default.settings.php', $directory . '/settings.php');
 
-    // All file system paths are created by System module during installation.
+    // The public file system path is created during installation. Additionally,
+    // during tests:
+    // - The temporary directory is set and created by install_base_system().
+    // - The private file directory is created post install by
+    //   WebTestBase::initConfig().
     // @see system_requirements()
     // @see TestBase::prepareEnvironment()
+    // @see install_base_system()
+    // @see\Drupal\simpletest\WebTestBase::initConfig()
     $settings['settings']['file_public_path'] = (object) [
       'value' => $this->publicFilesDirectory,
       'required' => TRUE,
@@ -587,15 +593,8 @@ abstract class WebTestBase extends TestBase {
   protected function initConfig(ContainerInterface $container) {
     $config = $container->get('config.factory');
 
-    // Manually create and configure private and temporary files directories.
-    // While these could be preset/enforced in settings.php like the public
-    // files directory above, some tests expect them to be configurable in the
-    // UI. If declared in settings.php, they would no longer be configurable.
+    // Manually create the private directory.
     file_prepare_directory($this->privateFilesDirectory, FILE_CREATE_DIRECTORY);
-    file_prepare_directory($this->tempFilesDirectory, FILE_CREATE_DIRECTORY);
-    $config->getEditable('system.file')
-      ->set('path.temporary', $this->tempFilesDirectory)
-      ->save();
 
     // Manually configure the test mail collector implementation to prevent
     // tests from sending out emails and collect them in state instead.

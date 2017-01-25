@@ -20,6 +20,7 @@ use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
+use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Url;
@@ -1035,6 +1036,21 @@ function install_verify_requirements(&$install_state) {
 function install_base_system(&$install_state) {
   // Install system.module.
   drupal_install_system($install_state);
+
+  // Prevent the installer from using the system temporary directory after the
+  // system module has been installed.
+  if (drupal_valid_test_ua()) {
+    // While the temporary directory could be preset/enforced in settings.php
+    // like the public files directory, some tests expect it to be configurable
+    // in the UI. If declared in settings.php, they would no longer be
+    // configurable. The temporary directory needs to match what is set in each
+    // test types ::prepareEnvironment() step.
+    $temporary_directory = dirname(PublicStream::basePath()) . '/temp';
+    file_prepare_directory($temporary_directory, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
+    \Drupal::configFactory()->getEditable('system.file')
+      ->set('path.temporary', $temporary_directory)
+      ->save();
+  }
 
   // Call file_ensure_htaccess() to ensure that all of Drupal's standard
   // directories (e.g., the public files directory and config directory) have
