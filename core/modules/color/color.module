@@ -319,7 +319,7 @@ function template_preprocess_color_scheme_form(&$variables) {
  *   The data that will appear in the $form_state->getValues() collection for this
  *   element. Return nothing to use the default.
  */
-function color_palette_color_value($element, $input = FALSE, FormStateInterface $form_state) {
+function color_palette_color_value($element, $input, FormStateInterface $form_state) {
   // If we suspect a possible cross-site request forgery attack, only accept
   // hexadecimal CSS color strings from user input, to avoid problems when this
   // value is used in the JavaScript preview.
