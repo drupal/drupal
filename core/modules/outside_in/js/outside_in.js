@@ -100,11 +100,7 @@
    * Close any active toolbar tray before entering edit mode.
    */
   function closeToolbarTrays() {
-    $('#toolbar-bar')
-      .find('.toolbar-tab')
-      .not('.contextual-toolbar-tab')
-      .has('.toolbar-tray.is-active')
-      .find('.toolbar-item').trigger('click');
+    $(Drupal.toolbar.models.toolbarModel.get('activeTab')).trigger('click');
   }
 
   /**
