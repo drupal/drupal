@@ -23,8 +23,15 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       'type' => 'list_integer',
       'cardinality' => 1,
       'settings' => array(
-        // Make sure that 0 works as an option.
-        'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',  3 => 'Some HTML encoded markup with &lt; &amp; &gt;'),
+        'allowed_values' => array(
+          // Make sure that 0 works as an option.
+          0 => 'Zero',
+          1 => 'One',
+          // Make sure that option text is properly sanitized.
+          2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
+          // Make sure that HTML entities in option text are not double-encoded.
+          3 => 'Some HTML encoded markup with &lt; &amp; &gt;',
+        ),
       ),
     );
     $this->card_1 = field_create_field($this->card_1);
@@ -35,8 +42,13 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       'type' => 'list_integer',
       'cardinality' => 2,
       'settings' => array(
-        // Make sure that 0 works as an option.
-        'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => array(
+          // Make sure that 0 works as an option.
+          0 => 'Zero',
+          1 => 'One',
+          // Make sure that option text is properly sanitized.
+          2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
+        ),
       ),
     );
     $this->card_2 = field_create_field($this->card_2);
@@ -47,8 +59,12 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       'type' => 'list_boolean',
       'cardinality' => 1,
       'settings' => array(
-        // Make sure that 0 works as a 'on' value'.
-        'allowed_values' => array(1 => 'Zero', 0 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => array(
+          // Make sure that 1 works as a 'on' value'.
+          1 => 'Zero',
+          // Make sure that option text is properly sanitized.
+          0 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
+        ),
       ),
     );
     $this->bool = field_create_field($this->bool);
