@@ -95,6 +95,7 @@
         "drupal/editor": "self.version",
         "drupal/entity_reference": "self.version",
         "drupal/field": "self.version",
+        "drupal/field_layout": "self.version",
         "drupal/field_ui": "self.version",
         "drupal/file": "self.version",
         "drupal/filter": "self.version",

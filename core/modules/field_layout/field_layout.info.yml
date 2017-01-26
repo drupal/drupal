@@ -1,0 +1,8 @@
+name: 'Field Layout'
+type: module
+description: 'Adds layout capabilities to the Field UI.'
+package: Core (Experimental)
+version: VERSION
+core: 8.x
+dependencies:
+  - layout_discovery

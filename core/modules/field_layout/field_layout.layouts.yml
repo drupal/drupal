@@ -1,0 +1,22 @@
+# @todo Move to layout_discovery in https://www.drupal.org/node/2840832.
+layout_onecol:
+  label: 'One column'
+  path: layouts/onecol
+  template: layout--onecol
+  category: 'Columns: 1'
+  default_region: content
+  regions:
+    content:
+      label: Content
+layout_twocol:
+  label: 'Two column'
+  path: layouts/twocol
+  template: layout--twocol
+  library: field_layout/drupal.layout.twocol
+  category: 'Columns: 2'
+  default_region: left
+  regions:
+    left:
+      label: Left
+    right:
+      label: Right

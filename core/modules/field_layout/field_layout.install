@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Field Layout.
+ */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
+
+/**
+ * Implements hook_install().
+ */
+function field_layout_install() {
+  // Ensure each entity display has a layout.
+  $entity_save = function (EntityDisplayWithLayoutInterface $entity) {
+    $entity->ensureLayout()->save();
+  };
+  array_map($entity_save, EntityViewDisplay::loadMultiple());
+  array_map($entity_save, EntityFormDisplay::loadMultiple());
+
+  // Invalidate the render cache since all content will now have a layout.
+  Cache::invalidateTags(['rendered']);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function field_layout_uninstall() {
+  // Reset each entity display to use the one-column layout to best approximate
+  // the absence of layouts.
+  $entity_save = function (EntityDisplayWithLayoutInterface $entity) {
+    $entity->setLayoutId('layout_onecol')->save();
+  };
+  array_map($entity_save, EntityViewDisplay::loadMultiple());
+  array_map($entity_save, EntityFormDisplay::loadMultiple());
+
+  // Invalidate the render cache since all content will no longer have a layout.
+  Cache::invalidateTags(['rendered']);
+}

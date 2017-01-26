@@ -1,0 +1,14 @@
+.layout--twocol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.layout--twocol > .layout-region {
+  flex: 0 1 50%;
+  max-width: 50%;
+}
+
+.layout--twocol > .layout-region--left {
+  max-width: calc(50% - 10px);
+  margin-right: 10px;
+}
