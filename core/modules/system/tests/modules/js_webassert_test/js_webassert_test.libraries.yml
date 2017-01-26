@@ -1,0 +1,14 @@
+wait_for_ajax_request:
+  version: VERSION
+  js:
+    js/js_webassert_test.wait_for_ajax_request.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+wait_for_element:
+  version: VERSION
+  js:
+    js/js_webassert_test.wait_for_element.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

@@ -26,10 +26,139 @@ class JSWebAssert extends WebAssert {
    *   be displayed.
    */
   public function assertWaitOnAjaxRequest($timeout = 10000, $message = 'Unable to complete AJAX request.') {
-    $result = $this->session->wait($timeout, '(typeof(jQuery)=="undefined" || (0 === jQuery.active && 0 === jQuery(\':animated\').length))');
+    $condition = <<<JS
+      (function() {
+        function isAjaxing(instance) {
+          return instance && instance.ajaxing === true;
+        }
+        return (
+          // Assert no AJAX request is running (via jQuery or Drupal) and no
+          // animation is running.
+          (typeof jQuery === 'undefined' || (jQuery.active === 0 && jQuery(':animated').length === 0)) &&
+          (typeof Drupal === 'undefined' || typeof Drupal.ajax === 'undefined' || !Drupal.ajax.instances.some(isAjaxing))
+        );
+      }());
+JS;
+    $result = $this->session->wait($timeout, $condition);
     if (!$result) {
       throw new \RuntimeException($message);
     }
+  }
+
+  /**
+   * Waits for the specified selector and returns it when available.
+   *
+   * @param string $selector
+   *   The selector engine name. See ElementInterface::findAll() for the
+   *   supported selectors.
+   * @param string|array $locator
+   *   The selector locator.
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   *
+   * @return \Behat\Mink\Element\NodeElement|null
+   *   The page element node if found, NULL if not.
+   *
+   * @see \Behat\Mink\Element\ElementInterface::findAll()
+   */
+  public function waitForElement($selector, $locator, $timeout = 10000) {
+    $page = $this->session->getPage();
+
+    $result = $page->waitFor($timeout / 1000, function() use ($page, $selector, $locator) {
+      return $page->find($selector, $locator);
+    });
+
+    return $result;
+  }
+
+  /**
+   * Waits for the specified selector and returns it when available and visible.
+   *
+   * @param string $selector
+   *   The selector engine name. See ElementInterface::findAll() for the
+   *   supported selectors.
+   * @param string|array $locator
+   *   The selector locator.
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   *
+   * @return \Behat\Mink\Element\NodeElement|null
+   *   The page element node if found and visible, NULL if not.
+   *
+   * @see \Behat\Mink\Element\ElementInterface::findAll()
+   */
+  public function waitForElementVisible($selector, $locator, $timeout = 10000) {
+    $page = $this->session->getPage();
+
+    $result = $page->waitFor($timeout / 1000, function() use ($page, $selector, $locator) {
+      $element = $page->find($selector, $locator);
+      if (!empty($element) && $element->isVisible()) {
+        return $element;
+      }
+      return NULL;
+    });
+
+    return $result;
+  }
+  /**
+   * Waits for a button (input[type=submit|image|button|reset], button) with
+   * specified locator and returns it.
+   *
+   * @param string $locator
+   *   The button ID, value or alt string.
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   *
+   * @return \Behat\Mink\Element\NodeElement|null
+   *   The page element node if found, NULL if not.
+   */
+  public function waitForButton($locator, $timeout = 10000) {
+    return $this->waitForElement('named', array('button', $locator), $timeout);
+  }
+
+  /**
+   * Waits for a link with specified locator and returns it when available.
+   *
+   * @param string $locator
+   *   The link ID, title, text or image alt.
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   *
+   * @return \Behat\Mink\Element\NodeElement|null
+   *   The page element node if found, NULL if not.
+   */
+  public function waitForLink($locator, $timeout = 10000) {
+    return $this->waitForElement('named', array('link', $locator), $timeout);
+  }
+
+  /**
+   * Waits for a field with specified locator and returns it when available.
+   *
+   * @param string $locator
+   *   The input ID, name or label for the field (input, textarea, select).
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   *
+   * @return \Behat\Mink\Element\NodeElement|null
+   *   The page element node if found, NULL if not.
+   */
+  public function waitForField($locator, $timeout = 10000) {
+    return $this->waitForElement('named', array('field', $locator), $timeout);
+  }
+
+  /**
+   * Waits for an element by its id and returns it when available.
+   *
+   * @param string $id
+   *   The element ID.
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   *
+   * @return \Behat\Mink\Element\NodeElement|null
+   *   The page element node if found, NULL if not.
+   */
+  public function waitForId($id, $timeout = 10000) {
+    return $this->waitForElement('named', array('id', $id), $timeout);
   }
 
   /**
@@ -38,9 +167,8 @@ class JSWebAssert extends WebAssert {
    * @see https://api.jqueryui.com/autocomplete/#option-delay
    */
   public function waitOnAutocomplete() {
-    // Drupal is using the default delay value of 300 milliseconds.
-    $this->session->wait(300);
-    $this->assertWaitOnAjaxRequest();
+    // Wait for the autocomplete to be visible.
+    return $this->waitForElementVisible('css', '.ui-autocomplete li');
   }
 
   /**
