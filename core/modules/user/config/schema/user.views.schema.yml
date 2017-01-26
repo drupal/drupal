@@ -98,3 +98,7 @@ views.filter.user_permissions:
 views.filter.user_roles:
   type: views.filter.many_to_one
   label: 'Role'
+
+views.filter_value.user_current:
+  type: views.filter_value.boolean
+  label: 'Current user'
