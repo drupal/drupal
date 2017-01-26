@@ -2,6 +2,7 @@
 
 namespace Drupal\datetime;
 
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -40,14 +41,28 @@ class DateTimeComputed extends TypedData {
       return $this->date;
     }
 
+    /** @var \Drupal\Core\Field\FieldItemInterface $item */
     $item = $this->getParent();
     $value = $item->{($this->definition->getSetting('date source'))};
 
-    $storage_format = $item->getFieldDefinition()->getSetting('datetime_type') == 'date' ? DATETIME_DATE_STORAGE_FORMAT : DATETIME_DATETIME_STORAGE_FORMAT;
+    $datetime_type = $item->getFieldDefinition()->getSetting('datetime_type');
+    $storage_format = $datetime_type === DateTimeItem::DATETIME_TYPE_DATE ? DATETIME_DATE_STORAGE_FORMAT : DATETIME_DATETIME_STORAGE_FORMAT;
     try {
       $date = DrupalDateTime::createFromFormat($storage_format, $value, DATETIME_STORAGE_TIMEZONE);
       if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
         $this->date = $date;
+        // If the format did not include an explicit time portion, then the
+        // time will be set from the current time instead. For consistency, we
+        // set the time to 12:00:00 UTC for date-only fields. This is used so
+        // that the local date portion is the same, across nearly all time
+        // zones.
+        // @see datetime_date_default_time()
+        // @see http://php.net/manual/en/datetime.createfromformat.php
+        // @todo Update comment and/or code per the chosen solution in
+        //   https://www.drupal.org/node/2830094
+        if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATE) {
+          $this->date->setTime(12, 0, 0);
+        }
       }
     }
     catch (\Exception $e) {
