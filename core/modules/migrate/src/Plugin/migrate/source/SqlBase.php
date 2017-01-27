@@ -2,13 +2,16 @@
 
 namespace Drupal\migrate\Plugin\migrate\source;
 
+use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\id_map\Sql;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\RequirementsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * is present, it is used as a database connection information array to define
  * the connection.
  */
-abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface {
+abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, RequirementsInterface {
 
   /**
    * The query string.
@@ -127,12 +130,17 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    *
    * @return \Drupal\Core\Database\Connection
    *   The connection to use for this plugin's queries.
+   *
+   * @throws \Drupal\migrate\Exception\RequirementsException
+   *   Thrown if no source database connection is configured.
    */
   protected function setUpDatabase(array $database_info) {
     if (isset($database_info['key'])) {
       $key = $database_info['key'];
     }
     else {
+      // If there is no explicit database configuration at all, fall back to a
+      // connection named 'migrate'.
       $key = 'migrate';
     }
     if (isset($database_info['target'])) {
@@ -144,7 +152,29 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     if (isset($database_info['database'])) {
       Database::addConnectionInfo($key, $target, $database_info['database']);
     }
-    return Database::getConnection($target, $key);
+    try {
+      $connection = Database::getConnection($target, $key);
+    }
+    catch (ConnectionNotDefinedException $e) {
+      // If we fell back to the magic 'migrate' connection and it doesn't exist,
+      // treat the lack of the connection as a RequirementsException.
+      if ($key == 'migrate') {
+        throw new RequirementsException("No database connection configured for source plugin " . $this->pluginId, [], 0, $e);
+      }
+      else {
+        throw $e;
+      }
+    }
+    return $connection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkRequirements() {
+    if ($this->pluginDefinition['requirements_met'] === TRUE) {
+      $this->getDatabase();
+    }
   }
 
   /**

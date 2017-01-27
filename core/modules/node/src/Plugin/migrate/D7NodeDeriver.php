@@ -65,6 +65,16 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
+    $node_types = static::getSourcePlugin('d7_node_type');
+    try {
+      $node_types->checkRequirements();
+    }
+    catch (RequirementsException $e) {
+      // If the d7_node_type requirements failed, that means we do not have a
+      // Drupal source database configured - there is nothing to generate.
+      return $this->derivatives;
+    }
+
     $fields = [];
     try {
       $source_plugin = static::getSourcePlugin('d7_field_instance');
@@ -84,7 +94,7 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
     }
 
     try {
-      foreach (static::getSourcePlugin('d7_node_type') as $row) {
+      foreach ($node_types as $row) {
         $node_type = $row->getSourceProperty('type');
         $values = $base_plugin_definition;
 

@@ -84,8 +84,19 @@ class D7TaxonomyTermDeriver extends DeriverBase implements ContainerDeriverInter
       // we'll create a migration just for the node properties.
     }
 
+    $vocabulary_source_plugin = static::getSourcePlugin('d7_taxonomy_vocabulary');
     try {
-      foreach (static::getSourcePlugin('d7_taxonomy_vocabulary') as $row) {
+      $vocabulary_source_plugin->checkRequirements();
+    }
+    catch (RequirementsException $e) {
+      // If the d7_taxonomy_vocabulary requirements failed, that means we do not
+      // have a Drupal source database configured - there is nothing to
+      // generate.
+      return $this->derivatives;
+    }
+
+    try {
+      foreach ($vocabulary_source_plugin as $row) {
         $bundle = $row->getSourceProperty('machine_name');
         $values = $base_plugin_definition;
 

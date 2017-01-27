@@ -90,6 +90,16 @@ class D6NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
       return $this->derivatives;
     }
 
+    $node_types = static::getSourcePlugin('d6_node_type');
+    try {
+      $node_types->checkRequirements();
+    }
+    catch (RequirementsException $e) {
+      // If the d6_node_type requirements failed, that means we do not have a
+      // Drupal source database configured - there is nothing to generate.
+      return $this->derivatives;
+    }
+
     // Read all CCK field instance definitions in the source database.
     $fields = array();
     try {
@@ -107,7 +117,7 @@ class D6NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
     }
 
     try {
-      foreach (static::getSourcePlugin('d6_node_type') as $row) {
+      foreach ($node_types as $row) {
         $node_type = $row->getSourceProperty('type');
         $values = $base_plugin_definition;
 

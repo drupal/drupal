@@ -10,7 +10,6 @@ use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
-use Drupal\migrate\Plugin\RequirementsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Mainly to let children retrieve information from the origin system in an
  * easier way.
  */
-abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginInterface, RequirementsInterface, DependentPluginInterface {
+abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginInterface, DependentPluginInterface {
 
   use DependencyTrait;
 
@@ -106,6 +105,7 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
         }
       }
     }
+    parent::checkRequirements();
   }
 
   /**
