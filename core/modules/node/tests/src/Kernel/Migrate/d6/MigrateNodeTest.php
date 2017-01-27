@@ -57,6 +57,8 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $node_revision = \Drupal::entityManager()->getStorage('node')->loadRevision(1);
     $this->assertIdentical('Test title', $node_revision->getTitle());
     $this->assertIdentical('1', $node_revision->getRevisionUser()->id(), 'Node revision has the correct user');
+    $this->assertSame('1', $node_revision->id(), 'Node 1 loaded.');
+    $this->assertSame('1', $node_revision->getRevisionId(), 'Node 1 revision 1 loaded.');
     // This is empty on the first revision.
     $this->assertIdentical(NULL, $node_revision->revision_log->value);
     $this->assertIdentical('This is a shared text field', $node->field_test->value);
@@ -88,6 +90,20 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertIdentical('http://groups.drupal.org/', $node->field_test_link->uri);
     $this->assertIdentical('Drupal Groups', $node->field_test_link->title);
     $this->assertIdentical([], $node->field_test_link->options['attributes']);
+
+    $node = Node::load(3);
+    // Test multivalue field.
+    $value_1 = $node->field_multivalue->value;
+    $value_2 = $node->field_multivalue[1]->value;
+
+    // SQLite does not support scales for float data types so we need to convert
+    // the value manually.
+    if ($this->container->get('database')->driver() == 'sqlite') {
+      $value_1 = sprintf('%01.2f', $value_1);
+      $value_2 = sprintf('%01.2f', $value_2);
+    }
+    $this->assertSame('33.00', $value_1);
+    $this->assertSame('44.00', $value_2);
 
     // Test that a link field with an internal link is migrated.
     $node = Node::load(9);
