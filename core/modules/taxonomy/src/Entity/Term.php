@@ -116,7 +116,6 @@ class Term extends ContentEntityBase implements TermInterface {
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
-      ->setDescription(t('The term name.'))
       ->setTranslatable(TRUE)
       ->setRequired(TRUE)
       ->setSetting('max_length', 255)
@@ -133,7 +132,6 @@ class Term extends ContentEntityBase implements TermInterface {
 
     $fields['description'] = BaseFieldDefinition::create('text_long')
       ->setLabel(t('Description'))
-      ->setDescription(t('A description of the term.'))
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
