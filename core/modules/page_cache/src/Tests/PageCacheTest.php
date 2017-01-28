@@ -382,7 +382,7 @@ class PageCacheTest extends WebTestBase {
       $this->assertTrue(
         $difference > $cache_ttl_4xx - 5 &&
         $difference < $cache_ttl_4xx + 5,
-        'The cache entry expiry time uses the cache_ttl_4xx setting.'
+        "The cache entry expiry time uses the cache_ttl_4xx setting. Expire: {$cache_item->expire} Created: {$cache_item->created}"
       );
     }
 
