@@ -125,6 +125,7 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface, EntityWith
       'label' => $label,
       'weight' => $this->getNextWeight($this->states),
     ];
+    ksort($this->states);
     return $this;
   }
 
@@ -418,6 +419,7 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface, EntityWith
     $from_state_ids = array_values($from_state_ids);
     sort($from_state_ids);
     $this->transitions[$transition_id]['from'] = $from_state_ids;
+    ksort($this->transitions);
 
     return $this;
   }
