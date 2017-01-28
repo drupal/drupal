@@ -164,6 +164,15 @@ function number_field_presave($entity_type, $entity, $field, $instance, $langcod
       }
     }
   }
+  if ($field['type'] == 'number_float') {
+    // Fix for #2042411 - Float field type not validating number with decimal
+    // point but no decimal numbers.
+    foreach ($items as $delta => $item) {
+      if (isset($item['value'])) {
+        $items[$delta]['value'] = floatval($item['value']);
+      }
+    }
+  }
 }
 
 /**
