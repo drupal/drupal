@@ -4,6 +4,7 @@ Drupal 7.54, xxxx-xx-xx (development version)
 - Modules are now able to define theme engines.
 - Numerous bug fixes.
 - Logging of searches can now be disabled.
+- Added menu tree render structure to (pre-)process hooks for theme_menu_tree().
 
 Drupal 7.53, 2016-12-07
 -----------------------
