@@ -86,11 +86,17 @@ class WorkflowTest extends UnitTestCase {
     $this->assertArrayEquals([], array_keys($workflow->getStates()));
     $this->assertArrayEquals([], array_keys($workflow->getStates([])));
 
-    // By default states are ordered in the order added.
     $workflow
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addState('archived', 'Archived');
+
+    // States are stored in alphabetical key order.
+    $this->assertArrayEquals([
+      'archived',
+      'draft',
+      'published',
+    ], array_keys($workflow->get('states')));
 
     // Ensure we're returning state objects.
     $this->assertInstanceOf(State::class, $workflow->getStates()['draft']);
@@ -379,21 +385,24 @@ class WorkflowTest extends UnitTestCase {
     $workflow
       ->addState('a', 'A')
       ->addState('b', 'B')
-      ->addTransition('a_a', 'A to A', ['a'], 'a')
-      ->addTransition('a_b', 'A to B', ['a'], 'b');
+      ->addTransition('a_b', 'A to B', ['a'], 'b')
+      ->addTransition('a_a', 'A to A', ['a'], 'a');
+
+    // Transitions are stored in alphabetical key order in configuration.
+    $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->get('transitions')));
 
     // Ensure we're returning transition objects.
     $this->assertInstanceOf(Transition::class, $workflow->getTransitions()['a_a']);
 
     // Passing in no IDs returns all transitions.
-    $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->getTransitions()));
-
-    // The order of states is by weight.
-    $workflow->setTransitionWeight('a_b', -1);
     $this->assertArrayEquals(['a_b', 'a_a'], array_keys($workflow->getTransitions()));
 
+    // The order of states is by weight.
+    $workflow->setTransitionWeight('a_a', -1);
+    $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->getTransitions()));
+
     // If all weights are equal it will fallback to labels.
-    $workflow->setTransitionWeight('a_b', 0);
+    $workflow->setTransitionWeight('a_a', 0);
     $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->getTransitions()));
     $workflow->setTransitionLabel('a_b', 'A B');
     $this->assertArrayEquals(['a_b', 'a_a'], array_keys($workflow->getTransitions()));
