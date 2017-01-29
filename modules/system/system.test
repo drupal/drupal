@@ -1461,6 +1461,60 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests date format configuration.
+ */
+class DateFormatTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Date format',
+      'description' => 'Test date format configuration and defaults.',
+      'group' => 'System',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Create admin user and log in admin user.
+    $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Test the default date type formats are consistent.
+   */
+  function testDefaultDateFormats() {
+    // These are the default format values from format_date().
+    $default_formats = array(
+      'short' => 'm/d/Y - H:i',
+      'medium' => 'D, m/d/Y - H:i',
+      'long' => 'l, F j, Y - H:i',
+    );
+
+    // Clear the date format variables.
+    variable_del('date_format_short');
+    variable_del('date_format_medium');
+    variable_del('date_format_long');
+
+    $this->drupalGet('admin/config/regional/date-time');
+
+    foreach ($default_formats as $format_name => $format_value) {
+      $id = 'edit-date-format-' . $format_name;
+      // Check that the configuration fields match the default format.
+      $this->assertOptionSelected(
+        $id,
+        $format_value,
+        format_string('The @type format type matches the expected format @format.',
+        array(
+          '@type' => $format_name,
+          '@format' => $format_value,
+        )
+      ));
+    }
+  }
+}
+
 class PageTitleFiltering extends DrupalWebTestCase {
   protected $content_user;
   protected $saved_title;
