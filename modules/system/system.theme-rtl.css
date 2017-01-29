@@ -41,12 +41,12 @@ th {
 /**
  * Collapsible fieldsets.
  */
-html.js fieldset.collapsible .fieldset-legend {
+html.js fieldset.collapsible > legend .fieldset-legend {
   background-position: 98% 75%;
   padding-left: 0;
   padding-right: 15px;
 }
-html.js fieldset.collapsed .fieldset-legend {
+html.js fieldset.collapsed > legend .fieldset-legend {
   background-image: url(../../misc/menu-collapsed-rtl.png);
   background-position: 98% 50%;
 }
