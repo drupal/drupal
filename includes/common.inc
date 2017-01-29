@@ -3986,7 +3986,11 @@ function drupal_html_id($id) {
   // be merged with content already on the base page. The HTML IDs must be
   // unique for the fully merged content. Therefore, initialize $seen_ids to
   // take into account IDs that are already in use on the base page.
-  $seen_ids_init = &drupal_static(__FUNCTION__ . ':init');
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast['seen_ids_init'])) {
+    $drupal_static_fast['seen_ids_init'] = &drupal_static(__FUNCTION__ . ':init');
+  }
+  $seen_ids_init = &$drupal_static_fast['seen_ids_init'];
   if (!isset($seen_ids_init)) {
     // Ideally, Drupal would provide an API to persist state information about
     // prior page requests in the database, and we'd be able to add this
@@ -4031,7 +4035,10 @@ function drupal_html_id($id) {
       }
     }
   }
-  $seen_ids = &drupal_static(__FUNCTION__, $seen_ids_init);
+  if (!isset($drupal_static_fast['seen_ids'])) {
+    $drupal_static_fast['seen_ids'] = &drupal_static(__FUNCTION__, $seen_ids_init);
+  }
+  $seen_ids = &$drupal_static_fast['seen_ids'];
 
   $id = strtr(drupal_strtolower($id), array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
 
