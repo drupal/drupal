@@ -1638,7 +1638,7 @@ function _filter_url_escape_comments($match, $escape = NULL) {
   // Replace all HTML coments with a '<!-- [hash] -->' placeholder.
   if ($mode) {
     $content = $match[1];
-    $hash = md5($content);
+    $hash = hash('sha256', $content);
     $comments[$hash] = $content;
     return "<!-- $hash -->";
   }
