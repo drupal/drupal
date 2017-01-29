@@ -9,6 +9,8 @@ Drupal 7.54, xxxx-xx-xx (development version)
 - Added menu tree render structure to (pre-)process hooks for theme_menu_tree().
 - Fixed incorrect default value for short and medium date formats on the date
   type configuration page.
+- File validation error message is now removed after subsequent upload of valid
+  file.
 
 Drupal 7.53, 2016-12-07
 -----------------------
