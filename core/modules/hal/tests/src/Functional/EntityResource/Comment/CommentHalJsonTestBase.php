@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\hal\Functional\EntityResource\Comment;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\Tests\rest\Functional\EntityResource\Comment\CommentResourceTestBase;
@@ -126,14 +125,6 @@ abstract class CommentHalJsonTestBase extends CommentResourceTestBase {
         ],
       ],
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts() {
-    // The 'url.site' cache context is added for '_links' in the response.
-    return Cache::mergeTags(parent::getExpectedCacheContexts(), ['url.site']);
   }
 
 }

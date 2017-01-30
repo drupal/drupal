@@ -464,6 +464,9 @@ services:
   http_client_factory:
     class: Drupal\Core\Http\ClientFactory
     arguments: ['@http_handler_stack']
+  plugin.manager.link_relation_type:
+    class: \Drupal\Core\Http\LinkRelationTypeManager
+    arguments: ['@app.root', '@module_handler', '@cache.discovery']
   theme.negotiator:
     class: Drupal\Core\Theme\ThemeNegotiator
     arguments: ['@access_check.theme']
