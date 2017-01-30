@@ -64,7 +64,10 @@ trait CookieResourceTestTrait {
     ];
 
     $request_options[RequestOptions::BODY] = $this->serializer->encode($request_body, 'json');
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/json';
+    $request_options[RequestOptions::HEADERS] = [
+      'Accept' => 'application/json',
+      'Content-Type' => 'application/json',
+    ];
     $response = $this->request('POST', $user_login_url, $request_options);
 
     // Parse and store the session cookie.
