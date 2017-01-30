@@ -122,7 +122,12 @@ function cache_get_multiple(array &$cids, $bin = 'cache') {
  *     the administrator panel.
  *   - cache_path: Stores the system paths that have an alias.
  * @param $expire
- *   (optional) One of the following values:
+ *   (optional) Controls the maximum lifetime of this cache entry. Note that
+ *   caches might be subject to clearing at any time, so this setting does not
+ *   guarantee a minimum lifetime. With this in mind, the cache should not be
+ *   used for data that must be kept during a cache clear, like sessions.
+ *
+ *   Use one of the following values:
  *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
  *     explicitly told to using cache_clear_all() with a cache ID.
  *   - CACHE_TEMPORARY: Indicates that the item should be removed at the next
@@ -262,7 +267,12 @@ interface DrupalCacheInterface {
    *   1MB in size to be stored by default. When caching large arrays or
    *   similar, take care to ensure $data does not exceed this size.
    * @param $expire
-   *   (optional) One of the following values:
+   *   (optional) Controls the maximum lifetime of this cache entry. Note that
+   *   caches might be subject to clearing at any time, so this setting does not
+   *   guarantee a minimum lifetime. With this in mind, the cache should not be
+   *   used for data that must be kept during a cache clear, like sessions.
+   *
+   *   Use one of the following values:
    *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
    *     explicitly told to using cache_clear_all() with a cache ID.
    *   - CACHE_TEMPORARY: Indicates that the item should be removed at the next
