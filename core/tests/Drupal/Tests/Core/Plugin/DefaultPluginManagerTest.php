@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Plugin;
 
+use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -360,6 +361,32 @@ class DefaultPluginManagerTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::findDefinitions
+   * @covers ::extractProviderFromDefinition
+   */
+  public function testProviderExists() {
+    $definitions = [];
+    $definitions['array_based_found'] = ['provider' => 'module_found'];
+    $definitions['array_based_missing'] = ['provider' => 'module_missing'];
+    $definitions['stdclass_based_found'] = (object) ['provider' => 'module_found'];
+    $definitions['stdclass_based_missing'] = (object) ['provider' => 'module_missing'];
+    $definitions['classed_object_found'] = new ObjectDefinition(['provider' => 'module_found']);
+    $definitions['classed_object_missing'] = new ObjectDefinition(['provider' => 'module_missing']);
+
+    $expected = [];
+    $expected['array_based_found'] = $definitions['array_based_found'];
+    $expected['stdclass_based_found'] = $definitions['stdclass_based_found'];
+    $expected['classed_object_found'] = $definitions['classed_object_found'];
+
+    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
+    $module_handler->moduleExists('module_found')->willReturn(TRUE)->shouldBeCalled();
+    $module_handler->moduleExists('module_missing')->willReturn(FALSE)->shouldBeCalled();
+    $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler->reveal());
+    $result = $plugin_manager->getDefinitions();
+    $this->assertEquals($expected, $result);
+  }
+
+  /**
    * @covers ::processDefinition
    * @dataProvider providerTestProcessDefinition
    */
@@ -450,6 +477,20 @@ class TestPluginForm implements PluginFormInterface {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+}
+class ObjectDefinition extends PluginDefinition {
+
+  /**
+   * ObjectDefinition constructor.
+   *
+   * @param array $definition
+   */
+  public function __construct(array $definition) {
+    foreach ($definition as $property => $value) {
+      $this->{$property} = $value;
+    }
   }
 
 }

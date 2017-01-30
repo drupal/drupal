@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Exception\EntityTypeIdLengthException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -12,7 +13,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *
  * @ingroup entity_api
  */
-class EntityType implements EntityTypeInterface {
+class EntityType extends PluginDefinition implements EntityTypeInterface {
 
   use StringTranslationTrait;
 
@@ -50,20 +51,6 @@ class EntityType implements EntityTypeInterface {
    * @var string
    */
   protected $id;
-
-  /**
-   * The name of the provider of this entity type.
-   *
-   * @var string
-   */
-  protected $provider;
-
-  /**
-   * The name of the entity type class.
-   *
-   * @var string
-   */
-  protected $class;
 
   /**
    * The name of the original entity type class.
@@ -391,27 +378,6 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function id() {
-    return $this->id;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getProvider() {
-    return $this->provider;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getClass() {
-    return $this->class;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getOriginalClass() {
     return $this->originalClass ?: $this->class;
   }
@@ -425,8 +391,8 @@ class EntityType implements EntityTypeInterface {
       // class, assume that is the original class name.
       $this->originalClass = $this->class;
     }
-    $this->class = $class;
-    return $this;
+
+    return parent::setClass($class);
   }
 
   /**
