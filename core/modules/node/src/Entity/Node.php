@@ -18,6 +18,7 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "node",
  *   label = @Translation("Content"),
+ *   label_collection = @Translation("Content"),
  *   label_singular = @Translation("content item"),
  *   label_plural = @Translation("content items"),
  *   label_count = @PluralTranslation(
