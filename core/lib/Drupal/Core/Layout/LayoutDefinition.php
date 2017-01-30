@@ -3,6 +3,7 @@
 namespace Drupal\Core\Layout;
 
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
+use Drupal\Component\Plugin\Definition\PluginDefinition;
 
 /**
  * Provides an implementation of a layout definition and its metadata.
@@ -12,23 +13,7 @@ use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
-class LayoutDefinition implements PluginDefinitionInterface, DerivablePluginDefinitionInterface {
-
-  /**
-   * The plugin ID.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
-   * The name of the provider of this layout definition.
-   *
-   * @todo Make protected after https://www.drupal.org/node/2818653.
-   *
-   * @var string
-   */
-  public $provider;
+class LayoutDefinition extends PluginDefinition implements PluginDefinitionInterface, DerivablePluginDefinitionInterface {
 
   /**
    * The name of the deriver of this layout definition, if any.
@@ -131,13 +116,6 @@ class LayoutDefinition implements PluginDefinitionInterface, DerivablePluginDefi
   protected $default_region;
 
   /**
-   * The name of the layout class.
-   *
-   * @var string
-   */
-  protected $class;
-
-  /**
    * Any additional properties and values.
    *
    * @var array
@@ -192,31 +170,6 @@ class LayoutDefinition implements PluginDefinitionInterface, DerivablePluginDefi
     else {
       $this->additional[$property] = $value;
     }
-    return $this;
-  }
-
-  /**
-   * Gets the unique identifier of the layout definition.
-   *
-   * @return string
-   *   The unique identifier of the layout definition.
-   */
-  public function id() {
-    return $this->id;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getClass() {
-    return $this->class;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setClass($class) {
-    $this->class = $class;
     return $this;
   }
 
@@ -497,16 +450,6 @@ class LayoutDefinition implements PluginDefinitionInterface, DerivablePluginDefi
   public function setDefaultRegion($default_region) {
     $this->default_region = $default_region;
     return $this;
-  }
-
-  /**
-   * Gets the name of the provider of this layout definition.
-   *
-   * @return string
-   *   The name of the provider of this layout definition.
-   */
-  public function getProvider() {
-    return $this->provider;
   }
 
   /**

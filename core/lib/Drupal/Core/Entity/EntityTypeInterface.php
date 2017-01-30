@@ -48,22 +48,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function set($property, $value);
 
   /**
-   * Gets the unique identifier of the entity type.
-   *
-   * @return string
-   *   The unique identifier of the entity type.
-   */
-  public function id();
-
-  /**
-   * Gets the name of the provider of this entity type.
-   *
-   * @return string
-   *   The name of the provider of this entity type.
-   */
-  public function getProvider();
-
-  /**
    * Gets the name of the original entity type class.
    *
    * In case the class name was changed with setClass(), this will return

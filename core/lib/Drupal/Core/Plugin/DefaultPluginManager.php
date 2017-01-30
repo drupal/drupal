@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Plugin;
 
+use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -285,16 +286,37 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     // If this plugin was provided by a module that does not exist, remove the
     // plugin definition.
     foreach ($definitions as $plugin_id => $plugin_definition) {
-      // If the plugin definition is an object, attempt to convert it to an
-      // array, if that is not possible, skip further processing.
-      if (is_object($plugin_definition) && !($plugin_definition = (array) $plugin_definition)) {
-        continue;
-      }
-      if (isset($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array('core', 'component')) && !$this->providerExists($plugin_definition['provider'])) {
+      $provider = $this->extractProviderFromDefinition($plugin_definition);
+      if ($provider && !in_array($provider, array('core', 'component')) && !$this->providerExists($provider)) {
         unset($definitions[$plugin_id]);
       }
     }
     return $definitions;
+  }
+
+  /**
+   * Extracts the provider from a plugin definition.
+   *
+   * @param mixed $plugin_definition
+   *   The plugin definition. Usually either an array or an instance of
+   *   \Drupal\Component\Plugin\Definition\PluginDefinitionInterface
+   *
+   * @return string|null
+   *   The provider string, if it exists. NULL otherwise.
+   */
+  protected function extractProviderFromDefinition($plugin_definition) {
+    if ($plugin_definition instanceof PluginDefinitionInterface) {
+      return $plugin_definition->getProvider();
+    }
+
+    // Attempt to convert the plugin definition to an array.
+    if (is_object($plugin_definition)) {
+      $plugin_definition = (array) $plugin_definition;
+    }
+
+    if (isset($plugin_definition['provider'])) {
+      return $plugin_definition['provider'];
+    }
   }
 
   /**
