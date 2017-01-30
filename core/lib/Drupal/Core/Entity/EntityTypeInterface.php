@@ -635,6 +635,14 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getLowercaseLabel();
 
   /**
+   * Gets the collection label of the entity type.
+   *
+   * @return string
+   *   The collection label.
+   */
+  public function getCollectionLabel();
+
+  /**
    * Gets the singular label of the entity type.
    *
    * @return string

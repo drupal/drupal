@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -282,13 +283,15 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $entity_type4->getAdminPermission()->willReturn('administer the entity type');
     $entity_type4->id()->willReturn('the_entity_type_id');
     $entity_type4->getLabel()->willReturn('The entity type');
+    $entity_type4->getCollectionLabel()->willReturn(new TranslatableMarkup('Test entities'));
     $entity_type4->getLinkTemplate('collection')->willReturn('/the/collection/link/template');
     $entity_type4->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $route = (new Route('/the/collection/link/template'))
       ->setDefaults([
         '_entity_list' => 'the_entity_type_id',
-        '_title' => '@label entities',
-        '_title_arguments' => ['@label' => 'The entity type'],
+        '_title' => 'Test entities',
+        '_title_arguments' => [],
+        '_title_context' => '',
       ])
       ->setRequirements([
         '_permission' => 'administer the entity type',

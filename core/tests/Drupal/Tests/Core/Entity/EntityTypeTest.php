@@ -319,6 +319,16 @@ class EntityTypeTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getCollectionLabel
+   */
+  public function testGetCollectionLabel() {
+    $translatable_label = new TranslatableMarkup('Entity test collection', [], [], $this->getStringTranslationStub());
+    $entity_type = $this->setUpEntityType(['label_collection' => $translatable_label]);
+    $entity_type->setStringTranslation($this->getStringTranslationStub());
+    $this->assertEquals('Entity test collection', $entity_type->getCollectionLabel());
+  }
+
+  /**
    * @covers ::getSingularLabel
    */
   public function testGetSingularLabel() {

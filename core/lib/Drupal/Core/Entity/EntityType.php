@@ -176,6 +176,13 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   protected $label = '';
 
   /**
+   * The human-readable label for a collection of entities of the type.
+   *
+   * @var string
+   */
+  protected $label_collection = '';
+
+  /**
    * The indefinite singular name of the type.
    *
    * @var string
@@ -724,6 +731,17 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function getLowercaseLabel() {
     return Unicode::strtolower($this->getLabel());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCollectionLabel() {
+    if (empty($this->label_collection)) {
+      $label = $this->getLabel();
+      $this->label_collection = new TranslatableMarkup('@label entities', ['@label' => $label], [], $this->getStringTranslation());
+    }
+    return $this->label_collection;
   }
 
   /**
