@@ -113,7 +113,7 @@ abstract class BlockResourceTestBase extends EntityResourceTestBase {
    */
   protected function getExpectedCacheContexts() {
     // @see ::createEntity()
-    return [];
+    return ['url.site'];
   }
 
   /**

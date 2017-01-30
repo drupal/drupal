@@ -3,6 +3,8 @@
 namespace Drupal\rest\Plugin\rest\resource;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -14,6 +16,7 @@ use Drupal\rest\ResourceResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\rest\ModifiedResourceResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -54,6 +57,13 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   protected $configFactory;
 
   /**
+   * The link relation type manager used to create HTTP header links.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $linkRelationTypeManager;
+
+  /**
    * Constructs a Drupal\rest\Plugin\rest\resource\EntityResource object.
    *
    * @param array $configuration
@@ -70,11 +80,14 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    *   A logger instance.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $link_relation_type_manager
+   *   The link relation type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, $serializer_formats, LoggerInterface $logger, ConfigFactoryInterface $config_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, $serializer_formats, LoggerInterface $logger, ConfigFactoryInterface $config_factory, PluginManagerInterface $link_relation_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->entityType = $entity_type_manager->getDefinition($plugin_definition['entity_type']);
     $this->configFactory = $config_factory;
+    $this->linkRelationTypeManager = $link_relation_type_manager;
   }
 
   /**
@@ -88,7 +101,8 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       $container->get('entity_type.manager'),
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('rest'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('plugin.manager.link_relation_type')
     );
   }
 
@@ -124,6 +138,8 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
         }
       }
     }
+
+    $this->addLinkHeaders($entity, $response);
 
     return $response;
   }
@@ -337,6 +353,37 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   public function calculateDependencies() {
     if (isset($this->entityType)) {
       return ['module' => [$this->entityType->getProvider()]];
+    }
+  }
+
+  /**
+   * Adds link headers to a response.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity.
+   * @param \Symfony\Component\HttpFoundation\Response $response
+   *   The response.
+   *
+   * @see https://tools.ietf.org/html/rfc5988#section-5
+   */
+  protected function addLinkHeaders(EntityInterface $entity, Response $response) {
+    foreach ($entity->getEntityType()->getLinkTemplates() as $relation_name => $link_template) {
+      if ($definition = $this->linkRelationTypeManager->getDefinition($relation_name, FALSE)) {
+        $generator_url = $entity->toUrl($relation_name)
+          ->setAbsolute(TRUE)
+          ->toString(TRUE);
+        if ($response instanceof CacheableResponseInterface) {
+          $response->addCacheableDependency($generator_url);
+        }
+        $uri = $generator_url->getGeneratedUrl();
+        $relationship = $relation_name;
+        if (!empty($definition['uri'])) {
+          $relationship = $definition['uri'];
+        }
+
+        $link_header = '<' . $uri . '>; rel="' . $relationship . '"';
+        $response->headers->set('Link', $link_header, FALSE);
+      }
     }
   }
 
