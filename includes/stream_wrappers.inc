@@ -133,7 +133,7 @@ interface DrupalStreamWrapperInterface extends StreamWrapperInterface {
    * @param $uri
    *   A string containing the URI that should be used for this instance.
    */
-  function setUri($uri);
+  public function setUri($uri);
 
   /**
    * Returns the stream resource URI.
@@ -218,7 +218,6 @@ interface DrupalStreamWrapperInterface extends StreamWrapperInterface {
    */
   public function dirname($uri = NULL);
 }
-
 
 /**
  * Drupal stream wrapper base class for local files.
@@ -547,6 +546,155 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    */
   public function stream_close() {
     return fclose($this->handle);
+  }
+
+  /**
+   * Sets metadata on the stream.
+   *
+   * WARNING: Do not call this method directly! It will be called internally by
+   * PHP itself when one of the following functions is called on a stream URL:
+   *
+   * @param string $uri
+   *   A string containing the URI to the file to set metadata on.
+   * @param int $option
+   *   One of:
+   *   - STREAM_META_TOUCH: The method was called in response to touch().
+   *   - STREAM_META_OWNER_NAME: The method was called in response to chown()
+   *     with string parameter.
+   *   - STREAM_META_OWNER: The method was called in response to chown().
+   *   - STREAM_META_GROUP_NAME: The method was called in response to chgrp().
+   *   - STREAM_META_GROUP: The method was called in response to chgrp().
+   *   - STREAM_META_ACCESS: The method was called in response to chmod().
+   * @param mixed $value
+   *   If option is:
+   *   - STREAM_META_TOUCH: Array consisting of two arguments of the touch()
+   *     function.
+   *   - STREAM_META_OWNER_NAME or STREAM_META_GROUP_NAME: The name of the owner
+   *     user/group as string.
+   *   - STREAM_META_OWNER or STREAM_META_GROUP: The value of the owner
+   *     user/group as integer.
+   *   - STREAM_META_ACCESS: The argument of the chmod() as integer.
+   *
+   * @return bool
+   *   Returns TRUE on success or FALSE on failure. If $option is not
+   *   implemented, FALSE should be returned.
+   *
+   * @see touch()
+   * @see chmod()
+   * @see chown()
+   * @see chgrp()
+   * @link http://php.net/manual/streamwrapper.stream-metadata.php
+   */
+  public function stream_metadata($uri, $option, $value) {
+    $target = $this->getLocalPath($uri);
+    $return = FALSE;
+    switch ($option) {
+      case STREAM_META_TOUCH:
+        if (!empty($value)) {
+          $return = touch($target, $value[0], $value[1]);
+        }
+        else {
+          $return = touch($target);
+        }
+        break;
+
+      case STREAM_META_OWNER_NAME:
+      case STREAM_META_OWNER:
+        $return = chown($target, $value);
+        break;
+
+      case STREAM_META_GROUP_NAME:
+      case STREAM_META_GROUP:
+        $return = chgrp($target, $value);
+        break;
+
+      case STREAM_META_ACCESS:
+        $return = chmod($target, $value);
+        break;
+    }
+    if ($return) {
+      // For convenience clear the file status cache of the underlying file,
+      // since metadata operations are often followed by file status checks.
+      clearstatcache(TRUE, $target);
+    }
+    return $return;
+  }
+
+  /**
+   * Truncate stream.
+   *
+   * Will respond to truncation; e.g., through ftruncate().
+   *
+   * @param int $new_size
+   *   The new size.
+   *
+   * @return bool
+   *   TRUE on success, FALSE otherwise.
+   */
+  public function stream_truncate($new_size) {
+    return ftruncate($this->handle, $new_size);
+  }
+
+  /**
+   * Retrieve the underlying stream resource.
+   *
+   * This method is called in response to stream_select().
+   *
+   * @param int $cast_as
+   *   Can be STREAM_CAST_FOR_SELECT when stream_select() is calling
+   *   stream_cast() or STREAM_CAST_AS_STREAM when stream_cast() is called for
+   *   other uses.
+   *
+   * @return resource|false
+   *   The underlying stream resource or FALSE if stream_select() is not
+   *   supported.
+   *
+   * @see stream_select()
+   * @link http://php.net/manual/streamwrapper.stream-cast.php
+   */
+  public function stream_cast($cast_as) {
+    return $this->handle ? $this->handle : FALSE;
+  }
+
+  /**
+   * Change stream options.
+   *
+   * This method is called to set options on the stream.
+   *
+   * Since Windows systems do not allow it and it is not needed for most use
+   * cases anyway, this method is not supported on local files and will trigger
+   * an error and return false. If needed, custom subclasses can provide
+   * OS-specific implementations for advanced use cases.
+   *
+   * @param int $option
+   *   One of:
+   *   - STREAM_OPTION_BLOCKING: The method was called in response to
+   *     stream_set_blocking().
+   *   - STREAM_OPTION_READ_TIMEOUT: The method was called in response to
+   *     stream_set_timeout().
+   *   - STREAM_OPTION_WRITE_BUFFER: The method was called in response to
+   *     stream_set_write_buffer().
+   * @param int $arg1
+   *   If option is:
+   *   - STREAM_OPTION_BLOCKING: The requested blocking mode:
+   *     - 1 means blocking.
+   *     - 0 means not blocking.
+   *   - STREAM_OPTION_READ_TIMEOUT: The timeout in seconds.
+   *   - STREAM_OPTION_WRITE_BUFFER: The buffer mode, STREAM_BUFFER_NONE or
+   *     STREAM_BUFFER_FULL.
+   * @param int $arg2
+   *   If option is:
+   *   - STREAM_OPTION_BLOCKING: This option is not set.
+   *   - STREAM_OPTION_READ_TIMEOUT: The timeout in microseconds.
+   *   - STREAM_OPTION_WRITE_BUFFER: The requested buffer size.
+   *
+   * @return bool
+   *   TRUE on success, FALSE otherwise. If $option is not implemented, FALSE
+   *   should be returned.
+   */
+  public function stream_set_option($option, $arg1, $arg2) {
+    trigger_error('stream_set_option() not supported for local file based stream wrappers', E_USER_WARNING);
+    return FALSE;
   }
 
   /**
