@@ -232,7 +232,7 @@ EOD;
     // \Drupal\Core\Config\ConfigInstaller::installDefaultConfig() to work.
     // Write directly to active storage to avoid early instantiation of
     // the event dispatcher which can prevent modules from registering events.
-    \Drupal::service('config.storage')->write('core.extension', array('module' => array(), 'theme' => array()));
+    \Drupal::service('config.storage')->write('core.extension', array('module' => array(), 'theme' => array(), 'profile' => ''));
 
     // Collect and set a fixed module list.
     $class = get_class($this);

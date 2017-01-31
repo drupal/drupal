@@ -12,6 +12,7 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Installer\Exception\AlreadyInstalledException;
 use Drupal\Core\Installer\Exception\InstallerException;
+use Drupal\Core\Installer\Exception\InstallProfileMismatchException;
 use Drupal\Core\Installer\Exception\NoProfilesException;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\Language;
@@ -2188,18 +2189,31 @@ function install_display_requirements($install_state, $requirements) {
 }
 
 /**
- * Installation task; ensures install profile is written to settings.php.
+ * Installation task; writes profile to settings.php if possible.
  *
  * @param array $install_state
  *   An array of information about the current installation state.
+ *
+ * @see _install_select_profile()
+ *
+ * @throws \Drupal\Core\Installer\Exception\InstallProfileMismatchException
+ *
+ * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0. The
+ *    install profile is written to core.extension.
  */
 function install_write_profile($install_state) {
-  if (Settings::get('install_profile') !== $install_state['parameters']['profile']) {
+  // Only need to write to settings.php if it is possible. The primary storage
+  // for the install profile is the core.extension configuration.
+  $settings_path = \Drupal::service('site.path') . '/settings.php';
+  if (is_writable($settings_path)) {
     // Remember the profile which was used.
     $settings['settings']['install_profile'] = (object) array(
       'value' => $install_state['parameters']['profile'],
       'required' => TRUE,
     );
     drupal_rewrite_settings($settings);
+  }
+  elseif (($settings_profile = Settings::get('install_profile')) && $settings_profile !== $install_state['parameters']['profile']) {
+    throw new InstallProfileMismatchException($install_state['parameters']['profile'], $settings_profile, $settings_path, \Drupal::translation());
   }
 }
