@@ -270,3 +270,30 @@ test.double_brackets.turtle.horse:
 
 test.double_brackets.*:
   type: mapping
+
+wrapping.config_schema_test.other_double_brackets:
+  type: config_object
+  mapping:
+    tests:
+      type: sequence
+      sequence:
+        - type: wrapping.test.other_double_brackets.[id]
+
+wrapping.test.other_double_brackets.*:
+  type: test.double_brackets.[id]
+  mapping:
+    id:
+      type: string
+    foo:
+      type: string
+    bar:
+      type: string
+
+test.double_brackets.cat:*.*:
+  type: test.double_brackets.breed
+
+test.double_brackets.breed:
+  type: test.double_brackets
+  mapping:
+    breed:
+      type: string

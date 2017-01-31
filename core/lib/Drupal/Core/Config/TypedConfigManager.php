@@ -166,9 +166,14 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       // Replace dynamic portions of the definition type.
       if (!empty($replacements) && strpos($definition['type'], ']')) {
         $sub_type = $this->determineType($this->replaceName($definition['type'], $replacements), $definitions);
+        $sub_definition = $definitions[$sub_type];
+        if (isset($definitions[$sub_type]['type'])) {
+          $sub_merge = $this->getDefinition($definitions[$sub_type]['type'], $exception_on_invalid);
+          $sub_definition = NestedArray::mergeDeepArray([$sub_merge, $definitions[$sub_type]], TRUE);
+        }
         // Merge the newly determined subtype definition with the original
         // definition.
-        $definition = NestedArray::mergeDeepArray([$definitions[$sub_type], $definition], TRUE);
+        $definition = NestedArray::mergeDeepArray([$sub_definition, $definition], TRUE);
         $type = "$type||$sub_type";
       }
       // Unset type so we try the merge only once per type.
