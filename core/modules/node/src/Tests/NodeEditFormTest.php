@@ -115,6 +115,21 @@ class NodeEditFormTest extends NodeTestBase {
     // Check if the node revision checkbox is rendered on node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertFieldById('edit-revision', NULL, 'The revision field is present.');
+
+    // Check that details form element opens when there are errors on child
+    // elements.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $edit = [];
+    // This invalid date will trigger an error.
+    $edit['created[0][value][date]'] = $this->randomMachineName(8);
+    // Get the current amount of open details elements.
+    $open_details_elements = count($this->cssSelect('details[open="open"]'));
+    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
+    // The node author details must be open.
+    $this->assertRaw('<details class="node-form-author js-form-wrapper form-wrapper" data-drupal-selector="edit-author" id="edit-author" open="open">');
+    // Only one extra details element should now be open.
+    $open_details_elements++;
+    $this->assertEqual(count($this->cssSelect('details[open="open"]')), $open_details_elements, 'Exactly one extra open &lt;details&gt; element found.');
   }
 
   /**
