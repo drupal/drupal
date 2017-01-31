@@ -669,6 +669,34 @@ class ConfigImporterTest extends KernelTestBase {
   }
 
   /**
+   * Tests install profile validation during configuration import.
+   *
+   * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
+   */
+  public function testInstallProfileMisMatch() {
+    $sync = $this->container->get('config.storage.sync');
+
+    $extensions = $sync->read('core.extension');
+    // Change the install profile.
+    $extensions['profile'] = 'this_will_not_work';
+    $sync->write('core.extension', $extensions);
+
+    try {
+      $this->configImporter->reset()->import();
+      $this->fail('ConfigImporterException not thrown; an invalid import was not stopped due to missing dependencies.');
+    }
+    catch (ConfigImporterException $e) {
+      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $error_log = $this->configImporter->getErrors();
+      // Install profiles can not be changed. Note that KernelTestBase currently
+      // does not use an install profile. This situation should be impossible
+      // to get in but site's can removed the install profile setting from
+      // settings.php so the test is valid.
+      $this->assertEqual(['Cannot change the install profile from <em class="placeholder">this_will_not_work</em> to <em class="placeholder"></em> once Drupal is installed.'], $error_log);
+    }
+  }
+
+  /**
    * Tests config_get_config_directory().
    */
   public function testConfigGetConfigDirectory() {

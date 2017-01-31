@@ -270,6 +270,11 @@ $config_directories = array();
  * by the user.
  *
  * @see install_select_profile()
+ *
+ * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0. The
+ *   install profile is written to the core.extension configuration. If a
+ *   service requires the install profile use the 'install_profile' container
+ *   parameter. Functional code can use \Drupal::installProfile().
  */
 # $settings['install_profile'] = '';
 

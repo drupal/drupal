@@ -1800,5 +1800,14 @@ function system_update_8300() {
 }
 
 /**
+ * Add install profile to core.extension configuration.
+ */
+function system_update_8301() {
+  \Drupal::configFactory()->getEditable('core.extension')
+    ->set('profile', \Drupal::installProfile())
+    ->save();
+}
+
+/**
  * @} End of "addtogroup updates-8.3.0".
  */

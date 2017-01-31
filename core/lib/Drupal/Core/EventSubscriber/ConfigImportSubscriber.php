@@ -8,7 +8,6 @@ use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\ConfigImportValidateEventSubscriberBase;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Site\Settings;
 
 /**
  * Config import subscriber for config import events.
@@ -112,9 +111,10 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
       }
     }
 
-    // Settings is safe to use because settings.php is written before any module
-    // is installed.
-    $install_profile = Settings::get('install_profile');
+    // Get the install profile from the site's configuration.
+    $current_core_extension = $config_importer->getStorageComparer()->getTargetStorage()->read('core.extension');
+    $install_profile = isset($current_core_extension['profile']) ? $current_core_extension['profile'] : NULL;
+
     // Ensure that all modules being uninstalled are not required by modules
     // that will be installed after the import.
     $uninstalls = $config_importer->getExtensionChangelist('module', 'uninstall');
@@ -129,9 +129,14 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     }
 
     // Ensure that the install profile is not being uninstalled.
-    if (in_array($install_profile, $uninstalls)) {
+    if (in_array($install_profile, $uninstalls, TRUE)) {
       $profile_name = $module_data[$install_profile]->info['name'];
       $config_importer->logError($this->t('Unable to uninstall the %profile profile since it is the install profile.', array('%profile' => $profile_name)));
+    }
+
+    // Ensure the profile is not changing.
+    if ($install_profile !== $core_extension['profile']) {
+      $config_importer->logError($this->t('Cannot change the install profile from %new_profile to %profile once Drupal is installed.', array('%profile' => $install_profile, '%new_profile' => $core_extension['profile'])));
     }
   }
 

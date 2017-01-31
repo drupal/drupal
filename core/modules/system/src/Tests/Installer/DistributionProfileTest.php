@@ -3,6 +3,7 @@
 namespace Drupal\system\Tests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Site\Settings;
 use Drupal\simpletest\InstallerTestBase;
 
 /**
@@ -68,6 +69,11 @@ class DistributionProfileTest extends InstallerTestBase {
     $this->assertResponse(200);
     // Confirm that we are logged-in after installation.
     $this->assertText($this->rootUser->getUsername());
+
+    // Confirm that Drupal recognizes this distribution as the current profile.
+    $this->assertEqual(\Drupal::installProfile(), 'mydistro');
+    $this->assertEqual(Settings::get('install_profile'), 'mydistro', 'The install profile has been written to settings.php.');
+    $this->assertEqual($this->config('core.extension')->get('profile'), 'mydistro', 'The install profile has been written to core.extension configuration.');
   }
 
 }

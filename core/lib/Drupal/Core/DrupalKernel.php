@@ -1204,6 +1204,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container = $this->getContainerBuilder();
     $container->set('kernel', $this);
     $container->setParameter('container.modules', $this->getModulesParameter());
+    $container->setParameter('install_profile', $this->getInstallProfile());
 
     // Get a list of namespaces and put it onto the container.
     $namespaces = $this->getModuleNamespacesPsr4($this->getModuleFileNames());
@@ -1559,6 +1560,27 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function addServiceFiles(array $service_yamls) {
     $this->serviceYamls['site'] = array_filter($service_yamls, 'file_exists');
+  }
+
+  /**
+   * Gets the active install profile.
+   *
+   * @return string|null
+   *   The name of the any active install profile or distribution.
+   */
+  protected function getInstallProfile() {
+    $config = $this->getConfigStorage()->read('core.extension');
+    if (!empty($config['profile'])) {
+      $install_profile = $config['profile'];
+    }
+    // @todo https://www.drupal.org/node/2831065 remove the BC layer.
+    else {
+      // If system_update_8300() has not yet run fallback to using settings.
+      $install_profile = Settings::get('install_profile');
+    }
+
+    // Normalize an empty string to a NULL value.
+    return empty($install_profile) ? NULL : $install_profile;
   }
 
 }
