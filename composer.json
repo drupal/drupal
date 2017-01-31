@@ -44,7 +44,10 @@
     },
     "scripts": {
         "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump",
-        "post-autoload-dump": "Drupal\\Core\\Composer\\Composer::ensureHtaccess",
+        "post-autoload-dump": [
+          "Drupal\\Core\\Composer\\Composer::ensureHtaccess",
+          "Drupal\\Core\\Composer\\Composer::configurePhpcs"
+        ],
         "post-package-install": "Drupal\\Core\\Composer\\Composer::vendorTestCodeCleanup",
         "post-package-update": "Drupal\\Core\\Composer\\Composer::vendorTestCodeCleanup"
     }
