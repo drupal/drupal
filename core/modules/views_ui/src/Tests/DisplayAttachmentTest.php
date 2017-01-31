@@ -58,4 +58,39 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertEqual(array_keys($view->displayHandlers->get('attachment_1')->getOption('displays')), array('default', 'page_1'), 'The attached displays got saved as expected');
   }
 
+  /**
+   * Tests the attachment working after the attached page was deleted.
+   */
+  public function testRemoveAttachedDisplay() {
+    // Create a view.
+    $view = $this->randomView();
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
+    $attachment_display_url = 'admin/structure/views/nojs/display/' . $view['id'] . '/attachment_1/displays';
+
+    // Open the Page display and create the attachment display.
+    $this->drupalGet($path_prefix . '/page_1');
+    $this->drupalPostForm(NULL, array(), 'Add Attachment');
+    $this->assertText(t('Not defined'), 'The right text appears if there is no attachment selection yet.');
+
+    // Attach the Attachment to the Page display.
+    $this->drupalPostForm($attachment_display_url, array('displays[page_1]' => 1), t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
+
+    // Open the Page display and mark it as deleted.
+    $this->drupalGet($path_prefix . '/page_1');
+    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is a delete button on the page display.');
+    $this->drupalPostForm($path_prefix . '/page_1', array(), 'Delete Page');
+
+    // Open the attachment display and save it.
+    $this->drupalGet($path_prefix . '/attachment_1');
+    $this->drupalPostForm(NULL, array(), t('Save'));
+
+    // Check that there is no warning for the removed page display.
+    $this->assertNoText("Plugin ID &#039;page_1&#039; was not found.");
+
+    // Check that the attachment is no longer linked to the removed display.
+    $this->assertText(t('Not defined'), 'The right text appears if there is no attachment selection yet.');
+
+  }
+
 }

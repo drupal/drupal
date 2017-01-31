@@ -258,6 +258,16 @@ class ViewEditForm extends ViewFormBase {
     $displays = $view->get('display');
     foreach ($displays as $id => $display) {
       if (!empty($display['deleted'])) {
+        // Remove view display from view attachment under the attachments
+        // options.
+        $display_handler = $executable->displayHandlers->get($id);
+        if ($attachments = $display_handler->getAttachedDisplays()) {
+          foreach ($attachments as $attachment ) {
+            $attached_options = $executable->displayHandlers->get($attachment)->getOption('displays');
+            unset($attached_options[$id]);
+            $executable->displayHandlers->get($attachment)->setOption('displays', $attached_options);
+          }
+        }
         $executable->displayHandlers->remove($id);
         unset($displays[$id]);
       }
