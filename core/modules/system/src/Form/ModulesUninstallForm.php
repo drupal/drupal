@@ -167,7 +167,7 @@ class ModulesUninstallForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Form submitted, but no modules selected.
     if (!array_filter($form_state->getValue('uninstall'))) {
-      $form_state->setErrorByName('uninstall', $this->t('No modules selected.'));
+      $form_state->setErrorByName('', $this->t('No modules selected.'));
       $form_state->setRedirect('system.modules_uninstall');
     }
   }
