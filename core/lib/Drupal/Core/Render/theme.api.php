@@ -1138,7 +1138,7 @@ function hook_page_bottom(array &$page_bottom) {
  *     Instead of this suggestion's implementation being used directly, the base
  *     hook will be invoked with this implementation as its first suggestion.
  *     The base hook's files will be included and the base hook's preprocess
- *     functions will be called in place of any suggestion's preprocess
+ *     functions will be called in addition to any suggestion's preprocess
  *     functions. If an implementation of hook_theme_suggestions_HOOK() (where
  *     HOOK is the base hook) changes the suggestion order, a different
  *     suggestion may be used in place of this suggestion. If after

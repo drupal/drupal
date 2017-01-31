@@ -129,10 +129,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
         $template_path .= '/' . implode('/', $template_parts);
       }
       $definition->setTemplate($template);
-      // Prepend 'layout__' so the base theme hook will be used.
-      // @todo Remove this workaround for https://www.drupal.org/node/2559825 in
-      //   https://www.drupal.org/node/2834019.
-      $definition->setThemeHook('layout__' . strtr($template, '-', '_'));
+      $definition->setThemeHook(strtr($template, '-', '_'));
       $definition->setTemplatePath($template_path);
     }
 

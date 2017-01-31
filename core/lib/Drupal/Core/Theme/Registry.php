@@ -606,27 +606,56 @@ class Registry implements DestructableInterface {
   protected function completeSuggestion($hook, array &$cache) {
     $previous_hook = $hook;
     $incomplete_previous_hook = array();
+    // Continue looping if the candidate hook doesn't exist or if the candidate
+    // hook has incomplete preprocess functions, and if the candidate hook is a
+    // suggestion (has a double underscore).
     while ((!isset($cache[$previous_hook]) || isset($cache[$previous_hook]['incomplete preprocess functions']))
       && $pos = strrpos($previous_hook, '__')) {
+      // Find the first existing candidate hook that has incomplete preprocess
+      // functions.
       if (isset($cache[$previous_hook]) && !$incomplete_previous_hook && isset($cache[$previous_hook]['incomplete preprocess functions'])) {
         $incomplete_previous_hook = $cache[$previous_hook];
         unset($incomplete_previous_hook['incomplete preprocess functions']);
       }
       $previous_hook = substr($previous_hook, 0, $pos);
+      $this->mergePreprocessFunctions($hook, $previous_hook, $incomplete_previous_hook, $cache);
+    }
 
-      // If base hook exists clone of it for the preprocess function
-      // without a template.
-      // @see https://www.drupal.org/node/2457295
-      if (isset($cache[$previous_hook]) && !isset($cache[$previous_hook]['incomplete preprocess functions'])) {
-        $cache[$hook] = $incomplete_previous_hook + $cache[$previous_hook];
-        if (isset($incomplete_previous_hook['preprocess functions'])) {
-          $diff = array_diff($incomplete_previous_hook['preprocess functions'], $cache[$previous_hook]['preprocess functions']);
-          $cache[$hook]['preprocess functions'] = array_merge($cache[$previous_hook]['preprocess functions'], $diff);
-        }
-        // If a base hook isn't set, this is the actual base hook.
-        if (!isset($cache[$previous_hook]['base hook'])) {
-          $cache[$hook]['base hook'] = $previous_hook;
-        }
+    // In addition to processing suggestions, include base hooks.
+    if (isset($cache[$hook]['base hook'])) {
+      // In order to retain the additions from above, pass in the current hook
+      // as the parent hook, otherwise it will be overwritten.
+      $this->mergePreprocessFunctions($hook, $cache[$hook]['base hook'], $cache[$hook], $cache);
+    }
+  }
+
+  /**
+   * Merges the source hook's preprocess functions into the destination hook's.
+   *
+   * @param string $destination_hook_name
+   *   The name of the hook to merge preprocess functions to.
+   * @param string $source_hook_name
+   *   The name of the hook to merge preprocess functions from.
+   * @param array $parent_hook
+   *   The parent hook if it exists. Either an incomplete hook from suggestions
+   *   or a base hook.
+   * @param array $cache
+   *   The theme registry, as documented in
+   *   \Drupal\Core\Theme\Registry::processExtension().
+   */
+  protected function mergePreprocessFunctions($destination_hook_name, $source_hook_name, $parent_hook, array &$cache) {
+    // If base hook exists clone of it for the preprocess function
+    // without a template.
+    // @see https://www.drupal.org/node/2457295
+    if (isset($cache[$source_hook_name]) && (!isset($cache[$source_hook_name]['incomplete preprocess functions']) || !isset($cache[$destination_hook_name]['incomplete preprocess functions']))) {
+      $cache[$destination_hook_name] = $parent_hook + $cache[$source_hook_name];
+      if (isset($parent_hook['preprocess functions'])) {
+        $diff = array_diff($parent_hook['preprocess functions'], $cache[$source_hook_name]['preprocess functions']);
+        $cache[$destination_hook_name]['preprocess functions'] = array_merge($cache[$source_hook_name]['preprocess functions'], $diff);
+      }
+      // If a base hook isn't set, this is the actual base hook.
+      if (!isset($cache[$source_hook_name]['base hook'])) {
+        $cache[$destination_hook_name]['base hook'] = $source_hook_name;
       }
     }
   }
