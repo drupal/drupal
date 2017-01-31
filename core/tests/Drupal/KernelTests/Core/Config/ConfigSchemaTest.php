@@ -631,6 +631,27 @@ class ConfigSchemaTest extends KernelTestBase {
     $this->assertEqual($definition['type'], 'wrapping.test.double_brackets.*||test.double_brackets.cat.dog');
     $definition = $tests[1]->getDataDefinition()->toArray();
     $this->assertEqual($definition['type'], 'wrapping.test.double_brackets.*||test.double_brackets.turtle.horse');
+
+    $typed_values = [
+      'tests' => [
+        [
+          'id' => 'cat:persion.dog',
+          'foo' => 'cat',
+          'bar' => 'dog',
+          'breed' => 'persion',
+        ],
+      ],
+    ];
+
+    \Drupal::configFactory()->getEditable('wrapping.config_schema_test.other_double_brackets')
+      ->setData($typed_values)
+      ->save();
+    $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.other_double_brackets')->get('tests')->getElements();
+    $definition = $tests[0]->getDataDefinition()->toArray();
+    // Check that definition type is a merge of the expected types.
+    $this->assertEqual($definition['type'], 'wrapping.test.other_double_brackets.*||test.double_brackets.cat:*.*');
+    // Check that breed was inherited from parent definition.
+    $this->assertEqual($definition['mapping']['breed'], ['type' => 'string']);
   }
 
 }
