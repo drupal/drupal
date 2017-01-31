@@ -119,7 +119,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $this->assertSame('twocol', $layout_definition->getTemplate());
     $this->assertSame("$theme_a_path/templates", $layout_definition->getPath());
     $this->assertSame('theme_a/twocol', $layout_definition->getLibrary());
-    $this->assertSame('layout__twocol', $layout_definition->getThemeHook());
+    $this->assertSame('twocol', $layout_definition->getThemeHook());
     $this->assertSame("$theme_a_path/templates", $layout_definition->getTemplatePath());
     $this->assertSame('theme_a', $layout_definition->getProvider());
     $this->assertSame('right', $layout_definition->getDefaultRegion());
@@ -165,7 +165,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $this->assertSame('plugin-provided-layout', $layout_definition->getTemplate());
     $this->assertSame($core_path, $layout_definition->getPath());
     $this->assertSame(NULL, $layout_definition->getLibrary());
-    $this->assertSame('layout__plugin_provided_layout', $layout_definition->getThemeHook());
+    $this->assertSame('plugin_provided_layout', $layout_definition->getThemeHook());
     $this->assertSame("$core_path/templates", $layout_definition->getTemplatePath());
     $this->assertSame('core', $layout_definition->getProvider());
     $this->assertSame('main', $layout_definition->getDefaultRegion());
@@ -209,13 +209,13 @@ EOS;
       'layout' => [
         'render element' => 'content',
       ],
-      'layout__twocol' => [
+      'twocol' => [
         'render element' => 'content',
         'base hook' => 'layout',
         'template' => 'twocol',
         'path' => "$theme_a_path/templates",
       ],
-      'layout__plugin_provided_layout' => [
+      'plugin_provided_layout' => [
         'render element' => 'content',
         'base hook' => 'layout',
         'template' => 'plugin-provided-layout',
