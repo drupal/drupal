@@ -2,17 +2,10 @@
 
 namespace Drupal\rest\LinkManager;
 
+use Drupal\serialization\LinkManager\LinkManagerInterface as MovedLinkManagerInterface;
+
 /**
- * Interface implemented by link managers.
- *
- * There are no explicit methods on the manager interface. Instead link managers
- * broker the interactions of the different components, and therefore must
- * implement each component interface, which is enforced by this interface
- * extending all of the component ones.
- *
- * While a link manager may directly implement these interface methods with
- * custom logic, it is expected to be more common for plugin managers to proxy
- * the method invocations to the respective components.
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. This has
+ *   been moved to the serialization module. This exists solely for BC.
  */
-interface LinkManagerInterface extends TypeLinkManagerInterface, RelationLinkManagerInterface {
-}
+interface LinkManagerInterface extends MovedLinkManagerInterface {}
