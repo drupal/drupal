@@ -89,3 +89,13 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['%serializer.formats%']
+  # Link managers.
+  serialization.link_manager:
+    class: Drupal\serialization\LinkManager\LinkManager
+    arguments: ['@serialization.link_manager.type', '@serialization.link_manager.relation']
+  serialization.link_manager.type:
+    class: Drupal\serialization\LinkManager\TypeLinkManager
+    arguments: ['@cache.default', '@module_handler', '@config.factory', '@request_stack', '@entity_type.bundle.info']
+  serialization.link_manager.relation:
+    class: Drupal\serialization\LinkManager\RelationLinkManager
+    arguments: ['@cache.default', '@entity.manager', '@module_handler', '@config.factory', '@request_stack']

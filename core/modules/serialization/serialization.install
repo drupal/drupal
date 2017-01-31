@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Update functions for the serialization module.
+ */
+
+/**
+ * @defgroup updates-8.2.x-to-8.3.x
+ * @{
+ * Update functions from 8.2.x to 8.3.x.
+ */
+
+/**
+ * Move 'link_domain' from 'rest.settings' to 'serialization.settings'.
+ */
+function serialization_update_8301() {
+  $config_factory = \Drupal::configFactory();
+
+  // The default value for the 'link_domain' key is `~`, which is the YAML
+  // equivalent of PHP's `NULL`. If the REST module is not installed, this is
+  // the value we will store in 'serialization.settings'.
+  $link_domain = NULL;
+
+  // But if the REST module was installed, we migrate its 'link_domain' setting,
+  // because we are actually moving that setting from 'rest.settings' to
+  // 'serialization.settings'.
+  $rest_settings = $config_factory->getEditable('rest.settings');
+  if ($rest_settings->getRawData() !== []) {
+    $link_domain = $rest_settings->get('link_domain');
+    // Remove the 'link_domain' setting from 'rest.settings'.
+    $rest_settings->clear('link_domain')
+      ->save();
+  }
+
+  $serialization_settings = $config_factory->getEditable('serialization.settings');
+  $serialization_settings->set('link_domain', $link_domain);
+  $serialization_settings->save(TRUE);
+}
+
+/**
+ * @} End of "defgroup updates-8.2.x-to-8.3.x".
+ */

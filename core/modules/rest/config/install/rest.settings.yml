@@ -1,7 +1,3 @@
-# Set the domain for REST type and relation links.
-# If left blank, the site's domain will be used.
-link_domain: ~
-
 # Before Drupal 8.2, EntityResource used permissions as well as the entity
 # access system for access checking. This was confusing, and it only did this
 # for historical reasons. New Drupal installations opt out from this by default

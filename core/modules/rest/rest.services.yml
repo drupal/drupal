@@ -11,15 +11,22 @@ services:
   # @todo Remove this service in Drupal 9.0.0.
   access_check.rest.csrf:
     alias: access_check.header.csrf
+  # Link managers.
+  # @deprecated in Drupal 8.3.x and will be removed before 9.0.0. Use
+  #   serialization.link_manager instead.
   rest.link_manager:
+    parent: serialization.link_manager
     class: Drupal\rest\LinkManager\LinkManager
-    arguments: ['@rest.link_manager.type', '@rest.link_manager.relation']
+  # @deprecated in Drupal 8.3.x and will be removed before 9.0.0. Use
+  #   serialization.link_manager.type instead.
   rest.link_manager.type:
+    parent: serialization.link_manager.type
     class: Drupal\rest\LinkManager\TypeLinkManager
-    arguments: ['@cache.default', '@module_handler', '@config.factory', '@request_stack', '@entity_type.bundle.info']
+  # @deprecated in Drupal 8.3.x and will be removed before 9.0.0. Use
+  #   serialization.link_manager.relation instead.
   rest.link_manager.relation:
+    parent: serialization.link_manager.relation
     class: Drupal\rest\LinkManager\RelationLinkManager
-    arguments: ['@cache.default', '@entity.manager', '@module_handler', '@config.factory', '@request_stack']
   rest.resource_routes:
     class: Drupal\rest\Routing\ResourceRoutes
     arguments: ['@plugin.manager.rest', '@entity_type.manager', '@logger.channel.rest']

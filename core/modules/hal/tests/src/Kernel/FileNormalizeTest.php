@@ -7,9 +7,9 @@ use Drupal\file\Entity\File;
 use Drupal\hal\Encoder\JsonEncoder;
 use Drupal\hal\Normalizer\FieldItemNormalizer;
 use Drupal\hal\Normalizer\FileEntityNormalizer;
-use Drupal\rest\LinkManager\LinkManager;
-use Drupal\rest\LinkManager\RelationLinkManager;
-use Drupal\rest\LinkManager\TypeLinkManager;
+use Drupal\serialization\LinkManager\LinkManager;
+use Drupal\serialization\LinkManager\RelationLinkManager;
+use Drupal\serialization\LinkManager\TypeLinkManager;
 use Symfony\Component\Serializer\Serializer;
 
 

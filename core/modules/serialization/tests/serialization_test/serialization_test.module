@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for testing Serialization module.
+ */
+
+/**
+ * Implements hook_serialization_type_uri_alter().
+ */
+function serialization_test_serialization_type_uri_alter(&$uri, $context = array()) {
+  if (!empty($context['serialization_test'])) {
+    $uri = 'serialization_test_type';
+  }
+}
+
+/**
+ * Implements hook_rest_relation_uri_alter().
+ */
+function serialization_test_serialization_relation_uri_alter(&$uri, $context = array()) {
+  if (!empty($context['serialization_test'])) {
+    $uri = 'serialization_test_relation';
+  }
+}
