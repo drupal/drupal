@@ -1,16 +1,22 @@
 
 Drupal 7.54, xxxx-xx-xx (development version)
 -----------------------
-- Modules are now able to define theme engines.
-- Numerous bug fixes.
-- Numerous performance improvements.
-- Numerous API documentation improvements.
-- Logging of searches can now be disabled.
-- Added menu tree render structure to (pre-)process hooks for theme_menu_tree().
+- Modules are now able to define theme engines (API addition:
+  https://www.drupal.org/node/2826480).
+- Logging of searches can now be disabled (new option in the administrative
+  interface).
+- Added menu tree render structure to (pre-)process hooks for theme_menu_tree()
+  (API addition: https://www.drupal.org/node/2827134).
+- Added new function for determining whether an HTTPS request is being served
+  (API addition: https://www.drupal.org/node/2824590).
 - Fixed incorrect default value for short and medium date formats on the date
   type configuration page.
 - File validation error message is now removed after subsequent upload of valid
   file.
+- Numerous bug fixes.
+- Numerous API documentation improvements.
+- Additional performance improvements.
+- Additional automated test coverage.
 
 Drupal 7.53, 2016-12-07
 -----------------------
