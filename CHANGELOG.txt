@@ -1,5 +1,5 @@
 
-Drupal 7.54, xxxx-xx-xx (development version)
+Drupal 7.54, 2017-02-01
 -----------------------
 - Modules are now able to define theme engines (API addition:
   https://www.drupal.org/node/2826480).
