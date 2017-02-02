@@ -42,7 +42,7 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
   protected function waitForOffCanvasToOpen() {
     $web_assert = $this->assertSession();
     $web_assert->assertWaitOnAjaxRequest();
-    $this->waitForElement('#drupal-offcanvas');
+    $web_assert->waitForElementVisible('css', '#drupal-offcanvas');
   }
 
   /**
@@ -50,19 +50,6 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
    */
   protected function waitForOffCanvasToClose() {
     $this->waitForNoElement('#drupal-offcanvas');
-  }
-
-  /**
-   * Waits for an element to appear on the page.
-   *
-   * @param string $selector
-   *   CSS selector.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   */
-  protected function waitForElement($selector, $timeout = 10000) {
-    $condition = "(jQuery('$selector').length > 0)";
-    $this->assertJsCondition($condition, $timeout);
   }
 
   /**
