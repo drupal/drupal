@@ -41,6 +41,9 @@ class AjaxCssTest extends JavascriptTestBase {
    * Tests adding style sheets dynamically to CKEditor.
    */
   public function testCkeditorAjaxAddCss() {
+    // Skip test until #2843693 is fixed.
+    $this->markTestSkipped();
+
     $this->drupalGet('/ckeditor_test/ajax_css');
 
     $session = $this->getSession();
