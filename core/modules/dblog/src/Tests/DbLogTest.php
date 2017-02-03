@@ -281,6 +281,12 @@ class DbLogTest extends WebTestBase {
       $this->assertText(t('Recent log messages'), 'DBLog report was displayed');
     }
 
+    $this->drupalGet('admin/reports/dblog/confirm');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Are you sure you want to delete the recent logs?'), 'DBLog clear logs form was displayed');
+    }
+
     // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse($response);
@@ -821,7 +827,7 @@ class DbLogTest extends WebTestBase {
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse(200);
     // Make sure HTML tags are filtered out.
-    $this->assertRaw('title="alert(&#039;foo&#039;);Lorem ipsum dolor sit amet, consectetur adipiscing &amp; elit. Entry #0">&lt;script&gt;alert(&#039;foo&#039;);&lt;/script&gt;Lorem ipsum dolor sit…</a>');
+    $this->assertRaw('title="alert(&#039;foo&#039;);Lorem');
     $this->assertNoRaw("<script>alert('foo');</script>");
 
     // Make sure HTML tags are filtered out in admin/reports/dblog/event/ too.
