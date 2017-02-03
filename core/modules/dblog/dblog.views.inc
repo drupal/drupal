@@ -20,6 +20,14 @@ function dblog_views_data() {
     'help' => t('Contains a list of log entries.'),
   );
 
+  $data['watchdog']['table']['join'] = array(
+    // Link ourselves to the {users_field_data} table
+    'users_field_data' => array(
+      'field' => 'uid',
+      'left_field' => 'uid',
+    ),
+  );
+
   $data['watchdog']['wid'] = array(
     'title' => t('WID'),
     'help' => t('Unique watchdog event ID.'),
@@ -39,7 +47,6 @@ function dblog_views_data() {
 
   $data['watchdog']['uid'] = array(
     'title' => t('UID'),
-    'help' => t('The user ID of the user on which the log entry was written..'),
     'field' => array(
       'id' => 'numeric',
     ),
@@ -52,8 +59,9 @@ function dblog_views_data() {
     'relationship' => array(
       'title' => t('User'),
       'help' => t('The user on which the log entry as written.'),
-      'base' => 'users',
+      'base' => 'users_field_data',
       'base field' => 'uid',
+      'field' => 'uid',
       'id' => 'standard',
     ),
   );
@@ -120,7 +128,7 @@ function dblog_views_data() {
     ),
     'filter' => array(
       'id' => 'in_operator',
-      'options callback' => 'Drupal\dblog\Controller\DbLogController::getLogLevelClassMap',
+      'options callback' => 'Drupal\Core\Logger\RfcLogLevel::getLevels',
     ),
     'sort' => array(
       'id' => 'standard',
