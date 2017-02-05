@@ -12,6 +12,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\simpletest\TestBase;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\simpletest\TestDiscovery;
+use Drupal\Tests\Listeners\SimpletestUiPrinter;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Drupal\Core\Test\TestStatus;
 
@@ -326,7 +327,7 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
     '--log-junit',
     escapeshellarg($phpunit_file),
     '--printer',
-    '\\\Drupal\\\Tests\\\Listeners\\\SimpletestUiPrinter',
+    escapeshellarg(SimpletestUiPrinter::class),
   );
 
   // Optimized for running a single test.
@@ -378,17 +379,16 @@ function simpletest_phpunit_command() {
   $reflector = new ReflectionClass($autoloader);
   $vendor_dir = dirname(dirname($reflector->getFileName()));
 
-  // Don't use the committed version in composer's bin dir if running on
-  // windows.
+  // The file in Composer's bin dir is a *nix link, which does not work when
+  // extracted from a tarball and generally not on Windows.
+  $command = $vendor_dir . '/phpunit/phpunit/phpunit';
   if (substr(PHP_OS, 0, 3) == 'WIN') {
+    // On Windows it is necessary to run the script using the PHP executable.
     $php_executable_finder = new PhpExecutableFinder();
     $php = $php_executable_finder->find();
-    $phpunit_bin = escapeshellarg($php) . ' -f ' . escapeshellarg($vendor_dir . '/phpunit/phpunit/composer/bin/phpunit') . ' --';
+    $command = $php . ' -f ' . escapeshellarg($command) . ' --';
   }
-  else {
-    $phpunit_bin = $vendor_dir . '/phpunit/phpunit/phpunit';
-  }
-  return $phpunit_bin;
+  return $command;
 }
 
 /**
