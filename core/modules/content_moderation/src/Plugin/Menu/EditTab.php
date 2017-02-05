@@ -84,7 +84,6 @@ class EditTab extends LocalTaskDefault implements ContainerFactoryPluginInterfac
       return parent::getTitle();
     }
 
-    // @todo https://www.drupal.org/node/2779933 write a test for this.
     return $this->moderationInfo->isLiveRevision($this->entity)
       ? $this->t('New draft')
       : $this->t('Edit draft');
@@ -94,7 +93,6 @@ class EditTab extends LocalTaskDefault implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    // @todo https://www.drupal.org/node/2779933 write a test for this.
     $tags = parent::getCacheTags();
     // Tab changes if node or node-type is modified.
     if ($this->entity) {
