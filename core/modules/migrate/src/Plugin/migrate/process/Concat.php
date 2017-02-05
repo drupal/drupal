@@ -8,9 +8,48 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
- * Concatenates the strings in the current value.
+ * Concatenates a set of strings.
  *
- * @link https://www.drupal.org/node/2345927 Online handbook documentation for concat process plugin @endlink
+ * The concat plugin is used to concatenate strings. For example, imploding a
+ * set of strings into a single string.
+ *
+ * Available configuration keys:
+ *   - delimiter: (optional) A delimiter, or glue string, to insert between the
+ *     strings.
+ *
+ * Examples:
+ *
+ * @code
+ * process:
+ *   new_text_field:
+ *     plugin: concat
+ *     source:
+ *       - foo
+ *       - bar
+ * @endcode
+ *
+ * This will set new_text_field to the concatenation of the 'foo' and 'bar'
+ * source values. For example, if the 'foo' property is "wambooli" and the 'bar'
+ * property is "pastafazoul", new_text_field will be "wamboolipastafazoul".
+ *
+ * You can also specify a delimiter.
+ *
+ * @code
+ * process:
+ *   new_text_field:
+ *     plugin: concat
+ *     source:
+ *       - foo
+ *       - bar
+ *     delimiter: /
+ * @endcode
+ *
+ * This will set new_text_field to the concatenation of the 'foo' source value,
+ * the delimiter and the 'bar' source value. For example, using the values above
+ * and "/" as the delimiter, if the 'foo' property is "wambooli" and the 'bar'
+ * property is "pastafazoul", new_text_field will be "wambooli/pastafazoul".
+ *
+ * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
  * @MigrateProcessPlugin(
  *   id = "concat",
@@ -21,8 +60,6 @@ class Concat extends ProcessPluginBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Concatenates the strings in the current value.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (is_array($value)) {
