@@ -818,7 +818,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   }
 
   /**
-   * Implementation of Iterator::rewind().
+   * Implementation of \Iterator::rewind().
    *
    * This is called before beginning a foreach loop.
    */
@@ -839,7 +839,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   }
 
   /**
-   * Implementation of Iterator::current().
+   * Implementation of \Iterator::current().
    *
    * This is called when entering a loop iteration, returning the current row.
    */
@@ -848,7 +848,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   }
 
   /**
-   * Implementation of Iterator::key().
+   * Implementation of \Iterator::key().
    *
    * This is called when entering a loop iteration, returning the key of the
    * current row. It must be a scalar - we will serialize to fulfill the
@@ -893,7 +893,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   }
 
   /**
-   * Implementation of Iterator::next().
+   * Implementation of \Iterator::next().
    *
    * This is called at the bottom of the loop implicitly, as well as explicitly
    * from rewind().
@@ -911,7 +911,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   }
 
   /**
-   * Implementation of Iterator::valid().
+   * Implementation of \Iterator::valid().
    *
    * This is called at the top of the loop, returning TRUE to process the loop
    * and FALSE to terminate it.

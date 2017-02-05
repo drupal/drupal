@@ -201,10 +201,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Implementation of MigrateSource::performRewind().
-   *
-   * We could simply execute the query and be functionally correct, but
-   * we will take advantage of the PDO-based API to optimize the query up-front.
+   * {@inheritdoc}
    */
   protected function initializeIterator() {
     // Initialize the batch size.

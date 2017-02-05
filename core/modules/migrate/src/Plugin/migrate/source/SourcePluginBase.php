@@ -256,7 +256,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * Gets the iterator key.
    *
-   * Implementation of Iterator::key - called when entering a loop iteration,
+   * Implementation of \Iterator::key() - called when entering a loop iteration,
    * returning the key of the current row. It must be a scalar - we will
    * serialize to fulfill the requirement, but using getCurrentIds() is
    * preferable.
@@ -268,7 +268,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * Checks whether the iterator is currently valid.
    *
-   * Implementation of Iterator::valid() - called at the top of the loop,
+   * Implementation of \Iterator::valid() - called at the top of the loop,
    * returning TRUE to process the loop and FALSE to terminate it.
    */
   public function valid() {
@@ -278,9 +278,9 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * Rewinds the iterator.
    *
-   * Implementation of Iterator::rewind() - subclasses of MigrateSource should
-   * implement performRewind() to do any class-specific setup for iterating
-   * source records.
+   * Implementation of \Iterator::rewind() - subclasses of SourcePluginBase
+   * should implement initializeIterator() to do any class-specific setup for
+   * iterating source records.
    */
   public function rewind() {
     $this->getIterator()->rewind();
