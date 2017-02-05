@@ -42,7 +42,9 @@ class LocalTaskTest extends BrowserTestBase {
     $this->drupalPlaceBlock('local_tasks_block', ['id' => 'tabs_block']);
     $this->drupalLogin($this->createUser(['bypass node access']));
 
-    $node_type = $this->createContentType();
+    $node_type = $this->createContentType([
+      'type' => 'test_content_type',
+    ]);
 
     // Now enable moderation for subsequent nodes.
     $workflow = Workflow::load('editorial');
@@ -59,20 +61,35 @@ class LocalTaskTest extends BrowserTestBase {
    * Tests local tasks behave with content_moderation enabled.
    */
   public function testLocalTasks() {
+    // The default state is a draft.
     $this->drupalGet(sprintf('node/%s', $this->testNode->id()));
-    $this->assertTasks(TRUE);
+    $this->assertTasks('Edit draft');
 
+    // When published as the live revision, the label changes.
+    $this->testNode->moderation_state = 'published';
+    $this->testNode->save();
+    $this->drupalGet(sprintf('node/%s', $this->testNode->id()));
+    $this->assertTasks('New draft');
+
+    $tags = $this->drupalGetHeader('X-Drupal-Cache-Tags');
+    $this->assertContains('node:1', $tags);
+    $this->assertContains('node_type:test_content_type', $tags);
+
+    // Without an upcast node, the state cannot be determined.
     $this->clickLink('Task Without Upcast Node');
-    $this->assertTasks(FALSE);
+    $this->assertTasks('Edit');
   }
 
   /**
    * Assert the correct tasks appear.
+   *
+   * @param string $edit_tab_label
+   *   The edit tab label to assert.
    */
-  protected function assertTasks($with_upcast_node) {
+  protected function assertTasks($edit_tab_label) {
     $this->assertSession()->linkExists('View');
     $this->assertSession()->linkExists('Task Without Upcast Node');
-    $this->assertSession()->linkExists($with_upcast_node ? 'Edit draft' : 'Edit');
+    $this->assertSession()->linkExists($edit_tab_label);
     $this->assertSession()->linkExists('Delete');
   }
 
