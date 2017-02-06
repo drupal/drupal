@@ -229,8 +229,12 @@ class FormValidator implements FormValidatorInterface {
    *   theming, and hook_form_alter functions.
    */
   protected function doValidateForm(&$elements, FormStateInterface &$form_state, $form_id = NULL) {
-    // Recurse through all children.
-    foreach (Element::children($elements) as $key) {
+    // Recurse through all children, sorting the elements so that the order of
+    // error messages displayed to the user matches the order of elements in
+    // the form. Use a copy of $elements so that it is not modified by the
+    // sorting itself.
+    $elements_sorted = $elements;
+    foreach (Element::children($elements_sorted, TRUE) as $key) {
       if (isset($elements[$key]) && $elements[$key]) {
         $this->doValidateForm($elements[$key], $form_state);
       }
