@@ -921,6 +921,16 @@ function system_requirements($phase) {
     }
   }
 
+  // Check to see if dates will be limited to 1901-2038.
+  if (PHP_INT_SIZE === 4) {
+    $requirements['limited_date_range'] = [
+      'title' => t('Limited Date Range'),
+      'value' => t('Your PHP installation has a limited date range.'),
+      'description' => t('You are running on a system where PHP is compiled or limited to using 32-bit integers. This will limit the range of dates and timestamps to the years 1901-2038.'),
+      'severity' => REQUIREMENT_WARNING,
+    ];
+  }
+
   return $requirements;
 }
 

@@ -293,7 +293,7 @@ class DateTimePlusTest extends UnitTestCase {
    * @see DateTimePlusTest::testDates()
    */
   public function providerTestDates() {
-    return array(
+    $dates = array(
       // String input.
       // Create date object from datetime string.
       array('2009-03-07 10:30', 'America/Chicago', '2009-03-07T10:30:00-06:00'),
@@ -308,6 +308,16 @@ class DateTimePlusTest extends UnitTestCase {
       // Same during daylight savings time.
       array('2009-06-07 10:30', 'Australia/Canberra', '2009-06-07T10:30:00+10:00'),
     );
+
+    // On 32-bit systems, timestamps are limited to 1901-2038.
+    if (PHP_INT_SIZE !== 4) {
+      // Create a date object in the distant past.
+      $dates[] = array('1809-02-12 10:30', 'America/Chicago', '1809-02-12T10:30:00-06:00');
+      // Create a date object in the far future.
+      $dates[] = array('2345-01-02 02:04', 'UTC', '2345-01-02T02:04:00+00:00');
+    }
+
+    return $dates;
   }
 
   /**
@@ -320,7 +330,7 @@ class DateTimePlusTest extends UnitTestCase {
    * @see DateTimePlusTest::testDates()
    */
   public function providerTestDateArrays() {
-    return array(
+    $dates = array(
       // Array input.
       // Create date object from date array, date only.
       array(array('year' => 2010, 'month' => 2, 'day' => 28), 'America/Chicago', '2010-02-28T00:00:00-06:00'),
@@ -331,6 +341,16 @@ class DateTimePlusTest extends UnitTestCase {
       // Create date object from date array with hour.
       array(array('year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 10), 'Europe/Berlin', '2010-02-28T10:00:00+01:00'),
     );
+
+    // On 32-bit systems, timestamps are limited to 1970-2038.
+    if (PHP_INT_SIZE !== 4) {
+      // Create a date object in the distant past.
+      $dates[] = array(array('year' => 1809, 'month' => 2, 'day' => 12), 'America/Chicago', '1809-02-12T00:00:00-06:00');
+      // Create a date object in the far future.
+      $dates[] = array(array('year' => 2345, 'month' => 1, 'day' => 2), 'UTC', '2345-01-02T00:00:00+00:00');
+    }
+
+    return $dates;
   }
 
   /**
