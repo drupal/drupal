@@ -115,12 +115,3 @@ function dblog_form_system_logging_settings_alter(&$form, FormStateInterface $fo
 function dblog_logging_settings_submit($form, FormStateInterface $form_state) {
   \Drupal::configFactory()->getEditable('dblog.settings')->set('row_limit', $form_state->getValue('dblog_row_limit'))->save();
 }
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function dblog_form_views_exposed_form_alter(&$form, FormStateInterface $form_state) {
-  if ($form_state->get('view')->id() == 'watchdog') {
-    $form['#attached']['library'][] = 'dblog/drupal.dblog';
-  }
-}
