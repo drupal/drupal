@@ -75,7 +75,6 @@ class Permissions extends PrerenderList {
   }
 
   public function preRender(&$values) {
-    $uids = array();
     $this->items = array();
 
     $permission_names = \Drupal::service('user.permissions')->getPermissions();
@@ -100,10 +99,8 @@ class Permissions extends PrerenderList {
         }
       }
 
-      foreach ($uids as $uid) {
-        if (isset($this->items[$uid])) {
-          ksort($this->items[$uid]);
-        }
+      foreach ($this->items as &$permission) {
+        ksort($permission);
       }
     }
   }
