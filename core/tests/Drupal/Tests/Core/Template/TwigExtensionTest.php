@@ -8,6 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigExtension;
+use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -343,6 +344,17 @@ class TwigExtensionTest extends UnitTestCase {
     $result = $twig->render("<div{{ create_attribute().addClass('meow') }}></div>");
     $expected = '<div class="meow"></div>';
     $this->assertEquals($expected, $result);
+  }
+
+  /**
+   * @covers ::getLink
+   */
+  public function testLinkWithOverriddenAttributes() {
+    $url = Url::fromRoute('<front>', [], ['attributes' => ['class' => ['foo']]]);
+
+    $build = $this->systemUnderTest->getLink('test', $url, ['class' => ['bar']]);
+
+    $this->assertEquals(['foo', 'bar'], $build['#url']->getOption('attributes')['class']);
   }
 
 }

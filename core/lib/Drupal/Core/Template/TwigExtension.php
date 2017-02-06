@@ -284,10 +284,7 @@ class TwigExtension extends \Twig_Extension {
       if ($attributes instanceof Attribute) {
         $attributes = $attributes->toArray();
       }
-      if ($existing_attributes = $url->getOption('attributes')) {
-        $attributes = array_merge($existing_attributes, $attributes);
-      }
-      $url->setOption('attributes', $attributes);
+      $url->mergeOptions(['attributes' => $attributes]);
     }
     // The text has been processed by twig already, convert it to a safe object
     // for the render system.
