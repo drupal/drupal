@@ -261,9 +261,13 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
 
     if ($driver instanceof GoutteDriver) {
       // Turn off curl timeout. Having a timeout is not a problem in a normal
-      // test running, but it is a problem when debugging.
+      // test running, but it is a problem when debugging. Also, disable SSL
+      // peer verification so that testing under HTTPS always works.
       /** @var \GuzzleHttp\Client $client */
-      $client = $this->container->get('http_client_factory')->fromOptions(['timeout' => NULL]);
+      $client = $this->container->get('http_client_factory')->fromOptions([
+        'timeout' => NULL,
+        'verify' => FALSE,
+      ]);
 
       // Inject a Guzzle middleware to generate debug output for every request
       // performed in the test.
