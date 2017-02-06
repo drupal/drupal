@@ -189,8 +189,11 @@ function comment_update_8200() {
  * Update status field.
  */
 function comment_update_8300() {
-  $field_definitions = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('comment');
-  \Drupal::service('entity.definition_update_manager')->updateFieldStorageDefinition($field_definitions['status']);
+  $entity_definition_update_manager = \Drupal::service('entity.definition_update_manager');
+  $field_definition = $entity_definition_update_manager->getFieldStorageDefinition('status', 'comment');
+  $field_definition->setDescription(new TranslatableMarkup('A boolean indicating the published state.'))
+    ->setRevisionable(TRUE);
+  $entity_definition_update_manager->updateFieldStorageDefinition($field_definition);
 }
 
 /**
