@@ -6141,6 +6141,30 @@ $connection->insert('field_revision_body')
   'body_summary' => '',
   'body_format' => 'filtered_html',
 ))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'und',
+  'delta' => '0',
+  'body_value' => 'is - Is that is it awesome.',
+  'body_summary' => '',
+  'body_format' => 'filtered_html',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '5',
+  'revision_id' => '5',
+  'language' => 'und',
+  'delta' => '0',
+  'body_value' => 'en - Is that is it awesome.',
+  'body_summary' => '',
+  'body_format' => 'filtered_html',
+))
 ->execute();
 
 $connection->schema()->createTable('field_revision_comment_body', array(
@@ -30945,6 +30969,38 @@ $connection->insert('node')
   'tnid' => '2',
   'translate' => '0',
 ))
+->values(array(
+  'nid' => '4',
+  'vid' => '4',
+  'type' => 'article',
+  'language' => 'is',
+  'title' => 'is - The thing about Firefly',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1478755274',
+  'changed' => '1478755274',
+  'comment' => '2',
+  'promote' => '1',
+  'sticky' => '0',
+  'tnid' => '4',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '5',
+  'vid' => '5',
+  'type' => 'article',
+  'language' => 'en',
+  'title' => 'en - The thing about Firefly',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1478755314',
+  'changed' => '1478755314',
+  'comment' => '2',
+  'promote' => '1',
+  'sticky' => '0',
+  'tnid' => '4',
+  'translate' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('node_access', array(
@@ -31089,6 +31145,22 @@ $connection->insert('node_comment_statistics')
   'last_comment_uid' => '1',
   'comment_count' => '0',
 ))
+->values(array(
+  'nid' => '4',
+  'cid' => '0',
+  'last_comment_timestamp' => '1478755274',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '1',
+  'comment_count' => '0',
+))
+->values(array(
+  'nid' => '5',
+  'cid' => '0',
+  'last_comment_timestamp' => '1478755314',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '1',
+  'comment_count' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('node_counter', array(
@@ -31143,14 +31215,26 @@ $connection->insert('node_counter')
 ->values(array(
   'nid' => '2',
   'totalcount' => '1',
-  'daycount' => '1',
+  'daycount' => '0',
   'timestamp' => '1471428059',
 ))
 ->values(array(
   'nid' => '3',
   'totalcount' => '1',
-  'daycount' => '1',
+  'daycount' => '0',
   'timestamp' => '1471428153',
+))
+->values(array(
+  'nid' => '4',
+  'totalcount' => '1',
+  'daycount' => '1',
+  'timestamp' => '1478755275',
+))
+->values(array(
+  'nid' => '5',
+  'totalcount' => '1',
+  'daycount' => '1',
+  'timestamp' => '1478755314',
 ))
 ->execute();
 
@@ -31267,6 +31351,30 @@ $connection->insert('node_revision')
   'title' => 'is - The thing about Deep Space 9',
   'log' => '',
   'timestamp' => '1471428152',
+  'status' => '1',
+  'comment' => '2',
+  'promote' => '1',
+  'sticky' => '0',
+))
+->values(array(
+  'nid' => '4',
+  'vid' => '4',
+  'uid' => '1',
+  'title' => 'is - The thing about Firefly',
+  'log' => '',
+  'timestamp' => '1478755274',
+  'status' => '1',
+  'comment' => '2',
+  'promote' => '1',
+  'sticky' => '0',
+))
+->values(array(
+  'nid' => '5',
+  'vid' => '5',
+  'uid' => '1',
+  'title' => 'en - The thing about Firefly',
+  'log' => '',
+  'timestamp' => '1478755314',
   'status' => '1',
   'comment' => '2',
   'promote' => '1',

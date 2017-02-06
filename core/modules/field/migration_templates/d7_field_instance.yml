@@ -28,6 +28,7 @@ process:
     source:
       - default_value
       - widget_settings
+  translatable: translatable
 destination:
   plugin: entity:field_config
 migration_dependencies:

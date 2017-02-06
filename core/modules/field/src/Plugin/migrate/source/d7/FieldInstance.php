@@ -86,6 +86,25 @@ class FieldInstance extends DrupalSqlBase {
     $field_data = unserialize($row->getSourceProperty('field_data'));
     $row->setSourceProperty('field_settings', $field_data['settings']);
 
+    $translatable = FALSE;
+    if ($row->getSourceProperty('entity_type') == 'node') {
+      // language_content_type_[bundle] may be
+      //   - 0: no language support
+      //   - 1: language assignment support
+      //   - 2: node translation support
+      //   - 4: entity translation support
+      if ($this->variableGet('language_content_type_' . $row->getSourceProperty('bundle'), 0) == 2) {
+        $translatable = TRUE;
+      }
+    }
+    else {
+      // This is not a node entity. Get the translatable value from the source
+      // field_config table.
+      $data = unserialize($row->getSourceProperty('field_data'));
+      $translatable = $data['translatable'];
+    }
+    $row->setSourceProperty('translatable', $translatable);
+
     return parent::prepareRow($row);
   }
 

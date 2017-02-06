@@ -1,18 +1,17 @@
-id: d7_node
-label: Nodes
+id: d7_node_translation
+label: Node translations
 migration_tags:
   - Drupal 7
+  - translation
 deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
 source:
   plugin: d7_node
+  translations: true
 process:
   # If you are using this file to build a custom migration consider removing
-  # the nid and vid fields to allow incremental migrations.
-  # In D7, nodes always have a tnid, but it's zero for untranslated nodes.
-  # We normalize it to equal the nid in that case.
-  # @see \Drupal\node\Plugin\migrate\source\d7\Node::prepareRow().
+  # the nid field to allow incremental migrations.
   nid: tnid
-  vid: vid
+  type: type
   langcode:
     plugin: default_value
     source: language
@@ -27,11 +26,17 @@ process:
   revision_uid: revision_uid
   revision_log: log
   revision_timestamp: timestamp
+  content_translation_source: source_langcode
 destination:
   plugin: entity:node
+  translations: true
+  content_translation_update_definitions:
+    - node
 migration_dependencies:
   required:
     - d7_user
     - d7_node_type
+    - language
   optional:
     - d7_field_instance
+provider: migrate_drupal

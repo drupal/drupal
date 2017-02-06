@@ -13,11 +13,16 @@ use Drupal\node\NodeInterface;
  */
 class MigrateNodeTest extends MigrateDrupal7TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static $modules = array(
+    'content_translation',
     'comment',
     'datetime',
     'filter',
     'image',
+    'language',
     'link',
     'node',
     'taxonomy',
@@ -40,15 +45,17 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->installSchema('system', ['sequences']);
 
     $this->executeMigrations([
+      'language',
       'd7_user_role',
       'd7_user',
       'd7_node_type',
+      'd7_language_content_settings',
       'd7_comment_type',
       'd7_taxonomy_vocabulary',
       'd7_field',
       'd7_field_instance',
       'd7_node',
-      'd7_node:article',
+      'd7_node_translation',
     ]);
   }
 
@@ -144,9 +151,31 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertIdentical('Click Here', $node->field_link->title);
 
     $node = Node::load(2);
+    $this->assertSame('en', $node->langcode->value);
     $this->assertIdentical("...is that it's the absolute best show ever. Trust me, I would know.", $node->body->value);
+    $this->assertSame('The thing about Deep Space 9', $node->label());
     $this->assertIdentical('internal:/', $node->field_link->uri);
     $this->assertIdentical('Home', $node->field_link->title);
+    $this->assertTrue($node->hasTranslation('is'), "Node 2 has an Icelandic translation");
+
+    $translation = $node->getTranslation('is');
+    $this->assertSame('is', $translation->langcode->value);
+    $this->assertSame("is - ...is that it's the absolute best show ever. Trust me, I would know.", $translation->body->value);
+    $this->assertSame('is - The thing about Deep Space 9', $translation->label());
+    $this->assertSame('internal:/', $translation->field_link->uri);
+    $this->assertSame('Home', $translation->field_link->title);
+
+    // Test that content_translation_source is set.
+    $manager = $this->container->get('content_translation.manager');
+    $this->assertSame('en', $manager->getTranslationMetadata($node->getTranslation('is'))->getSource());
+
+    // Node 3 is a translation of node 2, and should not be imported separately.
+    $this->assertNull(Node::load(3), "Node 3 doesn't exist in D8, it was a translation");
+
+    // Test that content_translation_source for a source other than English.
+    $node = Node::load(4);
+    $this->assertSame('is', $manager->getTranslationMetadata($node->getTranslation('en'))->getSource());
+
   }
 
 }

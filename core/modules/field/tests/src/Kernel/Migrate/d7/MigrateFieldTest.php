@@ -60,8 +60,6 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $this->assertTrue($field instanceof FieldStorageConfigInterface);
     $this->assertIdentical($expected_name, $field->getName());
     $this->assertIdentical($expected_type, $field->getType());
-    // FieldStorageConfig::$translatable is TRUE by default, so it is useful
-    // to test for FALSE here.
     $this->assertEqual($expected_translatable, $field->isTranslatable());
     $this->assertIdentical($expected_entity_type, $field->getTargetEntityTypeId());
 
@@ -78,31 +76,31 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
    * Tests migrating D7 fields to field_storage_config entities.
    */
   public function testFields() {
-    $this->assertEntity('node.body', 'text_with_summary', FALSE, 1);
-    $this->assertEntity('node.field_long_text', 'text_with_summary', FALSE, 1);
-    $this->assertEntity('comment.comment_body', 'text_long', FALSE, 1);
-    $this->assertEntity('node.field_file', 'file', FALSE, 1);
-    $this->assertEntity('user.field_file', 'file', FALSE, 1);
-    $this->assertEntity('node.field_float', 'float', FALSE, 1);
-    $this->assertEntity('node.field_image', 'image', FALSE, 1);
-    $this->assertEntity('node.field_images', 'image', FALSE, 1);
-    $this->assertEntity('node.field_integer', 'integer', FALSE, 1);
-    $this->assertEntity('comment.field_integer', 'integer', FALSE, 1);
-    $this->assertEntity('node.field_integer_list', 'list_integer', FALSE, 1);
-    $this->assertEntity('node.field_link', 'link', FALSE, 1);
-    $this->assertEntity('node.field_tags', 'entity_reference', FALSE, -1);
-    $this->assertEntity('node.field_term_reference', 'entity_reference', FALSE, 1);
-    $this->assertEntity('node.taxonomy_forums', 'entity_reference', FALSE, 1);
-    $this->assertEntity('node.field_text', 'text', FALSE, 1);
-    $this->assertEntity('node.field_text_list', 'list_string', FALSE, 3);
-    $this->assertEntity('node.field_boolean', 'boolean', FALSE, 1);
-    $this->assertEntity('node.field_email', 'email', FALSE, -1);
-    $this->assertEntity('node.field_phone', 'telephone', FALSE, 1);
-    $this->assertEntity('node.field_date', 'datetime', FALSE, 1);
-    $this->assertEntity('node.field_date_with_end_time', 'datetime', FALSE, 1);
-    $this->assertEntity('node.field_node_entityreference', 'entity_reference', FALSE, -1);
-    $this->assertEntity('node.field_user_entityreference', 'entity_reference', FALSE, 1);
-    $this->assertEntity('node.field_term_entityreference', 'entity_reference', FALSE, -1);
+    $this->assertEntity('node.body', 'text_with_summary', TRUE, 1);
+    $this->assertEntity('node.field_long_text', 'text_with_summary', TRUE, 1);
+    $this->assertEntity('comment.comment_body', 'text_long', TRUE, 1);
+    $this->assertEntity('node.field_file', 'file', TRUE, 1);
+    $this->assertEntity('user.field_file', 'file', TRUE, 1);
+    $this->assertEntity('node.field_float', 'float', TRUE, 1);
+    $this->assertEntity('node.field_image', 'image', TRUE, 1);
+    $this->assertEntity('node.field_images', 'image', TRUE, 1);
+    $this->assertEntity('node.field_integer', 'integer', TRUE, 1);
+    $this->assertEntity('comment.field_integer', 'integer', TRUE, 1);
+    $this->assertEntity('node.field_integer_list', 'list_integer', TRUE, 1);
+    $this->assertEntity('node.field_link', 'link', TRUE, 1);
+    $this->assertEntity('node.field_tags', 'entity_reference', TRUE, -1);
+    $this->assertEntity('node.field_term_reference', 'entity_reference', TRUE, 1);
+    $this->assertEntity('node.taxonomy_forums', 'entity_reference', TRUE, 1);
+    $this->assertEntity('node.field_text', 'text', TRUE, 1);
+    $this->assertEntity('node.field_text_list', 'list_string', TRUE, 3);
+    $this->assertEntity('node.field_boolean', 'boolean', TRUE, 1);
+    $this->assertEntity('node.field_email', 'email', TRUE, -1);
+    $this->assertEntity('node.field_phone', 'telephone', TRUE, 1);
+    $this->assertEntity('node.field_date', 'datetime', TRUE, 1);
+    $this->assertEntity('node.field_date_with_end_time', 'datetime', TRUE, 1);
+    $this->assertEntity('node.field_node_entityreference', 'entity_reference', TRUE, -1);
+    $this->assertEntity('node.field_user_entityreference', 'entity_reference', TRUE, 1);
+    $this->assertEntity('node.field_term_entityreference', 'entity_reference', TRUE, -1);
 
     // Assert that the taxonomy term reference fields are referencing the
     // correct entity type.
@@ -123,7 +121,8 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     // Validate that the source count and processed count match up.
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->getMigration('d7_field');
-    $this->assertIdentical($migration->getSourcePlugin()->count(), $migration->getIdMap()->processedCount());
+    $this->assertSame($migration->getSourcePlugin()
+      ->count(), $migration->getIdMap()->processedCount());
   }
 
 }
