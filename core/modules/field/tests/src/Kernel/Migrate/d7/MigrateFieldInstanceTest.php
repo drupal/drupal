@@ -80,8 +80,10 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
    *   The expected field type.
    * @param bool $is_required
    *   Whether or not the field is required.
+   * @param bool $expected_translatable
+   *   Whether or not the field is expected to be translatable.
    */
-  protected function assertEntity($id, $expected_label, $expected_field_type, $is_required) {
+  protected function assertEntity($id, $expected_label, $expected_field_type, $is_required, $expected_translatable) {
     list ($expected_entity_type, $expected_bundle, $expected_name) = explode('.', $id);
 
     /** @var \Drupal\field\FieldConfigInterface $field */
@@ -94,6 +96,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertIdentical($expected_name, $field->getName());
     $this->assertEqual($is_required, $field->isRequired());
     $this->assertIdentical($expected_entity_type . '.' . $expected_name, $field->getFieldStorageDefinition()->id());
+    $this->assertSame($expected_translatable, $field->isTranslatable());
   }
 
   /**
@@ -113,40 +116,38 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
    * Tests migrating D7 field instances to field_config entities.
    */
   public function testFieldInstances() {
-    $this->assertEntity('comment.comment_node_page.comment_body', 'Comment', 'text_long', TRUE);
-    $this->assertEntity('node.page.body', 'Body', 'text_with_summary', FALSE);
-    $this->assertEntity('comment.comment_node_article.comment_body', 'Comment', 'text_long', TRUE);
-    $this->assertEntity('node.article.body', 'Body', 'text_with_summary', FALSE);
-    $this->assertEntity('node.article.field_tags', 'Tags', 'entity_reference', FALSE);
-    $this->assertEntity('node.article.field_image', 'Image', 'image', FALSE);
-    $this->assertEntity('comment.comment_node_blog.comment_body', 'Comment', 'text_long', TRUE);
-    $this->assertEntity('node.blog.body', 'Body', 'text_with_summary', FALSE);
-    $this->assertEntity('comment.comment_node_book.comment_body', 'Comment', 'text_long', TRUE);
-    $this->assertEntity('node.book.body', 'Body', 'text_with_summary', FALSE);
-    $this->assertEntity('node.forum.taxonomy_forums', 'Forums', 'entity_reference', TRUE);
-    $this->assertEntity('comment.comment_node_forum.comment_body', 'Comment', 'text_long', TRUE);
-    $this->assertEntity('node.forum.body', 'Body', 'text_with_summary', FALSE);
-    $this->assertEntity('comment.comment_node_test_content_type.comment_body', 'Comment', 'text_long', TRUE);
-    $this->assertEntity('node.test_content_type.field_boolean', 'Boolean', 'boolean', FALSE);
-    $this->assertEntity('node.test_content_type.field_email', 'Email', 'email', FALSE);
-    $this->assertEntity('node.test_content_type.field_phone', 'Phone', 'telephone', TRUE);
-    $this->assertEntity('node.test_content_type.field_date', 'Date', 'datetime', FALSE);
-    $this->assertEntity('node.test_content_type.field_date_with_end_time', 'Date With End Time', 'datetime', FALSE);
-    $this->assertEntity('node.test_content_type.field_file', 'File', 'file', FALSE);
-    $this->assertEntity('node.test_content_type.field_float', 'Float', 'float', FALSE);
-    $this->assertEntity('node.test_content_type.field_images', 'Images', 'image', TRUE);
-    $this->assertEntity('node.test_content_type.field_integer', 'Integer', 'integer', TRUE);
-    $this->assertEntity('node.test_content_type.field_link', 'Link', 'link', FALSE);
-    $this->assertEntity('node.test_content_type.field_text_list', 'Text List', 'list_string', FALSE);
-    $this->assertEntity('node.test_content_type.field_integer_list', 'Integer List', 'list_integer', FALSE);
-    $this->assertEntity('node.test_content_type.field_long_text', 'Long text', 'text_with_summary', FALSE);
-    $this->assertEntity('node.test_content_type.field_term_reference', 'Term Reference', 'entity_reference', FALSE);
-    $this->assertEntity('node.test_content_type.field_node_entityreference', 'Node Entity Reference', 'entity_reference', FALSE);
-    $this->assertEntity('node.test_content_type.field_user_entityreference', 'User Entity Reference', 'entity_reference', FALSE);
-    $this->assertEntity('node.test_content_type.field_term_entityreference', 'Term Entity Reference', 'entity_reference', FALSE);
-    $this->assertEntity('node.test_content_type.field_text', 'Text', 'text', FALSE);
-    $this->assertEntity('comment.comment_node_test_content_type.field_integer', 'Integer', 'integer', FALSE);
-    $this->assertEntity('user.user.field_file', 'File', 'file', FALSE);
+    $this->assertEntity('comment.comment_node_page.comment_body', 'Comment', 'text_long', TRUE, FALSE);
+    $this->assertEntity('node.page.body', 'Body', 'text_with_summary', FALSE, FALSE);
+    $this->assertEntity('comment.comment_node_article.comment_body', 'Comment', 'text_long', TRUE, FALSE);
+    $this->assertEntity('node.article.body', 'Body', 'text_with_summary', FALSE, TRUE);
+    $this->assertEntity('node.article.field_tags', 'Tags', 'entity_reference', FALSE, TRUE);
+    $this->assertEntity('node.article.field_image', 'Image', 'image', FALSE, TRUE);
+    $this->assertEntity('comment.comment_node_blog.comment_body', 'Comment', 'text_long', TRUE, FALSE);
+    $this->assertEntity('node.blog.body', 'Body', 'text_with_summary', FALSE, TRUE);
+    $this->assertEntity('comment.comment_node_book.comment_body', 'Comment', 'text_long', TRUE, FALSE);
+    $this->assertEntity('node.book.body', 'Body', 'text_with_summary', FALSE, FALSE);
+    $this->assertEntity('node.forum.taxonomy_forums', 'Forums', 'entity_reference', TRUE, FALSE);
+    $this->assertEntity('comment.comment_node_forum.comment_body', 'Comment', 'text_long', TRUE, FALSE);
+    $this->assertEntity('node.forum.body', 'Body', 'text_with_summary', FALSE, FALSE);
+    $this->assertEntity('comment.comment_node_test_content_type.comment_body', 'Comment', 'text_long', TRUE, FALSE);
+    $this->assertEntity('node.test_content_type.field_boolean', 'Boolean', 'boolean', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_email', 'Email', 'email', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_phone', 'Phone', 'telephone', TRUE, FALSE);
+    $this->assertEntity('node.test_content_type.field_date', 'Date', 'datetime', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_date_with_end_time', 'Date With End Time', 'datetime', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_file', 'File', 'file', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_float', 'Float', 'float', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_images', 'Images', 'image', TRUE, FALSE);
+    $this->assertEntity('node.test_content_type.field_integer', 'Integer', 'integer', TRUE, FALSE);
+    $this->assertEntity('node.test_content_type.field_link', 'Link', 'link', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_text_list', 'Text List', 'list_string', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_integer_list', 'Integer List', 'list_integer', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_long_text', 'Long text', 'text_with_summary', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_term_reference', 'Term Reference', 'entity_reference', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_text', 'Text', 'text', FALSE, FALSE);
+    $this->assertEntity('comment.comment_node_test_content_type.field_integer', 'Integer', 'integer', FALSE, FALSE);
+    $this->assertEntity('user.user.field_file', 'File', 'file', FALSE, FALSE);
+
 
     $this->assertLinkFields('node.test_content_type.field_link', DRUPAL_OPTIONAL);
     $this->assertLinkFields('node.article.field_link', DRUPAL_DISABLED);

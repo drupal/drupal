@@ -374,6 +374,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'node',
       'destination_module' => 'node',
     ],
+    'd7_node_translation' => [
+      'source_module' => 'node',
+      'destination_module' => 'node',
+    ],
     'd7_node_title_label' => [
       'source_module' => 'node',
       'destination_module' => 'node',

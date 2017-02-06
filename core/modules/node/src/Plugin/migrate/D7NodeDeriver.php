@@ -39,25 +39,37 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
   protected $cckPluginManager;
 
   /**
+   * Whether or not to include translations.
+   *
+   * @var bool
+   */
+  protected $includeTranslations;
+
+  /**
    * D7NodeDeriver constructor.
    *
    * @param string $base_plugin_id
    *   The base plugin ID for the plugin ID.
    * @param \Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface $cck_manager
    *   The CCK plugin manager.
+   * @param bool $translations
+   *   Whether or not to include translations.
    */
-  public function __construct($base_plugin_id, MigrateCckFieldPluginManagerInterface $cck_manager) {
+  public function __construct($base_plugin_id, MigrateCckFieldPluginManagerInterface $cck_manager, $translations) {
     $this->basePluginId = $base_plugin_id;
     $this->cckPluginManager = $cck_manager;
+    $this->includeTranslations = $translations;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
+    // Translations don't make sense unless we have content_translation.
     return new static(
       $base_plugin_id,
-      $container->get('plugin.manager.migrate.cckfield')
+      $container->get('plugin.manager.migrate.cckfield'),
+      $container->get('module_handler')->moduleExists('content_translation')
     );
   }
 
@@ -65,6 +77,11 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
+    if (in_array('translation', $base_plugin_definition['migration_tags']) && !$this->includeTranslations) {
+      // Refuse to generate anything.
+      return $this->derivatives;
+    }
+
     $node_types = static::getSourcePlugin('d7_node_type');
     try {
       $node_types->checkRequirements();
@@ -105,6 +122,13 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
         $values['source']['node_type'] = $node_type;
         $values['destination']['default_bundle'] = $node_type;
 
+        // If this migration is based on the d7_node_revision migration or
+        // is for translations of nodes, it should explicitly depend on the
+        // corresponding d7_node variant.
+        if ($base_plugin_definition['id'] == ['d7_node_revision'] || in_array('translation', $base_plugin_definition['migration_tags'])) {
+          $values['migration_dependencies']['required'][] = 'd7_node:' . $node_type;
+        }
+
         $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($values);
         if (isset($fields[$node_type])) {
           foreach ($fields[$node_type] as $field_name => $info) {
@@ -131,7 +155,6 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
       // MigrationPluginManager gathers up the migration definitions but we do
       // not actually have a Drupal 7 source database.
     }
-
     return $this->derivatives;
   }
 

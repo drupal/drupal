@@ -35,7 +35,10 @@ process:
       phone: telephone
       text_long: text_long
       text_with_summary: text_with_summary
-  translatable: translatable
+  # Translatable is not migrated and the Drupal 8 default of true is used.
+  # If translatable is false in field storage then the field can not be
+  # set to translatable via the UI.
+  #translatable: translatable
   cardinality: cardinality
   settings:
     plugin: d7_field_settings
