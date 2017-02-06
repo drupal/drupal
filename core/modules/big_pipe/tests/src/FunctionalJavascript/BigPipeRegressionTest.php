@@ -184,4 +184,16 @@ JS;
     }
   }
 
+  /**
+   * Ensure default BigPipe placeholder HTML cannot split paragraphs.
+   *
+   * @see https://www.drupal.org/node/2802923
+   */
+  public function testPlaceholderInParagraph_2802923() {
+    $this->drupalLogin($this->drupalCreateUser());
+    $this->drupalGet(Url::fromRoute('big_pipe_regression_test.2802923'));
+
+    $this->assertJsCondition('document.querySelectorAll(\'p\').length === 1');
+  }
+
 }

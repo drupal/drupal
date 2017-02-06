@@ -357,7 +357,7 @@ class BigPipeTest extends WebTestBase {
     foreach ($expected_big_pipe_placeholders as $big_pipe_placeholder_id => $expected_ajax_response) {
       $this->pass('BigPipe placeholder: ' . $big_pipe_placeholder_id, 'Debug');
       // Verify expected placeholder.
-      $expected_placeholder_html = '<div data-big-pipe-placeholder-id="' . $big_pipe_placeholder_id . '"></div>';
+      $expected_placeholder_html = '<span data-big-pipe-placeholder-id="' . $big_pipe_placeholder_id . '"></span>';
       $this->assertRaw($expected_placeholder_html, 'BigPipe placeholder for placeholder ID "' . $big_pipe_placeholder_id . '" found.');
       $pos = strpos($this->getRawContent(), $expected_placeholder_html);
       $placeholder_positions[$pos] = $big_pipe_placeholder_id;
