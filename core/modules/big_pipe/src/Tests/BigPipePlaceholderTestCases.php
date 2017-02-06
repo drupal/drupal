@@ -61,7 +61,7 @@ class BigPipePlaceholderTestCases {
     );
     $status_messages->bigPipePlaceholderId = 'callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA';
     $status_messages->bigPipePlaceholderRenderArray = [
-      '#markup' => '<div data-big-pipe-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></div>',
+      '#markup' => '<span data-big-pipe-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>',
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
       '#attached' => [
         'library' => ['big_pipe/big_pipe'],
@@ -75,13 +75,13 @@ class BigPipePlaceholderTestCases {
         ],
       ],
     ];
-    $status_messages->bigPipeNoJsPlaceholder = '<div data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></div>';
+    $status_messages->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>';
     $status_messages->bigPipeNoJsPlaceholderRenderArray = [
-      '#markup' => '<div data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></div>',
+      '#markup' => '<span data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>',
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
       '#attached' => [
         'big_pipe_nojs_placeholders' => [
-          '<div data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></div>' => $status_messages->placeholderRenderArray,
+          '<span data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>' => $status_messages->placeholderRenderArray,
         ],
       ],
     ];
@@ -225,7 +225,7 @@ class BigPipePlaceholderTestCases {
     );
     $current_time->bigPipePlaceholderId = 'timecurrent-timetime';
     $current_time->bigPipePlaceholderRenderArray = [
-      '#markup' => '<div data-big-pipe-placeholder-id="timecurrent-timetime"></div>',
+      '#markup' => '<span data-big-pipe-placeholder-id="timecurrent-timetime"></span>',
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
       '#attached' => [
         'library' => ['big_pipe/big_pipe'],
@@ -248,13 +248,13 @@ class BigPipePlaceholderTestCases {
         'settings' => NULL,
       ],
     ];
-    $current_time->bigPipeNoJsPlaceholder = '<div data-big-pipe-nojs-placeholder-id="timecurrent-timetime"></div>';
+    $current_time->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="timecurrent-timetime"></span>';
     $current_time->bigPipeNoJsPlaceholderRenderArray = [
-      '#markup' => '<div data-big-pipe-nojs-placeholder-id="timecurrent-timetime"></div>',
+      '#markup' => '<span data-big-pipe-nojs-placeholder-id="timecurrent-timetime"></span>',
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
       '#attached' => [
         'big_pipe_nojs_placeholders' => [
-          '<div data-big-pipe-nojs-placeholder-id="timecurrent-timetime"></div>' => $current_time->placeholderRenderArray,
+          '<span data-big-pipe-nojs-placeholder-id="timecurrent-timetime"></span>' => $current_time->placeholderRenderArray,
         ],
       ],
     ];
@@ -274,7 +274,7 @@ class BigPipePlaceholderTestCases {
     );
     $exception->bigPipePlaceholderId = 'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU';
     $exception->bigPipePlaceholderRenderArray = [
-      '#markup' => '<div data-big-pipe-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU"></div>',
+      '#markup' => '<span data-big-pipe-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU"></span>',
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
       '#attached' => [
         'library' => ['big_pipe/big_pipe'],
@@ -289,7 +289,7 @@ class BigPipePlaceholderTestCases {
       ],
     ];
     $exception->embeddedAjaxResponseCommands = NULL;
-    $exception->bigPipeNoJsPlaceholder = '<div data-big-pipe-nojs-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU"></div>';
+    $exception->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU"></span>';
     $exception->bigPipeNoJsPlaceholderRenderArray = [
       '#markup' => $exception->bigPipeNoJsPlaceholder,
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
@@ -314,7 +314,7 @@ class BigPipePlaceholderTestCases {
     );
     $embedded_response_exception->bigPipePlaceholderId = 'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU';
     $embedded_response_exception->bigPipePlaceholderRenderArray = [
-      '#markup' => '<div data-big-pipe-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU"></div>',
+      '#markup' => '<span data-big-pipe-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU"></span>',
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
       '#attached' => [
         'library' => ['big_pipe/big_pipe'],
@@ -329,7 +329,7 @@ class BigPipePlaceholderTestCases {
       ],
     ];
     $embedded_response_exception->embeddedAjaxResponseCommands = NULL;
-    $embedded_response_exception->bigPipeNoJsPlaceholder = '<div data-big-pipe-nojs-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU"></div>';
+    $embedded_response_exception->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU"></span>';
     $embedded_response_exception->bigPipeNoJsPlaceholderRenderArray = [
       '#markup' => $embedded_response_exception->bigPipeNoJsPlaceholder,
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
