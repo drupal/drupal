@@ -720,7 +720,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       $this->drupalLogout();
     }
 
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $this->assertSession()->statusCodeEquals(200);
     $this->submitForm(array(
       'name' => $account->getUsername(),
