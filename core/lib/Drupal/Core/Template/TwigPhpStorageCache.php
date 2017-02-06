@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 
@@ -16,6 +17,11 @@ use Drupal\Core\PhpStorage\PhpStorageFactory;
  * @see \Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass
  */
 class TwigPhpStorageCache implements \Twig_CacheInterface {
+
+  /**
+   * The maximum length for each part of the cache key suffix.
+   */
+  const SUFFIX_SUBSTRING_LENGTH = 25;
 
   /**
    * The cache object used for auto-refresh via mtime.
@@ -67,20 +73,28 @@ class TwigPhpStorageCache implements \Twig_CacheInterface {
    * {@inheritdoc}
    */
   public function generateKey($name, $className) {
-    $hash = hash('sha256', $className);
-
     if (strpos($name, '{# inline_template_start #}') === 0) {
       // $name is an inline template, and can have characters that are not valid
-      // for a filename. $hash is unique for each inline template so we just use
-      // the generic name 'inline-template' here.
+      // for a filename. $suffix is unique for each inline template so we just
+      // use the generic name 'inline-template' here.
       $name = 'inline-template';
     }
     else {
       $name = basename($name);
     }
 
-    // The first part is what is invalidated.
-    return $this->templateCacheFilenamePrefix . '_' . $name . '_' . $hash;
+    // Windows (and some encrypted Linux systems) only support 255 characters in
+    // a path. On Windows a requirements error is displayed and installation is
+    // blocked if Drupal's public files path is longer than 120 characters.
+    // Thus, to always be less than 255, file paths may not be more than 135
+    // characters long. Using the default PHP file storage class, the Twig cache
+    // file path will be 124 characters long at most, which provides a margin of
+    // safety.
+    $suffix = substr($name, 0, self::SUFFIX_SUBSTRING_LENGTH) . '_';
+    $suffix .= substr(Crypt::hashBase64($className), 0, self::SUFFIX_SUBSTRING_LENGTH);
+
+    // The cache prefix is what gets invalidated.
+    return $this->templateCacheFilenamePrefix . '_' . $suffix;
   }
 
   /**

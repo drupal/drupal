@@ -904,6 +904,23 @@ function system_requirements($phase) {
     }
   }
 
+  // Installations on Windows can run into limitations with MAX_PATH if the
+  // Drupal root directory is too deep in the filesystem. Generally this shows
+  // up in cached Twig templates and other public files with long directory or
+  // file names. There is no definite root directory depth below which Drupal is
+  // guaranteed to function correctly on Windows. Since problems are likely
+  // with more than 100 characters in the Drupal root path, show an error.
+  if (substr(PHP_OS, 0, 3) == 'WIN') {
+    $depth = strlen(realpath(DRUPAL_ROOT . '/' . PublicStream::basePath()));
+    if ($depth > 120) {
+      $requirements['max_path_on_windows'] = [
+        'title' => t('Windows installation depth'),
+        'description' => t('The public files directory path is %depth characters. Paths longer than 120 characters will cause problems on Windows.', ['%depth' => $depth]),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+
   return $requirements;
 }
 

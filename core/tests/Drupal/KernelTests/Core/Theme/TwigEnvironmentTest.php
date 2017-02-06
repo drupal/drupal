@@ -2,8 +2,10 @@
 
 namespace Drupal\KernelTests\Core\Theme;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Template\TwigPhpStorageCache;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -87,7 +89,7 @@ class TwigEnvironmentTest extends KernelTestBase {
 
     $cache = $environment->getCache();
     $class = $environment->getTemplateClass($name);
-    $expected = $prefix . '_inline-template' . '_' . hash('sha256', $class);
+    $expected = $prefix . '_inline-template_' . substr(Crypt::hashBase64($class), 0, TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH);
     $this->assertEqual($expected, $cache->generateKey($name, $class));
   }
 
@@ -115,6 +117,20 @@ class TwigEnvironmentTest extends KernelTestBase {
     // Note: Later we refetch the twig service in order to bypass its internal
     // static cache.
     $environment = \Drupal::service('twig');
+
+    // A template basename greater than the constant
+    // TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH should get truncated.
+    $cache = $environment->getCache();
+    $long_name = 'core/modules/system/templates/block--system-messages-block.html.twig';
+    $this->assertGreaterThan(TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH, strlen(basename($long_name)));
+    $class = $environment->getTemplateClass($long_name);
+    $key = $cache->generateKey($long_name, $class);
+    $prefix = $environment->getTwigCachePrefix();
+    // The key should consist of the prefix, an underscore, and two strings
+    // each truncated to length TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH
+    // separated by an underscore.
+    $expected = strlen($prefix) + 2 + 2 * TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH;
+    $this->assertEquals($expected, strlen($key));
 
     $original_filename = $environment->getCacheFilename('core/modules/system/templates/container.html.twig');
     \Drupal::getContainer()->set('twig', NULL);
