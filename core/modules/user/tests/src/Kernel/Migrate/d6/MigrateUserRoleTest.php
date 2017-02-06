@@ -38,6 +38,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
     /** @var \Drupal\user\RoleInterface $role */
     $role = Role::load($id);
     $this->assertInstanceOf(RoleInterface::class, $role);
+    sort($permissions);
     $this->assertSame($permissions, $role->getPermissions());
     $this->assertSame([[$id]], $id_map->lookupDestinationIds(['rid' => $lookupId]));
   }
@@ -67,9 +68,9 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
       // From permission table.
       'access comments',
       'access content',
+      'migrate test authenticated permission',
       'post comments',
       'skip comment approval',
-      'migrate test authenticated permission',
       // From filter_format.
       'use text format filtered_html',
     ];
