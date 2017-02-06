@@ -1768,8 +1768,8 @@
  * processing state.
  *
  * The argument to \Drupal::formBuilder()->getForm() is the name of a class that
- * implements FormBuilderInterface. Any additional arguments passed to the
- * getForm() method will be passed along as additional arguments to the
+ * implements FormInterface. Any additional arguments passed to the getForm()
+ * method will be passed along as additional arguments to the
  * ExampleForm::buildForm() method.
  *
  * For example:
