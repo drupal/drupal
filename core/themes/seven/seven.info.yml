@@ -22,6 +22,12 @@ core: 8.x
 libraries:
  - seven/global-styling
 libraries-override:
+  system/base:
+    css:
+      component:
+        /core/themes/stable/css/system/components/system-status-counter.css: css/components/system-status-counter.css
+        /core/themes/stable/css/system/components/system-status-report-counters.css: css/components/system-status-report-counters.css
+        /core/themes/stable/css/system/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
   core/drupal.vertical-tabs:
     css:
       component:

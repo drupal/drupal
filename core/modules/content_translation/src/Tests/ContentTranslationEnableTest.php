@@ -35,7 +35,7 @@ class ContentTranslationEnableTest extends WebTestBase {
 
     // No pending updates should be available.
     $this->drupalGet('admin/reports/status');
-    $requirement_value = $this->cssSelect("tr.system-status-report__entry th:contains('Entity/field definitions') + td");
+    $requirement_value = $this->cssSelect("details.system-status-report__entry summary:contains('Entity/field definitions') + div");
     $this->assertEqual(t('Up to date'), trim((string) $requirement_value[0]));
 
     $this->drupalGet('admin/config/regional/content-language');
@@ -53,7 +53,7 @@ class ContentTranslationEnableTest extends WebTestBase {
 
     // No pending updates should be available.
     $this->drupalGet('admin/reports/status');
-    $requirement_value = $this->cssSelect("tr.system-status-report__entry th:contains('Entity/field definitions') + td");
+    $requirement_value = $this->cssSelect("details.system-status-report__entry summary:contains('Entity/field definitions') + div");
     $this->assertEqual(t('Up to date'), trim((string) $requirement_value[0]));
 
     // Create a node type and check the content translation settings are now

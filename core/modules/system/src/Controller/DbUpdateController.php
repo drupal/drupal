@@ -522,7 +522,7 @@ class DbUpdateController extends ControllerBase {
     $try_again_url = Url::fromUri($request->getUriForPath(''))->setOptions(['query' => $options])->toString(TRUE)->getGeneratedUrl();
 
     $build['status_report'] = array(
-      '#theme' => 'status_report',
+      '#type' => 'status_report',
       '#requirements' => $requirements,
       '#suffix' => $this->t('Check the messages and <a href=":url">try again</a>.', array(':url' => $try_again_url))
     );

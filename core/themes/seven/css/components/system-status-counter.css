@@ -1,0 +1,87 @@
+/**
+ * @file
+ * Styles for the system status counter component.
+ */
+
+.system-status-counter {
+  box-sizing: border-box;
+  overflow-y: hidden;
+  border: 1px solid #e6e4df;
+  border-radius: 3px;
+  display: inline-block;
+  width: 100%;
+  white-space: nowrap;
+  background: #FCFCFA;
+}
+.system-status-counter__status-icon {
+  display: inline-block;
+  height: 60px;
+  width: 60px;
+  vertical-align: middle;
+  border-right: 1px solid #e6e4df; /* LTR */
+  border-left: 0; /* LTR */
+  background-color: #faf9f5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .1) inset;
+}
+[dir="rtl"] .system-status-counter__status-icon {
+  border-right: 0;
+  border-left: 1px solid #e6e4df;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .1) inset;
+}
+.system-status-counter__status-icon:before {
+  content: "";
+  background-size: 25px;
+  background-position: 50% center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.system-status-counter__status-icon--error:before {
+  background-image: url(../../../stable/images/core/icons/e32700/error.svg);
+}
+.system-status-counter__status-icon--warning:before {
+  background-image: url(../../../stable/images/core/icons/e29700/warning.svg);
+}
+.system-status-counter__status-icon--checked:before {
+  background-image: url(../../../stable/images/core/icons/73b355/check.svg);
+}
+
+.system-status-counter__status-title {
+  display: inline-block;
+  vertical-align: middle;
+  text-transform: uppercase;
+  padding: 0 6px;
+  font-size: 1rem;
+  line-height: 1em;
+  font-weight: bold;
+}
+.system-status-counter__title-count {
+  display: block;
+  margin-bottom: 2px;
+}
+.system-status-counter__details {
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: none;
+  display: block;
+  line-height: 1.5;
+}
+
+@media screen and (min-width: 61em) {
+  .system-status-counter__status-icon,
+  .system-status-counter  {
+    height: 65px;
+  }
+  .system-status-counter__status-icon {
+    width: 65px;
+  }
+  .system-status-counter__status-title {
+    font-size: 16px;
+    padding: 10px 3%;
+  }
+  .system-status-counter__status-icon:before {
+    background-size: 35px;
+  }
+}

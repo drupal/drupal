@@ -197,9 +197,38 @@ function system_theme() {
       'render element' => 'form',
       'file' => 'system.admin.inc',
     ),
+    'status_report_page' => array(
+      'variables' => array(
+        'counters' => array(),
+        'general_info' => array(),
+        'requirements' => NULL,
+      ),
+    ),
     'status_report' => array(
-      'variables' => array('requirements' => NULL),
-      'file' => 'system.admin.inc',
+      'variables' => array(
+        'grouped_requirements' => NULL,
+        'requirements' => NULL,
+      ),
+    ),
+    'status_report_grouped' => array(
+      'variables' => array(
+        'grouped_requirements' => NULL,
+        'requirements' => NULL,
+      ),
+    ),
+    'status_report_counter' => array(
+      'variables' => array('amount' => NULL, 'text' => NULL, 'severity' => NULL),
+    ),
+    'status_report_general_info' => array(
+      'variables' => array(
+        'drupal' => array(),
+        'cron' => array(),
+        'database_system' => array(),
+        'database_system_version' => array(),
+        'php' => array(),
+        'php_memory_limit' => array(),
+        'webserver' => array(),
+      ),
     ),
     'admin_page' => array(
       'variables' => array('blocks' => NULL),

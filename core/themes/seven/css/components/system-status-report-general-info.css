@@ -1,0 +1,161 @@
+/**
+ * @file
+ * Seven styles for the System Status general info.
+ */
+
+.system-status-general-info {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.system-status-general-info__header {
+  background-color: #f5f5f2;
+  padding: 10px;
+  margin: 0;
+  overflow: hidden;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.system-status-general-info__item {
+  background: #fcfcfa;
+  border-top: 1px solid #ccc;
+  padding: 10px 10px 20px;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+.system-status-general-info__item-icon {
+  display: inline-block;
+  height: 45px;
+  width: 45px;
+  vertical-align: top;
+}
+.system-status-general-info__item-icon:before {
+  content: "";
+  background-size: 35px;
+  background-position: 50% center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.system-status-general-info__item-icon--d8:before {
+  background-image: url(../../images/icons/cccccc/d8-logo.svg);
+}
+.system-status-general-info__item-icon--clock:before {
+  background-image: url(../../images/icons/cccccc/clock.svg);
+}
+.system-status-general-info__item-icon--server:before {
+  background-image: url(../../images/icons/cccccc/server.svg);
+}
+.system-status-general-info__item-icon--php:before {
+  background-image: url(../../images/icons/cccccc/php-logo.svg);
+  background-size: 45px;
+}
+.system-status-general-info__item-icon--database:before {
+  background-image: url(../../images/icons/cccccc/database.svg);
+  background-size: 30px;
+}
+
+.system-status-general-info__item-details {
+  box-sizing: border-box;
+  display: inline-block;
+  width: calc(100% - 60px);
+  padding-left: 10px; /* LTR */
+  position: relative;
+}
+[dir="rtl"] .system-status-general-info__item-details {
+  padding-right: 10px;
+  padding-left: 0;
+}
+
+.system-status-general-info__item-title {
+  margin-bottom: 0;
+}
+
+.system-status-general-info__sub-item-title {
+  margin: 0;
+}
+
+.system-status-general-info__sub-item__title {
+  font-weight: bold;
+}
+.system-status-general-info__sub-item__value {
+  display: block;
+}
+
+.system-status-general-info__run-cron {
+  margin: 1em 0 0;
+}
+
+@media screen and (min-width: 48em) {
+  .system-status-general-info__items {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: hidden;
+  }
+
+  .system-status-general-info__item {
+    flex: 1;
+    flex-basis: 33%;
+    width: 33%;
+  }
+  .system-status-general-info__item:nth-child(2) {
+    flex: 2;
+    flex-basis: 66%;
+  }
+  .system-status-general-info__item:nth-child(2),
+  .system-status-general-info__item:nth-child(4),
+  .system-status-general-info__item:nth-child(5) {
+    border-left: 1px solid #ccc; /* LTR */
+  }
+  [dir="rtl"] .system-status-general-info__item:nth-child(1),
+  [dir="rtl"] .system-status-general-info__item:nth-child(3) {
+    border-left: 1px solid #ccc;
+  }
+  [dir="rtl"] .system-status-general-info__item:nth-child(2),
+  [dir="rtl"] .system-status-general-info__item:nth-child(5) {
+    border-left: 0;
+  }
+
+  .system-status-general-info__run-cron {
+    margin: 15px 0 5px;
+  }
+}
+
+@media screen and (min-width: 60em) {
+  .system-status-general-info__item-icon {
+    width: 55px;
+    height: 55px;
+  }
+  .system-status-general-info__item-icon:before {
+    background-size: 35px;
+  }
+  .system-status-general-info__item-icon--php:before {
+    background-size: 55px;
+  }
+
+  .system-status-general-info__run-cron {
+    position: absolute;
+    top: 1em;
+    right: 1em; /* LTR */
+    margin-top: 0;
+  }
+  [dir="rtl"] .system-status-general-info__run-cron {
+    left: 1em;
+    right: auto;
+  }
+}
+
+@media screen and (max-width: 48em) {
+  .system-status-general-info__header {
+    display: none;
+  }
+  .system-status-general-info {
+    border-top: 0;
+    margin-top: 25px;
+  }
+}

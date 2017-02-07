@@ -3,13 +3,151 @@
  * Seven styles for the System Status Report.
  */
 
+.system-status-report__requirements-group {
+  padding-top: 20px;
+}
 .system-status-report__entry {
+  border: 0;
   border-top: 1px solid #ccc;
-  border-bottom: inherit;
+  margin: 0;
+  width: 100%;
+  overflow: auto;
 }
-.system-status-report__entry:first-child {
-  border-top: 1px solid #bebfb9;
-}
-.system-status-report__entry:last-child {
+.system-status-report__entry:last-of-type {
   border-bottom: 1px solid #bebfb9;
+}
+.system-status-report__entry--error {
+  background-color: transparent;
+}
+.system-status-report__entry--warning {
+  background-color: transparent;
+}
+  /* Account for native and poly-filled details element */
+.system-status-report__status-title {
+  position: relative;
+  padding: 1em 1em 1em 3em; /* LTR */
+  box-sizing: border-box;
+  width: 100%;
+  font-weight: bold;
+}
+.system-status-report__status-title .details-title {
+  color: inherit;
+  text-transform: none;
+}
+html:not(.details) .system-status-report__status-title {
+  padding-left: 0;
+}
+.system-status-report__status-title .details-title {
+  padding-left: 3em; /* LTR */
+}
+[dir="rtl"] .system-status-report__status-title .details-title {
+  padding-right: 3em;
+  padding-left: 0;
+}
+[dir="rtl"].details .system-status-report__status-title {
+  padding: 1em 3em 1em 1em;
+}
+.collapse-processed > .system-status-report__status-title:before {
+  float: right; /* LTR */
+}
+.system-status-report__status-title::-webkit-details-marker {
+  float: right; /* LTR */
+}
+[dir="rtl"] .collapse-processed > .system-status-report__status-title:before {
+  float: left;
+}
+[dir="rtl"] .system-status-report__status-title::-webkit-details-marker {
+  float: left;
+}
+
+/* Make poly-filled details and summary elements behave correctly. */
+.system-status-report summary:first-child ~ * {
+  display: none;
+}
+.system-status-report details[open] > *,
+.system-status-report details > summary:first-child {
+  display: block;
+}
+
+.system-status-report__status-title .details-title:before,
+.details .system-status-report__status-icon:before {
+  content: "";
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top center;
+  height: 16px;
+  width: 16px;
+  position: absolute;
+  left: 10px; /* LTR */
+  top: 1em;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 10px; /* LTR */
+}
+[dir="rtl"] .system-status-report__status-title .details-title:before,
+[dir="rtl"].details .system-status-report__status-title:before {
+  left: auto;
+  right: 10px;
+  margin-right: 0;
+}
+.system-status-report__status-icon--error .details-title:before,
+.details .system-status-report__status-icon--error:before {
+  background-image: url(../../../stable/images/core/icons/e32700/error.svg);
+}
+.system-status-report__status-icon--warning .details-title:before,
+.details .system-status-report__status-icon--warning:before {
+  background-image: url(../../../stable/images/core/icons/e29700/warning.svg);
+}
+
+.system-status-report__entry__value {
+  box-sizing: border-box;
+  padding: 0 1em 1em 3em; /* LTR */
+}
+[dir="rtl"] .system-status-report__entry__value {
+  padding-right: 3em;
+  padding-left: 1em;
+}
+
+@media screen and (max-width: 48em) {
+  .system-status-report {
+    word-wrap: break-word;
+  }
+}
+
+@media screen and (min-width: 48em) {
+  .system-status-report__entry::after {
+    display: table;
+    content: '';
+    clear: both;
+  }
+  .system-status-report__status-title {
+    width: 18rem;
+    float: left; /* LTR */
+    cursor: default;
+  }
+  .system-status-report__status-title:hover,
+  .system-status-report__status-title:focus {
+    text-decoration: none;
+  }
+  [dir="rtl"] .system-status-report__status-title {
+    float: right;
+  }
+  .system-status-report__status-title::-webkit-details-marker {
+    display: none;
+  }
+  .collapse-processed > .system-status-report__status-title:before {
+    position: relative;
+    top: 3px;
+  }
+  .system-status-report__entry__value {
+    width: calc(100% - 23em);
+    float: right;
+    display: block;
+    padding-left: 0; /* LTR */
+    padding-top: 1em;
+  }
+  [dir="rtl"] .system-status-report__entry__value {
+    padding-left: 0;
+    padding-right: 3em;
+  }
 }

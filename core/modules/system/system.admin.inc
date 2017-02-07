@@ -106,66 +106,6 @@ function template_preprocess_system_admin_index(&$variables) {
 }
 
 /**
- * Prepares variables for status report template.
- *
- * Default template: status-report.html.twig.
- *
- * This theme function is dependent on install.inc being loaded, because
- * that's where the constants are defined.
- *
- * @param $variables
- *   An associative array containing:
- *   - requirements: An array of requirements/status items. Each requirement
- *     is an associative array containing the following elements:
- *     - title: The name of the requirement.
- *     - value: (optional) The current value (version, time, level, etc).
- *     - description: (optional) The description of the requirement.
- *     - severity: (optional) The requirement's result/severity level, one of:
- *       - REQUIREMENT_INFO: Status information.
- *       - REQUIREMENT_OK: The requirement is satisfied.
- *       - REQUIREMENT_WARNING: The requirement failed with a warning.
- *       - REQUIREMENT_ERROR: The requirement failed with an error.
- */
-function template_preprocess_status_report(&$variables) {
-  $severities = array(
-    REQUIREMENT_INFO => array(
-      'title' => t('Info'),
-      'status' => 'info',
-    ),
-    REQUIREMENT_OK => array(
-      'title' => t('OK'),
-      'status' => 'ok',
-    ),
-    REQUIREMENT_WARNING => array(
-      'title' => t('Warning'),
-      'status' => 'warning',
-    ),
-    REQUIREMENT_ERROR => array(
-      'title' => t('Error'),
-      'status' => 'error',
-    ),
-  );
-
-  foreach ($variables['requirements'] as $i => $requirement) {
-    // Always use the explicit requirement severity, if defined. Otherwise,
-    // default to REQUIREMENT_OK in the installer to visually confirm that
-    // installation requirements are met. And default to REQUIREMENT_INFO to
-    // denote neutral information without special visualization.
-    if (isset($requirement['severity'])) {
-      $severity = $severities[(int) $requirement['severity']];
-    }
-    elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
-      $severity = $severities[REQUIREMENT_OK];
-    }
-    else {
-      $severity = $severities[REQUIREMENT_INFO];
-    }
-    $variables['requirements'][$i]['severity_title'] = $severity['title'];
-    $variables['requirements'][$i]['severity_status'] = $severity['status'];
-  }
-}
-
-/**
  * Prepares variables for the module details templates.
  *
  * Default template: system-modules-details.html.twig.

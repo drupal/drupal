@@ -175,6 +175,9 @@ libraries-override:
         css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
         css/components/resize.module.css: css/system/components/resize.module.css
         css/components/sticky-header.module.css: css/system/components/sticky-header.module.css
+        css/components/system-status-counter.css: css/system/components/system-status-counter.css
+        css/components/system-status-report-counters.css: css/system/components/system-status-report-counters.css
+        css/components/system-status-report-general-info.css: css/system/components/system-status-report-general-info.css
         css/components/tabledrag.module.css: css/system/components/tabledrag.module.css
         css/components/tablesort.module.css: css/system/components/tablesort.module.css
         css/components/tree-child.module.css: css/system/components/tree-child.module.css

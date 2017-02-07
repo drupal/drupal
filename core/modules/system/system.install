@@ -535,14 +535,20 @@ function system_requirements($phase) {
         ],
       ];
     }
-    $cron_url = \Drupal::url('system.cron', ['key' => \Drupal::state()->get('system.cron_key'), ['absolute' => TRUE]]);
     $requirements['cron']['description'][] = [
       [
-        '#markup' => t('You can <a href=":cron">run cron manually</a>.', [':cron' => \Drupal::url('system.run_cron')]),
+        '#type' => 'link',
+        '#prefix' => '(',
+        '#title' => t('more information'),
+        '#suffix' => ')',
+        '#url' => Url::fromRoute('system.cron_settings'),
       ],
       [
-        '#prefix' => '<br />',
-        '#markup' => t('To run cron from outside the site, go to <a href=":url">@cron</a>', [':url' => $cron_url, '@cron' => $cron_url]),
+        '#prefix' => '<span class="cron-description__run-cron">',
+        '#suffix' => '</span>',
+        '#type' => 'link',
+        '#title' => t('Run cron'),
+        '#url' => Url::fromRoute('system.run_cron'),
       ],
     ];
   }

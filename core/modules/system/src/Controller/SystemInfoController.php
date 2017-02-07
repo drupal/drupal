@@ -47,7 +47,7 @@ class SystemInfoController implements ContainerInjectionInterface {
    */
   public function status() {
     $requirements = $this->systemManager->listRequirements();
-    return array('#theme' => 'status_report', '#requirements' => $requirements);
+    return ['#type' => 'status_report_page', '#requirements' => $requirements];
   }
 
   /**

@@ -38,7 +38,6 @@ tbody tr:hover,
 tbody tr:focus {
   background: #f7fcff;
 }
-
 /* See colors.css */
 tbody tr.color-warning:hover,
 tbody tr.color-warning:focus {
@@ -48,6 +47,7 @@ tbody tr.color-error:hover,
 tbody tr.color-error:focus {
   background: #fcf4f2;
 }
+
 td,
 th {
   vertical-align: middle;

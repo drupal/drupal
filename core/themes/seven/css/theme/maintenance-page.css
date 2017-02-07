@@ -2,6 +2,7 @@
  * @file
  * Maintenance theming.
  */
+
 .maintenance-page {
   background-color: #e0e0d8;
   background-image: -webkit-radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
@@ -51,7 +52,6 @@
   .task-list {
     margin-left: 0; /* LTR */
     list-style-type: none;
-    list-style-image: none;
     padding-left: 0; /* LTR */
     padding-bottom: 1em;
   }
@@ -142,7 +142,7 @@
   }
   .layout-container {
     margin: 0 auto;
-    max-width: 770px;
+    min-height: 75%;
     width: 75%;
     border-radius: 5px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
@@ -180,4 +180,22 @@
   .page-title {
     margin: 0.75em 1.9em;
   }
+}
+
+/**
+ * Status report customization for install and update page.
+ */
+.system-status-report__status-title {
+  float: none;
+  width: 100%;
+}
+.system-status-report__entry__value {
+  float: none;
+  width: 100%;
+  padding-left: 3em; /* LTR */
+  padding-top: 0;
+}
+[dir="rtl"] .system-status-report__entry__value {
+  padding-left: 1em;
+  padding-right: 3em;
 }
