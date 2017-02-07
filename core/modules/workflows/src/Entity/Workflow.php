@@ -15,6 +15,7 @@ use Drupal\workflows\WorkflowInterface;
  * @ConfigEntityType(
  *   id = "workflow",
  *   label = @Translation("Workflow"),
+ *   label_collection = @Translation("Workflows"),
  *   handlers = {
  *     "access" = "Drupal\workflows\WorkflowAccessControlHandler",
  *     "route_provider" = {

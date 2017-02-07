@@ -83,6 +83,7 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->drupalGet('admin/config/workflow');
     $this->assertSession()->linkByHrefExists('admin/config/workflow/workflows');
     $this->clickLink('Workflows');
+    $this->assertSession()->pageTextContains('Workflows');
     $this->assertSession()->pageTextContains('There is no Workflow yet.');
     $this->clickLink('Add workflow');
     $this->submitForm(['label' => 'Test', 'id' => 'test', 'workflow_type' => 'workflow_type_test'], 'Save');
