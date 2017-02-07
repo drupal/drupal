@@ -19,6 +19,9 @@ base:
       css/components/reset-appearance.module.css: { weight: -10 }
       css/components/resize.module.css: { weight: -10 }
       css/components/sticky-header.module.css: { weight: -10 }
+      css/components/system-status-counter.css: { weight: -10 }
+      css/components/system-status-report-counters.css: { weight: -10 }
+      css/components/system-status-report-general-info.css: { weight: -10 }
       css/components/tabledrag.module.css: { weight: -10 }
       css/components/tablesort.module.css: { weight: -10 }
       css/components/tree-child.module.css: { weight: -10 }

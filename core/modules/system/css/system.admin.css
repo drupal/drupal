@@ -204,10 +204,11 @@ small .admin-link:after {
 .system-status-report__status-title {
   position: relative;
   vertical-align: top;
-  width: 25%;
+  width: 100%;
   padding: 10px 6px 10px 40px; /* LTR */
   box-sizing: border-box;
   font-weight: normal;
+  background-color: transparent;
 }
 [dir="rtl"] .system-status-report__status-title {
     padding: 10px 40px 10px 6px;
@@ -231,6 +232,9 @@ small .admin-link:after {
 }
 .system-status-report__status-icon--warning:before {
   background-image: url(../../../misc/icons/e29700/warning.svg);
+}
+.system-status-report__entry__value {
+  padding: 1em .5em;
 }
 
 /**
@@ -386,4 +390,7 @@ small .admin-link:after {
 }
 [dir="rtl"] .system-themes-admin-form {
   clear: right;
+}
+.cron-description__run-cron {
+  display: block;
 }

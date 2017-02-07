@@ -27,7 +27,10 @@ global-styling:
       css/components/tables.css: {}
       css/components/search-admin-settings.css: {}
       css/components/tablesort-indicator.css: {}
+      css/components/system-status-report-general-info.css: {}
       css/components/system-status-report.css: {}
+      css/components/system-status-report-counters.css: {}
+      css/components/system-status-counter.css: {}
       css/components/tabs.css: {}
       css/components/views-ui.css: {}
     layout:
@@ -74,6 +77,18 @@ drupal.nav-tabs:
     - core/drupal
     - core/jquery.once
     - core/drupal.debounce
+    - core/collapse
+
+drupal.responsive-detail:
+  version: VERSION
+  js:
+    js/responsive-details.js: {}
+  dependencies:
+    - core/matchmedia
+    - core/matchmedia.addListener
+    - core/jquery
+    - core/jquery.once
+    - core/collapse
 
 vertical-tabs:
   version: VERSION

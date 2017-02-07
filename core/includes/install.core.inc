@@ -2158,7 +2158,7 @@ function install_display_requirements($install_state, $requirements) {
   // and indicating a desire to continue anyway. See drupal_requirements_url().
   if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && empty($install_state['parameters']['continue']))) {
     if ($install_state['interactive']) {
-      $build['report']['#theme'] = 'status_report';
+      $build['report']['#type'] = 'status_report';
       $build['report']['#requirements'] = $requirements;
       if ($severity == REQUIREMENT_WARNING) {
         $build['#title'] = t('Requirements review');
