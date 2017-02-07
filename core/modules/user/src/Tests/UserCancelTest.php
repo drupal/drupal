@@ -594,4 +594,20 @@ class UserCancelTest extends WebTestBase {
     $this->assertTrue($user1->isActive(), 'User #1 still exists and is not blocked.');
   }
 
+  /**
+   * Tests user cancel with node access.
+   */
+  function testUserDeleteWithContentAndNodeAccess() {
+
+    \Drupal::service('module_installer')->install(['node_access_test']);
+    // Rebuild node access.
+    node_access_rebuild();
+
+    $account = $this->drupalCreateUser(['access content']);
+    $node = $this->drupalCreateNode(['type' => 'page', 'uid' => $account->id()]);
+    $account->delete();
+    $load2 = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
+    $this->assertTrue(empty($load2));
+  }
+
 }
