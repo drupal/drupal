@@ -76,6 +76,11 @@ class LinkGenerator implements LinkGeneratorInterface {
    * @see system_page_attachments()
    */
   public function generate($text, Url $url) {
+    // The link generator should not modify the original URL object, this
+    // ensures consistent rendering.
+    // @see https://www.drupal.org/node/2842399
+    $url = clone $url;
+
     // Performance: avoid Url::toString() needing to retrieve the URL generator
     // service from the container.
     $url->setUrlGenerator($this->urlGenerator);
