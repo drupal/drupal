@@ -711,6 +711,7 @@ function node_user_predelete($account) {
   // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
   $nids = \Drupal::entityQuery('node')
     ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
     ->execute();
   entity_delete_multiple('node', $nids);
   // Delete old revisions.
