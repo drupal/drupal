@@ -26,8 +26,6 @@ use Symfony\Component\Routing\RouteCollection;
  * - collection
  *
  * @see \Drupal\Core\Entity\Routing\AdminHtmlRouteProvider.
- *
- * @internal
  */
 class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
 
