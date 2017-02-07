@@ -86,6 +86,7 @@ class EngineTwigTest extends WebTestBase {
       'link via the linkgenerator: ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['class' => ['llama', 'kitten', 'panda']]])),
       'link via the linkgenerator: ' . $link_generator->generate(Markup::create('<span>register</span>'), new Url('user.register', [], ['absolute' => TRUE])),
       'link via the linkgenerator: <a href="' . $generated_url . '"><span>register</span><svg></svg></a>',
+      'link via the linkgenerator: ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['foo' => 'bar']])) . ' ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['foo' => 'bar']])),
     ];
 
     // Verify that link() has the ability to bubble cacheability metadata:

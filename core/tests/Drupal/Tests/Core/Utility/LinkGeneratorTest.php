@@ -538,6 +538,25 @@ class LinkGeneratorTest extends UnitTestCase {
   }
 
   /**
+   * Tests whether rendering the same link twice works.
+   *
+   * This is a regression test for https://www.drupal.org/node/2842399.
+   */
+  public function testGenerateTwice() {
+    $this->urlGenerator->expects($this->any())
+      ->method('generateFromRoute')
+      ->will($this->returnValue((new GeneratedUrl())->setGeneratedUrl('/')));
+
+    $url = Url::fromRoute('<front>', [], ['attributes' => ['class' => ['foo', 'bar']]]);
+    $url->setUrlGenerator($this->urlGenerator);
+
+    $link = Link::fromTextAndUrl('text', $url);
+    $link->setLinkGenerator($this->linkGenerator);
+    $output = $link->toString() . $link->toString();
+    $this->assertEquals('<a href="/" class="foo bar">text</a><a href="/" class="foo bar">text</a>', $output);
+  }
+
+  /**
    * Checks that a link with certain properties exists in a given HTML snippet.
    *
    * @param array $properties

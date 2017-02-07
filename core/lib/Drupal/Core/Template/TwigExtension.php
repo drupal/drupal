@@ -280,6 +280,10 @@ class TwigExtension extends \Twig_Extension {
     if (!$url instanceof Url) {
       $url = Url::fromUri($url);
     }
+    // The twig extension should not modify the original URL object, this
+    // ensures consistent rendering.
+    // @see https://www.drupal.org/node/2842399
+    $url = clone $url;
     if ($attributes) {
       if ($attributes instanceof Attribute) {
         $attributes = $attributes->toArray();
