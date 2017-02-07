@@ -913,7 +913,7 @@ function locale_translation_get_status($projects = NULL, $langcodes = NULL) {
  *   Language code.
  * @param string $type
  *   Type of data to be stored.
- * @param array $data
+ * @param object $data
  *   File object also containing timestamp when the translation is last updated.
  */
 function locale_translation_status_save($project, $langcode, $type, $data) {
