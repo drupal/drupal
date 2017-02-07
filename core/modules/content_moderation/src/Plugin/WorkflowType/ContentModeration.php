@@ -82,30 +82,33 @@ class ContentModeration extends WorkflowTypeBase {
   }
 
   /**
-   * Gets the bundles of the entity type the workflow is applied to.
+   * Gets any bundles the workflow is applied to for the given entity type.
    *
    * @param string $entity_type_id
    *   The entity type ID to get the bundles for.
    *
    * @return string[]
-   *   The bundles of the entity type the workflow is applied to.
+   *   The bundles of the entity type the workflow is applied to or an empty
+   *   array if the entity type is not applied to the workflow.
    */
   public function getBundlesForEntityType($entity_type_id) {
-    return $this->configuration['entity_types'][$entity_type_id];
+    return isset($this->configuration['entity_types'][$entity_type_id]) ? $this->configuration['entity_types'][$entity_type_id] : [];
   }
 
   /**
    * Checks if the workflow applies to the supplied entity type and bundle.
    *
+   * @param string $entity_type_id
+   *   The entity type ID to check.
+   * @param string $bundle_id
+   *   The bundle ID to check.
+   *
    * @return bool
-   *   TRUE if the workflow applies to the supplied entity type and bundle.
-   *   FALSE if not.
+   *   TRUE if the workflow applies to the supplied entity type ID and bundle
+   *   ID. FALSE if not.
    */
   public function appliesToEntityTypeAndBundle($entity_type_id, $bundle_id) {
-    if (isset($this->configuration['entity_types'][$entity_type_id])) {
-      return in_array($bundle_id, $this->configuration['entity_types'][$entity_type_id], TRUE);
-    }
-    return FALSE;
+    return in_array($bundle_id, $this->getBundlesForEntityType($entity_type_id), TRUE);
   }
 
   /**
@@ -133,9 +136,11 @@ class ContentModeration extends WorkflowTypeBase {
    * Add an entity type ID / bundle ID to the workflow.
    *
    * @param string $entity_type_id
-   *   The entity type ID to add.
+   *   The entity type ID to add. It is responsibility of the caller to provide
+   *   a valid entity type ID.
    * @param string $bundle_id
-   *   The bundle ID to add.
+   *   The bundle ID to add. It is responsibility of the caller to provide a
+   *   valid bundle ID.
    */
   public function addEntityTypeAndBundle($entity_type_id, $bundle_id) {
     if (!$this->appliesToEntityTypeAndBundle($entity_type_id, $bundle_id)) {
