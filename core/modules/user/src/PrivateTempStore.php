@@ -112,6 +112,9 @@ class PrivateTempStore {
    *   The key of the data to store.
    * @param mixed $value
    *   The data to store.
+   *
+   * @throws \Drupal\user\TempStoreException
+   *   Thrown when a lock for the backend storage could not be acquired.
    */
   public function set($key, $value) {
     $key = $this->createkey($key);
@@ -161,6 +164,9 @@ class PrivateTempStore {
    * @return bool
    *   TRUE if the object was deleted or does not exist, FALSE if it exists but
    *   is not owned by $this->owner.
+   *
+   * @throws \Drupal\user\TempStoreException
+   *   Thrown when a lock for the backend storage could not be acquired.
    */
   public function delete($key) {
     $key = $this->createkey($key);

@@ -164,6 +164,9 @@ class SharedTempStore {
    * @return bool
    *   TRUE if the data was set, or FALSE if it already exists and is not owned
    *   by $this->user.
+   *
+   * @throws \Drupal\user\TempStoreException
+   *   Thrown when a lock for the backend storage could not be acquired.
    */
   public function setIfOwner($key, $value) {
     if ($this->setIfNotExists($key, $value)) {
@@ -185,6 +188,9 @@ class SharedTempStore {
    *   The key of the data to store.
    * @param mixed $value
    *   The data to store.
+   *
+   * @throws \Drupal\user\TempStoreException
+   *   Thrown when a lock for the backend storage could not be acquired.
    */
   public function set($key, $value) {
     if (!$this->lockBackend->acquire($key)) {
@@ -228,6 +234,9 @@ class SharedTempStore {
    *
    * @param string $key
    *   The key of the data to delete.
+   *
+   * @throws \Drupal\user\TempStoreException
+   *   Thrown when a lock for the backend storage could not be acquired.
    */
   public function delete($key) {
     if (!$this->lockBackend->acquire($key)) {
@@ -251,6 +260,9 @@ class SharedTempStore {
    * @return bool
    *   TRUE if the object was deleted or does not exist, FALSE if it exists but
    *   is not owned by $this->owner.
+   *
+   * @throws \Drupal\user\TempStoreException
+   *   Thrown when a lock for the backend storage could not be acquired.
    */
   public function deleteIfOwner($key) {
     if (!$object = $this->storage->get($key)) {
