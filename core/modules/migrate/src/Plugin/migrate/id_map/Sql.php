@@ -313,8 +313,10 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       // and map from the source field names to the map/msg field names.
       $count = 1;
       $source_id_schema = array();
+      $indexes = [];
       foreach ($this->migration->getSourcePlugin()->getIds() as $id_definition) {
         $mapkey = 'sourceid' . $count++;
+        $indexes['source'][] = $mapkey;
         $source_id_schema[$mapkey] = $this->getFieldSchema($id_definition);
         $source_id_schema[$mapkey]['not null'] = TRUE;
       }
@@ -369,6 +371,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
         'description' => 'Mappings from source identifier value(s) to destination identifier value(s).',
         'fields' => $fields,
         'primary key' => array(static::SOURCE_IDS_HASH),
+        'indexes' => $indexes,
       );
       $this->getDatabase()->schema()->createTable($this->mapTableName, $schema);
 
