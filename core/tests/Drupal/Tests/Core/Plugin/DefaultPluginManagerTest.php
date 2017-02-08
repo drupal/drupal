@@ -438,6 +438,17 @@ class DefaultPluginManagerTest extends UnitTestCase {
       'forms' => ['configure' => 'stdClass'],
       'foo' => ['bar' => ['baz']],
     ];
+
+    $data['class_with_slashes'][] = [
+      'class' => '\Drupal\Tests\Core\Plugin\TestPluginForm',
+    ];
+    $data['class_with_slashes'][] = [
+      'class' => 'Drupal\Tests\Core\Plugin\TestPluginForm',
+      'foo' => ['bar' => ['baz']],
+    ];
+
+    $data['object_with_class_with_slashes'][] = (new PluginDefinition())->setClass('\Drupal\Tests\Core\Plugin\TestPluginForm');
+    $data['object_with_class_with_slashes'][] = (new PluginDefinition())->setClass('Drupal\Tests\Core\Plugin\TestPluginForm');
     return $data;
   }
 

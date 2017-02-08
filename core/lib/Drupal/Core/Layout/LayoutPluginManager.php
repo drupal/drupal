@@ -80,10 +80,6 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
       throw new InvalidPluginDefinitionException($plugin_id, sprintf('The "%s" layout definition must extend %s', $plugin_id, LayoutDefinition::class));
     }
 
-    // Keep class definitions standard with no leading slash.
-    // @todo Remove this once https://www.drupal.org/node/2824655 is resolved.
-    $definition->setClass(ltrim($definition->getClass(), '\\'));
-
     // Add the module or theme path to the 'path'.
     $provider = $definition->getProvider();
     if ($this->moduleHandler->moduleExists($provider)) {

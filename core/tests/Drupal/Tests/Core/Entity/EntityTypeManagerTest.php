@@ -98,6 +98,7 @@ class EntityTypeManagerTest extends UnitTestCase {
 
       // Give the entity type a legitimate class to return.
       $entity_type->getClass()->willReturn($class);
+      $entity_type->setClass($class)->willReturn($entity_type->reveal());
 
       $definitions[$key] = $entity_type->reveal();
     }
