@@ -68,7 +68,7 @@ class WorkflowStateEditForm extends EntityForm {
     $form['transitions'] = [
       '#type' => 'table',
       '#header' => $header,
-      '#empty' => $this->t('There are no states yet.'),
+      '#empty' => $this->t('There are no transitions to or from this state yet.'),
     ];
     foreach ($state->getTransitions() as $transition) {
       $links['edit'] = [
