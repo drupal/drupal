@@ -6,6 +6,7 @@ use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\KernelTests\AssertConfigTrait;
+use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -16,6 +17,7 @@ use Drupal\KernelTests\KernelTestBase;
 class DefaultConfigTest extends KernelTestBase {
 
   use AssertConfigTrait;
+  use FileSystemModuleDiscoveryDataProviderTrait;
 
   /**
    * {@inheritdoc}
@@ -61,7 +63,7 @@ class DefaultConfigTest extends KernelTestBase {
   /**
    * Tests if installed config is equal to the exported config.
    *
-   * @dataProvider providerTestModuleConfig
+   * @dataProvider coreModuleListDataProvider
    */
   public function testModuleConfig($module) {
     // System and user are required in order to be able to install some of the
@@ -140,26 +142,6 @@ class DefaultConfigTest extends KernelTestBase {
         $this->assertConfigDiff($result, $config_name, static::$skippedConfig);
       }
     }
-  }
-
-  /**
-   * Test data provider for ::testModuleConfig().
-   *
-   * @return array
-   *   An array of module names to test.
-   */
-  public function providerTestModuleConfig() {
-    $module_dirs = array_keys(iterator_to_array(new \FilesystemIterator(__DIR__ . '/../../../../modules/')));
-    $module_names = array_map(function($path) {
-      return str_replace(__DIR__ . '/../../../../modules/', '', $path);
-    }, $module_dirs);
-    $modules_keyed = array_combine($module_names, $module_names);
-
-    $data = array_map(function ($module) {
-      return [$module];
-    }, $modules_keyed);
-
-    return $data;
   }
 
 }
