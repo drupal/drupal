@@ -78,4 +78,27 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
     $this->assertFalse($workflow_plugin->appliesToEntityTypeAndBundle('fake_node', 'fake_page'));
   }
 
+  /**
+   * @covers ::addEntityTypeAndBundle
+   */
+  public function testAddEntityTypeAndBundle() {
+    /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
+    $workflow_plugin = $this->workflow->getTypePlugin();
+
+    // The bundles are intentionally added in reverse alphabetical order.
+    $workflow_plugin->addEntityTypeAndBundle('fake_node', 'fake_page');
+    $workflow_plugin->addEntityTypeAndBundle('fake_node', 'fake_article');
+
+    // Add another entity type that comes alphabetically before 'fake_node'.
+    $workflow_plugin->addEntityTypeAndBundle('fake_block', 'fake_custom');
+
+    // The entity type keys and bundle values should be sorted alphabetically.
+    // The bundle array index should not reflect the order in which they are
+    // added.
+    $this->assertSame(
+      ['fake_block' => ['fake_custom'], 'fake_node' => ['fake_article', 'fake_page']],
+      $workflow_plugin->getConfiguration()['entity_types']
+    );
+  }
+
 }

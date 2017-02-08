@@ -145,7 +145,8 @@ class ContentModeration extends WorkflowTypeBase {
   public function addEntityTypeAndBundle($entity_type_id, $bundle_id) {
     if (!$this->appliesToEntityTypeAndBundle($entity_type_id, $bundle_id)) {
       $this->configuration['entity_types'][$entity_type_id][] = $bundle_id;
-      natsort($this->configuration['entity_types'][$entity_type_id]);
+      sort($this->configuration['entity_types'][$entity_type_id]);
+      ksort($this->configuration['entity_types']);
     }
   }
 
