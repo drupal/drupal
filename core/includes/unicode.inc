@@ -74,6 +74,11 @@ function unicode_requirements() {
  *   An XML parser object or FALSE on error.
  *
  * @ingroup php_wrappers
+ *
+ * @deprecated in Drupal 8.3.0 and will bre removed in Drupal 9.0.0. Use
+ *   xml_parser_create() and
+ *   xml_parser_set_option($xml_parser, XML_OPTION_TARGET_ENCODING, 'utf-8')
+ *   instead.
  */
 function drupal_xml_parser_create(&$data) {
   // Default XML encoding is UTF-8

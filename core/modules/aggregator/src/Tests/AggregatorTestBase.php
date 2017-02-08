@@ -271,7 +271,8 @@ abstract class AggregatorTestBase extends WebTestBase {
 EOF;
 
     $path = 'public://valid-opml.xml';
-    return file_unmanaged_save_data($opml, $path);
+    // Add the UTF-8 byte order mark.
+    return file_unmanaged_save_data(chr(239) . chr(187) . chr(191) . $opml, $path);
   }
 
   /**
