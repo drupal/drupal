@@ -74,13 +74,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   protected $databasePrefix;
 
   /**
-   * The site directory of the original parent site.
-   *
-   * @var string
-   */
-  protected $originalSiteDirectory;
-
-  /**
    * Time limit in seconds for the test.
    *
    * @var int
@@ -1027,7 +1020,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     $kernel->prepareLegacyRequest($request);
     $this->prepareDatabasePrefix();
 
-    $this->originalSiteDirectory = $kernel->findSitePath($request);
+    $this->originalSite = $kernel->findSitePath($request);
 
     // Create test directory ahead of installation so fatal errors and debug
     // information can be logged during installation process.
