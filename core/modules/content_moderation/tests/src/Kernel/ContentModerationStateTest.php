@@ -4,6 +4,7 @@ namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\Core\Entity\EntityPublishedInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\Core\Entity\EntityInterface;
@@ -151,6 +152,11 @@ class ContentModerationStateTest extends KernelTestBase {
     if ($entity instanceof EntityPublishedInterface) {
       $this->assertTrue($entity->isPublished());
     }
+
+    // Set an invalid moderation state.
+    $this->setExpectedException(EntityStorageException::class);
+    $entity->moderation_state->value = 'foobar';
+    $entity->save();
   }
 
   /**
