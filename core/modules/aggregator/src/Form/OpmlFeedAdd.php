@@ -190,7 +190,8 @@ class OpmlFeedAdd extends FormBase {
    */
   protected function parseOpml($opml) {
     $feeds = array();
-    $xml_parser = drupal_xml_parser_create($opml);
+    $xml_parser = xml_parser_create();
+    xml_parser_set_option($xml_parser, XML_OPTION_TARGET_ENCODING, 'utf-8');
     if (xml_parse_into_struct($xml_parser, $opml, $values)) {
       foreach ($values as $entry) {
         if ($entry['tag'] == 'OUTLINE' && isset($entry['attributes'])) {
