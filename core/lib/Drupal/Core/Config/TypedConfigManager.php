@@ -63,6 +63,17 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     return $this->discovery;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function processDefinition(&$definition, $plugin_id) {
+    parent::processDefinition($definition, $plugin_id);
+
+    // Typed config definitions assume a leading slash, see ::hasConfigSchema().
+    if (is_array($definition) && isset($definition['class'])) {
+      $definition['class'] = '\\' . $definition['class'];
+    }
+  }
 
   /**
    * {@inheritdoc}

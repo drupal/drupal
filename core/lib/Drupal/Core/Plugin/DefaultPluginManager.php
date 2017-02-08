@@ -240,13 +240,17 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * method.
    */
   public function processDefinition(&$definition, $plugin_id) {
-    // Only arrays can be operated on.
-    if (!is_array($definition)) {
-      return;
+    // Only array-based definitions can have defaults merged in.
+    if (is_array($definition) && !empty($this->defaults) && is_array($this->defaults)) {
+      $definition = NestedArray::mergeDeep($this->defaults, $definition);
     }
 
-    if (!empty($this->defaults) && is_array($this->defaults)) {
-      $definition = NestedArray::mergeDeep($this->defaults, $definition);
+    // Keep class definitions standard with no leading slash.
+    if ($definition instanceof PluginDefinitionInterface) {
+      $definition->setClass(ltrim($definition->getClass(), '\\'));
+    }
+    elseif (is_array($definition) && isset($definition['class'])) {
+      $definition['class'] = ltrim($definition['class'], '\\');
     }
   }
 
