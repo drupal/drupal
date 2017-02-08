@@ -993,7 +993,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // DX: 400 when no entity type bundle is specified.
       // @todo Change to 422 in https://www.drupal.org/node/2827084.
       $response = $this->request($method, $url, $request_options);
-      $this->assertResourceErrorResponse(400, 'A string must be provided as a bundle value.', $response);
+      $this->assertResourceErrorResponse(400, sprintf('Could not determine entity type bundle: "%s" field is missing.', $bundle_field_name), $response);
     }
   }
 

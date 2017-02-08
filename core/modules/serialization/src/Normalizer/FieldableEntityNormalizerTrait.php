@@ -95,7 +95,7 @@ trait FieldableEntityNormalizerTrait {
 
     // Make sure a bundle has been provided.
     if (!is_string($bundle_value)) {
-      throw new UnexpectedValueException('A string must be provided as a bundle value.');
+      throw new UnexpectedValueException(sprintf('Could not determine entity type bundle: "%s" field is missing.', $bundle_key));
     }
 
     // Make sure the submitted bundle is a valid bundle for the entity type.
