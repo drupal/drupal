@@ -12,7 +12,7 @@ use Drupal\workflows\Entity\Workflow;
  *
  * @coversDefaultClass \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration
  */
-class ContentModertaionWorkflowTypeApiTest extends KernelTestBase {
+class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
 
   /**
    * A workflow for testing.
@@ -50,8 +50,8 @@ class ContentModertaionWorkflowTypeApiTest extends KernelTestBase {
   public function testGetBundlesForEntityType() {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
     $workflow_plugin = $this->workflow->getTypePlugin();
-    // The content moderation plugin does not valid the existence of the entity
-    // type or bundle.
+    // The content moderation plugin does not validate the existence of the
+    // entity type or bundle.
     $this->assertEquals([], $workflow_plugin->getBundlesForEntityType('fake_node'));
     $workflow_plugin->addEntityTypeAndBundle('fake_node', 'fake_page');
     $this->assertEquals(['fake_page'], $workflow_plugin->getBundlesForEntityType('fake_node'));
@@ -68,8 +68,8 @@ class ContentModertaionWorkflowTypeApiTest extends KernelTestBase {
   public function testAppliesToEntityTypeAndBundle() {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
     $workflow_plugin = $this->workflow->getTypePlugin();
-    // The content moderation plugin does not valid the existence of the entity
-    // type or bundle.
+    // The content moderation plugin does not validate the existence of the
+    // entity type or bundle.
     $this->assertFalse($workflow_plugin->appliesToEntityTypeAndBundle('fake_node', 'fake_page'));
     $workflow_plugin->addEntityTypeAndBundle('fake_node', 'fake_page');
     $this->assertTrue($workflow_plugin->appliesToEntityTypeAndBundle('fake_node', 'fake_page'));
