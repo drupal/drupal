@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Plugin;
 
+use Drupal\Component\Plugin\Definition\DependentPluginDefinitionInterface;
+use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Entity\DependencyTrait;
@@ -26,11 +28,21 @@ trait PluginDependencyTrait {
    */
   protected function calculatePluginDependencies(PluginInspectionInterface $instance) {
     $definition = $instance->getPluginDefinition();
-    $this->addDependency('module', $definition['provider']);
-    // Plugins can declare additional dependencies in their definition.
-    if (isset($definition['config_dependencies'])) {
-      $this->addDependencies($definition['config_dependencies']);
+
+    if ($definition instanceof PluginDefinitionInterface) {
+      $this->addDependency('module', $definition->getProvider());
+      if ($definition instanceof DependentPluginDefinitionInterface && $config_dependencies = $definition->getConfigDependencies()) {
+        $this->addDependencies($config_dependencies);
+      }
     }
+    elseif (is_array($definition)) {
+      $this->addDependency('module', $definition['provider']);
+      // Plugins can declare additional dependencies in their definition.
+      if (isset($definition['config_dependencies'])) {
+        $this->addDependencies($definition['config_dependencies']);
+      }
+    }
+
     // If a plugin is dependent, calculate its dependencies.
     if ($instance instanceof DependentPluginInterface && $plugin_dependencies = $instance->calculateDependencies()) {
       $this->addDependencies($plugin_dependencies);

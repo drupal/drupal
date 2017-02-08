@@ -136,28 +136,17 @@ trait FieldLayoutEntityDisplayTrait {
   /**
    * Overrides \Drupal\Core\Entity\EntityDisplayBase::calculateDependencies().
    *
-   * @see \Drupal\Core\Plugin\PluginDependencyTrait::calculatePluginDependencies()
-   *
-   * @todo Remove once https://www.drupal.org/node/2821191 is resolved.
+   * Ensure the plugin dependencies are included. Once layouts are no longer
+   * stored as third party settings, this will be handled by the code in
+   * \Drupal\Core\Config\Entity\ConfigEntityBase::calculateDependencies() that
+   * handles \Drupal\Core\Entity\EntityWithPluginCollectionInterface.
    */
   public function calculateDependencies() {
     parent::calculateDependencies();
 
     // This can be called during uninstallation, so check for a valid ID first.
     if ($this->getLayoutId()) {
-      /** @var \Drupal\Core\Layout\LayoutInterface $layout */
-      $layout = $this->getLayout();
-      $definition = $layout->getPluginDefinition();
-
-      if (!in_array($definition->getProvider(), ['core', 'component'])) {
-        $this->addDependency('module', $definition->getProvider());
-      }
-      if ($config_dependencies = $definition->getConfigDependencies()) {
-        $this->addDependencies($config_dependencies);
-      }
-      if ($layout_dependencies = $layout->calculateDependencies()) {
-        $this->addDependencies($layout_dependencies);
-      }
+      $this->calculatePluginDependencies($this->getLayout());
     }
   }
 

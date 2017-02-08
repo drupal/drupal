@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Layout;
 
+use Drupal\Component\Plugin\Definition\DependentPluginDefinitionInterface;
+use Drupal\Component\Plugin\Definition\DependentPluginDefinitionTrait;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 
@@ -13,7 +15,9 @@ use Drupal\Component\Plugin\Definition\PluginDefinition;
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
-class LayoutDefinition extends PluginDefinition implements PluginDefinitionInterface, DerivablePluginDefinitionInterface {
+class LayoutDefinition extends PluginDefinition implements PluginDefinitionInterface, DerivablePluginDefinitionInterface, DependentPluginDefinitionInterface {
+
+  use DependentPluginDefinitionTrait;
 
   /**
    * The name of the deriver of this layout definition, if any.
@@ -21,15 +25,6 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    * @var string|null
    */
   protected $deriver;
-
-  /**
-   * The dependencies of this layout definition.
-   *
-   * @todo Make protected after https://www.drupal.org/node/2821191.
-   *
-   * @var array
-   */
-  public $config_dependencies;
 
   /**
    * The human-readable name.
@@ -449,31 +444,6 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    */
   public function setDefaultRegion($default_region) {
     $this->default_region = $default_region;
-    return $this;
-  }
-
-  /**
-   * Gets the config dependencies of this layout definition.
-   *
-   * @return array
-   *   An array of config dependencies.
-   *
-   * @see \Drupal\Core\Plugin\PluginDependencyTrait::calculatePluginDependencies()
-   */
-  public function getConfigDependencies() {
-    return $this->config_dependencies;
-  }
-
-  /**
-   * Sets the config dependencies of this layout definition.
-   *
-   * @param array $config_dependencies
-   *   An array of config dependencies.
-   *
-   * @return $this
-   */
-  public function setConfigDependencies(array $config_dependencies) {
-    $this->config_dependencies = $config_dependencies;
     return $this;
   }
 
