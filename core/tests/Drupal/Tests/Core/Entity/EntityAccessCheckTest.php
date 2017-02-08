@@ -9,8 +9,10 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Route;
+use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessCheck;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -70,13 +72,53 @@ class EntityAccessCheckTest extends UnitTestCase {
     $node = $node->reveal();
 
     /** @var \Drupal\Core\Routing\RouteMatchInterface|\Prophecy\Prophecy\ObjectProphecy $route_match */
-    $route_match = $this->prophesize(RouteMatchInterface::class);
-    $route_match->getRawParameters()->willReturn(new ParameterBag(['entity_type' => 'node', 'var_name' => 1]));
-    $route_match->getParameters()->willReturn(new ParameterBag(['entity_type' => 'node', 'var_name' => $node]));
-    $route_match = $route_match->reveal();
+    $route_match = $this->createRouteMatchForObject($node);
 
     $access_check = new EntityAccessCheck();
     $this->assertEquals(AccessResult::allowed(), $access_check->access($route, $route_match, $account));
   }
 
+  /**
+   * @covers ::access
+   */
+  public function testAccessWithDifferentRouteParameters() {
+    $route = new Route(
+      '/foo/{var_name}',
+      [],
+      ['_entity_access' => 'var_name.update'],
+      ['parameters' => ['var_name' => ['type' => 'entity:node']]]
+    );
+    /** @var \Drupal\Core\Session\AccountInterface $account */
+    $account = $this->prophesize(AccountInterface::class)->reveal();
+    $access_check = new EntityAccessCheck();
+
+    // Confirm an EntityInterface route parameter's ::access() is called.
+    /** @var \Drupal\Core\Entity\EntityInterface|\Prophecy\Prophecy\ObjectProphecy $node */
+    $node = $this->prophesize(EntityInterface::class);
+    $node->access('update', $account, TRUE)->willReturn(AccessResult::allowed());
+    $route_match = $this->createRouteMatchForObject($node->reveal());
+    $this->assertEquals(AccessResult::allowed(), $access_check->access($route, $route_match, $account));
+
+    // AccessibleInterface is not entity-like: ::access() should not be called.
+    /** @var \Drupal\Core\Access\AccessibleInterface|\Prophecy\Prophecy\ObjectProphecy $node */
+    $node = $this->prophesize(AccessibleInterface::class);
+    $node->access('update', $account, TRUE)->willReturn(AccessResult::allowed());
+    $route_match = $this->createRouteMatchForObject($node->reveal());
+    $this->assertEquals(AccessResult::neutral(), $access_check->access($route, $route_match, $account));
+  }
+
+  /**
+   * Wrap any object with a route match, and return that.
+   *
+   * @param \stdClass $object
+   *   Any object, including prophesized mocks based on interfaces.
+   * @return RouteMatchInterface
+   *   A prophesized RouteMatchInterface.
+   */
+  private function createRouteMatchForObject(\stdClass $object) {
+    $route_match = $this->prophesize(RouteMatchInterface::class);
+    $route_match->getRawParameters()->willReturn(new ParameterBag(['entity_type' => 'node', 'var_name' => 1]));
+    $route_match->getParameters()->willReturn(new ParameterBag(['entity_type' => 'node', 'var_name' => $object]));
+    return $route_match->reveal();
+  }
 }
