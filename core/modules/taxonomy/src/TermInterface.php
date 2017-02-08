@@ -87,6 +87,9 @@ interface TermInterface extends ContentEntityInterface, EntityChangedInterface {
    *
    * @return int
    *   The id of the vocabulary.
+   *
+   * @deprecated Scheduled for removal before Drupal 9.0.0. Use
+   *   TermInterface::bundle() instead.
    */
   public function getVocabularyId();
 

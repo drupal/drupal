@@ -194,7 +194,7 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
             $taxonomy_terms = $node->{$field->getName()}->referencedEntities();
             /** @var \Drupal\taxonomy\TermInterface $taxonomy_term */
             foreach ($taxonomy_terms as $taxonomy_term) {
-              $taxonomy[$taxonomy_term->id()] = $taxonomy_term->getVocabularyId();
+              $taxonomy[$taxonomy_term->id()] = $taxonomy_term->bundle();
             }
           }
         }
