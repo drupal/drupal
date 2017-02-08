@@ -53,10 +53,8 @@ trait CookieResourceTestTrait {
    * {@inheritdoc}
    */
   protected function initAuthentication() {
-    // @todo Remove hardcoded use of the 'json' format, and use static::$format
-    // + static::$mimeType instead in https://www.drupal.org/node/2820888.
     $user_login_url = Url::fromRoute('user.login.http')
-      ->setRouteParameter('_format', 'json');
+      ->setRouteParameter('_format', static::$format);
 
     $request_body = [
       'name' => $this->account->name->value,
@@ -65,8 +63,7 @@ trait CookieResourceTestTrait {
 
     $request_options[RequestOptions::BODY] = $this->serializer->encode($request_body, 'json');
     $request_options[RequestOptions::HEADERS] = [
-      'Accept' => 'application/json',
-      'Content-Type' => 'application/json',
+      'Content-Type' => static::$mimeType,
     ];
     $response = $this->request('POST', $user_login_url, $request_options);
 
