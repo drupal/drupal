@@ -92,7 +92,10 @@ trait CookieResourceTestTrait {
    * {@inheritdoc}
    */
   protected function assertResponseWhenMissingAuthentication(ResponseInterface $response) {
-    $this->assertResourceErrorResponse(403, '', $response);
+    // Requests needing cookie authentication but missing it results in a 403
+    // response. The cookie authentication mechanism sets no response message.
+    // @todo https://www.drupal.org/node/2847623
+    $this->assertResourceErrorResponse(403, FALSE, $response);
   }
 
   /**

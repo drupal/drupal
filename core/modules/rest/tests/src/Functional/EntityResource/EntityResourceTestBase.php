@@ -241,6 +241,43 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessMessage($method) {
+
+    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
+      return $this->getExpectedBCUnauthorizedAccessMessage($method);
+    }
+
+    $permission = $this->entity->getEntityType()->getAdminPermission();
+    if ($permission !== FALSE) {
+      return "The '{$permission}' permission is required.";
+    }
+
+    $http_method_to_entity_operation = [
+      'GET' => 'view',
+      'POST' => 'create',
+      'PATCH' => 'update',
+      'DELETE' => 'delete',
+    ];
+    $operation = $http_method_to_entity_operation[$method];
+    $message = sprintf('You are not authorized to %s this %s entity', $operation, $this->entity->getEntityTypeId());
+
+    if ($this->entity->bundle() !== $this->entity->getEntityTypeId()) {
+      $message .= ' of bundle ' . $this->entity->bundle();
+    }
+
+    return "$message.";
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedBcUnauthorizedAccessMessage($method) {
+    return "The 'restful " . strtolower($method) . " entity:" . $this->entity->getEntityTypeId() . "' permission is required.";
+  }
+
+  /**
    * The expected cache tags for the GET/HEAD response of the test entity.
    *
    * @see ::testGet
@@ -301,7 +338,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // response because ?_format query string is present.
     $response = $this->request('GET', $url, $request_options);
     if ($has_canonical_url) {
-      $this->assertResourceErrorResponse(403, '', $response);
+      $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response);
     }
     else {
       $this->assertResourceErrorResponse(404, 'No route found for "GET ' . str_replace($this->baseUrl, '', $this->getUrl()->setAbsolute()->toString()) . '"', $response);
@@ -335,14 +372,21 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertResponseWhenMissingAuthentication($response);
     }
 
+    $request_options[RequestOptions::HEADERS]['REST-test-auth'] = '1';
+
+    // DX: 403 when attempting to use unallowed authentication provider.
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertResourceErrorResponse(403, 'The used authentication method is not allowed on this route.', $response);
+
+    unset($request_options[RequestOptions::HEADERS]['REST-test-auth']);
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('GET'));
 
 
     // DX: 403 when unauthorized.
     $response = $this->request('GET', $url, $request_options);
-    // @todo Update the message in https://www.drupal.org/node/2808233.
-    $this->assertResourceErrorResponse(403, '', $response);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response);
     $this->assertArrayNotHasKey('Link', $response->getHeaders());
+
 
 
     $this->setUpAuthorization('GET');
@@ -420,8 +464,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('GET', $url, $request_options);
-    // @todo Update the message in https://www.drupal.org/node/2808233.
-    $this->assertResourceErrorResponse(403, '', $response);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response);
 
 
     $this->grantPermissionsToTestedRole(['restful get entity:' . static::$entityTypeId]);
@@ -570,8 +613,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('POST', $url, $request_options);
-    // @todo Update the message in https://www.drupal.org/node/2808233.
-    $this->assertResourceErrorResponse(403, '', $response);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
 
 
     $this->setUpAuthorization('POST');
@@ -638,8 +680,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('POST', $url, $request_options);
-    // @todo Update the message in https://www.drupal.org/node/2808233.
-    $this->assertResourceErrorResponse(403, '', $response);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
 
 
     $this->grantPermissionsToTestedRole(['restful post entity:' . static::$entityTypeId]);
@@ -760,8 +801,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('PATCH', $url, $request_options);
-    // @todo Update the message in https://www.drupal.org/node/2808233.
-    $this->assertResourceErrorResponse(403, '', $response);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('PATCH'), $response);
 
 
     $this->setUpAuthorization('PATCH');
@@ -843,8 +883,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('PATCH', $url, $request_options);
-    // @todo Update the message in https://www.drupal.org/node/2808233.
-    $this->assertResourceErrorResponse(403, '', $response);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('PATCH'), $response);
 
 
     $this->grantPermissionsToTestedRole(['restful patch entity:' . static::$entityTypeId]);
@@ -915,8 +954,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('DELETE', $url, $request_options);
-    // @todo Update the message in https://www.drupal.org/node/2808233.
-    $this->assertResourceErrorResponse(403, '', $response);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('DELETE'), $response);
 
 
     $this->setUpAuthorization('DELETE');
@@ -945,8 +983,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('DELETE', $url, $request_options);
-    // @todo Update the message in https://www.drupal.org/node/2808233.
-    $this->assertResourceErrorResponse(403, '', $response);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('DELETE'), $response);
 
 
     $this->grantPermissionsToTestedRole(['restful delete entity:' . static::$entityTypeId]);

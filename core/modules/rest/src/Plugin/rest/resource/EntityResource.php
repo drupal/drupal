@@ -120,7 +120,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   public function get(EntityInterface $entity) {
     $entity_access = $entity->access('view', NULL, TRUE);
     if (!$entity_access->isAllowed()) {
-      throw new AccessDeniedHttpException();
+      throw new AccessDeniedHttpException($entity_access->getReason() ?: $this->generateFallbackAccessDeniedMessage($entity, 'view'));
     }
 
     $response = new ResourceResponse($entity, 200);
@@ -160,8 +160,9 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       throw new BadRequestHttpException('No entity content received.');
     }
 
-    if (!$entity->access('create')) {
-      throw new AccessDeniedHttpException();
+    $entity_access = $entity->access('create', NULL, TRUE);
+    if (!$entity_access->isAllowed()) {
+      throw new AccessDeniedHttpException($entity_access->getReason() ?: $this->generateFallbackAccessDeniedMessage($entity, 'create'));
     }
     $definition = $this->getPluginDefinition();
     // Verify that the deserialized entity is of the type that we expect to
@@ -215,8 +216,9 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     if ($entity->getEntityTypeId() != $definition['entity_type']) {
       throw new BadRequestHttpException('Invalid entity type');
     }
-    if (!$original_entity->access('update')) {
-      throw new AccessDeniedHttpException();
+    $entity_access = $original_entity->access('update', NULL, TRUE);
+    if (!$entity_access->isAllowed()) {
+      throw new AccessDeniedHttpException($entity_access->getReason() ?: $this->generateFallbackAccessDeniedMessage($entity, 'update'));
     }
 
     // Overwrite the received properties.
@@ -279,8 +281,9 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
   public function delete(EntityInterface $entity) {
-    if (!$entity->access('delete')) {
-      throw new AccessDeniedHttpException();
+    $entity_access = $entity->access('delete', NULL, TRUE);
+    if (!$entity_access->isAllowed()) {
+      throw new AccessDeniedHttpException($entity_access->getReason() ?: $this->generateFallbackAccessDeniedMessage($entity, 'delete'));
     }
     try {
       $entity->delete();
@@ -292,6 +295,26 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     catch (EntityStorageException $e) {
       throw new HttpException(500, 'Internal Server Error', $e);
     }
+  }
+
+  /**
+   * Generates a fallback access denied message, when no specific reason is set.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   * @param string $operation
+   *   The disallowed entity operation.
+   *
+   * @return string
+   *   The proper message to display in the AccessDeniedHttpException.
+   */
+  protected function generateFallbackAccessDeniedMessage(EntityInterface $entity, $operation) {
+    $message = "You are not authorized to {$operation} this {$entity->getEntityTypeId()} entity";
+
+    if ($entity->bundle() !== $entity->getEntityTypeId()) {
+      $message .= " of bundle {$entity->bundle()}";
+    }
+    return "{$message}.";
   }
 
   /**

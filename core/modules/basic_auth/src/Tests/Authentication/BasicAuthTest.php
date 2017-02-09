@@ -173,6 +173,12 @@ class BasicAuthTest extends WebTestBase {
     $this->basicAuthGet($url, $account->getUsername(), $this->randomMachineName());
     $this->assertResponse('403', 'The user is blocked when wrong credentials are passed.');
     $this->assertText('Access denied', "A user friendly access denied message is displayed");
+
+    // Case when correct credentials but hasn't access to the route.
+    $url = Url::fromRoute('router_test.15');
+    $this->basicAuthGet($url, $account->getUsername(), $account->pass_raw);
+    $this->assertResponse('403', 'The used authentication method is not allowed on this route.');
+    $this->assertText('Access denied', "A user friendly access denied message is displayed");
   }
 
   /**

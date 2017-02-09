@@ -127,4 +127,20 @@ abstract class BlockResourceTestBase extends EntityResourceTestBase {
     });
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessMessage($method) {
+    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
+      return parent::getExpectedUnauthorizedAccessMessage($method);
+    }
+
+    switch ($method) {
+      case 'GET':
+        return "You are not authorized to view this block entity.";
+      default:
+        return parent::getExpectedUnauthorizedAccessMessage($method);
+    }
+  }
+
 }

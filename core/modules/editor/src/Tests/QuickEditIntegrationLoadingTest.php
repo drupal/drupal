@@ -84,10 +84,17 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
       // Ensure the text is transformed.
       $this->assertRaw('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
 
-      // Retrieving the untransformed text should result in an empty 403 response.
+      // Retrieving the untransformed text should result in an 403 response and
+      // return a different error message depending of the missing permission.
       $response = $this->drupalPost('editor/' . 'node/1/body/en/full', '', array(), array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax')));
       $this->assertResponse(403);
-      $this->assertIdentical('{}', $response);
+      if (!$user->hasPermission('access in-place editing')) {
+        $message = "A fatal error occurred: The 'access in-place editing' permission is required.";
+        $this->assertIdentical(Json::encode(['message' => $message]), $response);
+      }
+      else {
+        $this->assertIdentical('{}', $response);
+      }
     }
   }
 

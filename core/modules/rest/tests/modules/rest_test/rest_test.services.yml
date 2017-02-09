@@ -1,0 +1,5 @@
+services:
+  rest_test.authentication.test_auth:
+    class: Drupal\rest_test\Authentication\Provider\TestAuth
+    tags:
+      - { name: authentication_provider, provider_id: 'rest_test_auth' }

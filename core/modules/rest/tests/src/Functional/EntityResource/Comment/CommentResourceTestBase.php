@@ -310,4 +310,22 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     //$this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nfield_name: This value should not be null.\n", $response);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessMessage($method) {
+    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
+      return parent::getExpectedUnauthorizedAccessMessage($method);
+    }
+
+    switch ($method) {
+      case 'GET';
+        return "The 'access comments' permission is required and the comment must be published.";
+      case 'POST';
+        return "The 'post comments' permission is required.";
+      default:
+        return parent::getExpectedUnauthorizedAccessMessage($method);
+    }
+  }
+
 }
