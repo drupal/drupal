@@ -14,6 +14,36 @@ use Drupal\Core\Entity\ContentEntityInterface;
 interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface, RevisionLogInterface, EntityPublishedInterface {
 
   /**
+   * Denotes that the node is not published.
+   */
+  const NOT_PUBLISHED = 0;
+
+  /**
+   * Denotes that the node is published.
+   */
+  const PUBLISHED = 1;
+
+  /**
+   * Denotes that the node is not promoted to the front page.
+   */
+  const NOT_PROMOTED = 0;
+
+  /**
+   * Denotes that the node is promoted to the front page.
+   */
+  const PROMOTED = 1;
+
+  /**
+   * Denotes that the node is not sticky at the top of the page.
+   */
+  const NOT_STICKY = 0;
+
+  /**
+   * Denotes that the node is sticky at the top of the page.
+   */
+  const STICKY = 1;
+
+  /**
    * Gets the node type.
    *
    * @return string

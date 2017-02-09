@@ -7,6 +7,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\Entity\User;
 use Drupal\comment\Entity\Comment;
@@ -83,19 +84,19 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     $node_values = array(
       'published1' => array(
         'type' => 'article',
-        'status' => NODE_PUBLISHED,
+        'status' => NodeInterface::PUBLISHED,
         'title' => 'Node published1 (<&>)',
         'uid' => 1,
       ),
       'published2' => array(
         'type' => 'article',
-        'status' => NODE_PUBLISHED,
+        'status' => NodeInterface::PUBLISHED,
         'title' => 'Node published2 (<&>)',
         'uid' => 1,
       ),
       'unpublished' => array(
         'type' => 'article',
-        'status' => NODE_NOT_PUBLISHED,
+        'status' => NodeInterface::NOT_PUBLISHED,
         'title' => 'Node unpublished (<&>)',
         'uid' => 1,
       ),

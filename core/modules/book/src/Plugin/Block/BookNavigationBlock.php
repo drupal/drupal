@@ -7,6 +7,7 @@ use Drupal\book\BookManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -160,7 +161,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
       // not show unpublished books.
       $nid = \Drupal::entityQuery('node')
         ->condition('nid', $node->book['bid'], '=')
-        ->condition('status', NODE_PUBLISHED)
+        ->condition('status', NodeInterface::PUBLISHED)
         ->execute();
 
       // Only show the block if the user has view access for the top-level node.

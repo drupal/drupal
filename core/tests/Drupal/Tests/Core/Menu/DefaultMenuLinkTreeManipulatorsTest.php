@@ -8,6 +8,7 @@ use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Menu\DefaultMenuLinkTreeManipulators;
 use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Tests\UnitTestCase;
+use Drupal\node\NodeInterface;
 
 /**
  * Tests the default menu link tree manipulators.
@@ -295,7 +296,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
       ->with('nid', array(1, 2, 3, 4));
     $query->expects($this->at(1))
       ->method('condition')
-      ->with('status', NODE_PUBLISHED);
+      ->with('status', NodeInterface::PUBLISHED);
     $query->expects($this->once())
       ->method('execute')
       ->willReturn(array(1, 2, 4));
@@ -337,8 +338,4 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->assertEquals(AccessResult::neutral()->cachePerPermissions(), $tree[5]->subtree[6]->access);
   }
 
-}
-
-if (!defined('NODE_PUBLISHED')) {
-  define('NODE_PUBLISHED', 1);
 }

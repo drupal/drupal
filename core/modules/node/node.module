@@ -31,31 +31,49 @@ use Drupal\node\NodeTypeInterface;
 
 /**
  * Denotes that the node is not published.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.x.
+ *   Use \Drupal\node\NodeInterface::NOT_PUBLISHED instead.
  */
 const NODE_NOT_PUBLISHED = 0;
 
 /**
  * Denotes that the node is published.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.x.
+ *   Use \Drupal\node\NodeInterface::PUBLISHED instead.
  */
 const NODE_PUBLISHED = 1;
 
 /**
  * Denotes that the node is not promoted to the front page.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.x.
+ *   Use \Drupal\node\NodeInterface::NOT_PROMOTED instead.
  */
 const NODE_NOT_PROMOTED = 0;
 
 /**
  * Denotes that the node is promoted to the front page.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.x.
+ *   Use \Drupal\node\NodeInterface::PROMOTED instead.
  */
 const NODE_PROMOTED = 1;
 
 /**
  * Denotes that the node is not sticky at the top of the page.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.x.
+ *   Use \Drupal\node\NodeInterface::NOT_STICKY instead.
  */
 const NODE_NOT_STICKY = 0;
 
 /**
  * Denotes that the node is sticky at the top of the page.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.x.
+ *   Use \Drupal\node\NodeInterface::STICKY instead.
  */
 const NODE_STICKY = 1;
 
@@ -742,15 +760,15 @@ function node_get_recent($number = 10) {
     // have some unpublished nodes to view before adding the condition.
     $access_query = \Drupal::entityQuery('node')
       ->condition('uid', $account->id())
-      ->condition('status', NODE_NOT_PUBLISHED);
+      ->condition('status', NodeInterface::NOT_PUBLISHED);
     if ($account->hasPermission('view own unpublished content') && ($own_unpublished = $access_query->execute())) {
       $query->orConditionGroup()
-        ->condition('status', NODE_PUBLISHED)
+        ->condition('status', NodeInterface::PUBLISHED)
         ->condition('nid', $own_unpublished, 'IN');
     }
     else {
       // If not, restrict the query to published nodes.
-      $query->condition('status', NODE_PUBLISHED);
+      $query->condition('status', NodeInterface::PUBLISHED);
     }
   }
   $nids = $query

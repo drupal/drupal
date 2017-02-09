@@ -4,6 +4,7 @@ namespace Drupal\locale\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Tests you can enable multilingual support on content types and configure a
@@ -170,7 +171,7 @@ class LocaleContentTest extends WebTestBase {
       $nodes[$langcode] = $this->drupalCreateNode(array(
         'langcode' => $langcode,
         'type' => $type->id(),
-        'promote' => NODE_PROMOTED,
+        'promote' => NodeInterface::PROMOTED,
       ));
     }
 

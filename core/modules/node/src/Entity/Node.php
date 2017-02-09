@@ -229,7 +229,7 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function setPromoted($promoted) {
-    $this->set('promote', $promoted ? NODE_PROMOTED : NODE_NOT_PROMOTED);
+    $this->set('promote', $promoted ? NodeInterface::PROMOTED : NodeInterface::NOT_PROMOTED);
     return $this;
   }
 
@@ -244,7 +244,7 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function setSticky($sticky) {
-    $this->set('sticky', $sticky ? NODE_STICKY : NODE_NOT_STICKY);
+    $this->set('sticky', $sticky ? NodeInterface::STICKY : NodeInterface::NOT_STICKY);
     return $this;
   }
 

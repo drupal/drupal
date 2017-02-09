@@ -20,8 +20,7 @@ class PublishNode extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    $entity->status = NODE_PUBLISHED;
-    $entity->save();
+    $entity->setPublished()->save();
   }
 
   /**

@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Provides a couple of menu link tree manipulators.
@@ -147,7 +148,7 @@ class DefaultMenuLinkTreeManipulators {
       }
       else {
         $access_result->addCacheContexts(['user.node_grants:view']);
-        $query->condition('status', NODE_PUBLISHED);
+        $query->condition('status', NodeInterface::PUBLISHED);
       }
 
       $nids = $query->execute();

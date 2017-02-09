@@ -6,6 +6,7 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\node\NodeInterface;
 
 /**
  * Enables the page cache and tests its cache tags in various scenarios.
@@ -44,7 +45,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'body' => array(
         0 => array('value' => 'Body 1', 'format' => 'basic_html'),
       ),
-      'promote' => NODE_PROMOTED,
+      'promote' => NodeInterface::PROMOTED,
     ));
     $author_2 = $this->drupalCreateUser();
     $node_2 = $this->drupalCreateNode(array(
@@ -53,7 +54,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'body' => array(
         0 => array('value' => 'Body 2', 'format' => 'full_html'),
       ),
-      'promote' => NODE_PROMOTED,
+      'promote' => NodeInterface::PROMOTED,
     ));
 
     // Place a block, but only make it visible on full node page 2.
