@@ -24,8 +24,8 @@ class ContentTranslationEnableTest extends WebTestBase {
     // Enable modules and make sure the related config entity type definitions
     // are installed.
     $edit = [
-      'content_translation[enable]' => TRUE,
-      'language[enable]' => TRUE,
+      'modules[Multilingual][content_translation][enable]' => TRUE,
+      'modules[Multilingual][language][enable]' => TRUE,
     ];
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
