@@ -308,7 +308,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Enable a module.
     $edit = array(
-      'locale_test_translate[enable]' => 'locale_test_translate',
+      'modules[Testing][locale_test_translate][enable]' => 'locale_test_translate',
     );
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
@@ -343,7 +343,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Enable a module.
     $edit = array(
-      'locale_test_translate[enable]' => 'locale_test_translate',
+      'modules[Testing][locale_test_translate][enable]' => 'locale_test_translate',
     );
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
@@ -387,7 +387,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Enable a module.
     $edit = array(
-      'locale_test_translate[enable]' => 'locale_test_translate',
+      'modules[Testing][locale_test_translate][enable]' => 'locale_test_translate',
     );
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
 

@@ -98,7 +98,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->assertEqual($info['version'], '8.x-1.0');
 
     // Enable the module.
-    $this->drupalPostForm('admin/modules', array('update_test_new_module[enable]' => TRUE), t('Install'));
+    $this->drupalPostForm('admin/modules', array('modules[Testing][update_test_new_module][enable]' => TRUE), t('Install'));
 
     // Define the update XML such that the new module downloaded above needs an
     // update from 8.x-1.0 to 8.x-1.1.

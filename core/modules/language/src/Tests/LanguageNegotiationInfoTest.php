@@ -184,7 +184,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is now configurable.');
 
     // After installing another module, the config should be the same.
-    $this->drupalPostForm('admin/modules', ['test_module[enable]' => 1], t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[Testing][test_module][enable]' => 1], t('Install'));
     $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
 
     // After uninstalling the other module, the config should be the same.

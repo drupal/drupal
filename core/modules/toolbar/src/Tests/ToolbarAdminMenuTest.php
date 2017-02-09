@@ -112,7 +112,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
 
     // Enable a module.
     $edit = array();
-    $edit['taxonomy[enable]'] = TRUE;
+    $edit['modules[Core][taxonomy][enable]'] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->rebuildContainer();
 

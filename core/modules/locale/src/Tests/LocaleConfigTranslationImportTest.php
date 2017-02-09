@@ -109,7 +109,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
       ->save();
 
     // Install any module.
-    $this->drupalPostForm('admin/modules', ['dblog[enable]' => 'dblog'], t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[Core][dblog][enable]' => 'dblog'], t('Install'));
     $this->assertText('Module Database Logging has been enabled.');
 
     // Get the front page and ensure that the translated configuration still
