@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+ Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 CKEDITOR.plugins.setLang("specialchar","sl",{euro:"Znak za evro",lsquo:"Levi enojni narekovaj",rsquo:"Desni enojni narekovaj",ldquo:"Levi dvojni narekovaj",rdquo:"Desni dvojni narekovaj",ndash:"Pomišljaj",mdash:"Dolgi pomišljaj",iexcl:"Obrnjen klicaj",cent:"Znak za cent",pound:"Znak za funt",curren:"Znak valute",yen:"Znak za jen",brvbar:"Zlomljena črta",sect:"Znak za člen",uml:"Diereza",copy:"Znak avtorskih pravic",ordf:"Ženski zaporedni kazalnik",laquo:"Levi dvojni lomljeni narekovaj",not:"Znak za ne",
