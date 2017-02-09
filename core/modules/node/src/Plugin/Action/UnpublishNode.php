@@ -20,8 +20,7 @@ class UnpublishNode extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    $entity->status = NODE_NOT_PUBLISHED;
-    $entity->save();
+    $entity->setUnpublished()->save();
   }
 
   /**

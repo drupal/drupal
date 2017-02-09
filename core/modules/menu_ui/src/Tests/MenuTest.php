@@ -10,6 +10,7 @@ use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\system\Entity\Menu;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 
 /**
  * Add a custom menu, add menu links to the custom menu and Tools menu, check
@@ -542,7 +543,7 @@ class MenuTest extends MenuWebTestBase {
     // Create an unpublished node.
     $node = $this->drupalCreateNode(array(
       'type' => 'article',
-      'status' => NODE_NOT_PUBLISHED,
+      'status' => NodeInterface::NOT_PUBLISHED,
     ));
 
     $item = $this->addMenuLink('', '/node/' . $node->id());

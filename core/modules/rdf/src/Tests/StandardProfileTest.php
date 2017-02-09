@@ -143,7 +143,7 @@ class StandardProfileTest extends WebTestBase {
     // Create article.
     $article_settings = array(
       'type' => 'article',
-      'promote' => NODE_PROMOTED,
+      'promote' => NodeInterface::PROMOTED,
       'field_image' => array(
         array(
           'target_id' => $this->image->id(),
@@ -157,7 +157,7 @@ class StandardProfileTest extends WebTestBase {
     );
     $this->article = $this->drupalCreateNode($article_settings);
     // Create second article to test teaser list.
-    $this->drupalCreateNode(array('type' => 'article', 'promote' => NODE_PROMOTED,));
+    $this->drupalCreateNode(['type' => 'article', 'promote' => NodeInterface::PROMOTED]);
 
     // Create article comment.
     $this->articleComment = $this->saveComment($this->article->id(), $this->webUser->id(), NULL, 0);

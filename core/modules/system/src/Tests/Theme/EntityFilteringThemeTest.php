@@ -6,6 +6,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\comment\Entity\Comment;
 use Drupal\taxonomy\Entity\Term;
@@ -102,7 +103,7 @@ class EntityFilteringThemeTest extends WebTestBase {
     $this->node = $this->drupalCreateNode(array(
       'title' => $this->xssLabel,
       'type' => 'article',
-      'promote' => NODE_PROMOTED,
+      'promote' => NodeInterface::PROMOTED,
       'field_tags' => array(array('target_id' => $this->term->id())),
     ));
 

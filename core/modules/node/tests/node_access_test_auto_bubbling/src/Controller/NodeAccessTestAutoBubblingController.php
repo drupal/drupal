@@ -5,6 +5,7 @@ namespace Drupal\node_access_test_auto_bubbling\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -46,7 +47,7 @@ class NodeAccessTestAutoBubblingController extends ControllerBase implements Con
    */
   public function latest() {
     $nids = $this->entityQuery->get('node')
-      ->condition('status', NODE_PUBLISHED)
+      ->condition('status', NodeInterface::PUBLISHED)
       ->sort('created', 'DESC')
       ->range(0, 3)
       ->execute();

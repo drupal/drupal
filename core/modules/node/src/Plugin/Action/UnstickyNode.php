@@ -20,8 +20,7 @@ class UnstickyNode extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    $entity->sticky = NODE_NOT_STICKY;
-    $entity->save();
+    $entity->setSticky(FALSE)->save();
   }
 
   /**

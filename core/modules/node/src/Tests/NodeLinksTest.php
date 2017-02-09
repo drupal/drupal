@@ -2,6 +2,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\node\NodeInterface;
+
 /**
  * Tests the output of node links (read more, add new comment, etc).
  *
@@ -22,7 +24,7 @@ class NodeLinksTest extends NodeTestBase {
   public function testHideLinks() {
     $node = $this->drupalCreateNode(array(
       'type' => 'article',
-      'promote' => NODE_PROMOTED,
+      'promote' => NodeInterface::PROMOTED,
     ));
 
     // Links are displayed by default.
