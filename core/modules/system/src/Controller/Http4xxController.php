@@ -25,7 +25,7 @@ class Http4xxController extends ControllerBase {
    * The default 403 content.
    *
    * @return array
-   *   A render array containing the message to display for 404 pages.
+   *   A render array containing the message to display for 403 pages.
    */
   public function on403() {
     return [
