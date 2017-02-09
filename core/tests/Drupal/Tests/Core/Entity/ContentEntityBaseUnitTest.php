@@ -237,7 +237,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->assertFalse($this->entity->isNewRevision());
     $this->assertTrue($this->entity->isNewRevision());
     $this->entity->setNewRevision(TRUE);
-    $this->assertTRUE($this->entity->isNewRevision());
+    $this->assertTrue($this->entity->isNewRevision());
   }
 
   /**
