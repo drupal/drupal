@@ -2,6 +2,10 @@
 
 namespace Drupal\Tests\Core;
 
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryAggregateInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -240,16 +244,24 @@ class DrupalTest extends UnitTestCase {
    * @covers ::entityQuery
    */
   public function testEntityQuery() {
-    $query = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $query->expects($this->once())
-      ->method('get')
-      ->with('test_entity', 'OR')
-      ->will($this->returnValue(TRUE));
-    $this->setMockContainerService('entity.query', $query);
+    $query = $this->getMock(QueryInterface::class);
+    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage
+      ->expects($this->once())
+      ->method('getQuery')
+      ->with('OR')
+      ->willReturn($query);
 
-    $this->assertNotNull(\Drupal::entityQuery('test_entity', 'OR'));
+    $entity_type_manager = $this->getMock(EntityTypeManagerInterface::class);
+    $entity_type_manager
+      ->expects($this->once())
+      ->method('getStorage')
+      ->with('test_entity')
+      ->willReturn($storage);
+
+    $this->setMockContainerService('entity_type.manager', $entity_type_manager);
+
+    $this->assertInstanceOf(QueryInterface::class, \Drupal::entityQuery('test_entity', 'OR'));
   }
 
   /**
@@ -258,16 +270,24 @@ class DrupalTest extends UnitTestCase {
    * @covers ::entityQueryAggregate
    */
   public function testEntityQueryAggregate() {
-    $query = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $query->expects($this->once())
-      ->method('getAggregate')
-      ->with('test_entity', 'OR')
-      ->will($this->returnValue(TRUE));
-    $this->setMockContainerService('entity.query', $query);
+    $query = $this->getMock(QueryAggregateInterface::class);
+    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage
+      ->expects($this->once())
+      ->method('getAggregateQuery')
+      ->with('OR')
+      ->willReturn($query);
 
-    $this->assertNotNull(\Drupal::entityQueryAggregate('test_entity', 'OR'));
+    $entity_type_manager = $this->getMock(EntityTypeManagerInterface::class);
+    $entity_type_manager
+      ->expects($this->once())
+      ->method('getStorage')
+      ->with('test_entity')
+      ->willReturn($storage);
+
+    $this->setMockContainerService('entity_type.manager', $entity_type_manager);
+
+    $this->assertInstanceOf(QueryAggregateInterface::class, \Drupal::entityQueryAggregate('test_entity', 'OR'));
   }
 
   /**

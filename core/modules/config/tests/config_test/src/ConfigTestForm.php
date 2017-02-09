@@ -3,41 +3,13 @@
 namespace Drupal\config_test;
 
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the test config edit forms.
  */
 class ConfigTestForm extends EntityForm {
-
-  /**
-   * The entity query.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQuery;
-
-  /**
-   * Constructs a new ConfigTestForm.
-   *
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-   *   The entity query.
-   */
-  public function __construct(QueryFactory $entity_query) {
-    $this->entityQuery = $entity_query;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.query')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -189,7 +161,8 @@ class ConfigTestForm extends EntityForm {
   public function exists($entity_id, array $element, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
-    return (bool) $this->entityQuery->get($entity->getEntityTypeId())
+    return (bool) $this->entityTypeManager->getStorage($entity->getEntityTypeId())
+      ->getQuery()
       ->condition($entity->getEntityType()->getKey('id'), $entity_id)
       ->execute();
   }

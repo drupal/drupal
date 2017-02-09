@@ -3,7 +3,6 @@
 namespace Drupal\file\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,13 +24,6 @@ class Fid extends NumericArgument implements ContainerFactoryPluginInterface {
   protected $entityManager;
 
   /**
-   * The entity query factory service.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQuery;
-
-  /**
    * Constructs a Drupal\file\Plugin\views\argument\Fid object.
    *
    * @param array $configuration
@@ -42,13 +34,10 @@ class Fid extends NumericArgument implements ContainerFactoryPluginInterface {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-   *   The entity query factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, QueryFactory $entity_query) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityManager = $entity_manager;
-    $this->entityQuery = $entity_query;
   }
 
   /**
@@ -59,8 +48,7 @@ class Fid extends NumericArgument implements ContainerFactoryPluginInterface {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager'),
-      $container->get('entity.query')
+      $container->get('entity.manager')
     );
   }
 
@@ -68,11 +56,11 @@ class Fid extends NumericArgument implements ContainerFactoryPluginInterface {
    * Override the behavior of titleQuery(). Get the filenames.
    */
   public function titleQuery() {
-    $fids = $this->entityQuery->get('file')
+    $storage = $this->entityManager->getStorage('file');
+    $fids = $storage->getQuery()
       ->condition('fid', $this->value, 'IN')
       ->execute();
-    $controller = $this->entityManager->getStorage('file');
-    $files = $controller->loadMultiple($fids);
+    $files = $storage->loadMultiple($fids);
     $titles = array();
     foreach ($files as $file) {
       $titles[] = $file->getFilename();

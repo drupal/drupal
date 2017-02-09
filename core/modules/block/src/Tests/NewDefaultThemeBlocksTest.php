@@ -45,11 +45,14 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
       ->set('default', $new_theme)
       ->save();
 
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $block_storage */
+    $block_storage = $this->container->get('entity_type.manager')->getStorage('block');
+
     // Ensure that the new theme has all the blocks as the previous default.
-    $default_block_names = $this->container->get('entity.query')->get('block')
+    $default_block_names = $block_storage->getQuery()
       ->condition('theme', $default_theme)
       ->execute();
-    $new_blocks = $this->container->get('entity.query')->get('block')
+    $new_blocks = $block_storage->getQuery()
       ->condition('theme', $new_theme)
       ->execute();
     $this->assertTrue(count($default_block_names) == count($new_blocks), 'The new default theme has the same number of blocks as the previous theme.');
@@ -64,7 +67,7 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
     // Install a hidden base theme and ensure blocks are not copied.
     $base_theme = 'test_basetheme';
     \Drupal::service('theme_handler')->install([$base_theme]);
-    $new_blocks = $this->container->get('entity.query')->get('block')
+    $new_blocks = $block_storage->getQuery()
       ->condition('theme', $base_theme)
       ->execute();
     $this->assertTrue(empty($new_blocks), 'Installing a hidden base theme does not copy blocks from the default theme.');

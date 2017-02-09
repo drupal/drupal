@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\Entity\Sql;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\Query\QueryFactoryInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
@@ -1245,9 +1246,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('execute')
       ->willReturn(array(5));
 
-    $factory = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $factory = $this->getMock(QueryFactoryInterface::class);
     $factory->expects($this->once())
       ->method('get')
       ->with($this->entityType, 'AND')

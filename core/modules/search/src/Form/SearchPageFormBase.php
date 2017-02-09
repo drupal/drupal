@@ -3,7 +3,6 @@
 namespace Drupal\search\Form;
 
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\search\SearchPageRepositoryInterface;
@@ -29,13 +28,6 @@ abstract class SearchPageFormBase extends EntityForm {
   protected $plugin;
 
   /**
-   * The entity query factory.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQuery;
-
-  /**
    * The search page repository.
    *
    * @var \Drupal\search\SearchPageRepositoryInterface
@@ -45,13 +37,10 @@ abstract class SearchPageFormBase extends EntityForm {
   /**
    * Constructs a new search form.
    *
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-   *   The entity query.
    * @param \Drupal\search\SearchPageRepositoryInterface $search_page_repository
    *   The search page repository.
    */
-  public function __construct(QueryFactory $entity_query, SearchPageRepositoryInterface $search_page_repository) {
-    $this->entityQuery = $entity_query;
+  public function __construct(SearchPageRepositoryInterface $search_page_repository) {
     $this->searchPageRepository = $search_page_repository;
   }
 
@@ -60,7 +49,6 @@ abstract class SearchPageFormBase extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.query'),
       $container->get('search.search_page_repository')
     );
   }
@@ -131,7 +119,7 @@ abstract class SearchPageFormBase extends EntityForm {
    *   TRUE if the search configuration exists, FALSE otherwise.
    */
   public function exists($id) {
-    $entity = $this->entityQuery->get('search_page')
+    $entity = $this->entityTypeManager->getStorage('search_page')->getQuery()
       ->condition('id', $id)
       ->execute();
     return (bool) $entity;
@@ -144,7 +132,7 @@ abstract class SearchPageFormBase extends EntityForm {
     parent::validateForm($form, $form_state);
 
     // Ensure each path is unique.
-    $path = $this->entityQuery->get('search_page')
+    $path = $this->entityTypeManager->getStorage('search_page')->getQuery()
       ->condition('path', $form_state->getValue('path'))
       ->condition('id', $form_state->getValue('id'), '<>')
       ->execute();
