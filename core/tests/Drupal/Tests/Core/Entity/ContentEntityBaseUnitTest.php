@@ -182,8 +182,8 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->method('getFieldDefinitions')
       ->with($this->entityTypeId, $this->bundle)
       ->will($this->returnValue($this->fieldDefinitions));
-    $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', array($values, $this->entityTypeId, $this->bundle));
 
+    $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', array($values, $this->entityTypeId, $this->bundle), '', TRUE, TRUE, TRUE, ['isNew']);
     $values['defaultLangcode'] = array(LanguageInterface::LANGCODE_DEFAULT => LanguageInterface::LANGCODE_NOT_SPECIFIED);
     $this->entityUnd = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', array($values, $this->entityTypeId, $this->bundle));
   }
@@ -262,6 +262,12 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->assertTrue($this->entity->isDefaultRevision(FALSE));
     // The last call changed the return value for this call.
     $this->assertFalse($this->entity->isDefaultRevision());
+    // The revision for a new entity should always be the default revision.
+    $this->entity->expects($this->any())
+      ->method('isNew')
+      ->will($this->returnValue(TRUE));
+    $this->entity->isDefaultRevision(FALSE);
+    $this->assertTrue($this->entity->isDefaultRevision());
   }
 
   /**
