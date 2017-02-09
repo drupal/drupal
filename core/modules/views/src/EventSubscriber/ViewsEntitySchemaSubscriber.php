@@ -144,6 +144,11 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
       $changes[] = static::REVISION_DATA_TABLE_REMOVAL;
     }
 
+    // Stop here if no changes are needed.
+    if (empty($changes)) {
+      return;
+    }
+
     /** @var \Drupal\views\Entity\View[] $all_views */
     $all_views = $this->entityManager->getStorage('view')->loadMultiple(NULL);
 
