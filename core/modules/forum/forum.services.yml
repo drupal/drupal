@@ -24,5 +24,5 @@ services:
     class: Drupal\forum\ForumUninstallValidator
     tags:
       - { name: module_install.uninstall_validator }
-    arguments: ['@entity.manager', '@entity.query', '@config.factory', '@string_translation']
+    arguments: ['@entity_type.manager', '@config.factory', '@string_translation']
     lazy: true

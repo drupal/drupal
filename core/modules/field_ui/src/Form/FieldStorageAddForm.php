@@ -3,7 +3,6 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
@@ -47,13 +46,6 @@ class FieldStorageAddForm extends FormBase {
   protected $fieldTypePluginManager;
 
   /**
-   * The query factory to create entity queries.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  public $queryFactory;
-
-  /**
    * The configuration factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -67,15 +59,12 @@ class FieldStorageAddForm extends FormBase {
    *   The entity manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
    *   The field type plugin manager.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
-   *   The entity query factory.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, QueryFactory $query_factory, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory) {
     $this->entityManager = $entity_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
-    $this->queryFactory = $query_factory;
     $this->configFactory = $config_factory;
   }
 
@@ -93,7 +82,6 @@ class FieldStorageAddForm extends FormBase {
     return new static(
       $container->get('entity.manager'),
       $container->get('plugin.manager.field.field_type'),
-      $container->get('entity.query'),
       $container->get('config.factory')
     );
   }
@@ -505,7 +493,7 @@ class FieldStorageAddForm extends FormBase {
   protected function getExistingFieldLabels(array $field_names) {
     // Get all the fields corresponding to the given field storage names and
     // this entity type.
-    $field_ids = $this->queryFactory->get('field_config')
+    $field_ids = $this->entityManager->getStorage('field_config')->getQuery()
       ->condition('entity_type', $this->entityTypeId)
       ->condition('field_name', $field_names)
       ->execute();

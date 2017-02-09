@@ -5,7 +5,6 @@ namespace Drupal\comment\Form;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Psr\Log\LoggerInterface;
@@ -15,13 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a confirmation form for deleting a comment type entity.
  */
 class CommentTypeDeleteForm extends EntityDeleteForm {
-
-  /**
-   * The query factory to create entity queries.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  public $queryFactory;
 
   /**
    * The comment manager service.
@@ -54,8 +46,6 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
   /**
    * Constructs a query factory object.
    *
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
-   *   The entity query object.
    * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   The comment manager service.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
@@ -63,8 +53,7 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(QueryFactory $query_factory, CommentManagerInterface $comment_manager, EntityManager $entity_manager, LoggerInterface $logger) {
-    $this->queryFactory = $query_factory;
+  public function __construct(CommentManagerInterface $comment_manager, EntityManager $entity_manager, LoggerInterface $logger) {
     $this->commentManager = $comment_manager;
     $this->entityManager = $entity_manager;
     $this->logger = $logger;
@@ -75,7 +64,6 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.query'),
       $container->get('comment.manager'),
       $container->get('entity.manager'),
       $container->get('logger.factory')->get('comment')
@@ -86,7 +74,9 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $comments = $this->queryFactory->get('comment')->condition('comment_type', $this->entity->id())->execute();
+    $comments = $this->entityTypeManager->getStorage('comment')->getQuery()
+      ->condition('comment_type', $this->entity->id())
+      ->execute();
     $entity_type = $this->entity->getTargetEntityTypeId();
     $caption = '';
     foreach (array_keys($this->commentManager->getFields($entity_type)) as $field_name) {

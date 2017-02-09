@@ -3,8 +3,7 @@
 namespace Drupal\forum;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -19,18 +18,11 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
   use StringTranslationTrait;
 
   /**
-   * The field storage config storage.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $vocabularyStorage;
-
-  /**
-   * The entity query factory.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $queryFactory;
+  protected $entityTypeManager;
 
   /**
    * The config factory.
@@ -42,18 +34,15 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
   /**
    * Constructs a new ForumUninstallValidator.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
-   *   The entity query factory.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, QueryFactory $query_factory, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation) {
-    $this->vocabularyStorage = $entity_manager->getStorage('taxonomy_vocabulary');
-    $this->queryFactory = $query_factory;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
     $this->stringTranslation = $string_translation;
   }
@@ -94,7 +83,7 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
    *   TRUE if there are forum nodes, FALSE otherwise.
    */
   protected function hasForumNodes() {
-    $nodes = $this->queryFactory->get('node')
+    $nodes = $this->entityTypeManager->getStorage('node')->getQuery()
       ->condition('type', 'forum')
       ->accessCheck(FALSE)
       ->range(0, 1)
@@ -112,7 +101,7 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
    *   TRUE if there are terms for this vocabulary, FALSE otherwise.
    */
   protected function hasTermsForVocabulary(VocabularyInterface $vocabulary) {
-    $terms = $this->queryFactory->get('taxonomy_term')
+    $terms = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery()
       ->condition('vid', $vocabulary->id())
       ->accessCheck(FALSE)
       ->range(0, 1)
@@ -128,7 +117,7 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
    */
   protected function getForumVocabulary() {
     $vid = $this->configFactory->get('forum.settings')->get('vocabulary');
-    return $this->vocabularyStorage->load($vid);
+    return $this->entityTypeManager->getStorage('taxonomy_vocabulary')->load($vid);
   }
 
 }

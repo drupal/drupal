@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,13 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\user\Entity\User
  */
 class UserListBuilder extends EntityListBuilder {
-
-  /**
-   * The entity query factory.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $queryFactory;
 
   /**
    * The date formatter service.
@@ -47,16 +39,13 @@ class UserListBuilder extends EntityListBuilder {
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
-   *   The entity query factory.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, QueryFactory $query_factory, DateFormatterInterface $date_formatter, RedirectDestinationInterface $redirect_destination) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, DateFormatterInterface $date_formatter, RedirectDestinationInterface $redirect_destination) {
     parent::__construct($entity_type, $storage);
-    $this->queryFactory = $query_factory;
     $this->dateFormatter = $date_formatter;
     $this->redirectDestination = $redirect_destination;
   }
@@ -68,7 +57,6 @@ class UserListBuilder extends EntityListBuilder {
     return new static(
       $entity_type,
       $container->get('entity.manager')->getStorage($entity_type->id()),
-      $container->get('entity.query'),
       $container->get('date.formatter'),
       $container->get('redirect.destination')
     );
@@ -78,7 +66,7 @@ class UserListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function load() {
-    $entity_query = $this->queryFactory->get('user');
+    $entity_query = $this->storage->getQuery();
     $entity_query->condition('uid', 0, '<>');
     $entity_query->pager(50);
     $header = $this->buildHeader();

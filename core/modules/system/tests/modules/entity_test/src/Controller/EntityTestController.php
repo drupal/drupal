@@ -4,39 +4,11 @@ namespace Drupal\entity_test\Controller;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\Query\QueryFactory;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for entity_test routes.
  */
 class EntityTestController extends ControllerBase {
-
-  /**
-   * The entity query factory.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQueryFactory;
-
-  /**
-   * Constructs a new EntityTestController.
-   *
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
-   *   The entity query factory.
-   */
-  public function __construct(QueryFactory $entity_query_factory) {
-    $this->entityQueryFactory = $entity_query_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.query')
-    );
-  }
 
   /**
    * Returns an empty page.
@@ -69,8 +41,7 @@ class EntityTestController extends ControllerBase {
       return array();
     }
 
-    $query = $this->entityQueryFactory
-      ->get('entity_test')
+    $query = $this->entityTypeManager()->getStorage('entity_test')->getQuery()
       ->condition($entity_reference_field_name . '.target_id', $referenced_entity_id);
     $entities = $this->entityManager()
       ->getStorage('entity_test')
@@ -91,7 +62,7 @@ class EntityTestController extends ControllerBase {
    */
   public function listEntitiesAlphabetically($entity_type_id) {
     $entity_type_definition = $this->entityManager()->getDefinition($entity_type_id);
-    $query = $this->entityQueryFactory->get($entity_type_id);
+    $query = $this->entityTypeManager()->getStorage($entity_type_id)->getQuery();
 
     // Sort by label field, if any.
     if ($label_field = $entity_type_definition->getKey('label')) {

@@ -5,6 +5,8 @@ namespace Drupal\Tests\Core\Menu;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Menu\DefaultMenuLinkTreeManipulators;
 use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Tests\UnitTestCase;
@@ -34,11 +36,11 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   protected $currentUser;
 
   /**
-   * The mocked query factory.
+   * The mocked entity type manager.
    *
-   * @var \Drupal\Core\Entity\Query\QueryFactory|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $queryFactory;
+  protected $entityTypeManager;
 
   /**
    * The default menu link tree manipulators.
@@ -71,11 +73,9 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->currentUser = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->currentUser->method('isAuthenticated')
       ->willReturn(TRUE);
-    $this->queryFactory = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
 
-    $this->defaultMenuTreeManipulators = new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser, $this->queryFactory);
+    $this->defaultMenuTreeManipulators = new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser, $this->entityTypeManager);
 
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
@@ -300,10 +300,14 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $query->expects($this->once())
       ->method('execute')
       ->willReturn(array(1, 2, 4));
-    $this->queryFactory->expects($this->once())
-      ->method('get')
-      ->with('node')
+    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage->expects($this->once())
+      ->method('getQuery')
       ->willReturn($query);
+    $this->entityTypeManager->expects($this->once())
+      ->method('getStorage')
+      ->with('node')
+      ->willReturn($storage);
 
     $node_access_result = AccessResult::allowed()->cachePerPermissions()->addCacheContexts(['user.node_grants:view']);
 

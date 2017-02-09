@@ -4,7 +4,6 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
@@ -18,13 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Returns responses for System routes.
  */
 class SystemController extends ControllerBase {
-
-  /**
-   * The entity query factory object.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $queryFactory;
 
   /**
    * System Manager Service.
@@ -66,8 +58,6 @@ class SystemController extends ControllerBase {
    *
    * @param \Drupal\system\SystemManager $systemManager
    *   System manager service.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $queryFactory
-   *   The entity query object.
    * @param \Drupal\Core\Theme\ThemeAccessCheck $theme_access
    *   The theme access checker service.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
@@ -77,9 +67,8 @@ class SystemController extends ControllerBase {
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_link_tree
    *   The menu link tree service.
    */
-  public function __construct(SystemManager $systemManager, QueryFactory $queryFactory, ThemeAccessCheck $theme_access, FormBuilderInterface $form_builder, ThemeHandlerInterface $theme_handler, MenuLinkTreeInterface $menu_link_tree) {
+  public function __construct(SystemManager $systemManager, ThemeAccessCheck $theme_access, FormBuilderInterface $form_builder, ThemeHandlerInterface $theme_handler, MenuLinkTreeInterface $menu_link_tree) {
     $this->systemManager = $systemManager;
-    $this->queryFactory = $queryFactory;
     $this->themeAccess = $theme_access;
     $this->formBuilder = $form_builder;
     $this->themeHandler = $theme_handler;
@@ -92,7 +81,6 @@ class SystemController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('system.manager'),
-      $container->get('entity.query'),
       $container->get('access_check.theme'),
       $container->get('form_builder'),
       $container->get('theme_handler'),

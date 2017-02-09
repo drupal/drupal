@@ -35,5 +35,5 @@ services:
     class: Drupal\book\BookUninstallValidator
     tags:
       - { name: module_install.uninstall_validator }
-    arguments: ['@book.outline_storage', '@entity.query', '@string_translation']
+    arguments: ['@book.outline_storage', '@entity_type.manager', '@string_translation']
     lazy: true

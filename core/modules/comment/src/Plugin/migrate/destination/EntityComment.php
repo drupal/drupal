@@ -4,7 +4,6 @@ namespace Drupal\comment\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -25,13 +24,6 @@ class EntityComment extends EntityContentBase {
    * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
-
-  /**
-   * The entity query object.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryInterface
-   */
-  protected $entityQuery;
 
   /**
    * An array of entity IDs for the 'commented entity' keyed by entity type.
@@ -61,13 +53,10 @@ class EntityComment extends EntityContentBase {
    *   The field type plugin manager service.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state storage object.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-   *   The query object that can query the given entity type.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, StateInterface $state, QueryFactory $entity_query) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, StateInterface $state) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_manager, $field_type_manager);
     $this->state = $state;
-    $this->entityQuery = $entity_query;
   }
 
   /**
@@ -84,8 +73,7 @@ class EntityComment extends EntityContentBase {
       array_keys($container->get('entity.manager')->getBundleInfo($entity_type)),
       $container->get('entity.manager'),
       $container->get('plugin.manager.field.field_type'),
-      $container->get('state'),
-      $container->get('entity.query')
+      $container->get('state')
     );
   }
 

@@ -213,13 +213,13 @@ class Views {
       }
     }
 
-    $entity_ids = \Drupal::service('entity.query')->get('view')
+    $entity_ids = \Drupal::entityQuery('view')
       ->condition('status', TRUE)
       ->condition("display.*.display_plugin", $plugin_ids, 'IN')
       ->execute();
 
     $result = array();
-    foreach (\Drupal::entityManager()->getStorage('view')->loadMultiple($entity_ids) as $view) {
+    foreach (\Drupal::entityTypeManager()->getStorage('view')->loadMultiple($entity_ids) as $view) {
       // Check each display to see if it meets the criteria and is enabled.
 
       foreach ($view->get('display') as $id => $display) {

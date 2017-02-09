@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\Unit;
 
-use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Views;
 use Drupal\views\Entity\View;
@@ -154,12 +154,12 @@ class ViewsTest extends UnitTestCase {
       ->with(['test_view_1', 'test_view_2', 'test_view_3'])
       ->will($this->returnValue(['test_view_1' => $view_1, 'test_view_2' => $view_2, 'test_view_3' => $view_3]));
 
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $entity_manager->expects($this->exactly(2))
+    $entity_type_manager = $this->getMock(EntityTypeManagerInterface::class);
+    $entity_type_manager->expects($this->exactly(2))
       ->method('getStorage')
       ->with('view')
       ->will($this->returnValue($view_storage));
-    $this->container->set('entity.manager', $entity_manager);
+    $this->container->set('entity_type.manager', $entity_type_manager);
 
     $definitions = [
       'type_a' => [
@@ -177,9 +177,6 @@ class ViewsTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
     $this->container->set('plugin.manager.views.display', $display_manager);
-
-    $entity_query = new QueryFactory($entity_manager);
-    $this->container->set('entity.query', $entity_query);
 
     $result = Views::getApplicableViews($applicable_type);
     $this->assertEquals($expected, $result);

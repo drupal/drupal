@@ -452,19 +452,16 @@ use Drupal\node\Entity\NodeType;
  * // Simple query:
  * $query = \Drupal::entityQuery('your_entity_type');
  * // Or, if you have a $container variable:
- * $query_service = $container->get('entity.query');
- * $query = $query_service->get('your_entity_type');
+ * $storage = $container->get('entity_type.manager')->getStorage('your_entity_type');
+ * $query = $storage->getQuery();
  * @endcode
  * If you need aggregation, there is an aggregate query available, which
  * implements \Drupal\Core\Entity\Query\QueryAggregateInterface:
  * @code
  * $query \Drupal::entityQueryAggregate('your_entity_type');
  * // Or:
- * $query = $query_service->getAggregate('your_entity_type');
+ * $query = $storage->getAggregateQuery('your_entity_type');
  * @endcode
- * Also, you should use dependency injection to get this object if
- * possible; the service you need is entity.query, and its methods getQuery()
- * or getAggregateQuery() will get the query object.
  *
  * In either case, you can then add conditions to your query, using methods
  * like condition(), exists(), etc. on $query; add sorting, pager, and range

@@ -2,7 +2,7 @@
 
 namespace Drupal\book;
 
-use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -23,25 +23,25 @@ class BookUninstallValidator implements ModuleUninstallValidatorInterface {
   protected $bookOutlineStorage;
 
   /**
-   * The entity query for node.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\Query\QueryInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityQuery;
+  protected $entityTypeManager;
 
   /**
    * Constructs a new BookUninstallValidator.
    *
    * @param \Drupal\book\BookOutlineStorageInterface $book_outline_storage
    *   The book outline storage.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
-   *   The entity query factory.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(BookOutlineStorageInterface $book_outline_storage, QueryFactory $query_factory, TranslationInterface $string_translation) {
+  public function __construct(BookOutlineStorageInterface $book_outline_storage, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
     $this->bookOutlineStorage = $book_outline_storage;
-    $this->entityQuery = $query_factory->get('node');
+    $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $string_translation;
   }
 
@@ -82,7 +82,7 @@ class BookUninstallValidator implements ModuleUninstallValidatorInterface {
    *   TRUE if there are book nodes, FALSE otherwise.
    */
   protected function hasBookNodes() {
-    $nodes = $this->entityQuery
+    $nodes = $this->entityTypeManager->getStorage('node')->getQuery()
       ->condition('type', 'book')
       ->accessCheck(FALSE)
       ->range(0, 1)
