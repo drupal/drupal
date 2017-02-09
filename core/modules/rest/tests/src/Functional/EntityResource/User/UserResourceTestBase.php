@@ -217,4 +217,24 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     $this->assertSame(200, $response->getStatusCode());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessMessage($method) {
+    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
+      return parent::getExpectedUnauthorizedAccessMessage($method);
+    }
+
+    switch ($method) {
+      case 'GET':
+        return "The 'access user profiles' permission is required and the user must be active.";
+      case 'PATCH':
+        return "You are not authorized to update this user entity.";
+      case 'DELETE':
+        return 'You are not authorized to delete this user entity.';
+      default:
+        return parent::getExpectedUnauthorizedAccessMessage($method);
+    }
+  }
+
 }

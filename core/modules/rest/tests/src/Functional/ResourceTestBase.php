@@ -204,6 +204,29 @@ abstract class ResourceTestBase extends BrowserTestBase {
   abstract protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options);
 
   /**
+   * Return the expected error message.
+   *
+   * @param string $method
+   *   The HTTP method (GET, POST, PATCH, DELETE).
+   *
+   * @return string
+   *    The error string.
+   */
+  abstract protected function getExpectedUnauthorizedAccessMessage($method);
+
+  /**
+   * Return the default expected error message if the
+   * bc_entity_resource_permissions is true.
+   *
+   * @param string $method
+   *   The HTTP method (GET, POST, PATCH, DELETE).
+   *
+   * @return string
+   *   The error string.
+   */
+  abstract protected function getExpectedBcUnauthorizedAccessMessage($method);
+
+  /**
    * Initializes authentication.
    *
    * E.g. for cookie authentication, we first need to get a cookie.
@@ -321,7 +344,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   The error response to assert.
    */
   protected function assertResourceErrorResponse($expected_status_code, $expected_message, ResponseInterface $response) {
-    $expected_body = $this->serializer->encode(['message' => $expected_message], static::$format);
+    $expected_body = ($expected_message !== FALSE) ? $this->serializer->encode(['message' => $expected_message], static::$format) : FALSE;
     $this->assertResourceResponse($expected_status_code, $expected_body, $response);
   }
 

@@ -112,7 +112,7 @@ class QuickEditLoadingTest extends WebTestBase {
     // Retrieving the metadata should result in an empty 403 response.
     $post = array('fields[0]' => 'node/1/body/en/full');
     $response = $this->drupalPostWithFormat(Url::fromRoute('quickedit.metadata'), 'json', $post);
-    $this->assertIdentical('{"message":""}', $response);
+    $this->assertIdentical(Json::encode(['message' => "The 'access in-place editing' permission is required."]), $response);
     $this->assertResponse(403);
 
     // Quick Edit's JavaScript would SearchRankingTestnever hit these endpoints if the metadata
@@ -120,11 +120,12 @@ class QuickEditLoadingTest extends WebTestBase {
     // able to use any of the other endpoints either.
     $post = array('editors[0]' => 'form') + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost('quickedit/attachments', '', $post, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
-    $this->assertIdentical('{}', $response);
+    $message = Json::encode(['message' => "A fatal error occurred: The 'access in-place editing' permission is required."]);
+    $this->assertIdentical($message, $response);
     $this->assertResponse(403);
     $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost('quickedit/form/' . 'node/1/body/en/full', '', $post, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
-    $this->assertIdentical('{}', $response);
+    $this->assertIdentical($message, $response);
     $this->assertResponse(403);
     $edit = array();
     $edit['form_id'] = 'quickedit_field_form';
@@ -135,11 +136,11 @@ class QuickEditLoadingTest extends WebTestBase {
     $edit['body[0][format]'] = 'filtered_html';
     $edit['op'] = t('Save');
     $response = $this->drupalPost('quickedit/form/' . 'node/1/body/en/full', '', $edit, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
-    $this->assertIdentical('{}', $response);
+    $this->assertIdentical($message, $response);
     $this->assertResponse(403);
     $post = array('nocssjs' => 'true');
     $response = $this->drupalPostWithFormat('quickedit/entity/' . 'node/1', 'json', $post);
-    $this->assertIdentical('{"message":""}', $response);
+    $this->assertIdentical(Json::encode(['message' => "The 'access in-place editing' permission is required."]), $response);
     $this->assertResponse(403);
   }
 

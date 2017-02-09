@@ -122,10 +122,11 @@ class FilterFormatAccessTest extends WebTestBase {
     // Make sure that a regular user only has access to the text formats for
     // which they were granted access.
     $fallback_format = FilterFormat::load(filter_fallback_format());
+    $disallowed_format_name = $this->disallowedFormat->getPermissionName();
     $this->assertTrue($this->allowedFormat->access('use', $this->webUser), 'A regular user has access to use a text format they were granted access to.');
     $this->assertEqual(AccessResult::allowed()->addCacheContexts(['user.permissions']), $this->allowedFormat->access('use', $this->webUser, TRUE), 'A regular user has access to use a text format they were granted access to.');
     $this->assertFalse($this->disallowedFormat->access('use', $this->webUser), 'A regular user does not have access to use a text format they were not granted access to.');
-    $this->assertEqual(AccessResult::neutral()->cachePerPermissions(), $this->disallowedFormat->access('use', $this->webUser, TRUE), 'A regular user does not have access to use a text format they were not granted access to.');
+    $this->assertEqual(AccessResult::neutral("The '$disallowed_format_name' permission is required.")->cachePerPermissions(), $this->disallowedFormat->access('use', $this->webUser, TRUE), 'A regular user does not have access to use a text format they were not granted access to.');
     $this->assertTrue($fallback_format->access('use', $this->webUser), 'A regular user has access to use the fallback format.');
     $this->assertEqual(AccessResult::allowed(), $fallback_format->access('use', $this->webUser, TRUE), 'A regular user has access to use the fallback format.');
 

@@ -31,17 +31,22 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   /**
    * Creates an AccessResultInterface object with isNeutral() === TRUE.
    *
-   * @return \Drupal\Core\Access\AccessResult
+   * @param string|null $reason
+   *   (optional) The reason why access is forbidden. Intended for developers,
+   *   hence not translatable.
+   *
+   * @return \Drupal\Core\Access\AccessResultNeutral
    *   isNeutral() will be TRUE.
    */
-  public static function neutral() {
-    return new AccessResultNeutral();
+  public static function neutral($reason = NULL) {
+    assert('is_string($reason) || is_null($reason)');
+    return new AccessResultNeutral($reason);
   }
 
   /**
    * Creates an AccessResultInterface object with isAllowed() === TRUE.
    *
-   * @return \Drupal\Core\Access\AccessResult
+   * @return \Drupal\Core\Access\AccessResultAllowed
    *   isAllowed() will be TRUE.
    */
   public static function allowed() {
@@ -55,7 +60,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   (optional) The reason why access is forbidden. Intended for developers,
    *   hence not translatable.
    *
-   * @return \Drupal\Core\Access\AccessResult
+   * @return \Drupal\Core\Access\AccessResultForbidden
    *   isForbidden() will be TRUE.
    */
   public static function forbidden($reason = NULL) {
@@ -106,7 +111,12 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   isNeutral() will be TRUE.
    */
   public static function allowedIfHasPermission(AccountInterface $account, $permission) {
-    return static::allowedIf($account->hasPermission($permission))->addCacheContexts(['user.permissions']);
+    $access_result = static::allowedIf($account->hasPermission($permission))->addCacheContexts(['user.permissions']);
+
+    if ($access_result instanceof AccessResultReasonInterface) {
+      $access_result->setReason("The '$permission' permission is required.");
+    }
+    return $access_result;
   }
 
   /**
@@ -147,7 +157,21 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
       }
     }
 
-    return static::allowedIf($access)->addCacheContexts(empty($permissions) ? [] : ['user.permissions']);
+    $access_result = static::allowedIf($access)->addCacheContexts(empty($permissions) ? [] : ['user.permissions']);
+
+    if ($access_result instanceof AccessResultReasonInterface) {
+      if (count($permissions) === 1) {
+        $access_result->setReason("The '$permission' permission is required.");
+      }
+      elseif (count($permissions) > 1) {
+        $quote = function ($s) {
+          return "'$s'";
+        };
+        $access_result->setReason(sprintf("The following permissions are required: %s.", implode(" $conjunction ", array_map($quote, $permissions))));
+      }
+    }
+
+    return $access_result;
   }
 
   /**
@@ -308,6 +332,13 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
       if (!$this->isForbidden() || ($this->getCacheMaxAge() === 0 && $other->isForbidden())) {
         $merge_other = TRUE;
       }
+
+      if ($this->isForbidden() && $this instanceof AccessResultReasonInterface) {
+        $result->setReason($this->getReason());
+      }
+      elseif ($other->isForbidden() && $other instanceof AccessResultReasonInterface) {
+        $result->setReason($other->getReason());
+      }
     }
     elseif ($this->isAllowed() || $other->isAllowed()) {
       $result = static::allowed();
@@ -319,6 +350,14 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
       $result = static::neutral();
       if (!$this->isNeutral() || ($this->getCacheMaxAge() === 0 && $other->isNeutral()) || ($this->getCacheMaxAge() !== 0 && $other instanceof CacheableDependencyInterface && $other->getCacheMaxAge() !== 0)) {
         $merge_other = TRUE;
+        if ($other instanceof AccessResultReasonInterface) {
+          $result->setReason($other->getReason());
+        }
+      }
+      else {
+        if ($this instanceof AccessResultReasonInterface) {
+          $result->setReason($this->getReason());
+        }
       }
     }
     $result->inheritCacheability($this);
@@ -358,6 +397,14 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
       $result = static::neutral();
       if (!$this->isNeutral()) {
         $merge_other = TRUE;
+        if ($other instanceof AccessResultReasonInterface) {
+          $result->setReason($other->getReason());
+        }
+      }
+      else {
+        if ($this instanceof AccessResultReasonInterface) {
+          $result->setReason($this->getReason());
+        }
       }
     }
     $result->inheritCacheability($this);
