@@ -79,4 +79,18 @@ class FilterHtmlTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * @covers ::setConfiguration
+   */
+  public function testSetConfiguration() {
+    $configuration['settings'] = [
+      // New lines and spaces are replaced with a single space.
+      'allowed_html' => "<a>  <br>\r\n  <p>",
+      'filter_html_help' => 1,
+      'filter_html_nofollow' => 0,
+    ];
+    $filter = new FilterHtml($configuration, 'filter_html', ['provider' => 'test']);
+    $this->assertSame('<a> <br> <p>', $filter->getConfiguration()['settings']['allowed_html']);
+  }
+
 }
