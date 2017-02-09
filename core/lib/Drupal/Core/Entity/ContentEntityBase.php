@@ -312,7 +312,9 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     if (isset($new_value)) {
       $this->isDefaultRevision = (bool) $new_value;
     }
-    return $return;
+    // New entities should always ensure at least one default revision exists,
+    // creating an entity without a default revision is an invalid state.
+    return $this->isNew() || $return;
   }
 
   /**
