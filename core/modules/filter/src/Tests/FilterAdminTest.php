@@ -206,13 +206,13 @@ class FilterAdminTest extends WebTestBase {
     $this->assertTrue($full_format->access('use', $this->adminUser), 'Admin user may use Full HTML.');
     $this->assertFalse($full_format->access('use', $this->webUser), 'Web user may not use Full HTML.');
 
-    // Add an additional tag.
+    // Add an additional tag and extra spaces and returns.
     $edit = array();
-    $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>';
+    $edit['filters[filter_html][settings][allowed_html]'] = "<a>   <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>\r\n<quote>";
     $this->drupalPostForm('admin/config/content/formats/manage/' . $restricted, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
-    $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Allowed HTML tag added.');
+    $this->assertFieldByName('filters[filter_html][settings][allowed_html]', "<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>", 'Allowed HTML tag added.');
 
     $elements = $this->xpath('//select[@name=:first]/following::select[@name=:second]', array(
       ':first' => 'filters[' . $first_filter . '][weight]',

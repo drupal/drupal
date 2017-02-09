@@ -41,12 +41,10 @@ class FilterHtml extends FilterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form['allowed_html'] = array(
-      '#type' => 'textfield',
+      '#type' => 'textarea',
       '#title' => $this->t('Allowed HTML tags'),
       '#default_value' => $this->settings['allowed_html'],
-      '#maxlength' => 2048,
       '#description' => $this->t('A list of HTML tags that can be used. By default only the <em>lang</em> and <em>dir</em> attributes are allowed for all HTML tags. Each HTML tag may have attributes which are treated as allowed attribute names for that HTML tag. Each attribute may allow all values, or only allow specific values. Attribute names or values may be written as a prefix and wildcard like <em>jump-*</em>. JavaScript event attributes, JavaScript URLs, and CSS are always stripped.'),
-      '#size' => 250,
       '#attached' => array(
         'library' => array(
           'filter/drupal.filter.filter_html.admin',
@@ -70,6 +68,12 @@ class FilterHtml extends FilterBase {
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
+    if (isset($configuration['settings']['allowed_html'])) {
+      // The javascript in core/modules/filter/filter.filter_html.admin.js
+      // removes new lines and double spaces so, for consistency when javascript
+      // is disabled, remove them.
+      $configuration['settings']['allowed_html'] = preg_replace('/\s+/', ' ', $configuration['settings']['allowed_html']);
+    }
     parent::setConfiguration($configuration);
     // Force restrictions to be calculated again.
     $this->restrictions = NULL;
