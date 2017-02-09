@@ -145,11 +145,11 @@ class ModulesListForm extends FormBase {
     uasort($modules, 'system_sort_modules_by_info_name');
 
     // Iterate over each of the modules.
-    $form['modules']['#tree'] = TRUE;
     foreach ($modules as $filename => $module) {
       if (empty($module->info['hidden'])) {
         $package = $module->info['package'];
         $form['modules'][$package][$filename] = $this->buildRow($modules, $module, $distribution);
+        $form['modules'][$package][$filename]['#tree'] = TRUE;
       }
     }
 
@@ -357,8 +357,6 @@ class ModulesListForm extends FormBase {
    *   An array of modules to install and their dependencies.
    */
   protected function buildModuleList(FormStateInterface $form_state) {
-    $packages = $form_state->getValue('modules');
-
     // Build a list of modules to install.
     $modules = array(
       'install' => array(),
@@ -366,24 +364,22 @@ class ModulesListForm extends FormBase {
       'experimental' => [],
     );
 
-    // Required modules have to be installed.
-    // @todo This should really not be handled here.
     $data = system_rebuild_module_data();
     foreach ($data as $name => $module) {
-      if (!empty($module->required) && !$this->moduleHandler->moduleExists($name)) {
+      // If the module is installed there is nothing to do.
+      if ($this->moduleHandler->moduleExists($name)) {
+        continue;
+      }
+      // Required modules have to be installed.
+      if (!empty($module->required)) {
         $modules['install'][$name] = $module->info['name'];
       }
-    }
-
-    // First, build a list of all modules that were selected.
-    foreach ($packages as $package => $items) {
-      foreach ($items as $name => $checkbox) {
-        if ($checkbox['enable'] && !$this->moduleHandler->moduleExists($name)) {
-          $modules['install'][$name] = $data[$name]->info['name'];
-          // Identify experimental modules.
-          if ($package == 'Core (Experimental)') {
-            $modules['experimental'][$name] = $data[$name]->info['name'];
-          }
+      // Selected modules should be installed.
+      elseif (($checkbox = $form_state->getValue($name, FALSE)) && $checkbox['enable']) {
+        $modules['install'][$name] = $data[$name]->info['name'];
+        // Identify experimental modules.
+        if ($data[$name]->info['package'] == 'Core (Experimental)') {
+          $modules['experimental'][$name] = $data[$name]->info['name'];
         }
       }
     }
