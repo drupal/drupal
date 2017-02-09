@@ -36,7 +36,7 @@ class ExperimentalModuleTest extends WebTestBase {
     // First, test installing a non-experimental module with no dependencies.
     // There should be no confirmation form and no experimental module warning.
     $edit = [];
-    $edit["modules[Testing][test_page_test][enable]"] = TRUE;
+    $edit["test_page_test[enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->assertText('Module Test page has been enabled.');
     $this->assertNoText('Experimental modules are provided for testing purposes only.');
@@ -48,7 +48,7 @@ class ExperimentalModuleTest extends WebTestBase {
     // There should be a confirmation form with an experimental warning, but no
     // list of dependencies.
     $edit = [];
-    $edit["modules[Core (Experimental)][experimental_module_test][enable]"] = TRUE;
+    $edit["experimental_module_test[enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // The module should not be enabled and there should be a warning and a
@@ -70,7 +70,7 @@ class ExperimentalModuleTest extends WebTestBase {
     // Test enabling a module that is not itself experimental, but that depends
     // on an experimental module.
     $edit = [];
-    $edit["modules[Testing][experimental_module_dependency_test][enable]"] = TRUE;
+    $edit["experimental_module_dependency_test[enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // The module should not be enabled and there should be a warning and a
@@ -98,8 +98,8 @@ class ExperimentalModuleTest extends WebTestBase {
     // still a warning about experimental modules, but no message about
     // dependencies, since the user specifically enabled the dependency.
     $edit = [];
-    $edit["modules[Core (Experimental)][experimental_module_test][enable]"] = TRUE;
-    $edit["modules[Testing][experimental_module_dependency_test][enable]"] = TRUE;
+    $edit["experimental_module_test[enable]"] = TRUE;
+    $edit["experimental_module_dependency_test[enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // The module should not be enabled and there should be a warning and a
@@ -110,7 +110,7 @@ class ExperimentalModuleTest extends WebTestBase {
     $this->assertText('The following modules are experimental: Experimental Test');
 
     // Ensure the non-experimental module is not listed as experimental.
-    $this->assertNoText('The following modules are experimental: Experimental Test, Experimental Dependency Test');
+    $this->assertNoText('The following modules are experimental: Experimental Dependency Test, Experimental Test');
     $this->assertNoText('The following modules are experimental: Experimental Dependency Test');
 
     // There should be no message about enabling dependencies.
@@ -118,13 +118,13 @@ class ExperimentalModuleTest extends WebTestBase {
 
     // Enable the module and confirm that it worked.
     $this->drupalPostForm(NULL, [], 'Continue');
-    $this->assertText('2 modules have been enabled: Experimental Test, Experimental Dependency Test');
+    $this->assertText('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
 
     // Try to enable an experimental module that can not be due to
     // hook_requirements().
     \Drupal::state()->set('experimental_module_requirements_test_requirements', TRUE);
     $edit = [];
-    $edit["modules[Core (Experimental)][experimental_module_requirements_test][enable]"] = TRUE;
+    $edit["experimental_module_requirements_test[enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->assertUrl('admin/modules', [], 'If the module can not be installed we are not taken to the confirm form.');
     $this->assertText('The Experimental Test Requirements module can not be installed.');

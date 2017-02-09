@@ -37,7 +37,7 @@ class LocaleLocaleLookupTest extends WebTestBase {
    */
   public function testCircularDependency() {
     // Ensure that we can enable early_translation_test on a non-english site.
-    $this->drupalPostForm('admin/modules', array('modules[Testing][early_translation_test][enable]' => TRUE), t('Install'));
+    $this->drupalPostForm('admin/modules', array('early_translation_test[enable]' => TRUE), t('Install'));
     $this->assertResponse(200);
   }
 
