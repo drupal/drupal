@@ -356,7 +356,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *   TRUE if the entity type is a subclass of the class or interface.
    *
    * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0.
-   *   Use Drupal\Core\Entity\EntityTypeInterface::entityClassImpelments()
+   *   Use Drupal\Core\Entity\EntityTypeInterface::entityClassImplements()
    *   instead.
    */
   public function isSubclassOf($class);
