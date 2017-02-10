@@ -41,4 +41,13 @@ class WorkflowType extends Plugin {
    */
   public $label = '';
 
+  /**
+   * States required to exist.
+   *
+   * Normally supplied by WorkflowType::defaultConfiguration().
+   *
+   * @var array
+   */
+  public $required_states = [];
+
 }

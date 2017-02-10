@@ -17,11 +17,29 @@ use Drupal\workflows\WorkflowInterface;
  * @WorkflowType(
  *   id = "content_moderation",
  *   label = @Translation("Content moderation"),
+ *   required_states = {
+ *     "draft",
+ *     "published",
+ *   },
  * )
  */
 class ContentModeration extends WorkflowTypeBase {
 
   use StringTranslationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function initializeWorkflow(WorkflowInterface $workflow) {
+    $workflow
+      ->addState('draft', $this->t('Draft'))
+      ->setStateWeight('draft', -5)
+      ->addState('published', $this->t('Published'))
+      ->setStateWeight('published', 0)
+      ->addTransition('create_new_draft', $this->t('Create New Draft'), ['draft', 'published'], 'draft')
+      ->addTransition('publish', $this->t('Publish'), ['draft', 'published'], 'published');
+    return $workflow;
+  }
 
   /**
    * {@inheritdoc}
@@ -51,12 +69,15 @@ class ContentModeration extends WorkflowTypeBase {
    */
   public function buildStateConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, StateInterface $state = NULL) {
     /** @var \Drupal\content_moderation\ContentModerationState $state */
+    $is_required_state = isset($state) ? in_array($state->id(), $this->getRequiredStates(), TRUE) : FALSE;
+
     $form = [];
     $form['published'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Published'),
       '#description' => $this->t('When content reaches this state it should be published.'),
       '#default_value' => isset($state) ? $state->isPublishedState() : FALSE,
+      '#disabled' => $is_required_state,
     ];
 
     $form['default_revision'] = [
@@ -64,6 +85,7 @@ class ContentModeration extends WorkflowTypeBase {
       '#title' => $this->t('Default revision'),
       '#description' => $this->t('When content reaches this state it should be made the default revision; this is implied for published states.'),
       '#default_value' => isset($state) ? $state->isDefaultRevisionState() : FALSE,
+      '#disabled' => $is_required_state,
       // @todo Add form #state to force "make default" on when "published" is
       // on for a state.
       // @see https://www.drupal.org/node/2645614
@@ -156,7 +178,16 @@ class ContentModeration extends WorkflowTypeBase {
   public function defaultConfiguration() {
     // This plugin does not store anything per transition.
     return [
-      'states' => [],
+      'states' => [
+        'draft' => [
+          'published' => FALSE,
+          'default_revision' => FALSE,
+        ],
+        'published' => [
+          'published' => TRUE,
+          'default_revision' => TRUE,
+        ],
+      ],
       'entity_types' => [],
     ];
   }
@@ -167,6 +198,17 @@ class ContentModeration extends WorkflowTypeBase {
   public function calculateDependencies() {
     // @todo : Implement calculateDependencies() method.
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    $configuration = parent::getConfiguration();
+    // Ensure that states and entity types are ordered consistently.
+    ksort($configuration['states']);
+    ksort($configuration['entity_types']);
+    return $configuration;
   }
 
 }

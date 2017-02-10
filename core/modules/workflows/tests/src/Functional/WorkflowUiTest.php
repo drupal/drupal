@@ -66,10 +66,16 @@ class WorkflowUiTest extends BrowserTestBase {
       $this->assertSession()->statusCodeEquals(200);
     }
 
+    // Ensure that default states can not be deleted.
+    \Drupal::state()->set('workflow_type_test.required_states', ['published']);
+    $this->drupalGet('admin/config/workflow/workflows/manage/test/state/published/delete');
+    $this->assertSession()->statusCodeEquals(403);
+    \Drupal::state()->set('workflow_type_test.required_states', []);
+
     // Delete one of the states and ensure the other test cannot be deleted.
     $this->drupalGet('admin/config/workflow/workflows/manage/test/state/published/delete');
     $this->submitForm([], 'Delete');
-    $this->drupalGet('admin/config/workflow/workflows/manage/test/state/published/delete');
+    $this->drupalGet('admin/config/workflow/workflows/manage/test/state/draft/delete');
     $this->assertSession()->statusCodeEquals(403);
   }
 
@@ -189,9 +195,28 @@ class WorkflowUiTest extends BrowserTestBase {
     // the draft state.
     $published_delete_link = Url::fromRoute('entity.workflow.delete_state_form', [
       'workflow' => $workflow->id(),
-      'workflow_state' => 'published'
+      'workflow_state' => 'published',
     ])->toString();
+    $draft_delete_link = Url::fromRoute('entity.workflow.delete_state_form', [
+      'workflow' => $workflow->id(),
+      'workflow_state' => 'draft',
+    ])->toString();
+    $this->assertSession()->elementContains('css', 'tr[data-drupal-selector="edit-states-published"]', 'Delete');
     $this->assertSession()->linkByHrefExists($published_delete_link);
+    $this->assertSession()->linkByHrefExists($draft_delete_link);
+
+    // Make the published state a default state and ensure it is no longer
+    // linked.
+    \Drupal::state()->set('workflow_type_test.required_states', ['published']);
+    $this->getSession()->reload();
+    $this->assertSession()->linkByHrefNotExists($published_delete_link);
+    $this->assertSession()->linkByHrefExists($draft_delete_link);
+    $this->assertSession()->elementNotContains('css', 'tr[data-drupal-selector="edit-states-published"]', 'Delete');
+    \Drupal::state()->set('workflow_type_test.required_states', []);
+    $this->getSession()->reload();
+    $this->assertSession()->elementContains('css', 'tr[data-drupal-selector="edit-states-published"]', 'Delete');
+    $this->assertSession()->linkByHrefExists($published_delete_link);
+    $this->assertSession()->linkByHrefExists($draft_delete_link);
 
     // Delete the Draft state.
     $this->clickLink('Delete');
@@ -211,6 +236,20 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Workflow Test deleted.');
     $this->assertSession()->pageTextContains('There is no Workflow yet.');
     $this->assertNull($workflow_storage->loadUnchanged('test'), 'The test workflow has been deleted');
+
+    // Ensure that workflow types that implement
+    // \Drupal\workflows\WorkflowTypeInterface::initializeWorkflow() are
+    // initialized correctly.
+    $this->drupalGet('admin/config/workflow/workflows');
+    $this->clickLink('Add workflow');
+    $this->submitForm(['label' => 'Test 2', 'id' => 'test2', 'workflow_type' => 'workflow_type_required_state_test'], 'Save');
+    $this->assertSession()->addressEquals('admin/config/workflow/workflows/manage/test2');
+    $workflow = $workflow_storage->loadUnchanged('test2');
+    $this->assertTrue($workflow->hasState('fresh'), 'The workflow has the "fresh" state');
+    $this->assertTrue($workflow->hasState('rotten'), 'The workflow has the "rotten" state');
+    $this->assertTrue($workflow->hasTransition('rot'), 'The workflow has the "rot" transition');
+    $this->assertSession()->pageTextContains('Fresh');
+    $this->assertSession()->pageTextContains('Rotten');
   }
 
   /**

@@ -18,6 +18,21 @@ use Drupal\Core\Session\AccountInterface;
 interface WorkflowTypeInterface extends PluginInspectionInterface, DerivativeInspectionInterface, ConfigurablePluginInterface {
 
   /**
+   * Initializes a workflow.
+   *
+   * Used to create required states and default transitions.
+   *
+   * @param \Drupal\workflows\WorkflowInterface $workflow
+   *   The workflow to initialize.
+   *
+   * @return \Drupal\workflows\WorkflowInterface $workflow
+   *   The initialized workflow.
+   *
+   * @see \Drupal\workflows\Form\WorkflowAddForm::save()
+   */
+  public function initializeWorkflow(WorkflowInterface $workflow);
+
+  /**
    * Gets the label for the workflow type.
    *
    * @return string
@@ -116,5 +131,17 @@ interface WorkflowTypeInterface extends PluginInspectionInterface, DerivativeIns
    * @see \Drupal\workflows\Form\WorkflowTransitionEditForm::form()
    */
   public function buildTransitionConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, TransitionInterface $transition = NULL);
+
+  /**
+   * Gets the required states of workflow type.
+   *
+   * This are usually configured in the workflow type annotation.
+   *
+   * @return array[]
+   *   The required states.
+   *
+   * @see \Drupal\workflows\Annotation\WorkflowType
+   */
+  public function getRequiredStates();
 
 }

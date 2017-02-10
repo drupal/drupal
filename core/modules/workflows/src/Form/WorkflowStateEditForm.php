@@ -151,7 +151,7 @@ class WorkflowStateEditForm extends EntityForm {
     $actions['delete'] = [
       '#type' => 'link',
       '#title' => $this->t('Delete'),
-      '#access' => $this->entity->access('delete-state'),
+      '#access' => $this->entity->access('delete-state:' . $this->stateId),
       '#attributes' => [
         'class' => ['button', 'button--danger'],
       ],

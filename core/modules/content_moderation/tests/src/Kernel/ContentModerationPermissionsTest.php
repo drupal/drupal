@@ -70,11 +70,13 @@ class ContentModerationPermissionsTest extends KernelTestBase {
             ],
           ],
           'states' => [
-            'published' => [
-              'label' => 'Published',
-            ],
             'draft' => [
               'label' => 'Draft',
+              'weight' => -5,
+            ],
+            'published' => [
+              'label' => 'Published',
+              'weight' => 0,
             ],
           ],
         ],
@@ -101,11 +103,13 @@ class ContentModerationPermissionsTest extends KernelTestBase {
             ],
           ],
           'states' => [
-            'tired' => [
-              'label' => 'Tired',
-            ],
             'awake' => [
               'label' => 'Awake',
+              'weight' => -5,
+            ],
+            'tired' => [
+              'label' => 'Tired',
+              'weight' => -0,
             ],
           ],
         ],

@@ -56,17 +56,21 @@ class WorkflowAccessControlHandler extends EntityAccessControlHandler implements
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    if ($operation === 'delete-state') {
+    /** @var \Drupal\workflows\Entity\Workflow $entity */
+    $workflow_type = $entity->getTypePlugin();
+    if (strpos($operation, 'delete-state') === 0) {
+      list(, $state_id) = explode(':', $operation, 2);
       // Deleting a state is editing a workflow, but also we should forbid
       // access if there is only one state.
-      /** @var \Drupal\workflows\Entity\Workflow $entity */
-      $admin_access = AccessResult::allowedIf(count($entity->getStates()) > 1)->andIf(parent::checkAccess($entity, 'edit', $account))->addCacheableDependency($entity);
+      $admin_access = AccessResult::allowedIf(count($entity->getStates()) > 1)
+        ->andIf(parent::checkAccess($entity, 'edit', $account))
+        ->andIf(AccessResult::allowedIf(!in_array($state_id, $workflow_type->getRequiredStates(), TRUE)))
+        ->addCacheableDependency($entity);
     }
     else {
       $admin_access = parent::checkAccess($entity, $operation, $account);
     }
-    /** @var \Drupal\workflows\WorkflowInterface $entity */
-    return $entity->getTypePlugin()->checkWorkflowAccess($entity, $operation, $account)->orIf($admin_access);
+    return $workflow_type->checkWorkflowAccess($entity, $operation, $account)->orIf($admin_access);
   }
 
   /**
