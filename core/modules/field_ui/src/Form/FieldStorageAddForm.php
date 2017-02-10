@@ -410,7 +410,7 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Configures the field for the default view mode.
+   * Configures the newly created field for the default view and form modes.
    *
    * @param string $field_name
    *   The field name.
@@ -428,7 +428,7 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Configures the field for the default form mode.
+   * Configures the newly created field for the default view and form modes.
    *
    * @param string $field_name
    *   The field name.
