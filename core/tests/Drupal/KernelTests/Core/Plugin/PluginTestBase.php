@@ -58,31 +58,38 @@ abstract class PluginTestBase extends KernelTestBase {
     );
     $this->mockBlockExpectedDefinitions = array(
       'user_login' => array(
+        'id' => 'user_login',
         'label' => 'User login',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock',
       ),
       'menu:main_menu' => array(
+        'id' => 'menu',
         'label' => 'Main menu',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
       ),
       'menu:navigation' => array(
+        'id' => 'menu',
         'label' => 'Navigation',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
       ),
       'menu:foo' => array(
+        'id' => 'menu',
         'label' => 'Base label',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
         'setting' => 'default',
       ),
       'layout' => array(
+        'id' => 'layout',
         'label' => 'Layout',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
       ),
       'layout:foo' => array(
+        'id' => 'layout',
         'label' => 'Layout Foo',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
       ),
       'user_name' => array(
+        'id' => 'user_name',
         'label' => 'User name',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
         'context' => array(
@@ -90,6 +97,7 @@ abstract class PluginTestBase extends KernelTestBase {
         ),
       ),
       'user_name_optional' => array(
+        'id' => 'user_name_optional',
         'label' => 'User name optional',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
         'context' => array(
@@ -97,10 +105,12 @@ abstract class PluginTestBase extends KernelTestBase {
         ),
       ),
       'string_context' => array(
+        'id' => 'string_context',
         'label' => 'String typed data',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\TypedDataStringBlock',
       ),
       'complex_context' => array(
+        'id' => 'complex_context',
         'label' => 'Complex context',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockComplexContextBlock',
         'context' => array(

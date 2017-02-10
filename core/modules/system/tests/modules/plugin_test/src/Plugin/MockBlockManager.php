@@ -35,6 +35,7 @@ class MockBlockManager extends PluginManagerBase {
 
     // A simple plugin: the user login block.
     $this->discovery->setDefinition('user_login', array(
+      'id' => 'user_login',
       'label' => t('User login'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock',
     ));
@@ -46,11 +47,13 @@ class MockBlockManager extends PluginManagerBase {
     // MockMenuBlockDeriver class ensures that only derivatives, and not the
     // base plugin, are available to the system.
     $this->discovery->setDefinition('menu', array(
+      'id' => 'menu',
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
       'deriver' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlockDeriver',
     ));
     // A plugin defining itself as a derivative.
     $this->discovery->setDefinition('menu:foo', array(
+      'id' => 'menu',
       'label' => t('Base label'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
     ));
@@ -62,6 +65,7 @@ class MockBlockManager extends PluginManagerBase {
     // MockLayoutBlockDeriver class ensures that both the base plugin and the
     // derivatives are available to the system.
     $this->discovery->setDefinition('layout', array(
+      'id' => 'layout',
       'label' => t('Layout'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
       'deriver' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlockDeriver',
@@ -70,6 +74,7 @@ class MockBlockManager extends PluginManagerBase {
     // A block plugin that requires context to function. This block requires a
     // user object in order to return the user name from the getTitle() method.
     $this->discovery->setDefinition('user_name', array(
+      'id' => 'user_name',
       'label' => t('User name'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
       'context' => array(
@@ -79,6 +84,7 @@ class MockBlockManager extends PluginManagerBase {
 
     // An optional context version of the previous block plugin.
     $this->discovery->setDefinition('user_name_optional', array(
+      'id' => 'user_name_optional',
       'label' => t('User name optional'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
       'context' => array(
@@ -88,12 +94,14 @@ class MockBlockManager extends PluginManagerBase {
 
     // A block plugin that requires a typed data string context to function.
     $this->discovery->setDefinition('string_context', array(
+      'id' => 'string_context',
       'label' => t('String typed data'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\TypedDataStringBlock',
     ));
 
     // A complex context plugin that requires both a user and node for context.
     $this->discovery->setDefinition('complex_context', array(
+      'id' => 'complex_context',
       'label' => t('Complex context'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockComplexContextBlock',
       'context' => array(
