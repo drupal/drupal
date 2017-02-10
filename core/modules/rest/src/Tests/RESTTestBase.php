@@ -420,8 +420,7 @@ abstract class RESTTestBase extends WebTestBase {
    * Rebuilds routing caches.
    */
   protected function rebuildCache() {
-    // Rebuild routing cache, so that the REST API paths are available.
-    $this->container->get('router.builder')->rebuild();
+    $this->container->get('router.builder')->rebuildIfNeeded();
   }
 
   /**

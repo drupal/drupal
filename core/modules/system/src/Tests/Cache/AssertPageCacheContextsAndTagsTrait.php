@@ -122,10 +122,14 @@ trait AssertPageCacheContextsAndTagsTrait {
    */
   protected function assertCacheTags(array $expected_tags, $include_default_tags = TRUE) {
     // The anonymous role cache tag is only added if the user is anonymous.
-    if ($include_default_tags && \Drupal::currentUser()->isAnonymous()) {
-      $expected_tags = Cache::mergeTags($expected_tags, ['config:user.role.anonymous']);
+    if ($include_default_tags) {
+      if (\Drupal::currentUser()->isAnonymous()) {
+        $expected_tags = Cache::mergeTags($expected_tags, ['config:user.role.anonymous']);
+      }
+      $expected_tags[] = 'http_response';
     }
     $actual_tags = $this->getCacheHeaderValues('X-Drupal-Cache-Tags');
+    $expected_tags = array_unique($expected_tags);
     sort($expected_tags);
     sort($actual_tags);
     $this->assertIdentical($actual_tags, $expected_tags);

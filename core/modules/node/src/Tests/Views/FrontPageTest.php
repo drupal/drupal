@@ -265,7 +265,7 @@ class FrontPageTest extends ViewTestBase {
       $render_cache_tags
     );
     $expected_tags = Cache::mergeTags($empty_node_listing_cache_tags, $cache_context_tags);
-    $expected_tags = Cache::mergeTags($expected_tags, ['rendered', 'config:user.role.anonymous', 'config:system.site']);
+    $expected_tags = Cache::mergeTags($expected_tags, ['http_response', 'rendered', 'config:user.role.anonymous', 'config:system.site']);
     $this->assertPageCacheContextsAndTags(
       Url::fromRoute('view.frontpage.page_1'),
       $cache_contexts,
@@ -331,7 +331,7 @@ class FrontPageTest extends ViewTestBase {
     $this->assertPageCacheContextsAndTags(
       Url::fromRoute('view.frontpage.page_1'),
       $cache_contexts,
-      Cache::mergeTags($first_page_output_cache_tags, ['rendered', 'config:user.role.anonymous'])
+      Cache::mergeTags($first_page_output_cache_tags, ['http_response', 'rendered', 'config:user.role.anonymous'])
     );
 
     // Second page.
@@ -350,6 +350,7 @@ class FrontPageTest extends ViewTestBase {
       'node_view',
       'user_view',
       'user:0',
+      'http_response',
       'rendered',
       // FinishResponseSubscriber adds this cache tag to responses that have the
       // 'user.permissions' cache context for anonymous users.

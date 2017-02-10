@@ -46,6 +46,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
 
     // Verify a cache hit, but also the presence of the correct cache tags.
     $expected_tags = array(
+      'http_response',
       'rendered',
       'block_view',
       'config:block_list',
@@ -107,7 +108,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($url, 'MISS');
 
     // Verify a cache hit.
-    $this->verifyPageCache($url, 'HIT', ['config:block_list', 'config:user.role.anonymous', 'rendered']);
+    $this->verifyPageCache($url, 'HIT', ['config:block_list', 'config:user.role.anonymous', 'http_response', 'rendered']);
   }
 
 }

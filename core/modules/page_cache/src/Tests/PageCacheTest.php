@@ -63,6 +63,7 @@ class PageCacheTest extends WebTestBase {
     sort($cache_entry->tags);
     $expected_tags = array(
       'config:user.role.anonymous',
+      'http_response',
       'pre_render',
       'rendered',
       'system_test_cache_tags_page',
@@ -94,6 +95,7 @@ class PageCacheTest extends WebTestBase {
     sort($cache_entry->tags);
     $expected_tags = array(
       'config:user.role.anonymous',
+      'http_response',
       'pre_render',
       'rendered',
       'system_test_cache_tags_page',
