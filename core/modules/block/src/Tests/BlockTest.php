@@ -385,6 +385,7 @@ class BlockTest extends BlockTestBase {
       'block_view',
       'config:block.block.powered',
       'config:user.role.anonymous',
+      'http_response',
       'rendered',
     );
     sort($expected_cache_tags);
@@ -426,6 +427,7 @@ class BlockTest extends BlockTestBase {
       'config:block.block.powered',
       'config:block.block.powered-2',
       'config:user.role.anonymous',
+      'http_response',
       'rendered',
     );
     sort($expected_cache_tags);

@@ -80,6 +80,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
 
     // Full node page 1.
     $this->assertPageCacheContextsAndTags($node_1->urlInfo(), $cache_contexts, array(
+      'http_response',
       'rendered',
       'block_view',
       'config:block_list',
@@ -120,6 +121,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
 
     // Full node page 2.
     $this->assertPageCacheContextsAndTags($node_2->urlInfo(), $cache_contexts, array(
+      'http_response',
       'rendered',
       'block_view',
       'config:block_list',

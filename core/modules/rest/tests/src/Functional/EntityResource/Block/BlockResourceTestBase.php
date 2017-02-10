@@ -122,9 +122,9 @@ abstract class BlockResourceTestBase extends EntityResourceTestBase {
   protected function getExpectedCacheTags() {
     // Because the 'user.permissions' cache context is missing, the cache tag
     // for the anonymous user role is never added automatically.
-    return array_filter(parent::getExpectedCacheTags(), function ($tag) {
+    return array_values(array_filter(parent::getExpectedCacheTags(), function ($tag) {
       return $tag !== 'config:user.role.anonymous';
-    });
+    }));
   }
 
   /**

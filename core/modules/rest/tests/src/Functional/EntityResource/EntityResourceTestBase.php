@@ -147,6 +147,15 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
+   * Deprovisions the tested entity resource.
+   */
+  protected function deprovisionEntityResource() {
+    $this->resourceConfigStorage->load('entity.' . static::$entityTypeId)
+      ->delete();
+    $this->refreshTestStateAfterRestConfigChange();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -195,9 +204,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       }
       $this->entity->save();
     }
-
-    // @todo Remove this in https://www.drupal.org/node/2815845.
-    drupal_flush_all_caches();
   }
 
   /**
@@ -291,6 +297,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     if (!static::$auth) {
       $expected_cache_tags[] = 'config:user.role.anonymous';
     }
+    $expected_cache_tags[] = 'http_response';
     return Cache::mergeTags($expected_cache_tags, $this->entity->getCacheTags());
   }
 
@@ -458,8 +465,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
-    // @todo Remove this in https://www.drupal.org/node/2815845.
-    drupal_flush_all_caches();
+    $this->refreshTestStateAfterRestConfigChange();
 
 
     // DX: 403 when unauthorized.
@@ -475,6 +481,20 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assertResourceResponse(200, FALSE, $response);
 
 
+    $this->deprovisionEntityResource();
+
+
+    // DX: upon deprovisioning, immediate 404 if no route, 406 otherwise.
+    $response = $this->request('GET', $url, $request_options);
+    if (!$has_canonical_url) {
+      $this->assertSame(404, $response->getStatusCode());
+    }
+    else {
+      $this->assert406Response($response);
+    }
+
+
+    $this->provisionEntityResource();
     $url->setOption('query', ['_format' => 'non_existing_format']);
 
 
@@ -673,9 +693,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
+    $this->refreshTestStateAfterRestConfigChange();
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body_2;
-    // @todo Remove this in https://www.drupal.org/node/2815845.
-    drupal_flush_all_caches();
 
 
     // DX: 403 when unauthorized.
@@ -876,9 +895,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
+    $this->refreshTestStateAfterRestConfigChange();
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body_2;
-    // @todo Remove this in https://www.drupal.org/node/2815845.
-    drupal_flush_all_caches();
 
 
     // DX: 403 when unauthorized.
@@ -975,8 +993,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
-    // @todo Remove this in https://www.drupal.org/node/2815845.
-    drupal_flush_all_caches();
+    $this->refreshTestStateAfterRestConfigChange();
     $this->entity = $this->createEntity();
     $url = $this->getUrl()->setOption('query', $url->getOption('query'));
 

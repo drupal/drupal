@@ -119,6 +119,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // Ensure there's a clean slate: delete all REST resource config entities.
     $this->resourceConfigStorage->delete($this->resourceConfigStorage->loadMultiple());
+    $this->refreshTestStateAfterRestConfigChange();
   }
 
   /**
@@ -141,8 +142,25 @@ abstract class ResourceTestBase extends BrowserTestBase {
         'authentication' => $authentication,
       ]
     ])->save();
-    // @todo Remove this in https://www.drupal.org/node/2815845.
-    drupal_flush_all_caches();
+    $this->refreshTestStateAfterRestConfigChange();
+  }
+
+  /**
+   * Refreshes the state of the tester to be in sync with the testee.
+   *
+   * Should be called after every change made to:
+   * - RestResourceConfig entities
+   * - the 'rest.settings' simple configuration
+   */
+  protected function refreshTestStateAfterRestConfigChange() {
+    // Ensure that the cache tags invalidator has its internal values reset.
+    // Otherwise the http_response cache tag invalidation won't work.
+    $this->refreshVariables();
+
+    // Tests using this base class may trigger route rebuilds due to changes to
+    // RestResourceConfig entities or 'rest.settings'. Ensure the test generates
+    // routes using an up-to-date router.
+    \Drupal::service('router.builder')->rebuildIfNeeded();
   }
 
   /**

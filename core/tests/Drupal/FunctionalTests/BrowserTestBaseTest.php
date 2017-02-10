@@ -43,7 +43,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertNotContains('</html>', $text);
 
     // Response includes cache tags that we can assert.
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'rendered');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'http_response rendered');
 
     // Test that we can read the JS settings.
     $js_settings = $this->getDrupalSettings();
