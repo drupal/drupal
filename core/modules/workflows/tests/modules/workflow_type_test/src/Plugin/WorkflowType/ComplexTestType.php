@@ -79,4 +79,13 @@ class ComplexTestType extends WorkflowTypeBase {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    // Always return TRUE to allow the logic in
+    // \Drupal\workflows\Entity\Workflow::onDependencyRemoval() to be tested.
+    return TRUE;
+  }
+
 }

@@ -520,4 +520,14 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface, EntityWith
     return !empty($this->status) && !empty($this->states);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    $changed = $this->getTypePlugin()->onDependencyRemoval($dependencies);
+    // Ensure the parent method is called in order to process dependencies that
+    // affect third party settings.
+    return parent::onDependencyRemoval($dependencies) || $changed;
+  }
+
 }
