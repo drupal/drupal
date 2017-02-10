@@ -7,7 +7,6 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\migrate\Exception\RequirementsException;
-use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Plugin\MigrationDeriverTrait;
 use Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

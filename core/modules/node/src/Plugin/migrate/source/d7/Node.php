@@ -167,4 +167,5 @@ class Node extends FieldableEntity {
       $query->where('n.tnid <> 0 AND n.tnid <> n.nid');
     }
   }
+
 }

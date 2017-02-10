@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   },
  * )
  */
-class ShapeOnlyColorEditableWidget extends WidgetBase  {
+class ShapeOnlyColorEditableWidget extends WidgetBase {
 
   /**
    * {@inheritdoc}

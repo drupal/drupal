@@ -121,4 +121,5 @@ class EntityAccessCheckTest extends UnitTestCase {
     $route_match->getParameters()->willReturn(new ParameterBag(['entity_type' => 'node', 'var_name' => $object]));
     return $route_match->reveal();
   }
+
 }

@@ -77,7 +77,7 @@ class NodeCreationTest extends NodeTestBase {
     $admin_user = $this->drupalCreateUser(array('administer nodes', 'create page content'));
     $this->drupalLogin($admin_user);
     $this->drupalGet('node/add/page');
-    $this->assertNoFieldById('edit-revision', NULL , 'The revision checkbox is not present.');
+    $this->assertNoFieldById('edit-revision', NULL, 'The revision checkbox is not present.');
   }
 
   /**
