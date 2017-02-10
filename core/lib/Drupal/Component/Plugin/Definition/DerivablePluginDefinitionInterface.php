@@ -1,22 +1,11 @@
 <?php
 
-namespace Drupal\Core\Layout;
-
-use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
+namespace Drupal\Component\Plugin\Definition;
 
 /**
  * Provides an interface for a derivable plugin definition.
  *
  * @see \Drupal\Component\Plugin\Derivative\DeriverInterface
- * @see \Drupal\Core\Layout\ObjectDefinitionContainerDerivativeDiscoveryDecorator
- *
- * @internal
- *   The layout system is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
- *
- * @todo Move into \Drupal\Component\Plugin\Definition in
- *   https://www.drupal.org/node/2821189.
  */
 interface DerivablePluginDefinitionInterface extends PluginDefinitionInterface {
 

@@ -4,6 +4,7 @@ namespace Drupal\Core\Layout;
 
 use Drupal\Component\Plugin\Definition\DependentPluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\DependentPluginDefinitionTrait;
+use Drupal\Component\Plugin\Definition\DerivablePluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 
