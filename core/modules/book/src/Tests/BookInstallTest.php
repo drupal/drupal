@@ -39,7 +39,8 @@ class BookInstallTest extends WebTestBase {
     // Install the Book module.
     try {
       $this->container->get('module_installer')->install(['book']);
-    } catch (PreExistingConfigException $e) {
+    }
+    catch (PreExistingConfigException $e) {
       $this->fail("Expected exception thrown trying to install Book module: " . $e->getMessage());
     }
   }
