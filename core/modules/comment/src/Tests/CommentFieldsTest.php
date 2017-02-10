@@ -208,12 +208,12 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Install core content type module (book).
     $edit = array();
-    $edit['modules[Core][book][enable]'] = 'book';
+    $edit['modules[book][enable]'] = 'book';
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
     // Now install the comment module.
     $edit = array();
-    $edit['modules[Core][comment][enable]'] = 'comment';
+    $edit['modules[comment][enable]'] = 'comment';
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->rebuildContainer();
     $this->assertTrue($this->container->get('module_handler')->moduleExists('comment'), 'Comment module enabled.');

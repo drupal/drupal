@@ -117,8 +117,8 @@ ENDPO;
       // Activate a module, to make sure that config is not overridden by module
       // installation.
       $edit = array(
-        'modules[Core][views][enable]' => TRUE,
-        'modules[Core][filter][enable]' => TRUE,
+        'modules[views][enable]' => TRUE,
+        'modules[filter][enable]' => TRUE,
       );
       $this->drupalPostForm('admin/modules', $edit, t('Install'));
 

@@ -76,8 +76,8 @@ class ClassLoaderTest extends WebTestBase {
   public function testMultipleModules() {
     $this->drupalLogin($this->rootUser);
     $edit = [
-      "modules[Testing][module_install_class_loader_test1][enable]" => TRUE,
-      "modules[Testing][module_install_class_loader_test2][enable]" => TRUE,
+      "modules[module_install_class_loader_test1][enable]" => TRUE,
+      "modules[module_install_class_loader_test2][enable]" => TRUE,
     ];
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->rebuildContainer();
