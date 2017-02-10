@@ -1,0 +1,2 @@
+workflows.workflow.*.third_party.workflow_third_party_settings_test:
+  type: ignore

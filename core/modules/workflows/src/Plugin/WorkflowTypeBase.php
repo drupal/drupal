@@ -138,4 +138,11 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    return FALSE;
+  }
+
 }

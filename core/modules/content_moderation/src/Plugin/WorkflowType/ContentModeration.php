@@ -3,13 +3,16 @@
 namespace Drupal\content_moderation\Plugin\WorkflowType;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\content_moderation\ContentModerationState;
 use Drupal\workflows\Plugin\WorkflowTypeBase;
 use Drupal\workflows\StateInterface;
 use Drupal\workflows\WorkflowInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Attaches workflows to content entity types and their bundles.
@@ -23,9 +26,36 @@ use Drupal\workflows\WorkflowInterface;
  *   },
  * )
  */
-class ContentModeration extends WorkflowTypeBase {
+class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Creates an instance of the ContentModeration WorkflowType plugin.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -193,11 +223,59 @@ class ContentModeration extends WorkflowTypeBase {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function calculateDependencies() {
-    // @todo : Implement calculateDependencies() method.
-    return [];
+    $dependencies = parent::calculateDependencies();
+    foreach ($this->getEntityTypes() as $entity_type_id) {
+      $entity_definition = $this->entityTypeManager->getDefinition($entity_type_id);
+      foreach ($this->getBundlesForEntityType($entity_type_id) as $bundle) {
+        $dependency = $entity_definition->getBundleConfigDependency($bundle);
+        $dependencies[$dependency['type']][] = $dependency['name'];
+      }
+    }
+    return $dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    $changed = parent::onDependencyRemoval($dependencies);
+
+    // When bundle config entities are removed, ensure they are cleaned up from
+    // the workflow.
+    foreach ($dependencies['config'] as $removed_config) {
+      if ($entity_type_id = $removed_config->getEntityType()->getBundleOf()) {
+        $bundle_id = $removed_config->id();
+        $this->removeEntityTypeAndBundle($entity_type_id, $bundle_id);
+        $changed = TRUE;
+      }
+    }
+
+    // When modules that provide entity types are removed, ensure they are also
+    // removed from the workflow.
+    if (!empty($dependencies['module'])) {
+      // Gather all entity definitions provided by the dependent modules which
+      // are being removed.
+      $module_entity_definitions = [];
+      foreach ($this->entityTypeManager->getDefinitions() as $entity_definition) {
+        if (in_array($entity_definition->getProvider(), $dependencies['module'])) {
+          $module_entity_definitions[] = $entity_definition;
+        }
+      }
+
+      // For all entity types provided by the uninstalled modules, remove any
+      // configuration for those types.
+      foreach ($module_entity_definitions as $module_entity_definition) {
+        foreach ($this->getBundlesForEntityType($module_entity_definition->id()) as $bundle) {
+          $this->removeEntityTypeAndBundle($module_entity_definition->id(), $bundle);
+          $changed = TRUE;
+        }
+      }
+    }
+
+    return $changed;
   }
 
   /**

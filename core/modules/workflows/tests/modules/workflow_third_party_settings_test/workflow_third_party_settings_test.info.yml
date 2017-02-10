@@ -1,0 +1,8 @@
+name: 'Workflow Third Party Settings Test'
+type: module
+description: 'Allows third party settings on workflows to be tested.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - workflows
