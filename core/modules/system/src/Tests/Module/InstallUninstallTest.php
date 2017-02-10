@@ -59,8 +59,7 @@ class InstallUninstallTest extends ModuleTestBase {
     unset($all_modules['help']);
     $this->assertModuleNotInstalled('help');
     $edit = array();
-    $package = $required_modules['help']->info['package'];
-    $edit["modules[$package][help][enable]"] = TRUE;
+    $edit["modules[help][enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->assertText('has been enabled', 'Modules status has been updated.');
     $this->assertText(t('hook_modules_installed fired for help'));
@@ -93,7 +92,7 @@ class InstallUninstallTest extends ModuleTestBase {
       // Install the module.
       $edit = array();
       $package = $module->info['package'];
-      $edit["modules[$package][$name][enable]"] = TRUE;
+      $edit['modules[' . $name . '][enable]'] = TRUE;
       $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
       // Handle experimental modules, which require a confirmation screen.
@@ -191,7 +190,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $edit = array();
     $experimental = FALSE;
     foreach ($all_modules as $name => $module) {
-      $edit['modules[' . $module->info['package'] . '][' . $name . '][enable]'] = TRUE;
+      $edit['modules[' . $name . '][enable]'] = TRUE;
       // Track whether there is at least one experimental module.
       if ($module->info['package'] == 'Core (Experimental)') {
         $experimental = TRUE;

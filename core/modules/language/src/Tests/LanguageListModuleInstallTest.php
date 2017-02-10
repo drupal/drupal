@@ -28,7 +28,7 @@ class LanguageListModuleInstallTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($admin_user);
     $edit = array();
-    $edit['modules[Multilingual][language][enable]'] = 'language';
+    $edit['modules[language][enable]'] = 'language';
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
     $this->assertEqual(\Drupal::state()->get('language_test.language_count_preinstall', 0), 1, 'Using LanguageManager::getLanguages() returns 1 language during Language installation.');
