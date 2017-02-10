@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\Core\Plugin;
 
-use Drupal\Component\Plugin\Definition\DependentPluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Plugin\Definition\DependentPluginDefinitionInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Prophecy\ProphecyInterface;

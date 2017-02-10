@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Component\Plugin\Definition;
+namespace Drupal\Core\Plugin\Definition;
 
 /**
  * Provides an interface for a plugin definition that has dependencies.

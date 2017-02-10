@@ -2,11 +2,11 @@
 
 namespace Drupal\Core\Plugin;
 
-use Drupal\Component\Plugin\Definition\DependentPluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Entity\DependencyTrait;
+use Drupal\Core\Plugin\Definition\DependentPluginDefinitionInterface;
 
 /**
  * Provides a trait for calculating the dependencies of a plugin.

@@ -2,11 +2,11 @@
 
 namespace Drupal\Core\Layout;
 
-use Drupal\Component\Plugin\Definition\DependentPluginDefinitionInterface;
-use Drupal\Component\Plugin\Definition\DependentPluginDefinitionTrait;
 use Drupal\Component\Plugin\Definition\DerivablePluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
+use Drupal\Core\Plugin\Definition\DependentPluginDefinitionInterface;
+use Drupal\Core\Plugin\Definition\DependentPluginDefinitionTrait;
 
 /**
  * Provides an implementation of a layout definition and its metadata.
