@@ -22,7 +22,7 @@
 /* exported CKBUILDER_CONFIG */
 
 var CKBUILDER_CONFIG = {
-	skin: 'moono',
+	skin: 'moono-lisa',
 	ignore: [
 		// CKEditor repository structure: unrelated to the usage of CKEditor itself.
 		'dev',
@@ -49,7 +49,7 @@ var CKBUILDER_CONFIG = {
 		'gruntfile.js',
 		'styles.js',
 		'samples',
-		'skins/moono/readme.md'
+		'skins/moono-lisa/readme.md'
 	],
 	plugins : {
 		'about' : 1,
