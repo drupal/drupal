@@ -78,14 +78,15 @@ class WorkflowEditForm extends EntityForm {
       );
     }
 
-    $delete_state_access = $this->entity->access('delete-state');
     foreach ($states as $state) {
-      $links['edit'] = [
-        'title' => $this->t('Edit'),
-        'url' => Url::fromRoute('entity.workflow.edit_state_form', ['workflow' => $workflow->id(), 'workflow_state' => $state->id()]),
-        'attributes' => ['aria-label' => $this->t('Edit @state state', ['@state' => $state->label()])],
+      $links = [
+        'edit' => [
+          'title' => $this->t('Edit'),
+          'url' => Url::fromRoute('entity.workflow.edit_state_form', ['workflow' => $workflow->id(), 'workflow_state' => $state->id()]),
+          'attributes' => ['aria-label' => $this->t('Edit @state state', ['@state' => $state->label()])],
+        ]
       ];
-      if ($delete_state_access) {
+      if ($this->entity->access('delete-state:' . $state->id())) {
         $links['delete'] = [
           'title' => t('Delete'),
           'url' => Url::fromRoute('entity.workflow.delete_state_form', [

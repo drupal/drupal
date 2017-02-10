@@ -4,7 +4,6 @@ namespace Drupal\content_moderation\Tests;
 
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
-use Drupal\workflows\Entity\Workflow;
 
 /**
  * Tests general content moderation workflow for nodes.
@@ -71,21 +70,6 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
       $this->fail('Non-moderated test node was not saved correctly.');
     }
     $this->assertEqual(NULL, $node->moderation_state->value);
-
-    // \Drupal\content_moderation\Form\BundleModerationConfigurationForm()
-    // should not list workflows with no states.
-    $workflow = Workflow::create(['id' => 'stateless', 'label' => 'Stateless', 'type' => 'content_moderation']);
-    $workflow->save();
-
-    $this->drupalGet('admin/structure/types/manage/moderated_content/moderation');
-    $this->assertNoText('Stateless');
-    $workflow
-      ->addState('draft', 'Draft')
-      ->addState('published', 'Published')
-      ->addTransition('publish', 'Publish', ['draft', 'published'], 'published')
-      ->save();
-    $this->drupalGet('admin/structure/types/manage/moderated_content/moderation');
-    $this->assertText('Stateless');
   }
 
   /**

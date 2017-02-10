@@ -20,7 +20,7 @@ entity.workflow.delete_state_form:
     _form: '\Drupal\workflows\Form\WorkflowStateDeleteForm'
     _title: 'Delete state'
   requirements:
-    _entity_access: 'workflow.delete-state'
+    _workflow_state_delete_access: 'true'
 
 entity.workflow.add_transition_form:
   path: '/admin/config/workflow/workflows/manage/{workflow}/add_transition'

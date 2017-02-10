@@ -22,4 +22,13 @@ class TestType extends WorkflowTypeBase {
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getRequiredStates() {
+    // Normally this is obtained from the annotation but we get from state to
+    // allow dynamic testing.
+    return \Drupal::state()->get('workflow_type_test.required_states', []);
+  }
+
 }

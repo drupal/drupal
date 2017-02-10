@@ -34,6 +34,13 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   /**
    * {@inheritdoc}
    */
+  public function initializeWorkflow(WorkflowInterface $workflow) {
+    return $workflow;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function label() {
     $definition = $this->getPluginDefinition();
     // The label can be an object.
@@ -105,6 +112,13 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
       $this->defaultConfiguration(),
       $configuration
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRequiredStates() {
+    return $this->getPluginDefinition()['required_states'];
   }
 
   /**

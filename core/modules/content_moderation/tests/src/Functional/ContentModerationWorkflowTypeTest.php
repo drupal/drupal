@@ -43,13 +43,19 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
       'id' => 'test_workflow',
       'workflow_type' => 'content_moderation',
     ], 'Save');
-    $this->assertSession()->pageTextContains('Created the Test Workflow Workflow. In order for the workflow to be enabled there needs to be at least one state.');
+
+    // Make sure the test workflow includes the default states and transitions.
+    $this->assertSession()->pageTextContains('Draft');
+    $this->assertSession()->pageTextContains('Published');
+    $this->assertSession()->pageTextContains('Create New Draft');
+    $this->assertSession()->pageTextContains('Publish');
 
     // Ensure after a workflow is created, the bundle information can be
     // refreshed.
     $entity_bundle_info->clearCachedBundles();
     $this->assertNotEmpty($entity_bundle_info->getAllBundleInfo());
 
+    $this->clickLink('Add a new state');
     $this->submitForm([
       'label' => 'Test State',
       'id' => 'test_state',
@@ -57,6 +63,16 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
       'type_settings[content_moderation][default_revision]' => FALSE,
     ], 'Save');
     $this->assertSession()->pageTextContains('Created Test State state.');
+
+    // Ensure that the published settings cannot be changed.
+    $this->drupalGet('admin/config/workflow/workflows/manage/test_workflow/state/published');
+    $this->assertSession()->fieldDisabled('type_settings[content_moderation][published]');
+    $this->assertSession()->fieldDisabled('type_settings[content_moderation][default_revision]');
+
+    // Ensure that the draft settings cannot be changed.
+    $this->drupalGet('admin/config/workflow/workflows/manage/test_workflow/state/draft');
+    $this->assertSession()->fieldDisabled('type_settings[content_moderation][published]');
+    $this->assertSession()->fieldDisabled('type_settings[content_moderation][default_revision]');
   }
 
 }
