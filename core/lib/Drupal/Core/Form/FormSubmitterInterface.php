@@ -62,7 +62,7 @@ interface FormSubmitterInterface {
    *     ),
    *     'fragment' => 'baz',
    *   ),
-   * ));
+   * );
    * @endcode
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
