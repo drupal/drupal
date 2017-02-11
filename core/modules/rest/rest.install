@@ -26,7 +26,7 @@ function rest_requirements($phase) {
 }
 
 /**
- * @defgroup updates-8.1.x-to-8.2.x
+ * @defgroup updates-8.1.x-to-8.2.x Updates from 8.1.x to 8.2.x
  * @{
  * Update functions from 8.1.x to 8.2.x.
  */
