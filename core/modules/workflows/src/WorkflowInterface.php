@@ -174,7 +174,7 @@ interface WorkflowInterface extends ConfigEntityInterface {
   public function getTransitions(array $transition_ids = NULL);
 
   /**
-   * Gets the transactions IDs for a state for the provided direction.
+   * Gets the transition IDs for a state for the provided direction.
    *
    * @param $state_id
    *   The state to get transitions for.
@@ -183,7 +183,7 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *   values are: 'from' and 'to'.
    *
    * @return array
-   *   The transactions IDs for a state for the provided direction.
+   *   The transition IDs for a state for the provided direction.
    */
   public function getTransitionsForState($state_id, $direction = 'from');
 
