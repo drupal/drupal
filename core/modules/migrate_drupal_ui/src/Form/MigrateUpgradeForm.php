@@ -654,6 +654,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'profile',
       'destination_module' => 'user',
     ],
+    'd6_i18n_user_profile_field_instance' => [
+      'source_module' => 'i18n',
+      'destination_module' => 'user',
+    ],
   ];
 
   /**
