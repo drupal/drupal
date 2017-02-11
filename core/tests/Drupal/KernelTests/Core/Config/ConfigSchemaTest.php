@@ -5,6 +5,10 @@ namespace Drupal\KernelTests\Core\Config;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
+use Drupal\Core\Config\Schema\Ignore;
+use Drupal\Core\Config\Schema\Mapping;
+use Drupal\Core\Config\Schema\Undefined;
+use Drupal\Core\TypedData\Plugin\DataType\StringData;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -40,7 +44,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $definition = \Drupal::service('config.typed')->getDefinition('config_schema_test.no_such_key');
     $expected = array();
     $expected['label'] = 'Undefined';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
+    $expected['class'] = Undefined::class;
     $expected['type'] = 'undefined';
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for nonexistent configuration.');
@@ -55,7 +59,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $definition = \Drupal::service('config.typed')->getDefinition('config_schema_test.someschema');
     $expected = array();
     $expected['label'] = 'Schema test data';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['class'] = Mapping::class;
     $expected['mapping']['langcode']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Language code';
     $expected['mapping']['_core']['type'] = '_core_config_info';
@@ -70,21 +74,21 @@ class ConfigSchemaTest extends KernelTestBase {
     $definition = $config->get('testitem')->getDataDefinition()->toArray();
     $expected = array();
     $expected['label'] = 'Test item';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
+    $expected['class'] = Undefined::class;
     $expected['type'] = 'undefined';
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected, 'Automatic type detected for a scalar is undefined.');
     $definition = $config->get('testlist')->getDataDefinition()->toArray();
     $expected = array();
     $expected['label'] = 'Test list';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
+    $expected['class'] = Undefined::class;
     $expected['type'] = 'undefined';
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected, 'Automatic type detected for a list is undefined.');
     $definition = $config->get('testnoschema')->getDataDefinition()->toArray();
     $expected = array();
     $expected['label'] = 'Undefined';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
+    $expected['class'] = Undefined::class;
     $expected['type'] = 'undefined';
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected, 'Automatic type detected for an undefined integer is undefined.');
@@ -93,7 +97,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $definition = \Drupal::service('config.typed')->getDefinition('system.maintenance');
     $expected = array();
     $expected['label'] = 'Maintenance mode';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['class'] = Mapping::class;
     $expected['mapping']['message'] = array(
       'label' => 'Message to display when in maintenance mode',
       'type' => 'text',
@@ -111,7 +115,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $definition = \Drupal::service('config.typed')->getDefinition('config_schema_test.ignore');
     $expected = array();
     $expected['label'] = 'Ignore test';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['class'] = Mapping::class;
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping']['langcode'] = array(
       'type' => 'string',
@@ -143,7 +147,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = array();
     $expected['type'] = 'ignore';
     $expected['label'] = 'Irrelevant';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Ignore';
+    $expected['class'] = Ignore::class;
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected);
     $definition = \Drupal::service('config.typed')->get('config_schema_test.ignore')->get('indescribable')->getDataDefinition()->toArray();
@@ -154,7 +158,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $definition = \Drupal::service('config.typed')->getDefinition('image.style.large');
     $expected = array();
     $expected['label'] = 'Image style';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['class'] = Mapping::class;
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping']['name']['type'] = 'string';
     $expected['mapping']['uuid']['type'] = 'string';
@@ -187,7 +191,7 @@ class ConfigSchemaTest extends KernelTestBase {
     // This should be the schema for image.effect.image_scale.
     $expected = array();
     $expected['label'] = 'Image scale';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['class'] = Mapping::class;
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping']['width']['type'] = 'integer';
     $expected['mapping']['width']['label'] = 'Width';
@@ -214,7 +218,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = array();
     $expected['type'] = 'config_test.dynamic.*.third_party.config_schema_test';
     $expected['label'] = 'Mapping';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['class'] = Mapping::class;
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping'] = [
       'integer' => ['type' => 'integer'],
@@ -227,7 +231,7 @@ class ConfigSchemaTest extends KernelTestBase {
     // This should be the schema of config_schema_test.someschema.somemodule.*.*.
     $expected = array();
     $expected['label'] = 'Schema multiple filesystem marker test';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['class'] = Mapping::class;
     $expected['mapping']['langcode']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Language code';
     $expected['mapping']['_core']['type'] = '_core_config_info';
@@ -257,7 +261,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_1',
       'label' => 'Test item nested one level',
-      'class' => '\Drupal\Core\TypedData\Plugin\DataType\StringData',
+      'class' => StringData::class,
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
     );
     $this->assertEqual($definition, $expected);
@@ -268,7 +272,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_2',
       'label' => 'Test item nested two levels',
-      'class' => '\Drupal\Core\TypedData\Plugin\DataType\StringData',
+      'class' => StringData::class,
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
     );
     $this->assertEqual($definition, $expected);
@@ -279,7 +283,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_3',
       'label' => 'Test item nested three levels',
-      'class' => '\Drupal\Core\TypedData\Plugin\DataType\StringData',
+      'class' => StringData::class,
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
     );
     $this->assertEqual($definition, $expected);
@@ -399,7 +403,7 @@ class ConfigSchemaTest extends KernelTestBase {
     // This should be the schema of config_schema_test.wildcard_fallback.*.
     $expected = array();
     $expected['label'] = 'Schema wildcard fallback test';
-    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['class'] = Mapping::class;
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping']['langcode']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Language code';

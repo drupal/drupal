@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
 use Drupal\Core\Config\Schema\ConfigSchemaDiscovery;
+use Drupal\Core\Config\Schema\Undefined;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 
@@ -61,18 +62,6 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       $this->discovery = new ConfigSchemaDiscovery($this->schemaStorage);
     }
     return $this->discovery;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function processDefinition(&$definition, $plugin_id) {
-    parent::processDefinition($definition, $plugin_id);
-
-    // Typed config definitions assume a leading slash, see ::hasConfigSchema().
-    if (is_array($definition) && isset($definition['class'])) {
-      $definition['class'] = '\\' . $definition['class'];
-    }
   }
 
   /**
@@ -365,7 +354,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   public function hasConfigSchema($name) {
     // The schema system falls back on the Undefined class for unknown types.
     $definition = $this->getDefinition($name);
-    return is_array($definition) && ($definition['class'] != '\Drupal\Core\Config\Schema\Undefined');
+    return is_array($definition) && ($definition['class'] != Undefined::class);
   }
 
   /**
