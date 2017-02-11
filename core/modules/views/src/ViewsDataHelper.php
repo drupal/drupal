@@ -37,7 +37,7 @@ class ViewsDataHelper {
   /**
    * Fetches a list of all fields available for a given base type.
    *
-   * @param (array|string) $base
+   * @param array|string $base
    *   A list or a single base_table, for example node.
    * @param string $type
    *   The handler type, for example field or filter.

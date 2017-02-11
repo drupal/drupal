@@ -105,7 +105,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   /**
    * Determine if the argument needs a style plugin.
    *
-   * @return TRUE/FALSE
+   * @return bool
    */
   public function needsStylePlugin() {
     $info = $this->defaultActions($this->options['default_action']);

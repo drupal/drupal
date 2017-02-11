@@ -37,7 +37,7 @@ interface PoMetadataInterface {
   /**
    * Get header metadata.
    *
-   * @return \Drupal\Component\Gettext\PoHeader $header
+   * @return \Drupal\Component\Gettext\PoHeader
    *   Header instance representing metadata in a PO header.
    */
   public function getHeader();

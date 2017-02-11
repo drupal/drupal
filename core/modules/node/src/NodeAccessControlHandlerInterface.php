@@ -23,7 +23,7 @@ interface NodeAccessControlHandlerInterface {
    * @param \Drupal\node\NodeInterface $node
    *   The $node to acquire grants for.
    *
-   * @return array $grants
+   * @return array
    *   The access rules for the node.
    */
   public function acquireGrants(NodeInterface $node);
@@ -74,7 +74,7 @@ interface NodeAccessControlHandlerInterface {
    *   A user object representing the user for whom the operation is to be
    *   performed.
    *
-   * @return int.
+   * @return int
    *   Status of the access check.
    */
   public function checkAllGrants(AccountInterface $account);

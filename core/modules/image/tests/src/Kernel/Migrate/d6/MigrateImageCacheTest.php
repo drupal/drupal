@@ -88,14 +88,14 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
    */
   public function testMissingEffectPlugin() {
     Database::getConnection('default', 'migrate')->insert("imagecache_action")
-       ->fields([
+      ->fields([
        'presetid',
        'weight',
        'module',
        'action',
        'data',
      ])
-       ->values([
+      ->values([
        'presetid' => '1',
        'weight' => '0',
        'module' => 'imagecache',
@@ -121,14 +121,14 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
    */
   public function testInvalidCropValues() {
     Database::getConnection('default', 'migrate')->insert("imagecache_action")
-       ->fields([
+      ->fields([
        'presetid',
        'weight',
        'module',
        'action',
        'data',
      ])
-       ->values([
+      ->values([
        'presetid' => '1',
        'weight' => '0',
        'module' => 'imagecache',

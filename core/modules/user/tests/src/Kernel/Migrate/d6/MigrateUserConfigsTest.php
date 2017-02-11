@@ -71,10 +71,10 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
     foreach ($user_register_map as $map) {
       // Tests migration of user_register = 1
       Database::getConnection('default', 'migrate')
-          ->update('variable')
-          ->fields(['value' => serialize($map[0])])
-          ->condition('name', 'user_register')
-          ->execute();
+        ->update('variable')
+        ->fields(['value' => serialize($map[0])])
+        ->condition('name', 'user_register')
+        ->execute();
 
       /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
       $migration = $this->getMigration('d6_user_settings');

@@ -57,8 +57,8 @@ class MigrateMenuTest extends MigrateDrupal7TestBase {
 
     $migration = $this->getMigration('d7_menu');
     \Drupal::database()
-        ->truncate($migration->getIdMap()->mapTableName())
-        ->execute();
+      ->truncate($migration->getIdMap()->mapTableName())
+      ->execute();
     $this->executeMigration($migration);
 
     $navigation_menu = Menu::load('tools');

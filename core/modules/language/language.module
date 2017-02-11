@@ -146,7 +146,7 @@ function language_element_info_alter(&$type) {
  * @param array $element
  *   The form element to process.
  *
- * @return array $element
+ * @return array
  *   The processed form element.
  */
 function language_process_language_select($element) {

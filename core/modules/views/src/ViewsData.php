@@ -113,7 +113,7 @@ class ViewsData {
    *
    * @see https://www.drupal.org/node/2723553
    *
-   * @return array $data
+   * @return array
    *   An array of table data.
    */
   public function getAll() {
@@ -140,7 +140,7 @@ class ViewsData {
    *
    * @see https://www.drupal.org/node/2723553
    *
-   * @return array $data
+   * @return array
    *   An array of table data.
    */
   public function get($key = NULL) {

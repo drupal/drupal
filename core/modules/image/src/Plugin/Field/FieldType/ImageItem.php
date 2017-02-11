@@ -487,7 +487,7 @@ class ImageItem extends FileItem {
   /**
    * Gets the entity manager.
    *
-   * @return \Drupal\Core\Entity\EntityManagerInterface.
+   * @return \Drupal\Core\Entity\EntityManagerInterface
    */
   protected function getEntityManager() {
     if (!isset($this->entityManager)) {

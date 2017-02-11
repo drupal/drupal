@@ -485,7 +485,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    */
   public function getRowBySource(array $source_id_values) {
     $query = $this->getDatabase()->select($this->mapTableName(), 'map')
-              ->fields('map');
+      ->fields('map');
     $query->condition(static::SOURCE_IDS_HASH, $this->getSourceIDsHash($source_id_values));
     $result = $query->execute();
     return $result->fetchAssoc();
@@ -496,7 +496,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    */
   public function getRowByDestination(array $destination_id_values) {
     $query = $this->getDatabase()->select($this->mapTableName(), 'map')
-              ->fields('map');
+      ->fields('map');
     foreach ($this->destinationIdFields() as $field_name => $destination_id) {
       $query->condition("map.$destination_id", $destination_id_values[$field_name], '=');
     }
@@ -510,10 +510,10 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   public function getRowsNeedingUpdate($count) {
     $rows = array();
     $result = $this->getDatabase()->select($this->mapTableName(), 'map')
-                      ->fields('map')
-                      ->condition('source_row_status', MigrateIdMapInterface::STATUS_NEEDS_UPDATE)
-                      ->range(0, $count)
-                      ->execute();
+      ->fields('map')
+      ->condition('source_row_status', MigrateIdMapInterface::STATUS_NEEDS_UPDATE)
+      ->range(0, $count)
+      ->execute();
     foreach ($result as $row) {
       $rows[] = $row;
     }

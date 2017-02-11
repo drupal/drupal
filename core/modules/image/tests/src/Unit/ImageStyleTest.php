@@ -170,11 +170,11 @@ class ImageStyleTest extends UnitTestCase {
 
     $image_style = $this->getImageStyleMock($image_effect_id, $image_effect, array('getPrivateKey', 'getHashSalt'));
     $image_style->expects($this->any())
-        ->method('getPrivateKey')
-        ->will($this->returnValue($private_key));
+      ->method('getPrivateKey')
+      ->will($this->returnValue($private_key));
     $image_style->expects($this->any())
-        ->method('getHashSalt')
-        ->will($this->returnValue($hash_salt));
+      ->method('getHashSalt')
+      ->will($this->returnValue($hash_salt));
 
     // Assert the extension has been added to the URI before creating the token.
     $this->assertEquals($image_style->getPathToken('public://test.jpeg.png'), $image_style->getPathToken('public://test.jpeg'));
@@ -192,11 +192,11 @@ class ImageStyleTest extends UnitTestCase {
 
     $image_style = $this->getImageStyleMock($image_effect_id, $image_effect, array('getPrivateKey', 'getHashSalt'));
     $image_style->expects($this->any())
-        ->method('getPrivateKey')
-        ->will($this->returnValue($private_key));
+      ->method('getPrivateKey')
+      ->will($this->returnValue($private_key));
     $image_style->expects($this->any())
-        ->method('getHashSalt')
-        ->will($this->returnValue($hash_salt));
+      ->method('getHashSalt')
+      ->will($this->returnValue($hash_salt));
     // Assert no extension has been added to the uri before creating the token.
     $this->assertNotEquals($image_style->getPathToken('public://test.jpeg.png'), $image_style->getPathToken('public://test.jpeg'));
     $this->assertNotEquals(substr(Crypt::hmacBase64($image_style->id() . ':' . 'public://test.jpeg.png', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));

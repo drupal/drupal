@@ -537,7 +537,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Determine if this item is 'exposed', meaning it provides form elements
    * to let users modify the view.
    *
-   * @return TRUE/FALSE
+   * @return bool
    */
   public function isExposed() {
     return !empty($this->options['exposed']);

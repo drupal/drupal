@@ -32,7 +32,7 @@ class ViewAjaxResponse extends AjaxResponse {
   /**
    * Gets the executed view of this response.
    *
-   * @return \Drupal\views\ViewExecutable $view
+   * @return \Drupal\views\ViewExecutable
    *   The View executed on this ajax request.
    */
   public function getView() {

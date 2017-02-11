@@ -28,7 +28,7 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    * @param string $name
    *   The name of the context in the plugin definition.
    *
-   * @return \Drupal\Component\Plugin\Context\ContextDefinitionInterface.
+   * @return \Drupal\Component\Plugin\Context\ContextDefinitionInterface
    *   The definition against which the context value must validate.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
@@ -103,7 +103,7 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    *   The value to set the context to. The value has to validate against the
    *   provided context definition.
    *
-   * @return \Drupal\Component\Plugin\ContextAwarePluginInterface.
+   * @return \Drupal\Component\Plugin\ContextAwarePluginInterface
    *   A context aware plugin object for chaining.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException

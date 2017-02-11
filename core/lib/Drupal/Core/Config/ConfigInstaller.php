@@ -675,7 +675,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   /**
    * Gets the install profile from settings.
    *
-   * @return string|null $profile
+   * @return string|null
    *   The name of the installation profile or NULL if no installation profile
    *   is currently active. This is the case for example during the first steps
    *   of the installer or during unit tests.

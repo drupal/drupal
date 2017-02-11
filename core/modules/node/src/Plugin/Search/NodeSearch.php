@@ -433,8 +433,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     $query->addExpression('MAX(sd.reindex)', 'ex2');
     $query->condition(
         $query->orConditionGroup()
-        ->where('sd.sid IS NULL')
-        ->condition('sd.reindex', 0, '<>')
+          ->where('sd.sid IS NULL')
+          ->condition('sd.reindex', 0, '<>')
       );
     $query->orderBy('ex', 'DESC')
       ->orderBy('ex2')

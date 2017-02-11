@@ -51,8 +51,8 @@ class ViewsEscapingTest extends ViewTestBase {
 
     // Make base theme default then test for hook invocations.
     $this->config('system.theme')
-        ->set('default', 'views_test_theme')
-        ->save();
+      ->set('default', 'views_test_theme')
+      ->save();
     $this->assertEqual($this->config('system.theme')->get('default'), 'views_test_theme');
 
     $this->drupalGet('test_page_display_200');

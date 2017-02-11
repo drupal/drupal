@@ -29,7 +29,7 @@ class PostgresqlConnectionTest extends UnitTestCase {
   /**
    * Data provider for testEscapeTable.
    *
-   * @return []
+   * @return array
    *   An indexed array of where each value is an array of arguments to pass to
    *   testEscapeField. The first value is the expected value, and the second
    *   value is the value to test.
@@ -51,7 +51,7 @@ class PostgresqlConnectionTest extends UnitTestCase {
   /**
    * Data provider for testEscapeAlias.
    *
-   * @return []
+   * @return array
    *   Array of arrays with the following elements:
    *   - Expected escaped string.
    *   - String to escape.
@@ -68,7 +68,7 @@ class PostgresqlConnectionTest extends UnitTestCase {
   /**
    * Data provider for testEscapeField.
    *
-   * @return []
+   * @return array
    *   Array of arrays with the following elements:
    *   - Expected escaped string.
    *   - String to escape.

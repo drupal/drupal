@@ -27,7 +27,7 @@ interface ContextAwarePluginInterface extends ComponentContextAwarePluginInterfa
    * @param string $name
    *   The name of the context in the plugin definition.
    *
-   * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface.
+   * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
    *   The definition against which the context value must validate.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException

@@ -67,8 +67,8 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
   public function deleteRoleReferences(array $rids) {
     // Remove the role from all users.
     $this->database->delete('user__roles')
-        ->condition('roles_target_id', $rids)
-        ->execute();
+      ->condition('roles_target_id', $rids)
+      ->execute();
 
     $this->resetCache();
   }

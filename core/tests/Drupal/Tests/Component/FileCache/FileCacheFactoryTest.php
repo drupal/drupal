@@ -101,8 +101,8 @@ class FileCacheFactoryTest extends UnitTestCase {
 
     // Get a unique FileCache class.
     $file_cache = $this->getMockBuilder(FileCache::class)
-       ->disableOriginalConstructor()
-       ->getMock();
+      ->disableOriginalConstructor()
+      ->getMock();
     $class = get_class($file_cache);
 
     // Test fallback configuration.

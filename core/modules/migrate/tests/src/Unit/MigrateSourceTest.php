@@ -166,7 +166,7 @@ class MigrateSourceTest extends MigrateTestCase {
     $container = new ContainerBuilder();
     $cache = $this->getMock(CacheBackendInterface::class);
     $cache->expects($this->any())->method('set')
-        ->with($this->isType('string'), $this->isType('int'), $this->isType('int'));
+      ->with($this->isType('string'), $this->isType('int'), $this->isType('int'));
     $container->set('cache.migrate', $cache);
     \Drupal::setContainer($container);
 
@@ -204,7 +204,7 @@ class MigrateSourceTest extends MigrateTestCase {
     $container = new ContainerBuilder();
     $cache = $this->getMock(CacheBackendInterface::class);
     $cache->expects($this->any())->method('set')
-        ->with('test_key', $this->isType('int'), $this->isType('int'));
+      ->with('test_key', $this->isType('int'), $this->isType('int'));
     $container->set('cache.migrate', $cache);
     \Drupal::setContainer($container);
 
