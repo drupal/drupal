@@ -1,0 +1,29 @@
+id: d6_i18n_user_profile_field_instance
+label: User profile field instance configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_i18n_profile_field
+  constants:
+    entity_type: user
+    bundle: user
+process:
+  langcode: language
+  entity_type: 'constants/entity_type'
+  bundle: 'constants/bundle'
+  field_name: name
+  property:
+    plugin: static_map
+    source: property
+    map:
+      title: label
+      options: options
+      explanation: description
+  translation: translation
+destination:
+  plugin: entity:field_config
+  translations: true
+migration_dependencies:
+  required:
+    - user_profile_field
+    - user_profile_field_instance

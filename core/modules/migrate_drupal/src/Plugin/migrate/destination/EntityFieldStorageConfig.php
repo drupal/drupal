@@ -2,8 +2,10 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\destination;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityFieldStorageConfig as BaseEntityFieldStorageConfig;
@@ -45,11 +47,17 @@ class EntityFieldStorageConfig extends BaseEntityFieldStorageConfig {
    *   The storage for this entity type.
    * @param array $bundles
    *   The list of bundles this entity type has.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
    *   The field type plugin manager.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The configuration factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, FieldTypePluginManagerInterface $field_type_plugin_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_plugin_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $language_manager, $config_factory, $field_type_plugin_manager);
+    $this->languageManager = $language_manager;
+    $this->configFactory = $config_factory;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
   }
 
@@ -65,6 +73,8 @@ class EntityFieldStorageConfig extends BaseEntityFieldStorageConfig {
       $migration,
       $container->get('entity.manager')->getStorage($entity_type_id),
       array_keys($container->get('entity.manager')->getBundleInfo($entity_type_id)),
+      $container->get('language_manager'),
+      $container->get('config.factory'),
       $container->get('plugin.manager.field.field_type')
     );
   }

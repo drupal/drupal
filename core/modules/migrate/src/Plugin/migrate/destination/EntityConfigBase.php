@@ -3,10 +3,16 @@
 namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\language\ConfigurableLanguageManager;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class for importing configuration entities.
@@ -19,6 +25,63 @@ use Drupal\migrate\Row;
  * for re-importing (if that is supported).
  */
 class EntityConfigBase extends Entity {
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * The configuration factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface;
+   */
+  protected $configFactory;
+
+  /**
+   * Construct a new entity.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+   *   The migration.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The storage for this entity type.
+   * @param array $bundles
+   *   The list of bundles this entity type has.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The configuration factory.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
+    $this->languageManager = $language_manager;
+    $this->configFactory = $config_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+    $entity_type_id = static::getEntityTypeId($plugin_id);
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $migration,
+      $container->get('entity.manager')->getStorage($entity_type_id),
+      array_keys($container->get('entity.manager')->getBundleInfo($entity_type_id)),
+      $container->get('language_manager'),
+      $container->get('config.factory')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -39,17 +102,37 @@ class EntityConfigBase extends Entity {
       }
     }
     $entity = $this->getEntity($row, $old_destination_id_values);
-    $entity->save();
+    // Translations are already saved in updateEntity by configuration override.
+    if (!$this->isTranslationDestination()) {
+      $entity->save();
+    }
     if (count($ids) > 1) {
       // This can only be a config entity, content entities have their ID key
       // and that's it.
-      $return = array();
+      $return = [];
       foreach ($id_keys as $id_key) {
-        $return[] = $entity->get($id_key);
+        if (($this->isTranslationDestination()) && ($id_key == 'langcode')) {
+          // Config entities do not have a language property, get the language
+          // code from the destination.
+          $return[] = $row->getDestinationProperty($id_key);
+        }
+        else {
+          $return[] = $entity->get($id_key);
+        }
       }
       return $return;
     }
-    return array($entity->id());
+    return [$entity->id()];
+  }
+
+  /**
+   * Get whether this destination is for translations.
+   *
+   * @return bool
+   *   Whether this destination is for translations.
+   */
+  protected function isTranslationDestination() {
+    return !empty($this->configuration['translations']);
   }
 
   /**
@@ -58,6 +141,9 @@ class EntityConfigBase extends Entity {
   public function getIds() {
     $id_key = $this->getKey('id');
     $ids[$id_key]['type'] = 'string';
+    if ($this->isTranslationDestination()) {
+      $ids['langcode']['type'] = 'string';
+    }
     return $ids;
   }
 
@@ -70,11 +156,28 @@ class EntityConfigBase extends Entity {
    *   The row object to update from.
    */
   protected function updateEntity(EntityInterface $entity, Row $row) {
-    foreach ($row->getRawDestination() as $property => $value) {
-      $this->updateEntityProperty($entity, explode(Row::PROPERTY_SEPARATOR, $property), $value);
+    // This is a translation if the language in the active config does not
+    // match the language of this row.
+    $translation = FALSE;
+    if ($row->hasDestinationProperty('langcode') && $this->languageManager instanceof ConfigurableLanguageManager) {
+      $config = $entity->getConfigDependencyName();
+      $langcode = $this->configFactory->get('langcode');
+      if ($langcode != $row->getDestinationProperty('langcode')) {
+        $translation = TRUE;
+      }
     }
 
-    $this->setRollbackAction($row->getIdMap());
+    if ($translation) {
+      $config_override = $this->languageManager->getLanguageConfigOverride($row->getDestinationProperty('langcode'), $config);
+      $config_override->set(str_replace(Row::PROPERTY_SEPARATOR, '.', $row->getDestinationProperty('property')), $row->getDestinationProperty('translation'));
+      $config_override->save();
+    }
+    else {
+      foreach ($row->getRawDestination() as $property => $value) {
+        $this->updateEntityProperty($entity, explode(Row::PROPERTY_SEPARATOR, $property), $value);
+      }
+      $this->setRollbackAction($row->getIdMap());
+    }
   }
 
   /**
@@ -113,9 +216,39 @@ class EntityConfigBase extends Entity {
   protected function generateId(Row $row, array $ids) {
     $id_values = array();
     foreach ($ids as $id) {
+      if ($this->isTranslationDestination() && $id == 'langcode') {
+        continue;
+      }
       $id_values[] = $row->getDestinationProperty($id);
     }
     return implode('.', $id_values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rollback(array $destination_identifier) {
+    if ($this->isTranslationDestination()) {
+      // The entity id does not include the langcode.
+      $id_values = array();
+      foreach ($destination_identifier as $key => $value) {
+        if ($this->isTranslationDestination() && $key == 'langcode') {
+          continue;
+        }
+        $id_values[] = $value;
+      }
+      $entity_id = implode('.', $id_values);
+      $language = $destination_identifier['langcode'];
+
+      $config = $this->storage->load($entity_id)->getConfigDependencyName();
+      $config_override = $this->languageManager->getLanguageConfigOverride($language, $config);
+      // Rollback the translation.
+      $config_override->delete();
+    }
+    else {
+      $destination_identifier = implode('.', $destination_identifier);
+      parent::rollback(array($destination_identifier));
+    }
   }
 
 }
