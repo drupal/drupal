@@ -339,7 +339,7 @@ class SystemTestController extends ControllerBase {
   /**
    * Returns the current date.
    *
-   * @return \Symfony\Component\HttpFoundation\Response $response
+   * @return \Symfony\Component\HttpFoundation\Response
    *   A Response object containing the current date.
    */
   public function getCurrentDate() {
@@ -351,7 +351,7 @@ class SystemTestController extends ControllerBase {
   /**
    * Returns a response with a test header set from the request.
    *
-   * @return \Symfony\Component\HttpFoundation\Response $response
+   * @return \Symfony\Component\HttpFoundation\Response
    *   A Response object containing the test header.
    */
   public function getTestHeader(Request $request) {

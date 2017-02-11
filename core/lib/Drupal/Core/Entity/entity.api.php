@@ -1723,9 +1723,9 @@ function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $
   if ($entity_type->id() == 'node' && $bundle == 'article') {
     $fields = array();
     $fields['mymodule_text_more'] = BaseFieldDefinition::create('string')
-        ->setLabel(t('More text'))
-        ->setComputed(TRUE)
-        ->setClass('\Drupal\mymodule\EntityComputedMoreText');
+      ->setLabel(t('More text'))
+      ->setComputed(TRUE)
+      ->setClass('\Drupal\mymodule\EntityComputedMoreText');
     return $fields;
   }
 }

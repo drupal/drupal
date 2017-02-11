@@ -31,11 +31,11 @@ foreach ($block_configs as $block_config) {
 
 // Update the config entity query "index".
 $existing_blocks = $connection->select('key_value')
-    ->fields('key_value', ['value'])
-    ->condition('collection', 'config.entity.key_store.block')
-    ->condition('name', 'theme:seven')
-    ->execute()
-    ->fetchField();
+  ->fields('key_value', ['value'])
+  ->condition('collection', 'config.entity.key_store.block')
+  ->condition('name', 'theme:seven')
+  ->execute()
+  ->fetchField();
 $existing_blocks = unserialize($existing_blocks);
 
 $connection->update('key_value')

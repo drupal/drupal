@@ -25,13 +25,13 @@ class TestBaseTest extends UnitTestCase {
    */
   public function getTestBaseForAssertionTests($test_id) {
     $mock_test_base = $this->getMockBuilder('Drupal\simpletest\TestBase')
-        ->setConstructorArgs(array($test_id))
-        ->setMethods(array('storeAssertion'))
-        ->getMockForAbstractClass();
+      ->setConstructorArgs(array($test_id))
+      ->setMethods(array('storeAssertion'))
+      ->getMockForAbstractClass();
     // Override storeAssertion() so we don't need a database.
     $mock_test_base->expects($this->any())
-        ->method('storeAssertion')
-        ->will($this->returnValue(NULL));
+      ->method('storeAssertion')
+      ->will($this->returnValue(NULL));
     return $mock_test_base;
   }
 

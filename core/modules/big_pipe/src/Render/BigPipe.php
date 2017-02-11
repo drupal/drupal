@@ -640,8 +640,10 @@ EOF;
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request for which a response is being sent.
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST|\Symfony\Component\HttpKernel\HttpKernelInterface::SUB_REQUEST $request_type
-   *   The request type.
+   * @param int $request_type
+   *   The request type. Can either be
+   *   \Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST or
+   *   \Symfony\Component\HttpKernel\HttpKernelInterface::SUB_REQUEST.
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The response to filter.
    *

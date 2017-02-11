@@ -69,7 +69,7 @@ class ConfigModuleOverridesEvent extends Event {
   /**
    * Get configuration overrides.
    *
-   * @return array.
+   * @return array
    *   The array of configuration overrides.
    */
   public function getOverrides() {

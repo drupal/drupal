@@ -18,7 +18,7 @@ interface NodeGrantDatabaseStorageInterface {
    *   A user object representing the user for whom the operation is to be
    *   performed.
    *
-   * @return int.
+   * @return int
    *   Status of the access check.
    */
   public function checkAll(AccountInterface $account);

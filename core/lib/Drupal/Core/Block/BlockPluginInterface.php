@@ -102,7 +102,7 @@ interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormIn
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return array $form
+   * @return array
    *   The renderable form array representing the entire configuration form.
    */
   public function blockForm($form, FormStateInterface $form_state);

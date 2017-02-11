@@ -116,14 +116,14 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
 
     $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
-            ->method('load')
-            ->with($format_id)
-            ->will($this->returnValue($filter_format));
+      ->method('load')
+      ->with($format_id)
+      ->will($this->returnValue($filter_format));
 
     $this->entityManager->expects($this->once())
-                        ->method('getStorage')
-                        ->with('filter_format')
-                        ->will($this->returnValue($storage));
+      ->method('getStorage')
+      ->with('filter_format')
+      ->will($this->returnValue($storage));
 
     $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertContains('test_module', $dependencies['module']);

@@ -3043,21 +3043,22 @@
         },
         {
             "name": "drupal/coder",
-            "version": "8.2.8",
+            "version": "8.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klausi/coder.git",
-                "reference": "6d717e1a5a5dd592ebbeaafad11746849fb52532"
+                "reference": "c835ff5c1733676fe0d3f3b861e814d570baaa6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klausi/coder/zipball/6d717e1a5a5dd592ebbeaafad11746849fb52532",
-                "reference": "6d717e1a5a5dd592ebbeaafad11746849fb52532",
+                "url": "https://api.github.com/repos/klausi/coder/zipball/c835ff5c1733676fe0d3f3b861e814d570baaa6f",
+                "reference": "c835ff5c1733676fe0d3f3b861e814d570baaa6f",
                 "shasum": ""
             },
             "require": {
+                "ext-mbstring": "*",
                 "php": ">=5.4.0",
-                "squizlabs/php_codesniffer": ">=2.5.1",
+                "squizlabs/php_codesniffer": ">=2.7.0 <3.0",
                 "symfony/yaml": ">=2.0.0"
             },
             "require-dev": {
@@ -3075,7 +3076,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2016-07-05T20:48:03+00:00"
+            "time": "2016-12-09T21:57:53+00:00"
         },
         {
             "name": "fabpot/goutte",

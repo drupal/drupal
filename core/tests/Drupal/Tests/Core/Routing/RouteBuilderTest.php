@@ -262,8 +262,8 @@ class RouteBuilderTest extends UnitTestCase {
       ->with('router_rebuild');
 
     $this->yamlDiscovery->expects($this->any())
-                        ->method('findAll')
-                        ->will($this->returnValue(array()));
+      ->method('findAll')
+      ->will($this->returnValue(array()));
 
     $this->routeBuilder->setRebuildNeeded();
 

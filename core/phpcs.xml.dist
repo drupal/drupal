@@ -57,6 +57,8 @@
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentFullStop"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentNotCapital"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamNameNoMatch"/>
+    <exclude name="Drupal.Commenting.FunctionComment.ParamTypeSpaces"/>
+    <exclude name="Drupal.Commenting.FunctionComment.ReturnTypeSpaces"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
   <rule ref="Drupal.ControlStructures.ElseIf"/>

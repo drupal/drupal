@@ -16,7 +16,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @param string $entity_type
    *   The entity type for this access control handler.
    *
-   * @return \Drupal\Core\Entity\EntityAccessControlHandlerInterface.
+   * @return \Drupal\Core\Entity\EntityAccessControlHandlerInterface
    *   A access control handler instance.
    */
   public function getAccessControlHandler($entity_type);
@@ -40,7 +40,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @param string $entity_type
    *   The entity type for this view builder.
    *
-   * @return \Drupal\Core\Entity\EntityViewBuilderInterface.
+   * @return \Drupal\Core\Entity\EntityViewBuilderInterface
    *   A view builder instance.
    */
   public function getViewBuilder($entity_type);

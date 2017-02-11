@@ -42,8 +42,8 @@ EOT;
 
     $migration = $this->getMigration('d6_menu');
     \Drupal::database()
-        ->truncate($migration->getIdMap()->mapTableName())
-        ->execute();
+      ->truncate($migration->getIdMap()->mapTableName())
+      ->execute();
     $this->executeMigration($migration);
 
     $navigation_menu = Menu::load('navigation');

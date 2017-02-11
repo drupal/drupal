@@ -260,7 +260,7 @@ class Block extends DisplayPluginBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return array $form
+   * @return array
    *   The renderable form array representing the entire configuration form.
    *
    * @see \Drupal\views\Plugin\Block\ViewsBlock::blockForm()

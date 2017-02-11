@@ -87,8 +87,8 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $typed_data_manager = $this->getMock(TypedDataManagerInterface::class);
     $typed_data_manager->expects($this->any())
-        ->method('createDataDefinition')
-        ->willReturn($this->getMock('Drupal\Core\TypedData\DataDefinitionInterface'));
+      ->method('createDataDefinition')
+      ->willReturn($this->getMock('Drupal\Core\TypedData\DataDefinitionInterface'));
 
     $typed_data_manager->expects($this->any())
       ->method('getDefinition')

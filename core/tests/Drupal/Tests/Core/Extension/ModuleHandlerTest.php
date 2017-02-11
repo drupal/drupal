@@ -398,11 +398,11 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->cacheBackend
       ->expects($this->exactly(2))
       ->method('get')
-        ->will($this->returnValue(NULL));
+      ->will($this->returnValue(NULL));
     $this->cacheBackend
       ->expects($this->exactly(2))
       ->method('set')
-        ->with($this->logicalOr('module_implements', 'hook_info'));
+      ->with($this->logicalOr('module_implements', 'hook_info'));
     $this->moduleHandler->getImplementations('hook');
     $this->moduleHandler->writeCache();
   }

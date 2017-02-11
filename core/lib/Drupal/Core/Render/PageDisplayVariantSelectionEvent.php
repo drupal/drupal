@@ -80,7 +80,7 @@ class PageDisplayVariantSelectionEvent extends Event implements RefinableCacheab
   /**
    * The selected page display variant plugin ID.
    *
-   * @return string;
+   * @return string
    */
   public function getPluginId() {
     return $this->pluginId;

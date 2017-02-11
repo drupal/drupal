@@ -49,8 +49,8 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
 
     // Make base theme default then test for hook invocations.
     $this->config('system.theme')
-        ->set('default', 'test_basetheme')
-        ->save();
+      ->set('default', 'test_basetheme')
+      ->save();
     $this->assertEqual($this->config('system.theme')->get('default'), 'test_basetheme');
 
     // Make sure a views rendered page is touched.
@@ -62,8 +62,8 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
     // Make sub theme default to test for hook invocation
     // from both sub and base theme.
     $this->config('system.theme')
-        ->set('default', 'test_subtheme')
-        ->save();
+      ->set('default', 'test_subtheme')
+      ->save();
     $this->assertEqual($this->config('system.theme')->get('default'), 'test_subtheme');
 
     // Make sure a views rendered page is touched.

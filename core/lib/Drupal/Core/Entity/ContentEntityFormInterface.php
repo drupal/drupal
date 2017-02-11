@@ -16,7 +16,7 @@ interface ContentEntityFormInterface extends EntityFormInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface.
+   * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface
    *   The current form display.
    */
   public function getFormDisplay(FormStateInterface $form_state);

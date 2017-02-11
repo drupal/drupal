@@ -417,8 +417,8 @@ class StringDatabaseStorage implements StringStorageInterface {
         // Conditions for target fields when doing an outer join only make
         // sense if we add also OR field IS NULL.
         $query->condition(db_or()
-            ->condition($field_alias, (array) $value, 'IN')
-            ->isNull($field_alias)
+          ->condition($field_alias, (array) $value, 'IN')
+          ->isNull($field_alias)
         );
       }
       else {

@@ -47,17 +47,17 @@ class MigrateTrackerNodeTest extends MigrateDrupal7TestBase {
   public function testMigrateTrackerNode() {
     $connection = Database::getConnection('default', 'migrate');
     $num_rows = $connection
-        ->select('tracker_node', 'tn')
-        ->fields('tn', ['nid', 'published', 'changed'])
-        ->countQuery()
-        ->execute()
-        ->fetchField();
+      ->select('tracker_node', 'tn')
+      ->fields('tn', ['nid', 'published', 'changed'])
+      ->countQuery()
+      ->execute()
+      ->fetchField();
     $this->assertIdentical('1', $num_rows);
 
     $tracker_nodes = $connection
-        ->select('tracker_node', 'tn')
-        ->fields('tn', ['nid', 'published', 'changed'])
-        ->execute();
+      ->select('tracker_node', 'tn')
+      ->fields('tn', ['nid', 'published', 'changed'])
+      ->execute();
     $row = $tracker_nodes->fetchAssoc();
     $this->assertIdentical('1', $row['nid']);
     $this->assertIdentical('1', $row['published']);
