@@ -344,7 +344,9 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    */
   public function viewsFormSubmit(&$form, FormStateInterface $form_state) {
     if ($form_state->get('step') == 'views_form_views_form') {
-      // Filter only selected checkboxes.
+      // Filter only selected checkboxes. Use the actual user input rather than
+      // the raw form values array, since the site data may change before the
+      // bulk form is submitted, which can lead to data loss.
       $user_input = $form_state->getUserInput();
       $selected = array_filter($user_input[$this->options['id']]);
       $entities = array();
