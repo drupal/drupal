@@ -162,7 +162,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
         $source_id_values = array_values(unserialize($source_id));
         $row = $id_map->getRowBySource($source_id_values);
         $destination = serialize($id_map->currentDestination());
-        $message = "Successful migration of $source_id to $destination as part of the {$migration->id()} migration. The source row status is " . $row['source_row_status'];
+        $message = "Migration of $source_id to $destination as part of the {$migration->id()} migration. The source row status is " . $row['source_row_status'];
         // A completed migration should have maps with
         // MigrateIdMapInterface::STATUS_IGNORED or
         // MigrateIdMapInterface::STATUS_IMPORTED.
