@@ -18,11 +18,8 @@ class MigrateExternalTranslatedTest extends MigrateTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo: Remove migrate_drupal when https://www.drupal.org/node/2560795 is
-   * fixed.
    */
-  public static $modules = ['system', 'user', 'language', 'node', 'field', 'migrate_drupal', 'migrate_external_translated_test'];
+  public static $modules = ['system', 'user', 'language', 'node', 'field', 'migrate_external_translated_test'];
 
   /**
    * {@inheritdoc}
