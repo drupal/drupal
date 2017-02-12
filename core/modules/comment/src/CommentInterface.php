@@ -23,6 +23,21 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
   const PUBLISHED = 1;
 
   /**
+   * Anonymous posters cannot enter their contact information.
+   */
+  const ANONYMOUS_MAYNOT_CONTACT = 0;
+
+  /**
+   * Anonymous posters may leave their contact information.
+   */
+  const ANONYMOUS_MAY_CONTACT = 1;
+
+  /**
+   * Anonymous posters are required to leave their contact information.
+   */
+  const ANONYMOUS_MUST_CONTACT = 2;
+
+  /**
    * Determines if this comment is a reply to another comment.
    *
    * @return bool

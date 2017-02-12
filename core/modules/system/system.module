@@ -30,16 +30,25 @@ use GuzzleHttp\Exception\RequestException;
 
 /**
  * New users will be set to the default time zone at registration.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\user\UserInterface::TIMEZONE_DEFAULT instead.
  */
 const DRUPAL_USER_TIMEZONE_DEFAULT = 0;
 
 /**
  * New users will get an empty time zone at registration.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\user\UserInterface::TIMEZONE_EMPTY instead.
  */
 const DRUPAL_USER_TIMEZONE_EMPTY = 1;
 
 /**
  * New users will select their own timezone at registration.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\user\UserInterface::TIMEZONE_SELECT instead.
  */
 const DRUPAL_USER_TIMEZONE_SELECT = 2;
 
@@ -61,12 +70,18 @@ const DRUPAL_REQUIRED = 2;
 /**
  * Return only visible regions.
  *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\block\BlockRepositoryInterface::REGIONS_VISIBLE instead.
+ *
  * @see system_region_list()
  */
 const REGIONS_VISIBLE = 'visible';
 
 /**
  * Return all regions.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\block\BlockRepositoryInterface::REGIONS_ALL instead.
  *
  * @see system_region_list()
  */
