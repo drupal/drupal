@@ -708,6 +708,7 @@
         // When the link is clicked, dynamically click the hidden form button
         // for adding a new filter group.
         .once('views-rearrange-filter-handler')
+        .find('#views-add-group-link')
         .on('click.views-rearrange-filter-handler', $.proxy(this, 'clickAddGroupButton'));
 
       // Find each (visually hidden) button for removing a filter group and
