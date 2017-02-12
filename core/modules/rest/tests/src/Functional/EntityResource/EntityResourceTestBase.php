@@ -688,7 +688,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // 201 for well-formed request.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceResponse(201, FALSE, $response);
-    $this->assertSame([str_replace($this->entity->id(), static::$firstCreatedEntityId, $this->entity->toUrl('canonical')->setAbsolute(TRUE)->toString())], $response->getHeader('Location'));
+    $location = $this->entityStorage->load(static::$firstCreatedEntityId)->toUrl('canonical')->setAbsolute(TRUE)->toString();
+    $this->assertSame([$location], $response->getHeader('Location'));
     $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
 
 
@@ -708,7 +709,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // 201 for well-formed request.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceResponse(201, FALSE, $response);
-    $this->assertSame([str_replace($this->entity->id(), static::$secondCreatedEntityId, $this->entity->toUrl('canonical')->setAbsolute(TRUE)->toString())], $response->getHeader('Location'));
+    $location = $this->entityStorage->load(static::$secondCreatedEntityId)->toUrl('canonical')->setAbsolute(TRUE)->toString();
+    $this->assertSame([$location], $response->getHeader('Location'));
     $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
   }
 
