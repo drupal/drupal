@@ -16,8 +16,20 @@ use Drupal\breakpoint\BreakpointInterface;
 
 /**
  * The machine name for the empty image breakpoint image style option.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Use
+ *   Drupal\responsive_image\ResponsiveImageStyleInterface::EMPTY_IMAGE
+ *   instead.
  */
 const RESPONSIVE_IMAGE_EMPTY_IMAGE = '_empty image_';
+
+/**
+ * The machine name for the original image breakpoint image style option.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\responsive_image\ResponsiveImageStyleInterface::ORIGINAL_IMAGE
+ *   instead.
+ */
 const RESPONSIVE_IMAGE_ORIGINAL_IMAGE = '_original image_';
 
 /**

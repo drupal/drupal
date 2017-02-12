@@ -14,6 +14,44 @@ use Drupal\Core\Session\AccountInterface;
 interface UserInterface extends ContentEntityInterface, EntityChangedInterface, AccountInterface {
 
   /**
+   * Maximum length of username text field.
+   *
+   * Keep this under 191 characters so we can use a unique constraint in MySQL.
+   */
+  const USERNAME_MAX_LENGTH = 60;
+
+  /**
+   * Only administrators can create user accounts.
+   */
+  const REGISTER_ADMINISTRATORS_ONLY = 'admin_only';
+
+  /**
+   * Visitors can create their own accounts.
+   */
+  const REGISTER_VISITORS = 'visitors';
+
+  /**
+   * Visitors can create accounts, but they don't become active without
+   * administrative approval.
+   */
+  const REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 'visitors_admin_approval';
+
+  /**
+   * New users will be set to the default time zone at registration.
+   */
+  const TIMEZONE_DEFAULT = 0;
+
+  /**
+   * New users will get an empty time zone at registration.
+   */
+  const TIMEZONE_EMPTY = 1;
+
+  /**
+   * New users will select their own timezone at registration.
+   */
+  const TIMEZONE_SELECT = 2;
+
+  /**
    * Whether a user has a certain role.
    *
    * @param string $rid

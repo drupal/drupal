@@ -16,50 +16,79 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 
-// These are internally used constants for this code, do not modify.
+/*
+ * These are internally used constants for this code, do not modify.
+ */
 
 /**
  * Project is missing security update(s).
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\update\UpdateManagerInterface::NOT_SECURE instead.
  */
 const UPDATE_NOT_SECURE = 1;
 
 /**
  * Current release has been unpublished and is no longer available.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\update\UpdateManagerInterface::REVOKED instead.
  */
 const UPDATE_REVOKED = 2;
 
 /**
  * Current release is no longer supported by the project maintainer.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\update\UpdateManagerInterface::NOT_SUPPORTED instead.
  */
 const UPDATE_NOT_SUPPORTED = 3;
 
 /**
  * Project has a new release available, but it is not a security release.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\update\UpdateManagerInterface::NOT_CURRENT instead.
  */
 const UPDATE_NOT_CURRENT = 4;
 
 /**
  * Project is up to date.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\update\UpdateManagerInterface::CURRENT instead.
  */
 const UPDATE_CURRENT = 5;
 
 /**
  * Project's status cannot be checked.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\update\UpdateFetcherInterface::NOT_CHECKED instead.
  */
 const UPDATE_NOT_CHECKED = -1;
 
 /**
  * No available update data was found for project.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\update\UpdateFetcherInterface::UNKNOWN instead.
  */
 const UPDATE_UNKNOWN = -2;
 
 /**
  * There was a failure fetching available update data for this project.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\update\UpdateFetcherInterface::NOT_FETCHED instead.
  */
 const UPDATE_NOT_FETCHED = -3;
 
 /**
  * We need to (re)fetch available update data for this project.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\update\UpdateFetcherInterface::FETCH_PENDING instead.
  */
 const UPDATE_FETCH_PENDING = -4;
 

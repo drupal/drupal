@@ -28,22 +28,35 @@ use Drupal\user\UserInterface;
  * Maximum length of username text field.
  *
  * Keep this under 191 characters so we can use a unique constraint in MySQL.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\user\UserInterface::USERNAME_MAX_LENGTH instead.
  */
 const USERNAME_MAX_LENGTH = 60;
 
 /**
  * Only administrators can create user accounts.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\user\UserInterface::REGISTER_ADMINISTRATORS_ONLY instead.
  */
 const USER_REGISTER_ADMINISTRATORS_ONLY = 'admin_only';
 
 /**
  * Visitors can create their own accounts.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\user\UserInterface::REGISTER_VISITORS instead.
  */
 const USER_REGISTER_VISITORS = 'visitors';
 
 /**
  * Visitors can create accounts, but they don't become active without
  * administrative approval.
+ *
+ * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\user\UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL
+ * instead.
  */
 const USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 'visitors_admin_approval';
 

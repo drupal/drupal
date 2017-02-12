@@ -10,6 +10,11 @@ use Drupal\Core\Entity\ContentEntityStorageInterface;
 interface FeedStorageInterface extends ContentEntityStorageInterface {
 
   /**
+   * Denotes that a feed's items should never expire.
+   */
+  const CLEAR_NEVER = 0;
+
+  /**
    * Returns the fids of feeds that need to be refreshed.
    *
    * @return array
