@@ -642,7 +642,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 422 when invalid entity: multiple values sent for single-value field.
     $response = $this->request('POST', $url, $request_options);
     $label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName;
-    $label_field_capitalized = ucfirst($label_field);
+    $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
     $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: $label_field_capitalized: this field cannot hold more than 1 values.\n", $response);
 
 
@@ -829,7 +829,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 422 when invalid entity: multiple values sent for single-value field.
     $response = $this->request('PATCH', $url, $request_options);
     $label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName;
-    $label_field_capitalized = ucfirst($label_field);
+    $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
     $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: $label_field_capitalized: this field cannot hold more than 1 values.\n", $response);
 
 
