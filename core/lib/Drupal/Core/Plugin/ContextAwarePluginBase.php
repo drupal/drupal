@@ -17,7 +17,7 @@ use Drupal\Core\Plugin\Context\ContextInterface;
 /**
  * Base class for plugins that are context aware.
  */
-abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase implements ContextAwarePluginInterface {
+abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase implements ContextAwarePluginInterface, CacheableDependencyInterface {
   use TypedDataTrait;
   use StringTranslationTrait;
   use DependencySerializationTrait;
