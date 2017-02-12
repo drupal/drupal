@@ -615,7 +615,7 @@ td.group-title {
   margin: 0;
   padding: 6px 16px;
 }
-.views-ui-dialog .views-override {
+.views-ui-dialog .views-override:not(:empty) {
   background-color: #f3f4ee;
   padding: 8px 13px;
 }
