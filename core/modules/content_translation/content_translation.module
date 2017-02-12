@@ -42,7 +42,7 @@ function content_translation_help($route_name, RouteMatchInterface $route_match)
     case 'language.content_settings_page':
       $output = '';
       if (!\Drupal::languageManager()->isMultilingual()) {
-        $output .= '<br/>' . t('Before you can translate content, there must be at least two languages added on the <a href=":url">languages administration</a> page.', array(':url' => \Drupal::url('entity.configurable_language.collection')));
+        $output .= '<p>' . t('Before you can translate content, there must be at least two languages added on the <a href=":url">languages administration</a> page.', array(':url' => \Drupal::url('entity.configurable_language.collection'))) . '</p>';
       }
       return $output;
   }
