@@ -280,8 +280,9 @@ function hook_menu_links_discovered_alter(&$links) {
 /**
  * Alter local tasks displayed on the page before they are rendered.
  *
- * This hook is invoked by menu_local_tasks(). The system-determined tabs and
- * actions are passed in by reference. Additional tabs may be added.
+ * This hook is invoked by \Drupal\Core\Menu\LocalTaskManager::getLocalTasks().
+ * The system-determined tabs and actions are passed in by reference. Additional
+ * tabs may be added.
  *
  * The local tasks are under the 'tabs' element and keyed by plugin ID.
  *
