@@ -611,6 +611,22 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::setTransitionFromStates
+   */
+  public function testSetTransitionFromStatesAlreadyExists() {
+    $this->setExpectedException(\InvalidArgumentException::class, "The 'create_new_draft' transition already allows 'draft' to 'draft' transitions in workflow 'test'");
+    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
+    $workflow
+      ->addState('draft', 'Draft')
+      ->addState('archived', 'Archived')
+      ->addState('needs_review', 'Needs Review')
+      ->addTransition('create_new_draft', 'Create new draft', ['draft'], 'draft')
+      ->addTransition('needs_review', 'Needs review', ['needs_review'], 'draft');
+
+    $workflow->setTransitionFromStates('needs_review', ['draft']);
+  }
+
+  /**
    * @covers ::deleteTransition
    */
   public function testDeleteTransition() {
