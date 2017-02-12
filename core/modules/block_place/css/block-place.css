@@ -13,6 +13,7 @@
 }
 
 .block-place-region a.button {
+  position: relative;
   background: url(../../../misc/icons/bebebe/plus.svg) #ffffff center center / 16px 16px no-repeat;
   border: 1px solid #cccccc;
   box-sizing: border-box;
@@ -23,7 +24,35 @@
   white-space: nowrap;
 }
 
-.block-place-region:hover a.button, .block-place-region:focus a.button {
+.block-place-region:hover a.button,
+.block-place-region:focus a.button {
   background-image: url(../../../misc/icons/787878/plus.svg);
-  transition: all 0.25s ease;
+}
+
+.block-place-region .ajax-progress {
+  position: relative;
+  top: -10px;
+  right: 26px; /* LTR */
+  height: 0;
+  width: 0;
+  overflow: visible;
+  padding: 0;
+}
+
+[dir="rtl"] .block-place-region .ajax-progress {
+  float: inherit;
+  left: 26px;
+  right: inherit;
+}
+
+.block-place-region .ajax-progress-throbber .throbber {
+  display: block;
+  padding: 0;
+  height: 26px;
+  width: 26px;
+  background-position: center 6px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 100px;
+  box-sizing: border-box;
 }
