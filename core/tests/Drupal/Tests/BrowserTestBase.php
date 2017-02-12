@@ -989,10 +989,8 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
           ),
           // form_type_checkboxes_value() requires NULL instead of FALSE values
           // for programmatic form submissions to disable a checkbox.
-          'update_status_module' => array(
-            1 => NULL,
-            2 => NULL,
-          ),
+          'enable_update_status_module' => NULL,
+          'enable_update_status_emails' => NULL,
         ),
       ),
     );
