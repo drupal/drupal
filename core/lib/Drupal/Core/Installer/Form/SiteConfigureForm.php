@@ -213,22 +213,20 @@ class SiteConfigureForm extends ConfigFormBase {
     $form['update_notifications'] = array(
       '#type' => 'fieldgroup',
       '#title' => $this->t('Update notifications'),
-    );
-    $form['update_notifications']['update_status_module'] = array(
-      '#type' => 'checkboxes',
-      '#title' => $this->t('Update notifications'),
-      '#options' => array(
-        1 => $this->t('Check for updates automatically'),
-        2 => $this->t('Receive email notifications'),
-      ),
-      '#default_value' => array(1, 2),
       '#description' => $this->t('The system will notify you when updates and important security releases are available for installed components. Anonymous information about your site is sent to <a href=":drupal">Drupal.org</a>.', array(':drupal' => 'https://www.drupal.org')),
-      '#weight' => 15,
     );
-    $form['update_notifications']['update_status_module'][2] = array(
+    $form['update_notifications']['enable_update_status_module'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Check for updates automatically'),
+      '#default_value' => 1,
+    );
+    $form['update_notifications']['enable_update_status_emails'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Receive email notifications'),
+      '#default_value' => 1,
       '#states' => array(
         'visible' => array(
-          'input[name="update_status_module[1]"]' => array('checked' => TRUE),
+          'input[name="enable_update_status_module"]' => array('checked' => TRUE),
         ),
       ),
     );
@@ -270,13 +268,14 @@ class SiteConfigureForm extends ConfigFormBase {
     $account_values = $form_state->getValue('account');
 
     // Enable update.module if this option was selected.
-    $update_status_module = $form_state->getValue('update_status_module');
-    if ($update_status_module[1]) {
+    $update_status_module = $form_state->getValue('enable_update_status_module');
+    if ($update_status_module) {
       $this->moduleInstaller->install(array('file', 'update'), FALSE);
 
       // Add the site maintenance account's email address to the list of
       // addresses to be notified when updates are available, if selected.
-      if ($update_status_module[2]) {
+      $email_update_status_emails = $form_state->getValue('enable_update_status_emails');
+      if ($email_update_status_emails) {
         // Reset the configuration factory so it is updated with the new module.
         $this->resetConfigFactory();
         $this->config('update.settings')->set('notification.emails', array($account_values['mail']))->save(TRUE);
