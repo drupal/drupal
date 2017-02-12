@@ -31,8 +31,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
   const REGISTER_VISITORS = 'visitors';
 
   /**
-   * Visitors can create accounts, but they don't become active without
-   * administrative approval.
+   * Visitors can create accounts that only become active with admin approval.
    */
   const REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 'visitors_admin_approval';
 

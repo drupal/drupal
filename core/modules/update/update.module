@@ -16,9 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 
-/*
- * These are internally used constants for this code, do not modify.
- */
+// These are internally used constants for this code, do not modify.
 
 /**
  * Project is missing security update(s).
