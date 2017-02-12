@@ -133,6 +133,12 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     }
 
     $form = \Drupal::formBuilder()->buildForm('\Drupal\views\Form\ViewsExposedForm', $form_state);
+    $errors = $form_state->getErrors();
+
+    // If the exposed form had errors, do not build the view.
+    if (!empty($errors)) {
+      $this->view->build_info['abort'] = TRUE;
+    }
 
     if (!$this->view->display_handler->displaysExposed() || (!$block && $this->view->display_handler->getOption('exposed_block'))) {
       return array();

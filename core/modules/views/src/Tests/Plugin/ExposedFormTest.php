@@ -36,6 +36,8 @@ class ExposedFormTest extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->enableViewsTestModule();
+
     $this->drupalCreateContentType(array('type' => 'article'));
 
     // Create some random nodes.
@@ -396,6 +398,25 @@ class ExposedFormTest extends ViewTestBase {
    */
   protected function getExpectedExposedFormId(ViewExecutable $view) {
     return Html::cleanCssIdentifier('views-exposed-form-' . $view->storage->id() . '-' . $view->current_display);
+  }
+
+  /**
+   * Tests a view which is rendered after a form with a validation error.
+   */
+  public function testFormErrorWithExposedForm() {
+    $this->drupalGet('views_test_data_error_form_page');
+    $this->assertResponse(200);
+    $form = $this->cssSelect('form.views-exposed-form');
+    $this->assertTrue($form, 'The exposed form element was found.');
+    $this->assertRaw(t('Apply'), 'Ensure the exposed form is rendered before submitting the normal form.');
+    $this->assertRaw('<div class="views-row">', 'Views result shown.');
+
+    $this->drupalPostForm(NULL, array(), t('Submit'));
+    $this->assertResponse(200);
+    $form = $this->cssSelect('form.views-exposed-form');
+    $this->assertTrue($form, 'The exposed form element was found.');
+    $this->assertRaw(t('Apply'), 'Ensure the exposed form is rendered after submitting the normal form.');
+    $this->assertRaw('<div class="views-row">', 'Views result shown.');
   }
 
 }
