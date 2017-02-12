@@ -19,3 +19,11 @@ views_test_data.form_multiple:
     _controller: '\Drupal\views_test_data\Controller\ViewsTestFormMultipleController::testPage'
   requirements:
     _access: 'TRUE'
+
+views_test_data.error_form_page:
+  path: '/views_test_data_error_form_page'
+  defaults:
+    _title: 'Test Views Form Exposed Errors'
+    _controller: '\Drupal\views_test_data\Controller\ViewsTestDataController::errorFormPage'
+  requirements:
+    _access: 'TRUE'
