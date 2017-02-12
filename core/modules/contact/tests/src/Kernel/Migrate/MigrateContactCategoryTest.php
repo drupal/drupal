@@ -59,6 +59,26 @@ class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
     $this->assertEntity('website_feedback', 'Website feedback', ['admin@example.com'], '', 0);
     $this->assertEntity('some_other_category', 'Some other category', ['test@example.com'], 'Thanks for contacting us, we will reply ASAP!', 1);
     $this->assertEntity('a_category_much_longer_than_thir', 'A category much longer than thirty two characters', ['fortyninechars@example.com'], '', 2);
+
+    // Test there are no duplicated roles.
+    $contact_forms = [
+      'website_feedback1',
+      'some_other_category1',
+      'a_category_much_longer_than_thir1',
+    ];
+    $this->assertEmpty(ContactForm::loadMultiple($contact_forms));
+
+    /*
+     * Remove the map row for the Website feedback contact form so that it
+     * can be migrated again.
+     */
+    $id_map = $this->getMigration('contact_category')->getIdMap();
+    $id_map->delete(['cid' => '1']);
+    $this->executeMigration('contact_category');
+
+    // Test there is a duplicate Website feedback form.
+    $contact_form = ContactForm::load('website_feedback1');
+    $this->assertEntity('website_feedback1', 'Website feedback', ['admin@example.com'], '', 0);
   }
 
 }
