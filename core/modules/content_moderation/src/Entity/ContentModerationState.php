@@ -68,8 +68,7 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
       ->setDescription(t('The moderation state of the referenced content.'))
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
-      ->setRevisionable(TRUE)
-      ->addConstraint('ModerationState', []);
+      ->setRevisionable(TRUE);
 
     $fields['content_entity_type_id'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Content entity type ID'))
