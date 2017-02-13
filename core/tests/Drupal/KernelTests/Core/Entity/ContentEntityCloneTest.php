@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -43,8 +44,15 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
       'user_id' => $user->id(),
       'language' => 'en',
     ]);
+    $translation = $entity->addTranslation('de');
 
-    $clone = clone $entity->addTranslation('de');
+    // Initialize the fields on the translation objects in order to check that
+    // they are properly cloned and have a reference to the cloned entity
+    // object and not to the original one.
+    $entity->getFields();
+    $translation->getFields();
+
+    $clone = clone $translation;
 
     $this->assertEqual($entity->getTranslationLanguages(), $clone->getTranslationLanguages(), 'The entity and its clone have the same translation languages.');
 
@@ -55,10 +63,12 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
         if ($field->getFieldDefinition()->isTranslatable()) {
           $args = ['%field_name' => $field_name, '%langcode' => $langcode];
           $this->assertEqual($langcode, $field->getEntity()->language()->getId(), format_string('Translatable field %field_name on translation %langcode has correct entity reference in translation %langcode after cloning.', $args));
+          $this->assertSame($translation, $field->getEntity(), new FormattableMarkup('Translatable field %field_name on translation %langcode has correct reference to the cloned entity object.', $args));
         }
         else {
           $args = ['%field_name' => $field_name, '%langcode' => $langcode, '%default_langcode' => $default_langcode];
           $this->assertEqual($default_langcode, $field->getEntity()->language()->getId(), format_string('Non translatable field %field_name on translation %langcode has correct entity reference in the default translation %default_langcode after cloning.', $args));
+          $this->assertSame($translation->getUntranslated(), $field->getEntity(), new FormattableMarkup('Non translatable field %field_name on translation %langcode has correct reference to the cloned entity object in the default translation %default_langcode.', $args));
         }
       }
     }
