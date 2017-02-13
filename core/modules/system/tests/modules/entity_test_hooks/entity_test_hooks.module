@@ -1,0 +1,11 @@
+<?php
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\entity_test\Entity\EntityTest;
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for entity_test.
+ */
+function entity_test_hooks_entity_test_view(array &$build, EntityTest $entity_test, EntityViewDisplayInterface $display, $view_mode) {
+  drupal_set_message('custom hook invocation called');
+}
