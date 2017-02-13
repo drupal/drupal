@@ -15,7 +15,7 @@ use Drupal\migrate\MigrateSkipRowException;
  * is thrown.
  *
  * Available configuration keys:
- *   - index: The source property to check for.
+ * - index: The source property to check for.
  *
  * Example:
  *

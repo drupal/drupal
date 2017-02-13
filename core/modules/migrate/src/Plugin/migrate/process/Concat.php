@@ -14,8 +14,8 @@ use Drupal\migrate\Row;
  * set of strings into a single string.
  *
  * Available configuration keys:
- *   - delimiter: (optional) A delimiter, or glue string, to insert between the
- *     strings.
+ * - delimiter: (optional) A delimiter, or glue string, to insert between the
+ *   strings.
  *
  * Examples:
  *
