@@ -7,15 +7,38 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
- * This plugin allows source value to be passed to a callback.
+ * Passes the source value to a callback.
  *
- * The current value is passed to a callable that returns the processed value.
- * This plugin allows simple processing of the value, such as strtolower(). The
- * callable takes the value as the single mandatory argument. No additional
- * arguments can be passed to the callback as this would make the migration YAML
- * file too complex.
+ * The callback process plugin allows simple processing of the value, such as
+ * strtolower(). The callable takes the source value as the single mandatory
+ * argument. No additional arguments can be passed to the callback.
  *
- * @link https://www.drupal.org/node/2181783 Online handbook documentation for callback process plugin @endlink
+ * Available configuration keys:
+ *   - callable: The name of the callable method.
+ *
+ * Examples:
+ *
+ * @code
+ * process:
+ *   destination_field:
+ *     plugin: callback
+ *     callable: strtolower
+ *     source: source_field
+ * @endcode
+ *
+ * An example where the callable is a static method in a class:
+ *
+ * @code
+ * process:
+ *   destination_field:
+ *     plugin: callback
+ *     callable:
+ *       - '\Drupal\Component\Utility\Unicode'
+ *       - strtolower
+ *     source: source_field
+ * @endcode
+ *
+ * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
  * @MigrateProcessPlugin(
  *   id = "callback"
