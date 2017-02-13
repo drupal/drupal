@@ -509,6 +509,13 @@ class SelectTest extends DatabaseTestBase {
       $this->assertEqual(count($result), count($test_group['expected']), 'Returns the expected number of rows.');
       $this->assertEqual(sort($result), sort($test_group['expected']), 'Returns the expected rows.');
     }
+
+    // Ensure that REGEXP filter still works with no-string type field.
+    $query = $database->select('test', 't');
+    $query->addField('t', 'age');
+    $query->condition('t.age', '2[6]', 'REGEXP');
+    $result = $query->execute()->fetchField();
+    $this->assertEquals($result, '26', 'Regexp with number type.');
   }
 
   /**
