@@ -8,9 +8,55 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 
 /**
- * This plugin explodes a delimited string into an array of values.
+ * Splits the source string into an array of strings, using a delimiter.
  *
- * @link https://www.drupal.org/node/2674504 Online handbook documentation for explode process plugin @endlink
+ * This plugin creates an array of strings by splitting the source parameter on
+ * boundaries formed by the delimiter.
+ *
+ * Available configuration keys:
+ * - source: The source string.
+ * - limit: (optional)
+ *   - If limit is set and positive, the returned array will contain a maximum
+ *     of limit elements with the last element containing the rest of string.
+ *   - If limit is set and negative, all components except the last -limit are
+ *     returned.
+ *   - If the limit parameter is zero, then this is treated as 1.
+ * - delimiter: The boundary string.
+ *
+ * Example:
+ *
+ * @code
+ * process:
+ *   bar:
+ *     plugin: explode
+ *       source: foo
+ *       delimiter: /
+ * @endcode
+ *
+ * If foo is "node/1", then bar will be ['node', '1']. The PHP equivalent of
+ * this would be:
+ *
+ * @code
+ *   $bar = explode('/', $foo);
+ * @endcode
+ *
+ * @code
+ * process:
+ *   bar:
+ *     plugin: explode
+ *       source: foo
+ *       limit: 1
+ *       delimiter: /
+ * @endcode
+ *
+ * If foo is "node/1/edit", then bar will be ['node', '1/edit']. The PHP
+ * equivalent of this would be:
+ *
+ * @code
+ *   $bar = explode('/', $foo, 1);
+ * @endcode
+ *
+ * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
  * @MigrateProcessPlugin(
  *   id = "explode"
