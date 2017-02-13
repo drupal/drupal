@@ -14,7 +14,7 @@ class SerializationLinkManagerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['serialization', 'serialization_test', 'rest_test', 'system'];
+  public static $modules = ['serialization', 'serialization_test', 'system'];
 
   /**
    * {@inheritdoc}

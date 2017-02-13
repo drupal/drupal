@@ -22,3 +22,25 @@ function serialization_test_serialization_relation_uri_alter(&$uri, $context = a
     $uri = 'serialization_test_relation';
   }
 }
+
+/**
+ * Implements hook_rest_type_uri_alter().
+ *
+ * @deprecated Kept only for BC test coverage, see \Drupal\Tests\serialization\Kernel\SerializationLinkManagerTest::testGetTypeUri().
+ */
+function serialization_test_rest_type_uri_alter(&$uri, $context = array()) {
+  if (!empty($context['rest_test'])) {
+    $uri = 'rest_test_type';
+  }
+}
+
+/**
+ * Implements hook_rest_relation_uri_alter().
+ *
+ * @deprecated Kept only for BC test coverage, see \Drupal\Tests\serialization\Kernel\SerializationLinkManagerTest::testGetRelationUri().
+ */
+function serialization_test_rest_relation_uri_alter(&$uri, $context = array()) {
+  if (!empty($context['rest_test'])) {
+    $uri = 'rest_test_relation';
+  }
+}
