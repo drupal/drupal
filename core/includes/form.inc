@@ -782,6 +782,9 @@ function batch_set($batch_definition) {
  *   \Symfony\Component\HttpFoundation\RedirectResponse, which will be used
  *   automatically by the standard batch processing pipeline (and which takes
  *   precedence over this parameter).
+ *   User will be redirected to the page that started the batch if this argument
+ *   is omitted and no redirect response was returned by the 'finished'
+ *   callback. Any query arguments will be automatically persisted.
  * @param \Drupal\Core\Url $url
  *   (optional - should only be used for separate scripts like update.php)
  *   URL of the batch processing page.
@@ -801,7 +804,7 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
       'current_set' => 0,
       'progressive' => TRUE,
       'url' => isset($url) ? $url : Url::fromRoute('system.batch_page.html'),
-      'source_url' => Url::fromRouteMatch(\Drupal::routeMatch()),
+      'source_url' => Url::fromRouteMatch(\Drupal::routeMatch())->mergeOptions(['query' => \Drupal::request()->query->all()]),
       'batch_redirect' => $redirect,
       'theme' => \Drupal::theme()->getActiveTheme()->getName(),
       'redirect_callback' => $redirect_callback,

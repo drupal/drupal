@@ -107,6 +107,13 @@ class ProcessingTest extends WebTestBase {
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_2'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
     $this->assertNoEscaped('<', 'No escaped markup is present.');
+
+    // Extra query arguments will trigger logic that will add them to the
+    // redirect URL. Make sure they are persisted.
+    $this->drupalGet('batch-test/multistep', ['query' => ['big_tree' => 'small_axe']]);
+    $this->drupalPostForm(NULL, array(), 'Submit');
+    $this->assertText('step 2', 'Form is displayed in step 2.');
+    $this->assertTrue(strpos($this->getUrl(), 'batch-test/multistep?big_tree=small_axe'), 'Query argument was persisted and another extra argument was added.');
   }
 
   /**
