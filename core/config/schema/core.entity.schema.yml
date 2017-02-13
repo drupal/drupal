@@ -255,10 +255,10 @@ field.formatter.settings.boolean:
       type: string
       label: 'Output format'
     format_custom_false:
-      type: string
+      type: label
       label: 'Custom output for FALSE'
     format_custom_true:
-      type: string
+      type: label
       label: 'Custom output for TRUE'
 
 field.formatter.settings.string:
