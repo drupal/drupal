@@ -6,13 +6,34 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
- * This plugin flattens the current value.
+ * Flattens the source value.
  *
- * During some types of processing (e.g. user permission splitting), what was
- * once a single value gets transformed into multiple values. This plugin will
- * flatten them back down to single values again.
+ * The flatten process plugin converts a nested array into a flat array. For
+ * example [[1, 2, [3, 4]], [5], 6] becomes [1, 2, 3, 4, 5, 6]. During some
+ * types of processing (e.g. user permission splitting), what was once a
+ * one-dimensional array gets transformed into a multidimensional array. This
+ * plugin will flatten them back down to one-dimensional arrays again.
  *
- * @link https://www.drupal.org/node/2154215 Online handbook documentation for flatten process plugin @endlink
+ * Example:
+ *
+ * @code
+ * process:
+ *   tags:
+ *      -
+ *        plugin: default_value
+ *        source: foo
+ *        default_value: [bar, [qux, quux]]
+ *      -
+ *        plugin: flatten
+ * @endcode
+ *
+ * In this example, the default_value process returns [bar, [qux, quux]] (given
+ * a NULL value of foo). At this point, Migrate would try to import two
+ * items: bar and [qux, quux]. The latter is not a valid one and won't be
+ * imported. We need to pass the values through the flatten processor to obtain
+ * a three items array [bar, qux, quux], suitable for import.
+ *
+ * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
  * @MigrateProcessPlugin(
  *   id = "flatten",
@@ -24,7 +45,7 @@ class Flatten extends ProcessPluginBase {
   /**
    * Flatten nested array values to single array values.
    *
-   * For example, array(array(1, 2, array(3, 4))) becomes array(1, 2, 3, 4).
+   * For example, [[1, 2, [3, 4]]] becomes [1, 2, 3, 4].
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($value)), FALSE);
