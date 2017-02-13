@@ -34,7 +34,13 @@ class LayoutDefault extends PluginBase implements LayoutInterface {
    * {@inheritdoc}
    */
   public function build(array $regions) {
-    $build = array_intersect_key($regions, $this->pluginDefinition->getRegions());
+    // Ensure $build only contains defined regions and in the order defined.
+    $build = [];
+    foreach ($this->getPluginDefinition()->getRegionNames() as $region_name) {
+      if (array_key_exists($region_name, $regions)) {
+        $build[$region_name] = $regions[$region_name];
+      }
+    }
     $build['#settings'] = $this->getConfiguration();
     $build['#layout'] = $this->pluginDefinition;
     $build['#theme'] = $this->pluginDefinition->getThemeHook();
