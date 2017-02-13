@@ -43,13 +43,13 @@ class SearchDateIntervalTest extends SearchTestBase {
         'format' => $default_format,
       ],
       'langcode' => 'en',
-      'created' => $created_time_en->format('U'),
+      'created' => $created_time_en->getTimestamp(),
     ]);
 
     // Add Spanish translation to the node.
     $translation = $node->addTranslation('es', ['title' => 'Node ES']);
     $translation->body->value = $this->randomMachineName(32);
-    $translation->created->value = $created_time_es->format('U');
+    $translation->created->value = $created_time_es->getTimestamp();
     $node->save();
 
     // Update the index.

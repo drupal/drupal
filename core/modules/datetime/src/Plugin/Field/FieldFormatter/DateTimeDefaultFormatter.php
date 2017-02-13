@@ -100,7 +100,7 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
     $format_types = $this->dateFormatStorage->loadMultiple();
     $options = [];
     foreach ($format_types as $type => $type_info) {
-      $format = $this->dateFormatter->format($time->format('U'), $type);
+      $format = $this->dateFormatter->format($time->getTimestamp(), $type);
       $options[$type] = $type_info->label() . ' (' . $format . ')';
     }
 
