@@ -129,7 +129,7 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
     $end_date = $element['end_value']['#value']['object'];
 
     if ($start_date instanceof DrupalDateTime && $end_date instanceof DrupalDateTime) {
-      if ($start_date->format('U') !== $end_date->format('U')) {
+      if ($start_date->getTimestamp() !== $end_date->getTimestamp()) {
         $interval = $start_date->diff($end_date);
         if ($interval->invert === 1) {
           $form_state->setError($element, $this->t('The @title end date cannot be before the start date', ['@title' => $element['#title']]));
