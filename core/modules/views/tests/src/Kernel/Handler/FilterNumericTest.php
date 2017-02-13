@@ -212,6 +212,66 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
+  /**
+   * Tests the numeric filter handler with the 'regular_expression' operator.
+   */
+  public function testFilterNumericRegularExpression() {
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+
+    // Filtering by regular expression pattern.
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
+      'age' => array(
+        'id' => 'age',
+        'table' => 'views_test_data',
+        'field' => 'age',
+        'relationship' => 'none',
+        'operator' => 'regular_expression',
+        'value' => array(
+          'value' => '2[8]',
+        ),
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'Ringo',
+        'age' => 28,
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
+  }
+
+  /**
+   * Tests the numeric filter handler with the 'regular_expression' operator
+   * to grouped exposed filters.
+   */
+  public function testFilterNumericExposedGroupedRegularExpression() {
+    $filters = $this->getGroupedExposedFilters();
+    $view = Views::getView('test_view');
+    $view->newDisplay('page', 'Page', 'page_1');
+
+    // Filter: Age, Operator: regular_expression, Value: 2[7-8]
+    $filters['age']['group_info']['default_group'] = 6;
+    $view->setDisplay('page_1');
+    $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
+    $view->save();
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'George',
+        'age' => 27,
+      ),
+      array(
+        'name' => 'Ringo',
+        'age' => 28,
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
+  }
+
   public function testFilterNumericEmpty() {
     $view = Views::getView('test_view');
     $view->setDisplay();
@@ -406,6 +466,13 @@ class FilterNumericTest extends ViewsKernelTestBase {
             5 => array(
               'title' => 'Age is not empty',
               'operator' => 'not empty',
+            ),
+            6 => array(
+              'title' => 'Age is regexp 2[7-8]',
+              'operator' => 'regular_expression',
+              'value' => array(
+                'value' => '2[7-8]',
+              ),
             ),
           ),
         ),

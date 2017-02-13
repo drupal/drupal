@@ -82,7 +82,7 @@ class NumericFilter extends FilterPluginBase {
       'regular_expression' => array(
         'title' => $this->t('Regular expression'),
         'short' => $this->t('regex'),
-        'method' => 'op_regex',
+        'method' => 'opRegex',
         'values' => 1,
       ),
     );
@@ -274,7 +274,7 @@ class NumericFilter extends FilterPluginBase {
    *   The expression pointing to the queries field, for example "foo.bar".
    */
   protected function opRegex($field) {
-    $this->query->addWhere($this->options['group'], $field, $this->value, 'REGEXP');
+    $this->query->addWhere($this->options['group'], $field, $this->value['value'], 'REGEXP');
   }
 
   public function adminSummary() {
