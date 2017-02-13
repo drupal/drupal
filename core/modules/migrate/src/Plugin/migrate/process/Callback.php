@@ -14,7 +14,7 @@ use Drupal\migrate\Row;
  * argument. No additional arguments can be passed to the callback.
  *
  * Available configuration keys:
- *   - callable: The name of the callable method.
+ * - callable: The name of the callable method.
  *
  * Examples:
  *
