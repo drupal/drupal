@@ -1,0 +1,15 @@
+test.controller_view:
+  path: '/test-view/{entity_test}'
+  defaults:
+    _controller: 'Drupal\entity_test_hooks\Controller\ViewController::view'
+    _title: 'Test view'
+  requirements:
+    _access: 'TRUE'
+
+test.controller_view_multiple:
+  path: '/test-view-multiple/{entity_test}'
+  defaults:
+    _controller: 'Drupal\entity_test_hooks\Controller\ViewController::viewMultiple'
+    _title: 'Test multiple'
+  requirements:
+    _access: 'TRUE'
