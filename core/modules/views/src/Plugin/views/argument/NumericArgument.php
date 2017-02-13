@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 
 /**
  * Basic argument handler for arguments that are numeric. Incorporates
@@ -122,6 +123,19 @@ class NumericArgument extends ArgumentPluginBase {
    */
   public function getSortName() {
     return $this->t('Numerical', array(), array('context' => 'Sort order'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContextDefinition() {
+    if ($context_definition = parent::getContextDefinition()) {
+      return $context_definition;
+    }
+
+    // If the parent does not provide a context definition through the
+    // validation plugin, fall back to the integer type.
+    return new ContextDefinition('integer', $this->adminLabel(), FALSE);
   }
 
 }

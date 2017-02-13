@@ -111,6 +111,11 @@ class ViewsBlockTest extends UnitTestCase {
     $this->displayHandler->expects($this->any())
       ->method('getPluginId')
       ->willReturn('block');
+
+    $this->displayHandler->expects($this->any())
+      ->method('getHandlers')
+      ->willReturn([]);
+
     $this->executable->display_handler = $this->displayHandler;
 
     $this->storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
