@@ -6,6 +6,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\AccessAwareRouterInterface;
+use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -152,23 +153,30 @@ class PathValidator implements PathValidatorInterface {
       $router = $this->accessAwareRouter;
     }
 
+    $initial_request_context = $router->getContext() ? $router->getContext() : new RequestContext();
     $path = $this->pathProcessor->processInbound('/' . $path, $request);
 
     try {
-      return $router->match($path);
+      $request_context = new RequestContext();
+      $request_context->fromRequest($request);
+      $router->setContext($request_context);
+      $result = $router->match($path);
     }
     catch (ResourceNotFoundException $e) {
-      return FALSE;
+      $result = FALSE;
     }
     catch (ParamNotConvertedException $e) {
-      return FALSE;
+      $result = FALSE;
     }
     catch (AccessDeniedHttpException $e) {
-      return FALSE;
+      $result = FALSE;
     }
     catch (MethodNotAllowedException $e) {
-      return FALSE;
+      $result = FALSE;
     }
+
+    $router->setContext($initial_request_context);
+    return $result;
   }
 
 }
