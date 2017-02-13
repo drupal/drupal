@@ -1326,6 +1326,17 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return $dependencies;
   }
 
+  /**
+   * Returns a context definition for this argument.
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface|null
+   *   A context definition that represents the argument or NULL if that is
+   *   not possible.
+   */
+  public function getContextDefinition() {
+    return $this->getPlugin('argument_validator')->getContextDefinition();
+  }
+
 }
 
 /**

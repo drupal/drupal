@@ -82,6 +82,7 @@ class ViewsBlock implements ContainerDeriverInterface {
       $executable = $view->getExecutable();
       $executable->initDisplay();
       foreach ($executable->displayHandlers as $display) {
+        /** @var \Drupal\views\Plugin\views\display\DisplayPluginInterface $display */
         // Add a block plugin definition for each block display.
         if (isset($display) && !empty($display->definition['uses_hook_block'])) {
           $delta = $view->id() . '-' . $display->display['id'];
@@ -106,9 +107,18 @@ class ViewsBlock implements ContainerDeriverInterface {
             'config_dependencies' => array(
               'config' => array(
                 $view->getConfigDependencyName(),
-              )
-            )
+              ),
+            ),
           );
+
+          // Look for arguments and expose them as context.
+          foreach ($display->getHandlers('argument') as $argument_name => $argument) {
+            /** @var \Drupal\views\Plugin\views\argument\ArgumentPluginBase $argument */
+            if ($context_definition = $argument->getContextDefinition()) {
+              $this->derivatives[$delta]['context'][$argument_name] = $context_definition;
+            }
+          }
+
           $this->derivatives[$delta] += $base_plugin_definition;
         }
       }

@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\argument;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ManyToOneHelper;
@@ -317,6 +318,19 @@ class StringArgument extends ArgumentPluginBase {
 
   public function summaryName($data) {
     return $this->caseTransform(parent::summaryName($data), $this->options['case']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContextDefinition() {
+    if ($context_definition = parent::getContextDefinition()) {
+      return $context_definition;
+    }
+
+    // If the parent does not provide a context definition through the
+    // validation plugin, fall back to the string type.
+    return new ContextDefinition('string', $this->adminLabel(), FALSE);
   }
 
 }
