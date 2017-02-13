@@ -491,17 +491,13 @@ function _batch_finished() {
       $_SESSION['batch_form_state'] = $_batch['form_state'];
     }
     $callback = $_batch['redirect_callback'];
-    /** @var \Drupal\Core\Url $source_url */
-    $source_url = $_batch['source_url'];
+    $_batch['source_url']->mergeOptions(['query' => ['op' => 'finish', 'id' => $_batch['id']]]);
     if (is_callable($callback)) {
-      $callback($_batch['source_url'], array('query' => array('op' => 'finish', 'id' => $_batch['id'])));
+      $callback($_batch['source_url'], $_batch['source_url']->getOption('query'));
     }
     elseif ($callback === NULL) {
       // Default to RedirectResponse objects when nothing specified.
-      $url = $source_url
-        ->setAbsolute()
-        ->setOption('query', ['op' => 'finish', 'id' => $_batch['id']]);
-      return new RedirectResponse($url->toString());
+      return new RedirectResponse($_batch['source_url']->setAbsolute()->toString());
     }
   }
 }
