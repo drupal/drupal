@@ -54,9 +54,7 @@ class AuthorFormatter extends EntityReferenceFormatterBase {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity) {
-    // Always allow an entity author's username to be read, even if the current
-    // user does not have permission to view the entity author's profile.
-    return AccessResult::allowed();
+    return $entity->access('view label', NULL, TRUE);
   }
 
 }
