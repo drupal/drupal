@@ -1035,10 +1035,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
 
 
-        // DX: 400 when incorrect entity type bundle is specified.
-        // @todo Change to 422 in https://www.drupal.org/node/2827084.
+        // DX: 422 when incorrect entity type bundle is specified.
         $response = $this->request($method, $url, $request_options);
-        $this->assertResourceErrorResponse(400, '"bad_bundle_name" is not a valid bundle type for denormalization.', $response);
+        $this->assertResourceErrorResponse(422, '"bad_bundle_name" is not a valid bundle type for denormalization.', $response);
       }
 
 
@@ -1046,10 +1045,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
 
 
-      // DX: 400 when no entity type bundle is specified.
-      // @todo Change to 422 in https://www.drupal.org/node/2827084.
+      // DX: 422 when no entity type bundle is specified.
       $response = $this->request($method, $url, $request_options);
-      $this->assertResourceErrorResponse(400, sprintf('Could not determine entity type bundle: "%s" field is missing.', $bundle_field_name), $response);
+      $this->assertResourceErrorResponse(422, sprintf('Could not determine entity type bundle: "%s" field is missing.', $bundle_field_name), $response);
     }
   }
 

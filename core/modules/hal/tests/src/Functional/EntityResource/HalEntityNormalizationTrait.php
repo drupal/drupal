@@ -101,18 +101,18 @@ trait HalEntityNormalizationTrait {
       $normalization['_links']['type'] = Url::fromUri('base:rest/type/' . static::$entityTypeId . '/bad_bundle_name');
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
 
-      // DX: 400 when incorrect entity type bundle is specified.
+      // DX: 422 when incorrect entity type bundle is specified.
       $response = $this->request($method, $url, $request_options);
-      $this->assertResourceErrorResponse(400, 'No entity type(s) specified', $response);
+      $this->assertResourceErrorResponse(422, 'No entity type(s) specified', $response);
 
 
       unset($normalization['_links']['type']);
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
 
 
-      // DX: 400 when no entity type bundle is specified.
+      // DX: 422 when no entity type bundle is specified.
       $response = $this->request($method, $url, $request_options);
-      $this->assertResourceErrorResponse(400, 'The type link relation must be specified.', $response);
+      $this->assertResourceErrorResponse(422, 'The type link relation must be specified.', $response);
     }
   }
 
