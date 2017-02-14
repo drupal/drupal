@@ -27,6 +27,9 @@ class WorkflowTest extends UnitTestCase {
     // mocked.
     $container = new ContainerBuilder();
     $workflow_type = $this->prophesize(WorkflowTypeInterface::class);
+    $workflow_type->setConfiguration(Argument::any())->will(function ($arguments) {
+      $this->getConfiguration()->willReturn($arguments[0]);
+    });
     $workflow_type->decorateState(Argument::any())->willReturnArgument(0);
     $workflow_type->decorateTransition(Argument::any())->willReturnArgument(0);
     $workflow_manager = $this->prophesize(WorkflowTypeManager::class);
@@ -215,6 +218,9 @@ class WorkflowTest extends UnitTestCase {
     // correctly.
     $container = new ContainerBuilder();
     $workflow_type = $this->prophesize(WorkflowTypeInterface::class);
+    $workflow_type->setConfiguration(Argument::any())->will(function ($arguments) {
+      $this->getConfiguration()->willReturn($arguments[0]);
+    });
     $workflow_type->decorateState(Argument::any())->willReturnArgument(0);
     $workflow_type->decorateTransition(Argument::any())->willReturnArgument(0);
     $workflow_type->deleteState('draft')->shouldBeCalled();
@@ -636,6 +642,9 @@ class WorkflowTest extends UnitTestCase {
     // correctly.
     $container = new ContainerBuilder();
     $workflow_type = $this->prophesize(WorkflowTypeInterface::class);
+    $workflow_type->setConfiguration(Argument::any())->will(function ($arguments) {
+      $this->getConfiguration()->willReturn($arguments[0]);
+    });
     $workflow_type->decorateState(Argument::any())->willReturnArgument(0);
     $workflow_type->decorateTransition(Argument::any())->willReturnArgument(0);
     $workflow_type->deleteTransition('publish')->shouldBeCalled();

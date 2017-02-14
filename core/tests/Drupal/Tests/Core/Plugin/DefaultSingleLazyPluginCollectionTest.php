@@ -58,6 +58,17 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
     $this->assertEquals(['id' => 'banana', 'key' => 'other_value'], $this->defaultPluginCollection->get('banana')->getConfiguration());
   }
 
+  /**
+   * @covers ::getInstanceIds
+   */
+  public function testGetInstanceIds() {
+    $this->setupPluginCollection($this->any());
+    $this->assertEquals(['apple' => 'apple'], $this->defaultPluginCollection->getInstanceIds());
+
+    $this->defaultPluginCollection->addInstanceId('banana', ['id' => 'banana', 'key' => 'other_value']);
+    $this->assertEquals(['banana' => 'banana'], $this->defaultPluginCollection->getInstanceIds());
+  }
+
 }
 
 class ConfigurablePlugin extends PluginBase implements ConfigurablePluginInterface {

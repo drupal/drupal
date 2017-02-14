@@ -52,10 +52,7 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
    */
   public function __construct(PluginManagerInterface $manager, $instance_id, array $configuration) {
     $this->manager = $manager;
-    $this->instanceId = $instance_id;
-    // This is still needed by the parent LazyPluginCollection class.
-    $this->instanceIDs = array($instance_id => $instance_id);
-    $this->configuration = $configuration;
+    $this->addInstanceId($instance_id, $configuration);
   }
 
   /**
@@ -95,6 +92,8 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
    */
   public function addInstanceId($id, $configuration = NULL) {
     $this->instanceId = $id;
+    // Reset the list of instance IDs since there can be only one.
+    $this->instanceIDs = [];
     parent::addInstanceId($id, $configuration);
     if ($configuration !== NULL) {
       $this->setConfiguration($configuration);
