@@ -14,14 +14,19 @@ class BlockContentViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
+  public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
+    return $this->viewMultiple(array($entity), $view_mode, $langcode)[0];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     $build_list = parent::viewMultiple($entities, $view_mode, $langcode);
     // Apply the buildMultiple() #pre_render callback immediately, to make
     // bubbling of attributes and contextual links to the actual block work.
     // @see \Drupal\block\BlockViewBuilder::buildBlock()
-    foreach ($entities as $key => $entity) {
-      unset($build_list[$key]['#pre_render'][0]);
-    }
+    unset($build_list['#pre_render'][0]);
     return $this->buildMultiple($build_list);
   }
 
