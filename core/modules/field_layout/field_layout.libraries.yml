@@ -1,5 +1,0 @@
-drupal.layout.twocol:
-  version: VERSION
-  css:
-    layout:
-      layouts/twocol/twocol.layout.css: {}

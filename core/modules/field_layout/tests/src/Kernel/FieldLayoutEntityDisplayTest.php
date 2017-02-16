@@ -68,6 +68,7 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
     $expected['dependencies']['module'] = [
       'entity_test',
       'field_layout',
+      'layout_discovery',
     ];
     // A third party setting is added by the entity_test module.
     $expected['third_party_settings']['entity_test'] = ['foo' => 'bar'];

@@ -1,0 +1,51 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a two column layout.
+ *
+ * This template provides a two column display layout with full width areas at
+ * the top, bottom and in the middle.
+ *
+ * Available variables:
+ * - content: The content for this layout.
+ * - attributes: HTML attributes for the layout <div>.
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+set classes = [
+'layout--twocol-bricks',
+]
+%}
+{% if content %}
+<div{{ attributes.addClass(classes) }}>
+  <div class="layout-region layout-region--fullwidth">
+    {{ content.top }}
+  </div>
+
+  <div class="layout-region layout-region--left_above">
+    {{ content.left_above }}
+  </div>
+
+  <div class="layout-region layout-region--right_above">
+    {{ content.right_above }}
+  </div>
+
+  <div class="layout-region layout-region--middle">
+    {{ content.middle }}
+  </div>
+
+  <div class="layout-region layout-region--left_below">
+    {{ content.left_below }}
+  </div>
+
+  <div class="layout-region layout-region--right_below">
+    {{ content.right_below }}
+  </div>
+
+  <div class="layout-region layout-region--fullwidth">
+    {{ content.bottom }}
+  </div>
+</div>
+{% endif %}

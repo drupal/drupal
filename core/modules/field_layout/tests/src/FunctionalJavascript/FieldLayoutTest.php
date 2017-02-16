@@ -90,7 +90,7 @@ class FieldLayoutTest extends JavascriptTestBase {
 
     // The field is moved to the default region for the new layout.
     $this->assertSession()->pageTextContains('Your settings have been saved.');
-    $this->assertEquals(['Left', 'Right', 'Disabled'], $this->getRegionTitles());
+    $this->assertEquals(['Top', 'Left', 'Right', 'Bottom', 'Disabled'], $this->getRegionTitles());
 
     $this->drupalGet('entity_test/manage/1/edit');
     // No fields are visible, and the regions don't display when empty.
@@ -99,7 +99,7 @@ class FieldLayoutTest extends JavascriptTestBase {
 
     // After a refresh the new regions are still there.
     $this->drupalGet('entity_test/structure/entity_test/form-display');
-    $this->assertEquals(['Left', 'Right', 'Disabled'], $this->getRegionTitles());
+    $this->assertEquals(['Top', 'Left', 'Right', 'Bottom', 'Disabled'], $this->getRegionTitles());
 
     // Drag the field to the right region.
     $field_test_text_row = $this->getSession()->getPage()->find('css', '#field-test-text');
@@ -147,7 +147,7 @@ class FieldLayoutTest extends JavascriptTestBase {
     $this->submitForm([], 'Save');
 
     $this->assertSession()->pageTextContains('Your settings have been saved.');
-    $this->assertEquals(['Left', 'Right', 'Disabled'], $this->getRegionTitles());
+    $this->assertEquals(['Top', 'Left', 'Right', 'Bottom', 'Disabled'], $this->getRegionTitles());
 
     $this->drupalGet('entity_test/1');
     // No fields are visible, and the regions don't display when empty.
@@ -157,7 +157,7 @@ class FieldLayoutTest extends JavascriptTestBase {
 
     // After a refresh the new regions are still there.
     $this->drupalGet('entity_test/structure/entity_test/display');
-    $this->assertEquals(['Left', 'Right', 'Disabled'], $this->getRegionTitles());
+    $this->assertEquals(['Top', 'Left', 'Right', 'Bottom', 'Disabled'], $this->getRegionTitles());
 
     // Drag the field to the left region.
     $this->assertTrue($this->assertSession()->optionExists('fields[field_test_text][region]', 'hidden')->isSelected());

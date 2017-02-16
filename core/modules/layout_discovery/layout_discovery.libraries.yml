@@ -1,0 +1,25 @@
+onecol:
+  version: VERSION
+  css:
+    theme:
+      layouts/onecol/onecol.css: {}
+twocol_bricks:
+  version: VERSION
+  css:
+    theme:
+      layouts/twocol_bricks/twocol_bricks.css: {}
+twocol:
+  version: VERSION
+  css:
+    theme:
+      layouts/twocol/twocol.css: {}
+threecol_25_50_25:
+  version: VERSION
+  css:
+    theme:
+      layouts/threecol_25_50_25/threecol_25_50_25.css: {}
+threecol_33_34_33:
+  version: VERSION
+  css:
+    theme:
+      layouts/threecol_33_34_33/threecol_33_34_33.css: {}
