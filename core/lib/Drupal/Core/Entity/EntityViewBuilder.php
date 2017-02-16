@@ -108,7 +108,16 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * {@inheritdoc}
    */
   public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
-    return $this->viewMultiple(array($entity), $view_mode, $langcode)[0];
+    $build_list = $this->viewMultiple(array($entity), $view_mode, $langcode);
+
+    // The default ::buildMultiple() #pre_render callback won't run, because we
+    // extract a child element of the default renderable array. Thus we must
+    // assign an alternative #pre_render callback that applies the necessary
+    // transformations and then still calls ::buildMultiple().
+    $build = $build_list[0];
+    $build['#pre_render'][] = array($this, 'build');
+
+    return $build;
   }
 
   /**
@@ -117,6 +126,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     $build_list = array(
       '#sorted' => TRUE,
+      '#pre_render' => array(array($this, 'buildMultiple')),
     );
     $weight = 0;
     foreach ($entities as $key => $entity) {
@@ -129,7 +139,6 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       $entityType = $this->entityTypeId;
       $this->moduleHandler()->alter(array($entityType . '_build_defaults', 'entity_build_defaults'), $build_list[$key], $entity, $view_mode);
 
-      $build_list[$key]['#pre_render'][] = array($this, 'build');
       $build_list[$key]['#weight'] = $weight++;
     }
 
@@ -191,12 +200,11 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   /**
    * Builds an entity's view; augments entity defaults.
    *
-   * This method is assigned as a #pre_render callback in ::viewMultiple() for
-   * each entity.
+   * This function is assigned as a #pre_render callback in ::view().
    *
-   * It transforms the renderable array for a single entity to a structure
-   * understood by EntityViewBuilder::buildMultiple(), which is currently not
-   * called directly.
+   * It transforms the renderable array for a single entity to the same
+   * structure as if we were rendering multiple entities, and then calls the
+   * default ::buildMultiple() #pre_render callback.
    *
    * @param array $build
    *   A renderable array containing build information and context for an entity
@@ -205,8 +213,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * @return array
    *   The updated renderable array.
    *
-   * @see \Drupal\Core\Render\RendererInterface
-   * @see \Drupal\Core\Entity\EntityViewBuilder::buildMultiple()
+   * @see drupal_render()
    */
   public function build(array $build) {
     $build_list = [$build];
@@ -217,17 +224,11 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   /**
    * Builds multiple entities' views; augments entity defaults.
    *
-   * This method is currently only called through EntityViewBuilder::build()
-   * as the render (cache) system does not support a #pre_render callback for
-   * multiple, separately cached render arrays.
+   * This function is assigned as a #pre_render callback in ::viewMultiple().
    *
-   * @todo Either simplify this to remove support for building multiple entities
-   *   at once or support a #pre_render_multiple or similar API in the render
-   *   system.
-   *
-   * By delaying the building of an entity until the #pre_render processing, the
-   * processing cost of assembling an entity's renderable array is saved on
-   * cache-hit requests.
+   * By delaying the building of an entity until the #pre_render processing in
+   * drupal_render(), the processing cost of assembling an entity's renderable
+   * array is saved on cache-hit requests.
    *
    * @param array $build_list
    *   A renderable  array containing build information and context for an
