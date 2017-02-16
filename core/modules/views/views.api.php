@@ -1085,7 +1085,7 @@ function hook_views_plugins_join_alter(array &$plugins) {
 }
 
 /**
- * Modify the list of available views join plugins.
+ * Modify the list of available views pager plugins.
  *
  * This hook may be used to modify plugin properties after they have been
  * specified by other modules.
