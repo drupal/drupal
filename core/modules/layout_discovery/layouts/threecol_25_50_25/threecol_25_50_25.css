@@ -1,0 +1,17 @@
+.layout--threecol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.layout--threecol > .layout-region {
+  flex: 0 1 25%;
+}
+
+.layout--threecol > .layout-region--fullwidth {
+  flex: 0 1 100%;
+}
+
+.layout--threecol > .layout-region--middle {
+  flex: 0 1 50%;
+}

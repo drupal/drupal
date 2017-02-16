@@ -1,0 +1,13 @@
+.layout--threecol-33 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.layout--threecol-33 > .layout-region {
+  flex: 0 1 33%;
+}
+
+.layout--threecol-33 > .layout-region--fullwidth {
+  flex: 0 1 100%;
+}

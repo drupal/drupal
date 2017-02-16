@@ -1,0 +1,88 @@
+layout_onecol:
+  label: 'One column'
+  path: layouts/onecol
+  template: layout--onecol
+  library: layout_discovery/onecol
+  category: 'Columns: 1'
+  default_region: content
+  regions:
+    content:
+      label: Content
+
+layout_twocol:
+  label: 'Two column'
+  path: layouts/twocol
+  template: layout--twocol
+  library: layout_discovery/twocol
+  category: 'Columns: 2'
+  default_region: left
+  regions:
+    top:
+      label: Top
+    left:
+      label: Left
+    right:
+      label: Right
+    bottom:
+      label: Bottom
+
+layout_twocol_bricks:
+  label: 'Two column bricks'
+  path: layouts/twocol_bricks
+  template: layout--twocol-bricks
+  library: layout_discovery/twocol_bricks
+  category: 'Columns: 2'
+  default_region: middle
+  regions:
+    top:
+      label: Top
+    left_above:
+      label: 'Left above'
+    right_above:
+      label: 'Right above'
+    middle:
+      label: Middle
+    left_below:
+      label: 'Left below'
+    right_below:
+      label: 'Right below'
+    bottom:
+      label: Bottom
+
+layout_threecol_25_50_25:
+  label: 'Three column 25/50/25'
+  path: layouts/threecol_25_50_25
+  template: layout--threecol-25-50-25
+  library: layout_discovery/threecol_25_50_25
+  category: 'Columns: 3'
+  default_region: left
+  regions:
+    top:
+      label: Top
+    left:
+      label: Left
+    middle:
+      label: Middle
+    right:
+      label: Right
+    bottom:
+      label: Bottom
+
+layout_threecol_33_34_33:
+  label: 'Three column 33/34/33'
+  path: layouts/threecol_33_34_33
+  template: layout--threecol-33-34-33
+  library: layout_discovery/threecol_33_34_33
+  category: 'Columns: 3'
+  default_region: left
+  regions:
+    top:
+      label: Top
+    left:
+      label: Left
+    middle:
+      label: Middle
+    right:
+      label: Right
+    bottom:
+      label: Bottom

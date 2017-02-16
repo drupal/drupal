@@ -1,0 +1,13 @@
+.layout--twocol-bricks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.layout--twocol-bricks > .layout-region {
+  flex: 0 1 50%;
+}
+
+.layout--twocol-bricks > .layout-region--fullwidth {
+  flex: 0 1 100%;
+}
