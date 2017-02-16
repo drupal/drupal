@@ -544,8 +544,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $parseable_valid_request_body   = $this->serializer->encode($this->getNormalizedPostEntity(), static::$format);
     $parseable_valid_request_body_2 = $this->serializer->encode($this->getNormalizedPostEntity(), static::$format);
     $parseable_invalid_request_body   = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPostEntity()), static::$format);
-    // @todo Change to ['uuid' => UUID] in https://www.drupal.org/node/2820743.
-    $parseable_invalid_request_body_2 = $this->serializer->encode($this->getNormalizedPostEntity() + ['uuid' => [['value' => $this->randomMachineName(129)]]], static::$format);
+    $parseable_invalid_request_body_2 = $this->serializer->encode($this->getNormalizedPostEntity() + ['uuid' => [$this->randomMachineName(129)]], static::$format);
     $parseable_invalid_request_body_3 = $this->serializer->encode($this->getNormalizedPostEntity() + ['field_rest_test' => [['value' => $this->randomString()]]], static::$format);
 
     // The URL and Guzzle request options that will be used in this test. The
