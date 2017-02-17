@@ -358,7 +358,7 @@ class CommentForm extends ContentEntityForm {
     $entity = $comment->getCommentedEntity();
     $field_name = $comment->getFieldName();
     $uri = $entity->urlInfo();
-    $logger = $this->logger('content');
+    $logger = $this->logger('comment');
 
     if ($this->currentUser->hasPermission('post comments') && ($this->currentUser->hasPermission('administer comments') || $entity->{$field_name}->status == CommentItemInterface::OPEN)) {
       $comment->save();
