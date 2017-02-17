@@ -17,6 +17,11 @@ use Psr\Log\LoggerInterface;
 class ThemeInstaller implements ThemeInstallerInterface {
 
   /**
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
@@ -55,7 +60,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
    * @var \Psr\Log\LoggerInterface
    */
   protected $logger;
-
 
   /**
    * Constructs a new ThemeInstaller.
