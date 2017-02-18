@@ -111,11 +111,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected static $secondCreatedEntityId = 3;
 
   /**
-   * @var \GuzzleHttp\ClientInterface
-   */
-  protected $httpClient;
-
-  /**
    * The main entity used for testing.
    *
    * @var \Drupal\Core\Entity\EntityInterface
@@ -164,10 +159,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->serializer = $this->container->get('serializer');
     $this->entityStorage = $this->container->get('entity_type.manager')
       ->getStorage(static::$entityTypeId);
-
-    // Set up a HTTP client that accepts relative URLs.
-    $this->httpClient = $this->container->get('http_client_factory')
-      ->fromOptions(['base_uri' => $this->baseUrl]);
 
     // Create an entity.
     $this->entity = $this->createEntity();

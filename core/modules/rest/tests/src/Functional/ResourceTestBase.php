@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\rest\Functional;
 
+use Behat\Mink\Driver\BrowserKitDriver;
 use Drupal\Core\Url;
 use Drupal\rest\RestResourceConfigInterface;
 use Drupal\Tests\BrowserTestBase;
@@ -84,6 +85,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
   public static $modules = ['rest'];
 
   /**
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -120,6 +126,10 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Ensure there's a clean slate: delete all REST resource config entities.
     $this->resourceConfigStorage->delete($this->resourceConfigStorage->loadMultiple());
     $this->refreshTestStateAfterRestConfigChange();
+
+    // Set up a HTTP client that accepts relative URLs.
+    $this->httpClient = $this->container->get('http_client_factory')
+      ->fromOptions(['base_uri' => $this->baseUrl]);
   }
 
   /**
@@ -325,6 +335,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    */
   protected function request($method, Url $url, array $request_options) {
     $request_options[RequestOptions::HTTP_ERRORS] = FALSE;
+    $request_options = $this->decorateWithXdebugCookie($request_options);
     return $this->httpClient->request($method, $url->toString(), $request_options);
   }
 
@@ -364,6 +375,32 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function assertResourceErrorResponse($expected_status_code, $expected_message, ResponseInterface $response) {
     $expected_body = ($expected_message !== FALSE) ? $this->serializer->encode(['message' => $expected_message], static::$format) : FALSE;
     $this->assertResourceResponse($expected_status_code, $expected_body, $response);
+  }
+
+  /**
+   * Adds the Xdebug cookie to the request options.
+   *
+   * @param array $request_options
+   *   The request options.
+   *
+   * @return array
+   *   Request options updated with the Xdebug cookie if present.
+   */
+  protected function decorateWithXdebugCookie(array $request_options) {
+    $session = $this->getSession();
+    $driver = $session->getDriver();
+    if ($driver instanceof BrowserKitDriver) {
+      $client = $driver->getClient();
+      foreach ($client->getCookieJar()->all() as $cookie) {
+        if (isset($request_options[RequestOptions::HEADERS]['Cookie'])) {
+          $request_options[RequestOptions::HEADERS]['Cookie'] .= '; ' . $cookie->getName() . '=' . $cookie->getValue();
+        }
+        else {
+          $request_options[RequestOptions::HEADERS]['Cookie'] = $cookie->getName() . '=' . $cookie->getValue();
+        }
+      }
+    }
+    return $request_options;
   }
 
 }
