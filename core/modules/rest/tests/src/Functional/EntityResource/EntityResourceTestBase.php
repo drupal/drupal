@@ -433,22 +433,24 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
     $this->assertSame($unserialized->uuid(), $this->entity->uuid());
     // Finally, assert that the expected 'Link' headers are present.
-    $this->assertArrayHasKey('Link', $response->getHeaders());
-    $link_relation_type_manager = $this->container->get('plugin.manager.link_relation_type');
-    $expected_link_relation_headers = array_map(function ($rel) use ($link_relation_type_manager) {
-      $definition = $link_relation_type_manager->getDefinition($rel, FALSE);
-      return (!empty($definition['uri']))
-        ? $definition['uri']
-        : $rel;
-    }, array_keys($this->entity->getEntityType()->getLinkTemplates()));
-    $parse_rel_from_link_header = function ($value) use ($link_relation_type_manager) {
-      $matches = [];
-      if (preg_match('/rel="([^"]+)"/', $value, $matches) === 1) {
-        return $matches[1];
-      }
-      return FALSE;
-    };
-    $this->assertSame($expected_link_relation_headers, array_map($parse_rel_from_link_header, $response->getHeader('Link')));
+    if ($this->entity->getEntityType()->getLinkTemplates()) {
+      $this->assertArrayHasKey('Link', $response->getHeaders());
+      $link_relation_type_manager = $this->container->get('plugin.manager.link_relation_type');
+      $expected_link_relation_headers = array_map(function ($rel) use ($link_relation_type_manager) {
+        $definition = $link_relation_type_manager->getDefinition($rel, FALSE);
+        return (!empty($definition['uri']))
+          ? $definition['uri']
+          : $rel;
+      }, array_keys($this->entity->getEntityType()->getLinkTemplates()));
+      $parse_rel_from_link_header = function ($value) use ($link_relation_type_manager) {
+        $matches = [];
+        if (preg_match('/rel="([^"]+)"/', $value, $matches) === 1) {
+          return $matches[1];
+        }
+        return FALSE;
+      };
+      $this->assertSame($expected_link_relation_headers, array_map($parse_rel_from_link_header, $response->getHeader('Link')));
+    }
     $get_headers = $response->getHeaders();
 
     // Verify that the GET and HEAD responses are the same. The only difference
