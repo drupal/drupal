@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -13,7 +14,28 @@ use Drupal\Core\Routing\RouteMatchInterface;
 function migrate_drupal_ui_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.migrate_drupal_ui':
-      $output = '<p>' . t('The Migrate Drupal UI module provides a one-click upgrade from an earlier version of Drupal. For details, see the <a href=":migrate">online documentation for the Migrate Drupal UI module</a> in the handbook on upgrading from previous versions.', [':migrate' => 'https://www.drupal.org/upgrade/migrate']) . '</p>';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Migrate Drupal UI module provides a simple user interface to perform an upgrade from an earlier version of Drupal. For more information, see the <a href=":migrate">online documentation for the Migrate Drupal UI module</a>.',
+          [':migrate' => 'https://www.drupal.org/upgrade/migrate']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Preparing the site') . '</dt>';
+      $output .= '<dd>' . t('You need to enable all modules on this site that are enabled on the previous site. For example, if you have used the Book module on the previous site then you must enable the Book module on this site for that data to be available on this site.') . '</dd>';
+      $output .= '<dt>' . t('Performing the upgrade') . '</dt>';
+      $output .= '<dd>' . t('On the <a href=":upgrade">Upgrade</a> page, you are guided through performing the upgrade in several steps.',
+          [':upgrade' => \Drupal::url('migrate_drupal_ui.upgrade')]) . '</dd>';
+      $output .= '<dd><ol><li>' . t('You need to enter the database credentials of the Drupal site that you want to upgrade. You can also include its files directory in the upgrade.') . '</li>';
+      $output .= '<li>' . t('The next page then provides an overview of which upgrade paths are available or missing, before you proceed to perform the upgrade.') . '</li>';
+      $output .= '<li>' . t('Lastly, a message is displayed about the number of upgrade tasks that were successful or failed.') . '</li></ol></dd>';
+      $output .= '<dt>' . t('Reviewing the upgrade log') . '</dt>';
+      $output .= '<dd>' . t('You can review a <a href=":log">log of upgrade messages</a> by clicking the link in the message provided after the upgrade or by filtering the messages for the type <em>migrate_drupal_ui</em> on the <a href=":messages">Recent log messages</a> page.',
+          [':log' => \Drupal::url('migrate_drupal_ui.log'), ':messages' => \Drupal::url('dblog.overview')]) . '</dd>';
+      $output .= '<dt>' . t('Incremental upgrades') . '</dt>';
+      $output .= '<dd>' . t('Incremental upgrades are not yet supported through the user interface.') . '</dd>';
+      $output .= '<dt>' . t('Rolling back an upgrade') . '</dt>';
+      $output .= '<dd>' . t('Rolling back an upgrade is not yet supported through the user interface.') . '</dd>';
+      $output .= '</dl>';
       return $output;
   }
 }
