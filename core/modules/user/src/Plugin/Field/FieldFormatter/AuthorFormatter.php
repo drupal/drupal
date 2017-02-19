@@ -2,7 +2,6 @@
 
 namespace Drupal\user\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
