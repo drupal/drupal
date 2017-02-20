@@ -145,7 +145,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Provides test data for estUserNameAccess().
+   * Provides test data for testUserNameAccess().
    */
   public function userNameProvider() {
     $name_access = array(
