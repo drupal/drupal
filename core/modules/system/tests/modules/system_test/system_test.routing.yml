@@ -182,3 +182,17 @@ system_test.header:
     _controller: '\Drupal\system_test\Controller\SystemTestController::getTestHeader'
   requirements:
     _access: 'TRUE'
+
+system_test.echo:
+  path: '/system-test/echo/{text}'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::simpleEcho'
+  requirements:
+    _access: 'TRUE'
+
+system_test.echo_utf8:
+  path: '/system-test/Ȅchȏ/meφΩ/{text}'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::simpleEcho'
+  requirements:
+    _access: 'TRUE'
