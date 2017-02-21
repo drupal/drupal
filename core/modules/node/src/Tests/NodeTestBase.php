@@ -8,6 +8,9 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Sets up page and article content types.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\node\Functional\NodeTestBase instead.
  */
 abstract class NodeTestBase extends WebTestBase {
 

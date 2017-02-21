@@ -10,6 +10,9 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Helper class for module test cases.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\system\Functional\Module\ModuleTestBase instead.
  */
 abstract class ModuleTestBase extends WebTestBase {
 

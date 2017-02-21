@@ -9,6 +9,9 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Base class for file tests that use the file_test module to test uploads and
  * hooks.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\file\Functional\FileManagedTestBase instead.
  */
 abstract class FileManagedTestBase extends WebTestBase {
 

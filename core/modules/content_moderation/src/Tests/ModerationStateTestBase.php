@@ -8,6 +8,9 @@ use Drupal\user\Entity\Role;
 
 /**
  * Defines a base class for moderation state tests.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\content_moderation\Functional\ModerationStateTestBase instead.
  */
 abstract class ModerationStateTestBase extends WebTestBase {
 

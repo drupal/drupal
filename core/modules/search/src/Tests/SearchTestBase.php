@@ -7,6 +7,9 @@ use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Defines the common search test code.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\search\Functional\SearchTestBase instead.
  */
 abstract class SearchTestBase extends WebTestBase {
 

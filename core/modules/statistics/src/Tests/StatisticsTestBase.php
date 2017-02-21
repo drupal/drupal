@@ -6,6 +6,9 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Defines a base class for testing the Statistics module.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\statistics\Functional\StatisticsTestBase instead.
  */
 abstract class StatisticsTestBase extends WebTestBase {
 

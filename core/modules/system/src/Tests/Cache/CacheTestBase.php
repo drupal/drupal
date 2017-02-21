@@ -6,6 +6,9 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Provides helper methods for cache tests.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\system\Functional\Cache\CacheTestBase instead.
  */
 abstract class CacheTestBase extends WebTestBase {
 

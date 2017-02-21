@@ -8,6 +8,9 @@ use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Provides helper methods for page cache tags tests.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase instead.
  */
 abstract class PageCacheTagsTestBase extends WebTestBase {
 

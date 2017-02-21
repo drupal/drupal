@@ -8,6 +8,9 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Parent class for Field API tests.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\field\Functional\FieldTestBase instead.
  */
 abstract class FieldTestBase extends WebTestBase {
 

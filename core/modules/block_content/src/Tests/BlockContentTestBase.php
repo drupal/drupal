@@ -8,6 +8,9 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Sets up block content types.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\block_content\Functional\BlockContentTestBase instead.
  */
 abstract class BlockContentTestBase extends WebTestBase {
 
