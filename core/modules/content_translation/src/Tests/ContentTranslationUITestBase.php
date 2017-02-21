@@ -14,6 +14,9 @@ use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests the Content Translation UI.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase instead.
  */
 abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 

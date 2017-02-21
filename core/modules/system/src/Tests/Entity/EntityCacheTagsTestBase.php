@@ -16,6 +16,9 @@ use Drupal\user\RoleInterface;
 
 /**
  * Provides helper methods for Entity cache tags tests.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase instead.
  */
 abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
