@@ -64,13 +64,16 @@ class TaggedHandlersPassTest extends UnitTestCase {
    * Tests consumer with missing interface in non-production environment.
    *
    * @expectedException \Symfony\Component\DependencyInjection\Exception\LogicException
-   * @expectedExceptionMessage Service consumer 'consumer_id' class method Drupal\Tests\Core\DependencyInjection\Compiler\InvalidConsumer::addHandler() has to type-hint an interface.
+   * @expectedExceptionMessage Service consumer 'consumer_id1' class method Drupal\Tests\Core\DependencyInjection\Compiler\InvalidConsumer::addHandler() has to type-hint an interface.
    * @covers ::process
    */
   public function testProcessMissingInterface() {
     $container = $this->buildContainer();
     $container
-      ->register('consumer_id', __NAMESPACE__ . '\InvalidConsumer')
+      ->register('consumer_id0', __NAMESPACE__ . '\ValidConsumer')
+      ->addTag('service_collector');
+    $container
+      ->register('consumer_id1', __NAMESPACE__ . '\InvalidConsumer')
       ->addTag('service_collector');
 
     $handler_pass = new TaggedHandlersPass();

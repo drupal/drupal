@@ -77,6 +77,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
   public function process(ContainerBuilder $container) {
     foreach ($container->findTaggedServiceIds('service_collector') as $consumer_id => $passes) {
       foreach ($passes as $pass) {
+        $interface = NULL;
         $tag = isset($pass['tag']) ? $pass['tag'] : $consumer_id;
         $method_name = isset($pass['call']) ? $pass['call'] : 'addHandler';
         $required = isset($pass['required']) ? $pass['required'] : FALSE;
