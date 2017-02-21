@@ -76,8 +76,9 @@
     <div id="main-wrapper" class="layout-main-wrapper layout-container clearfix">
       <div id="main" class="layout-main clearfix">
         {{ page.breadcrumb }}
-        <main id="content" class="column main-content" role="main" tabindex="-1">
-          <section class="section" id="main-content">
+        <main id="content" class="column main-content" role="main">
+          <section class="section">
+            <a id="main-content" tabindex="-1"></a>
             {{ page.content }}
           </section>
         </main>

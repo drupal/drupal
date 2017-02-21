@@ -48,7 +48,8 @@
   <div class="layout-container">
     {{ page.pre_content }}
     {{ page.breadcrumb }}
-    <main class="page-content clearfix" id="main-content" role="main" tabindex="-1">
+    <main class="page-content clearfix" role="main">
+      <div class="visually-hidden"><a id="main-content" tabindex="-1"></a></div>
       {{ page.highlighted }}
       {% if page.help %}
         <div class="help">
