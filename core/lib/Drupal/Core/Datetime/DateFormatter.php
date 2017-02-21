@@ -122,11 +122,15 @@ class DateFormatter implements DateFormatterInterface {
     $date = DrupalDateTime::createFromTimestamp($timestamp, $this->timezones[$timezone], $create_settings);
 
     // If we have a non-custom date format use the provided date format pattern.
-    if ($date_format = $this->dateFormat($type, $langcode)) {
-      $format = $date_format->getPattern();
+    if ($type !== 'custom') {
+      if ($date_format = $this->dateFormat($type, $langcode)) {
+        $format = $date_format->getPattern();
+      }
     }
 
-    // Fall back to medium if a format was not found.
+    // Fall back to the 'medium' date format type if the format string is
+    // empty, either from not finding a requested date format or being given an
+    // empty custom format string.
     if (empty($format)) {
       $format = $this->dateFormat('fallback', $langcode)->getPattern();
     }
@@ -316,9 +320,9 @@ class DateFormatter implements DateFormatterInterface {
    * @param string $langcode
    *   The langcode of the language to use.
    *
-   * @return string|null
-   *   The pattern for the date format in the given language for non-custom
-   *   formats, NULL otherwise.
+   * @return \Drupal\Core\Datetime\DateFormatInterface|null
+   *   The configuration entity for the date format in the given language for
+   *   non-custom formats, NULL otherwise.
    */
   protected function dateFormat($format, $langcode) {
     if (!isset($this->dateFormats[$format][$langcode])) {

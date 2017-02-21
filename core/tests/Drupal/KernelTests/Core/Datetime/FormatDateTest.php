@@ -51,6 +51,8 @@ class FormatDateTest extends KernelTestBase {
   public function testFormatDate() {
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $formatter */
     $formatter = $this->container->get('date.formatter');
+    /** @var \Drupal\Core\Language\LanguageManagerInterface $language_manager */
+    $language_manager = $this->container->get('language_manager');
 
     $timestamp = strtotime('2007-03-26T00:00:00+00:00');
     $this->assertSame('Sunday, 25-Mar-07 17:00:00 PDT', $formatter->format($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Test all parameters.');
@@ -59,6 +61,14 @@ class FormatDateTest extends KernelTestBase {
     $this->assertSame('\\domingo, 25-Mar-07 17:00:00 PDT', $formatter->format($timestamp, 'custom', '\\\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), 'Test format containing backslash character.');
     $this->assertSame('\\l, 25-Mar-07 17:00:00 PDT', $formatter->format($timestamp, 'custom', '\\\\\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), 'Test format containing backslash followed by escaped format string.');
     $this->assertSame('Monday, 26-Mar-07 01:00:00 BST', $formatter->format($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London', 'en'), 'Test a different time zone.');
+    $this->assertSame('Thu, 01/01/1970 - 00:00', $formatter->format(0, 'custom', '', 'UTC', 'en'), 'Test custom format with empty string.');
+
+    // Make sure we didn't change the configuration override language.
+    $this->assertSame('en', $language_manager->getConfigOverrideLanguage()->getId(), 'Configuration override language not disturbed,');
+
+    // Test bad format string will use the fallback format.
+    $this->assertSame($formatter->format($timestamp, 'fallback'), $formatter->format($timestamp, 'bad_format_string'), 'Test fallback format.');
+    $this->assertSame('en', $language_manager->getConfigOverrideLanguage()->getId(), 'Configuration override language not disturbed,');
 
     // Change the default language and timezone.
     $this->config('system.site')->set('default_langcode', static::LANGCODE)->save();
@@ -66,7 +76,8 @@ class FormatDateTest extends KernelTestBase {
 
     // Reset the language manager so new negotiations attempts will fall back on
     // on the new language.
-    $this->container->get('language_manager')->reset();
+    $language_manager->reset();
+    $this->assertSame('en', $language_manager->getConfigOverrideLanguage()->getId(), 'Configuration override language not disturbed,');
 
     $this->assertSame('Sunday, 25-Mar-07 17:00:00 PDT', $formatter->format($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Test a different language.');
     $this->assertSame('Monday, 26-Mar-07 01:00:00 BST', $formatter->format($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London'), 'Test a different time zone.');
@@ -83,6 +94,13 @@ class FormatDateTest extends KernelTestBase {
     $this->assertSame('2007-W12', $formatter->format($timestamp, 'html_week'), 'Test html_week date format.');
     $this->assertSame('2007-03', $formatter->format($timestamp, 'html_month'), 'Test html_month date format.');
     $this->assertSame('2007', $formatter->format($timestamp, 'html_year'), 'Test html_year date format.');
+
+    // Make sure we didn't change the configuration override language.
+    $this->assertSame('en', $language_manager->getConfigOverrideLanguage()->getId(), 'Configuration override language not disturbed,');
+
+    // Test bad format string will use the fallback format.
+    $this->assertSame($formatter->format($timestamp, 'fallback'), $formatter->format($timestamp, 'bad_format_string'), 'Test fallback format.');
+    $this->assertSame('en', $language_manager->getConfigOverrideLanguage()->getId(), 'Configuration override language not disturbed,');
 
     // HTML is not escaped by the date formatter, it must be escaped later.
     $this->assertSame("<script>alert('2007');</script>", $formatter->format($timestamp, 'custom', '\<\s\c\r\i\p\t\>\a\l\e\r\t\(\'Y\'\)\;\<\/\s\c\r\i\p\t\>'), 'Script tags not removed from dates.');
