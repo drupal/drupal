@@ -106,7 +106,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
   public function render() {
     $build = $this->view->style_plugin->render($this->view->result);
 
-    $this->applyDisplayCachablityMetadata($build);
+    $this->applyDisplayCacheabilityMetadata($build);
 
     return $build;
   }

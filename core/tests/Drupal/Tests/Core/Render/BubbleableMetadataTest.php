@@ -671,7 +671,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestAddCachableDependency() {
+  public function providerTestAddCacheableDependency() {
     return [
       // Merge in a cacheable metadata.
       'merge-cacheable-metadata' => [

@@ -286,7 +286,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     $this->drupalGet($url);
     $this->assertEqual(0, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
-    // Ensure that the view cachability metadata is propagated even, for an
+    // Ensure that the view cacheability metadata is propagated even, for an
     // empty block.
     $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:views.view.test_view_block' , 'http_response', 'rendered']));
     $this->assertCacheContexts(['url.query_args:_wrapper_format']);
