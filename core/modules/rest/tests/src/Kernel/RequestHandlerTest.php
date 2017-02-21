@@ -49,7 +49,7 @@ class RequestHandlerTest extends KernelTestBase {
    */
   public function testHandle() {
     $request = new Request();
-    $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'restplugin'], ['_format' => 'json']));
+    $route_match = new RouteMatch('test', (new Route('/rest/test', ['_rest_resource_config' => 'restplugin'], ['_format' => 'json']))->setMethods(['GET']));
 
     $resource = $this->prophesize(StubRequestHandlerResourcePlugin::class);
     $resource->get(NULL, $request)
@@ -76,7 +76,7 @@ class RequestHandlerTest extends KernelTestBase {
     $this->assertEquals($response, $handler_response);
 
     // We will call the patch method this time.
-    $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'restplugin'], ['_content_type_format' => 'json']));
+    $route_match = new RouteMatch('test', (new Route('/rest/test', ['_rest_resource_config' => 'restplugin'], ['_content_type_format' => 'json']))->setMethods(['PATCH']));
     $request->setMethod('PATCH');
     $response = new ResourceResponse([]);
     $resource->patch(NULL, $request)
