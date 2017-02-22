@@ -61,6 +61,7 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
     // Create a test entity.
     $entity = EntityTestMulChanged::create(array(
       'name' => $this->randomString(),
+      'not_translatable' => $this->randomString(),
       'user_id' => $user1->id(),
       'language' => 'en',
     ));
@@ -121,6 +122,25 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
       $german->getChangedTime(), $changed_de,
       'Changed time of the German translation did not change.'
     );
+
+    // Update a non-translatable field to make sure that the changed timestamp
+    // is updated for all translations.
+    $entity->set('not_translatable', $this->randomString())->save();
+
+    $this->assertTrue(
+      $entity->getChangedTime() > $changed_en,
+      'Changed time of original language did change.'
+    );
+
+    $this->assertTrue(
+      $german->getChangedTime() > $changed_de,
+      'Changed time of the German translation did change.'
+    );
+
+    $this->assertEquals($entity->getChangedTime(), $german->getChangedTime(), 'When editing a non-translatable field the updated changed time is equal across all translations.');
+
+    $changed_en = $entity->getChangedTime();
+    $changed_de = $german->getChangedTime();
 
     $entity->setOwner($user2);
 

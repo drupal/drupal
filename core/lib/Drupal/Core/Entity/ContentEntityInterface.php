@@ -25,9 +25,6 @@ interface ContentEntityInterface extends \Traversable, FieldableEntityInterface,
   /**
    * Determines if the current translation of the entity has unsaved changes.
    *
-   * If the entity is translatable only translatable fields will be checked for
-   * changes.
-   *
    * @return bool
    *   TRUE if the current translation of the entity has changes.
    */

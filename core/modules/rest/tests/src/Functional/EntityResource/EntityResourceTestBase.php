@@ -186,13 +186,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
       // Set a default value on the field.
       $this->entity->set('field_rest_test', ['value' => 'All the faith he had had had had no effect on the outcome of his life.']);
-      // @todo Remove in this if-test in https://www.drupal.org/node/2808335.
-      if ($this->entity instanceof EntityChangedInterface) {
-        $changed = $this->entity->getChangedTime();
-        $this->entity->setChangedTime(42);
-        $this->entity->save();
-        $this->entity->setChangedTime($changed);
-      }
       $this->entity->save();
     }
   }

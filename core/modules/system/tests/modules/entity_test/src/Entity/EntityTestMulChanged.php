@@ -60,6 +60,10 @@ class EntityTestMulChanged extends EntityTestMul implements EntityChangedInterfa
       ->setDescription(t('The time that the entity was last edited.'))
       ->setTranslatable(TRUE);
 
+    $fields['not_translatable'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Non translatable'))
+      ->setDescription(t('A non-translatable string field'));
+
     return $fields;
   }
 
