@@ -383,4 +383,30 @@ class CacheTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, [['name' => 'Paul']], $map);
   }
 
+  /**
+   * Tests that cacheability metadata is carried over from argument defaults.
+   */
+  public function testArgumentDefaultCache() {
+    $view = Views::getView('test_view');
+
+    // Add a new argument and set the test plugin for the argument_default.
+    $options = array(
+      'default_argument_type' => 'argument_default_test',
+      'default_argument_options' => array(
+        'value' => 'John'
+      ),
+      'default_action' => 'default'
+    );
+    $view->addHandler('default', 'argument', 'views_test_data', 'name', $options);
+    $view->initHandlers();
+
+    $output = $view->preview();
+
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
+    $renderer->renderPlain($output);
+    $this->assertEquals(['config:views.view.test_view', 'example_tag'], $output['#cache']['tags']);
+  }
+
 }
