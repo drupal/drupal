@@ -1267,6 +1267,31 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   }
 
   /**
+   * Returns an array of field names to skip in ::hasTranslationChanges.
+   *
+   * @return array
+   *   An array of field names.
+   */
+  protected function getFieldsToSkipFromTranslationChangesCheck() {
+    // A list of known revision metadata fields which should be skipped from
+    // the comparision.
+    // @todo Replace the hard coded list of revision metadata fields with the
+    // solution from https://www.drupal.org/node/2615016.
+    $fields = [
+      $this->getEntityType()->getKey('revision'),
+      'revision_translation_affected',
+      'revision_uid',
+      'revision_user',
+      'revision_timestamp',
+      'revision_created',
+      'revision_log',
+      'revision_log_message',
+    ];
+
+    return $fields;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function hasTranslationChanges() {
@@ -1299,13 +1324,17 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // possible or be meaningless.
     /** @var \Drupal\Core\Entity\ContentEntityBase $translation */
     $translation = $original->getTranslation($this->activeLangcode);
+
+    // The list of fields to skip from the comparision.
+    $skip_fields = $this->getFieldsToSkipFromTranslationChangesCheck();
+
     foreach ($this->getFieldDefinitions() as $field_name => $definition) {
       // @todo Avoid special-casing the following fields. See
       //    https://www.drupal.org/node/2329253.
-      if ($field_name == 'revision_translation_affected' || $field_name == 'revision_id') {
+      if (in_array($field_name, $skip_fields, TRUE)) {
         continue;
       }
-      if (!$definition->isComputed() && (!$translated || $definition->isTranslatable())) {
+      if (!$definition->isComputed()) {
         $items = $this->get($field_name)->filterEmptyItems();
         $original_items = $translation->get($field_name)->filterEmptyItems();
         if (!$items->equals($original_items)) {

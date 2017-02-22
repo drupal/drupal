@@ -129,14 +129,29 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Create the node.
     $node = $this->drupalCreateNode();
+    $storage = \Drupal::entityTypeManager()->getStorage($node->getEntityTypeId());
 
+    // Create a new revision based on the default revision.
+    // Revision 2.
+    $node = $storage->load($node->id());
     $node->setNewRevision(TRUE);
     $node->save();
+
+    // Revision 3.
+    $node = $storage->load($node->id());
     $node->setNewRevision(TRUE);
     $node->save();
+
+    // Revision 4.
+    // Trigger translation changes in order to show the revision.
+    $node = $storage->load($node->id());
+    $node->setTitle($this->randomString());
     $node->isDefaultRevision(FALSE);
     $node->setNewRevision(TRUE);
     $node->save();
+
+    // Revision 5.
+    $node = $storage->load($node->id());
     $node->isDefaultRevision(FALSE);
     $node->setNewRevision(TRUE);
     $node->save();
@@ -147,17 +162,15 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Verify that the default revision can be an older revision than the latest
     // one.
-    $this->assertLinkByHref('/node/' . $node_id . '/revisions/5/revert');
-    $this->assertLinkByHref('/node/' . $node_id . '/revisions/4/revert');
-    $this->assertNoLinkByHref('/node/' . $node_id . '/revisions/3/revert');
-    $current_revision_row = $this->xpath("//table[contains(@class, :table_class)]//tbody//tr[3 and contains(@class, :class) and contains(., :text)]", [
-      ':table_class' => 'node-revision-table',
-      ':class' => 'revision-current',
-      ':text' => 'Current revision',
-    ]);
-    $this->assertEqual(count($current_revision_row), 1, 'The default revision can be a revision other than the latest one.');
-    $this->assertLinkByHref('/node/' . $node_id . '/revisions/2/revert');
+    // Assert that the revisions with translations changes are shown: 1 and 4.
     $this->assertLinkByHref('/node/' . $node_id . '/revisions/1/revert');
+    $this->assertLinkByHref('/node/' . $node_id . '/revisions/4/revert');
+
+    // Assert that the revisions without translations changes are filtered out:
+    // 2, 3 and 5.
+    $this->assertNoLinkByHref('/node/' . $node_id . '/revisions/2/revert');
+    $this->assertNoLinkByHref('/node/' . $node_id . '/revisions/3/revert');
+    $this->assertNoLinkByHref('/node/' . $node_id . '/revisions/5/revert');
   }
 
 }

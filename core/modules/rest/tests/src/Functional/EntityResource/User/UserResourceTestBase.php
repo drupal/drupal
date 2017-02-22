@@ -104,7 +104,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
       ],
       'changed' => [
         [
-          'value' => '123456789',
+          'value' =>  (string) $this->entity->getChangedTime(),
         ],
       ],
       'default_langcode' => [
