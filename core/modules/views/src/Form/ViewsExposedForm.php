@@ -107,7 +107,7 @@ class ViewsExposedForm extends FormBase {
       // Prevent from showing up in \Drupal::request()->query.
       '#name' => '',
       '#type' => 'submit',
-      '#value' => $this->t('Filter'),
+      '#value' => $this->t('Apply'),
       '#id' => Html::getUniqueId('edit-submit-' . $view->storage->id()),
     );
 
