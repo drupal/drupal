@@ -2112,6 +2112,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       // Assigned by reference so anything added in $element['#attached'] will
       // be available on the view.
       '#attached' => &$this->view->element['#attached'],
+      '#cache' => &$this->view->element['#cache'],
     );
 
     $this->applyDisplayCachablityMetadata($this->view->element);
