@@ -414,7 +414,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
 
           if (!empty($result)) {
             // Allow modules to provide translations for specific links.
-            $this->moduleHandler->alter('language_switch_links', $result, $type, $path);
+            $this->moduleHandler->alter('language_switch_links', $result, $type, $url);
             $links = (object) array('links' => $result, 'method_id' => $method_id);
             break;
           }
