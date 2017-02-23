@@ -89,7 +89,6 @@ class UpdateComplexTest extends DatabaseTestBase {
    */
   function testUpdateExpression() {
     $before_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchField();
-    $GLOBALS['larry_test'] = 1;
     $num_updated = db_update('test')
       ->condition('name', 'Ringo')
       ->fields(array('job' => 'Musician'))
@@ -104,7 +103,6 @@ class UpdateComplexTest extends DatabaseTestBase {
     $this->assertEqual($person->name, 'Ringo', 'Name set correctly.');
     $this->assertEqual($person->age, $before_age + 4, 'Age set correctly.');
     $this->assertEqual($person->job, 'Musician', 'Job set correctly.');
-    $GLOBALS['larry_test'] = 0;
   }
 
   /**
