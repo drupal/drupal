@@ -1835,9 +1835,14 @@ function system_update_8301() {
 }
 
 /**
+ * @addtogroup updates-8.4.x
+ * @{
+ */
+
+/**
  * Move revision metadata fields to the revision table.
  */
-function system_update_8302(&$sandbox) {
+function system_update_8400(&$sandbox) {
   // Due to the fields from RevisionLogEntityTrait not being explicitly
   // mentioned in the storage they might have been installed wrongly in the base
   // table for revisionable untranslatable entities and in the data and revision
@@ -1970,5 +1975,5 @@ function system_update_8302(&$sandbox) {
 }
 
 /**
- * @} End of "addtogroup updates-8.3.0".
+ * @} End of "addtogroup updates-8.4.x".
  */
