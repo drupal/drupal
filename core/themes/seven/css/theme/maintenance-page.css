@@ -142,8 +142,8 @@
   }
   .layout-container {
     margin: 0 auto;
-    min-height: 75%;
     width: 75%;
+    max-width: 770px;
     border-radius: 5px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     padding: 20px 0 40px 0;
