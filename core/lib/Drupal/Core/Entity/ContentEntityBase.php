@@ -1014,10 +1014,9 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     if ($this->hasField($name)) {
       return TRUE;
     }
+
     // For non-field properties, check the internal values.
-    else {
-      return isset($this->values[$name]);
-    }
+    return isset($this->values[$name]);
   }
 
   /**
@@ -1027,11 +1026,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // Unsetting a field means emptying it.
     if ($this->hasField($name)) {
       $this->get($name)->setValue(array());
+      return TRUE;
     }
+
     // For non-field properties, unset the internal value.
-    else {
-      unset($this->values[$name]);
-    }
+    unset($this->values[$name]);
   }
 
   /**
@@ -1067,60 +1066,62 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   public function __clone() {
     // Avoid deep-cloning when we are initializing a translation object, since
     // it will represent the same entity, only with a different active language.
-    if (!$this->translationInitialize) {
-      // The translation is a different object, and needs its own TypedData
-      // adapter object.
-      $this->typedData = NULL;
-      $definitions = $this->getFieldDefinitions();
+    if ($this->translationInitialize) {
+      return TRUE;
+    }
 
-      // The translation cache has to be cleared before cloning the fields
-      // below so that the call to getTranslation() does not re-use the
-      // translation objects of the old entity but instead creates new
-      // translation objects from the newly cloned entity. Otherwise the newly
-      // cloned field item lists would hold references to the old translation
-      // objects in their $parent property after the call to setContext().
-      $this->clearTranslationCache();
+    // The translation is a different object, and needs its own TypedData
+    // adapter object.
+    $this->typedData = NULL;
+    $definitions = $this->getFieldDefinitions();
 
-      // Because the new translation objects that are created below are
-      // themselves created by *cloning* the newly cloned entity we need to
-      // make sure that the references to property values are properly cloned
-      // before cloning the fields. Otherwise calling
-      // $items->getEntity()->isNew(), for example, would return the
-      // $enforceIsNew value of the old entity.
+    // The translation cache has to be cleared before cloning the fields
+    // below so that the call to getTranslation() does not re-use the
+    // translation objects of the old entity but instead creates new
+    // translation objects from the newly cloned entity. Otherwise the newly
+    // cloned field item lists would hold references to the old translation
+    // objects in their $parent property after the call to setContext().
+    $this->clearTranslationCache();
 
-      // Ensure the translations array is actually cloned by overwriting the
-      // original reference with one pointing to a copy of the array.
-      $translations = $this->translations;
-      $this->translations = &$translations;
+    // Because the new translation objects that are created below are
+    // themselves created by *cloning* the newly cloned entity we need to
+    // make sure that the references to property values are properly cloned
+    // before cloning the fields. Otherwise calling
+    // $items->getEntity()->isNew(), for example, would return the
+    // $enforceIsNew value of the old entity.
 
-      // Ensure that the following properties are actually cloned by
-      // overwriting the original references with ones pointing to copies of
-      // them: enforceIsNew, newRevision, loadedRevisionId and fields.
-      $enforce_is_new = $this->enforceIsNew;
-      $this->enforceIsNew = &$enforce_is_new;
+    // Ensure the translations array is actually cloned by overwriting the
+    // original reference with one pointing to a copy of the array.
+    $translations = $this->translations;
+    $this->translations = &$translations;
 
-      $new_revision = $this->newRevision;
-      $this->newRevision = &$new_revision;
+    // Ensure that the following properties are actually cloned by
+    // overwriting the original references with ones pointing to copies of
+    // them: enforceIsNew, newRevision, loadedRevisionId and fields.
+    $enforce_is_new = $this->enforceIsNew;
+    $this->enforceIsNew = &$enforce_is_new;
 
-      $original_revision_id = $this->loadedRevisionId;
-      $this->loadedRevisionId = &$original_revision_id;
+    $new_revision = $this->newRevision;
+    $this->newRevision = &$new_revision;
 
-      $fields = $this->fields;
-      $this->fields = &$fields;
+    $original_revision_id = $this->loadedRevisionId;
+    $this->loadedRevisionId = &$original_revision_id;
 
-      foreach ($this->fields as $name => $values) {
-        $this->fields[$name] = array();
-        // Untranslatable fields may have multiple references for the same field
-        // object keyed by language. To avoid creating different field objects
-        // we retain just the original value, as references will be recreated
-        // later as needed.
-        if (!$definitions[$name]->isTranslatable() && count($values) > 1) {
-          $values = array_intersect_key($values, array(LanguageInterface::LANGCODE_DEFAULT => TRUE));
-        }
-        foreach ($values as $langcode => $items) {
-          $this->fields[$name][$langcode] = clone $items;
-          $this->fields[$name][$langcode]->setContext($name, $this->getTranslation($langcode)->getTypedData());
-        }
+    $fields = $this->fields;
+    $this->fields = &$fields;
+
+    foreach ($this->fields as $name => $values) {
+      $this->fields[$name] = array();
+      // Untranslatable fields may have multiple references for the same field
+      // object keyed by language. To avoid creating different field objects
+      // we retain just the original value, as references will be recreated
+      // later as needed.
+      if (!$definitions[$name]->isTranslatable() && count($values) > 1) {
+        $values = array_intersect_key($values, array(LanguageInterface::LANGCODE_DEFAULT => TRUE));
+      }
+      foreach ($values as $langcode => $items) {
+        $this->fields[$name][$langcode] = clone $items;
+        $this->fields[$name][$langcode]->setContext($name, $this->getTranslation($langcode)->getTypedData());
       }
     }
   }
