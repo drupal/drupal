@@ -294,17 +294,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // Make sure the key fields come first in the list of fields.
       $all_fields = array_merge($key_fields, array_diff($all_fields, $key_fields));
 
-      // Nodes have all three of these fields, while custom blocks only have
-      // log.
-      // @todo Provide automatic definitions for revision metadata fields in
-      //   https://www.drupal.org/node/2248983.
-      $revision_metadata_fields = array_intersect(array(
-        'revision_timestamp',
-        'revision_uid',
-        'revision_log',
-      ), $all_fields);
-
+      // If the entity is revisionable, gather the fields that need to be put
+      // in the revision table.
       $revisionable = $this->entityType->isRevisionable();
+      $revision_metadata_fields = $revisionable ? array_values($this->entityType->getRevisionMetadataKeys()) : [];
+
       $translatable = $this->entityType->isTranslatable();
       if (!$revisionable && !$translatable) {
         // The base layout stores all the base field values in the base table.

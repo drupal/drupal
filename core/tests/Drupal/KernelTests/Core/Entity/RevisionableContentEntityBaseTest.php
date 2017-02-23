@@ -2,7 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\entity_test\Entity\EntityTestWithRevisionLog;
+use Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
@@ -15,7 +15,7 @@ class RevisionableContentEntityBaseTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'system', 'user'];
+  public static $modules = ['entity_test_revlog', 'system', 'user'];
 
   /**
    * {@inheritdoc}
@@ -31,7 +31,7 @@ class RevisionableContentEntityBaseTest extends KernelTestBase {
   public function testRevisionableContentEntity() {
     $user = User::create(['name' => 'test name']);
     $user->save();
-    /** @var \Drupal\entity_test\Entity\EntityTestWithRevisionLog $entity */
+    /** @var \Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog $entity */
     $entity = EntityTestWithRevisionLog::create([
       'type' => 'entity_test_revlog',
     ]);

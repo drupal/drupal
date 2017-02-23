@@ -239,3 +239,24 @@ function views_post_update_boolean_filter_values() {
 /**
  * @} End of "addtogroup updates-8.2.x".
  */
+
+/**
+ * @addtogroup updates-8.3.x
+ * @{
+ */
+
+/**
+ * Fix table names for revision metadata fields.
+ */
+function views_post_update_revision_metadata_fields() {
+  // The table names are fixed automatically in
+  // \Drupal\views\Entity\View::preSave(), so we just need to re-save all views.
+  $views = View::loadMultiple();
+  array_walk($views, function(View $view) {
+    $view->save();
+  });
+}
+
+/**
+ * @} End of "addtogroup updates-8.3.x".
+ */

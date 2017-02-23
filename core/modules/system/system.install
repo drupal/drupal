@@ -12,6 +12,9 @@ use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Core\Path\AliasStorage;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
@@ -1829,6 +1832,141 @@ function system_update_8301() {
   \Drupal::configFactory()->getEditable('core.extension')
     ->set('profile', \Drupal::installProfile())
     ->save();
+}
+
+/**
+ * Move revision metadata fields to the revision table.
+ */
+function system_update_8302(&$sandbox) {
+  // Due to the fields from RevisionLogEntityTrait not being explicitly
+  // mentioned in the storage they might have been installed wrongly in the base
+  // table for revisionable untranslatable entities and in the data and revision
+  // data tables for revisionable and translatable entities.
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $database = \Drupal::database();
+  $database_schema = $database->schema();
+
+  if (!isset($sandbox['current'])) {
+    // This must be the first run. Initialize the sandbox.
+    $sandbox['current'] = 0;
+
+    $definitions = array_filter(\Drupal::entityTypeManager()->getDefinitions(), function (EntityTypeInterface $entity_type) use ($entity_definition_update_manager) {
+      if ($entity_type = $entity_definition_update_manager->getEntityType($entity_type->id())) {
+        return is_subclass_of($entity_type->getClass(), FieldableEntityInterface::class) && ($entity_type instanceof ContentEntityTypeInterface) && $entity_type->isRevisionable();
+      }
+      return FALSE;
+    });
+    $sandbox['entity_type_ids'] = array_keys($definitions);
+    $sandbox['max'] = count($sandbox['entity_type_ids']);
+  }
+
+  $current_entity_type_key = $sandbox['current'];
+  for ($i = $current_entity_type_key; ($i < $current_entity_type_key + 1) && ($i < $sandbox['max']); $i++) {
+    $entity_type_id = $sandbox['entity_type_ids'][$i];
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
+    $entity_type = $entity_definition_update_manager->getEntityType($entity_type_id);
+
+    $base_fields = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($entity_type_id);
+    $revision_metadata_fields = $entity_type->getRevisionMetadataKeys();
+    $fields_to_update = array_intersect_key($base_fields, array_flip($revision_metadata_fields));
+
+    if (!empty($fields_to_update)) {
+      // Initialize the entity table names.
+      // @see \Drupal\Core\Entity\Sql\SqlContentEntityStorage::initTableLayout()
+      $base_table = $entity_type->getBaseTable() ?: $entity_type_id;
+      $data_table = $entity_type->getDataTable() ?: $entity_type_id . '_field_data';
+      $revision_table = $entity_type->getRevisionTable() ?: $entity_type_id . '_revision';
+      $revision_data_table = $entity_type->getRevisionDataTable() ?: $entity_type_id . '_field_revision';
+      $revision_field = $entity_type->getKey('revision');
+
+      // No data needs to be migrated if the entity type is not translatable.
+      if ($entity_type->isTranslatable()) {
+        if (!isset($sandbox[$entity_type_id])) {
+          // This must be the first run for this entity type. Initialize the
+          // sub-sandbox for it.
+
+          // Calculate the number of revisions to process.
+          $count = \Drupal::entityQuery($entity_type_id)
+            ->allRevisions()
+            ->count()
+            ->accessCheck(FALSE)
+            ->execute();
+
+          $sandbox[$entity_type_id]['current'] = 0;
+          $sandbox[$entity_type_id]['max'] = $count;
+        }
+        // Define the step size.
+        $steps = Settings::get('entity_update_batch_size', 50);
+
+        // Collect the revision IDs to process.
+        $revisions = \Drupal::entityQuery($entity_type_id)
+          ->allRevisions()
+          ->range($sandbox[$entity_type_id]['current'], $sandbox[$entity_type_id]['current'] + $steps)
+          ->sort($revision_field, 'ASC')
+          ->accessCheck(FALSE)
+          ->execute();
+        $revisions = array_keys($revisions);
+
+        foreach ($fields_to_update as $revision_metadata_field_name => $definition) {
+          // If the revision metadata field is present in the data and the
+          // revision data table, install its definition again with the updated
+          // storage code in order for the field to be installed in the
+          // revision table. Afterwards, copy over the field values and remove
+          // the field from the data and the revision data tables.
+          if ($database_schema->fieldExists($data_table, $revision_metadata_field_name) && $database_schema->fieldExists($revision_data_table, $revision_metadata_field_name)) {
+            // Install the field in the revision table.
+            if (!isset($sandbox[$entity_type_id]['storage_definition_installed'][$revision_metadata_field_name])) {
+              $entity_definition_update_manager->installFieldStorageDefinition($revision_metadata_field_name, $entity_type_id, $entity_type->getProvider(), $definition);
+              $sandbox[$entity_type_id]['storage_definition_installed'][$revision_metadata_field_name] = TRUE;
+            }
+
+            // Apply the field value from the revision data table to the
+            // revision table.
+            foreach ($revisions as $rev_id) {
+              $field_value = $database->select($revision_data_table, 't')
+                ->fields('t', [$revision_metadata_field_name])
+                ->condition($revision_field, $rev_id)
+                ->execute()
+                ->fetchField();
+              $database->update($revision_table)
+                ->condition($revision_field, $rev_id)
+                ->fields([$revision_metadata_field_name => $field_value])
+                ->execute();
+            }
+          }
+        }
+
+        $sandbox[$entity_type_id]['current'] += count($revisions);
+        $sandbox[$entity_type_id]['finished'] = ($sandbox[$entity_type_id]['current'] == $sandbox[$entity_type_id]['max']) || empty($revisions);
+
+        if ($sandbox[$entity_type_id]['finished']) {
+          foreach ($fields_to_update as $revision_metadata_field_name => $definition) {
+            // Drop the field from the data and revision data tables.
+            $database_schema->dropField($data_table, $revision_metadata_field_name);
+            $database_schema->dropField($revision_data_table, $revision_metadata_field_name);
+          }
+          $sandbox['current']++;
+        }
+      }
+      else {
+        foreach ($fields_to_update as $revision_metadata_field_name => $definition) {
+          if ($database_schema->fieldExists($base_table, $revision_metadata_field_name)) {
+            // Install the field in the revision table.
+            $entity_definition_update_manager->installFieldStorageDefinition($revision_metadata_field_name, $entity_type_id, $entity_type->getProvider(), $definition);
+            // Drop the field from the base table.
+            $database_schema->dropField($base_table, $revision_metadata_field_name);
+          }
+        }
+        $sandbox['current']++;
+      }
+    }
+    else {
+      $sandbox['current']++;
+    }
+
+  }
+
+  $sandbox['#finished'] = $sandbox['current'] == $sandbox['max'];
 }
 
 /**

@@ -61,6 +61,11 @@ use Drupal\user\UserInterface;
  *     "published" = "status",
  *     "uid" = "uid",
  *   },
+ *   revision_metadata_keys = {
+ *     "revision_user" = "revision_uid",
+ *     "revision_created" = "revision_timestamp",
+ *     "revision_log_message" = "revision_log"
+ *   },
  *   bundle_entity_type = "node_type",
  *   field_ui_base_route = "entity.node_type.edit_form",
  *   common_reference_target = TRUE,
