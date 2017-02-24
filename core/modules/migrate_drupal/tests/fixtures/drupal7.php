@@ -44169,7 +44169,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'search_active_modules',
-  'value' => 'a:2:{s:4:"node";s:4:"node";s:4:"user";i:0;}',
+  'value' => 'a:2:{s:4:"node";s:4:"node";s:4:"user";s:4:"user";}',
 ))
 ->values(array(
   'name' => 'search_and_or_limit',

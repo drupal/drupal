@@ -394,15 +394,11 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'path',
       'destination_module' => 'path',
     ],
-    'd6_search_page' => [
+    'search_page' => [
       'source_module' => 'search',
       'destination_module' => 'search',
     ],
     'd6_search_settings' => [
-      'source_module' => 'search',
-      'destination_module' => 'search',
-    ],
-    'd7_search_page' => [
       'source_module' => 'search',
       'destination_module' => 'search',
     ],

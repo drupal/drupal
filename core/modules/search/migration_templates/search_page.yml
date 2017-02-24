@@ -1,9 +1,10 @@
-id: d6_search_page
+id: search_page
 label: Search page configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
-  plugin: d6_search_page
+  plugin: variable
   variables:
     - node_rank_comments
     - node_rank_promote
@@ -16,7 +17,6 @@ source:
     path: node
     plugin: node_search
 process:
-  module: module
   id: 'constants/id'
   path: 'constants/path'
   plugin: 'constants/plugin'
