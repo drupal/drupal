@@ -258,10 +258,19 @@ abstract class FileFieldTestBase extends BrowserTestBase {
 
   /**
    * Asserts that a file exists physically on disk.
+   *
+   * Overrides PHPUnit_Framework_Assert::assertFileExists() to also work with
+   * file entities.
+   *
+   * @param \Drupal\File\FileInterface|string $file
+   *   Either the file entity or the file URI.
+   * @param string $message
+   *   (optional) A message to display with the assertion.
    */
-  function assertFileExists($file, $message = NULL) {
+  public static function assertFileExists($file, $message = NULL) {
     $message = isset($message) ? $message : format_string('File %file exists on the disk.', array('%file' => $file->getFileUri()));
-    $this->assertTrue(is_file($file->getFileUri()), $message);
+    $filename = $file instanceof FileInterface ? $file->getFileUri() : $file;
+    parent::assertFileExists($filename, $message);
   }
 
   /**
@@ -276,10 +285,19 @@ abstract class FileFieldTestBase extends BrowserTestBase {
 
   /**
    * Asserts that a file does not exist on disk.
+   *
+   * Overrides PHPUnit_Framework_Assert::assertFileExists() to also work with
+   * file entities.
+   *
+   * @param \Drupal\File\FileInterface|string $file
+   *   Either the file entity or the file URI.
+   * @param string $message
+   *   (optional) A message to display with the assertion.
    */
-  function assertFileNotExists($file, $message = NULL) {
+  public static function assertFileNotExists($file, $message = NULL) {
     $message = isset($message) ? $message : format_string('File %file exists on the disk.', array('%file' => $file->getFileUri()));
-    $this->assertFalse(is_file($file->getFileUri()), $message);
+    $filename = $file instanceof FileInterface ? $file->getFileUri() : $file;
+    parent::assertFileNotExists($filename, $message);
   }
 
   /**
