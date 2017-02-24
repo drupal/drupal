@@ -7,7 +7,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use Drupal\search\Entity\SearchPage;
 
 /**
- * Upgrade search page variables.
+ * Upgrade search rank settings to search.page.*.yml.
  *
  * @group migrate_drupal_6
  */
@@ -23,7 +23,7 @@ class MigrateSearchPageTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('d6_search_page');
+    $this->executeMigration('search_page');
   }
 
   /**
@@ -53,7 +53,7 @@ class MigrateSearchPageTest extends MigrateDrupal6TestBase {
       ->execute();
 
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-    $migration = $this->getMigration('d6_search_page');
+    $migration = $this->getMigration('search_page');
     // Indicate we're rerunning a migration that's already run.
     $migration->getIdMap()->prepareUpdate();
     $this->executeMigration($migration);
