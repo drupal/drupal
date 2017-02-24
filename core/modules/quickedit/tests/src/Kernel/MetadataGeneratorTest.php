@@ -5,7 +5,7 @@ namespace Drupal\Tests\quickedit\Kernel;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\quickedit\EditorSelector;
 use Drupal\quickedit\MetadataGenerator;
-use Drupal\quickedit_test\MockEditEntityFieldAccessCheck;
+use Drupal\quickedit_test\MockQuickEditEntityFieldAccessCheck;
 use Drupal\filter\Entity\FilterFormat;
 
 /**
@@ -44,7 +44,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
   /**
    * The access checker object to be used by the metadata generator object.
    *
-   * @var \Drupal\quickedit\Access\EditEntityFieldAccessCheckInterface
+   * @var \Drupal\quickedit\Access\QuickEditEntityFieldAccessCheckInterface
    */
   protected $accessChecker;
 
@@ -52,7 +52,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
     parent::setUp();
 
     $this->editorManager = $this->container->get('plugin.manager.quickedit.editor');
-    $this->accessChecker = new MockEditEntityFieldAccessCheck();
+    $this->accessChecker = new MockQuickEditEntityFieldAccessCheck();
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
     $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
   }

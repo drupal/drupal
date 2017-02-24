@@ -5,21 +5,21 @@ namespace Drupal\Tests\quickedit\Unit\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
-use Drupal\quickedit\Access\EditEntityFieldAccessCheck;
+use Drupal\quickedit\Access\QuickEditEntityFieldAccessCheck;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * @coversDefaultClass \Drupal\quickedit\Access\EditEntityFieldAccessCheck
+ * @coversDefaultClass \Drupal\quickedit\Access\QuickEditEntityFieldAccessCheck
  * @group Access
  * @group quickedit
  */
-class EditEntityFieldAccessCheckTest extends UnitTestCase {
+class QuickEditEntityFieldAccessCheckTest extends UnitTestCase {
 
   /**
    * The tested access checker.
    *
-   * @var \Drupal\quickedit\Access\EditEntityFieldAccessCheck
+   * @var \Drupal\quickedit\Access\QuickEditEntityFieldAccessCheck
    */
   protected $editAccessCheck;
 
@@ -27,7 +27,7 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->editAccessCheck = new EditEntityFieldAccessCheck();
+    $this->editAccessCheck = new QuickEditEntityFieldAccessCheck();
 
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
@@ -40,7 +40,7 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
   /**
    * Provides test data for testAccess().
    *
-   * @see \Drupal\Tests\edit\Unit\quickedit\Access\EditEntityFieldAccessCheckTest::testAccess()
+   * @see \Drupal\Tests\edit\Unit\quickedit\Access\QuickEditEntityFieldAccessCheckTest::testAccess()
    */
   public function providerTestAccess() {
     $data = array();

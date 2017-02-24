@@ -3,7 +3,7 @@ services:
     class: Drupal\quickedit\Plugin\InPlaceEditorManager
     parent: default_plugin_manager
   access_check.quickedit.entity_field:
-    class: Drupal\quickedit\Access\EditEntityFieldAccessCheck
+    class: Drupal\quickedit\Access\QuickEditEntityFieldAccessCheck
     tags:
       - { name: access_check, applies_to: _access_quickedit_entity_field }
   quickedit.editor.selector:
