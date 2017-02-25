@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\forum\Tests;
+namespace Drupal\Tests\forum\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests for forum.module.
@@ -18,7 +18,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *
  * @group forum
  */
-class ForumTest extends WebTestBase {
+class ForumTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -193,21 +193,21 @@ class ForumTest extends WebTestBase {
     // Topics cell contains number of topics and number of unread topics.
     $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="forum__topics"]', $forum_arg);
     $topics = $this->xpath($xpath);
-    $topics = trim($topics[0]);
-    $this->assertEqual($topics, '6', 'Number of topics found.');
+    $topics = trim($topics[0]->getText());
+    // The extracted text contains the number of topics (6) and new posts
+    // (also 6) in this table cell.
+    $this->assertEquals('6 6 new posts in forum ' . $this->forum['name'], $topics, 'Number of topics found.');
 
     // Verify the number of unread topics.
-    $unread_topics = $this->container->get('forum_manager')->unreadTopics($this->forum['tid'], $this->editAnyTopicsUser->id());
-    $unread_topics = \Drupal::translation()->formatPlural($unread_topics, '1 new post', '@count new posts');
-    $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="forum__topics"]//a', $forum_arg);
-    $this->assertFieldByXPath($xpath, $unread_topics, 'Number of unread topics found.');
+    $elements = $this->xpath('//tr[@id=:forum]//td[@class="forum__topics"]//a', $forum_arg);
+    $this->assertStringStartsWith('6 new posts', $elements[0]->getText(), 'Number of unread topics found.');
     // Verify that the forum name is in the unread topics text.
-    $xpath = $this->buildXPathQuery('//tr[@id=:forum]//em[@class="placeholder"]', $forum_arg);
-    $this->assertFieldByXpath($xpath, $this->forum['name'], 'Forum name found in unread topics text.');
+    $elements = $this->xpath('//tr[@id=:forum]//em[@class="placeholder"]', $forum_arg);
+    $this->assertContains($this->forum['name'], $elements[0]->getText(), 'Forum name found in unread topics text.');
 
     // Verify total number of posts in forum.
-    $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="forum__posts"]', $forum_arg);
-    $this->assertFieldByXPath($xpath, '6', 'Number of posts found.');
+    $elements = $this->xpath('//tr[@id=:forum]//td[@class="forum__posts"]', $forum_arg);
+    $this->assertEquals('6', $elements[0]->getText(), 'Number of posts found.');
 
     // Test loading multiple forum nodes on the front page.
     $this->drupalLogin($this->drupalCreateUser(array('administer content types', 'create forum content', 'post comments')));
@@ -322,8 +322,8 @@ class ForumTest extends WebTestBase {
 
     // Test vocabulary form alterations.
     $this->drupalGet('admin/structure/taxonomy/manage/forums');
-    $this->assertFieldByName('op', t('Save'), 'Save button found.');
-    $this->assertNoFieldByName('op', t('Delete'), 'Delete button not found.');
+    $this->assertSession()->buttonExists('Save');
+    $this->assertSession()->buttonNotExists('Delete');
 
     // Test term edit form alterations.
     $this->drupalGet('taxonomy/term/' . $this->forumContainer['tid'] . '/edit');
@@ -343,7 +343,7 @@ class ForumTest extends WebTestBase {
     $vocabulary->save();
     // Test tags vocabulary form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags');
-    $this->assertFieldByName('op', t('Save'), 'Save button found.');
+    $this->assertSession()->buttonExists('Save');
     $this->assertLink(t('Delete'));
     // Test tags vocabulary term form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags/add');

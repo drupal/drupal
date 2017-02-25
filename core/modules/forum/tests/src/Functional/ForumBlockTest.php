@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\forum\Tests;
+namespace Drupal\Tests\forum\Functional;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\comment\Entity\Comment;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the forum blocks.
  *
  * @group forum
  */
-class ForumBlockTest extends WebTestBase {
+class ForumBlockTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
