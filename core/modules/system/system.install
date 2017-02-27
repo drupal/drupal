@@ -1835,6 +1835,10 @@ function system_update_8301() {
 }
 
 /**
+ * @} End of "addtogroup updates-8.3.0".
+ */
+
+/**
  * @addtogroup updates-8.4.x
  * @{
  */

@@ -26,12 +26,12 @@ class MoveRevisionMetadataFieldsUpdateTest extends UpdatePathTestBase {
   /**
    * Tests that the revision metadata fields are moved correctly.
    */
-  public function testSystemUpdate3000() {
+  public function testSystemUpdate8400() {
     $this->runUpdates();
 
     foreach (['entity_test_revlog', 'entity_test_mul_revlog'] as $entity_type_id) {
       /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
-      $storage =  \Drupal::entityTypeManager()->getStorage($entity_type_id);
+      $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
       /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
       $entity_type = $storage->getEntityType();
       $revision_metadata_field_names = $entity_type->getRevisionMetadataKeys();

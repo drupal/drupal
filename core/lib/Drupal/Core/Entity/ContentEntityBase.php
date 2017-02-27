@@ -1270,20 +1270,15 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    *   An array of field names.
    */
   protected function getFieldsToSkipFromTranslationChangesCheck() {
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
+    $entity_type = $this->getEntityType();
     // A list of known revision metadata fields which should be skipped from
     // the comparision.
-    // @todo Replace the hard coded list of revision metadata fields with the
-    // solution from https://www.drupal.org/node/2615016.
     $fields = [
-      $this->getEntityType()->getKey('revision'),
+      $entity_type->getKey('revision'),
       'revision_translation_affected',
-      'revision_uid',
-      'revision_user',
-      'revision_timestamp',
-      'revision_created',
-      'revision_log',
-      'revision_log_message',
     ];
+    $fields = array_merge($fields, array_values($entity_type->getRevisionMetadataKeys()));
 
     return $fields;
   }
