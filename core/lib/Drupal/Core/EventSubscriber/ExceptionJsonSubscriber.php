@@ -14,7 +14,7 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
    * {@inheritdoc}
    */
   protected function getHandledFormats() {
-    return ['json'];
+    return ['json', 'drupal_modal', 'drupal_dialog', 'drupal_ajax'];
   }
 
   /**

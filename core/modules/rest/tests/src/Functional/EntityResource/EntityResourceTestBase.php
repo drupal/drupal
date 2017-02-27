@@ -5,7 +5,6 @@ namespace Drupal\Tests\rest\Functional\EntityResource;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
@@ -487,17 +486,17 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 406 when requesting unsupported format.
     $response = $this->request('GET', $url, $request_options);
     $this->assert406Response($response);
-    $this->assertNotSame([static::$mimeType], $response->getHeader('Content-Type'));
+    $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
 
 
     $request_options[RequestOptions::HEADERS]['Accept'] = static::$mimeType;
 
 
-    // DX: 406 when requesting unsupported format but specifying Accept header.
-    // @todo Update in https://www.drupal.org/node/2825347.
+    // DX: 406 when requesting unsupported format but specifying Accept header:
+    // should result in a text/plain response.
     $response = $this->request('GET', $url, $request_options);
     $this->assert406Response($response);
-    $this->assertSame(['application/json'], $response->getHeader('Content-Type'));
+    $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
 
 
     $url = Url::fromRoute('rest.entity.' . static::$entityTypeId . '.GET.' . static::$format);
@@ -566,11 +565,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $url->setOption('query', []);
 
 
-    // DX: 415 when no Content-Type request header, but HTML if canonical route.
+    // DX: 415 when no Content-Type request header, plain text if canonical URL.
     $response = $this->request('POST', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(415, $response->getStatusCode());
-      $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+      $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
       $this->assertContains(htmlspecialchars('No "Content-Type" request header specified'), (string) $response->getBody());
     }
     else {
@@ -728,12 +727,12 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $request_options = [];
 
 
-    // DX: 405 when resource not provisioned, but HTML if canonical route.
+    // DX: 404 when resource not provisioned, but 405 if canonical route.
     $response = $this->request('PATCH', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(405, $response->getStatusCode());
       $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
-      $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+      $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
     }
     else {
       $this->assertResourceErrorResponse(404, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getUrl()->setAbsolute()->toString()) . '"', $response);
@@ -758,7 +757,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(415, $response->getStatusCode());
-      $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+      $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
       $this->assertTrue(FALSE !== strpos((string) $response->getBody(), htmlspecialchars('No "Content-Type" request header specified')));
     }
     else {
@@ -922,12 +921,12 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $request_options = [];
 
 
-    // DX: 405 when resource not provisioned, but HTML if canonical route.
+    // DX: 404 when resource not provisioned, but 405 if canonical route.
     $response = $this->request('DELETE', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(405, $response->getStatusCode());
       $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
-      $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+      $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
     }
     else {
       $this->assertResourceErrorResponse(404, 'No route found for "DELETE ' . str_replace($this->baseUrl, '', $this->getUrl()->setAbsolute()->toString()) . '"', $response);

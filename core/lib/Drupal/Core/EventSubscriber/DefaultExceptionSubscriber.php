@@ -7,7 +7,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -119,7 +118,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
 
     $content = $this->t('The website encountered an unexpected error. Please try again later.');
     $content .= $message ? '</br></br>' . $message : '';
-    $response = new Response($content, 500);
+    $response = new Response($content, 500, ['Content-Type' => 'text/plain']);
 
     if ($exception instanceof HttpExceptionInterface) {
       $response->setStatusCode($exception->getStatusCode());
@@ -127,34 +126,6 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     }
     else {
       $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, '500 Service unavailable (with message)');
-    }
-
-    $event->setResponse($response);
-  }
-
-  /**
-   * Handles any exception as a generic error page for JSON.
-   *
-   * @todo This should probably check the error reporting level.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  protected function onJson(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
-    $error = Error::decodeException($exception);
-
-    // Display the message if the current error reporting level allows this type
-    // of message to be displayed,
-    $data = NULL;
-    if (error_displayable($error) && $message = $exception->getMessage()) {
-      $data = ['message' => sprintf('A fatal error occurred: %s', $message)];
-    }
-
-    $response = new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
-    if ($exception instanceof HttpExceptionInterface) {
-      $response->setStatusCode($exception->getStatusCode());
-      $response->headers->add($exception->getHeaders());
     }
 
     $event->setResponse($response);
@@ -216,16 +187,6 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     // them can/should happen in earlier listeners if desired.
     if (in_array($format, ['drupal_modal', 'drupal_dialog', 'drupal_ajax'])) {
       $format = 'json';
-    }
-
-    // Make an educated guess that any Accept header type that includes "json"
-    // can probably handle a generic JSON response for errors. As above, for
-    // any format this doesn't catch or that wants custom handling should
-    // register its own exception listener.
-    foreach ($request->getAcceptableContentTypes() as $mime) {
-      if (strpos($mime, 'html') === FALSE && strpos($mime, 'json') !== FALSE) {
-        $format = 'json';
-      }
     }
 
     return $format;

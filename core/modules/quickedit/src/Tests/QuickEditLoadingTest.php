@@ -115,12 +115,12 @@ class QuickEditLoadingTest extends WebTestBase {
     $this->assertIdentical(Json::encode(['message' => "The 'access in-place editing' permission is required."]), $response);
     $this->assertResponse(403);
 
-    // Quick Edit's JavaScript would SearchRankingTestnever hit these endpoints if the metadata
+    // Quick Edit's JavaScript would never hit these endpoints if the metadata
     // was empty as above, but we need to make sure that malicious users aren't
     // able to use any of the other endpoints either.
     $post = array('editors[0]' => 'form') + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost('quickedit/attachments', '', $post, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
-    $message = Json::encode(['message' => "A fatal error occurred: The 'access in-place editing' permission is required."]);
+    $message = Json::encode(['message' => "The 'access in-place editing' permission is required."]);
     $this->assertIdentical($message, $response);
     $this->assertResponse(403);
     $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
