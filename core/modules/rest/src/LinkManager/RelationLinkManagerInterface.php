@@ -2,10 +2,10 @@
 
 namespace Drupal\rest\LinkManager;
 
-use Drupal\serialization\LinkManager\RelationLinkManagerInterface as MovedRelationLinkManagerInterface;
+use Drupal\hal\LinkManager\RelationLinkManagerInterface as MovedRelationLinkManagerInterface;
 
 /**
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. This has
- *   been moved to the serialization module. This exists solely for BC.
+ *   been moved to the hal module. This exists solely for BC.
  */
 interface RelationLinkManagerInterface extends MovedRelationLinkManagerInterface {}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\serialization\LinkManager;
+namespace Drupal\hal\LinkManager;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -70,7 +70,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
     // (e.g., include a language prefix), then the module must also override the
     // TypeLinkManager class/service to return the desired URL.
     $uri = $this->getLinkDomain() . "/rest/type/$entity_type/$bundle";
-    $this->moduleHandler->alter('serialization_type_uri', $uri, $context);
+    $this->moduleHandler->alter('hal_type_uri', $uri, $context);
     // @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. This
     // hook is invoked to maintain backwards compatibility
     $this->moduleHandler->alter('rest_type_uri', $uri, $context);
@@ -99,7 +99,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
    *   corresponding type URI.
    */
   protected function getTypes($context = array()) {
-    $cid = 'serialization:links:types';
+    $cid = 'hal:links:types';
     $cache = $this->cache->get($cid);
     if (!$cache) {
       $data = $this->writeCache($context);
@@ -143,7 +143,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
     }
     // These URIs only change when entity info changes, so cache it permanently
     // and only clear it when entity_info is cleared.
-    $this->cache->set('serialization:links:types', $data, Cache::PERMANENT, array('entity_types'));
+    $this->cache->set('hal:links:types', $data, Cache::PERMANENT, array('entity_types'));
     return $data;
   }
 

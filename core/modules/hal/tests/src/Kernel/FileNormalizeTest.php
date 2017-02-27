@@ -5,11 +5,11 @@ namespace Drupal\Tests\hal\Kernel;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\file\Entity\File;
 use Drupal\hal\Encoder\JsonEncoder;
+use Drupal\hal\LinkManager\LinkManager;
+use Drupal\hal\LinkManager\RelationLinkManager;
+use Drupal\hal\LinkManager\TypeLinkManager;
 use Drupal\hal\Normalizer\FieldItemNormalizer;
 use Drupal\hal\Normalizer\FileEntityNormalizer;
-use Drupal\serialization\LinkManager\LinkManager;
-use Drupal\serialization\LinkManager\RelationLinkManager;
-use Drupal\serialization\LinkManager\TypeLinkManager;
 use Symfony\Component\Serializer\Serializer;
 
 
