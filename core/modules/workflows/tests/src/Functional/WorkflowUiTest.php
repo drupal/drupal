@@ -176,9 +176,8 @@ class WorkflowUiTest extends BrowserTestBase {
     $workflow = $workflow_storage->loadUnchanged('test');
     $this->assertEquals('draft', $workflow->getInitialState()->id());
 
-    // This will take us to the list of workflows, so we need to edit the
-    // workflow again.
-    $this->clickLink('Edit');
+    // Verify that we are still on the workflow edit page.
+    $this->assertSession()->addressEquals('admin/config/workflow/workflows/manage/test');
 
     // Ensure that weight changes the transition ordering.
     $this->assertEquals(['publish', 'create_new_draft'], array_keys($workflow->getTransitions()));
@@ -187,9 +186,8 @@ class WorkflowUiTest extends BrowserTestBase {
     $workflow = $workflow_storage->loadUnchanged('test');
     $this->assertEquals(['create_new_draft', 'publish'], array_keys($workflow->getTransitions()));
 
-    // This will take us to the list of workflows, so we need to edit the
-    // workflow again.
-    $this->clickLink('Edit');
+    // Verify that we are still on the workflow edit page.
+    $this->assertSession()->addressEquals('admin/config/workflow/workflows/manage/test');
 
     // Ensure that a delete link for the published state exists before deleting
     // the draft state.

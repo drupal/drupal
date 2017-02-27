@@ -191,7 +191,6 @@ class WorkflowEditForm extends EntityForm {
     $workflow = $this->entity;
     $workflow->save();
     drupal_set_message($this->t('Saved the %label Workflow.', ['%label' => $workflow->label()]));
-    $form_state->setRedirectUrl($workflow->toUrl('collection'));
   }
 
   /**
