@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\serialization\LinkManager;
+namespace Drupal\hal\LinkManager;
 
 /**
  * Defines an interface for a link manager with a configurable domain.

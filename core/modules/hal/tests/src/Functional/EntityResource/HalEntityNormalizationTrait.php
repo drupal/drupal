@@ -92,7 +92,7 @@ trait HalEntityNormalizationTrait {
    * {@inheritdoc}
    */
   protected function assertNormalizationEdgeCases($method, Url $url, array $request_options) {
-    // \Drupal\serialization\Normalizer\EntityNormalizer::denormalize(): entity
+    // \Drupal\hal\Normalizer\EntityNormalizer::denormalize(): entity
     // types with bundles MUST send their bundle field to be denormalizable.
     if ($this->entity->getEntityType()->hasKey('bundle')) {
       $normalization = $this->getNormalizedPostEntity();

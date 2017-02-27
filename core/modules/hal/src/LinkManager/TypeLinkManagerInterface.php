@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\serialization\LinkManager;
+namespace Drupal\hal\LinkManager;
 
 interface TypeLinkManagerInterface extends ConfigurableLinkManagerInterface {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\serialization\LinkManager;
+namespace Drupal\hal\LinkManager;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -69,7 +69,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
     // different (e.g., include a language prefix), then the module must also
     // override the RelationLinkManager class/service to return the desired URL.
     $uri = $this->getLinkDomain() . "/rest/relation/$entity_type/$bundle/$field_name";
-    $this->moduleHandler->alter('serialization_relation_uri', $uri, $context);
+    $this->moduleHandler->alter('hal_relation_uri', $uri, $context);
     // @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. This
     // hook is invoked to maintain backwards compatibility
     $this->moduleHandler->alter('rest_relation_uri', $uri, $context);
@@ -104,7 +104,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
    *   by corresponding relation URI.
    */
   protected function getRelations($context = array()) {
-    $cid = 'serialization:links:relations';
+    $cid = 'hal:links:relations';
     $cache = $this->cache->get($cid);
     if (!$cache) {
       $this->writeCache($context);
@@ -138,7 +138,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
     }
     // These URIs only change when field info changes, so cache it permanently
     // and only clear it when the fields cache is cleared.
-    $this->cache->set('serialization:links:relations', $data, Cache::PERMANENT, array('entity_field_info'));
+    $this->cache->set('hal:links:relations', $data, Cache::PERMANENT, array('entity_field_info'));
   }
 
 }

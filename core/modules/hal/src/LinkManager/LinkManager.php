@@ -1,29 +1,29 @@
 <?php
 
-namespace Drupal\serialization\LinkManager;
+namespace Drupal\hal\LinkManager;
 
 class LinkManager implements LinkManagerInterface {
 
   /**
    * The type link manager.
    *
-   * @var \Drupal\serialization\LinkManager\TypeLinkManagerInterface
+   * @var \Drupal\hal\LinkManager\TypeLinkManagerInterface
    */
   protected $typeLinkManager;
 
   /**
    * The relation link manager.
    *
-   * @var \Drupal\serialization\LinkManager\RelationLinkManagerInterface
+   * @var \Drupal\hal\LinkManager\RelationLinkManagerInterface
    */
   protected $relationLinkManager;
 
   /**
    * Constructor.
    *
-   * @param \Drupal\serialization\LinkManager\TypeLinkManagerInterface $type_link_manager
+   * @param \Drupal\hal\LinkManager\TypeLinkManagerInterface $type_link_manager
    *   Manager for handling bundle URIs.
-   * @param \Drupal\serialization\LinkManager\RelationLinkManagerInterface $relation_link_manager
+   * @param \Drupal\hal\LinkManager\RelationLinkManagerInterface $relation_link_manager
    *   Manager for handling bundle URIs.
    */
   public function __construct(TypeLinkManagerInterface $type_link_manager, RelationLinkManagerInterface $relation_link_manager) {

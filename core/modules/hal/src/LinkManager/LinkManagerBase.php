@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\serialization\LinkManager;
+namespace Drupal\hal\LinkManager;
 
 /**
- * Defines an abstract base-class for Serialization link manager objects.
+ * Defines an abstract base-class for HAL link manager objects.
  */
 abstract class LinkManagerBase {
 
@@ -44,7 +44,7 @@ abstract class LinkManagerBase {
    */
   protected function getLinkDomain() {
     if (empty($this->linkDomain)) {
-      if ($domain = $this->configFactory->get('serialization.settings')->get('link_domain')) {
+      if ($domain = $this->configFactory->get('hal.settings')->get('link_domain')) {
         $this->linkDomain = rtrim($domain, '/');
       }
       else {

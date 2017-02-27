@@ -4,7 +4,7 @@ namespace Drupal\hal\Normalizer;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\serialization\LinkManager\LinkManagerInterface;
+use Drupal\hal\LinkManager\LinkManagerInterface;
 use GuzzleHttp\ClientInterface;
 
 /**
@@ -33,7 +33,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
    *   The entity manager.
    * @param \GuzzleHttp\ClientInterface $http_client
    *   The HTTP Client.
-   * @param \Drupal\serialization\LinkManager\LinkManagerInterface $link_manager
+   * @param \Drupal\hal\LinkManager\LinkManagerInterface $link_manager
    *   The hypermedia link manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
