@@ -5,7 +5,6 @@ namespace Drupal\Core\Routing;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\State\StateInterface;
@@ -140,9 +139,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
    *
    * @return \Symfony\Component\Routing\RouteCollection with all urls that
    *      could potentially match $request. Empty collection if nothing can
-   *      match. The collection will be sorted from highest to lowest fit (match
-   *      of path parts) and then in ascending order by route name for routes
-   *      with the same fit.
+   *      match.
    */
   public function getRouteCollectionForRequest(Request $request) {
     // Cache both the system path as well as route parameters and matching
@@ -320,19 +317,15 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
    * Get all routes which match a certain pattern.
    *
    * @param string $path
-   *   The route pattern to search for.
+   *   The route pattern to search for (contains % as placeholders).
    *
    * @return \Symfony\Component\Routing\RouteCollection
-   *   Returns a route collection of matching routes. The collection may be
-   *   empty and will be sorted from highest to lowest fit (match of path parts)
-   *   and then in ascending order by route name for routes with the same fit.
+   *   Returns a route collection of matching routes.
    */
   protected function getRoutesByPath($path) {
     // Split the path up on the slashes, ignoring multiple slashes in a row
-    // or leading or trailing slashes. Convert to lower case here so we can
-    // have a case insensitive match from the incoming path to the lower case
-    // pattern outlines from \Drupal\Core\Routing\RouteCompiler::compile().
-    $parts = preg_split('@/+@', Unicode::strtolower($path), NULL, PREG_SPLIT_NO_EMPTY);
+    // or leading or trailing slashes.
+    $parts = preg_split('@/+@', $path, NULL, PREG_SPLIT_NO_EMPTY);
 
     $collection = new RouteCollection();
 
@@ -354,8 +347,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
       $routes = [];
     }
 
-    // We sort by fit and name in PHP to avoid a SQL filesort and avoid any
-    // difference in the sorting behavior of SQL back-ends.
+    // We sort by fit and name in PHP to avoid a SQL filesort.
     usort($routes, array($this, 'routeProviderRouteCompare'));
 
     foreach ($routes as $row) {

@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Component\Utility\Unicode;
 use Symfony\Component\Routing\RouteCompilerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCompiler as SymfonyRouteCompiler;
@@ -38,8 +37,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
     // The Drupal-specific compiled information.
     $stripped_path = static::getPathWithoutDefaults($route);
     $fit = static::getFit($stripped_path);
-    // Store a lower-case pattern outline to enable case-insensitive matching.
-    $pattern_outline = Unicode::strtolower(static::getPatternOutline($stripped_path));
+    $pattern_outline = static::getPatternOutline($stripped_path);
     // We count the number of parts including any optional trailing parts. This
     // allows the RouteProvider to filter candidate routes more efficiently.
     $num_parts = count(explode('/', trim($route->getPath(), '/')));
@@ -48,30 +46,23 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
       $fit,
       $pattern_outline,
       $num_parts,
-
-      // The following parameters are what Symfony uses in
-      // \Symfony\Component\Routing\Matcher\UrlMatcher::matchCollection().
-
-      // Set the static prefix to an empty string since it is redundant to
-      // the matching in \Drupal\Core\Routing\RouteProvider::getRoutesByPath()
-      // and by skipping it we more easily make the routing case insensitive.
-      '',
-      // Set the regex to use UTF-8 and be case-insensitive.
-      $symfony_compiled->getRegex() . 'ui',
+      // These are the Symfony compiled parts.
+      $symfony_compiled->getStaticPrefix(),
+      $symfony_compiled->getRegex(),
       $symfony_compiled->getTokens(),
       $symfony_compiled->getPathVariables(),
       $symfony_compiled->getHostRegex(),
       $symfony_compiled->getHostTokens(),
       $symfony_compiled->getHostVariables(),
       $symfony_compiled->getVariables()
-    );
+      );
   }
 
   /**
    * Returns the pattern outline.
    *
    * The pattern outline is the path pattern but normalized so that all
-   * placeholders are the string '%'.
+   * placeholders are equal strings and default values are removed.
    *
    * @param string $path
    *   The path for which we want the normalized outline.
