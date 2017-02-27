@@ -90,7 +90,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
       $form_id .= '_' . $this->entity->bundle();
     }
     if ($this->operation != 'default') {
-      $form_id = $form_id . '_' . str_replace('-', '_', $this->operation);
+      $form_id = $form_id . '_' . $this->operation;
     }
     return $form_id . '_form';
   }

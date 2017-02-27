@@ -97,11 +97,6 @@ class EntityFormTest extends UnitTestCase {
         'bundle' => '',
         'operation' => 'delete',
       )),
-      array('workflow_edit_state_form', array(
-        'entity_type' => 'workflow',
-        'bundle' => '',
-        'operation' => 'edit-state',
-      )),
     );
   }
 
