@@ -140,6 +140,74 @@ class RoutingFixtures {
   }
 
   /**
+   * Returns a complex set of routes for testing.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   */
+  public function mixedCaseRouteCollection() {
+    $collection = new RouteCollection();
+
+    $route = new Route('/path/one');
+    $route->setMethods(['GET']);
+    $collection->add('route_a', $route);
+
+    $route = new Route('/path/{thing}/one');
+    $route->setMethods(['PUT']);
+    $collection->add('route_b', $route);
+
+    // Uses Hebrew letter QOF (U+05E7)
+    $route = new Route('/somewhere/{item}/over/the/קainbow');
+    $route->setMethods(['GET']);
+    $collection->add('route_c', $route);
+
+    $route = new Route('/another/{thing}/aboUT/{item}');
+    $collection->add('route_d', $route);
+
+    // Greek letters lower case phi (U+03C6) and lower case omega (U+03C9)
+    $route = new Route('/place/meφω');
+    $route->setMethods(['GET', 'HEAD']);
+    $collection->add('route_e', $route);
+
+    return $collection;
+  }
+
+  /**
+   * Returns a complex set of routes for testing.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   */
+  public function duplicatePathsRouteCollection() {
+    $collection = new RouteCollection();
+
+    $route = new Route('/path/one');
+    $route->setMethods(['GET']);
+    $collection->add('route_b', $route);
+
+    // Add the routes not in order by route name.
+    $route = new Route('/path/one');
+    $route->setMethods(['GET']);
+    $collection->add('route_a', $route);
+
+    $route = new Route('/path/one');
+    $route->setMethods(['GET']);
+    $collection->add('route_c', $route);
+
+    $route = new Route('/path/TWO');
+    $route->setMethods(['GET']);
+    $collection->add('route_d', $route);
+
+    // Greek letters lower case phi (U+03C6) and lower case omega (U+03C9)
+    $route = new Route('/place/meφω');
+    $route->setMethods(['GET', 'HEAD']);
+    $collection->add('route_f', $route);
+
+    $route = new Route('/PLACE/meφω');
+    $collection->add('route_e', $route);
+
+    return $collection;
+  }
+
+  /**
    * Returns a Content-type restricted set of routes for testing.
    *
    * @return \Symfony\Component\Routing\RouteCollection
