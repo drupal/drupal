@@ -6,6 +6,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -118,6 +119,30 @@ abstract class DateTimeFormatterBase extends FormatterBase implements ContainerF
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function viewElements(FieldItemListInterface $items, $langcode) {
+    $elements = array();
+
+    foreach ($items as $delta => $item) {
+      if ($item->date) {
+        /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
+        $date = $item->date;
+        $elements[$delta] = $this->buildDateWithIsoAttribute($date);
+
+        if (!empty($item->_attributes)) {
+          $elements[$delta]['#attributes'] += $item->_attributes;
+          // Unset field item attributes since they have been included in the
+          // formatter output and should not be rendered in the field template.
+          unset($item->_attributes);
+        }
+      }
+    }
+
+    return $elements;
+  }
+
+  /**
    * Creates a formatted date value as a string.
    *
    * @param object $date
@@ -165,6 +190,71 @@ abstract class DateTimeFormatterBase extends FormatterBase implements ContainerF
     }
 
     return $settings;
+  }
+
+  /**
+   * Creates a render array from a date object.
+   *
+   * @param \Drupal\Core\Datetime\DrupalDateTime $date
+   *   A date object.
+   *
+   * @return array
+   *   A render array.
+   */
+  protected function buildDate(DrupalDateTime $date) {
+    if ($this->getFieldSetting('datetime_type') == DateTimeItem::DATETIME_TYPE_DATE) {
+      // A date without time will pick up the current time, use the default.
+      datetime_date_default_time($date);
+    }
+    $this->setTimeZone($date);
+
+    $build = [
+      '#markup' => $this->formatDate($date),
+      '#cache' => [
+        'contexts' => [
+          'timezone',
+        ],
+      ],
+    ];
+
+    return $build;
+  }
+
+  /**
+   * Creates a render array from a date object with ISO date attribute.
+   *
+   * @param \Drupal\Core\Datetime\DrupalDateTime $date
+   *   A date object.
+   *
+   * @return array
+   *   A render array.
+   */
+  protected function buildDateWithIsoAttribute(DrupalDateTime $date) {
+    if ($this->getFieldSetting('datetime_type') == DateTimeItem::DATETIME_TYPE_DATE) {
+      // A date without time will pick up the current time, use the default.
+      datetime_date_default_time($date);
+    }
+
+    // Create the ISO date in Universal Time.
+    $iso_date = $date->format("Y-m-d\TH:i:s") . 'Z';
+
+    $this->setTimeZone($date);
+
+    $build = [
+      '#theme' => 'time',
+      '#text' => $this->formatDate($date),
+      '#html' => FALSE,
+      '#attributes' => [
+        'datetime' => $iso_date,
+      ],
+      '#cache' => [
+        'contexts' => [
+          'timezone',
+        ],
+      ],
+    ];
+
+    return $build;
   }
 
 }

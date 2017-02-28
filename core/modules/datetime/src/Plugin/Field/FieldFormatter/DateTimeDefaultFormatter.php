@@ -3,7 +3,6 @@
 namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -26,59 +25,6 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
     return array(
       'format_type' => 'medium',
     ) + parent::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
-
-    foreach ($items as $delta => $item) {
-      $output = '';
-      $iso_date = '';
-
-      if ($item->date) {
-        /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
-        $date = $item->date;
-
-        if ($this->getFieldSetting('datetime_type') == 'date') {
-          // A date without time will pick up the current time, use the default.
-          datetime_date_default_time($date);
-        }
-
-        // Create the ISO date in Universal Time.
-        $iso_date = $date->format("Y-m-d\TH:i:s") . 'Z';
-
-        $this->setTimeZone($date);
-
-        $output = $this->formatDate($date);
-      }
-
-      // Display the date using theme datetime.
-      $elements[$delta] = array(
-        '#cache' => [
-          'contexts' => [
-            'timezone',
-          ],
-        ],
-        '#theme' => 'time',
-        '#text' => $output,
-        '#html' => FALSE,
-        '#attributes' => array(
-          'datetime' => $iso_date,
-        ),
-      );
-      if (!empty($item->_attributes)) {
-        $elements[$delta]['#attributes'] += $item->_attributes;
-        // Unset field item attributes since they have been included in the
-        // formatter output and should not be rendered in the field template.
-        unset($item->_attributes);
-      }
-    }
-
-    return $elements;
-
   }
 
   /**

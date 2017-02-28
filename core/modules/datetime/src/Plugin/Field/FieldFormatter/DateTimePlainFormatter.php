@@ -25,27 +25,12 @@ class DateTimePlainFormatter extends DateTimeFormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $output = '';
       if (!empty($item->date)) {
         /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
         $date = $item->date;
 
-        if ($this->getFieldSetting('datetime_type') == 'date') {
-          // A date without time will pick up the current time, use the default.
-          datetime_date_default_time($date);
-        }
-        $this->setTimeZone($date);
-
-        $output = $this->formatDate($date);
+        $elements[$delta] = $this->buildDate($date);
       }
-      $elements[$delta] = [
-        '#cache' => [
-          'contexts' => [
-            'timezone',
-          ],
-        ],
-        '#markup' => $output,
-      ];
     }
 
     return $elements;

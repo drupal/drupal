@@ -2,6 +2,7 @@
 
 namespace Drupal\datetime\Tests;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -138,6 +139,16 @@ class DateTimeFieldTest extends DateTestBase {
       $expected = $date->format($this->displayOptions['settings']['date_format']);
       $this->renderTestEntity($id);
       $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_custom format displayed as %expected.', array('%expected' => $expected)));
+
+      // Test that allowed markup in custom format is preserved and XSS is
+      // removed.
+      $this->displayOptions['settings']['date_format'] = '\\<\\s\\t\\r\\o\\n\\g\\>m/d/Y\\<\\/\\s\\t\\r\\o\\n\\g\\>\\<\\s\\c\\r\\i\\p\\t\\>\\a\\l\\e\\r\\t\\(\\S\\t\\r\\i\\n\\g\\.\\f\\r\\o\\m\\C\\h\\a\\r\\C\\o\\d\\e\\(\\8\\8\\,\\8\\3\\,\\8\\3\\)\\)\\<\\/\\s\\c\\r\\i\\p\\t\\>';
+      entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+      $expected = '<strong>' . $date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83))';
+      $this->renderTestEntity($id);
+      $this->assertRaw($expected, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', array('%expected' => $expected)));
 
       // Verify that the 'datetime_time_ago' formatter works for intervals in the
       // past.  First update the test entity so that the date difference always

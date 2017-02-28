@@ -38,6 +38,9 @@ class DateRangeCustomFormatter extends DateTimeCustomFormatter {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
+    // @todo Evaluate removing this method in
+    // https://www.drupal.org/node/2793143 to determine if the behavior and
+    // markup in the base class implementation can be used instead.
     $elements = [];
     $separator = $this->getSetting('separator');
 
