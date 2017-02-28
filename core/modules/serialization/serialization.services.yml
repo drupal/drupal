@@ -17,6 +17,10 @@ services:
     tags:
       - { name: normalizer }
     arguments: ['@entity.manager']
+  serializer.normalizer.primitive_data:
+    class: Drupal\serialization\Normalizer\PrimitiveDataNormalizer
+    tags:
+      - { name: normalizer, priority: 5, bc: bc_primitives_as_strings, bc_config_name: 'serialization.settings' }
   serializer.normalizer.complex_data:
     class: Drupal\serialization\Normalizer\ComplexDataNormalizer
     tags:
@@ -89,3 +93,8 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['%serializer.formats%']
+  serialization.bc_config_subscriber:
+    class: Drupal\serialization\EventSubscriber\BcConfigSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@kernel']

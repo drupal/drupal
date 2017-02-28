@@ -82,7 +82,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
   protected function getExpectedNormalizedEntity() {
     return [
       'uid' => [
-        ['value' => '3'],
+        ['value' => 3],
       ],
       'uuid' => [
         ['value' => $this->entity->uuid()],
@@ -99,12 +99,12 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
       ],
       'created' => [
         [
-          'value' => '123456789',
+          'value' => 123456789,
         ],
       ],
       'changed' => [
         [
-          'value' =>  (string) $this->entity->getChangedTime(),
+          'value' => $this->entity->getChangedTime(),
         ],
       ],
       'default_langcode' => [

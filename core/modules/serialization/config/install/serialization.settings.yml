@@ -1,0 +1,4 @@
+# Before Drupal 8.3, typed data primitive values were normalized as strings, as
+# this was usually returned from database storage. A primitive data normalizer
+# has been introduced to get the casted value instead.
+bc_primitives_as_strings: false

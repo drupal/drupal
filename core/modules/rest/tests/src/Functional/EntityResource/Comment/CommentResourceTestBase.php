@@ -144,17 +144,17 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       ],
       'status' => [
         [
-          'value' => 1,
+          'value' => TRUE,
         ],
       ],
       'created' => [
         [
-          'value' => '123456789',
+          'value' => 123456789,
         ],
       ],
       'changed' => [
         [
-          'value' => (string) $this->entity->getChangedTime(),
+          'value' => $this->entity->getChangedTime(),
         ],
       ],
       'default_langcode' => [
@@ -164,7 +164,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       ],
       'uid' => [
         [
-          'target_id' => $author->id(),
+          'target_id' => (int) $author->id(),
           'target_type' => 'user',
           'target_uuid' => $author->uuid(),
           'url' => base_path() . 'user/' . $author->id(),
@@ -178,7 +178,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       ],
       'entity_id' => [
         [
-          'target_id' => '1',
+          'target_id' => 1,
           'target_type' => 'entity_test',
           'target_uuid' => EntityTest::load(1)->uuid(),
           'url' => base_path() . 'entity_test/1',

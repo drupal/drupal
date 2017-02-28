@@ -110,7 +110,8 @@ class EntitySerializationTest extends NormalizerTestBase {
       ),
       'user_id' => array(
         array(
-          'target_id' => $this->user->id(),
+          // id() will return the string value as it comes from the database.
+          'target_id' => (int) $this->user->id(),
           'target_type' => $this->user->getEntityTypeId(),
           'target_uuid' => $this->user->uuid(),
           'url' => $this->user->url(),
@@ -134,7 +135,7 @@ class EntitySerializationTest extends NormalizerTestBase {
     $normalized = $this->serializer->normalize($this->entity);
 
     foreach (array_keys($expected) as $fieldName) {
-      $this->assertEqual($expected[$fieldName], $normalized[$fieldName], "ComplexDataNormalizer produces expected array for $fieldName.");
+      $this->assertSame($expected[$fieldName], $normalized[$fieldName], "Normalization produces expected array for $fieldName.");
     }
     $this->assertEqual(array_diff_key($normalized, $expected), array(), 'No unexpected data is added to the normalized array.');
   }

@@ -6,6 +6,31 @@
  */
 
 /**
+ * Implements hook_requirements().
+ */
+function serialization_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $requirements['serialization_as_strings'] = array(
+      'title' => t('Serialized data types'),
+      'severity' => REQUIREMENT_INFO,
+    );
+
+    if (\Drupal::config('serialization.settings')->get('bc_primitives_as_strings')) {
+      $requirements['serialization_as_strings']['value'] = t('Enabled');
+      $requirements['serialization_as_strings']['description'] = t('The Serialization API is configured to output only string values for REST and other applications (instead of integers or Booleans when appropriate). <a href="https://www.drupal.org/node/2837696">Disabling this backwards compatibility mode</a> is recommended unless your sites or applications require string output.');
+    }
+    else {
+      $requirements['serialization_as_strings']['value'] = t('Not enabled');
+      $requirements['serialization_as_strings']['description'] = t('The Serialization API is configured with the recommended default and outputs typed values (integers, Booleans, or strings as appropriate) for REST and other applications. If your site or applications require string output, you can <a href="https://www.drupal.org/node/2837696">enable backwards compatibility mode</a>.');
+    }
+  }
+
+  return $requirements;
+}
+
+/**
  * @defgroup updates-8.2.x-to-8.3.x Updates from 8.2.x to 8.3.x
  * @{
  * Update functions from 8.2.x to 8.3.x.
@@ -15,6 +40,18 @@
  * @see hal_update_8301()
  */
 function serialization_update_8301() {}
+
+/**
+ * Add serialization.settings::bc_primitives_as_strings configuration.
+ */
+function serialization_update_8302() {
+  $config_factory = \Drupal::configFactory();
+  $config_factory->getEditable('serialization.settings')
+    ->set('bc_primitives_as_strings', FALSE)
+    ->save(FALSE);
+
+  return t('The REST API will no longer output all values as strings. Integers/booleans will be used where appropriate. If your site depends on these value being strings, <a href="https://www.drupal.org/node/2837696">read the change record to learn how to enable the BC mode.</a>');
+}
 
 /**
  * @} End of "defgroup updates-8.2.x-to-8.3.x".

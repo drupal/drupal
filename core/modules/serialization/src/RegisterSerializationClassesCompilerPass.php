@@ -2,6 +2,7 @@
 
 namespace Drupal\serialization;
 
+use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -22,6 +23,12 @@ class RegisterSerializationClassesCompilerPass implements CompilerPassInterface 
 
     // Retrieve registered Normalizers and Encoders from the container.
     foreach ($container->findTaggedServiceIds('normalizer') as $id => $attributes) {
+      // If there is a BC key present, pass this to determine if the normalizer
+      // should be skipped.
+      if (isset($attributes[0]['bc']) && $this->normalizerBcSettingIsEnabled($attributes[0]['bc'], $attributes[0]['bc_config_name'])) {
+        continue;
+      }
+
       $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
       $normalizers[$priority][] = new Reference($id);
     }
@@ -51,6 +58,18 @@ class RegisterSerializationClassesCompilerPass implements CompilerPassInterface 
     }
     $container->setParameter('serializer.formats', $formats);
     $container->setParameter('serializer.format_providers', $format_providers);
+  }
+
+  /**
+   * Returns whether a normalizer BC setting is disabled or not.
+   *
+   * @param string $key
+   *
+   * @return bool
+   */
+  protected function normalizerBcSettingIsEnabled($key, $config_name) {
+    $settings = BootstrapConfigStorageFactory::get()->read($config_name);
+    return !empty($settings[$key]);
   }
 
   /**

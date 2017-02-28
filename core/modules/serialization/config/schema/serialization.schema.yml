@@ -1,0 +1,7 @@
+serialization.settings:
+  type: config_object
+  label: 'Serialization settings'
+  mapping:
+    bc_primitives_as_strings:
+      type: boolean
+      label: 'Whether to retain pre Drupal 8.3 behavior of serializing all primitive items as strings.'

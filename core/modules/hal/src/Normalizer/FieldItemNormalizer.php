@@ -21,7 +21,14 @@ class FieldItemNormalizer extends NormalizerBase {
    * {@inheritdoc}
    */
   public function normalize($field_item, $format = NULL, array $context = array()) {
-    $values = $field_item->toArray();
+    $values = [];
+    // We normalize each individual property, so each can do their own casting,
+    // if needed.
+    /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
+    foreach ($field_item as $property_name => $property) {
+      $values[$property_name] = $this->serializer->normalize($property, $format, $context);
+    }
+
     if (isset($context['langcode'])) {
       $values['lang'] = $context['langcode'];
     }
