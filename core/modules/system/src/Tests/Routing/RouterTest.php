@@ -101,6 +101,34 @@ class RouterTest extends WebTestBase {
   }
 
   /**
+   * Confirms that multiple routes with the same path do not cause an error.
+   */
+  public function testDuplicateRoutePaths() {
+    // Tests two routes with exactly the same path. The route with the maximum
+    // fit and lowest sorting route name will match, regardless of the order the
+    // routes are declared.
+    // @see \Drupal\Core\Routing\RouteProvider::getRoutesByPath()
+    $this->drupalGet('router-test/duplicate-path2');
+    $this->assertResponse(200);
+    $this->assertRaw('router_test.two_duplicate1');
+
+    // Tests three routes with same the path. One of the routes the path has a
+    // different case.
+    $this->drupalGet('router-test/case-sensitive-duplicate-path3');
+    $this->assertResponse(200);
+    $this->assertRaw('router_test.case_sensitive_duplicate1');
+    // While case-insensitive matching works, exact matches are preferred.
+    $this->drupalGet('router-test/case-sensitive-Duplicate-PATH3');
+    $this->assertResponse(200);
+    $this->assertRaw('router_test.case_sensitive_duplicate2');
+    // Test that case-insensitive matching works, falling back to the first
+    // route defined.
+    $this->drupalGet('router-test/case-sensitive-Duplicate-Path3');
+    $this->assertResponse(200);
+    $this->assertRaw('router_test.case_sensitive_duplicate1');
+  }
+
+  /**
    * Confirms that placeholders in paths work correctly.
    */
   public function testControllerPlaceholders() {

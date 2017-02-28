@@ -43,10 +43,16 @@
  *   by the machine name of the module that defines the route, or the name of
  *   a subsystem.
  * - The 'path' line gives the URL path of the route (relative to the site's
- *   base URL). Note: The path in Drupal is treated case insensitive so
- *   /example and /EXAmplE should return the same page.
- *   @todo Fix https://www.drupal.org/node/2075889 to actually get this
- *   behaviour.
+ *   base URL). Generally, paths in Drupal are treated as case-insensitive,
+ *   which overrides the default Symfony behavior. Specifically:
+ *   - If different routes are defined for /example and /EXAmplE, the exact
+ *   match is respected.
+ *   - If there is no exact match, the route falls back to a case-insensitive
+ *   match, so /example and /EXAmplE will return the same page.
+ *   Relying on case-sensitive path matching is not recommended because it
+ *   negatively affects user experience, and path aliases do not support case-
+ *   sensitive matches. The case-sensitive exact match is currently supported
+ *   only for backwards compatibility and may be deprecated in a later release.
  * - The 'defaults' section tells how to build the main content of the route,
  *   and can also give other information, such as the page title and additional
  *   arguments for the route controller method. There are several possibilities

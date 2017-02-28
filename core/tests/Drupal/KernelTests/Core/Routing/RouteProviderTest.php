@@ -7,6 +7,7 @@
 
 namespace Drupal\KernelTests\Core\Routing;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -195,7 +196,108 @@ class RouteProviderTest extends KernelTestBase {
   }
 
   /**
-   * Confirms that a trailing slash on the request doesn't result in a 404.
+   * Data provider for testMixedCasePaths()
+   */
+  public function providerMixedCaseRoutePaths() {
+    return [
+      ['/path/one', 'route_a'],
+      ['/path/two', NULL],
+      ['/PATH/one', 'route_a'],
+      ['/path/2/one', 'route_b', 'PUT'],
+      ['/paTH/3/one', 'route_b', 'PUT'],
+      // There should be no lower case of a Hebrew letter.
+      ['/somewhere/4/over/the/קainbow', 'route_c'],
+      ['/Somewhere/5/over/the/קainboW', 'route_c'],
+      ['/another/llama/aboUT/22', 'route_d'],
+      ['/another/llama/about/22', 'route_d'],
+      ['/place/meΦω', 'route_e', 'HEAD'],
+      ['/place/meφΩ', 'route_e', 'HEAD'],
+    ];
+  }
+
+  /**
+   * Confirms that we find routes using a case-insensitive path match.
+   *
+   * @dataProvider providerMixedCaseRoutePaths
+   */
+  public function testMixedCasePaths($path, $expected_route_name, $method = 'GET') {
+    // The case-insensitive behavior for higher UTF-8 characters depends on
+    // \Drupal\Component\Utility\Unicode::strtolower() using mb_strtolower()
+    // but kernel tests do not currently run the check that enables it.
+    // @todo remove this when https://www.drupal.org/node/2849669 is fixed.
+    Unicode::check();
+
+    $connection = Database::getConnection();
+    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
+    $dumper->addRoutes($this->fixtures->mixedCaseRouteCollection());
+    $dumper->dump();
+
+    $request = Request::create($path, $method);
+
+    $routes = $provider->getRouteCollectionForRequest($request);
+
+    if ($expected_route_name) {
+      $this->assertEquals(1, count($routes), 'The correct number of routes was found.');
+      $this->assertNotNull($routes->get($expected_route_name), 'The first matching route was found.');
+    }
+    else {
+      $this->assertEquals(0, count($routes), 'No routes matched.');
+    }
+  }
+
+  /**
+   * Data provider for testMixedCasePaths()
+   */
+  public function providerDuplicateRoutePaths() {
+    // When matching routes with the same fit the route with the lowest-sorting
+    // name should end up first in the resulting route collection.
+    return [
+      ['/path/one', 3, 'route_a'],
+      ['/PATH/one', 3, 'route_a'],
+      ['/path/two', 1, 'route_d'],
+      ['/PATH/three', 0],
+      ['/place/meΦω', 2, 'route_e'],
+      ['/placE/meφΩ', 2, 'route_e'],
+    ];
+  }
+
+  /**
+   * Confirms that we find all routes with the same path.
+   *
+   * @dataProvider providerDuplicateRoutePaths
+   */
+  public function testDuplicateRoutePaths($path, $number, $expected_route_name = NULL) {
+
+    // The case-insensitive behavior for higher UTF-8 characters depends on
+    // \Drupal\Component\Utility\Unicode::strtolower() using mb_strtolower()
+    // but kernel tests do not currently run the check that enables it.
+    // @todo remove this when https://www.drupal.org/node/2849669 is fixed.
+    Unicode::check();
+
+    $connection = Database::getConnection();
+    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
+    $dumper->addRoutes($this->fixtures->duplicatePathsRouteCollection());
+    $dumper->dump();
+
+    $request = Request::create($path);
+    $routes = $provider->getRouteCollectionForRequest($request);
+    $this->assertEquals($number, count($routes), 'The correct number of routes was found.');
+    if ($expected_route_name) {
+      $route_name = key(current($routes));
+      $this->assertEquals($expected_route_name, $route_name, 'The expected route name was found.');
+    }
+  }
+
+  /**
+   * Confirms that a trailing slash on the request does not result in a 404.
    */
   function testOutlinePathMatchTrailingSlash() {
     $connection = Database::getConnection();

@@ -212,3 +212,38 @@ router_test.hierarchy_parent_child2:
     _controller: '\Drupal\router_test\TestControllers::test'
   requirements:
     _access: 'TRUE'
+
+router_test.two_duplicate1:
+  path: '/router-test/duplicate-path2'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::testRouteName'
+  requirements:
+    _access: 'TRUE'
+
+router_test.two_duplicate2:
+  path: '/router-test/duplicate-path2'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::testRouteName'
+  requirements:
+    _access: 'TRUE'
+
+router_test.case_sensitive_duplicate1:
+  path: '/router-test/case-sensitive-duplicate-path3'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::testRouteName'
+  requirements:
+    _access: 'TRUE'
+
+router_test.case_sensitive_duplicate2:
+  path: '/router-test/case-sensitive-Duplicate-PATH3'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::testRouteName'
+  requirements:
+    _access: 'TRUE'
+
+router_test.case_sensitive_duplicate3:
+  path: '/router-test/case-sensitive-duplicate-path3'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::testRouteName'
+  requirements:
+    _access: 'TRUE'

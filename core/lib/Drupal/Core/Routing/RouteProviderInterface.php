@@ -18,7 +18,9 @@ interface RouteProviderInterface extends RouteProviderBaseInterface {
    *   The route pattern to search for (contains {} as placeholders).
    *
    * @return \Symfony\Component\Routing\RouteCollection
-   *   Returns a route collection of matching routes.
+   *   Returns a route collection of matching routes. The collection may be
+   *   empty and will be sorted from highest to lowest fit (match of path parts)
+   *   and then in ascending order by route name for routes with the same fit.
    */
   public function getRoutesByPattern($pattern);
 

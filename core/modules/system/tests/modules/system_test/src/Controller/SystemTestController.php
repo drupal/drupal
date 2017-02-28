@@ -313,6 +313,21 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
+   * Simple argument echo.
+   *
+   * @param string $text
+   *   Any string for the {text} slug.
+   *
+   * @return array
+   *   A render array.
+   */
+  public function simpleEcho($text) {
+    return [
+      '#plain_text' => $text,
+    ];
+  }
+
+  /**
    * Shows permission-dependent content.
    *
    * @return array

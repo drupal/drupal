@@ -160,6 +160,96 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   }
 
   /**
+   * Tries to match a URL with a set of routes.
+   *
+   * @param string $pathinfo
+   *   The path info to be parsed
+   * @param \Symfony\Component\Routing\RouteCollection $routes
+   *   The set of routes.
+   *
+   * @return array|null
+   *   An array of parameters. NULL when there is no match.
+   */
+  protected function matchCollection($pathinfo, RouteCollection $routes) {
+    // Try a case-sensitive match.
+    $match = $this->doMatchCollection($pathinfo, $routes, TRUE);
+    // Try a case-insensitive match.
+    if ($match === NULL && $routes->count() > 0) {
+      $match = $this->doMatchCollection($pathinfo, $routes, FALSE);
+    }
+    return $match;
+  }
+
+  /**
+   * Tries to match a URL with a set of routes.
+   *
+   * This code is very similar to Symfony's UrlMatcher::matchCollection() but it
+   * supports case-insensitive matching. The static prefix optimization is
+   * removed as this duplicates work done by the query in
+   * RouteProvider::getRoutesByPath().
+   *
+   * @param string $pathinfo
+   *   The path info to be parsed
+   * @param \Symfony\Component\Routing\RouteCollection $routes
+   *   The set of routes.
+   * @param bool $case_sensitive
+   *   Determines if the match should be case-sensitive of not.
+   *
+   * @return array|null
+   *   An array of parameters. NULL when there is no match.
+   *
+   * @see \Symfony\Component\Routing\Matcher\UrlMatcher::matchCollection()
+   * @see \Drupal\Core\Routing\RouteProvider::getRoutesByPath()
+   */
+  protected function doMatchCollection($pathinfo, RouteCollection $routes, $case_sensitive) {
+    foreach ($routes as $name => $route) {
+      $compiledRoute = $route->compile();
+
+      // Set the regex to use UTF-8.
+      $regex = $compiledRoute->getRegex() . 'u';
+      if (!$case_sensitive) {
+        $regex = $regex . 'i';
+      }
+      if (!preg_match($regex, $pathinfo, $matches)) {
+        continue;
+      }
+
+      $hostMatches = array();
+      if ($compiledRoute->getHostRegex() && !preg_match($compiledRoute->getHostRegex(), $this->context->getHost(), $hostMatches)) {
+        $routes->remove($name);
+        continue;
+      }
+
+      // Check HTTP method requirement.
+      if ($requiredMethods = $route->getMethods()) {
+        // HEAD and GET are equivalent as per RFC.
+        if ('HEAD' === $method = $this->context->getMethod()) {
+          $method = 'GET';
+        }
+
+        if (!in_array($method, $requiredMethods)) {
+          $this->allow = array_merge($this->allow, $requiredMethods);
+          $routes->remove($name);
+          continue;
+        }
+      }
+
+      $status = $this->handleRouteRequirements($pathinfo, $name, $route);
+
+      if (self::ROUTE_MATCH === $status[0]) {
+        return $status[1];
+      }
+
+      if (self::REQUIREMENT_MISMATCH === $status[0]) {
+        $routes->remove($name);
+        continue;
+      }
+
+      return $this->getAttributes($route, $name, array_replace($matches, $hostMatches));
+    }
+  }
+
+  /**
    * Returns a collection of potential matching routes for a request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
