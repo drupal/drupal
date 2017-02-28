@@ -108,7 +108,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
       ],
       'changed' => [
         [
-          'value' =>  (string) $this->entity->getChangedTime(),
+          'value' => $this->entity->getChangedTime(),
         ],
       ],
       'default_langcode' => [

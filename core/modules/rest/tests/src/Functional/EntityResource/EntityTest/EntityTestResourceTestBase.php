@@ -73,7 +73,7 @@ abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
       ],
       'id' => [
         [
-          'value' => '1',
+          'value' => 1,
         ],
       ],
       'langcode' => [
@@ -93,12 +93,12 @@ abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
       ],
       'created' => [
         [
-          'value' => $this->entity->get('created')->value,
+          'value' => (int) $this->entity->get('created')->value,
         ]
       ],
       'user_id' => [
         [
-          'target_id' => $author->id(),
+          'target_id' => (int) $author->id(),
           'target_type' => 'user',
           'target_uuid' => $author->uuid(),
           'url' => $author->toUrl()->toString(),

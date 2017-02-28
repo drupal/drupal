@@ -2,16 +2,7 @@
 
 namespace Drupal\Tests\hal\Kernel;
 
-use Drupal\Core\Cache\MemoryBackend;
 use Drupal\file\Entity\File;
-use Drupal\hal\Encoder\JsonEncoder;
-use Drupal\hal\LinkManager\LinkManager;
-use Drupal\hal\LinkManager\RelationLinkManager;
-use Drupal\hal\LinkManager\TypeLinkManager;
-use Drupal\hal\Normalizer\FieldItemNormalizer;
-use Drupal\hal\Normalizer\FileEntityNormalizer;
-use Symfony\Component\Serializer\Serializer;
-
 
 /**
  * Tests that file entities can be normalized in HAL.
@@ -33,20 +24,6 @@ class FileNormalizeTest extends NormalizerTestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('file');
-
-    $entity_manager = \Drupal::entityManager();
-    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend(), \Drupal::moduleHandler(), \Drupal::service('config.factory'), \Drupal::service('request_stack'), \Drupal::service('entity_type.bundle.info')), new RelationLinkManager(new MemoryBackend(), $entity_manager, \Drupal::moduleHandler(), \Drupal::service('config.factory'), \Drupal::service('request_stack')));
-
-    // Set up the mock serializer.
-    $normalizers = array(
-      new FieldItemNormalizer(),
-      new FileEntityNormalizer($entity_manager, \Drupal::httpClient(), $link_manager, \Drupal::moduleHandler()),
-    );
-
-    $encoders = array(
-      new JsonEncoder(),
-    );
-    $this->serializer = new Serializer($normalizers, $encoders);
   }
 
 

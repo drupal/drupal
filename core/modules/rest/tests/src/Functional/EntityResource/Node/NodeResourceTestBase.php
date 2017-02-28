@@ -116,32 +116,32 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
       ],
       'status' => [
         [
-          'value' => 1,
+          'value' => TRUE,
         ],
       ],
       'created' => [
         [
-          'value' => '123456789',
+          'value' => 123456789,
         ],
       ],
       'changed' => [
         [
-          'value' =>  (string) $this->entity->getChangedTime(),
+          'value' => $this->entity->getChangedTime(),
         ],
       ],
       'promote' => [
         [
-          'value' => 1,
+          'value' => TRUE,
         ],
       ],
       'sticky' => [
         [
-          'value' => '0',
+          'value' => FALSE,
         ],
       ],
       'revision_timestamp' => [
         [
-          'value' => '123456789',
+          'value' => 123456789,
         ],
       ],
       'revision_translation_affected' => [
@@ -156,7 +156,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
       ],
       'uid' => [
         [
-          'target_id' => $author->id(),
+          'target_id' => (int) $author->id(),
           'target_type' => 'user',
           'target_uuid' => $author->uuid(),
           'url' => base_path() . 'user/' . $author->id(),
@@ -164,14 +164,13 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
       ],
       'revision_uid' => [
         [
-          'target_id' => $author->id(),
+          'target_id' => (int) $author->id(),
           'target_type' => 'user',
           'target_uuid' => $author->uuid(),
           'url' => base_path() . 'user/' . $author->id(),
         ],
       ],
-      'revision_log' => [
-      ],
+      'revision_log' => [],
     ];
   }
 

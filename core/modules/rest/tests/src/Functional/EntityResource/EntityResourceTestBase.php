@@ -407,11 +407,15 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assertEquals($this->getExpectedCacheTags(), empty($cache_tags_header_value) ? [] : explode(' ', $cache_tags_header_value));
     $cache_contexts_header_value = $response->getHeader('X-Drupal-Cache-Contexts')[0];
     $this->assertEquals($this->getExpectedCacheContexts(), empty($cache_contexts_header_value) ? [] : explode(' ', $cache_contexts_header_value));
-    // Comparing the exact serialization is pointless, because the order of
-    // fields does not matter (at least not yet). That's why we only compare the
-    // normalized entity with the decoded response: it's comparing PHP arrays
-    // instead of strings.
-    $this->assertEquals($this->getExpectedNormalizedEntity(), $this->serializer->decode((string) $response->getBody(), static::$format));
+    // Sort the serialization data first so we can do an identical comparison
+    // for the keys with the array order the same (it needs to match with
+    // identical comparison).
+    $expected = $this->getExpectedNormalizedEntity();
+    ksort($expected);
+    $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
+    ksort($actual);
+    $this->assertSame($expected, $actual);
+
     // Not only assert the normalization, also assert deserialization of the
     // response results in the expected object.
     $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
@@ -449,7 +453,35 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     }
     $this->assertSame($get_headers, $head_headers);
 
+    // Only run this for fieldable entities. It doesn't make sense for config
+    // entities as config values are already casted. They also run through the
+    // ConfigEntityNormalizer, which doesn't deal with fields individually.
+    if ($this->entity instanceof FieldableEntityInterface) {
+      $this->config('serialization.settings')->set('bc_primitives_as_strings', TRUE)->save(TRUE);
+      // Rebuild the container so new config is reflected in the removal of the
+      // PrimitiveDataNormalizer.
+      $this->rebuildAll();
 
+
+      $response = $this->request('GET', $url, $request_options);
+      $this->assertResourceResponse(200, FALSE, $response);
+
+
+      // Again do an identical comparison, but this time transform the expected
+      // normalized entity's values to strings. This ensures the BC layer for
+      // bc_primitives_as_strings works as expected.
+      $expected = $this->getExpectedNormalizedEntity();
+      // Config entities are not affected.
+      // @see \Drupal\serialization\Normalizer\ConfigEntityNormalizer::normalize()
+      $expected = static::castToString($expected);
+      ksort($expected);
+      $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
+      ksort($actual);
+      $this->assertSame($expected, $actual);
+    }
+
+
+    // BC: rest_update_8203().
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
     $this->refreshTestStateAfterRestConfigChange();
 
@@ -510,6 +542,30 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $path = str_replace('987654321', '{' . static::$entityTypeId . '}', $url->setAbsolute()->setOptions(['base_url' => '', 'query' => []])->toString());
     $message = 'The "' . static::$entityTypeId . '" parameter was not converted for the path "' . $path . '" (route name: "rest.entity.' . static::$entityTypeId . '.GET.' . static::$format . '")';
     $this->assertResourceErrorResponse(404, $message, $response);
+  }
+
+  /**
+   * Transforms a normalization: casts all non-string types to strings.
+   *
+   * @param array $normalization
+   *   A normalization to transform.
+   *
+   * @return array
+   *   The transformed normalization.
+   */
+  protected static function castToString(array $normalization) {
+    foreach ($normalization as $key => $value) {
+      if (is_bool($value)) {
+        $normalization[$key] = (string) (int) $value;
+      }
+      elseif (is_int($value) || is_float($value)) {
+        $normalization[$key] = (string) $value;
+      }
+      elseif (is_array($value)) {
+        $normalization[$key] = static::castToString($value);
+      }
+    }
+    return $normalization;
   }
 
   /**
