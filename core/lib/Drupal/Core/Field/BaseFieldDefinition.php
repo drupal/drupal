@@ -89,7 +89,6 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
       ->setLabel($definition->getLabel())
       ->setName($definition->getName())
       ->setProvider($definition->getProvider())
-      ->setQueryable($definition->isQueryable())
       ->setRevisionable($definition->isRevisionable())
       ->setSettings($definition->getSettings())
       ->setTargetEntityTypeId($definition->getTargetEntityTypeId())
@@ -287,7 +286,8 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * {@inheritdoc}
    */
   public function isQueryable() {
-    return isset($this->definition['queryable']) ? $this->definition['queryable'] : !$this->isComputed();
+    @trigger_error('BaseFieldDefinition::isQueryable() is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, you should use \Drupal\Core\Field\BaseFieldDefinition::hasCustomStorage(). See https://www.drupal.org/node/2856563.', E_USER_DEPRECATED);
+    return !$this->hasCustomStorage();
   }
 
   /**
@@ -298,8 +298,14 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * @return static
    *   The object itself for chaining.
+   *
+   * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use
+   *   \Drupal\Core\Field\BaseFieldDefinition::setCustomStorage() instead.
+   *
+   * @see https://www.drupal.org/node/2856563
    */
   public function setQueryable($queryable) {
+    @trigger_error('BaseFieldDefinition::setQueryable() is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, you should use \Drupal\Core\Field\BaseFieldDefinition::setCustomStorage(). See https://www.drupal.org/node/2856563.', E_USER_DEPRECATED);
     $this->definition['queryable'] = $queryable;
     return $this;
   }
