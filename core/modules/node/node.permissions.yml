@@ -18,12 +18,13 @@ view own unpublished content:
   title: 'View own unpublished content'
 view all revisions:
   title: 'View all revisions'
+  description: 'To view a revision, you also need permission to view the content item.'
 revert all revisions:
   title: 'Revert all revisions'
-  description: 'Role requires permission <em>view revisions</em> and <em>edit rights</em> for nodes in question or <em>administer nodes</em>.'
+  description: 'To revert a revision, you also need permission to edit the content item.'
 delete all revisions:
   title: 'Delete all revisions'
-  description: 'Role requires permission to <em>view revisions</em> and <em>delete rights</em> for nodes in question or <em>administer nodes</em>.'
+  description: 'To delete a revision, you also need permission to delete the content item.'
 
 permission_callbacks:
   - \Drupal\node\NodePermissions::nodeTypePermissions
