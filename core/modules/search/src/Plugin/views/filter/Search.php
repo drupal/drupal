@@ -2,6 +2,7 @@
 
 namespace Drupal\search\Plugin\views\filter;
 
+use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -150,7 +151,7 @@ class Search extends FilterPluginBase {
     else {
       $search_index = $this->ensureMyTable();
 
-      $search_condition = db_and();
+      $search_condition = new Condition('AND');
 
       // Create a new join to relate the 'search_total' table to our current
       // 'search_index' table.
@@ -184,7 +185,7 @@ class Search extends FilterPluginBase {
       // Add the keyword conditions, as is done in
       // SearchQuery::prepareAndNormalize(), but simplified because we are
       // only concerned with relevance ranking so we do not need to normalize.
-      $or = db_or();
+      $or = new Condition('OR');
       foreach ($words as $word) {
         $or->condition("$search_index.word", $word);
       }

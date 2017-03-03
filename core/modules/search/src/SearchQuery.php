@@ -2,6 +2,7 @@
 
 namespace Drupal\search;
 
+use Drupal\Core\Database\Query\Condition;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -205,7 +206,7 @@ class SearchQuery extends SelectExtender {
     $this->addTag('search_' . $type);
 
     // Initialize conditions and status.
-    $this->conditions = db_and();
+    $this->conditions = new Condition('AND');
     $this->status = 0;
 
     return $this;
@@ -313,7 +314,7 @@ class SearchQuery extends SelectExtender {
         }
         $has_or = TRUE;
         $has_new_scores = FALSE;
-        $queryor = db_or();
+        $queryor = new Condition('OR');
         foreach ($key as $or) {
           list($num_new_scores) = $this->parseWord($or);
           $has_new_scores |= $num_new_scores;
@@ -401,7 +402,7 @@ class SearchQuery extends SelectExtender {
     }
 
     // Build the basic search query: match the entered keywords.
-    $or = db_or();
+    $or = new Condition('OR');
     foreach ($this->words as $word) {
       $or->condition('i.word', $word);
     }

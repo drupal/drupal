@@ -3,6 +3,7 @@
 namespace Drupal\locale;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\Condition;
 
 /**
  * Defines a class to store localized strings in the database.
@@ -416,7 +417,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       elseif ($table_alias == 't' && $join === 'leftJoin') {
         // Conditions for target fields when doing an outer join only make
         // sense if we add also OR field IS NULL.
-        $query->condition(db_or()
+        $query->condition((new Condition('OR'))
           ->condition($field_alias, (array) $value, 'IN')
           ->isNull($field_alias)
         );
@@ -429,7 +430,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     // Process other options, string filter, query limit, etc.
     if (!empty($options['filters'])) {
       if (count($options['filters']) > 1) {
-        $filter = db_or();
+        $filter = new Condition('OR');
         $query->condition($filter);
       }
       else {

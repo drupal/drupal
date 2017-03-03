@@ -74,8 +74,8 @@ class ViewsSearchQuery extends SearchQuery {
       $conditions =& $condition['field']->conditions();
       foreach ($conditions as $key => &$subcondition) {
         if (is_numeric($key)) {
-          // As conditions can have subconditions, for example db_or(), the
-          // function has to be called recursively.
+          // As conditions can be nested, the function has to be called
+          // recursively.
           $this->conditionReplaceString($search, $replace, $subcondition);
         }
       }

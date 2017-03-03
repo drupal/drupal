@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\Query\Condition;
+
 /**
  * Tests the Update query builder, complex queries.
  *
@@ -15,7 +17,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   function testOrConditionUpdate() {
     $update = db_update('test')
       ->fields(array('job' => 'Musician'))
-      ->condition(db_or()
+      ->condition((new Condition('OR'))
         ->condition('name', 'John')
         ->condition('name', 'Paul')
       );
