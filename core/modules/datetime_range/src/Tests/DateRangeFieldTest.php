@@ -61,9 +61,12 @@ class DateRangeFieldTest extends DateTestBase {
       $this->drupalGet('entity_test/add');
       $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Start date element found.');
       $this->assertFieldByName("{$field_name}[0][end_value][date]", '', 'End date element found.');
-      $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]/h4[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
+      $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
       $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Start time element not found.');
       $this->assertNoFieldByName("{$field_name}[0][end_value][time]", '', 'End time element not found.');
+      $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend//text()', $field_name, 'Fieldset and label found');
+      $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
+      $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
       // Build up dates in the UTC timezone.
       $value = '2012-12-31 00:00:00';
@@ -251,6 +254,9 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Start time element found.');
     $this->assertFieldByName("{$field_name}[0][end_value][date]", '', 'End date element found.');
     $this->assertFieldByName("{$field_name}[0][end_value][time]", '', 'End time element found.');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend//text()', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
+    $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
     // Build up dates in the UTC timezone.
     $value = '2012-12-31 00:00:00';
@@ -415,9 +421,12 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Start date element found.');
     $this->assertFieldByName("{$field_name}[0][end_value][date]", '', 'End date element found.');
-    $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]/h4[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
+    $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
     $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Start time element not found.');
     $this->assertNoFieldByName("{$field_name}[0][end_value][time]", '', 'End time element not found.');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend//text()', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
+    $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
     // Build up dates in the proper timezone.
     $value = '2012-12-31 00:00:00';
@@ -587,6 +596,9 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend//text()', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
+    $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
     // Assert that Hour and Minute Elements do not appear on Date Only.
     $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element not found on Date Only.');

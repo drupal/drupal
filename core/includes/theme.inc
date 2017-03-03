@@ -576,8 +576,14 @@ function template_preprocess_datetime_wrapper(&$variables) {
   // Suppress error messages.
   $variables['errors'] = NULL;
 
+  $variables['description'] = NULL;
   if (!empty($element['#description'])) {
+    $description_attributes = [];
+    if (!empty($element['#id'])) {
+      $description_attributes['id'] = $element['#id'] . '--description';
+    }
     $variables['description'] = $element['#description'];
+    $variables['description_attributes'] = new Attribute($description_attributes);
   }
 
   $variables['required'] = FALSE;

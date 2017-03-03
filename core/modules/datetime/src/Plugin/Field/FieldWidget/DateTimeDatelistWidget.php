@@ -35,6 +35,9 @@ class DateTimeDatelistWidget extends DateTimeWidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
+    // Wrap all of the select elements with a fieldset.
+    $element['#theme_wrappers'][] = 'fieldset';
+
     $date_order = $this->getSetting('date_order');
 
     if ($this->getFieldSetting('datetime_type') == 'datetime') {
