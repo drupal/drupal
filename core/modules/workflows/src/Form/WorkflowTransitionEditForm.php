@@ -23,6 +23,13 @@ class WorkflowTransitionEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  public function getFormId() {
+    return 'workflow_transition_edit_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state, $workflow_transition = NULL) {
     $this->transitionId = $workflow_transition;
     return parent::buildForm($form, $form_state);
