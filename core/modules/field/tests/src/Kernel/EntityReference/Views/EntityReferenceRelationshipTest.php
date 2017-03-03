@@ -3,6 +3,7 @@
 namespace Drupal\Tests\field\Kernel\EntityReference\Views;
 
 use Drupal\entity_test\Entity\EntityTestMulChanged;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
@@ -32,6 +33,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     'test_entity_reference_reverse_entity_test_view',
     'test_entity_reference_entity_test_mul_view',
     'test_entity_reference_reverse_entity_test_mul_view',
+    'test_entity_reference_group_by_empty_relationships',
     );
 
   /**
@@ -70,6 +72,9 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     // tables created will be greater than 48 chars long.
     // @see \Drupal\Core\Entity\Sql\DefaultTableMapping::generateFieldTableName()
     $this->createEntityReferenceField('entity_test_mul_changed', 'entity_test_mul_changed', 'field_test_data_with_a_long_name', 'field_test_data_with_a_long_name', 'entity_test');
+
+    // Create reference from entity_test_mul to entity_test cardinality: infinite.
+    $this->createEntityReferenceField('entity_test_mul', 'entity_test_mul', 'field_data_test_unlimited', 'field_data_test_unlimited', 'entity_test', 'default', array(), FieldStorageConfig::CARDINALITY_UNLIMITED);
 
     ViewTestData::createTestViews(get_class($this), array('entity_reference_test_views'));
   }
@@ -274,6 +279,58 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
       $this->assertEqual($row->_relationship_entities['field_test_data_with_a_long_name']->bundle(), 'entity_test');
 
     }
+  }
+
+  /**
+   * Tests group by with optional and empty relationship.
+   */
+  public function testGroupByWithEmptyRelationships() {
+    $entities = [];
+    // Create 4 entities with name1 and 3 entities with name2.
+    for ($i = 1; $i <= 4; $i++) {
+      $entity = [
+        'name' => 'name' . $i,
+      ];
+      $entity = EntityTest::create($entity);
+      $entities[] = $entity;
+      $entity->save();
+    }
+
+    $entity = EntityTestMul::create([
+      'name' => 'name1',
+    ]);
+    $entity->field_data_test_unlimited = [
+      ['target_id' => $entities[0]->id()],
+      ['target_id' => $entities[1]->id()],
+      ['target_id' => $entities[2]->id()],
+    ];
+    $entity->save();
+
+    $entity = EntityTestMul::create([
+      'name' => 'name2',
+    ]);
+    $entity->field_data_test_unlimited = [
+      ['target_id' => $entities[0]->id()],
+      ['target_id' => $entities[1]->id()],
+    ];
+    $entity->save();
+
+    $entity = EntityTestMul::create([
+      'name' => 'name3',
+    ]);
+    $entity->field_data_test_unlimited->target_id = $entities[0]->id();
+    $entity->save();
+
+    $view = Views::getView('test_entity_reference_group_by_empty_relationships');
+    $this->executeView($view);
+    $this->assertCount(4, $view->result);
+    // First three results should contain a reference from EntityTestMul.
+    $this->assertNotEmpty($view->getStyle()->getField(0, 'name_2'));
+    $this->assertNotEmpty($view->getStyle()->getField(1, 'name_2'));
+    $this->assertNotEmpty($view->getStyle()->getField(2, 'name_2'));
+    // Fourth result has no reference from EntityTestMul hence the output for
+    // should be empty.
+    $this->assertEqual('', $view->getStyle()->getField(3, 'name_2'));
   }
 
 }

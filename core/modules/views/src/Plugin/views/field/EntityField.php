@@ -818,10 +818,17 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
         'settings' => $this->options['settings'],
         'label' => 'hidden',
       ];
-      // Some bundles might not have a specific field, in which case the faked
-      // entity doesn't have it either.
-      $entity = $this->createEntityForGroupBy($this->getEntity($values), $values);
-      $build_list = isset($entity->{$this->definition['field_name']}) ? $entity->{$this->definition['field_name']}->view($display) : NULL;
+      // Optional relationships may not provide an entity at all. So we can't
+      // use createEntityForGroupBy() for those rows.
+      if ($entity = $this->getEntity($values)) {
+        $entity = $this->createEntityForGroupBy($entity, $values);
+        // Some bundles might not have a specific field, in which case the faked
+        // entity doesn't have it either.
+        $build_list = isset($entity->{$this->definition['field_name']}) ? $entity->{$this->definition['field_name']}->view($display) : NULL;
+      }
+      else {
+        $build_list = NULL;
+      }
     }
 
     if (!$build_list) {
