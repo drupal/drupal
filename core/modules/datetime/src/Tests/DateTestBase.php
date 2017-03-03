@@ -120,6 +120,7 @@ abstract class DateTestBase extends WebTestBase {
     $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
+      'description' => 'Description for ' . $field_name,
       'required' => TRUE,
     ]);
     $this->field->save();

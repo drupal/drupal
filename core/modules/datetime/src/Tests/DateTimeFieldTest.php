@@ -48,8 +48,10 @@ class DateTimeFieldTest extends DateTestBase {
       // Display creation form.
       $this->drupalGet('entity_test/add');
       $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
-      $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]/h4[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
+      $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class,"js-form-required")]', TRUE, 'Required markup found');
       $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Time element not found.');
+      $this->assertFieldByXPath('//input[@aria-describedby="edit-' . $field_name . '-0-value--description"]', NULL, 'ARIA described-by found');
+      $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0-value--description"]', NULL, 'ARIA description found');
 
       // Build up a date in the UTC timezone. Note that using this will also
       // mimic the user in a different timezone simply entering '2012-12-31' via
@@ -213,6 +215,9 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
     $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend//text()', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
+    $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
     // Build up a date in the UTC timezone.
     $value = '2012-12-31 00:00:00';
@@ -363,6 +368,9 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend//text()', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
+    $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
     // Assert that Hour and Minute Elements do not appear on Date Only
     $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element not found on Date Only.');
