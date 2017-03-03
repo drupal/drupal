@@ -18,5 +18,17 @@ process:
       - constants/slash
       - alias
   langcode: language
+  node_translation:
+    -
+      plugin: explode
+      source: source
+      delimiter: /
+    -
+      plugin: extract
+      index:
+        - 1
+    -
+      plugin: migration
+      migration: d7_node_translation
 destination:
   plugin: url_alias

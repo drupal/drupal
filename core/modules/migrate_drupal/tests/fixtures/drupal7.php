@@ -43135,6 +43135,30 @@ $connection->insert('url_alias')
   'alias' => 'term33',
   'language' => 'und',
 ))
+->values(array(
+  'pid' => '2',
+  'source' => 'node/2',
+  'alias' => 'deep-space-9',
+  'language' => 'en',
+))
+->values(array(
+  'pid' => '3',
+  'source' => 'node/3',
+  'alias' => 'deep-space-9-is',
+  'language' => 'is',
+))
+->values(array(
+  'pid' => '4',
+  'source' => 'node/4',
+  'alias' => 'firefly-is',
+  'language' => 'is',
+))
+->values(array(
+  'pid' => '5',
+  'source' => 'node/5',
+  'alias' => 'firefly',
+  'language' => 'en',
+))
 ->execute();
 
 $connection->schema()->createTable('users', array(
