@@ -253,13 +253,13 @@ class FileItem extends EntityReferenceItem {
    * Determines the URI for a file field.
    *
    * @param array $data
-   *   An array of token objects to pass to token_replace().
+   *   An array of token objects to pass to Token::replace().
    *
    * @return string
    *   An unsanitized file directory URI with tokens replaced. The result of
    *   the token replacement is then converted to plain text and returned.
    *
-   * @see token_replace()
+   * @see \Drupal\Core\Utility\Token::replace()
    */
   public function getUploadLocation($data = array()) {
     return static::doGetUploadLocation($this->getSettings(), $data);
@@ -271,11 +271,13 @@ class FileItem extends EntityReferenceItem {
    * @param array $settings
    *   The array of field settings.
    * @param array $data
-   *   An array of token objects to pass to token_replace().
+   *   An array of token objects to pass to Token::replace().
    *
    * @return string
    *   An unsanitized file directory URI with tokens replaced. The result of
    *   the token replacement is then converted to plain text and returned.
+   *
+   * @see \Drupal\Core\Utility\Token::replace()
    */
   protected static function doGetUploadLocation(array $settings, $data = []) {
     $destination = trim($settings['file_directory'], '/');
