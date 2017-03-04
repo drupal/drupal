@@ -127,7 +127,7 @@ function system_requirements($phase) {
     }
 
     if ($rewrite_warning) {
-      $requirements['apache_version'] =  [
+      $requirements['apache_version'] = [
         'title' => t('Apache version'),
         'value' => $apache_version_string,
         'severity' => REQUIREMENT_WARNING,
@@ -136,7 +136,7 @@ function system_requirements($phase) {
     }
 
     if ($rewrite_error) {
-      $requirements['Apache version'] =  [
+      $requirements['Apache version'] = [
         'title' => t('Apache version'),
         'value' => $apache_version_string,
         'severity' => REQUIREMENT_ERROR,
@@ -145,7 +145,7 @@ function system_requirements($phase) {
     }
 
     if (!$rewrite_error && !$rewrite_warning) {
-      $requirements['rewrite_module'] =  [
+      $requirements['rewrite_module'] = [
         'title' => t('Clean URLs'),
         'value' => t('Disabled'),
         'severity' => REQUIREMENT_WARNING,

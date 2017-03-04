@@ -44,7 +44,7 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function testUserLoginLocalTasks($route) {
     $tasks = [
-      0 => ['user.register', 'user.pass', 'user.login',],
+      0 => ['user.register', 'user.pass', 'user.login'],
     ];
     $this->assertLocalTasks($route, $tasks);
   }
@@ -67,7 +67,7 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function testUserPageLocalTasks($route, $subtask = []) {
     $tasks = [
-      0 => ['entity.user.canonical', 'entity.user.edit_form',],
+      0 => ['entity.user.canonical', 'entity.user.edit_form'],
     ];
     if ($subtask) $tasks[] = $subtask;
     $this->assertLocalTasks($route, $tasks);

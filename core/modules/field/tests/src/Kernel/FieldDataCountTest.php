@@ -112,7 +112,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
 
     $entity_init = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
-      ->create(['type' => $entity_type,]);
+      ->create(['type' => $entity_type]);
     $cardinality = $this->fieldTestData->field_storage_2->getCardinality();
 
     $this->assertIdentical($this->fieldTestData->field_storage_2->hasData(), FALSE, 'There are no entities with field data.');

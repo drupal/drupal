@@ -781,7 +781,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
             ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
           ],
         ],
-       '#options' => [
+        '#options' => [
           'none' => $this->t('No transform'),
           'upper' => $this->t('Upper case'),
           'lower' => $this->t('Lower case'),

@@ -87,7 +87,7 @@ class ManageDisplayTest extends WebTestBase {
     $options = array_map(function($item) {
       return (string) $item->attributes()->value[0];
     }, $result);
-    $expected_options =  [
+    $expected_options = [
       'field_no_settings',
       'field_empty_test',
       'field_empty_setting',
@@ -249,7 +249,7 @@ class ManageDisplayTest extends WebTestBase {
     $options = array_map(function($item) {
       return (string) $item->attributes()->value[0];
     }, $result);
-    $expected_options =  [
+    $expected_options = [
       'test_field_widget',
       'test_field_widget_multiple',
     ];

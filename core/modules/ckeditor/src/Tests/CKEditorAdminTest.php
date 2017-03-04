@@ -84,23 +84,23 @@ class CKEditorAdminTest extends WebTestBase {
           [
             [
               'name' => 'Formatting',
-              'items' => ['Bold', 'Italic',],
+              'items' => ['Bold', 'Italic'],
             ],
             [
               'name' => 'Links',
-              'items' => ['DrupalLink', 'DrupalUnlink',],
+              'items' => ['DrupalLink', 'DrupalUnlink'],
             ],
             [
               'name' => 'Lists',
-              'items' => ['BulletedList', 'NumberedList',],
+              'items' => ['BulletedList', 'NumberedList'],
             ],
             [
               'name' => 'Media',
-              'items' => ['Blockquote', 'DrupalImage',],
+              'items' => ['Blockquote', 'DrupalImage'],
             ],
             [
               'name' => 'Tools',
-              'items' => ['Source',],
+              'items' => ['Source'],
             ],
           ],
         ],

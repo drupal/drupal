@@ -48,7 +48,7 @@ class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function testBookNodeLocalTasks($route) {
     $this->assertLocalTasks($route, [
-      0 => ['entity.node.book_outline_form', 'entity.node.canonical', 'entity.node.edit_form', 'entity.node.delete_form', 'entity.node.version_history',],
+      0 => ['entity.node.book_outline_form', 'entity.node.canonical', 'entity.node.edit_form', 'entity.node.delete_form', 'entity.node.version_history'],
     ]);
   }
 

@@ -342,7 +342,7 @@ class ConfigSchemaTest extends KernelTestBase {
       ],
       'float' => '3.14',
       'null_float' => '',
-      'sequence' =>  [1, 0, 1],
+      'sequence' => [1, 0, 1],
       'sequence_bc' => [1, 0, 1],
       // Not in schema and therefore should be left untouched.
       'not_present_in_schema' => TRUE,
@@ -365,7 +365,7 @@ class ConfigSchemaTest extends KernelTestBase {
       ],
       'float' => 3.14,
       'null_float' => NULL,
-      'sequence' =>  [TRUE, FALSE, TRUE],
+      'sequence' => [TRUE, FALSE, TRUE],
       'sequence_bc' => [TRUE, FALSE, TRUE],
       'not_present_in_schema' => TRUE,
       'config_schema_test_integer' => 1,

@@ -150,7 +150,7 @@ function _update_manager_check_backends(&$form, $operation) {
 function update_manager_archive_extract($file, $directory) {
   $archiver = archiver_get_archiver($file);
   if (!$archiver) {
-    throw new Exception(t('Cannot extract %file, not a valid archive.',  ['%file' => $file]));
+    throw new Exception(t('Cannot extract %file, not a valid archive.', ['%file' => $file]));
   }
 
   // Remove the directory if it exists, otherwise it might contain a mixture of

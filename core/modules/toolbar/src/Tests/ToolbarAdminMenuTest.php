@@ -179,7 +179,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
 
     $this->hash = $this->getSubtreesHash();
 
-    $rid = $this->drupalCreateRole(['administer content types',]);
+    $rid = $this->drupalCreateRole(['administer content types']);
 
     // Assign the role to the user.
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/edit', ["roles[$rid]" => $rid], t('Save'));
@@ -214,7 +214,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
 
     // adminUser2 will add a role to adminUser.
     $this->drupalLogin($this->adminUser2);
-    $rid = $this->drupalCreateRole(['administer content types',]);
+    $rid = $this->drupalCreateRole(['administer content types']);
 
     // Get the subtree hash for adminUser2 to check later that it has not
     // changed. Request a new page to refresh the drupalSettings object.

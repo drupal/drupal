@@ -51,7 +51,7 @@ class ConfigEntityListTest extends WebTestBase {
 
     // Test getOperations() method.
     $expected_operations = [
-      'edit' =>  [
+      'edit' => [
         'title' => t('Edit'),
         'weight' => 10,
         'url' => $entity->urlInfo(),
@@ -61,7 +61,7 @@ class ConfigEntityListTest extends WebTestBase {
         'weight' => 40,
         'url' => $entity->urlInfo('disable'),
       ],
-      'delete' =>  [
+      'delete' => [
         'title' => t('Delete'),
         'weight' => 100,
         'url' => $entity->urlInfo('delete-form'),
