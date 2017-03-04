@@ -46,7 +46,7 @@ mapping:
 sequence:
   label: Sequence
   class: '\Drupal\Core\Config\Schema\Sequence'
-  definition_class: '\Drupal\Core\TypedData\ListDataDefinition'
+  definition_class: '\Drupal\Core\Config\Schema\SequenceDataDefinition'
 
 # Simple extended data types:
 

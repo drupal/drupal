@@ -3,6 +3,8 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Config\Schema\Ignore;
+use Drupal\Core\Config\Schema\Sequence;
+use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
@@ -209,6 +211,29 @@ abstract class StorableConfigBase extends ConfigBase {
       // Recurse into any nested keys.
       foreach ($value as $nested_value_key => $nested_value) {
         $value[$nested_value_key] = $this->castValue($key . '.' . $nested_value_key, $nested_value);
+      }
+
+      if ($element instanceof Sequence) {
+        $data_definition = $element->getDataDefinition();
+        if ($data_definition instanceof SequenceDataDefinition) {
+          // Apply any sorting defined on the schema.
+          switch ($data_definition->getOrderBy()) {
+            case 'key':
+              ksort($value);
+              break;
+
+            case 'value':
+              // The PHP documentation notes that "Be careful when sorting
+              // arrays with mixed types values because sort() can produce
+              // unpredictable results". There is no risk here because
+              // \Drupal\Core\Config\StorableConfigBase::castValue() has
+              // already cast all values to the same type using the
+              // configuration schema.
+              sort($value);
+              break;
+
+          }
+        }
       }
     }
     return $value;

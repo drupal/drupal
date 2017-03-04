@@ -396,6 +396,76 @@ class ConfigSchemaTest extends KernelTestBase {
   }
 
   /**
+   * Tests configuration sequence sorting using schemas.
+   */
+  public function testConfigSaveWithSequenceSorting() {
+    $data = [
+      'keyed_sort' => [
+        'b' => '1',
+        'a' => '2',
+      ],
+      'no_sort' => [
+        'b' => '2',
+        'a' => '1',
+      ],
+    ];
+    // Save config which has a schema that enforces sorting.
+    $this->config('config_schema_test.schema_sequence_sort')
+      ->setData($data)
+      ->save();
+    $this->assertSame(['a' => '2', 'b' => '1'], $this->config('config_schema_test.schema_sequence_sort')->get('keyed_sort'));
+    $this->assertSame(['b' => '2', 'a' => '1'], $this->config('config_schema_test.schema_sequence_sort')->get('no_sort'));
+
+    $data = [
+      'value_sort' => ['b', 'a'],
+      'no_sort' => ['b', 'a'],
+    ];
+    // Save config which has a schema that enforces sorting.
+    $this->config('config_schema_test.schema_sequence_sort')
+      ->setData($data)
+      ->save();
+
+    $this->assertSame(['a', 'b'], $this->config('config_schema_test.schema_sequence_sort')->get('value_sort'));
+    $this->assertSame(['b', 'a'], $this->config('config_schema_test.schema_sequence_sort')->get('no_sort'));
+
+    // Value sort does not preserve keys - this is intentional.
+    $data = [
+      'value_sort' => [1 => 'b', 2 => 'a'],
+      'no_sort' => [1 => 'b', 2 => 'a'],
+    ];
+    // Save config which has a schema that enforces sorting.
+    $this->config('config_schema_test.schema_sequence_sort')
+      ->setData($data)
+      ->save();
+
+    $this->assertSame(['a', 'b'], $this->config('config_schema_test.schema_sequence_sort')->get('value_sort'));
+    $this->assertSame([1 => 'b', 2 => 'a'], $this->config('config_schema_test.schema_sequence_sort')->get('no_sort'));
+
+    // Test sorts do not destroy complex values.
+    $data = [
+      'complex_sort_value' => [['foo' => 'b', 'bar' => 'b'] , ['foo' => 'a', 'bar' => 'a']],
+      'complex_sort_key' => ['b' => ['foo' => '1', 'bar' => '1'] , 'a' => ['foo' => '2', 'bar' => '2']],
+    ];
+    $this->config('config_schema_test.schema_sequence_sort')
+      ->setData($data)
+      ->save();
+    $this->assertSame([['foo' => 'a', 'bar' => 'a'], ['foo' => 'b', 'bar' => 'b']], $this->config('config_schema_test.schema_sequence_sort')->get('complex_sort_value'));
+    $this->assertSame(['a' => ['foo' => '2', 'bar' => '2'], 'b' => ['foo' => '1', 'bar' => '1']], $this->config('config_schema_test.schema_sequence_sort')->get('complex_sort_key'));
+
+    // Swap the previous test scenario around.
+    $data = [
+      'complex_sort_value' => ['b' => ['foo' => '1', 'bar' => '1'] , 'a' => ['foo' => '2', 'bar' => '2']],
+      'complex_sort_key' => [['foo' => 'b', 'bar' => 'b'] , ['foo' => 'a', 'bar' => 'a']],
+    ];
+    $this->config('config_schema_test.schema_sequence_sort')
+      ->setData($data)
+      ->save();
+    $this->assertSame([['foo' => '1', 'bar' => '1'], ['foo' => '2', 'bar' => '2']], $this->config('config_schema_test.schema_sequence_sort')->get('complex_sort_value'));
+    $this->assertSame([['foo' => 'b', 'bar' => 'b'], ['foo' => 'a', 'bar' => 'a']], $this->config('config_schema_test.schema_sequence_sort')->get('complex_sort_key'));
+
+  }
+
+  /**
    * Tests fallback to a greedy wildcard.
    */
   function testSchemaFallback() {

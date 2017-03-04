@@ -297,3 +297,41 @@ test.double_brackets.breed:
   mapping:
     breed:
       type: string
+
+config_schema_test.schema_sequence_sort:
+  type: config_object
+  mapping:
+    keyed_sort:
+      type: sequence
+      orderby: key
+      sequence:
+        - type: string
+    value_sort:
+      type: sequence
+      orderby: value
+      sequence:
+        - type: string
+    no_sort:
+      type: sequence
+      sequence:
+        - type: string
+    complex_sort_value:
+      type: sequence
+      orderby: value
+      sequence:
+        - type: mapping
+          mapping:
+            foo:
+              type: string
+            bar:
+              type: string
+    complex_sort_key:
+      type: sequence
+      orderby: key
+      sequence:
+        - type: mapping
+          mapping:
+            foo:
+              type: string
+            bar:
+              type: string
