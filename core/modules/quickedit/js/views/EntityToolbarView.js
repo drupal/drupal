@@ -51,7 +51,7 @@
 
       // Reposition the entity toolbar as the viewport and the position within
       // the viewport changes.
-      $(window).on('resize.quickedit scroll.quickedit', debounce($.proxy(this.windowChangeHandler, this), 150));
+      $(window).on('resize.quickedit scroll.quickedit drupalViewportOffsetChange.quickedit', debounce($.proxy(this.windowChangeHandler, this), 150));
 
       // Adjust the fence placement within which the entity toolbar may be
       // positioned.
@@ -141,7 +141,7 @@
       this.$fence.remove();
 
       // Stop listening to additional events.
-      $(window).off('resize.quickedit scroll.quickedit');
+      $(window).off('resize.quickedit scroll.quickedit drupalViewportOffsetChange.quickedit');
       $(document).off('drupalViewportOffsetChange.quickedit');
 
       Backbone.View.prototype.remove.call(this);
