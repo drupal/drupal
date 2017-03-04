@@ -41,6 +41,9 @@ class LayoutTest extends KernelTestBase {
   public function testRenderLayout($layout_id, $config, $regions, $html) {
     $layout = $this->layoutPluginManager->createInstance($layout_id, $config);
     $built['layout'] = $layout->build($regions);
+    $built['layout']['#prefix'] = 'Test prefix';
+    $built['layout']['#suffix'] = 'Test suffix';
+    $html = 'Test prefix' . $html . "\n" . 'Test suffix';
 
     // Assume each layout is contained by a form, in order to ensure the
     // building of the layout does not interfere with form processing.
@@ -58,6 +61,15 @@ class LayoutTest extends KernelTestBase {
    * Data provider for testRenderLayout().
    */
   public function renderLayoutData() {
+    $data['layout_onecol'] = [
+      'layout_onecol',
+      [],
+      [
+        'content' => [
+          '#markup' => 'This is the content',
+        ],
+      ],
+    ];
     $data['layout_test_1col_with_form'] = [
       'layout_test_1col',
       [],
@@ -121,6 +133,14 @@ class LayoutTest extends KernelTestBase {
         ],
       ],
     ];
+
+    $data['layout_onecol'][] = <<<'EOD'
+<div data-drupal-selector="edit-layout" class="layout--onecol">
+  <div class="layout-region layout-region--content">
+    This is the content
+  </div>
+</div>
+EOD;
 
     $data['layout_test_1col_with_form'][] = <<<'EOD'
 <div class="layout-example-1col clearfix">
