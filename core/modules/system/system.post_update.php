@@ -65,3 +65,21 @@ function system_post_update_add_region_to_entity_displays() {
 function system_post_update_hashes_clear_cache() {
   // Empty post-update hook.
 }
+
+/**
+ * @addtogroup updates-8.3.x
+ * @{
+ */
+
+/**
+ * Force plugin definitions to be cleared.
+ *
+ * @see https://www.drupal.org/node/2802663
+ */
+function system_post_update_timestamp_plugins() {
+  // Empty post-update hook.
+}
+
+/**
+ * @} End of "addtogroup uupdates-8.3.x".
+ */
