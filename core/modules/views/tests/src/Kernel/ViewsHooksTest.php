@@ -26,7 +26,7 @@ class ViewsHooksTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $hooks =  [
+  protected static $hooks = [
     'views_data' => 'all',
     'views_data_alter' => 'alter',
     'views_query_substitutions' => 'view',

@@ -455,7 +455,7 @@ class User extends ContentEntityBase implements UserInterface {
       // @todo: A default value of NULL is ignored, so we have to specify
       // an empty field item structure instead. Fix this in
       // https://www.drupal.org/node/2318605.
-      ->setDefaultValue([0 =>  ['value' => NULL]])
+      ->setDefaultValue([0 => ['value' => NULL]])
       // @todo: Define this via an options provider once
       // https://www.drupal.org/node/2329937 is completed.
       ->addPropertyConstraints('value', [

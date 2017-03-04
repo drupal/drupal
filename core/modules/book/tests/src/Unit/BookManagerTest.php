@@ -102,7 +102,7 @@ class BookManagerTest extends UnitTestCase {
       // Provides a book with an existing parent.
       [
         ['pid' => 11, 'nid' => 12],
-        ['nid' => 11, 'depth' => 1, 'p1' => 11,],
+        ['nid' => 11, 'depth' => 1, 'p1' => 11],
         ['depth' => 2, 'p1' => 11, 'p2' => 12] + $empty,
       ],
       // Provides a book with two existing parents.

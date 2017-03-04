@@ -109,23 +109,23 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
           [
             [
               'name' => $this->t('Formatting'),
-              'items' => ['Bold', 'Italic',],
+              'items' => ['Bold', 'Italic'],
             ],
             [
               'name' => $this->t('Links'),
-              'items' => ['DrupalLink', 'DrupalUnlink',],
+              'items' => ['DrupalLink', 'DrupalUnlink'],
             ],
             [
               'name' => $this->t('Lists'),
-              'items' => ['BulletedList', 'NumberedList',],
+              'items' => ['BulletedList', 'NumberedList'],
             ],
             [
               'name' => $this->t('Media'),
-              'items' => ['Blockquote', 'DrupalImage',],
+              'items' => ['Blockquote', 'DrupalImage'],
             ],
             [
               'name' => $this->t('Tools'),
-              'items' => ['Source',],
+              'items' => ['Source'],
             ],
           ],
         ],

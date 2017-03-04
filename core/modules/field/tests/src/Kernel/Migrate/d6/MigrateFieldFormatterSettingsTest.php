@@ -138,7 +138,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $this->assertIdentical($expected, $component);
 
     // Test date field.
-    $defaults = ['format_type' => 'fallback', 'timezone_override' => '',];
+    $defaults = ['format_type' => 'fallback', 'timezone_override' => ''];
     $expected['weight'] = 10;
     $expected['type'] = 'datetime_default';
     $expected['settings'] = ['format_type' => 'fallback'] + $defaults;
