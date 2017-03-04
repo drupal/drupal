@@ -10,7 +10,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
  *   label = @Translation("Created"),
  *   description = @Translation("An entity field containing a UNIX timestamp of when the entity has been created."),
  *   no_ui = TRUE,
- *   default_widget = "datetime_timestamp",
+ *   default_widget = "datetime_default",
  *   default_formatter = "timestamp"
  * )
  */
